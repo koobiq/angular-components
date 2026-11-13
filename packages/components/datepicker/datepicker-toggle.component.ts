@@ -5,18 +5,17 @@ import {
     Component,
     Directive,
     input,
-    OnChanges,
+    type OnChanges,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     untracked,
     ViewEncapsulation
 } from '@angular/core';
 import { outputToObservable, toObservable } from '@angular/core/rxjs-interop';
-import { KbqSiblingPopup, kbqSiblingPopupProvider } from '@koobiq/components/core';
+import { filter, map, merge, type Observable, switchMap } from 'rxjs';
+import { type KbqSiblingPopup, kbqSiblingPopupProvider } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { merge, Observable } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
-import { KbqDatepicker } from './datepicker.component';
+import type { KbqDatepicker } from './datepicker.component';
 
 /** Can be used to override the icon of a `kbqDatepickerToggle`. */
 @Directive({
@@ -40,7 +39,7 @@ export class KbqDatepickerToggleIcon {}
             ></i>
         </ng-content>
     `,
-    styleUrls: ['./datepicker-toggle.scss'],
+    styleUrl: './datepicker-toggle.scss',
     providers: [kbqSiblingPopupProvider(KbqDatepickerToggleIconComponent)],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -135,7 +134,7 @@ export class KbqDatepickerToggleIconComponent<D> implements OnChanges, KbqSiblin
         }
 
         // The input, not the icon, handles the keys of the datepicker and gets the focus back once it closes.
-        datepicker.datepickerInput.focus();
+        datepicker.datepickerInput?.focus();
         datepicker.open();
     }
 

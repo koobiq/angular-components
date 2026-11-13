@@ -58,7 +58,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                         Base
                         <i
                             kbq-icon="kbq-circle-question_16"
-                            [color]="'contrast-fade'"
+                            color="contrast-fade"
                             [style.cursor]="'help'"
                             [kbqPlacement]="popUpPlacements.Right"
                             [kbqTooltip]="tooltipText"

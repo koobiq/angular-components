@@ -1,10 +1,11 @@
-import { Path } from '@angular-devkit/core';
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Path } from '@angular-devkit/core';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
-import { visitAll, Visitor } from '../../utils/ast';
+import { visitAll, type Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
+import { capturedGroups } from '../../utils/regexp';
 import { collectInlineTemplateRanges, parseTemplate } from '../../utils/typescript';
 import {
     BEHAVIOUR_NOTE,
@@ -18,7 +19,7 @@ import {
     UNPARSEABLE_TEMPLATE_MESSAGE,
     WRITABLE_MEMBERS
 } from './data';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 const TS_EXT = '.ts';
 const HTML_EXT = '.html';
@@ -320,8 +321,8 @@ function collectRefManualMembers(template: string, refs: string[]): Set<string> 
         // `\bref\.(member)\b` — a template can only read these, so no call/method exclusions are needed.
         const pattern = new RegExp(`\\b${escapeRegExp(ref)}\\.(${members.join('|')})\\b`, 'g');
 
-        for (const match of template.matchAll(pattern)) {
-            found.add(match[1]);
+        for (const member of capturedGroups(template, pattern)) {
+            found.add(member);
         }
     }
 

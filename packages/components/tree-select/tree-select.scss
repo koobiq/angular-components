@@ -1,6 +1,5 @@
-@use '../core/styles/common/select' as *;
-
-@use './tree-select-theme' as *;
+@use '../core/styles/common/select';
+@use './tree-select-theme';
 
 .kbq-tree-select {
     @extend %kbq-select-base;
@@ -21,10 +20,10 @@
         height: 100%;
 
         .kbq-tree-option {
-            @include item-active-area(var(--kbq-size-3xs));
+            @include select.item-active-area(var(--kbq-size-3xs));
         }
     }
 }
 
-@include kbq-tree-select-theme();
-@include kbq-tree-select-typography();
+@include tree-select-theme.kbq-tree-select-theme();
+@include tree-select-theme.kbq-tree-select-typography();

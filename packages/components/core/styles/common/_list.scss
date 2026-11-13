@@ -1,4 +1,4 @@
-@use './tokens' as *;
+@use './tokens';
 
 // This mixin will ensure that lines that overflow the container will hide the overflow and
 // truncate neatly with an ellipsis.
@@ -56,7 +56,7 @@
 
     border: var(--kbq-size-3xs) solid transparent;
 
-    padding: var(--kbq-size-xxs) kbq-difference-series-css-variables([size-m, size-3xs]);
+    padding: var(--kbq-size-xxs) tokens.kbq-difference-series-css-variables([size-m, size-3xs]);
 
     .kbq-list-text {
         @include kbq-list-text();
@@ -78,8 +78,8 @@
     border-right: var(--kbq-size-3xs) solid transparent;
 
     padding-top: var(--kbq-size-xs);
-    padding-left: kbq-difference-series-css-variables([size-m, size-3xs]);
-    padding-right: kbq-difference-series-css-variables([size-m, size-3xs]);
+    padding-left: tokens.kbq-difference-series-css-variables([size-m, size-3xs]);
+    padding-right: tokens.kbq-difference-series-css-variables([size-m, size-3xs]);
     padding-bottom: var(--kbq-size-3xs);
 
     .kbq-list-text {

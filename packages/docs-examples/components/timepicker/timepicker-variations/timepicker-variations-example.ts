@@ -1,13 +1,13 @@
 import { LowerCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import type { DateTime } from 'luxon';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { DateTime } from 'luxon';
 
 /**
  * @title Timepicker variations
@@ -23,8 +23,8 @@ import { DateTime } from 'luxon';
         LuxonDateModule,
         LowerCasePipe
     ],
-    templateUrl: 'timepicker-variations-example.html',
-    styleUrls: ['timepicker-variations-example.css'],
+    templateUrl: './timepicker-variations-example.html',
+    styleUrl: './timepicker-variations-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimepickerVariationsExample {

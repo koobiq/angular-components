@@ -1,9 +1,10 @@
 import { Dir } from '@angular/cdk/bidi';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { CdkScrollable, ScrollDispatcher, ScrollingModule } from '@angular/cdk/scrolling';
-import { Component, ElementRef, Provider, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, ElementRef, type Provider, type Type, viewChild } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { Subject } from 'rxjs';
 import {
     createMouseEvent,
     dispatchFakeEvent,
@@ -11,13 +12,12 @@ import {
     KBQ_ANIMATIONS_CONFIG,
     KbqOverflowShadowContainer
 } from '@koobiq/components/core';
-import { Subject } from 'rxjs';
 import {
     KBQ_NATIVE_SCROLLBAR_OPTIONS,
     KbqNativeScrollbar,
     kbqNativeScrollbarOptionsProvider,
     KbqScrollbar,
-    KbqScrollbarMode,
+    type KbqScrollbarMode,
     kbqScrollbarOptionsProvider,
     KbqScrollbarViewport
 } from './scrollbar';

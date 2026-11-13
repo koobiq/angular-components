@@ -1,7 +1,7 @@
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { ElementRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { KbqCaretRect } from '../form-field/caret-rect';
+import type { KbqCaretRect } from '../form-field/caret-rect';
 import { kbqGetOverlayOriginSize, kbqIsElementOrigin, kbqResolveOverlayOrigin } from './overlay-origin';
 
 /** `CdkOverlayOrigin` injects its own `ElementRef`, so it can only be built in an injection context. */

@@ -1,5 +1,5 @@
-import { Component, DebugElement, Type } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, type DebugElement, type Type } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqFieldset, KbqFieldsetItem, KbqLegend } from './fieldset';

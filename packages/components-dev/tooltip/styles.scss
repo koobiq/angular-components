@@ -12,15 +12,15 @@ dev-app {
     width: 100%;
 
     .dev-li-actual {
-        animation: blink-animation 1s steps(5, start) infinite;
-        -webkit-animation: blink-animation 1s steps(5, start) infinite;
+        animation: dev-blink-animation 1s steps(5, start) infinite;
+        -webkit-animation: dev-blink-animation 1s steps(5, start) infinite;
     }
-    @keyframes blink-animation {
+    @keyframes dev-blink-animation {
         to {
             visibility: hidden;
         }
     }
-    @-webkit-keyframes blink-animation {
+    @-webkit-keyframes dev-blink-animation {
         to {
             visibility: hidden;
         }

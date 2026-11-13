@@ -1,6 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { Component, DebugElement, effect, signal, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, type DebugElement, effect, signal, type Type, viewChild } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import {
     FormControl,
     FormGroup,
@@ -17,10 +17,10 @@ import {
     ErrorStateMatcher,
     KBQ_ANIMATIONS_CONFIG,
     KBQ_CHECKABLE_CLICK_ACTION,
-    KbqCheckedState
+    type KbqCheckedState
 } from '@koobiq/components/core';
 import { KbqError, KbqFormFieldModule, KbqHint } from '@koobiq/components/form-field';
-import { KbqToggleClickAction, KbqToggleComponent, KbqToggleModule } from './index';
+import { type KbqToggleClickAction, KbqToggleComponent, KbqToggleModule } from './index';
 
 const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component], providers }).compileComponents();

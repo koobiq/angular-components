@@ -1,14 +1,14 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChangeDetectorRef, Component, type DebugElement, inject } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ENTER, ESCAPE } from '@koobiq/components/core';
 import {
-    KbqFilter,
+    type KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
-    KbqPipe,
-    KbqPipeTemplate,
+    type KbqPipe,
+    type KbqPipeTemplate,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
 import { KbqBasePipe } from './base-pipe';

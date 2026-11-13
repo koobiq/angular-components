@@ -1,26 +1,26 @@
 <kbq-dropdown #horizontalNavbarDropdownApps="kbqDropdown">
     @for (app of text().apps; track $index) {
-        <button kbq-dropdown-item>{{ app }}</button>
+        <button kbq-dropdown-item type="button">{{ app }}</button>
     }
 </kbq-dropdown>
 
 <kbq-dropdown #horizontalNavbarTasks="kbqDropdown">
-    <button kbq-dropdown-item>{{ text().taskStatuses.open }}</button>
-    <button kbq-dropdown-item>{{ text().taskStatuses.inProgress }}</button>
-    <button kbq-dropdown-item>{{ text().taskStatuses.done }}</button>
-    <button kbq-dropdown-item>{{ text().taskStatuses.canceled }}</button>
+    <button kbq-dropdown-item type="button">{{ text().taskStatuses.open }}</button>
+    <button kbq-dropdown-item type="button">{{ text().taskStatuses.inProgress }}</button>
+    <button kbq-dropdown-item type="button">{{ text().taskStatuses.done }}</button>
+    <button kbq-dropdown-item type="button">{{ text().taskStatuses.canceled }}</button>
 </kbq-dropdown>
 
 <kbq-dropdown #horizontalNavbarProfile="kbqDropdown">
-    <button kbq-dropdown-item>{{ text().profileMenu.settings }}</button>
+    <button kbq-dropdown-item type="button">{{ text().profileMenu.settings }}</button>
     <kbq-divider />
-    <button kbq-dropdown-item>{{ text().administration }}</button>
-    <button kbq-dropdown-item>{{ text().profileMenu.users }}</button>
+    <button kbq-dropdown-item type="button">{{ text().administration }}</button>
+    <button kbq-dropdown-item type="button">{{ text().profileMenu.users }}</button>
     <kbq-divider />
-    <button kbq-dropdown-item>{{ text().profileMenu.downloadApp }}</button>
+    <button kbq-dropdown-item type="button">{{ text().profileMenu.downloadApp }}</button>
     <kbq-divider />
-    <button kbq-dropdown-item>{{ text().profileMenu.switchTenant }}</button>
-    <button kbq-dropdown-item>{{ text().profileMenu.logOut }}</button>
+    <button kbq-dropdown-item type="button">{{ text().profileMenu.switchTenant }}</button>
+    <button kbq-dropdown-item type="button">{{ text().profileMenu.logOut }}</button>
 </kbq-dropdown>
 
 <kbq-navbar>
@@ -28,11 +28,11 @@
         <kbq-navbar-item
             #horizontalNavbarDropdownAppsDropdownTrigger="kbqDropdownTrigger"
             bento
+            kbqTrigger="hover"
             [class.kbq-active]="horizontalNavbarDropdownAppsDropdownTrigger.opened"
             [kbqDropdownTriggerFor]="horizontalNavbarDropdownApps"
             [kbqPlacement]="popUpPlacements.BottomLeft"
             [tooltipText]="text().allApps"
-            [kbqTrigger]="'hover'"
         >
             <i kbq-icon="kbq-bento-menu_16" color="contrast"></i>
         </kbq-navbar-item>
@@ -47,6 +47,7 @@
 
         <button
             kbq-navbar-item
+            type="button"
             class="kbq-active"
             [kbqPlacement]="popUpPlacements.Bottom"
             [tooltipText]="text().dashboards"
@@ -68,7 +69,7 @@
         </kbq-navbar-item>
 
         <kbq-navbar-item>
-            <button kbq-button [color]="'contrast'">
+            <button kbq-button type="button" color="contrast">
                 <span>{{ text().newTask }}</span>
             </button>
         </kbq-navbar-item>
@@ -77,7 +78,7 @@
     <kbq-navbar-container>
         <kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [tooltipText]="text().notifications">
             <i kbq-icon="kbq-bell_16" color="contrast"></i>
-            <kbq-badge [badgeColor]="'error'" [compact]="true">5</kbq-badge>
+            <kbq-badge badgeColor="error" [compact]="true">5</kbq-badge>
         </kbq-navbar-item>
 
         <kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [tooltipText]="text().administration">
@@ -92,11 +93,11 @@
 
         <kbq-navbar-item
             #horizontalNavbarProfileDropdownTrigger="kbqDropdownTrigger"
+            kbqTrigger="hover"
             [class.kbq-active]="horizontalNavbarProfileDropdownTrigger.opened"
             [kbqDropdownTriggerFor]="horizontalNavbarProfile"
             [kbqPlacement]="popUpPlacements.BottomLeft"
             [tooltipText]="text().profile"
-            [kbqTrigger]="'hover'"
         >
             <i kbq-icon="kbq-user_16" color="contrast"></i>
         </kbq-navbar-item>

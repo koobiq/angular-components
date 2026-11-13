@@ -1,14 +1,20 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { KbqButtonColor, KbqButtonModule, KbqButtonStyleInput, KbqButtonStyles } from '@koobiq/components/button';
+import { map } from 'rxjs';
+import {
+    type KbqButtonColor,
+    KbqButtonModule,
+    type KbqButtonStyleInput,
+    KbqButtonStyles
+} from '@koobiq/components/button';
 import { KbqComponentColors, KbqFormattersModule, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
-import { map } from 'rxjs/operators';
 
 type ExampleAction = {
     id: string;
@@ -32,13 +38,14 @@ type ExampleAction = {
         KbqIconModule,
         KbqDropdownModule,
         KbqOverflowItemsModule,
-        KbqFormattersModule
+        KbqFormattersModule,
+        NgOptimizedImage
     ],
     template: `
         <kbq-top-bar>
             <div class="layout-row layout-align-center-center" kbqTopBarContainer placement="start">
                 <div class="layout-row layout-margin-right-l flex-none">
-                    <img alt="example icon" src="https://koobiq.io/assets/example-icon.svg" width="24" height="24" />
+                    <img alt="example icon" ngSrc="https://koobiq.io/assets/example-icon.svg" width="24" height="24" />
                 </div>
                 <div class="kbq-truncate-line example-kbq-top-bar__title" kbqTopBarTitle>
                     <span class="kbq-truncate-line layout-margin-right-xs">Dashboards</span>
@@ -54,6 +61,7 @@ type ExampleAction = {
                     @for (action of actions; track action.id) {
                         <button
                             kbq-button
+                            type="button"
                             [kbqOverflowItem]="action.id"
                             [kbqStyle]="action.style"
                             [color]="action.color"
@@ -75,6 +83,7 @@ type ExampleAction = {
                     <div kbqOverflowItemsResult>
                         <button
                             kbq-button
+                            type="button"
                             aria-label="More"
                             [kbqStyle]="KbqButtonStyles.Transparent"
                             [color]="KbqComponentColors.Contrast"
@@ -86,7 +95,7 @@ type ExampleAction = {
                         <kbq-dropdown #appDropdown="kbqDropdown">
                             @for (action of actions; track action.id) {
                                 @if (kbqOverflowItems.hiddenItemIDs().has(action.id)) {
-                                    <button kbq-dropdown-item>
+                                    <button kbq-dropdown-item type="button">
                                         {{ action.text || action.id }}
                                     </button>
                                 }

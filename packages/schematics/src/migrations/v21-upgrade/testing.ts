@@ -1,10 +1,10 @@
-import { JsonValue, workspaces } from '@angular-devkit/core';
-import { Tree } from '@angular-devkit/schematics';
+import type { JsonValue, workspaces } from '@angular-devkit/core';
+import type { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
 import { createTestApp } from '../../utils/testing';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
 
@@ -31,6 +31,9 @@ export async function runV21Upgrade(
     const appTree: Tree = await createTestApp(runner, { style: 'scss' });
     const projects = (await getWorkspace(appTree)).projects as unknown as workspaces.ProjectDefinitionCollection;
     const [project] = projects.keys();
+
+    if (project === undefined) throw new Error('createTestApp made a workspace without projects');
+
     const root = `/${projects.get(project)!.root}/src/app`;
     const messages: string[] = [];
 

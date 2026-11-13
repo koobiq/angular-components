@@ -4,10 +4,10 @@
  * that drives it and a single `clampedText` locale section. Splitting them would duplicate all
  * three across two packages for no consumer-visible gain.
  */
-import { InjectionToken, Provider, Signal } from '@angular/core';
+import { InjectionToken, type Provider, type Signal } from '@angular/core';
 import {
-    KbqClampedTextLocaleConfiguration,
-    KbqDeepPartial,
+    type KbqClampedTextLocaleConfiguration,
+    type KbqDeepPartial,
     kbqInjectLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
     ruRULocaleData

@@ -1,7 +1,7 @@
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { firstValueFrom } from 'rxjs';
 import type { MockInstance } from 'vitest';
 import { KbqIconRegistry } from './icon-registry';

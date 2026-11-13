@@ -1,13 +1,13 @@
-import { CdkMonitorFocus, CdkTrapFocus, FocusMonitor, FocusOrigin, InteractivityChecker } from '@angular/cdk/a11y';
+import { CdkMonitorFocus, CdkTrapFocus, FocusMonitor, type FocusOrigin, InteractivityChecker } from '@angular/cdk/a11y';
 import { hasModifierKey } from '@angular/cdk/keycodes';
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import {
     CdkConnectedOverlay,
-    ConnectedPosition,
+    type ConnectedPosition,
     Overlay,
     ScrollDispatcher,
-    ScrollStrategy
+    type ScrollStrategy
 } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import {
@@ -33,12 +33,29 @@ import {
     output,
     PendingTasks,
     signal,
-    TemplateRef,
+    type TemplateRef,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { AbstractControl, ControlValueAccessor, NgControl } from '@angular/forms';
+import { AbstractControl, type ControlValueAccessor, NgControl } from '@angular/forms';
+import {
+    catchError,
+    concat,
+    concatMap,
+    debounceTime,
+    defaultIfEmpty,
+    ignoreElements,
+    map,
+    merge,
+    type Observable,
+    of,
+    startWith,
+    take,
+    takeUntil,
+    takeWhile,
+    timer
+} from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     isElement,
@@ -48,7 +65,7 @@ import {
     KBQ_WINDOW,
     kbqAnimationsDisabled,
     KbqComponentColors,
-    KbqConnectedOverlayOriginProvider,
+    type KbqConnectedOverlayOriginProvider,
     KbqLocaleOverridesDirective,
     PopUpPlacements,
     runCompareWith
@@ -58,8 +75,6 @@ import { KbqFormField, KbqLabel } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSelect } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { concat, debounceTime, merge, Observable, of, startWith, timer } from 'rxjs';
-import { catchError, concatMap, defaultIfEmpty, ignoreElements, map, take, takeUntil, takeWhile } from 'rxjs/operators';
 
 const baseClass = 'kbq-inline-edit';
 
@@ -1217,7 +1232,12 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
         if (!formFieldRefList.length || !Array.isArray(value)) return;
 
         value.forEach((controlValue, index) => {
-            const control = this.coerceControl(formFieldRefList[index]);
+            const formFieldRef = formFieldRefList[index];
+
+            // `getValueHandler` can return more values than there are fields, and a field can leave the view mid-edit.
+            if (!formFieldRef) return;
+
+            const control = this.coerceControl(formFieldRef);
 
             if (control instanceof AbstractControl) {
                 control.setValue(controlValue);

@@ -1,5 +1,4 @@
-@use '../core/styles/common/tokens' as *;
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
 .kbq-markdown {
     display: block;
@@ -55,7 +54,7 @@
         padding: var(--kbq-markdown-list-size-ul-padding);
     }
 
-    .kbq-markdown__ul > li:before {
+    .kbq-markdown__ul > li::before {
         content: '—';
         display: block;
         position: absolute;
@@ -70,7 +69,7 @@
         counter-reset: li;
 
         > li {
-            &:before {
+            &::before {
                 content: counter(li) '.';
                 counter-increment: li;
                 padding-right: var(--kbq-markdown-list-size-ol-number-padding-right);
@@ -117,7 +116,7 @@
 
     .kbq-markdown__pre,
     .kbq-markdown__code {
-        @include kbq-squircle(var(--kbq-markdown-code-size-border-radius));
+        @include squircle.kbq-squircle(var(--kbq-markdown-code-size-border-radius));
     }
 
     .kbq-markdown__code:not(.kbq-markdown__pre > .kbq-markdown__code) {

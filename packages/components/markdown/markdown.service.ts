@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { marked, MarkedOptions } from 'marked';
+import { marked, type MarkedOptions } from 'marked';
 import { CLASS_PREFIX, MARKDOWN_TAGS_TO_CLASS_ALIAS, MARKDOWN_WHOLE_TAGS_TO_CLASS_ALIAS } from './markdown.values';
 
 /**

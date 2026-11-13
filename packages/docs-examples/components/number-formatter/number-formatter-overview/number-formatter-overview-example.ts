@@ -1,15 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { delay, distinctUntilChanged } from 'rxjs';
 import {
     KBQ_LOCALE_SERVICE,
     KbqFormattersModule,
-    KbqLocaleService,
+    type KbqLocaleService,
     KbqNormalizeWhitespace
 } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTableModule } from '@koobiq/components/table';
-import { delay } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
 
 /**
  * @title Number-formatter

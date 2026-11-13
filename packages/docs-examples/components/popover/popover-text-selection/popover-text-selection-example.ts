@@ -1,11 +1,11 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, type ElementRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { debounceTime, fromEvent } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqCaretRect, kbqCreateCaretOrigin, kbqGetSelectionRect } from '@koobiq/components/core';
+import { type KbqCaretRect, kbqCreateCaretOrigin, kbqGetSelectionRect } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
-import { debounceTime, fromEvent } from 'rxjs';
 
 /** `Node.TEXT_NODE`, spelled out so that the example never reads a DOM global. */
 const TEXT_NODE = 3;
@@ -46,6 +46,7 @@ type Format = (typeof FORMATS)[number];
                 @for (format of formats; track format.tag) {
                     <button
                         kbq-button
+                        type="button"
                         kbqStyle="transparent"
                         [attr.aria-label]="format.label"
                         [attr.aria-pressed]="active().includes(format.tag)"
@@ -164,13 +165,15 @@ export class PopoverTextSelectionExample {
         if (wrapper) {
             // The whole wrapper goes, so a selection inside a longer formatted run unformats that run.
             const contents = Array.from(wrapper.childNodes);
+            const first = contents.at(0);
+            const last = contents.at(-1);
 
-            if (!contents.length) return;
+            if (!first || !last) return;
 
             wrapper.replaceWith(...contents);
 
-            next.setStartBefore(contents[0]);
-            next.setEndAfter(contents[contents.length - 1]);
+            next.setStartBefore(first);
+            next.setEndAfter(last);
         } else {
             const element = this.document.createElement(format.tag);
 

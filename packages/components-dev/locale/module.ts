@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KBQ_LOCALE_SERVICE,
+    type KbqLocaleItem,
     KbqLocaleOverridesDirective,
-    KbqLocaleService,
+    type KbqLocaleService,
     KbqLocaleServiceModule,
     KbqOptionModule
 } from '@koobiq/components/core';
@@ -13,6 +14,8 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqSelectModule } from '@koobiq/components/select';
+
+type DevLocaleItem = KbqLocaleItem & { selected: boolean };
 
 @Component({
     selector: 'dev-app',
@@ -29,23 +32,25 @@ import { KbqSelectModule } from '@koobiq/components/select';
         KbqSelectModule
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE);
 
-    selectedLanguage;
-    languages;
+    selectedLanguage?: DevLocaleItem;
+    languages: DevLocaleItem[];
 
     constructor() {
         this.languages = this.localeService.locales.items.map((item) => ({ ...item, selected: false }));
 
-        this.selectLanguage(this.languages[0]);
+        if (this.languages[0]) {
+            this.selectLanguage(this.languages[0]);
+        }
     }
 
-    selectLanguage(language) {
+    selectLanguage(language: DevLocaleItem) {
         this.languages.forEach((item) => (item.selected = false));
         this.selectedLanguage = language;
         this.selectedLanguage.selected = true;

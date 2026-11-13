@@ -1,7 +1,6 @@
-import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { type Observable, take } from 'rxjs';
 import { BaseTreeControl } from './base-tree-control';
-import { KbqTreeControlOptions } from './tree-control';
+import type { KbqTreeControlOptions } from './tree-control';
 
 /** Nested tree control. Able to expand/collapse a subtree recursively for NestedNode type. */
 export class NestedTreeControl<T, K = T> extends BaseTreeControl<T, K> {
@@ -13,7 +12,7 @@ export class NestedTreeControl<T, K = T> extends BaseTreeControl<T, K> {
      * an asynchronous source yields an incomplete — usually empty — descendant list.
      */
     constructor(
-        public getChildren: (dataNode: T) => Observable<T[]>,
+        public override getChildren: (dataNode: T) => Observable<T[]>,
         options?: KbqTreeControlOptions<T, K>
     ) {
         super();
@@ -39,7 +38,7 @@ export class NestedTreeControl<T, K = T> extends BaseTreeControl<T, K> {
 
     /** Gets a list of descendant dataNodes of a subtree rooted at given data node recursively. */
     getDescendants(dataNode: T): T[] {
-        const descendants = [];
+        const descendants: T[] = [];
 
         this._getDescendants(descendants, dataNode);
 

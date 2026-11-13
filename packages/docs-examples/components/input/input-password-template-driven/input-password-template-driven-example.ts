@@ -1,5 +1,12 @@
 import { ChangeDetectionStrategy, Component, Directive, signal } from '@angular/core';
-import { AbstractControl, FormsModule, NG_VALIDATORS, ValidationErrors, Validator, Validators } from '@angular/forms';
+import {
+    type AbstractControl,
+    FormsModule,
+    NG_VALIDATORS,
+    type ValidationErrors,
+    type Validator,
+    Validators
+} from '@angular/forms';
 import { PasswordValidators } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 

@@ -6,23 +6,23 @@ import {
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
     KbqTreeModule,
-    KbqTreeOption,
+    type KbqTreeOption,
     KbqTreeSelection,
-    KbqTreeSelectionChange
+    type KbqTreeSelectionChange
 } from '@koobiq/components/tree';
 
 export class FileNode {
-    children: FileNode[];
-    name: string;
+    children?: FileNode[];
+    name = '';
     type: any;
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-    name: string;
+    name = '';
     type: any;
-    level: number;
-    expandable: boolean;
+    level = 0;
+    expandable = false;
     parent: any;
 }
 
@@ -189,18 +189,9 @@ abstract class TreeParams {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeDescendantsSubcategoriesExample extends TreeParams {
-    treeControl: FlatTreeControl<FileFlatNode>;
-    treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
-    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     modelValue: any = ['docs'];
 
     readonly tree = viewChild.required(KbqTreeSelection);
-
-    constructor() {
-        super();
-    }
 
     onSelectionChange($event: KbqTreeSelectionChange<KbqTreeOption>) {
         const option: KbqTreeOption = $event.option;
@@ -212,7 +203,7 @@ export class TreeDescendantsSubcategoriesExample extends TreeParams {
         this.toggleParents(($event.option.data as any)?.parent);
     }
 
-    private toggleParents(parent) {
+    private toggleParents(parent: FileFlatNode | null) {
         if (!parent) {
             return;
         }

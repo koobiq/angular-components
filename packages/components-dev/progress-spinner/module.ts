@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, type OnDestroy, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqProgressSpinnerModule, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
+import { KbqProgressSpinnerModule, type ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import {
     ProgressSpinnerIndeterminateExample,
     ProgressSpinnerOverviewExample
@@ -28,7 +28,7 @@ export class DevDocsExamples {}
     selector: 'dev-app',
     imports: [KbqProgressSpinnerModule, FormsModule, DevDocsExamples, DevThemeToggle],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -37,10 +37,10 @@ export class DevApp implements OnDestroy {
 
     mode: ProgressSpinnerMode = 'determinate';
     percent: number = 0;
-    intervalId: number;
+    intervalId: ReturnType<typeof setInterval>;
 
     constructor() {
-        setInterval(() => (this.percent = (this.percent + STEP) % (MAX_PERCENT + STEP)), INTERVAL);
+        this.intervalId = setInterval(() => (this.percent = (this.percent + STEP) % (MAX_PERCENT + STEP)), INTERVAL);
     }
 
     ngOnDestroy() {

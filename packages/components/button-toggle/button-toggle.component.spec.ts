@@ -1,9 +1,10 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
-import { Component, DebugElement, effect, signal, viewChild, viewChildren } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, type DebugElement, effect, signal, viewChild, viewChildren } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { EMPTY } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     dispatchKeyboardEvent,
@@ -16,8 +17,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleDirective } from '@koobiq/components/title';
-import { EMPTY } from 'rxjs';
-import { KbqButtonToggle, KbqButtonToggleChange, KbqButtonToggleGroup, KbqButtonToggleModule } from './index';
+import { KbqButtonToggle, type KbqButtonToggleChange, KbqButtonToggleGroup, KbqButtonToggleModule } from './index';
 
 describe('KbqButtonToggle with forms', () => {
     beforeEach(() => {
@@ -1563,10 +1563,10 @@ describe('KbqButtonToggle called from an effect', () => {
     template: `
         <kbq-button-toggle-group [disabled]="isGroupDisabled" [vertical]="isVertical" [(value)]="groupValue">
             @if (renderFirstToggle) {
-                <kbq-button-toggle [value]="'test1'">Test1</kbq-button-toggle>
+                <kbq-button-toggle value="test1">Test1</kbq-button-toggle>
             }
-            <kbq-button-toggle [value]="'test2'">Test2</kbq-button-toggle>
-            <kbq-button-toggle [value]="'test3'">Test3</kbq-button-toggle>
+            <kbq-button-toggle value="test2">Test2</kbq-button-toggle>
+            <kbq-button-toggle value="test3">Test3</kbq-button-toggle>
         </kbq-button-toggle-group>
     `
 })
@@ -1604,9 +1604,9 @@ class ButtonToggleGroupWithNgModel {
     imports: [KbqButtonModule, KbqButtonToggleModule],
     template: `
         <kbq-button-toggle-group [disabled]="isGroupDisabled" [multiple]="isMultiple" [vertical]="isVertical">
-            <kbq-button-toggle [value]="'eggs'">Eggs</kbq-button-toggle>
-            <kbq-button-toggle [value]="'flour'">Flour</kbq-button-toggle>
-            <kbq-button-toggle [value]="'sugar'">Sugar</kbq-button-toggle>
+            <kbq-button-toggle value="eggs">Eggs</kbq-button-toggle>
+            <kbq-button-toggle value="flour">Flour</kbq-button-toggle>
+            <kbq-button-toggle value="sugar">Sugar</kbq-button-toggle>
         </kbq-button-toggle-group>
     `
 })
@@ -1646,9 +1646,9 @@ class StandaloneButtonToggle {
 @Component({
     imports: [KbqButtonModule, KbqButtonToggleModule],
     template: `
-        <kbq-button-toggle-group [value]="'red'" (change)="lastEvent = $event">
-            <kbq-button-toggle [value]="'red'">Value Red</kbq-button-toggle>
-            <kbq-button-toggle [value]="'green'">Value Green</kbq-button-toggle>
+        <kbq-button-toggle-group value="red" (change)="lastEvent = $event">
+            <kbq-button-toggle value="red">Value Red</kbq-button-toggle>
+            <kbq-button-toggle value="green">Value Green</kbq-button-toggle>
         </kbq-button-toggle-group>
     `
 })
@@ -1662,8 +1662,8 @@ class ButtonToggleGroupWithInitialValue {
     template: `
         <span [title]="group.value"></span>
         <kbq-button-toggle-group #group="kbqButtonToggleGroup" [(value)]="value">
-            <kbq-button-toggle [value]="'red'">Value Red</kbq-button-toggle>
-            <kbq-button-toggle [value]="'green'">Value Green</kbq-button-toggle>
+            <kbq-button-toggle value="red">Value Red</kbq-button-toggle>
+            <kbq-button-toggle value="green">Value Green</kbq-button-toggle>
         </kbq-button-toggle-group>
     `
 })
@@ -1678,8 +1678,8 @@ class ButtonToggleGroupWithValueReadBeforeIt {
     template: `
         <span [title]="group.value"></span>
         <kbq-button-toggle-group #group="kbqButtonToggleGroup" multiple [(value)]="values">
-            <kbq-button-toggle [value]="'one'">Value One</kbq-button-toggle>
-            <kbq-button-toggle [value]="'two'">Value Two</kbq-button-toggle>
+            <kbq-button-toggle value="one">Value One</kbq-button-toggle>
+            <kbq-button-toggle value="two">Value Two</kbq-button-toggle>
         </kbq-button-toggle-group>
     `
 })
@@ -1695,7 +1695,7 @@ class MultipleButtonToggleGroupWithValueReadBeforeIt {
         <span [attr.data-value]="group.value"></span>
         <kbq-button-toggle-group #group="kbqButtonToggleGroup" [(value)]="value">
             @if (renderLate) {
-                <kbq-button-toggle [value]="'late'">Value Late</kbq-button-toggle>
+                <kbq-button-toggle value="late">Value Late</kbq-button-toggle>
             }
         </kbq-button-toggle-group>
     `
@@ -1711,8 +1711,8 @@ class UnmatchedButtonToggleGroupWithValueReadBeforeIt {
     template: `
         <span [title]="group.value"></span>
         <kbq-button-toggle-group #group="kbqButtonToggleGroup" [(value)]="value">
-            <kbq-button-toggle [value]="'red'">Value Red</kbq-button-toggle>
-            <kbq-button-toggle [value]="'green'" [checked]="true">Value Green</kbq-button-toggle>
+            <kbq-button-toggle value="red">Value Red</kbq-button-toggle>
+            <kbq-button-toggle value="green" [checked]="true">Value Green</kbq-button-toggle>
         </kbq-button-toggle-group>
     `
 })
@@ -1725,9 +1725,9 @@ class ButtonToggleGroupWithPrecheckedToggle {
     imports: [KbqButtonModule, KbqButtonToggleModule, FormsModule, ReactiveFormsModule],
     template: `
         <kbq-button-toggle-group [formControl]="control">
-            <kbq-button-toggle [value]="'red'">Value Red</kbq-button-toggle>
-            <kbq-button-toggle [value]="'green'">Value Green</kbq-button-toggle>
-            <kbq-button-toggle [value]="'blue'">Value Blue</kbq-button-toggle>
+            <kbq-button-toggle value="red">Value Red</kbq-button-toggle>
+            <kbq-button-toggle value="green">Value Green</kbq-button-toggle>
+            <kbq-button-toggle value="blue">Value Blue</kbq-button-toggle>
         </kbq-button-toggle-group>
     `
 })
@@ -1740,7 +1740,7 @@ class ButtonToggleGroupWithFormControl {
     template: `
         <kbq-button-toggle-group [formControl]="control" [multiple]="multiple" (valueChange)="valueChange($event)">
             <kbq-button-toggle [value]="first">First</kbq-button-toggle>
-            <kbq-button-toggle [value]="'green'">Green</kbq-button-toggle>
+            <kbq-button-toggle value="green">Green</kbq-button-toggle>
         </kbq-button-toggle-group>
     `
 })
@@ -1757,7 +1757,7 @@ class ButtonToggleGroupWithChangingToggleValue {
     template: `
         <kbq-button-toggle-group [(value)]="value">
             <kbq-button-toggle [value]="first">First</kbq-button-toggle>
-            <kbq-button-toggle [value]="'green'">Green</kbq-button-toggle>
+            <kbq-button-toggle value="green">Green</kbq-button-toggle>
         </kbq-button-toggle-group>
     `
 })
@@ -1774,9 +1774,9 @@ class TwoWayButtonToggleGroupWithChangingToggleValue {
     template: `
         <kbq-button-toggle-group [formControl]="control">
             @if (renderRed) {
-                <kbq-button-toggle [value]="'red'">Value Red</kbq-button-toggle>
+                <kbq-button-toggle value="red">Value Red</kbq-button-toggle>
             }
-            <kbq-button-toggle [value]="'green'">Value Green</kbq-button-toggle>
+            <kbq-button-toggle value="green">Value Green</kbq-button-toggle>
         </kbq-button-toggle-group>
     `
 })
@@ -1939,12 +1939,12 @@ const EFFECT_RUN_LIMIT = 10;
     imports: [KbqButtonToggleModule],
     template: `
         <kbq-button-toggle-group #group="kbqButtonToggleGroup">
-            <kbq-button-toggle [value]="'first'">First</kbq-button-toggle>
-            <kbq-button-toggle [value]="'second'">Second</kbq-button-toggle>
+            <kbq-button-toggle value="first">First</kbq-button-toggle>
+            <kbq-button-toggle value="second">Second</kbq-button-toggle>
         </kbq-button-toggle-group>
 
         <kbq-button-toggle-group multiple>
-            <kbq-button-toggle [value]="'third'">Third</kbq-button-toggle>
+            <kbq-button-toggle value="third">Third</kbq-button-toggle>
         </kbq-button-toggle-group>
     `
 })

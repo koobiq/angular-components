@@ -1,19 +1,19 @@
-import { Direction, Directionality } from '@angular/cdk/bidi';
+import { type Direction, Directionality } from '@angular/cdk/bidi';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { ViewportRuler } from '@angular/cdk/scrolling';
-import { Component, Injectable, Provider, signal, Type } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, Injectable, type Provider, signal, type Type } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { BehaviorSubject, EMPTY, type Observable, Subject } from 'rxjs';
 import { KBQ_WINDOW } from '@koobiq/components/core';
-import { BehaviorSubject, EMPTY, Observable, Subject } from 'rxjs';
 import {
     fitSplitterSizes,
     KbqSplitter,
-    KbqSplitterAppearance,
+    type KbqSplitterAppearance,
     kbqSplitterOptionsProvider,
-    KbqSplitterOrientation,
+    type KbqSplitterOrientation,
     KbqSplitterPanel,
-    KbqSplitterSize,
+    type KbqSplitterSize,
     resizeSplitterSizesAt,
     resolveSplitterSize,
     snapSplitterSize

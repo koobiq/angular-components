@@ -12,7 +12,7 @@ import {
     input,
     linkedSignal,
     numberAttribute,
-    OnInit,
+    type OnInit,
     output,
     signal,
     untracked,
@@ -20,6 +20,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { debounceTime, Subject } from 'rxjs';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import {
     KBQ_A11Y_LOCALE_CONFIGURATION,
@@ -31,11 +32,9 @@ import {
     KbqStateSaving
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqResizable, KbqResizer, KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
+import { KbqResizable, KbqResizer, type KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { SizeL } from '@koobiq/design-tokens';
-import { Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
 
 @Component({
     selector: 'kbq-content-panel-aside',

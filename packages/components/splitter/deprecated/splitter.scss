@@ -1,4 +1,4 @@
-@use './splitter-theme' as *;
+@use './splitter-theme';
 
 .kbq-splitter-component {
     display: flex;
@@ -48,4 +48,4 @@
     }
 }
 
-@include kbq-splitter-theme();
+@include splitter-theme.kbq-splitter-theme();

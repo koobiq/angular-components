@@ -3,27 +3,28 @@ import { CdkScrollable, FlexibleConnectedPositionStrategy, OverlayKeyboardDispat
 import {
     ChangeDetectionStrategy,
     Component,
-    ComponentRef,
-    EmbeddedViewRef,
-    Injector,
-    TemplateRef,
-    Type,
-    ViewContainerRef,
-    ViewEncapsulation,
-    ViewRef,
+    type ComponentRef,
+    type EmbeddedViewRef,
     forwardRef,
     inject,
-    viewChild
+    Injector,
+    type TemplateRef,
+    type Type,
+    viewChild,
+    ViewContainerRef,
+    ViewEncapsulation,
+    type ViewRef
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { kbqInjectA11yLocaleConfiguration } from '@koobiq/components/core';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqToastService } from './toast.service';
-import { KBQ_TOAST_STACK, KbqToastData, KbqToastTemplateContext } from './toast.type';
+import { KBQ_TOAST_STACK, KbqToastData, type KbqToastTemplateContext } from './toast.type';
 
 @Component({
     selector: 'kbq-toast-container',
     template: '<ng-container #container />',
-    styleUrls: ['./toast-container.component.scss'],
+    styleUrl: './toast-container.component.scss',
     // A container written into a consumer's template has no stack above it — `KbqToastService` provides
     // itself only for the container it creates — so `createToast()` would leave the toast without one.
     // `forwardRef` because the service imports this file back.

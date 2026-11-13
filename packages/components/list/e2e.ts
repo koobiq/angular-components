@@ -1,12 +1,12 @@
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, computed, signal, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal, type WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqOptionModule } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqListModule, KbqListSelectionDroppedEvent } from '@koobiq/components/list';
+import { KbqListModule, type KbqListSelectionDroppedEvent } from '@koobiq/components/list';
 
 @Component({
     selector: 'e2e-list-states',

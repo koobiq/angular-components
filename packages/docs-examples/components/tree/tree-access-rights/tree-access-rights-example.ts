@@ -1,5 +1,6 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, viewChild } from '@angular/core';
+import { type AfterViewInit, ChangeDetectionStrategy, Component, type OnDestroy, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import {
     FlatTreeControl,
     KbqTreeFlatDataSource,
@@ -7,20 +8,19 @@ import {
     KbqTreeModule,
     KbqTreeSelection
 } from '@koobiq/components/tree';
-import { Subscription } from 'rxjs';
 
 export class FileNode {
-    children: FileNode[];
-    name: string;
+    children?: FileNode[];
+    name = '';
     type: any;
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-    name: string;
+    name = '';
     type: any;
-    level: number;
-    expandable: boolean;
+    level = 0;
+    expandable = false;
     parent: any;
 }
 
@@ -217,11 +217,6 @@ abstract class TreeParams {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeAccessRightsExample extends TreeParams implements AfterViewInit, OnDestroy {
-    treeControl: FlatTreeControl<FileFlatNode>;
-    treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
-    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     modelValue: any = [];
     filteredModel: any = [];
 
@@ -229,12 +224,8 @@ export class TreeAccessRightsExample extends TreeParams implements AfterViewInit
 
     readonly tree = viewChild.required(KbqTreeSelection);
 
-    constructor() {
-        super();
-    }
-
     ngAfterViewInit(): void {
-        const handleSingleOption = (items, cb) => {
+        const handleSingleOption = (items: FileFlatNode[], cb: (item: FileFlatNode) => void) => {
             // Process only when a single item is selected
             if (items.length === 1) {
                 const singleOrParent: any = items[0];
@@ -302,8 +293,8 @@ export class TreeAccessRightsExample extends TreeParams implements AfterViewInit
         this.selectionChangeSubscription.unsubscribe();
     }
 
-    onModelChange($event) {
-        this.modelValue = $event;
+    onModelChange(event: string[]) {
+        this.modelValue = event;
         this.filteredModel = this.tree()
             .selectionModel.selected.filter((option: any) => !option.disabled)
             .map((node: any) => this.treeControl.getValue(node));

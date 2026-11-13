@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@angular/core';
 import { KbqIcon } from './icon.component';
 
 /**
@@ -12,7 +12,7 @@ import { KbqIcon } from './icon.component';
 @Component({
     selector: `[kbq-icon-item]`,
     template: '<ng-content />',
-    styleUrls: ['icon-item.scss', 'icon-item-tokens.scss'],
+    styleUrls: ['./icon-item.scss', './icon-item-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

@@ -12,8 +12,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
         KbqButtonModule,
         KbqIconModule
     ],
-    templateUrl: 'button-fill-and-style-only-icon-example.html',
-    styleUrls: ['button-fill-and-style-only-icon-example.css'],
+    templateUrl: './button-fill-and-style-only-icon-example.html',
+    styleUrl: './button-fill-and-style-only-icon-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonFillAndStyleOnlyIconExample {

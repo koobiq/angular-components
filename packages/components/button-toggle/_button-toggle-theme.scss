@@ -1,4 +1,4 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-button-toggle-state($state-name) {
     // The style class is named on purpose. The inner button is a transparent `KbqButton`, so
@@ -61,6 +61,6 @@
 
 @mixin kbq-button-toggle-typography() {
     .kbq-button-toggle .kbq-button-toggle-wrapper {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
     }
 }

@@ -81,7 +81,7 @@
     }
 }
 
-@mixin _icon($left-icon, $right-icon) {
+@mixin -icon($left-icon, $right-icon) {
     .kbq-icon.kbq-empty {
         color: $left-icon;
 
@@ -104,7 +104,7 @@
             color: var(--kbq-foreground-theme);
             background: var(--kbq-states-background-theme-less-active);
 
-            @include _icon(var(--kbq-icon-theme), var(--kbq-icon-theme));
+            @include -icon(var(--kbq-icon-theme), var(--kbq-icon-theme));
 
             &:hover:not(.kbq-disabled),
             &.kbq-hover:not(.kbq-disabled) {
@@ -125,7 +125,7 @@
                 color: var(--kbq-states-foreground-disabled);
                 background: var(--kbq-states-background-disabled);
 
-                @include _icon(var(--kbq-states-icon-disabled), var(--kbq-states-icon-disabled));
+                @include -icon(var(--kbq-states-icon-disabled), var(--kbq-states-icon-disabled));
             }
         }
     }

@@ -10,7 +10,7 @@ import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
     selector: 'scrollbar-virtual-scroll-example',
     imports: [KbqScrollbarViewport, ScrollingModule, KbqButtonModule],
     template: `
-        <button kbq-button (click)="addItems()">Add items</button>
+        <button kbq-button type="button" (click)="addItems()">Add items</button>
 
         <cdk-virtual-scroll-viewport kbqScrollbarViewport class="example-scrollbar" itemSize="32">
             <div *cdkVirtualFor="let item of items()" class="example-item">{{ item }}</div>

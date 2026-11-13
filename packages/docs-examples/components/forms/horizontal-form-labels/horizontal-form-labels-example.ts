@@ -13,8 +13,8 @@ import { KbqInputModule } from '@koobiq/components/input';
         KbqFormsModule,
         KbqInputModule
     ],
-    templateUrl: 'horizontal-form-labels-example.html',
-    styleUrls: ['horizontal-form-labels-example.css'],
+    templateUrl: './horizontal-form-labels-example.html',
+    styleUrl: './horizontal-form-labels-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HorizontalFormLabelsExample {

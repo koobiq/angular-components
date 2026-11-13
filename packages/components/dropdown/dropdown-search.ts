@@ -1,11 +1,11 @@
-import { AfterContentInit, Directive, inject } from '@angular/core';
+import { type AfterContentInit, Directive, inject } from '@angular/core';
 import { ESCAPE, LEFT_ARROW, RIGHT_ARROW } from '@koobiq/components/core';
 import { KBQ_FORM_FIELD, KBQ_FORM_FIELD_DEFAULT_OPTIONS } from '@koobiq/components/form-field';
+import { KBQ_DROPDOWN_PANEL } from './dropdown.types';
 import {
     throwKbqDropdownSearchMissingInputError,
     throwKbqDropdownSearchMissingNgControlError
 } from './dropdown-errors';
-import { KBQ_DROPDOWN_PANEL } from './dropdown.types';
 
 /**
  * Marks a `kbq-form-field` projected into a `kbq-dropdown` as the panel's search field.

@@ -1,10 +1,10 @@
-import { _IdGenerator, FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { _IdGenerator, FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
 import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 import { Platform } from '@angular/cdk/platform';
 import {
-    AfterContentChecked,
-    AfterContentInit,
-    AfterViewInit,
+    type AfterContentChecked,
+    type AfterContentInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -12,29 +12,29 @@ import {
     computed,
     contentChild,
     contentChildren,
-    DoCheck,
+    type DoCheck,
     effect,
-    ElementRef,
+    type ElementRef,
     forwardRef,
     inject,
     Injector,
     input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
+    type OnChanges,
+    type OnDestroy,
+    type OnInit,
     output,
-    Provider,
-    QueryList,
+    type Provider,
+    type QueryList,
     Renderer2,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { ControlValueAccessor, FormGroupDirective, NG_VALUE_ACCESSOR, NgControl, NgForm } from '@angular/forms';
+import { type ControlValueAccessor, FormGroupDirective, NG_VALUE_ACCESSOR, NgControl, NgForm } from '@angular/forms';
 import {
-    CanUpdateErrorState,
+    type CanUpdateErrorState,
     ErrorStateMatcher,
     KbqColorDirective,
     KbqErrorStateTracker,
@@ -504,8 +504,8 @@ export class KbqRadioGroup
 
 @Component({
     selector: 'kbq-radio-button',
-    templateUrl: 'radio.component.html',
-    styleUrls: ['radio.scss', 'radio-tokens.scss'],
+    templateUrl: './radio.component.html',
+    styleUrls: ['./radio.scss', './radio-tokens.scss'],
     providers: [
         kbqHintParentFactoryProvider(() => {
             const button = inject(KbqRadioButton);

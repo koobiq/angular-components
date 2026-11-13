@@ -1127,7 +1127,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Custom checkbox block",
     "componentName": "BlockCheckboxExample",
     "files": [
-      "block-checkbox-example.ts"
+      "block-checkbox-example.ts",
+      "block-checkbox-example.css"
     ],
     "localImportFiles": [],
     "selector": "block-checkbox-example",
@@ -3878,7 +3879,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "ListIntermediateStateExample",
     "files": [
       "list-intermediate-state-example.ts",
-      "./list-intermediate-state-example.html"
+      "list-intermediate-state-example.html"
     ],
     "localImportFiles": [],
     "selector": "list-intermediate-state-example",
@@ -4023,7 +4024,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownArticleExample",
     "files": [
       "markdown-article-example.ts",
-      "./markdown-article-example.html"
+      "markdown-article-example.html"
     ],
     "localImportFiles": [],
     "selector": "markdown-article-example",
@@ -4036,7 +4037,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownCodeBlockExample",
     "files": [
       "markdown-code-block-example.ts",
-      "./markdown-code-block-example.html"
+      "markdown-code-block-example.html"
     ],
     "localImportFiles": [],
     "selector": "markdown-code-block-example",
@@ -4049,7 +4050,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownCodeExample",
     "files": [
       "markdown-code-example.ts",
-      "./markdown-code-example.html"
+      "markdown-code-example.html"
     ],
     "localImportFiles": [],
     "selector": "markdown-code-example",
@@ -4062,7 +4063,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownDividerExample",
     "files": [
       "markdown-divider-example.ts",
-      "./markdown-divider-example.html"
+      "markdown-divider-example.html"
     ],
     "localImportFiles": [],
     "selector": "markdown-divider-example",
@@ -4075,7 +4076,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownHeadersCombinationsExample",
     "files": [
       "markdown-headers-combinations-example.ts",
-      "./markdown-headers-combinations-example.html"
+      "markdown-headers-combinations-example.html"
     ],
     "localImportFiles": [],
     "selector": "markdown-headers-combinations-example",
@@ -4088,7 +4089,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownImageExample",
     "files": [
       "markdown-image-example.ts",
-      "./markdown-image-example.html"
+      "markdown-image-example.html"
     ],
     "localImportFiles": [],
     "selector": "markdown-image-example",
@@ -4113,7 +4114,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownLineBreakExample",
     "files": [
       "markdown-line-break-example.ts",
-      "./markdown-line-break-example.html"
+      "markdown-line-break-example.html"
     ],
     "localImportFiles": [],
     "selector": "markdown-line-break-example",
@@ -4126,7 +4127,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownLinkExample",
     "files": [
       "markdown-link-example.ts",
-      "./markdown-link-example.html"
+      "markdown-link-example.html"
     ],
     "localImportFiles": [],
     "selector": "markdown-link-example",
@@ -4139,7 +4140,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownListExample",
     "files": [
       "markdown-list-example.ts",
-      "./markdown-list-example.html"
+      "markdown-list-example.html"
     ],
     "localImportFiles": [],
     "selector": "markdown-list-example",
@@ -4152,7 +4153,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownOverviewExample",
     "files": [
       "markdown-overview-example.ts",
-      "./markdown-overview-example.html"
+      "markdown-overview-example.html"
     ],
     "localImportFiles": [],
     "selector": "markdown-overview-example",
@@ -4165,7 +4166,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownParagraphExample",
     "files": [
       "markdown-paragraph-example.ts",
-      "./markdown-paragraph-example.html"
+      "markdown-paragraph-example.html"
     ],
     "localImportFiles": [],
     "selector": "markdown-paragraph-example",
@@ -4178,7 +4179,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownQuoteExample",
     "files": [
       "markdown-quote-example.ts",
-      "./markdown-quote-example.html"
+      "markdown-quote-example.html"
     ],
     "localImportFiles": [],
     "selector": "markdown-quote-example",
@@ -4204,7 +4205,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownTableExample",
     "files": [
       "markdown-table-example.ts",
-      "./markdown-table-example.html"
+      "markdown-table-example.html"
     ],
     "localImportFiles": [],
     "selector": "markdown-table-example",
@@ -5584,7 +5585,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "SidepanelOverlayedExample",
     "files": [
       "sidepanel-overlayed-example.ts",
-      "./sidepanel-overlayed-example.html"
+      "sidepanel-overlayed-example.html"
     ],
     "localImportFiles": [],
     "selector": "sidepanel-overlayed-example",
@@ -6105,7 +6106,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TabsAddTabVerticalExample",
     "files": [
       "tabs-add-tab-vertical-example.ts",
-      "./tabs-add-tab-vertical-example.css"
+      "tabs-add-tab-vertical-example.css"
     ],
     "localImportFiles": [],
     "selector": "tabs-add-tab-vertical-example",
@@ -6118,7 +6119,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TabsAddTabExample",
     "files": [
       "tabs-add-tab-example.ts",
-      "./tabs-add-tab-example.css"
+      "tabs-add-tab-example.css"
     ],
     "localImportFiles": [],
     "selector": "tabs-add-tab-example",
@@ -6878,7 +6879,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TitleCustomContentExample",
     "files": [
       "title-custom-content-example.ts",
-      "./title-custom-content-example.css"
+      "title-custom-content-example.css"
     ],
     "localImportFiles": [],
     "selector": "title-custom-content-example",
@@ -6891,7 +6892,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TitleListOptionExample",
     "files": [
       "title-list-option-example.ts",
-      "./title-list-option-example.css"
+      "title-list-option-example.css"
     ],
     "localImportFiles": [],
     "selector": "title-list-option-example",
@@ -6904,7 +6905,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TitleMultipleTextExample",
     "files": [
       "title-multiple-text-example.ts",
-      "./title-multiple-text-example.css"
+      "title-multiple-text-example.css"
     ],
     "localImportFiles": [],
     "selector": "title-multiple-text-example",
@@ -6917,7 +6918,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TitleOverviewExample",
     "files": [
       "title-overview-example.ts",
-      "./title-overview-example.css"
+      "title-overview-example.css"
     ],
     "localImportFiles": [],
     "selector": "title-overview-example",
@@ -6930,7 +6931,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TitleVerticalOverflowExample",
     "files": [
       "title-vertical-overflow-example.ts",
-      "./title-vertical-overflow-example.css"
+      "title-vertical-overflow-example.css"
     ],
     "localImportFiles": [],
     "selector": "title-vertical-overflow-example",

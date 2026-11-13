@@ -1,7 +1,7 @@
-import { DialogRef } from '@angular/cdk/dialog';
-import { OverlayRef } from '@angular/cdk/overlay';
-import { filter, Observable, ReplaySubject, Subject, take } from 'rxjs';
-import { KbqActionsPanelContainer } from './actions-panel-container';
+import type { DialogRef } from '@angular/cdk/dialog';
+import type { OverlayRef } from '@angular/cdk/overlay';
+import { filter, type Observable, ReplaySubject, Subject, take } from 'rxjs';
+import type { KbqActionsPanelContainer } from './actions-panel-container';
 
 /**
  * Reference to actions panel opened by `KbqActionsPanel` service.

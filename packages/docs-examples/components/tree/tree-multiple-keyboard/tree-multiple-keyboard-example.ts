@@ -3,17 +3,17 @@ import { FormsModule } from '@angular/forms';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 
 export class FileNode {
-    children: FileNode[];
-    name: string;
+    children?: FileNode[];
+    name = '';
     type: any;
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-    name: string;
+    name = '';
     type: any;
-    level: number;
-    expandable: boolean;
+    level = 0;
+    expandable = false;
     parent: any;
 }
 
@@ -169,7 +169,7 @@ export class TreeMultipleKeyboardExample {
         return node.expandable;
     };
 
-    private getChildren = (node: FileNode): FileNode[] => {
+    private getChildren = (node: FileNode): FileNode[] | undefined => {
         return node.children;
     };
 

@@ -4,21 +4,23 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { AsyncPipe, JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal, ViewEncapsulation } from '@angular/core';
 import { FormsModule, UntypedFormControl } from '@angular/forms';
+import { debounceTime, of, startWith, switchMap } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqMultipleInput, PopUpPlacements } from '@koobiq/components/core';
+import { type KbqMultipleInput, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
-    KbqListDragPreview,
+    type KbqListCopyEvent,
+    type KbqListDragPreview,
     KbqListModule,
-    KbqListSelectionChange,
-    KbqListSelectionDroppedEvent
+    type KbqListOption,
+    type KbqListSelectAllEvent,
+    type KbqListSelectionChange,
+    type KbqListSelectionDroppedEvent
 } from '@koobiq/components/list';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { ListExamplesModule } from 'packages/docs-examples/components/list';
-import { of } from 'rxjs';
-import { debounceTime, startWith, switchMap } from 'rxjs/operators';
 import { DevThemeToggle } from '../theme-toggle';
 
 type DevItem = { id: number; label: string; caption?: string };
@@ -74,7 +76,7 @@ export class DevDocsExamples {}
         ScrollingModule
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -89,6 +91,11 @@ export class DevApp {
     selectAllSelected: string[] = ['Item 1'];
 
     readonly dragPreview = signal<KbqListDragPreview>('text');
+
+    // The options of the select are the values of `KbqListDragPreview`
+    protected setDragPreview(value: string): void {
+        this.dragPreview.set(value as KbqListDragPreview);
+    }
 
     // One option with a caption and one with a label nobody could fit, so the text preview shows off
     // both of its lines and its truncation.
@@ -149,13 +156,13 @@ export class DevApp {
         console.log(`onSelectionChange: ${$event.option.value}`);
     }
 
-    onSelectAll($event) {
-        console.log('onSelectAll', $event);
+    onSelectAll(event: KbqListSelectAllEvent<KbqListOption<string>>) {
+        console.log('onSelectAll', event);
     }
 
-    onCopy($event) {
-        console.log('onCopy', $event);
-        this.clipboard.copy($event.option.value);
+    onCopy(event: KbqListCopyEvent<KbqListOption<string>>) {
+        console.log('onCopy', event);
+        this.clipboard.copy(event.option.value);
     }
 
     onRemove(item: string) {

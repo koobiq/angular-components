@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
-import { KBQ_AG_GRID_STATUS_BAR_PARAMS, KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
-    ColDef,
-    FirstDataRenderedEvent,
+    type ColDef,
+    type FirstDataRenderedEvent,
     ModuleRegistry,
-    RowSelectionOptions
+    type RowSelectionOptions
 } from 'ag-grid-community';
+import { KBQ_AG_GRID_STATUS_BAR_PARAMS, KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

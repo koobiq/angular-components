@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal, type TemplateRef } from '@angular/core';
+import { merge, Subscription, tap, timer } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSidepanelModule, KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqSkeletonDl, KbqSkeletonGroup, KbqSkeletonTable } from '@koobiq/components/skeleton';
 import { KbqTableModule } from '@koobiq/components/table';
-import { merge, Subscription, tap, timer } from 'rxjs';
 
 type Detail = { term: string; value: string };
 
@@ -40,21 +40,21 @@ const SERVERS: Server[] = Array.from({ length: 6 }, (_, index) => ({
         KbqTableModule
     ],
     template: `
-        <button kbq-button (click)="open(template)">Open sidepanel</button>
+        <button kbq-button type="button" (click)="open(template)">Open sidepanel</button>
 
         <ng-template #template>
             <kbq-sidepanel-header [closeable]="true">LDAP-7f7d60de-d36d-46df-80b9-8f272c32ae45</kbq-sidepanel-header>
             <kbq-sidepanel-body class="example-body">
                 @if (details(); as details) {
                     <div class="example-actions">
-                        <button kbq-button (click)="load()">
+                        <button kbq-button type="button" (click)="load()">
                             <i kbq-icon="kbq-circle-play_16"></i>
                             Start synchronization
                         </button>
-                        <button kbq-button aria-label="Edit" disabled>
+                        <button kbq-button type="button" aria-label="Edit" disabled>
                             <i kbq-icon="kbq-pencil_16"></i>
                         </button>
-                        <button kbq-button disabled>
+                        <button kbq-button disabled type="button">
                             <i kbq-icon="kbq-trash_16"></i>
                             Remove
                         </button>

@@ -9,9 +9,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectNoOptions } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { KbqTreeModule, KbqTreeOption } from '@koobiq/components/tree';
+import { KbqTreeModule, type KbqTreeOption } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
-import { KbqPipeTemplate, KbqSelectValue, KbqTreeSelectNode } from '../filter-bar.types';
+import type { KbqPipeTemplate, KbqSelectValue, KbqTreeSelectNode } from '../filter-bar.types';
 import { getId, KbqBasePipe } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
@@ -35,8 +35,8 @@ import { KbqTreeSelectPipeBase } from './tree-select-pipe-base';
         FormsModule,
         NgTemplateOutlet
     ],
-    templateUrl: 'pipe-tree-select.html',
-    styleUrls: ['base-pipe.scss', 'pipe-tree-select.scss'],
+    templateUrl: './pipe-tree-select.html',
+    styleUrls: ['./base-pipe.scss', './pipe-tree-select.scss'],
     providers: [
         {
             provide: KbqBasePipe,
@@ -53,7 +53,7 @@ export class KbqPipeTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSelectV
     }
 
     /** Whether the current pipe is empty. */
-    get isEmpty(): boolean {
+    override get isEmpty(): boolean {
         return !this.data.value;
     }
 

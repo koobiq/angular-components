@@ -13,19 +13,25 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule
     ],
     template: `
-        <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Contrast">
+        <button kbq-button type="button" kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Contrast">
             Contrast (default)
         </button>
 
-        <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.ContrastFade">
+        <button kbq-button type="button" kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.ContrastFade">
             Contrast Fade
         </button>
 
-        <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Error">Error</button>
+        <button kbq-button type="button" kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Error">
+            Error
+        </button>
 
-        <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Warning">Warning</button>
+        <button kbq-button type="button" kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Warning">
+            Warning
+        </button>
 
-        <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Theme">Theme</button>
+        <button kbq-button type="button" kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Theme">
+            Theme
+        </button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {

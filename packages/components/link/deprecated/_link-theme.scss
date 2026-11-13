@@ -1,25 +1,23 @@
 @use 'sass:string';
-
-@use '../../core/styles/common/tokens' as *;
-
+@use '../../core/styles/common/tokens';
 @use './link-tokens';
 
 // The links this theme styles: the directive and any markup that carries its classes. The `KbqLink` component
 // shares the `kbq-link` class but brings a stylesheet of its own, and `:where()` keeps it out without changing the
 // specificity of a single rule here.
-$_kbq-link: '.kbq-link:where(:not([kbqlink]))';
+$-kbq-link: '.kbq-link:where(:not([kbqlink]))';
 
 // Unquoted, so that the joiner reaches the CSS as an escape rather than as an invisible character
-$_kbq-link-word-joiner: string.unquote('"\\2060"');
+$-kbq-link-word-joiner: string.unquote('"\\2060"');
 
 // The width of a 16px icon less half a pixel: Chromium lays out a line that ends in negative letter-spacing a
 // fraction wider than the max-content size it reports, so the full width would push the last word to the next
 // line in a shrink-to-fit container.
-$_kbq-link-trailing-icon-reserve: 15.5px;
+$-kbq-link-trailing-icon-reserve: 15.5px;
 
 // The gap after the text. Before an icon it is part of the reserve instead of a margin: Firefox does not always
 // keep a margin together with the last word, and the icon could wrap alone again.
-@mixin _kbq-link-text-end-gap($gap) {
+@mixin -kbq-link-text-end-gap($gap) {
     &:not(:last-child) {
         margin-right: $gap;
     }
@@ -28,7 +26,7 @@ $_kbq-link-trailing-icon-reserve: 15.5px;
         margin-right: 0;
 
         &::after {
-            padding-inline-end: calc($gap + $_kbq-link-trailing-icon-reserve);
+            padding-inline-end: calc($gap + $-kbq-link-trailing-icon-reserve);
         }
     }
 }
@@ -76,12 +74,12 @@ $_kbq-link-trailing-icon-reserve: 15.5px;
         // room: the last word and the icon fit on the line together or wrap together.
         .kbq-link__text:has(+ .kbq-icon) {
             &::after {
-                content: $_kbq-link-word-joiner;
-                content: $_kbq-link-word-joiner / '';
+                content: $-kbq-link-word-joiner;
+                content: $-kbq-link-word-joiner / '';
             }
 
             + .kbq-icon {
-                margin-inline-start: -$_kbq-link-trailing-icon-reserve;
+                margin-inline-start: -$-kbq-link-trailing-icon-reserve;
             }
         }
     }
@@ -91,7 +89,7 @@ $_kbq-link-trailing-icon-reserve: 15.5px;
             margin-left: var(--kbq-link-size-normal-content-padding);
         }
 
-        @include _kbq-link-text-end-gap(var(--kbq-link-size-normal-content-padding));
+        @include -kbq-link-text-end-gap(var(--kbq-link-size-normal-content-padding));
     }
 
     &.kbq-link_compact {
@@ -109,7 +107,7 @@ $_kbq-link-trailing-icon-reserve: 15.5px;
                     margin-left: var(--kbq-link-size-compact-content-padding);
                 }
 
-                @include _kbq-link-text-end-gap(var(--kbq-link-size-compact-content-padding));
+                @include -kbq-link-text-end-gap(var(--kbq-link-size-compact-content-padding));
             }
         }
     }
@@ -120,18 +118,18 @@ $_kbq-link-trailing-icon-reserve: 15.5px;
                 margin-left: var(--kbq-link-size-big-content-padding);
             }
 
-            @include _kbq-link-text-end-gap(var(--kbq-link-size-big-content-padding));
+            @include -kbq-link-text-end-gap(var(--kbq-link-size-big-content-padding));
         }
     }
 
     &.kbq-text-with-icon.kbq-link_external {
         .kbq-link__text {
-            @include _kbq-link-text-end-gap(1px);
+            @include -kbq-link-text-end-gap(1px);
         }
 
         &.kbq-link_compact {
             .kbq-link__text {
-                @include _kbq-link-text-end-gap(0px);
+                @include -kbq-link-text-end-gap(0px);
             }
 
             .kbq-icon {
@@ -141,7 +139,7 @@ $_kbq-link-trailing-icon-reserve: 15.5px;
 
         &.kbq-link_big {
             .kbq-link__text {
-                @include _kbq-link-text-end-gap(2px);
+                @include -kbq-link-text-end-gap(2px);
             }
         }
     }
@@ -169,7 +167,7 @@ $_kbq-link-trailing-icon-reserve: 15.5px;
 }
 
 @mixin kbq-link-theme() {
-    #{$_kbq-link} {
+    #{$-kbq-link} {
         @include kbq-link-geometry();
 
         @include kbq-link-state();
@@ -248,15 +246,15 @@ $_kbq-link-trailing-icon-reserve: 15.5px;
 }
 
 @mixin kbq-link-typography() {
-    #{$_kbq-link} {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+    #{$-kbq-link} {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
-    #{$_kbq-link}.kbq-link_compact {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+    #{$-kbq-link}.kbq-link_compact {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
     }
 
-    #{$_kbq-link}.kbq-link_big {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-big);
+    #{$-kbq-link}.kbq-link_big {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
     }
 }

@@ -1,4 +1,4 @@
-import { SignalMembersConfig, WarnPattern } from '../../utils/signal-members-migration';
+import type { SignalMembersConfig, WarnPattern } from '../../utils/signal-members-migration';
 
 /**
  * Data for the `dropdown-signals` migration.

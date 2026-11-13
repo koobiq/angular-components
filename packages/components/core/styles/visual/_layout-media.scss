@@ -1,6 +1,6 @@
 @mixin media-print {
     @media print {
-        /* stylelint-disable-next-line selector-class-pattern */
+        /* stylelint-disable-next-line selector-class-pattern -- the print utilities are public class names without the prefix */
         .hide-print:not(.show-print):not(.show) {
             display: none !important;
         }

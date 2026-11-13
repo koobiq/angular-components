@@ -5,11 +5,11 @@ import {
     effect,
     inject,
     signal,
-    Type,
+    type Type,
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { KBQ_WINDOW } from '../tokens';
 import { KBQ_STATE_SAVING_ENABLED, KbqStateSaving } from './state-saving';
 import { KBQ_STATE_SAVING_KEY_RESOLVER } from './state-saving-key';
@@ -18,7 +18,7 @@ import {
     KBQ_STATE_STORE,
     KbqLocalStorageStateStore,
     KbqSessionStorageStateStore,
-    KbqStateStore
+    type KbqStateStore
 } from './state-store';
 
 /** In-memory `KbqStateStore` used to make state-saving tests deterministic. */

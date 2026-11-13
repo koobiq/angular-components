@@ -1,8 +1,8 @@
-import { SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { SchematicContext, Tree } from '@angular-devkit/schematics';
 import { migrateTemplate, migrateTs } from '../../utils/angular-parsing';
 import { getParsingInfo } from '../../utils/package-config';
-import { MigrationData, readSourceFiles } from '../../utils/typescript';
-import { Schema } from './schema';
+import { type MigrationData, readSourceFiles } from '../../utils/typescript';
+import type { Schema } from './schema';
 
 export const migrationData: MigrationData = {
     elementName: 'kbq-autocomplete',

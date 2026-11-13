@@ -1,3 +1,4 @@
+import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -11,13 +12,13 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
  */
 @Component({
     selector: 'popover-close-example',
-    imports: [KbqInputModule, KbqButtonModule, KbqPopoverModule, KbqIconModule, KbqDropdownModule],
-    templateUrl: 'popover-close-example.html',
-    styleUrls: ['popover-close-example.css'],
+    imports: [KbqInputModule, KbqButtonModule, KbqPopoverModule, KbqIconModule, KbqDropdownModule, NgOptimizedImage],
+    templateUrl: './popover-close-example.html',
+    styleUrl: './popover-close-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverCloseExample {
-    members: Record<string, string>[] = [
+    members: { name: string; role: string }[] = [
         { name: 'Alex Unipraise', role: 'Editor' },
         { name: 'Serge Vox', role: 'Editor' },
         { name: 'Rick Brick', role: 'Viewer' },

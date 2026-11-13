@@ -9,8 +9,8 @@ import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
     imports: [
         KbqBadgeModule
     ],
-    templateUrl: 'badge-overview-example.html',
-    styleUrls: ['badge-overview-example.css'],
+    templateUrl: './badge-overview-example.html',
+    styleUrl: './badge-overview-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BadgeOverviewExample {

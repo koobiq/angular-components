@@ -1,9 +1,9 @@
-import { workspaces } from '@angular-devkit/core';
-import { SchematicContext, Tree } from '@angular-devkit/schematics';
-import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import type { workspaces } from '@angular-devkit/core';
+import type { SchematicContext, Tree } from '@angular-devkit/schematics';
+import { SchematicTestRunner, type UnitTestTree } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
-import { SignalMembersConfig, signalMembersRule } from './signal-members-migration';
+import { type SignalMembersConfig, signalMembersRule } from './signal-members-migration';
 import { createTestApp } from './testing';
 
 const collectionPath = path.join(__dirname, '../collection.json');

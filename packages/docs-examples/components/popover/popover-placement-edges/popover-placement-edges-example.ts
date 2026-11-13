@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
+import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
 /**
@@ -16,7 +16,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         KbqInputModule,
         KbqToggleModule
     ],
-    templateUrl: 'popover-placement-edges-example.html',
+    templateUrl: './popover-placement-edges-example.html',
     styles: `
         .popover-placement-edges-example {
             display: flex;
@@ -46,6 +46,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 })
 export class PopoverPlacementEdgesExample {
     placements = PopUpPlacements;
-    activePopover: KbqPopoverTrigger;
+    activePopover?: KbqPopoverTrigger;
     protected arrowCentered = false;
 }

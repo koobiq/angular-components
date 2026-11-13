@@ -1,5 +1,5 @@
 import { docsHasMarkdown } from '../../apps/docs/src/app/page-paths';
-import { DocsStructureItem, DocsStructureItemId, DocsStructureItemTab } from '../../apps/docs/src/app/structure';
+import { type DocsStructureItem, DocsStructureItemId, DocsStructureItemTab } from '../../apps/docs/src/app/structure';
 import { getNgModuleNames, renderApiAsMarkdown } from '../api-gen/rendering/markdown';
 import { renderDesignTokens } from './design-tokens';
 import { pageToMarkdown } from './page-markdown';
@@ -7,7 +7,7 @@ import {
     createExampleResolver,
     getPageSource,
     getPageUrl,
-    LlmsPageSources,
+    type LlmsPageSources,
     readApiManifest,
     readRepoFile,
     resolveSiteUrl

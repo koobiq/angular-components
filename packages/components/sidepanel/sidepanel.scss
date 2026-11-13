@@ -1,17 +1,13 @@
 @use 'sass:map';
-
 @use '../core/styles/common';
-
-@use '../core/styles/common/tokens' as *;
-
-@use './sidepanel-theme' as *;
-@use '../core/styles/common/squircle' as *;
+@use './sidepanel-theme';
+@use '../core/styles/common/squircle';
 
 $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
 
 $state-transition: 300ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 
-@mixin _sidepanel-container($selected-side) {
+@mixin -sidepanel-container($selected-side) {
     $sides: top, right, bottom, left;
     $opposite-sides: (
         'top': 'bottom',
@@ -22,7 +18,7 @@ $state-transition: 300ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 
     .kbq-sidepanel-content {
         @each $side in $sides {
-            @if (not (map.get($opposite-sides, $selected-side) == $side)) {
+            @if not(map.get($opposite-sides, $selected-side) == $side) {
                 margin-#{$side}: var(--kbq-sidepanel-size-panel-viewport-margin);
             }
         }
@@ -48,7 +44,7 @@ $state-transition: 300ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 
     @include common.kbq-animations-off();
 
-    /* stylelint-disable-next-line selector-class-pattern */
+    /* stylelint-disable-next-line selector-class-pattern -- a layout utility that consumers put into the sidepanel body */
     .flex {
         min-height: 0;
     }
@@ -104,7 +100,7 @@ $state-transition: 300ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
         flex-direction: row;
     }
 
-    @include _sidepanel-container(right);
+    @include -sidepanel-container(right);
 }
 
 .kbq-sidepanel-container_left {
@@ -117,7 +113,7 @@ $state-transition: 300ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
         flex-direction: row-reverse;
     }
 
-    @include _sidepanel-container(left);
+    @include -sidepanel-container(left);
 }
 
 .kbq-sidepanel-container_top {
@@ -130,7 +126,7 @@ $state-transition: 300ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
         flex-direction: column-reverse;
     }
 
-    @include _sidepanel-container(top);
+    @include -sidepanel-container(top);
 }
 
 .kbq-sidepanel-container_bottom {
@@ -143,7 +139,7 @@ $state-transition: 300ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
         flex-direction: column;
     }
 
-    @include _sidepanel-container(bottom);
+    @include -sidepanel-container(bottom);
 }
 
 .kbq-sidepanel-wrapper {
@@ -185,7 +181,7 @@ $state-transition: 300ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
     min-height: 0;
     min-width: 0;
     width: 100%;
-    @include kbq-squircle(var(--kbq-size-border-radius));
+    @include squircle.kbq-squircle(var(--kbq-size-border-radius));
 }
 
 // Host element of a component-based sidepanel, which the portal outlet inserts between
@@ -275,5 +271,5 @@ $state-transition: 300ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
     }
 }
 
-@include kbq-sidepanel-theme();
-@include kbq-sidepanel-typography();
+@include sidepanel-theme.kbq-sidepanel-theme();
+@include sidepanel-theme.kbq-sidepanel-typography();

@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import {
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     effect,
@@ -11,25 +11,26 @@ import {
     signal,
     viewChild
 } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, type UrlSegment } from '@angular/router';
+import { map } from 'rxjs';
 import { KBQ_WINDOW, KbqThemeService } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { DocsLocaleState } from '../../services/locale';
 import { DocsStructureTokensTab } from '../../structure';
+import { DocsAnchorsComponent } from '../anchors/anchors.component';
 import { DocsCodeSnippetDirective } from '../code-snippet/code-snippet';
 import { DocsComponentViewerWrapperComponent } from '../component-viewer/component-viewer-wrapper';
-
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, UrlSegment } from '@angular/router';
-import { map } from 'rxjs';
-
-import { DocsAnchorsComponent } from '../anchors/anchors.component';
 import { docsData as borderRadius } from './data/border-radius';
 import { docsData as colors } from './data/colors';
 import { docsData as palette } from './data/palette';
 import { docsData as sematic } from './data/semantic';
 import { docsData as shadows } from './data/shadows';
 import { docsData as sizes } from './data/sizes';
+
+// Typography has a page of its own.
+type DocsTokensTab = Exclude<DocsStructureTokensTab, DocsStructureTokensTab.Typography>;
 
 interface DocsTokensSectionInfo {
     type: string;
@@ -104,19 +105,16 @@ interface DocsTokensInfoRaw {
             </table>
         }
     `,
-    styleUrls: ['design-tokens.scss'],
+    styleUrl: 'design-tokens.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocsTokensTable extends DocsLocaleState {
     // Accepts both a top-level `DocsTokensInfo` and a nested `DocsTokensSectionInfo`; only `.tokens`
     // is read (guarded), and `DocsTokensSectionInfo` is assignable to `DocsTokensInfo`.
     readonly section = input<DocsTokensInfo>();
-    readonly tab = input.required<DocsStructureTokensTab>();
+    readonly tab = input.required<DocsTokensTab>();
 
-    readonly mapTabToType: Record<
-        Exclude<DocsStructureTokensTab, DocsStructureTokensTab.Typography>,
-        'dimensions' | 'sizes' | 'shadows'
-    > = {
+    readonly mapTabToType: Record<DocsTokensTab, 'dimensions' | 'sizes' | 'shadows'> = {
         [DocsStructureTokensTab.Colors]: 'dimensions',
         [DocsStructureTokensTab.BorderRadius]: 'dimensions',
         [DocsStructureTokensTab.Palette]: 'dimensions',
@@ -125,10 +123,7 @@ export class DocsTokensTable extends DocsLocaleState {
         [DocsStructureTokensTab.Shadows]: 'shadows'
     };
 
-    readonly mapTabToCssProp: Record<
-        Exclude<DocsStructureTokensTab, DocsStructureTokensTab.Typography>,
-        'border-radius' | 'background-color' | 'box-shadow' | 'width'
-    > = {
+    readonly mapTabToCssProp: Record<DocsTokensTab, 'border-radius' | 'background-color' | 'box-shadow' | 'width'> = {
         [DocsStructureTokensTab.Colors]: 'background-color',
         [DocsStructureTokensTab.BorderRadius]: 'border-radius',
         [DocsStructureTokensTab.Palette]: 'background-color',
@@ -136,10 +131,6 @@ export class DocsTokensTable extends DocsLocaleState {
         [DocsStructureTokensTab.Sizes]: 'width',
         [DocsStructureTokensTab.Shadows]: 'box-shadow'
     };
-
-    constructor() {
-        super();
-    }
 
     getStyle(token: string) {
         const cssProp = this.mapTabToCssProp[this.tab()];
@@ -189,7 +180,7 @@ export class DocsTokensTable extends DocsLocaleState {
         </docs-component-viewer-wrapper>
 
         <div class="docs-component-viewer__sticky-wrapper">
-            <docs-anchors [headerSelectors]="'.docs-header-link'" />
+            <docs-anchors headerSelectors=".docs-header-link" />
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -210,16 +201,13 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
     protected readonly tokensInfo = signal<DocsTokensInfo[]>([]);
     protected readonly activatedTab = toSignal(
         this.activatedRoute.url.pipe(
-            map(([{ path: id }]: UrlSegment[]) => <DocsStructureTokensTab>id),
+            map(([tab]: UrlSegment[]) => <DocsTokensTab>(tab?.path ?? DocsStructureTokensTab.Colors)),
             takeUntilDestroyed()
         ),
         { initialValue: DocsStructureTokensTab.Colors }
     );
 
-    protected tokenDataMap: Record<
-        Exclude<DocsStructureTokensTab, DocsStructureTokensTab.Typography>,
-        DocsTokensInfoRaw[]
-    > = {
+    protected tokenDataMap: Record<DocsTokensTab, DocsTokensInfoRaw[]> = {
         [DocsStructureTokensTab.Colors]: colors,
         [DocsStructureTokensTab.Shadows]: shadows,
         [DocsStructureTokensTab.BorderRadius]: borderRadius,

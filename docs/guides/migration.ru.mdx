@@ -39,6 +39,7 @@
 - **21.0.0**: кнопка сброса у списка тегов удаляет теги сама и оставляет неактивные на месте.
 - **21.0.0**: переход на `@koobiq/design-tokens` 4 — новая шкала палитры, источники в формате DTCG и опциональные токены компонентов.
 - **21.1.0**: блок кода по умолчанию загружает ядро highlight.js, а не полную сборку.
+- **21.1.0**: типы полей и геттеров, которые бывают пустыми, говорят об этом, а события и `KbqFormFieldControl` получили конструкторы и абстрактные члены.
 
 ### Обновление до 18.5.3
 
@@ -3529,6 +3530,84 @@ ng g @koobiq/components:code-block-highlight-js-core --project "<your project>"
 - **Конфигурация, которую корневые провайдеры получают через функцию.** Добавленный корневой провайдер переопределяет ее: удалите добавленный. Миграция сообщает о проекте, который задает конфигурацию вне корневых провайдеров.
 - **Библиотека, которая показывает блоки кода.** Конфигурацию задают приложения, которые ее используют.
 - **Тесты** не получают провайдеров приложения: добавьте конфигурацию в `TestBed` теста, который проверяет подсвеченную разметку.
+
+### Типы полей, которые бывают пустыми (21.1.0)
+
+{/* migration-step-components(accordion, app-switcher, autocomplete, checkbox, core, datepicker, dropdown, filter-bar, form-field, modal, navbar, notification-center, number-formatter, popover, select, sidepanel, tabs, timepicker, toggle, tooltip, tree, tree-select) */}
+
+Часть полей библиотека заполняет только в хуке жизненного цикла или при создании оверлея, а часть геттеров возвращает `undefined`, хотя их тип обещал значение. Теперь тип говорит об этом: `| undefined`. Поведение не изменилось: чтение, которое раньше падало с `TypeError`, теперь не компилируется.
+
+#### Поля и геттеры, которые стали `| undefined`
+
+| Компонент                                   | Члены                                                                                                                                                | Когда значения нет                                                                                                                                                 |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| select                                      | `KbqSelect.selectionModel`, `triggerRect`, геттер `selected`                                                                                         | модель создается в `ngOnInit`; `selected` пуст в одиночном выборе без значения                                                                                     |
+| tree-select                                 | `KbqTreeSelect.selectionModel`, `triggerRect`, `options`, геттер `selected`                                                                          | до `ngAfterContentInit` и без дерева внутри                                                                                                                        |
+| tree                                        | `TreeControl` и `BaseTreeControl`: `getLevel`, `isExpandable`, `getChildren`; геттер `data` у `KbqTreeNode` и `KbqTreeOption`; `KbqTreeNodeDef.when` | у плоского контрола нет `getChildren`, у вложенного нет `getLevel` и `isExpandable`; у строки «Выбрать все» нет данных; у определения узла по умолчанию нет `when` |
+| datepicker                                  | `KbqDatepickerInput.datepicker`, `calendar`; `KbqDatepicker.datepickerInput`                                                                         | пока не привязаны `[kbqDatepicker]`, `[kbqCalendar]` или поле ввода                                                                                                |
+| accordion, app-switcher, autocomplete       | `keyManager`                                                                                                                                         | до инициализации содержимого                                                                                                                                       |
+| core, popover, tooltip, notification-center | `KbqPopUp.trigger`; `KbqPopUpTrigger.portal`, `strategy`, `externalNativeElement`; `trigger` и `panelId` панелей                                     | до создания оверлея                                                                                                                                                |
+| dropdown                                    | `KbqDropdown.direction`                                                                                                                              | пока триггер не открыл меню                                                                                                                                        |
+| tabs                                        | `KbqTabChangeEvent.tab`, геттер `KbqTab.templateLabel`, `KbqTabLabelWrapper.tab`, `KbqTabBody.bodyPosition` и `origin`                               | событие приходит и после удаления всех вкладок; у вкладки с текстовой подписью нет шаблона                                                                         |
+| sidepanel                                   | `KbqSidepanelRef.instance`                                                                                                                           | панель открыта с `TemplateRef`                                                                                                                                     |
+| notification-center                         | геттер `KbqNotificationItemComponent.data`, `context`                                                                                                | пока не передано уведомление                                                                                                                                       |
+| navbar                                      | геттер `KbqNavbarFocusableItem.tooltip`                                                                                                              | у логотипа и кнопки сворачивания нет подсказки                                                                                                                     |
+| number-formatter                            | поля `KBQ_NUMBER_FORMATTER_OPTIONS` и `KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS`                                                                         | опция не задана                                                                                                                                                    |
+
+#### Конструкторы и абстрактные члены
+
+- `KbqCheckboxChange` и `KbqToggleChange` принимают `source` и `checked` в конструкторе, `KbqTabChangeEvent` - `index` и `tab`. Поля по-прежнему можно менять.
+- Члены `KbqFormFieldControl` стали абстрактными. Класс, который его расширяет (`extends`), объявляет `value`, `id`, `placeholder`, `ngControl`, `focused`, `empty`, `required`, `disabled` и `errorState`; класс, который его реализует (`implements`), уже это делает.
+- `KbqPopUp.prefix` стал абстрактным: наследник объявляет префикс своих CSS-классов.
+
+#### Уточненные типы параметров
+
+Параметры и возвращаемые значения, объявленные как `any`, получили точный тип. Вызов с тем, чего ждет компонент, компилируется как раньше; не компилируется вызов с другим типом и наследник, который переопределяет член с несовместимой сигнатурой.
+
+- Обработчики событий принимают тип события: `onClick` (`Event`) и `onKeyDown` (`KeyboardEvent`) у `KbqOptionActionComponent`, `onPaste` (`ClipboardEvent`) у `KbqDatepickerInput` и `KbqTimepicker`, `KbqTreeOption.onKeydown` (`KeyboardEvent`), `KbqTreeSelection.focus` (необязательный `Event | null`). Это заметно в тестах, которые вызывают их с объектом-заглушкой.
+- `KbqCalendar.registerInput` принимает `KbqDatepickerInput<D>`.
+- `KbqPopUpTrigger.updatePlacementPriority` принимает `string | string[] | null | undefined`.
+- `handle` у фильтров плоского дерева `FilterByValues` и `FilterParentsForNodes` принимает `string | null`, как объявлено в `FlatTreeControlFilter`.
+- `KbqModalRef.markForCheck` и `KbqDatepickerInput.onPaste` возвращают `void`.
+- `KbqPipeDateBaseComponent.formGroup` типизирован: `FormGroup` с контролами `start` и `end`.
+- `isTemplateRef` у `KbqPopUp` и `KbqBasePipe` возвращает `value is TemplateRef<C>` вместо `boolean`: наследник, который переопределяет его с `boolean`, не компилируется.
+
+#### Начальные значения
+
+Часть полей вместо `undefined` получила начальное значение того же типа. Тип не изменился, но строгое сравнение с `undefined` до инициализации теперь ложно:
+
+- `KbqPopUp`: `header` и `content` - `''`, `arrow` и `defaultPaddings` - `false`, `context` и `offset` - `null`. `KbqPopUpTrigger.overlayRef` - `null`.
+- `BaseTreeControl.dataNodes` - `[]`.
+- `keyManager` у `KbqSelect`, `KbqTreeSelection`, `KbqListSelection`, `KbqTagList` и навигационной панели создается сразу.
+- `errorStateMatcher` у загрузки файлов - `ErrorStateMatcher` по умолчанию.
+- `KbqDatepicker.startAt` без входа - `null`, `dateFilter` без входа пропускает любую дату.
+- `KbqDatepickerInput`: `min` и `max` - `null`.
+- `KbqPopoverTrigger`: `header` и `footer` - `''`.
+- `popoverHeight` у `KbqNotificationCenterTrigger` и `KbqNotificationCenterComponent` - `''`.
+- `KbqSelect.withVirtualScroll` и `KbqTreeSelect.isEmptySearchResult` - `false`.
+- `level` у `KbqTreeNodeOutletContext` и `KbqTreeNodePadding` - `0`, `KbqTreeNodePadding.withIcon` - `false`.
+- `FlatTreeControl.expandedItemsBeforeFiltration` и `result` у фильтров плоского дерева - `[]`.
+- `KbqTreeSelectFlatNode`: `name` - `''`, `level` - `0`, `expandable` - `false`.
+
+Пустой массив, в отличие от `undefined`, истинен: проверка `if (treeControl.expandedItemsBeforeFiltration)` до первой фильтрации теперь срабатывает.
+
+#### Запуск миграции
+
+Схематик `uninitialized-members` зарегистрирован на 21.1.0, поэтому `ng update` на эту версию запустит его сам:
+
+```bash
+ng g @koobiq/components:uninitialized-members --project "<your project>"
+```
+
+#### Что исправляется автоматически
+
+Ничего. Схематик только сообщает о местах, где читается член из таблицы, создается событие без аргументов или расширяется `KbqFormFieldControl` либо `KbqPopUp`. Он ищет по имени в файлах, которые используют эти типы, поэтому может указать и на чужой объект.
+
+#### Что нужно исправить вручную
+
+- **Чтение члена.** Проверьте значение, например `select.selectionModel?.selected ?? []`, или добавьте `!`, если код выполняется после инициализации компонента: `!` сохраняет прежнее поведение и падает там же, где падал старый код.
+- **Создание события.** Передайте значения в конструктор: `new KbqCheckboxChange(checkbox, true)`.
+- **Наследник `KbqFormFieldControl` или `KbqPopUp`.** Объявите абстрактные члены.
 
 ### После миграции
 

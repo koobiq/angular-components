@@ -104,7 +104,7 @@
         overflow-y: auto;
 
         .kbq-tree-selection {
-            padding: 0 0;
+            padding: 0;
 
             .kbq-tree-option {
                 border-radius: 0;
@@ -113,8 +113,8 @@
                 min-height: 48px;
                 padding: calc(var(--kbq-size-m) - var(--kbq-size-3xs)) calc(var(--kbq-size-l) - var(--kbq-size-3xs));
 
-                &:before,
-                &:after {
+                &::before,
+                &::after {
                     display: none;
                 }
             }

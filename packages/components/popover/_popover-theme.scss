@@ -1,4 +1,4 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-popover-theme() {
     .kbq-popover {
@@ -33,10 +33,10 @@
 
 @mixin kbq-popover-typography() {
     .kbq-popover__header {
-        @include kbq-typography-level-to-styles-css-variables(typography, subheading);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, subheading);
     }
 
     .kbq-popover__content {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }

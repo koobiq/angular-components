@@ -1,7 +1,5 @@
-@use '../../datepicker/datepicker-theme' as *;
-@use '../filter-bar-theme' as *;
-
-@use '../../datepicker/datepicker-tokens' as *;
+@use '../../datepicker/datepicker-theme';
+@use '../../datepicker/datepicker-tokens';
 
 .kbq-pipe-date__popover {
     // Tokens are declared on the overlay panel itself so they resolve outside `.kbq-filter-bar`.
@@ -142,5 +140,5 @@
     }
 }
 
-@include kbq-datepicker-theme();
-@include kbq-datepicker-typography();
+@include datepicker-theme.kbq-datepicker-theme();
+@include datepicker-theme.kbq-datepicker-typography();

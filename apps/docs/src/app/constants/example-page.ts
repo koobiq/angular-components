@@ -1,4 +1,4 @@
-import { DefaultUrlSerializer, PRIMARY_OUTLET, UrlSegment } from '@angular/router';
+import { DefaultUrlSerializer, PRIMARY_OUTLET, type UrlSegment } from '@angular/router';
 
 /** First URL segment of the page that shows a single live example. */
 export const DOCS_EXAMPLE_PAGE_PATH = 'examples';

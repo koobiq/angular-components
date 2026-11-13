@@ -6,34 +6,34 @@ import {
     ElementRef,
     inject,
     input,
-    OnInit,
-    TemplateRef,
+    type OnInit,
+    type TemplateRef,
     untracked,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
-    AbstractControl,
-    ControlValueAccessor,
+    type AbstractControl,
+    type ControlValueAccessor,
     FormControl,
     FormGroup,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
     ReactiveFormsModule,
-    ValidationErrors,
-    Validator,
-    ValidatorFn
+    type ValidationErrors,
+    type Validator,
+    type ValidatorFn
 } from '@angular/forms';
-import { ErrorStateMatcher, KbqTimeRangeLocaleConfiguration } from '@koobiq/components/core';
+import { distinctUntilChanged, map } from 'rxjs';
+import type { ErrorStateMatcher, KbqTimeRangeLocaleConfiguration } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqError, KbqFieldset, KbqFieldsetItem, KbqHint } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
-import { distinctUntilChanged, map } from 'rxjs/operators';
-import { KbqTimeRangeEditorBridge } from './time-range-editor-bridge';
 import { KbqTimeRangeService } from './time-range.service';
-import {
+import { KbqTimeRangeEditorBridge } from './time-range-editor-bridge';
+import type {
     KbqRangeValue,
     KbqTimeRangeOptionContext,
     KbqTimeRangeRange,
@@ -357,7 +357,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
      */
     protected outOfBoundsMessage(): string {
         const bothOutOfBounds = borders.every((border) =>
-            this.borderHalves(border).some((control) => control.touched && !!control.errors?.kbqTimeRangeOutOfBounds)
+            this.borderHalves(border).some((control) => control.touched && control.hasError('kbqTimeRangeOutOfBounds'))
         );
 
         if (!bothOutOfBounds) return '';

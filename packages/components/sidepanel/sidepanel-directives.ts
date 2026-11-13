@@ -20,8 +20,8 @@ import {
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTitleDirective } from '@koobiq/components/title';
-import { KbqSidepanelRef } from './sidepanel-ref';
 import { KbqSidepanelService } from './sidepanel.service';
+import { KbqSidepanelRef } from './sidepanel-ref';
 
 /**
  * Button that will close the current sidepanel.
@@ -95,11 +95,11 @@ export class KbqSidepanelClose {
                 kbq-button
                 kbq-sidepanel-close
                 type="button"
+                color="contrast"
+                kbqStyle="transparent"
                 [attr.aria-label]="a11yLocaleConfiguration().close"
-                [color]="'contrast'"
-                [kbqStyle]="'transparent'"
             >
-                <i kbq-icon="kbq-xmark_16" [color]="'contrast'"></i>
+                <i kbq-icon="kbq-xmark_16" color="contrast"></i>
             </button>
         }
     `,

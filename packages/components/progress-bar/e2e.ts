@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KBQ_ANIMATIONS_CONFIG, KbqComponentColors } from '@koobiq/components/core';
-import { ProgressBarMode } from './progress-bar.component';
+import type { ProgressBarMode } from './progress-bar.component';
 import { KbqProgressBarModule } from './progress-bar.module';
 
 type ProgressBarState = {

@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqAgGridSkeletonCellRenderer, KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
-    ColDef,
-    ICellRendererParams,
-    IDatasource,
-    IGetRowsParams,
+    type ColDef,
+    type ICellRendererParams,
+    type IDatasource,
+    type IGetRowsParams,
     ModuleRegistry
 } from 'ag-grid-community';
+import { KbqAgGridSkeletonCellRenderer, KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

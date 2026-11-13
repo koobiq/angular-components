@@ -1,5 +1,5 @@
 import { CdkTrapFocus } from '@angular/cdk/a11y';
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, type OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { NgTemplateOutlet } from '@angular/common';
 import {
@@ -14,17 +14,18 @@ import {
     Injector,
     input,
     NgZone,
-    OnDestroy,
+    type OnDestroy,
     TemplateRef,
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter, fromEvent, Subject, takeUntil } from 'rxjs';
 import {
     isHtmlElementOrNull,
     KBQ_WINDOW,
     kbqAnimationsDisabled,
-    KbqDefaultSizes,
+    type KbqDefaultSizes,
     kbqInjectNativeElement,
     KbqLocaleOverridesDirective
 } from '@koobiq/components/core';
@@ -35,11 +36,10 @@ import {
     KbqEmptyStateTitle
 } from '@koobiq/components/empty-state';
 import { KbqIcon } from '@koobiq/components/icon';
-import { filter, fromEvent, Subject, takeUntil } from 'rxjs';
 import { KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION } from './file-upload.tokens';
-import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
+import type { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
 import { KbqDrop } from './primitives';
-import { KbqSingleFileUploadComponent } from './single-file-upload.component';
+import type { KbqSingleFileUploadComponent } from './single-file-upload.component';
 
 /** Dropzone overlay content configuration. */
 export type KbqDropzoneData = Partial<{
@@ -97,10 +97,6 @@ export class KbqFullScreenDropzoneService extends KbqDrop implements OnDestroy {
     private readonly ngZone = inject(NgZone);
     private readonly animationsDisabled = kbqAnimationsDisabled();
     private overlayRef?: OverlayRef;
-
-    constructor() {
-        super();
-    }
 
     ngOnDestroy() {
         // The service is provided per component, and the listeners live on `document.body`: without
@@ -195,7 +191,7 @@ export class KbqFullScreenDropzoneService extends KbqDrop implements OnDestroy {
     }
 
     /** @docs-private */
-    onDrop(event: DragEvent): void {
+    override onDrop(event: DragEvent): void {
         super.onDrop(event);
         this.close();
     }
@@ -310,7 +306,7 @@ export class KbqLocalDropzone extends KbqDrop {
     }
 
     /** @docs-private */
-    onDrop(event: DragEvent) {
+    override onDrop(event: DragEvent) {
         super.onDrop(event);
         this.close();
     }
@@ -463,7 +459,7 @@ export class KbqFileUploadEmptyState extends KbqEmptyState {
             [caption]="config?.caption ?? ''"
         />
     `,
-    styleUrls: ['./dropzone.scss'],
+    styleUrl: './dropzone.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

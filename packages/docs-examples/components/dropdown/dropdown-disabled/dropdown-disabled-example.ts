@@ -23,7 +23,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
         KbqTitleModule,
         KbqOptionModule
     ],
-    templateUrl: 'dropdown-disabled-example.html',
+    templateUrl: './dropdown-disabled-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownDisabledExample {

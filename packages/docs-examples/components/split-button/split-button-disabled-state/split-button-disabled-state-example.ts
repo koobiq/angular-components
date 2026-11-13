@@ -19,11 +19,11 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
         <div>
             <div class="example-split-button-styles__header">Primary Disabled</div>
             <kbq-split-button>
-                <button kbq-button [disabled]="true">
+                <button kbq-button type="button" [disabled]="true">
                     <i kbq-icon="kbq-plus_16"></i>
                     Split Button
                 </button>
-                <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
+                <button kbq-button type="button" aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
             </kbq-split-button>
@@ -32,11 +32,17 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
         <div>
             <div class="example-split-button-styles__header">Secondary Disabled</div>
             <kbq-split-button>
-                <button kbq-button>
+                <button kbq-button type="button">
                     <i kbq-icon="kbq-plus_16"></i>
                     Split Button
                 </button>
-                <button kbq-button aria-label="More options" [disabled]="true" [kbqDropdownTriggerFor]="dropdown">
+                <button
+                    kbq-button
+                    type="button"
+                    aria-label="More options"
+                    [disabled]="true"
+                    [kbqDropdownTriggerFor]="dropdown"
+                >
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
             </kbq-split-button>
@@ -45,20 +51,20 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
         <div>
             <div class="example-split-button-styles__header">Сompletely Disabled</div>
             <kbq-split-button [disabled]="true">
-                <button kbq-button>
+                <button kbq-button type="button">
                     <i kbq-icon="kbq-plus_16"></i>
                     Split Button
                 </button>
-                <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
+                <button kbq-button type="button" aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
             </kbq-split-button>
         </div>
 
         <kbq-dropdown #dropdown="kbqDropdown">
-            <button kbq-dropdown-item>Extra Action 1</button>
-            <button kbq-dropdown-item>Extra Action 2</button>
-            <button kbq-dropdown-item>Extra Action 3</button>
+            <button kbq-dropdown-item type="button">Extra Action 1</button>
+            <button kbq-dropdown-item type="button">Extra Action 2</button>
+            <button kbq-dropdown-item type="button">Extra Action 3</button>
         </kbq-dropdown>
     `,
     styles: `

@@ -1,39 +1,37 @@
-@use 'theming/theming' as *;
-@use 'typography/typography' as *;
-
-@use 'theming/scrollbar-theme' as *;
-
+@use 'theming/theming';
+@use 'typography/typography';
+@use 'theming/scrollbar-theme';
 @use '../../link/deprecated/link-theme';
-@use '../../markdown/markdown-theme' as *;
-@use '../../tabs/tabs-theme' as *;
-@use '../../tags/tag-theme' as *;
-@use '../../textarea/textarea-theme' as *;
-@use '../forms/forms-theme' as *;
-@use '../highlight/highlight-theme' as *;
+@use '../../markdown/markdown-theme';
+@use '../../tabs/tabs-theme';
+@use '../../tags/tag-theme';
+@use '../../textarea/textarea-theme';
+@use '../forms/forms-theme';
+@use '../highlight/highlight-theme';
 
 @mixin koobiq-theme() {
-    @include kbq-core-theme();
+    @include theming.kbq-core-theme();
 
-    @include kbq-forms-theme();
-    @include kbq-highlight-theme();
-    @include kbq-highlight-background-theme();
+    @include forms-theme.kbq-forms-theme();
+    @include highlight-theme.kbq-highlight-theme();
+    @include highlight-theme.kbq-highlight-background-theme();
     // The deprecated link directive has no stylesheet of its own
     @include link-theme.kbq-link-theme();
-    @include kbq-markdown-theme();
+    @include markdown-theme.kbq-markdown-theme();
     // @deprecated Will be removed in 22.0.0, with `scrollbar/deprecated`.
-    @include kbq-scrollbar-theme();
-    @include kbq-tabs-theme();
-    @include kbq-tag-theme();
+    @include scrollbar-theme.kbq-scrollbar-theme();
+    @include tabs-theme.kbq-tabs-theme();
+    @include tag-theme.kbq-tag-theme();
 }
 
 @mixin koobiq-typography() {
-    @include kbq-base-typography();
-    @include kbq-markdown-base-typography();
-    @include kbq-markdown-typography();
+    @include typography.kbq-base-typography();
+    @include typography.kbq-markdown-base-typography();
+    @include markdown-theme.kbq-markdown-typography();
 
     @include link-theme.kbq-link-typography();
-    @include kbq-forms-typography();
-    @include kbq-tabs-typography();
-    @include kbq-tag-typography();
-    @include kbq-textarea-typography();
+    @include forms-theme.kbq-forms-typography();
+    @include tabs-theme.kbq-tabs-typography();
+    @include tag-theme.kbq-tag-typography();
+    @include textarea-theme.kbq-textarea-typography();
 }

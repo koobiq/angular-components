@@ -20,7 +20,7 @@ import { kbqOptionalNumberAttribute } from '@koobiq/components/core';
 @Component({
     selector: 'kbq-divider',
     template: '',
-    styleUrls: ['divider.scss', 'divider-tokens.scss'],
+    styleUrls: ['./divider.scss', './divider-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

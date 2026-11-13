@@ -3,10 +3,10 @@ import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
 import { CdkPortalOutlet } from '@angular/cdk/portal';
 import {
-    AfterContentChecked,
-    AfterContentInit,
+    type AfterContentChecked,
+    type AfterContentInit,
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -14,23 +14,24 @@ import {
     contentChildren,
     DestroyRef,
     Directive,
-    ElementRef,
+    type ElementRef,
     forwardRef,
     inject,
     InjectionToken,
     input,
     isDevMode,
-    OnChanges,
-    OnDestroy,
+    type OnChanges,
+    type OnDestroy,
     output,
-    QueryList,
+    type QueryList,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { debounceTime, merge, Subscription } from 'rxjs';
 import {
     KBQ_PARENT_ANIMATION_COMPONENT,
     kbqOptionalNumberAttribute,
@@ -38,12 +39,10 @@ import {
     KbqStateSaving
 } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { merge, Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { KbqTab } from './tab.component';
 import { KbqTabBody } from './tab-body.component';
 import { KbqTabHeader } from './tab-header.component';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
-import { KbqTab } from './tab.component';
 
 @Directive({
     selector:
@@ -83,10 +82,13 @@ const RESIZE_DEBOUNCE_INTERVAL = 100;
 
 /** A simple change event emitted on focus or selection changes. */
 export class KbqTabChangeEvent {
-    /** Index of the currently-selected tab. */
-    index: number;
-    /** Reference to the currently-selected tab. */
-    tab: KbqTab;
+    /** Creates the event a tab group emits when the selected tab changes. */
+    constructor(
+        /** Index of the currently-selected tab. */
+        public index: number,
+        /** Reference to the currently-selected tab, `undefined` when the group has no tab at that index. */
+        public tab: KbqTab | undefined
+    ) {}
 }
 
 /** Possible positions for the tab header. */
@@ -351,8 +353,8 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
             if (indexToSelect === this.selectedIndexState()) {
                 const tabs = this.tabs.toArray();
 
-                for (let i = 0; i < tabs.length; i++) {
-                    if (tabs[i].isActive) {
+                for (const [i, tab] of tabs.entries()) {
+                    if (tab.isActive) {
                         // Assign both to the `activeTab` and the selected index so we don't fire a changed
                         // event, otherwise the consumer may end up in an infinite loop in some edge cases like
                         // adding a tab within the `selectedIndexChange` event.
@@ -395,7 +397,7 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
 
             // Changing these values after change detection has run
             // since the checked content may contain references to them.
-            Promise.resolve().then(() => {
+            void Promise.resolve().then(() => {
                 this.tabs.forEach((tab, index) => (tab.isActive = index === indexToSelect));
 
                 if (!isFirstRun) {
@@ -627,15 +629,7 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
     }
 
     private createChangeEvent(index: number): KbqTabChangeEvent {
-        const event = new KbqTabChangeEvent();
-
-        event.index = index;
-
-        if (this.tabs && this.tabs.length) {
-            event.tab = this.tabs.toArray()[index];
-        }
-
-        return event;
+        return new KbqTabChangeEvent(index, this.tabs?.toArray()[index]);
     }
 
     /**

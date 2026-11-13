@@ -17,7 +17,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
         KbqButtonModule,
         KbqBadgeModule
     ],
-    templateUrl: 'popover-header-example.html',
+    templateUrl: './popover-header-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverHeaderExample {

@@ -1,4 +1,4 @@
-import { spawnSync, SpawnSyncReturns } from 'child_process';
+import { spawnSync, type SpawnSyncReturns } from 'child_process';
 
 /**
  * Class that can be used to execute Git commands within a given project directory.
@@ -21,9 +21,11 @@ export class GitClient {
     getRemoteCommitSha(branchName: string): string {
         // `--` ends option parsing, so a remoteGitUrl like `--upload-pack=<cmd>` stays a
         // repository argument instead of making git execute it (CodeQL js/second-order-command-line-injection).
-        return this.spawnGitProcess(['ls-remote', '-h', '--', this.remoteGitUrl, `refs/heads/${branchName}`])
-            .stdout.split('\t')[0]
-            .trim();
+        return (
+            this.spawnGitProcess(['ls-remote', '-h', '--', this.remoteGitUrl, `refs/heads/${branchName}`])
+                .stdout.split('\t')[0]
+                ?.trim() ?? ''
+        );
     }
 
     /** Gets the latest commit SHA for the specified git reference. */
@@ -90,9 +92,11 @@ export class GitClient {
     /** Gets the Git SHA of the specified remote tag. */
     getShaOfRemoteTag(tagName: string): string {
         // Same `--` guard as in `getRemoteCommitSha`.
-        return this.spawnGitProcess(['ls-remote', '-t', '--', this.remoteGitUrl, `refs/tags/${tagName}^{}`])
-            .stdout.split('\t')[0]
-            .trim();
+        return (
+            this.spawnGitProcess(['ls-remote', '-t', '--', this.remoteGitUrl, `refs/tags/${tagName}^{}`])
+                .stdout.split('\t')[0]
+                ?.trim() ?? ''
+        );
     }
 
     /** Pushes the specified tag to the remote git repository. */

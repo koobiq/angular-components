@@ -1,6 +1,6 @@
-import { Signal, signal } from '@angular/core';
-import { AbstractControl, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import { ErrorStateMatcher } from '../error/error-state-matcher';
+import { type Signal, signal } from '@angular/core';
+import type { AbstractControl, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import type { ErrorStateMatcher } from '../error/error-state-matcher';
 
 /** @docs-private */
 export interface CanUpdateErrorState {

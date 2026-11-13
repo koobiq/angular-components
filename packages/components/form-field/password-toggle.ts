@@ -1,23 +1,23 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-
 import { F8 } from '@angular/cdk/keycodes';
 import {
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     computed,
     inject,
     input,
-    InputSignal,
+    type InputSignal,
     numberAttribute,
-    OnDestroy,
-    Signal,
-    TemplateRef,
+    type OnDestroy,
+    type Signal,
+    type TemplateRef,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { fromEvent } from 'rxjs';
 import {
     KBQ_A11Y_LOCALE_CONFIGURATION,
     kbqInjectNativeElement,
@@ -26,9 +26,9 @@ import {
 } from '@koobiq/components/core';
 import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { fromEvent } from 'rxjs';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KBQ_FORM_FIELD } from './form-field';
-import { KbqFormFieldControl } from './form-field-control';
+import type { KbqFormFieldControl } from './form-field-control';
 
 /**
  * Narrow structural contract for `kbqInputPassword`, duck-typed here to avoid a circular
@@ -75,7 +75,7 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
             ></i>
         </ng-content>
     `,
-    styleUrls: ['password-toggle.scss'],
+    styleUrl: 'password-toggle.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -99,7 +99,7 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
 })
 export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     protected readonly nativeElement = kbqInjectNativeElement();
-    protected readonly focusMonitor = inject(FocusMonitor);
+    protected override readonly focusMonitor = inject(FocusMonitor);
 
     private readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'a11y',
@@ -125,11 +125,11 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
      * Tooltip shown while the password is visible. Reading it resolves to the tooltip matching the current
      * visibility, so that the base trigger renders the right one.
      */
-    get content(): string | TemplateRef<any> {
+    override get content(): string | TemplateRef<any> {
         return this.control.elementType() === 'password' ? this.kbqTooltipHidden() : this._content;
     }
 
-    set content(content: string | TemplateRef<any>) {
+    override set content(content: string | TemplateRef<any>) {
         this._content = content;
 
         untracked(() => this.updateData());
@@ -201,11 +201,11 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
         }
     }
 
-    ngAfterViewInit(): void {
-        this.focusMonitor.monitor(this.nativeElement, true);
+    override ngAfterViewInit(): void {
+        void this.focusMonitor.monitor(this.nativeElement, true);
     }
 
-    ngOnDestroy() {
+    override ngOnDestroy() {
         this.focusMonitor.stopMonitoring(this.nativeElement);
     }
 

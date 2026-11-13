@@ -1,18 +1,18 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
-    AbstractControl,
-    AsyncValidatorFn,
+    type AbstractControl,
+    type AsyncValidatorFn,
     FormControl,
     FormGroup,
     ReactiveFormsModule,
-    ValidationErrors
+    type ValidationErrors
 } from '@angular/forms';
+import { Observable } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
-import { KbqFileItem, KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
+import { type KbqFileItem, KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { Observable } from 'rxjs';
 
 const MAX_LINE_COUNT = 100;
 
@@ -79,8 +79,8 @@ function maxLinesValidator(maxLines: number): AsyncValidatorFn {
                 #kbqFileUpload
                 class="layout-margin-bottom-s"
                 formControlName="fileUpload"
+                progressMode="indeterminate"
                 [errorStateMatcher]="errorStateMatcher"
-                [progressMode]="'indeterminate'"
                 [accept]="['.txt']"
             >
                 @if (form.controls.fileUpload.pending) {

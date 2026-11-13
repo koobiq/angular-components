@@ -1,14 +1,14 @@
 import {
+    afterNextRender,
     ChangeDetectionStrategy,
     Component,
-    TemplateRef,
-    afterNextRender,
     inject,
     signal,
+    TemplateRef,
     viewChild
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqSidepanelModule, KbqSidepanelRef, KbqSidepanelService } from '@koobiq/components/sidepanel';
+import { KbqSidepanelModule, type KbqSidepanelRef, KbqSidepanelService } from '@koobiq/components/sidepanel';
 
 const stateSavingKey = 'sidepanel-state-saving-example';
 
@@ -20,7 +20,7 @@ const stateSavingKey = 'sidepanel-state-saving-example';
     imports: [KbqButtonModule, KbqSidepanelModule],
     template: `
         <div class="example-sidepanel-state-saving__actions">
-            <button kbq-button type="button" [color]="'contrast'" (click)="toggle()">
+            <button kbq-button type="button" color="contrast" (click)="toggle()">
                 {{ sidepanelRef() ? 'Close sidepanel' : 'Open sidepanel' }}
             </button>
 

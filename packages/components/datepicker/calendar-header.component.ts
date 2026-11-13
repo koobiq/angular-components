@@ -1,12 +1,12 @@
 import { TitleCasePipe } from '@angular/common';
 import {
-    AfterContentInit,
+    type AfterContentInit,
     ChangeDetectionStrategy,
     Component,
     input,
-    OnChanges,
+    type OnChanges,
     output,
-    SimpleChanges,
+    type SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -35,8 +35,8 @@ export type MonthName = {
         KbqSelectModule,
         KbqOptionModule
     ],
-    templateUrl: 'calendar-header.html',
-    styleUrls: ['calendar-header.scss'],
+    templateUrl: './calendar-header.html',
+    styleUrl: './calendar-header.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -67,7 +67,8 @@ export class KbqCalendarHeader<D> implements AfterContentInit, OnChanges {
         this.updateSelectionOptions();
     }
 
-    private _activeDate: D;
+    // Today until the calendar binds its own active date, as it does before the header renders.
+    private _activeDate: D = this.adapter.today();
 
     get maxDate(): D | null {
         return this._maxDate;
@@ -131,8 +132,12 @@ export class KbqCalendarHeader<D> implements AfterContentInit, OnChanges {
 
     constructor() {
         this.monthNames = this.adapter.getMonthNames('long').map((name, i) => {
-            return { name, nameShort: this.adapter.getMonthNames('short')[i], value: i, disabled: false };
+            return { name, nameShort: this.adapter.getMonthNames('short')[i]!, value: i, disabled: false };
         });
+
+        // What `updateSelectedValues()` gives for the initial active date: no years are listed yet.
+        this.selectedMonth = this.adapter.getMonth(this._activeDate);
+        this.selectedYear = this.adapter.getYear(this._activeDate);
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -224,11 +229,11 @@ export class KbqCalendarHeader<D> implements AfterContentInit, OnChanges {
     }
 
     private updateSelectedValues() {
-        this.selectedMonth = this.monthNames[this.adapter.getMonth(this.activeDate)].value;
+        this.selectedMonth = this.adapter.getMonth(this.activeDate);
 
         const year = this.adapter.getYear(this.activeDate);
 
-        this.selectedYear = this.years.find((item) => item === year) || this.years[0];
+        this.selectedYear = this.years.find((item) => item === year) || this.years[0] || year;
     }
 
     private updateSelectionOptions() {
@@ -248,10 +253,6 @@ export class KbqCalendarHeader<D> implements AfterContentInit, OnChanges {
     }
 
     private updateMonthOptions() {
-        if (!this._activeDate) {
-            return;
-        }
-
         const minYear = this.adapter.getYear(this.minDate!);
         const minMonth = this.adapter.getMonth(this.minDate!);
 

@@ -1,11 +1,10 @@
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
-import { AfterViewInit, Directive, inject, input, OnDestroy } from '@angular/core';
+import { type AfterViewInit, Directive, inject, input, type OnDestroy } from '@angular/core';
+import { debounceTime, Subscription, throttleTime } from 'rxjs';
 import { KBQ_WINDOW, KbqOption } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { Subscription, throttleTime } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
 
 @Directive({
     selector: 'kbq-option',
@@ -31,7 +30,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
      * Overrides the tooltip's hoverable default. The overflow hint floats over the neighbouring options of a
      * scrolling list, so a pointer-capturing pane would swallow the click that selects them.
      */
-    readonly ignoreTooltipPointerEvents = input<boolean>(true);
+    override readonly ignoreTooltipPointerEvents = input<boolean>(true);
 
     /**
      * The hint repeats text the option had to clip, so `kbqTooltipDisabled="false"` cannot conjure one for an
@@ -59,11 +58,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
      * condition, so a child clipping for another reason is not read as truncated text.
      */
     private hasClippedLine(textElement: HTMLElement): boolean {
-        const { children } = textElement;
-
-        for (let index = 0; index < children.length; index++) {
-            const line = children[index];
-
+        for (const line of Array.from(textElement.children)) {
             if (
                 line.clientWidth < line.scrollWidth &&
                 this.window.getComputedStyle(line).textOverflow.includes('ellipsis')
@@ -75,11 +70,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
         return false;
     }
 
-    constructor() {
-        super();
-    }
-
-    ngAfterViewInit() {
+    override ngAfterViewInit() {
         super.ngAfterViewInit();
 
         this.content = this.option.viewValue;
@@ -103,7 +94,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
             .subscribe((origin) => (origin === 'keyboard' ? this.handleElementEnter() : this.handleElementLeave()));
     }
 
-    ngOnDestroy() {
+    override ngOnDestroy() {
         this.resizeSubscription.unsubscribe();
         this.contentObserverSubscription.unsubscribe();
         this.focusMonitorSubscription.unsubscribe();

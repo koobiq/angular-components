@@ -52,9 +52,9 @@ export const pruneIsNewBadges = (source: string, now: DateTime): PruneIsNewBadge
         // No trailing comma means the entry was the object's last property, so the preceding line
         // now ends the object and must lose its own comma (prettier runs `trailingComma: 'none'`).
         if (!line.trimEnd().endsWith(',')) {
-            const previous = kept.length - 1;
+            const previous = kept.at(-1);
 
-            kept[previous] = kept[previous].replace(/,(\s*)$/, '$1');
+            if (previous !== undefined) kept[kept.length - 1] = previous.replace(/,(\s*)$/, '$1');
         }
     });
 

@@ -1,12 +1,15 @@
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
+import { countries } from 'country-flag-icons';
+import * as flags3x2 from 'country-flag-icons/string/3x2';
 import { KbqFlag } from '@koobiq/components/flag';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { countries } from 'country-flag-icons';
-import * as flags3x2 from 'country-flag-icons/string/3x2';
+
+// `countries` lists the codes as plain strings, so the flags are looked up by string.
+const flags: Record<string, string> = flags3x2;
 
 const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
 
@@ -80,7 +83,7 @@ export class FlagAspectRatioExample {
         .map((code) => ({
             code,
             name: getCountryName(code),
-            svg: this.sanitizer.bypassSecurityTrustHtml(flags3x2[code.replace(/-/g, '_')])
+            svg: this.sanitizer.bypassSecurityTrustHtml(flags[code.replace(/-/g, '_')] ?? '')
         }))
         .sort((a, b) => a.name.localeCompare(b.name));
 

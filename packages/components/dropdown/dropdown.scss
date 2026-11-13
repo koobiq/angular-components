@@ -1,6 +1,6 @@
 @use './dropdown-theme' as theme;
 @use '../core/styles/common/select';
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
 .kbq-dropdown-trigger {
     &.kbq-button {
@@ -43,7 +43,7 @@
     min-width: max(var(--kbq-dropdown-size-container-width-min), 100%);
     max-width: var(--kbq-dropdown-size-container-width-max);
 
-    @include kbq-squircle(var(--kbq-dropdown-size-container-border-radius));
+    @include squircle.kbq-squircle(var(--kbq-dropdown-size-container-border-radius));
 
     box-sizing: border-box;
 
@@ -61,8 +61,8 @@
     .kbq-dropdown-item {
         @include select.item-active-area(var(--kbq-size-3xs));
 
-        &:before,
-        &:after {
+        &::before,
+        &::after {
             top: calc(-1 * var(--kbq-size-3xs));
             bottom: calc(-1 * var(--kbq-size-3xs));
         }
@@ -71,7 +71,7 @@
         // shimmer onto this hit-area pseudo-element. The shimmer is rendered on
         // .kbq-dropdown-item-overlay instead (see dropdown-item.scss), so just neutralize it here
         // without touching content/position/width/height/left, which the hit-area still needs.
-        &.kbq-progress:after {
+        &.kbq-progress::after {
             background: none;
             animation: none;
         }

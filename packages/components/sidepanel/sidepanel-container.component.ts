@@ -1,27 +1,27 @@
 import { CdkTrapFocus, ConfigurableFocusTrapFactory, FocusTrapFactory } from '@angular/cdk/a11y';
-import { BasePortalOutlet, CdkPortalOutlet, ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
+import { BasePortalOutlet, CdkPortalOutlet, type ComponentPortal, type TemplatePortal } from '@angular/cdk/portal';
 import {
     afterNextRender,
-    AfterRenderRef,
+    type AfterRenderRef,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ComponentRef,
+    type ComponentRef,
     computed,
     ElementRef,
-    EmbeddedViewRef,
+    type EmbeddedViewRef,
     inject,
     InjectionToken,
     Injector,
-    OnDestroy,
+    type OnDestroy,
     signal,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { type Observable, Subject } from 'rxjs';
 import { kbqAfterAnimations, kbqAnimationsDisabled } from '@koobiq/components/core';
-import { Observable, Subject } from 'rxjs';
 import {
-    KbqSidepanelAnimationEvent,
+    type KbqSidepanelAnimationEvent,
     KbqSidepanelAnimationState,
     kbqSidepanelTransformAnimation
 } from './sidepanel-animations';
@@ -78,8 +78,8 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
 
     private readonly _withIndent = signal(inject(KBQ_SIDEPANEL_WITH_INDENT));
 
-    /** ID for the container DOM element. */
-    id: string;
+    /** ID for the container DOM element, assigned by the `KbqSidepanelRef` created along with the container. */
+    id = '';
 
     /**
      * Id of the element naming the sidepanel. Comes from the config, or from `kbq-sidepanel-header`.
@@ -148,7 +148,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     protected readonly indentClickEmitter = new Subject<MouseEvent>();
 
     /** Whether the component has been destroyed. */
-    private destroyed: boolean;
+    private destroyed?: boolean;
 
     ngOnDestroy(): void {
         this.destroyed = true;

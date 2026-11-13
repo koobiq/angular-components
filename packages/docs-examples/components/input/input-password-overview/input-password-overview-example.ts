@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { AbstractControl, FormControl, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
+import { type AbstractControl, FormControl, ReactiveFormsModule, type ValidationErrors } from '@angular/forms';
 import { PasswordValidators } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 
@@ -23,7 +23,7 @@ const latinAndSpecialSymbols = ({ value }: AbstractControl): ValidationErrors | 
         <kbq-form-field style="width: 250px">
             <input kbqInputPassword [formControl]="control" />
 
-            <kbq-password-toggle [kbqTooltipHidden]="'Показать пароль'" [kbqTooltipNotHidden]="'Скрыть пароль'" />
+            <kbq-password-toggle kbqTooltipHidden="Показать пароль" kbqTooltipNotHidden="Скрыть пароль" />
 
             <kbq-reactive-password-hint [hasError]="control.hasError('minLength') || control.hasError('maxLength')">
                 От 8 до 15 символов

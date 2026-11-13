@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, viewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, type OnInit, viewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqHighlightModule, KbqPseudoCheckboxModule } from '@koobiq/components/core';
@@ -13,18 +13,18 @@ import {
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
     KbqTreeModule,
-    KbqTreeOption,
+    type KbqTreeOption,
     KbqTreeSelection
 } from '@koobiq/components/tree';
 import {
     KbqTreeSelect,
-    KbqTreeSelectChange,
+    type KbqTreeSelectChange,
     KbqTreeSelectModule,
     kbqTreeSelectOptionsProvider
 } from '@koobiq/components/tree-select';
 import { TreeSelectExamplesModule } from '../../docs-examples/components/tree-select';
 import { DevThemeToggle } from '../theme-toggle';
-import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, DevFileNode } from '../tree/module';
+import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, type DevFileNode } from '../tree/module';
 
 @Component({
     selector: 'dev-examples',
@@ -151,31 +151,33 @@ export class DevApp implements OnInit {
         return `${hiddenItemsText} ${hiddenItems}`;
     }
 
-    openedChange($event) {
-        console.log('openedChange: ', $event);
+    openedChange(event: boolean) {
+        console.log('openedChange: ', event);
     }
 
-    opened($event) {
-        console.log('opened: ', $event);
+    opened() {
+        console.log('opened');
     }
 
-    closed($event) {
-        console.log('closed: ', $event);
+    closed() {
+        console.log('closed');
     }
 
-    private toggleParents(parent) {
-        if (!parent) {
+    private toggleParents(parent: DevFileFlatNode | null) {
+        const selectionModel = this.select().selectionModel;
+
+        if (!parent || !selectionModel) {
             return;
         }
 
         const descendants = this.treeControl.getDescendants(parent);
-        const isParentSelected = this.select().selectionModel.selected.includes(parent);
+        const isParentSelected = selectionModel.selected.includes(parent);
 
-        if (!isParentSelected && descendants.every((d: any) => this.select().selectionModel.selected.includes(d))) {
-            this.select().selectionModel.select(parent);
+        if (!isParentSelected && descendants.every((d: any) => selectionModel.selected.includes(d))) {
+            selectionModel.select(parent);
             this.toggleParents(parent.parent);
         } else if (isParentSelected) {
-            this.select().selectionModel.deselect(parent);
+            selectionModel.deselect(parent);
             this.toggleParents(parent.parent);
         }
     }
@@ -200,7 +202,7 @@ export class DevApp implements OnInit {
         return node.expandable;
     };
 
-    private getChildren = (node: DevFileNode): DevFileNode[] => {
+    private getChildren = (node: DevFileNode): DevFileNode[] | undefined => {
         return node.children;
     };
 

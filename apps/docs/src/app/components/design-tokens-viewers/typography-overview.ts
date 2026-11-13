@@ -1,11 +1,10 @@
+import { TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
+import { KbqTableModule } from '@koobiq/components/table';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { DocsLocaleState } from '../../services/locale';
 import { DocsCodeSnippetDirective } from '../code-snippet/code-snippet';
 import { DocsComponentViewerWrapperComponent } from '../component-viewer/component-viewer-wrapper';
-
-import { TitleCasePipe } from '@angular/common';
-import { KbqTableModule } from '@koobiq/components/table';
 import { docsData } from './data/typography';
 
 @Component({
@@ -48,7 +47,7 @@ import { docsData } from './data/typography';
             </table>
         </docs-component-viewer-wrapper>
     `,
-    styleUrls: ['design-tokens.scss'],
+    styleUrl: 'design-tokens.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-markdown'

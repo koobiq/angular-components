@@ -1,10 +1,10 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, viewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, type OnInit, viewChild, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqHighlightModule, KbqPseudoCheckboxModule, KbqPseudoCheckboxState } from '@koobiq/components/core';
+import { KbqHighlightModule, KbqPseudoCheckboxModule, type KbqPseudoCheckboxState } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -12,7 +12,7 @@ import { KbqSelectNoOptions } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqTreeModule, kbqTreeSelectAllValue, KbqTreeSelection } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
-import { KbqPipeTemplate, KbqSelectValue, KbqTreeSelectFlatNode, KbqTreeSelectNode } from '../filter-bar.types';
+import type { KbqPipeTemplate, KbqSelectValue, KbqTreeSelectFlatNode, KbqTreeSelectNode } from '../filter-bar.types';
 import { getId, KbqBasePipe } from './base-pipe';
 import { KbqMultiSelectPipeState } from './multi-select-pipe-state';
 import { KbqPipeButton } from './pipe-button';
@@ -49,8 +49,8 @@ export interface KbqMultiTreeSelectValueTemplateContext<T extends KbqTreeSelectN
         KbqSelectNoOptions,
         NgTemplateOutlet
     ],
-    templateUrl: 'pipe-multi-tree-select.html',
-    styleUrls: ['base-pipe.scss', 'pipe-multi-tree-select.scss'],
+    templateUrl: './pipe-multi-tree-select.html',
+    styleUrls: ['./base-pipe.scss', './pipe-multi-tree-select.scss'],
     providers: [
         {
             provide: KbqBasePipe,
@@ -70,7 +70,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     }
 
     /** Whether the current pipe is empty. */
-    get isEmpty(): boolean {
+    override get isEmpty(): boolean {
         return this.multiSelect.isEmpty(super.isEmpty);
     }
 
@@ -96,7 +96,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
 
         if (this.select().search()?.ngControl?.value) {
             return this.tree().renderedOptions.filter(
-                (option) => option.value !== kbqTreeSelectAllValue && !option.data.expandable && !option.disabled
+                (option) => option.value !== kbqTreeSelectAllValue && !option.data?.expandable && !option.disabled
             ).length;
         }
 
@@ -106,7 +106,9 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     }
 
     get numberOfSelectedLeaves(): number {
-        return this.select().selectionModel.selected.filter(({ value }) => value !== kbqTreeSelectAllValue).length;
+        return (
+            this.select().selectionModel?.selected.filter(({ value }) => value !== kbqTreeSelectAllValue).length ?? 0
+        );
     }
 
     /** true if all options selected */
@@ -228,7 +230,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
         return { $implicit: this, option: this.getSourceNode(node), search: this.searchControl.value };
     }
 
-    onSelect({ value: option }) {
+    onSelect({ value: option }: { value: any }) {
         if (!option) return;
 
         const tree = this.tree();
@@ -273,9 +275,12 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
             // relying on the tree's own guards.
             const visibleNodes = this.tree()
                 .renderedOptions.filter((option) => option.value !== kbqTreeSelectAllValue && !option.disabled)
-                .map((option) => option.data);
+                .map((option) => option.data)
+                .filter((data) => data !== undefined);
             // Same model the tree owns, written once rather than once per row.
             const { selectionModel } = this.select();
+
+            if (!selectionModel) return;
 
             if (this.allVisibleOptionsSelected) {
                 selectionModel.deselect(...visibleNodes);
@@ -285,6 +290,8 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
         } else {
             // Same model the tree owns — see the note in `enforceLockedNodes`.
             const { selectionModel } = this.select();
+
+            if (!selectionModel) return;
 
             if (this.allOptionsSelected) {
                 // `clear()` would drop the locked nodes along with the rest. Matched by value rather than
@@ -398,6 +405,9 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     private enforceLockedNodes(): void {
         // The tree-select exposes the very same model the tree owns.
         const { selectionModel } = this.select();
+
+        if (!selectionModel) return;
+
         const missing = this.lockedDataNodes.filter((node) => !selectionModel.isSelected(node));
 
         if (missing.length) {
@@ -406,21 +416,20 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     }
 
     private toggleParents(parent: KbqTreeSelectFlatNode | undefined) {
-        if (!parent) {
+        const { selectionModel } = this.select();
+
+        if (!parent || !selectionModel) {
             return;
         }
 
         const descendants = this.treeControl.getDescendants(parent);
-        const isParentSelected = this.select().selectionModel.selected.includes(parent);
+        const isParentSelected = selectionModel.selected.includes(parent);
 
-        if (
-            !isParentSelected &&
-            descendants.every((d: KbqTreeSelectFlatNode) => this.select().selectionModel.selected.includes(d))
-        ) {
-            this.select().selectionModel.select(parent);
+        if (!isParentSelected && descendants.every((d: KbqTreeSelectFlatNode) => selectionModel.selected.includes(d))) {
+            selectionModel.select(parent);
             this.toggleParents(parent.parent);
         } else if (isParentSelected) {
-            this.select().selectionModel.deselect(parent);
+            selectionModel.deselect(parent);
             this.toggleParents(parent.parent);
         }
     }

@@ -1,25 +1,26 @@
 import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
 import { DOCUMENT, NgComponentOutlet } from '@angular/common';
 import {
+    afterEveryRender,
+    afterNextRender,
     ApplicationRef,
     ChangeDetectionStrategy,
     Component,
-    DestroyRef,
-    ElementRef,
-    Injector,
-    Type,
-    ViewEncapsulation,
-    afterEveryRender,
-    afterNextRender,
     computed,
+    DestroyRef,
     effect,
+    type ElementRef,
     inject,
+    Injector,
     signal,
-    viewChild
+    type Type,
+    viewChild,
+    ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, type Params, Router } from '@angular/router';
+import { map } from 'rxjs';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { createSearchPredicate, kbqInjectNativeElement } from '@koobiq/components/core';
@@ -28,14 +29,13 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { map } from 'rxjs/operators';
 import { DOCS_MIGRATION_PROGRESS_LABEL, DOCS_MIGRATION_RANGE_TITLE } from '../../services/i18n';
 import { DocsLocaleState } from '../../services/locale';
 import { docsGetItems } from '../../structure';
 import { DocsComponentViewerWrapperComponent } from '../component-viewer/component-viewer-wrapper';
 import {
-    DOCS_MIGRATION_COMPONENTS_ATTR,
     DOCS_MIGRATION_COMPONENT_SELECTOR,
+    DOCS_MIGRATION_COMPONENTS_ATTR,
     DOCS_MIGRATION_DONE_ATTR,
     DOCS_MIGRATION_FRAMING_SELECTOR,
     DOCS_MIGRATION_RELEASE_ATTR,
@@ -47,8 +47,6 @@ import {
 import { DocsMigrationProgress } from './docs-migration-progress';
 import { DocsMigrationStepDone } from './docs-migration-step-done';
 import {
-    DocsMigrationVersionOption,
-    DocsVersion,
     docsBuildMigrationVersionOptions,
     docsMigrationFromChoices,
     docsMigrationKnownValue,
@@ -57,7 +55,9 @@ import {
     docsMigrationToChoices,
     docsMigrationUpdateCommand,
     docsMigrationUpdateMajors,
-    docsParseVersion
+    type DocsMigrationVersionOption,
+    docsParseVersion,
+    type DocsVersion
 } from './migration-versions';
 
 /**
@@ -103,7 +103,7 @@ const componentsOf = (element: Element): string[] =>
         ReactiveFormsModule
     ],
     templateUrl: './docs-migration-guide.html',
-    styleUrls: ['./docs-migration-guide.scss'],
+    styleUrl: './docs-migration-guide.scss',
     providers: [DocsMigrationProgress],
     changeDetection: ChangeDetectionStrategy.OnPush,
     // The guide is a page component rendered through an outlet, so the step styles have to reach
@@ -221,9 +221,9 @@ export class DocsMigrationGuide extends DocsLocaleState {
         super();
 
         this.route.queryParams.pipe(takeUntilDestroyed()).subscribe((params: Params) => {
-            const requestedFrom = readParam(params.from);
-            const requestedTo = readParam(params.to);
-            const requestedComponents = readListParam(params.components);
+            const requestedFrom = readParam(params['from']);
+            const requestedTo = readParam(params['to']);
+            const requestedComponents = readListParam(params['components']);
             const from = this.knownValue(requestedFrom);
             const to = docsMigrationNormalizeTo(from, this.knownValue(requestedTo));
             const components = this.knownComponents(requestedComponents);

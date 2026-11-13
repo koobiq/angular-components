@@ -13,6 +13,7 @@
         // @octokit/request-error fail against this config's ES2017 target.
         "skipLibCheck": true,
         "strict": true,
+        "noUncheckedIndexedAccess": true,
         "sourceMap": false,
         "composite": true,
         "outDir": "./dist",

@@ -30,7 +30,7 @@ const SUCCESS_LABEL_DURATION = 1000;
             }
         </span>
     `,
-    styleUrls: ['./copy-button.scss'],
+    styleUrl: './copy-button.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

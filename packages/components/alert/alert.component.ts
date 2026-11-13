@@ -14,7 +14,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
-import { KbqComponentColors, KbqEnumValues } from '@koobiq/components/core';
+import { KbqComponentColors, type KbqEnumValues } from '@koobiq/components/core';
 import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
 
 /** Visual style of an alert. */
@@ -84,7 +84,7 @@ export class KbqAlertControl {}
 @Component({
     selector: 'kbq-alert',
     templateUrl: './alert.component.html',
-    styleUrls: ['alert.component.scss', 'alert-tokens.scss'],
+    styleUrls: ['./alert.component.scss', './alert-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

@@ -31,7 +31,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
             </div>
         </ng-template>
     `,
-    styleUrls: ['./title-custom-content-example.css'],
+    styleUrl: './title-custom-content-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleCustomContentExample {

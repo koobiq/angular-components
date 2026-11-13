@@ -1,7 +1,6 @@
 @use '../core/styles/common/animation';
 @use '../core/styles/functions/timing';
-
-@use './progress-bar-theme' as *;
+@use './progress-bar-theme';
 
 // The fill is sized statically, so the animation only has to move and stretch it: both are
 // compositor-only, and neither is the thing that makes the bar visible. `translateX()` is a share of
@@ -83,5 +82,5 @@
     }
 }
 
-@include kbq-progress-bar-theme();
-@include kbq-progress-bar-typography();
+@include progress-bar-theme.kbq-progress-bar-theme();
+@include progress-bar-theme.kbq-progress-bar-typography();

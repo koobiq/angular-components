@@ -10,7 +10,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     selector: 'dropdown-item-link-example',
     imports: [KbqDropdownModule, KbqButtonModule, KbqIconModule],
     template: `
-        <button kbq-button [kbqDropdownTriggerFor]="actionsDropdown">
+        <button kbq-button type="button" [kbqDropdownTriggerFor]="actionsDropdown">
             Actions
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>

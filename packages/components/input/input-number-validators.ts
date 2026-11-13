@@ -1,6 +1,21 @@
-import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { computed, Directive, forwardRef, input, OnChanges, Provider, SimpleChanges } from '@angular/core';
-import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator, ValidatorFn, Validators } from '@angular/forms';
+import { coerceNumberProperty, type NumberInput } from '@angular/cdk/coercion';
+import {
+    computed,
+    Directive,
+    forwardRef,
+    input,
+    type OnChanges,
+    type Provider,
+    type SimpleChanges
+} from '@angular/core';
+import {
+    type AbstractControl,
+    NG_VALIDATORS,
+    type ValidationErrors,
+    type Validator,
+    type ValidatorFn,
+    Validators
+} from '@angular/forms';
 
 /**
  * Transform for the validator bounds. `coerceNumberProperty`, not `parseInt`: the bound value may be a
@@ -34,8 +49,8 @@ export class KbqMinValidator implements Validator, OnChanges {
     /** Lower bound installed as `Validators.min`. A non-numeric bound reads back as `NaN`. */
     readonly min = input<number, NumberInput>(undefined!, { transform: bound });
 
-    private validator: ValidatorFn;
-    private onChange: () => void;
+    private validator: ValidatorFn = Validators.nullValidator;
+    private onChange?: () => void;
 
     /** `min()` unless it is `NaN`, which has no DOM representation. */
     protected readonly coercedMin = computed(() => (Number.isNaN(this.min()) ? null : this.min()));
@@ -87,8 +102,8 @@ export class KbqMaxValidator implements Validator, OnChanges {
     /** Upper bound installed as `Validators.max`. A non-numeric bound reads back as `NaN`. */
     readonly max = input<number, NumberInput>(undefined!, { transform: bound });
 
-    private validator: ValidatorFn;
-    private onChange: () => void;
+    private validator: ValidatorFn = Validators.nullValidator;
+    private onChange?: () => void;
 
     /** `max()` unless it is `NaN`, which has no DOM representation. */
     protected readonly coercedMax = computed(() => (Number.isNaN(this.max()) ? null : this.max()));

@@ -1,14 +1,20 @@
-import { FocusOrigin } from '@angular/cdk/a11y';
-import { Direction } from '@angular/cdk/bidi';
-import { InjectionToken, OutputEmitterRef, Signal, TemplateRef, WritableSignal } from '@angular/core';
+import type { FocusOrigin } from '@angular/cdk/a11y';
+import type { Direction } from '@angular/cdk/bidi';
+import {
+    InjectionToken,
+    type OutputEmitterRef,
+    type Signal,
+    type TemplateRef,
+    type WritableSignal
+} from '@angular/core';
 import {
     KBQ_PANEL_DEFAULT_MIN_WIDTH,
-    KbqPanelMaxWidth,
-    KbqPanelMinWidth,
-    KbqPanelWidth
+    type KbqPanelMaxWidth,
+    type KbqPanelMinWidth,
+    type KbqPanelWidth
 } from '@koobiq/components/core';
-import { KbqDropdownContent } from './dropdown-content.directive';
-import { KbqDropdownItem } from './dropdown-item.component';
+import type { KbqDropdownContent } from './dropdown-content.directive';
+import type { KbqDropdownItem } from './dropdown-item.component';
 
 /** Position of the dropdown panel along the x-axis. */
 export type KbqDropdownPositionX = 'before' | 'after' | 'center';
@@ -32,6 +38,8 @@ export interface KbqDropdownPanel {
     overlapTriggerY: WritableSignal<boolean>;
     templateRef: Signal<TemplateRef<any>>;
     closed: OutputEmitterRef<DropdownCloseReason>;
+    // `KbqDropdown` declares `parent: KbqDropdownPanel | undefined`, which a consumer compiling with
+    // `exactOptionalPropertyTypes` can assign here only while this type keeps `| undefined`.
     parent?: KbqDropdownPanel | undefined;
     panelWidth?: Signal<KbqPanelWidth>;
     panelMinWidth?: Signal<KbqPanelMinWidth>;

@@ -1,17 +1,23 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import {
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     inject,
     signal,
     viewChild,
-    WritableSignal
+    type WritableSignal
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { auditTime, map } from 'rxjs';
 import { KbqBadgeModule } from '@koobiq/components/badge';
-import { KbqButtonColor, KbqButtonModule, KbqButtonStyleInput, KbqButtonStyles } from '@koobiq/components/button';
+import {
+    type KbqButtonColor,
+    KbqButtonModule,
+    type KbqButtonStyleInput,
+    KbqButtonStyles
+} from '@koobiq/components/button';
 import { KbqComponentColors, KbqFormattersModule, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -20,7 +26,6 @@ import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
-import { auditTime, map } from 'rxjs/operators';
 
 type ExampleAction = {
     id: string;
@@ -67,6 +72,7 @@ type ExampleAction = {
                     @for (action of actions; track action.id) {
                         <button
                             kbq-button
+                            type="button"
                             [kbqOverflowItem]="action.id"
                             [kbqStyle]="action.style"
                             [color]="action.color"
@@ -88,6 +94,7 @@ type ExampleAction = {
                     <div kbqOverflowItemsResult>
                         <button
                             kbq-button
+                            type="button"
                             aria-label="More"
                             [kbqStyle]="KbqButtonStyles.Transparent"
                             [color]="KbqComponentColors.Contrast"
@@ -99,7 +106,7 @@ type ExampleAction = {
                         <kbq-dropdown #appDropdown="kbqDropdown">
                             @for (action of actions; track action.id) {
                                 @if (kbqOverflowItems.hiddenItemIDs().has(action.id)) {
-                                    <button kbq-dropdown-item>
+                                    <button kbq-dropdown-item type="button">
                                         {{ action.text || action.id }}
                                     </button>
                                 }

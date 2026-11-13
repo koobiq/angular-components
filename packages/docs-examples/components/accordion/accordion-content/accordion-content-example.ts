@@ -8,8 +8,8 @@ import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 @Component({
     selector: 'accordion-content-example',
     imports: [KbqAccordionModule, KbqCheckboxModule],
-    templateUrl: 'accordion-content-example.html',
-    styleUrls: ['accordion-content-example.css'],
+    templateUrl: './accordion-content-example.html',
+    styleUrl: './accordion-content-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionContentExample {

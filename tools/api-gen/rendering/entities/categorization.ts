@@ -1,4 +1,4 @@
-import { ClassEntry, DocEntry, EntryType, JsDocTagEntry } from '../entities';
+import { type ClassEntry, type DocEntry, EntryType, type JsDocTagEntry } from '../entities';
 
 /** The kinds of entry the extractor reports for a class, decorated or not. */
 const CLASS_ENTRY_TYPES = new Set<EntryType>([

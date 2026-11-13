@@ -7,7 +7,7 @@
             [class.example-alert_in-progress]="inProgress()"
             [compact]="true"
         >
-            <i kbq-icon="kbq-circle-info_16" [color]="'error'"></i>
+            <i kbq-icon="kbq-circle-info_16" color="error"></i>
             <span>
                 Fill in at least one of the fields:
                 <span kbqLink (click)="seriesInput.focus()">Series,</span>
@@ -31,10 +31,10 @@
                         kbqInput
                         name="input"
                         kbqTooltipColor="error"
+                        kbqTooltip="Only numbers"
+                        kbqTrigger="manual"
                         [kbqEnterDelay]="10"
                         [kbqPlacement]="popUpPlacements.Top"
-                        [kbqTooltip]="'Only numbers'"
-                        [kbqTrigger]="'manual'"
                         (blur)="seriesTooltip.hide()"
                         (input)="onInput($event, seriesTooltip, form.controls.series)"
                     />
@@ -51,10 +51,10 @@
                         kbqInput
                         name="input"
                         kbqTooltipColor="error"
+                        kbqTooltip="Only numbers"
+                        kbqTrigger="manual"
                         [kbqEnterDelay]="10"
                         [kbqPlacement]="popUpPlacements.Top"
-                        [kbqTooltip]="'Only numbers'"
-                        [kbqTrigger]="'manual'"
                         (blur)="numberTooltip.hide()"
                         (input)="onInput($event, numberTooltip, form.controls.number)"
                     />

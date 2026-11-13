@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPopoverModule } from '@koobiq/components/popover';
-import { KbqTabChangeEvent, KbqTabsModule } from '@koobiq/components/tabs';
+import { type KbqTabChangeEvent, KbqTabsModule } from '@koobiq/components/tabs';
 import {
     TabsActionbarExample,
     TabsAddTabExample,
@@ -61,7 +61,7 @@ export class DevApp {
         { tabId: 'settings', icon: 'kbq-gear_16' },
         { tabId: 'tasks', icon: 'kbq-bars-horizontal_16' }
     ];
-    selectedTabIndex: number;
+    selectedTabIndex?: number;
     readonly dashboards = new Array(2).fill(0).map((_, index) => `Dashboard ${index}`);
     activeDashboard = this.dashboards[0];
 

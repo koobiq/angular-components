@@ -13,7 +13,7 @@ import { KbqTableModule } from '@koobiq/components/table';
         KbqLink,
         KbqTableModule
     ],
-    templateUrl: 'badge-table-example.html',
+    templateUrl: './badge-table-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BadgeTableExample {

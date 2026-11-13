@@ -6,8 +6,8 @@ import {
     input,
     ViewEncapsulation
 } from '@angular/core';
-import { SafeHtml } from '@angular/platform-browser';
-import { KbqFlagShadow, KbqFlagShape } from './flag.types';
+import type { SafeHtml } from '@angular/platform-browser';
+import type { KbqFlagShadow, KbqFlagShape } from './flag.types';
 
 /**
  * Presentational wrapper for a consumer-provided country flag (inline `<svg>` or `<img>`).
@@ -28,7 +28,7 @@ import { KbqFlagShadow, KbqFlagShape } from './flag.types';
             <span class="kbq-flag__svg" [innerHTML]="svg()"></span>
         }
     `,
-    styleUrls: ['flag.scss', 'flag-tokens.scss'],
+    styleUrls: ['./flag.scss', './flag-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

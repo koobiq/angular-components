@@ -1,19 +1,19 @@
 import {
-    AfterContentInit,
+    type AfterContentInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    OnChanges,
-    SimpleChanges,
-    ViewEncapsulation,
     inject,
     input,
+    type OnChanges,
     output,
-    viewChild
+    type SimpleChanges,
+    viewChild,
+    ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DateAdapter, KbqDateTimezoneService } from '@koobiq/components/core';
-import { KbqCalendarBody, KbqCalendarCell, KbqCalendarCellCssClasses } from './calendar-body.component';
+import { type DateAdapter, KbqDateTimezoneService } from '@koobiq/components/core';
+import { KbqCalendarBody, KbqCalendarCell, type KbqCalendarCellCssClasses } from './calendar-body.component';
 import { injectRequiredDateAdapter } from './datepicker-errors';
 
 const DAYS_PER_WEEK = 7;
@@ -28,7 +28,7 @@ const DAYS_PER_WEEK = 7;
     imports: [
         KbqCalendarBody
     ],
-    templateUrl: 'month-view.html',
+    templateUrl: './month-view.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     exportAs: 'kbqMonthView'
@@ -67,7 +67,7 @@ export class KbqMonthView<D> implements AfterContentInit, OnChanges {
         this.selectedDate = this.getDateInCurrentMonth(this._selected);
     }
 
-    private _selected: D | null;
+    private _selected: D | null = null;
 
     /** @docs-private */
     readonly activeDateInput = input<D | undefined>(undefined, { alias: 'activeDate' });
@@ -88,7 +88,7 @@ export class KbqMonthView<D> implements AfterContentInit, OnChanges {
     readonly dateClass = input<(date: D) => KbqCalendarCellCssClasses>(undefined!);
 
     /** Emits when a new date is selected. */
-    readonly selectedChange = output<D | null>();
+    readonly selectedChange = output<D>();
 
     /** Emits when any date is selected. */
     readonly userSelection = output<void>();
@@ -99,20 +99,20 @@ export class KbqMonthView<D> implements AfterContentInit, OnChanges {
     /** The body of calendar table */
     readonly kbqCalendarBody = viewChild.required(KbqCalendarBody);
 
-    /** Grid of calendar cells representing the dates of the month. */
-    weeks: KbqCalendarCell[][];
+    /** Grid of calendar cells representing the dates of the month. Defaults to `[]`. */
+    weeks: KbqCalendarCell[][] = [];
 
-    /** The number of blank cells in the first row before the 1st of the month. */
-    firstWeekOffset: number;
+    /** The number of blank cells in the first row before the 1st of the month. Defaults to `0`. */
+    firstWeekOffset = 0;
 
     /**
      * The date of the month that the currently selected Date falls on.
      * Null if the currently selected Date is in another month.
      */
-    selectedDate: number | null;
+    selectedDate: number | null = null;
 
     /** The date of the month that today falls on. Null if today is in another month. */
-    todayDate: number | null;
+    todayDate: number | null = null;
 
     /** The names of the weekdays. */
     weekdays: { long: string; narrow: string }[];
@@ -124,7 +124,7 @@ export class KbqMonthView<D> implements AfterContentInit, OnChanges {
 
         // Rotate the labels for days of the week based on the configured first day of the week.
         const weekdays = longWeekdays.map((long, i) => {
-            return { long, narrow: narrowWeekdays[i] };
+            return { long, narrow: narrowWeekdays[i]! };
         });
 
         this.weekdays = weekdays.slice(firstDayOfWeek).concat(weekdays.slice(0, firstDayOfWeek));
@@ -193,11 +193,14 @@ export class KbqMonthView<D> implements AfterContentInit, OnChanges {
         const daysInMonth = this.adapter.getNumDaysInMonth(this.activeDate);
         const dateNames = this.adapter.getDateNames();
 
-        this.weeks = [[]];
+        let week: KbqCalendarCell[] = [];
+
+        this.weeks = [week];
 
         for (let i = 0, cell = this.firstWeekOffset; i < daysInMonth; i++, cell++) {
             if (cell === DAYS_PER_WEEK) {
-                this.weeks.push([]);
+                week = [];
+                this.weeks.push(week);
                 cell = 0;
             }
 
@@ -210,7 +213,7 @@ export class KbqMonthView<D> implements AfterContentInit, OnChanges {
             const dateClass = this.dateClass();
             const cellClasses = dateClass ? dateClass(date) : undefined;
 
-            this.weeks[this.weeks.length - 1].push(new KbqCalendarCell(i + 1, dateNames[i], enabled, cellClasses));
+            week.push(new KbqCalendarCell(i + 1, dateNames[i]!, enabled, cellClasses));
         }
     }
 

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
+import { type KbqFilter, KbqFilterBarModule, type KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 
 const OPTIONS = Array.from({ length: 12 }, (_, index) => ({ name: `Option ${index + 1}`, id: `${index + 1}` }));
 

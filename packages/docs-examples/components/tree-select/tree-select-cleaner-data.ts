@@ -1,16 +1,16 @@
 /** Keeps the tree plumbing out of the cleaner example, which is about the reset control. */
 
 export class Node {
-    name: string;
-    children: Node[];
+    name = '';
+    children?: Node[];
 }
 
 /** Flat node with expandable and level information. */
 export class FlatNode {
-    name: string;
-    level: number;
-    expandable: boolean;
-    parent: FlatNode | null;
+    name = '';
+    level = 0;
+    expandable = false;
+    parent: FlatNode | null = null;
 }
 
 /** A shallow service tree: every node the examples disable sits at the top level, where it is rendered. */
@@ -41,7 +41,7 @@ export const getLevel = (node: FlatNode): number => node.level;
 
 export const isExpandable = (node: FlatNode): boolean => node.expandable;
 
-export const getChildren = (node: Node): Node[] => node.children;
+export const getChildren = (node: Node): Node[] | undefined => node.children;
 
 export const getValue = (node: FlatNode): string => node.name;
 

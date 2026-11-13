@@ -11,15 +11,17 @@ import { KbqComponentColors } from '@koobiq/components/core';
         KbqButtonModule
     ],
     template: `
-        <button class="example-hug-content__button" kbq-button [color]="colors.Contrast">Текст кнопки</button>
+        <button type="button" class="example-hug-content__button" kbq-button [color]="colors.Contrast">
+            Текст кнопки
+        </button>
         &nbsp;
         <br />
-        <button class="example-hug-content__button" kbq-button [color]="colors.Contrast">
+        <button type="button" class="example-hug-content__button" kbq-button [color]="colors.Contrast">
             Очень длинный текст кнопки
         </button>
         &nbsp;
     `,
-    styleUrls: ['button-hug-content-example.css'],
+    styleUrl: 'button-hug-content-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonHugContentExample {

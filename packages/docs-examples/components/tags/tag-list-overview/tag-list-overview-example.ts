@@ -2,7 +2,7 @@ import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTagEvent, KbqTagListDroppedEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { type KbqTagEvent, type KbqTagListDroppedEvent, KbqTagsModule } from '@koobiq/components/tags';
 
 const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Tag ${i}` }));
 

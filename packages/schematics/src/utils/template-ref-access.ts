@@ -1,9 +1,10 @@
 import { visitAll } from './ast';
+import { capturedGroups } from './regexp';
 import {
     memberAccessPattern,
-    Range,
-    TemplateExpression,
-    TemplateRefResolver,
+    type Range,
+    type TemplateExpression,
+    type TemplateRefResolver,
     TemplateScanner
 } from './signal-members-migration';
 
@@ -73,7 +74,7 @@ function assignedExpressionEnd(template: string, from: number, limit: number): n
     let end = limit;
 
     for (let i = from; i < limit && end === limit; i++) {
-        const char = template[i];
+        const char = template.charAt(i);
 
         if (quote) {
             if (char === '\\') i++;
@@ -90,7 +91,7 @@ function assignedExpressionEnd(template: string, from: number, limit: number): n
         }
     }
 
-    while (end > from && /\s/.test(template[end - 1])) end--;
+    while (end > from && /\s/.test(template.charAt(end - 1))) end--;
 
     return end;
 }
@@ -123,7 +124,7 @@ export function rewriteRefAccesses(
         const source = template.slice(expression.start, expression.end);
 
         for (const match of source.matchAll(assignmentPattern(name, policy.members))) {
-            const [, target, member, operator] = match;
+            const [, target = '', member = '', operator = ''] = match;
             const targetEnd = expression.start + match.index + target.length;
 
             if (seen.has(targetEnd)) continue;
@@ -154,7 +155,7 @@ export function rewriteRefAccesses(
         for (const match of source.matchAll(memberAccessPattern(name, policy.members))) {
             const start = expression.start + match.index;
             const end = start + match[0].length;
-            const member = match[2];
+            const member = match[2] ?? '';
 
             if (seen.has(end)) continue;
 
@@ -197,7 +198,7 @@ export function rewriteRefAccesses(
             if (policy.reported?.length) {
                 const source = template.slice(expression.start, expression.end);
 
-                for (const [, member] of source.matchAll(anyAccessPattern(name, policy.reported))) {
+                for (const member of capturedGroups(source, anyAccessPattern(name, policy.reported))) {
                     result.reported.add(member);
                 }
             }

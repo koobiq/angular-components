@@ -2,9 +2,9 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { compilePage } from '../compile-page';
 import {
-    DocsMigrationDocument,
     docsIsMigrationSource,
     docsJoinMigrationBlocks,
+    type DocsMigrationDocument,
     docsSplitMigrationSections
 } from './migration-steps';
 

@@ -1,8 +1,7 @@
-@use '../core/styles/common/tokens' as *;
 @use './modal-confirm';
 @use './modal-animation';
-@use './modal-theme' as *;
-@use '../core/styles/common/squircle' as *;
+@use './modal-theme';
+@use '../core/styles/common/squircle';
 
 .kbq-modal-container {
     box-sizing: border-box;
@@ -11,7 +10,7 @@
 
     top: var(--kbq-modal-size-viewport-inset);
 
-    @include kbq-squircle(var(--kbq-modal-size-border-radius));
+    @include squircle.kbq-squircle(var(--kbq-modal-size-border-radius));
 
     // The dialog is the height authority: it never grows past the viewport minus its own inset on
     // each side, and it lays its chrome out at the real height, so only the body has to give way.
@@ -66,7 +65,7 @@
 .kbq-modal-content {
     position: relative;
 
-    @include kbq-squircle(var(--kbq-modal-size-border-radius));
+    @include squircle.kbq-squircle(var(--kbq-modal-size-border-radius));
 
     // Carries the container's column layout down to the header/body/footer that actually live here.
     display: flex;
@@ -166,5 +165,5 @@
     }
 }
 
-@include kbq-modal-theme();
-@include kbq-modal-typography();
+@include modal-theme.kbq-modal-theme();
+@include modal-theme.kbq-modal-typography();

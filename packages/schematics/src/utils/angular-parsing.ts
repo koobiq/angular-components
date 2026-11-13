@@ -1,13 +1,13 @@
-import { SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
 import { getSimpleAttributeName, getSimpleAttributeValue, visitAll } from './ast';
 import {
     AnalyzedFile,
     ElementCollector,
     forEachClass,
-    MigrationData,
+    type MigrationData,
     parseTemplate,
-    TransformTemplateAttributesResult
+    type TransformTemplateAttributesResult
 } from './typescript';
 
 export type TemplateTransformFn = (template: string, fileName: string) => Promise<TransformTemplateAttributesResult>;
@@ -152,7 +152,7 @@ export function analyzeDecorators(
 
     const metadata =
         decorator &&
-        decorator.expression.arguments.length > 0 &&
+        decorator.expression.arguments[0] &&
         ts.isObjectLiteralExpression(decorator.expression.arguments[0])
             ? decorator.expression.arguments[0]
             : null;

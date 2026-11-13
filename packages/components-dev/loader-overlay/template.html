@@ -16,7 +16,7 @@
     text text text text text text text text text text text text text text text text text text text text text text text
     text text text text text
     @if (loading) {
-        <kbq-loader-overlay [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'" [text]="'Создание отчета'" />
+        <kbq-loader-overlay caption="18,7 МБ из 25 МБ — осталось 2 мин" text="Создание отчета" />
     }
 </div>
 
@@ -33,11 +33,7 @@ transparent
     text text text text text text text text text text text text text text text text text text text text text text text
     text text text text text
     @if (loading) {
-        <kbq-loader-overlay
-            [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'"
-            [text]="'Создание отчета'"
-            [transparent]="true"
-        />
+        <kbq-loader-overlay caption="18,7 МБ из 25 МБ — осталось 2 мин" text="Создание отчета" [transparent]="true" />
     }
 </div>
 
@@ -54,7 +50,7 @@ compact
     text text text text text text text text text text text text text text text text text text text text text text text
     text text text text text
     @if (loading) {
-        <kbq-loader-overlay size="compact" [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'" [text]="'Создание отчета'" />
+        <kbq-loader-overlay size="compact" caption="18,7 МБ из 25 МБ — осталось 2 мин" text="Создание отчета" />
     }
 </div>
 
@@ -72,7 +68,7 @@ custom
     text text text text text
     @if (loading) {
         <kbq-loader-overlay [caption]="caption" [text]="text">
-            <kbq-progress-spinner kbq-loader-overlay-indicator [color]="colors.Error" [mode]="'indeterminate'" />
+            <kbq-progress-spinner kbq-loader-overlay-indicator mode="indeterminate" [color]="colors.Error" />
             <div kbq-loader-overlay-text>Создание отчета</div>
             <div kbq-loader-overlay-caption>18,7 МБ из 25 МБ — осталось 2 мин</div>
         </kbq-loader-overlay>

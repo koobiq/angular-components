@@ -1,10 +1,8 @@
 @use '../dist/components';
-
 @use '../dist/components/core/styles/visual';
 @use '../dist/components/core/styles/common/tokens';
 @use '../dist/components/core/styles/common/list';
-
-@use '../dist/components/core/styles/koobiq-theme' as *;
+@use '../dist/components/core/styles/koobiq-theme';
 
 @include components.kbq-core();
 
@@ -15,11 +13,11 @@
 @mixin docs-typography() {
     @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
-    @include koobiq-typography();
+    @include koobiq-theme.koobiq-typography();
 }
 
 @mixin kbq-docs-theme() {
-    @include koobiq-theme();
+    @include koobiq-theme.koobiq-theme();
 
     & {
         background: var(--kbq-background-bg);

@@ -3,9 +3,10 @@ import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateFormatter } from '@koobiq/components/core';
 import {
     kbqBuildTree,
-    KbqFilter,
+    type KbqFilter,
     KbqFilterBarModule,
-    KbqPipeTemplate,
+    type KbqPipe,
+    type KbqPipeTemplate,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
 import { injectLocalizedPeriods } from '../localized-data';
@@ -148,8 +149,8 @@ export class FilterBarPipeTypesExample {
         this.activeFilter = this.getDefaultFilter();
     }
 
-    onChangePipe($event) {
-        console.log('onChangePipe: ', $event);
+    onChangePipe(event: KbqPipe) {
+        console.log('onChangePipe: ', event);
     }
 
     getDefaultFilter(): KbqFilter {

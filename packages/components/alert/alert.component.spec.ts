@@ -1,8 +1,8 @@
-import { Component, signal, Type } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, signal, type Type } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
-import { KbqComponentColors, KbqEnumValues } from '@koobiq/components/core';
+import { KbqComponentColors, type KbqEnumValues } from '@koobiq/components/core';
 import { KbqIcon, KbqIconButton, KbqIconItem } from '@koobiq/components/icon';
 import { KbqAlert, KbqAlertCloseButton, KbqAlertColors, KbqAlertControl, KbqAlertStyles, KbqAlertTitle } from './index';
 
@@ -342,7 +342,7 @@ class ConfigurableTestApp {
     selector: 'test-app',
     imports: [KbqAlert, KbqIcon],
     template: `
-        <kbq-alert [alertColor]="'success'">
+        <kbq-alert alertColor="success">
             <i kbq-icon="kbq-circle-info_16" [color]="colors.Error"></i>
             Alert text
         </kbq-alert>

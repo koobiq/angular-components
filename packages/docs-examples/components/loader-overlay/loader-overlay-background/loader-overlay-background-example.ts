@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqLoaderOverlayModule, KbqLoaderOverlaySurface } from '@koobiq/components/loader-overlay';
+import { KbqLoaderOverlayModule, type KbqLoaderOverlaySurface } from '@koobiq/components/loader-overlay';
 
 /**
  * @title Loader-overlay background
@@ -10,7 +10,7 @@ import { KbqLoaderOverlayModule, KbqLoaderOverlaySurface } from '@koobiq/compone
     template: `
         <div class="example__grid">
             @for (surface of surfaces; track surface.value) {
-                <div class="example__item {{ surface.surfaceClass }}">
+                <div class="example__item" [class]="surface.surfaceClass">
                     <div class="example__content">
                         <p class="example__paragraph kbq-text-normal">{{ content }}</p>
                         <p class="example__paragraph example__paragraph_fade kbq-text-normal">

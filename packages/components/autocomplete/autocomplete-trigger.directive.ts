@@ -1,14 +1,14 @@
 ﻿import { Directionality } from '@angular/cdk/bidi';
 import {
-    ConnectedPosition,
-    FlexibleConnectedPositionStrategy,
-    FlexibleConnectedPositionStrategyOrigin,
+    type ConnectedPosition,
+    type FlexibleConnectedPositionStrategy,
+    type FlexibleConnectedPositionStrategyOrigin,
     Overlay,
     OverlayConfig,
-    OverlayRef,
-    PositionStrategy,
+    type OverlayRef,
+    type PositionStrategy,
     ScrollDispatcher,
-    ScrollStrategy
+    type ScrollStrategy
 } from '@angular/cdk/overlay';
 import { _getEventTarget, _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -16,7 +16,7 @@ import { ViewportRuler } from '@angular/cdk/scrolling';
 import { DOCUMENT } from '@angular/common';
 import {
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectorRef,
     Directive,
@@ -29,16 +29,32 @@ import {
     input,
     isWritableSignal,
     NgZone,
-    OnDestroy,
+    type OnDestroy,
     output,
-    Provider,
+    type Provider,
     Renderer2,
     signal,
     untracked,
     ViewContainerRef
 } from '@angular/core';
 import { outputToObservable, toObservable } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+    delay,
+    EMPTY,
+    filter,
+    fromEvent,
+    map,
+    merge,
+    Observable,
+    of as observableOf,
+    startWith,
+    Subject,
+    Subscription,
+    switchMap,
+    take,
+    tap
+} from 'rxjs';
 import {
     defaultOffsetY,
     DOWN_ARROW,
@@ -49,7 +65,7 @@ import {
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
     KBQ_OVERLAY_LAYERS,
     KBQ_WINDOW,
-    KbqCaretRect,
+    type KbqCaretRect,
     kbqCreateCaretOrigin,
     kbqCreateTextMirror,
     kbqGetCaretRect,
@@ -57,26 +73,24 @@ import {
     kbqGetTextQuery,
     kbqIsTextLaidOutFromStart,
     kbqListenForCaretMoves,
-    KbqOption,
+    type KbqOption,
     kbqOptionalNumberAttribute,
     KbqOptionSelectionChange,
     kbqRepositionScrollStrategyFactory,
-    KbqResolvedPanelWidth,
+    type KbqResolvedPanelWidth,
     kbqResolvePanelWidth,
-    KbqSiblingPopup,
+    type KbqSiblingPopup,
     kbqSiblingPopupProvider,
-    KbqTextMirror,
-    KbqTextQuery,
-    KeyboardNavigationHandler,
+    type KbqTextMirror,
+    type KbqTextQuery,
+    type KeyboardNavigationHandler,
     RIGHT_ARROW,
     TAB,
     UP_ARROW
 } from '@koobiq/components/core';
 import { KBQ_FORM_FIELD, KbqFormFieldControl } from '@koobiq/components/form-field';
-import { EMPTY, fromEvent, merge, Observable, of as observableOf, Subject, Subscription } from 'rxjs';
-import { delay, filter, map, startWith, switchMap, take, tap } from 'rxjs/operators';
-import { KbqAutocompleteOrigin } from './autocomplete-origin.directive';
-import { KbqAutocomplete } from './autocomplete.component';
+import type { KbqAutocomplete } from './autocomplete.component';
+import type { KbqAutocompleteOrigin } from './autocomplete-origin.directive';
 
 /**
  * Injection token that determines the scroll handling while the autocomplete panel is open. The root default
@@ -181,7 +195,7 @@ export class KbqAutocompleteTrigger
 
     /** The currently active option, coerced to MatOption type. */
     get activeOption(): KbqOption | null {
-        return this.autocomplete()?.keyManager?.activeItem;
+        return this.autocomplete()?.keyManager?.activeItem ?? null;
     }
 
     get panelOpen(): boolean {
@@ -348,20 +362,20 @@ export class KbqAutocompleteTrigger
     /** Whether the overlay is attached. A signal: host bindings read it, and it changes outside any listener. */
     private readonly overlayAttached = signal(false);
 
-    private overlayRef: OverlayRef | null;
+    private overlayRef?: OverlayRef | null;
 
-    private portal: TemplatePortal;
+    private portal?: TemplatePortal;
 
     private scrollStrategy: () => ScrollStrategy;
 
     /** Old value of the native input. Used to work around issues with the `input` event on IE. */
-    private previousValue: string | number | null;
+    private previousValue?: string | number | null;
 
     /** Strategy that is used to position the panel. */
-    private positionStrategy: FlexibleConnectedPositionStrategy;
+    private positionStrategy: FlexibleConnectedPositionStrategy | undefined;
 
     /** The subscription for closing actions (some are bound to document). */
-    private closingActionsSubscription: Subscription;
+    private closingActionsSubscription = Subscription.EMPTY;
 
     /** Subscription to viewport size changes. */
     private viewportSubscription = Subscription.EMPTY;
@@ -411,7 +425,7 @@ export class KbqAutocompleteTrigger
                     // Focus returns to the input on every arrow key; it must not drag the scroll with it.
                     this.elementRef.nativeElement.focus({ preventScroll: true });
                     this.updateInlineHint();
-                } else if (!this.panelOpen && autocompleteValue.keyManager.activeItem) {
+                } else if (!this.panelOpen && autocompleteValue.keyManager?.activeItem) {
                     autocompleteValue.keyManager.activeItem?.selectViaInteraction();
                 }
             });
@@ -492,7 +506,7 @@ export class KbqAutocompleteTrigger
     get panelClosingActions(): Observable<KbqOptionSelectionChange | null> {
         return merge(
             this.optionSelections,
-            this.autocomplete().keyManager.tabOut.pipe(filter(() => this.overlayAttached())),
+            this.autocomplete().keyManager?.tabOut.pipe(filter(() => this.overlayAttached())) ?? observableOf(),
             this.closeKeyEventStream,
             this.getOutsideClickStream(),
             this.overlayRef ? this.overlayRef.detachments().pipe(filter(() => this.overlayAttached())) : observableOf()
@@ -504,7 +518,7 @@ export class KbqAutocompleteTrigger
 
     // Implemented as part of ControlValueAccessor.
     writeValue(value: any): void {
-        Promise.resolve(null).then(() => {
+        void Promise.resolve(null).then(() => {
             this.setTriggerValue(value);
 
             // The text changed without an input event: the query, its options and its hint belong to the old text.
@@ -569,7 +583,7 @@ export class KbqAutocompleteTrigger
             this.resetActiveItem();
             event.preventDefault();
         } else if (autocomplete) {
-            const prevActiveItem = autocomplete.keyManager.activeItem;
+            const prevActiveItem = autocomplete.keyManager?.activeItem;
 
             if (this.panelOpen || keyCode === TAB) {
                 autocomplete.onKeydown(event);
@@ -580,8 +594,10 @@ export class KbqAutocompleteTrigger
 
             const isArrowKey = keyCode === UP_ARROW || keyCode === DOWN_ARROW;
 
-            if (isArrowKey && event.shiftKey && autocomplete.keyManager.activeItem !== prevActiveItem) {
-                autocomplete.keyManager.activeItem?.selectViaInteraction();
+            const activeItem = autocomplete.keyManager?.activeItem;
+
+            if (isArrowKey && event.shiftKey && activeItem !== prevActiveItem) {
+                activeItem?.selectViaInteraction();
             }
         }
     }
@@ -647,7 +663,7 @@ export class KbqAutocompleteTrigger
     }
 
     scrollActiveOptionIntoView(): void {
-        this.autocomplete().keyManager.activeItem?.focus();
+        this.autocomplete().keyManager?.activeItem?.focus();
     }
 
     /** Stream of clicks outside of the autocomplete panel. */
@@ -697,7 +713,7 @@ export class KbqAutocompleteTrigger
             return () => ref.destroy();
         });
         const optionChanges = this.autocomplete().options.changes.pipe(
-            tap(() => this.positionStrategy.reapplyLastPosition()),
+            tap(() => this.positionStrategy?.reapplyLastPosition()),
             // Defer emitting to the stream until the next tick, because changing
             // bindings in here will cause "changed after checked" errors.
             delay(0)
@@ -1017,9 +1033,9 @@ export class KbqAutocompleteTrigger
         const autocomplete = this.autocomplete();
 
         if (autocomplete.autoActiveFirstOption()) {
-            autocomplete.keyManager.setFirstItemActive();
+            autocomplete.keyManager?.setFirstItemActive();
         } else {
-            autocomplete.keyManager.setActiveItem(-1);
+            autocomplete.keyManager?.setActiveItem(-1);
         }
     }
 

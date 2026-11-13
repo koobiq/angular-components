@@ -19,7 +19,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
     ],
     template: `
         <kbq-split-button>
-            <button kbq-button>
+            <button kbq-button type="button">
                 <i kbq-icon="kbq-plus_16"></i>
                 <span kbq-title class="kbq-truncate-line">
                     Save engineering time with unified payments functionality. We obsess over the maze of gateways,
@@ -27,15 +27,15 @@ import { KbqTitleModule } from '@koobiq/components/title';
                     teams can build what you need on one platform.
                 </span>
             </button>
-            <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
+            <button kbq-button type="button" aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </kbq-split-button>
 
         <kbq-dropdown #dropdown="kbqDropdown">
-            <button kbq-dropdown-item>Extra Action 1</button>
-            <button kbq-dropdown-item>Extra Action 2</button>
-            <button kbq-dropdown-item>Extra Action 3</button>
+            <button kbq-dropdown-item type="button">Extra Action 1</button>
+            <button kbq-dropdown-item type="button">Extra Action 2</button>
+            <button kbq-dropdown-item type="button">Extra Action 3</button>
         </kbq-dropdown>
     `,
     styles: `

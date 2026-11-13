@@ -10,9 +10,10 @@
         @if (docStates.isHeaderOverflown) {
             <button
                 kbq-button
+                type="button"
                 class="docs-navbar__anchor kbq-text-big"
-                [color]="'contrast'"
-                [kbqStyle]="'transparent'"
+                color="contrast"
+                kbqStyle="transparent"
                 (click)="docStates.scrollUp()"
             >
                 {{ docStates.currentHeader?.textContent }}
@@ -39,9 +40,9 @@
                 target="_blank"
                 kbq-button
                 class="kbq-button-icon docs-navbar__github-icon layout-row"
+                color="contrast"
+                kbqStyle="transparent"
                 [attr.aria-label]="t('navbarGitHub')"
-                [color]="'contrast'"
-                [kbqStyle]="'transparent'"
             >
                 <i kbq-icon="">
                     <!-- prettier-ignore -->
@@ -55,31 +56,33 @@
 
             <button
                 kbq-button
+                type="button"
                 class="kbq-button-icon"
+                color="contrast"
+                kbqStyle="transparent"
                 [attr.aria-label]="t('themeSwitcher')"
-                [color]="'contrast'"
                 [kbqDropdownTriggerFor]="themeDropdown"
-                [kbqStyle]="'transparent'"
             >
-                <i kbq-icon="kbq-sun-moon_16" [color]="'contrast'"></i>
+                <i kbq-icon="kbq-sun-moon_16" color="contrast"></i>
             </button>
 
             <docs-docsearch />
 
             <button
                 kbq-button
+                type="button"
                 class="kbq-button-icon docs-navbar__mobile-menu"
+                color="contrast"
+                kbqStyle="transparent"
                 [attr.aria-expanded]="!!opened"
                 [attr.aria-label]="t('navbarMenu')"
-                [color]="'contrast'"
-                [kbqStyle]="'transparent'"
                 (click)="toggleMenu()"
             >
                 <i
                     kbq-icon=""
+                    color="contrast"
                     [class.kbq-bars-horizontal_32]="!opened"
                     [class.kbq-xmark_32]="opened"
-                    [color]="'contrast'"
                 ></i>
             </button>
         </div>
@@ -92,7 +95,12 @@
     </div>
 
     @for (option of themeOptions; track option.mode) {
-        <button kbq-dropdown-item [class.kbq-selected]="option.mode === mode()" (click)="setTheme(option.mode)">
+        <button
+            kbq-dropdown-item
+            type="button"
+            [class.kbq-selected]="option.mode === mode()"
+            (click)="setTheme(option.mode)"
+        >
             {{ option.title[locale()] }}
         </button>
     }

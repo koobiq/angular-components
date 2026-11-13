@@ -1,4 +1,4 @@
-﻿import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
+﻿import { coerceNumberProperty, type NumberInput } from '@angular/cdk/coercion';
 import {
     booleanAttribute,
     computed,
@@ -11,13 +11,14 @@ import {
     InjectionToken,
     input,
     NgZone,
-    OnDestroy,
-    Provider,
+    type OnDestroy,
+    type Provider,
     Renderer2,
     signal,
     untracked
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Subject } from 'rxjs';
 import {
     BACKSPACE,
     checkAndNormalizeLocalizedNumber,
@@ -38,12 +39,12 @@ import {
     KBQ_DEFAULT_LOCALE_ID,
     KBQ_DEFAULT_PRECISION_SEPARATOR,
     KBQ_LOCALE_SERVICE,
-    KbqDeepPartial,
-    KbqInputLocaleConfiguration,
-    KbqInputNumberLocaleConfiguration,
+    type KbqDeepPartial,
+    type KbqInputLocaleConfiguration,
+    type KbqInputNumberLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
     KbqLocaleOverridesDirective,
-    KbqLocaleService,
+    type KbqLocaleService,
     LEFT_ARROW,
     normalizeNumber,
     NUMPAD_MINUS,
@@ -55,7 +56,6 @@ import {
     X,
     Z
 } from '@koobiq/components/core';
-import { Subject } from 'rxjs';
 
 /**
  * @deprecated Use {@link KBQ_INPUT_DEFAULT_LOCALE_CONFIGURATION}, which carries the whole `input`
@@ -133,7 +133,7 @@ function isPastSafeInteger(value: number): boolean {
  * `0` that reading `'1e-7'.split('.')` would give.
  */
 function getFractionDigits(value: number): number {
-    const [mantissa, negativeExponent] = value.toString().split(/e-/i);
+    const [mantissa = '', negativeExponent] = value.toString().split(/e-/i);
     const digits = mantissa.split(KBQ_DEFAULT_PRECISION_SEPARATOR)[1]?.length ?? 0;
 
     return negativeExponent ? digits + Number(negativeExponent) : digits;
@@ -325,7 +325,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         KBQ_INPUT_LOCALE_CONFIGURATION
     );
 
-    private valueFromPaste: number | null;
+    private valueFromPaste?: number | null;
 
     /** Pending `onInput` reformats by timer handle: cancelled on destroy, run at once before a step. */
     private readonly pendingReformats = new Map<ReturnType<typeof setTimeout>, (correctCaret: boolean) => void>();
@@ -612,8 +612,8 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     private correctCaretForSeparator(previousValueLength: number, previousSelectionStart: number): void {
         const offsetWhenSeparatorAdded = 2;
 
-        this.ngZone.runOutsideAngular(() =>
-            Promise.resolve().then(() => {
+        this.ngZone.runOutsideAngular(() => {
+            void Promise.resolve().then(() => {
                 const lengthDelta = this.viewValue.length - previousValueLength;
 
                 if (this.value && Math.abs(this.value) >= 1000 && Math.abs(lengthDelta) === offsetWhenSeparatorAdded) {
@@ -622,8 +622,8 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
                     this.renderer.setProperty(this.nativeElement, 'selectionStart', cursorPosition);
                     this.renderer.setProperty(this.nativeElement, 'selectionEnd', cursorPosition);
                 }
-            })
-        );
+            });
+        });
     }
 
     private setViewValue(value: string | null, savePosition: boolean = false) {
@@ -711,7 +711,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
             .split(separator)
             .map((valuePart) => normalizeNumber(valuePart, this.config));
 
-        const integer = +intPart;
+        const integer = Number(intPart);
 
         // A lone sign before the decimal separator (`-,5`) is no number yet: clear the field, do not print NaN.
         if (!Number.isFinite(integer)) return null;

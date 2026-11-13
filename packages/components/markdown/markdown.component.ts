@@ -5,19 +5,19 @@ import {
     Component,
     computed,
     DestroyRef,
-    ElementRef,
+    type ElementRef,
     inject,
     InjectionToken,
     input,
-    Provider,
+    type Provider,
     signal,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
+import type { MarkedOptions } from 'marked';
 import { KbqNativeScrollbar, kbqNativeScrollbarOptionsProvider } from '@koobiq/components/scrollbar';
-import { MarkedOptions } from 'marked';
 import { KbqMarkdownService } from './markdown.service';
 
 /** List of options for `marked` library. */
@@ -37,7 +37,7 @@ export const kbqMarkdownMarkedOptionsProvider = (options: MarkedOptions): Provid
         <pre #contentWrapper class="kbq-markdown__input" ngPreserveWhitespaces><ng-content /></pre>
         <div class="kbq-markdown__output" [innerHtml]="resultHtml()"></div>
     `,
-    styleUrls: ['./markdown.scss', 'markdown-tokens.scss'],
+    styleUrls: ['./markdown.scss', './markdown-tokens.scss'],
     // The rendered content comes from `[innerHtml]`, so its scrollbars can only be customized from the host.
     providers: [kbqNativeScrollbarOptionsProvider({ descendants: true })],
     changeDetection: ChangeDetectionStrategy.OnPush,

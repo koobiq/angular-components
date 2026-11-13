@@ -22,27 +22,27 @@ import { KbqIconModule } from '@koobiq/components/icon';
             <kbq-breadcrumb-item
                 routerLink="./info-sec"
                 text="Information Security"
+                fragment="fragment"
                 [queryParams]="{ queryParams: 'queryParams' }"
-                [fragment]="'fragment'"
             />
 
             <kbq-breadcrumb-item
                 routerLink="./access-control"
                 text="Access Control"
+                fragment="fragment"
                 [queryParams]="{ queryParams: 'queryParams' }"
-                [fragment]="'fragment'"
             />
 
             <kbq-breadcrumb-item
                 routerLink="./authorization"
                 text="Authorization"
+                fragment="fragment"
                 [queryParams]="{ queryParams: 'queryParams' }"
-                [fragment]="'fragment'"
             />
 
             <kbq-breadcrumb-item>
                 <div *kbqBreadcrumbView>
-                    <button kbq-button kbqBreadcrumb [kbqDropdownTriggerFor]="siblingsListDropdown">
+                    <button kbq-button kbqBreadcrumb type="button" [kbqDropdownTriggerFor]="siblingsListDropdown">
                         Access Control
                         <i kbq-icon="kbq-chevron-down-s_16"></i>
                     </button>

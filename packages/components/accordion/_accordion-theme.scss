@@ -1,4 +1,4 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-accordion-theme() {
     // Only the trigger owns the item's focus ring. `:focus-within` would also fire for header
@@ -49,14 +49,14 @@
 @mixin kbq-accordion-typography() {
     .kbq-accordion-header,
     .kbq-accordion-trigger {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-big);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
     }
 
     .kbq-accordion-trigger__caption {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
     }
 
     .kbq-accordion-content {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }

@@ -1,4 +1,4 @@
-import { KbqMultipleFileUploadLocaleConfiguration } from '@koobiq/components/core';
+import type { KbqMultipleFileUploadLocaleConfiguration } from '@koobiq/components/core';
 
 /**
  * Mirrors the strings the library ships for `tk-TM` rather than inventing new ones — the example only

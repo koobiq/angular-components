@@ -1,11 +1,10 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { map, type Observable, startWith } from 'rxjs';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqFormsModule, KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 
 /**
  * @title Autocomplete
@@ -42,7 +41,7 @@ import { map, startWith } from 'rxjs/operators';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AutocompleteOverviewExample implements OnInit {
+export class AutocompleteOverviewExample {
     options = [
         'Abkhazia',
         'Australia',
@@ -219,14 +218,10 @@ export class AutocompleteOverviewExample implements OnInit {
     ];
 
     control = new FormControl('');
-    filteredOptions: Observable<string[]>;
-
-    ngOnInit(): void {
-        this.filteredOptions = this.control.valueChanges.pipe(
-            startWith(''),
-            map((value) => this.filter(value as string))
-        );
-    }
+    filteredOptions: Observable<string[]> = this.control.valueChanges.pipe(
+        startWith(''),
+        map((value) => this.filter(value as string))
+    );
 
     private filter(value: string): string[] {
         const filterValue = value ? value.toLowerCase() : '';

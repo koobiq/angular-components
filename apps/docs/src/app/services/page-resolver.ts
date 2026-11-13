@@ -1,7 +1,7 @@
-import { inject, Injectable, InjectionToken, Type } from '@angular/core';
-import { ActivatedRouteSnapshot, Params, RedirectCommand, ResolveFn, Router } from '@angular/router';
-import { DocsApiEntryPoint, DocsApiEntryPoints } from '../components/api-page/api-page.types';
-import { DocsLocale } from '../constants/locale';
+import { inject, Injectable, InjectionToken, type Type } from '@angular/core';
+import { type ActivatedRouteSnapshot, type Params, RedirectCommand, type ResolveFn, Router } from '@angular/router';
+import type { DocsApiEntryPoint, DocsApiEntryPoints } from '../components/api-page/api-page.types';
+import type { DocsLocale } from '../constants/locale';
 import { DocsStructureItemTab } from '../structure';
 
 /** Loads the component compiled from the MDX source of a page. */

@@ -8,68 +8,68 @@ import {
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { CdkObserveContent } from '@angular/cdk/observers';
 import {
-    CdkScrollable,
-    FlexibleConnectedPositionStrategy,
-    OverlayConfig,
-    OverlayRef,
+    type CdkScrollable,
+    type FlexibleConnectedPositionStrategy,
+    type OverlayConfig,
+    type OverlayRef,
     ScrollDispatcher,
-    ScrollStrategy
+    type ScrollStrategy
 } from '@angular/cdk/overlay';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
-    AfterContentInit,
-    AfterViewInit,
+    type AfterContentInit,
+    type AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    DestroyRef,
+    type DestroyRef,
     Directive,
-    ElementRef,
+    type ElementRef,
     EventEmitter,
-    InjectionToken,
-    InputSignal,
-    OnChanges,
-    OnInit,
-    Provider,
-    SimpleChanges,
-    TemplateRef,
-    Type,
-    ViewEncapsulation,
-    booleanAttribute,
     inject,
+    InjectionToken,
     input,
+    type InputSignal,
+    type OnChanges,
+    type OnInit,
+    type Provider,
+    type SimpleChanges,
+    type TemplateRef,
+    type Type,
     untracked,
-    viewChild
+    viewChild,
+    ViewEncapsulation
 } from '@angular/core';
 import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { merge, NEVER } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
+    applyPopupMargins,
     EmptyFocusTrapStrategy,
     KBQ_OVERLAY_LAYERS,
-    KbqCaretRect,
+    type KbqCaretRect,
     KbqComponentColors,
-    KbqOverflowShadowBottom,
-    KbqOverflowShadowContainer,
-    KbqOverflowShadowTop,
-    KbqOverlayOrigin,
-    KbqPopUp,
-    KbqPopUpPlacementValues,
-    KbqPopUpSizeValues,
-    KbqPopUpTrigger,
-    KbqStickToWindowPlacementValues,
-    POSITION_TO_CSS_MAP,
-    PopUpPlacements,
-    PopUpSizes,
-    PopUpTriggers,
-    applyPopupMargins,
     kbqCreateCaretOrigin,
     kbqInjectA11yLocaleConfiguration,
     kbqOptionalNumberAttribute,
+    KbqOverflowShadowBottom,
+    KbqOverflowShadowContainer,
+    KbqOverflowShadowTop,
+    type KbqOverlayOrigin,
+    KbqPopUp,
+    type KbqPopUpPlacementValues,
+    type KbqPopUpSizeValues,
+    KbqPopUpTrigger,
     kbqRepositionScrollStrategyFactory,
-    kbqSiblingPopupProvider
+    kbqSiblingPopupProvider,
+    type KbqStickToWindowPlacementValues,
+    PopUpPlacements,
+    PopUpSizes,
+    PopUpTriggers,
+    POSITION_TO_CSS_MAP
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
-import { NEVER, merge } from 'rxjs';
 
 export const defaultOffsetYWithArrow = 8;
 
@@ -130,21 +130,22 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     /** Debounce shared by the mutation observer and the scroll-shadow container (both expose `debounce`). */
     protected readonly contentObserverDebounce = contentObserverDebounce;
 
-    prefix = 'kbq-popover';
+    override prefix = 'kbq-popover';
 
     // Safe arrow inset from popover.scss: the 24px arrow padding plus half of its 12px square.
     protected override arrowCenterInset = 30;
 
-    header: string | TemplateRef<any>;
-    footer: string | TemplateRef<any>;
+    override header: string | TemplateRef<any> = '';
+    footer: string | TemplateRef<any> = '';
 
-    trigger: KbqPopoverTrigger;
+    /** The trigger that opened the panel; a panel rendered on its own has none. */
+    override trigger: KbqPopoverTrigger | undefined;
 
     isTrapFocus: boolean = false;
     hasCloseButton: boolean = false;
 
     /** Id of the panel element, referenced by the trigger's `aria-controls`. Written by the trigger. */
-    panelId: string;
+    panelId: string | undefined;
 
     /** Accessible name of the panel, used when there is no header to label it. Written by the trigger. */
     ariaLabel: string | undefined;
@@ -212,7 +213,7 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
         }
     }
 
-    updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues) {
+    override updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues) {
         super.updateClassMap(placement, customClass, { [`${this.prefix}_${size}`]: !!size });
     }
 
@@ -366,10 +367,10 @@ export class KbqPopoverTrigger
      * Additionally positions the element relative to the window side (Top, Right, Bottom and Left).
      * If container is specified, the positioning will be relative to it.
      * */
-    stickToWindow: KbqStickToWindowPlacementValues | undefined;
+    override stickToWindow: KbqStickToWindowPlacementValues | undefined;
 
     /** Container for additional positioning, used with `kbqPopoverStickToWindow`. Bound with `kbqPopoverContainer`. */
-    container: HTMLElement | undefined;
+    override container: HTMLElement | undefined;
 
     /** Input (`kbqPopoverContainer`) — sets {@link container}. */
     set popoverContainer(value: HTMLElement | undefined) {
@@ -408,7 +409,7 @@ export class KbqPopoverTrigger
         this.updateData();
     }
 
-    private _header: string | TemplateRef<any>;
+    private _header: string | TemplateRef<any> = '';
 
     /** Input (`kbqPopoverContent`) — content of the panel, as a string or a template. */
     get content(): string | TemplateRef<any> {
@@ -432,7 +433,7 @@ export class KbqPopoverTrigger
         this.updateData();
     }
 
-    private _footer: string | TemplateRef<any>;
+    private _footer: string | TemplateRef<any> = '';
 
     /** Input (`kbqPopoverDisabled`) — disables the trigger and closes an open popover. */
     get disabled(): boolean {
@@ -661,7 +662,7 @@ export class KbqPopoverTrigger
     }
 
     /** Input (`kbqEnterDelay`) — delay before opening, in milliseconds. Defaults to `0`. */
-    enterDelay: number = 0;
+    override enterDelay: number = 0;
 
     /**
      * Input (`kbqLeaveDelay`) — delay before closing, in milliseconds. Defaults to `0`, and to
@@ -1018,7 +1019,7 @@ export class KbqPopoverTrigger
         }
     }
 
-    ngOnInit(): void {
+    override ngOnInit(): void {
         super.ngOnInit();
 
         this.scrollable
@@ -1037,7 +1038,7 @@ export class KbqPopoverTrigger
     }
 
     /** @docs-private */
-    show(delay: number = this.enterDelay): void {
+    override show(delay: number = this.enterDelay): void {
         const event = this.mouseEvent;
         const pointerEvent =
             this.relativeToPointer && this.triggerName === PopUpTriggers.Click && event?.detail ? event : null;
@@ -1065,9 +1066,9 @@ export class KbqPopoverTrigger
         if (pointerEvent && wasAttached) {
             this.ngZone.run(() => this.instance.show(delay));
             this.updatePosition();
-            this.strategy.withLockedPosition(false);
+            this.strategy?.withLockedPosition(false);
             this.overlayRef?.updatePosition();
-            this.strategy.withLockedPosition(true);
+            this.strategy?.withLockedPosition(true);
             this.instance?.updateArrowPosition();
         }
     }
@@ -1149,7 +1150,7 @@ export class KbqPopoverTrigger
      * which is the task in which that click's change detection writes a popover input — would drop the
      * close the click had already scheduled.
      */
-    updatePosition(reapplyPosition: boolean = false) {
+    override updatePosition(reapplyPosition: boolean = false) {
         this.overlayRef = this.createOverlay();
 
         const position = (this.overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy)

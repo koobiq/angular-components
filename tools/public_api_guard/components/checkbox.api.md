@@ -82,6 +82,9 @@ export class KbqCheckbox extends KbqColorDirective implements OnChanges, DoCheck
 
 // @public
 export class KbqCheckboxChange {
+    constructor(
+    source: KbqCheckbox,
+    checked: boolean);
     checked: boolean;
     source: KbqCheckbox;
 }

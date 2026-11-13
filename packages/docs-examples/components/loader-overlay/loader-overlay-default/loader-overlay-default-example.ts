@@ -15,7 +15,7 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
             text text text text text text text text text text text text text text text text text text text text text
             text text text text text text text text text text text text text text text text text text text text text
             text text text text text text text text text text text text text text text
-            <kbq-loader-overlay [text]="'Загрузка'" />
+            <kbq-loader-overlay text="Загрузка" />
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

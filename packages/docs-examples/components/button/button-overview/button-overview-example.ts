@@ -16,6 +16,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
     ],
     template: `
         <button
+            type="button"
             class="example-overview__button"
             kbq-button
             [class.kbq-progress]="hasProgress"
@@ -28,7 +29,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
         <kbq-checkbox [(ngModel)]="isDisabled">disabled</kbq-checkbox>
         <kbq-checkbox [(ngModel)]="hasProgress">progress</kbq-checkbox>
     `,
-    styleUrls: ['button-overview-example.css'],
+    styleUrl: 'button-overview-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonOverviewExample {

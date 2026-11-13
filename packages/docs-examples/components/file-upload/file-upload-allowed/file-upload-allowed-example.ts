@@ -12,7 +12,7 @@ import { KbqIcon } from '@koobiq/components/icon';
         KbqIcon
     ],
     template: `
-        <kbq-multiple-file-upload [allowed]="'mixed'">
+        <kbq-multiple-file-upload allowed="mixed">
             <ng-template #kbqFileIcon let-file>
                 @if (!file.hasError) {
                     <i kbq-icon="kbq-file-text-o_16"></i>

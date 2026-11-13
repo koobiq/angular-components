@@ -1,6 +1,6 @@
 @use '../core/styles/common/tokens';
 
-@mixin _kbq-form-field-state($state-name) {
+@mixin -kbq-form-field-state($state-name) {
     .kbq-form-field__container {
         border-color: var(--kbq-form-field-#{$state-name}-border-color);
         background-color: var(--kbq-form-field-#{$state-name}-background);
@@ -38,7 +38,7 @@
 
 @mixin kbq-form-field-theme() {
     .kbq-form-field {
-        @include _kbq-form-field-state(default);
+        @include -kbq-form-field-state(default);
 
         // `color-scheme` is what stops the browser painting its own autofill highlight from the
         // light palette in a dark application. It is declared once for the whole theme in
@@ -86,7 +86,7 @@
 
         // Invalid by control `ErrorStateMatcher`
         &.kbq-form-field_invalid {
-            @include _kbq-form-field-state(states-error);
+            @include -kbq-form-field-state(states-error);
         }
 
         &.kbq-form-field-type-input,
@@ -99,7 +99,7 @@
         &.kbq-form-field-type-select {
             &:not(:has(.cdk-keyboard-focused, .kbq-focused)) {
                 &.cdk-focused {
-                    @include _kbq-form-field-state(states-focused);
+                    @include -kbq-form-field-state(states-focused);
 
                     & .kbq-form-field__container {
                         box-shadow: inset 0 0 0.1px var(--kbq-form-field-size-focus-outline-width)
@@ -109,7 +109,7 @@
 
                 // Invalid by control `ErrorStateMatcher`
                 &.kbq-form-field_invalid {
-                    @include _kbq-form-field-state(states-error);
+                    @include -kbq-form-field-state(states-error);
 
                     &.cdk-focused .kbq-form-field__container {
                         box-shadow: inset 0 0 0.1px var(--kbq-form-field-size-focus-outline-width)
@@ -160,7 +160,7 @@
         }
 
         &.kbq-disabled {
-            @include _kbq-form-field-state(states-disabled);
+            @include -kbq-form-field-state(states-disabled);
 
             // Leaves the hints out, as in the invalid state: they follow the disabled state through `KBQ_HINT_PARENT`.
             .kbq-form-field__container .kbq-icon.kbq-empty {

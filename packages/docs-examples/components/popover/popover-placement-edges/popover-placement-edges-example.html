@@ -12,8 +12,8 @@
 
     <ng-template #customFooter>
         <div style="gap: 16px" class="layout-row layout-wrap">
-            <button kbq-button [color]="'contrast'" (click)="activePopover.hide(0)">Сохранить</button>
-            <button kbq-button (click)="activePopover.hide(0)">Отмена</button>
+            <button kbq-button type="button" color="contrast" (click)="activePopover?.hide(0)">Сохранить</button>
+            <button kbq-button type="button" (click)="activePopover?.hide(0)">Отмена</button>
         </div>
     </ng-template>
 
@@ -22,6 +22,7 @@
             #kbqLeftTopPopover="kbqPopover"
             kbq-button
             kbqPopover
+            type="button"
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
             [kbqPopoverArrow]="false"
@@ -34,6 +35,7 @@
             #kbqLeftBottomPopover="kbqPopover"
             kbq-button
             kbqPopover
+            type="button"
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
             [kbqPopoverArrow]="false"
@@ -48,6 +50,7 @@
             #kbqTopLeftPopover="kbqPopover"
             kbq-button
             kbqPopover
+            type="button"
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
             [kbqPopoverArrowCentered]="arrowCentered"
@@ -60,6 +63,7 @@
             #kbqBottomLeftPopover="kbqPopover"
             kbq-button
             kbqPopover
+            type="button"
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
             [kbqPopoverArrowCentered]="arrowCentered"
@@ -75,6 +79,7 @@
             #kbqTopRightPopover="kbqPopover"
             kbq-button
             kbqPopover
+            type="button"
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
             [kbqPopoverArrowCentered]="arrowCentered"
@@ -87,6 +92,7 @@
             #kbqBottomRightPopover="kbqPopover"
             kbq-button
             kbqPopover
+            type="button"
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
             [kbqPopoverArrowCentered]="arrowCentered"
@@ -101,6 +107,7 @@
             #kbqRightTopPopover="kbqPopover"
             kbq-button
             kbqPopover
+            type="button"
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
             [kbqPopoverArrow]="false"
@@ -113,6 +120,7 @@
             #kbqRightBottomPopover="kbqPopover"
             kbq-button
             kbqPopover
+            type="button"
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
             [kbqPopoverArrow]="false"

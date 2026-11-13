@@ -21,10 +21,10 @@ import { KbqSidebarModule, SidebarPositions } from '@koobiq/components/sidebar';
 
         <main>
             <div>Main content</div>
-            <div><button kbq-button (click)="toggleLeft()">Toggle left model</button></div>
-            <div><button kbq-button (click)="leftSidebar.toggle()">Toggle left</button></div>
-            <div><button kbq-button (click)="toggleRight()">Toggle right model</button></div>
-            <div><button kbq-button (click)="rightSidebar.toggle()">Toggle right</button></div>
+            <div><button kbq-button type="button" (click)="toggleLeft()">Toggle left model</button></div>
+            <div><button kbq-button type="button" (click)="leftSidebar.toggle()">Toggle left</button></div>
+            <div><button kbq-button type="button" (click)="toggleRight()">Toggle right model</button></div>
+            <div><button kbq-button type="button" (click)="rightSidebar.toggle()">Toggle right</button></div>
         </main>
 
         <kbq-sidebar

@@ -1,6 +1,4 @@
-@use '../core/styles/common/tokens' as *;
-
-@use './icon-item-theme' as *;
+@use './icon-item-theme';
 
 .kbq-icon-item {
     box-sizing: border-box;
@@ -16,9 +14,9 @@
     }
 
     > svg {
-        fill: currentColor;
+        fill: currentcolor;
         vertical-align: middle;
     }
 }
 
-@include kbq-icon-item-theme();
+@include icon-item-theme.kbq-icon-item-theme();

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
+import { KbqFilterBarModule, type KbqPipe, type KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 
 /**
  * @title filter-bar-cleanable

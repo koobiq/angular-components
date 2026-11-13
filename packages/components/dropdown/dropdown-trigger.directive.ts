@@ -1,23 +1,23 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
-import { Direction, Directionality } from '@angular/cdk/bidi';
+import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
+import { type Direction, Directionality } from '@angular/cdk/bidi';
 import {
-    FlexibleConnectedPositionStrategy,
-    FlexibleConnectedPositionStrategyOrigin,
-    HorizontalConnectionPos,
+    type FlexibleConnectedPositionStrategy,
+    type FlexibleConnectedPositionStrategyOrigin,
+    type HorizontalConnectionPos,
     Overlay,
     OverlayConfig,
-    OverlayRef,
+    type OverlayRef,
     ScrollDispatcher,
-    ScrollStrategy,
-    VerticalConnectionPos
+    type ScrollStrategy,
+    type VerticalConnectionPos
 } from '@angular/cdk/overlay';
 import { _getEventTarget, normalizePassiveListenerOptions, Platform } from '@angular/cdk/platform';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
 import {
-    AfterContentInit,
+    type AfterContentInit,
     afterNextRender,
-    AfterRenderRef,
+    type AfterRenderRef,
     booleanAttribute,
     Directive,
     effect,
@@ -28,13 +28,14 @@ import {
     input,
     model,
     numberAttribute,
-    OnDestroy,
+    type OnDestroy,
     output,
     signal,
     untracked,
     ViewContainerRef
 } from '@angular/core';
 import { outputToObservable } from '@angular/core/rxjs-interop';
+import { asapScheduler, delay, filter, map, merge, type Observable, of as observableOf, Subscription } from 'rxjs';
 import {
     defaultOffsetY,
     DOWN_ARROW,
@@ -42,24 +43,27 @@ import {
     KBQ_OVERLAY_LAYERS,
     kbqGetPanelWidthOrigin,
     kbqIsElementOrigin,
-    KbqOverlayOrigin,
-    KbqPanelWidthOrigin,
+    type KbqOverlayOrigin,
+    type KbqPanelWidthOrigin,
     kbqRepositionScrollStrategyFactory,
-    KbqResolvedPanelWidth,
+    type KbqResolvedPanelWidth,
     kbqResolveOverlayOrigin,
     kbqResolvePanelWidth,
-    KbqSiblingPopup,
+    type KbqSiblingPopup,
     kbqSiblingPopupProvider,
     LEFT_ARROW,
     RIGHT_ARROW,
     SPACE
 } from '@koobiq/components/core';
-import { asapScheduler, merge, Observable, of as observableOf, Subscription } from 'rxjs';
-import { delay, filter, map } from 'rxjs/operators';
+import { KbqDropdown } from './dropdown.component';
+import type {
+    DropdownCloseReason,
+    KbqDropdownPanel,
+    KbqDropdownPositionX,
+    KbqDropdownPositionY
+} from './dropdown.types';
 import { throwKbqDropdownMissingError } from './dropdown-errors';
 import { KbqDropdownItem } from './dropdown-item.component';
-import { KbqDropdown } from './dropdown.component';
-import { DropdownCloseReason, KbqDropdownPanel, KbqDropdownPositionX, KbqDropdownPositionY } from './dropdown.types';
 
 /**
  * Injection token that determines the scroll handling while the dropdown is open. The root default keeps the
@@ -168,7 +172,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     private readonly injector = inject(Injector);
 
     protected readonly isBrowser = inject(Platform).isBrowser;
-    lastDestroyReason: DropdownCloseReason;
+    lastDestroyReason: DropdownCloseReason = undefined;
 
     /**
      * Element whose width the panel should match. Defaults to the trigger itself.
@@ -281,7 +285,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     private readonly openedState = signal(false);
 
-    private portal: TemplatePortal;
+    private portal?: TemplatePortal;
 
     private overlayRef: OverlayRef | null = null;
 
@@ -777,7 +781,12 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
             positionMap.xPositions[this.dropdown().xPosition()];
 
         // eslint-disable-next-line prefer-const
-        let [overlayY, overlayFallbackY, originY, originFallbackY]: VerticalConnectionPos[] =
+        let [overlayY, overlayFallbackY, originY, originFallbackY]: [
+            VerticalConnectionPos,
+            VerticalConnectionPos,
+            VerticalConnectionPos,
+            VerticalConnectionPos
+        ] =
             this.dropdown().yPosition() === 'above'
                 ? ['bottom', 'top', 'bottom', 'top']
                 : ['top', 'bottom', 'top', 'bottom'];

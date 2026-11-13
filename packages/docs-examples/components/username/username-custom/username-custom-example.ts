@@ -5,12 +5,12 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTitleModule } from '@koobiq/components/title';
 import {
     KBQ_PROFILE_MAPPING,
-    KbqFormatKeyToProfileMappingExtended,
-    KbqUserInfo,
+    type KbqFormatKeyToProfileMappingExtended,
+    type KbqUserInfo,
     KbqUsernameFormatKey,
-    KbqUsernameMode,
+    type KbqUsernameMode,
     KbqUsernameModule,
-    KbqUsernameStyle
+    type KbqUsernameStyle
 } from '@koobiq/components/username';
 
 const mapping: KbqFormatKeyToProfileMappingExtended = {

@@ -6,17 +6,18 @@ import {
     Component,
     computed,
     effect,
-    ElementRef,
+    type ElementRef,
     inject,
     input,
     signal,
-    Type,
+    type Type,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { forkJoin, map, type Observable } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
+import { type KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { kbqInjectNativeElement, KbqStateSavingService } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
@@ -26,8 +27,6 @@ import { KbqSkeleton } from '@koobiq/components/skeleton';
 import { KbqToastService } from '@koobiq/components/toast';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { EXAMPLE_COMPONENTS } from '@koobiq/docs-examples';
-import { forkJoin, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { DocsLocaleState } from 'src/app/services/locale';
 import { docsExamplePageUrl } from '../../constants/example-page';
 import { DocsDocumentLoader } from '../../services/document-loader';
@@ -64,7 +63,7 @@ const isLoader = (component: Type<unknown> | DocsExampleLoader): component is Do
         KbqSkeleton
     ],
     templateUrl: './docs-live-example-viewer.html',
-    styleUrls: ['./docs-live-example-viewer.scss'],
+    styleUrl: './docs-live-example-viewer.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -92,7 +91,7 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     /** Data for the currently selected example. */
     readonly exampleData = computed(() => EXAMPLE_COMPONENTS[this.example()]);
 
-    protected readonly exampleId = computed(() => this.exampleData().selector.replace('-example', ''));
+    protected readonly exampleId = computed(() => this.exampleData()?.selector.replace('-example', ''));
 
     /**
      * A plain `href` rather than a `routerLink`: the router does not open a new tab, and before hydration event
@@ -228,6 +227,9 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
      */
     private generateExampleTabs() {
         const exampleData = this.exampleData();
+
+        if (!exampleData) return;
+
         const docsContentPath = `docs-content/examples-source/${exampleData.packagePath}`;
 
         const observables = exampleData.files.map((fileName) => {
@@ -256,7 +258,7 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
                 // Files arrive from async HTTP; under OnPush the code panel needs an explicit check.
                 this.cdr.markForCheck();
             },
-            error: (error) => {
+            error: (error: unknown) => {
                 console.error('Error fetching the files', error);
             }
         });
@@ -292,7 +294,7 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
 
         if (filteredFiles.length === 1) {
             /* If there is only one non-empty document in the example, then show the block without tabs */
-            filteredFiles[0].filename = '';
+            filteredFiles[0]!.filename = '';
         }
 
         return filteredFiles;

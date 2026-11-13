@@ -1,12 +1,12 @@
 import chalk from 'chalk';
-import { execSync, ExecSyncOptions } from 'child_process';
+import { execSync, type ExecSyncOptions } from 'child_process';
 import { readFileSync } from 'fs';
 import inquirer from 'inquirer';
 import { join } from 'path';
-import { GitClient } from './git/git-client';
+import type { GitClient } from './git/git-client';
 import { NpmViewError } from './npm/npm-client';
 import { resolveNpmDistTag } from './npm/resolve-npm-dist-tag';
-import { Version } from './version-name/parse-version';
+import type { Version } from './version-name/parse-version';
 import { getAllowedPublishBranches } from './version-name/publish-branches';
 
 const { red, italic, yellow, green } = chalk;
@@ -60,7 +60,9 @@ export class BaseReleaseTask {
 
         // In case there are multiple allowed publish branches for this version, we just
         // exit and let the user decide which branch they want to release from.
-        if (allowedBranches.length !== 1) {
+        const [defaultPublishBranch, ...otherBranches] = allowedBranches;
+
+        if (!defaultPublishBranch || otherBranches.length > 0) {
             console.warn(yellow('  ✘   You are not on an allowed publish branch.'));
             console.warn(
                 yellow(`      Please switch to one of the following branches: ` + `${allowedBranches.join(', ')}`)
@@ -70,8 +72,6 @@ export class BaseReleaseTask {
 
         // For this version there is only *one* allowed publish branch, so we could
         // automatically switch to that branch in case the user isn't on it yet.
-        const defaultPublishBranch = allowedBranches[0];
-
         if (!this.git.checkoutBranch(defaultPublishBranch)) {
             console.error(red(`  ✘   Could not switch to the "${italic(defaultPublishBranch)}" ` + `branch.`));
             console.error(red(`      Please ensure that the branch exists or manually switch to the ` + `branch.`));

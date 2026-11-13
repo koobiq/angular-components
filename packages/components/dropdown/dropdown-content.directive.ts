@@ -1,6 +1,14 @@
 import { DomPortalOutlet, TemplatePortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
-import { ApplicationRef, Directive, inject, Injector, OnDestroy, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+    ApplicationRef,
+    Directive,
+    inject,
+    Injector,
+    type OnDestroy,
+    TemplateRef,
+    ViewContainerRef
+} from '@angular/core';
 import { Subject } from 'rxjs';
 
 /**
@@ -19,8 +27,8 @@ export class KbqDropdownContent implements OnDestroy {
 
     /** Emits when the dropdown content has been attached. */
     attached = new Subject<void>();
-    private portal: TemplatePortal;
-    private outlet: DomPortalOutlet;
+    private portal?: TemplatePortal;
+    private outlet?: DomPortalOutlet;
 
     /**
      * Attaches the content with a particular context.

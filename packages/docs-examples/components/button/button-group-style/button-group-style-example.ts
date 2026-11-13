@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqButtonColor, KbqButtonModule, KbqButtonStyle, KbqButtonStyles } from '@koobiq/components/button';
+import { type KbqButtonColor, KbqButtonModule, type KbqButtonStyle, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 
@@ -17,7 +17,7 @@ import { KbqIcon } from '@koobiq/components/icon';
             <div class="layout-row layout-gap-xl">
                 <div kbq-button-group [color]="style.color" [kbqStyle]="style.appearance">
                     @for (item of data; track item) {
-                        <button kbq-button>
+                        <button kbq-button type="button">
                             {{ item }}
                         </button>
                     }
@@ -25,7 +25,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 
                 <div kbq-button-group [color]="style.color" [kbqStyle]="style.appearance">
                     @for (item of data; track item) {
-                        <button kbq-button aria-label="Diamond icon">
+                        <button kbq-button type="button" aria-label="Diamond icon">
                             <i kbq-icon="kbq-diamond_16"></i>
                         </button>
                     }

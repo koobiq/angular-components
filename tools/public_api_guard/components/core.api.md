@@ -2712,7 +2712,7 @@ export abstract class KbqAbstractSelect {
     // (undocumented)
     protected setOverlayPosition(): void;
     protected subscribeToPanelResize(): void;
-    protected abstract triggerRect: DOMRect;
+    protected abstract triggerRect: DOMRect | undefined;
     protected unsubscribeFromPanelResize(): void;
     protected updateOverlayWidth(panelWidth: KbqPanelWidth, panelMinWidth: KbqPanelMinWidth, origin: KbqPanelWidthOrigin): void;
     protected updatePanelAnchor(): boolean;
@@ -3670,9 +3670,9 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
-    onClick($event: any): void;
+    onClick(event: Event): void;
     // (undocumented)
-    onKeyDown($event: any): void;
+    onKeyDown(event: KeyboardEvent): void;
     protected get resolvedAriaLabel(): string;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptionActionComponent, "kbq-option-action", ["kbqOptionAction"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, never, ["[kbq-icon]"], true, [{ directive: typeof KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
@@ -3896,7 +3896,7 @@ export abstract class KbqPopUp implements OnDestroy {
     hide(delay: number): void;
     readonly hovered: Signal<boolean>;
     // (undocumented)
-    isTemplateRef(value: any): boolean;
+    isTemplateRef<C>(value: unknown): value is TemplateRef<C>;
     // (undocumented)
     isVisible(): boolean;
     // (undocumented)
@@ -3905,7 +3905,7 @@ export abstract class KbqPopUp implements OnDestroy {
     offset: number | null;
     protected readonly onHideSubject: Subject<void>;
     // (undocumented)
-    protected prefix: string;
+    protected abstract prefix: string;
     // (undocumented)
     protected readonly renderer: Renderer2;
     protected setHovered(value: boolean): void;
@@ -3914,7 +3914,7 @@ export abstract class KbqPopUp implements OnDestroy {
     // (undocumented)
     show(delay: number): void;
     // (undocumented)
-    trigger: KbqPopUpTrigger<unknown>;
+    trigger: KbqPopUpTrigger<unknown> | undefined;
     updateArrowPosition(): void;
     // (undocumented)
     updateClassMap(placement: string, customClass: string, classMap?: any): void;
@@ -3957,7 +3957,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected _disabled: boolean;
     protected readonly elementRef: ElementRef<HTMLElement>;
     enterDelay: number;
-    protected externalNativeElement: HTMLElement;
+    protected externalNativeElement: HTMLElement | undefined;
     focus(): void;
     protected getActiveOrigin(): FlexibleConnectedPositionStrategyOrigin;
     protected getAdjustedPositions(): ConnectionPositionPair[];
@@ -4006,7 +4006,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected placement: KbqPopUpPlacementValues;
     abstract placementChange: EventEmitter<KbqPopUpPlacementValues>;
     protected placementPriority: string | string[] | null;
-    protected portal: ComponentPortal<T>;
+    protected portal: ComponentPortal<T> | undefined;
     protected preventClose: boolean;
     resetOrigin(): void;
     protected readonly scrollable: CdkScrollable | null;
@@ -4017,7 +4017,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected setOrigin(origin: FlexibleConnectedPositionStrategyOrigin | null): void;
     show(delay?: number): void;
     stickToWindow: KbqStickToWindowPlacementValues | undefined;
-    protected strategy: FlexibleConnectedPositionStrategy;
+    protected strategy: FlexibleConnectedPositionStrategy | undefined;
     touchendHandler(): void;
     abstract trigger: string;
     triggerName: string;
@@ -4025,7 +4025,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     abstract updateData(): void;
     updateOrigin(origin: KbqOverlayOrigin | null): void;
     updatePlacement(value: KbqPopUpPlacementValues): void;
-    updatePlacementPriority(value: any): void;
+    updatePlacementPriority(value: string | string[] | null | undefined): void;
     updatePosition(reapplyPosition?: boolean): void;
     updateVisible(externalValue: boolean): void;
     protected readonly viewportRuler: ViewportRuler;

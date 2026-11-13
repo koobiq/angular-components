@@ -6,23 +6,23 @@ import {
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
     KbqTreeModule,
-    KbqTreeOption,
+    type KbqTreeOption,
     KbqTreeSelection
 } from '@koobiq/components/tree';
-import { KbqTreeSelect, KbqTreeSelectChange, KbqTreeSelectModule } from '@koobiq/components/tree-select';
+import { KbqTreeSelect, type KbqTreeSelectChange, KbqTreeSelectModule } from '@koobiq/components/tree-select';
 
 export class FileNode {
-    children: FileNode[];
-    name: string;
+    children?: FileNode[];
+    name = '';
     type: any;
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-    name: string;
+    name = '';
     type: any;
-    level: number;
-    expandable: boolean;
+    level = 0;
+    expandable = false;
     parent: any;
 }
 
@@ -175,19 +175,21 @@ export class TreeSelectChildSelectionOverviewExample {
         this.toggleParents($event.value.data.parent);
     }
 
-    private toggleParents(parent) {
-        if (!parent) {
+    private toggleParents(parent: FileFlatNode | null) {
+        const selectionModel = this.select().selectionModel;
+
+        if (!parent || !selectionModel) {
             return;
         }
 
         const descendants = this.treeControl.getDescendants(parent);
-        const isParentSelected = this.select().selectionModel.selected.includes(parent);
+        const isParentSelected = selectionModel.selected.includes(parent);
 
-        if (!isParentSelected && descendants.every((d: any) => this.select().selectionModel.selected.includes(d))) {
-            this.select().selectionModel.select(parent);
+        if (!isParentSelected && descendants.every((d: any) => selectionModel.selected.includes(d))) {
+            selectionModel.select(parent);
             this.toggleParents(parent.parent);
         } else if (isParentSelected) {
-            this.select().selectionModel.deselect(parent);
+            selectionModel.deselect(parent);
             this.toggleParents(parent.parent);
         }
     }
@@ -212,7 +214,7 @@ export class TreeSelectChildSelectionOverviewExample {
         return node.expandable;
     };
 
-    private getChildren = (node: FileNode): FileNode[] => {
+    private getChildren = (node: FileNode): FileNode[] | undefined => {
         return node.children;
     };
 

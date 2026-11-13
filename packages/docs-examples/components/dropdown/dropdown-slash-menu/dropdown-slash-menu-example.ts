@@ -6,7 +6,7 @@ import {
     Component,
     computed,
     DestroyRef,
-    ElementRef,
+    type ElementRef,
     inject,
     Renderer2,
     signal,
@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import {
     createSearchPredicate,
-    KbqCaretRect,
+    type KbqCaretRect,
     kbqCreateCaretOrigin,
     kbqGetSelectionRect,
     kbqGetTextQuery,
@@ -105,7 +105,12 @@ const GROUPS: { label: string; items: { name: string; icon: string }[] }[] = [
 
                     @for (item of group.items; track item.name) {
                         <!-- Taking focus would drop the caret the menu is anchored to. -->
-                        <button kbq-dropdown-item (click)="insert(item.name)" (mousedown)="$event.preventDefault()">
+                        <button
+                            kbq-dropdown-item
+                            type="button"
+                            (click)="insert(item.name)"
+                            (mousedown)="$event.preventDefault()"
+                        >
                             <i [kbq-icon]="item.icon"></i>
                             <span [innerHTML]="item.name | kbqHighlightBackground: tokens()"></span>
                         </button>
@@ -114,7 +119,7 @@ const GROUPS: { label: string; items: { name: string; icon: string }[] }[] = [
             }
 
             @if (isEmpty()) {
-                <button disabled kbq-dropdown-item>Nothing found</button>
+                <button disabled kbq-dropdown-item type="button">Nothing found</button>
             }
 
             <kbq-dropdown-footer class="example-slash-menu__footer">

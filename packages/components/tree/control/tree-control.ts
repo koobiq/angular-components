@@ -1,5 +1,5 @@
-import { SelectionModel } from '@angular/cdk/collections';
-import { BehaviorSubject, Observable } from 'rxjs';
+import type { SelectionModel } from '@angular/cdk/collections';
+import type { BehaviorSubject, Observable } from 'rxjs';
 
 /** Options of `FlatTreeControl` and `NestedTreeControl`. */
 export interface KbqTreeControlOptions<T, K> {
@@ -37,17 +37,20 @@ export interface TreeControl<T, K = T> {
      */
     filterValue: BehaviorSubject<T[] | string | null>;
 
-    /** Get depth of a given data node, return the level number. This is for flat tree node. */
-    getLevel(dataNode: T): number;
+    /** Get depth of a given data node, return the level number. Only a control of a flat tree has it. */
+    getLevel: ((dataNode: T) => number) | undefined;
 
     /**
      * Whether the data node is expandable. Returns true if expandable.
-     * This is for flat tree node.
+     * Only a control of a flat tree has it.
      */
-    isExpandable(dataNode: T): boolean;
+    isExpandable: ((dataNode: T) => boolean) | undefined;
 
-    /** Gets a stream that emits whenever the given data node's children change. */
-    getChildren(dataNode: T): Observable<T[]>;
+    /**
+     * Gets a stream that emits whenever the given data node's children change.
+     * Only a control of a nested tree has it.
+     */
+    getChildren: ((dataNode: T) => Observable<T[]>) | undefined;
 
     /** Whether the data node is expanded or collapsed. Return true if it's expanded. */
     isExpanded(dataNode: T): boolean;

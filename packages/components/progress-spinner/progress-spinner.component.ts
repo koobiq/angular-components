@@ -9,7 +9,12 @@ import {
     numberAttribute,
     ViewEncapsulation
 } from '@angular/core';
-import { kbqAnimationsDisabled, KbqColorDirective, KbqComponentColors, KbqDefaultSizes } from '@koobiq/components/core';
+import {
+    kbqAnimationsDisabled,
+    KbqColorDirective,
+    KbqComponentColors,
+    type KbqDefaultSizes
+} from '@koobiq/components/core';
 
 /** Whether the spinner reports a known progress value or spins indefinitely. */
 export type ProgressSpinnerMode = 'determinate' | 'indeterminate';

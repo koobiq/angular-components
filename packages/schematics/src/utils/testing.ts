@@ -1,6 +1,6 @@
-import { Path, virtualFs } from '@angular-devkit/core';
+import { type Path, virtualFs } from '@angular-devkit/core';
 import { HostTree } from '@angular-devkit/schematics';
-import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import { type SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 
 function createWorkspace(runner: SchematicTestRunner): Promise<UnitTestTree> {
     return runner.runExternalSchematic('@schematics/angular', 'workspace', {

@@ -2,20 +2,20 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
-import { KbqTreeSelectChange, KbqTreeSelectModule } from '@koobiq/components/tree-select';
+import { type KbqTreeSelectChange, KbqTreeSelectModule } from '@koobiq/components/tree-select';
 
 export class FileNode {
-    children: FileNode[];
-    name: string;
+    children?: FileNode[];
+    name = '';
     type: any;
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-    name: string;
+    name = '';
     type: any;
-    level: number;
-    expandable: boolean;
+    level = 0;
+    expandable = false;
     parent: any;
 }
 
@@ -182,7 +182,7 @@ export class TreeSelectMultipleOverviewExample {
         return node.expandable;
     };
 
-    private getChildren = (node: FileNode): FileNode[] => {
+    private getChildren = (node: FileNode): FileNode[] | undefined => {
         return node.children;
     };
 
@@ -198,7 +198,7 @@ export class TreeSelectMultipleOverviewExample {
         console.log('selectionChange: ', $event);
     }
 
-    protected onModelChange($event) {
-        console.log('onModelChange: ', $event);
+    protected onModelChange(event: string[]) {
+        console.log('onModelChange: ', event);
     }
 }

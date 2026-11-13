@@ -1,39 +1,39 @@
-﻿import { Component, DebugElement, Provider, Type, inject, viewChild } from '@angular/core';
-import { ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
+﻿import { Component, type DebugElement, inject, type Provider, type Type, viewChild } from '@angular/core';
+import { type ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import {
-    AbstractControl,
-    FormGroupDirective,
+    type AbstractControl,
+    type FormGroupDirective,
     FormsModule,
-    NgForm,
+    type NgForm,
     ReactiveFormsModule,
     UntypedFormBuilder,
     UntypedFormControl,
-    UntypedFormGroup,
+    type UntypedFormGroup,
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import type { Mock } from 'vitest';
 import {
     COMMA,
+    createKeyboardEvent,
     DASH,
+    dispatchEvent,
+    dispatchFakeEvent,
+    dispatchKeyboardEvent,
     DOWN_ARROW,
-    ErrorStateMatcher,
+    type ErrorStateMatcher,
     FF_MINUS,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
     KbqLocaleServiceModule,
     NUMPAD_MINUS,
-    UP_ARROW,
-    createKeyboardEvent,
-    dispatchEvent,
-    dispatchFakeEvent,
-    dispatchKeyboardEvent,
     ruRUFormattersData,
-    typeInElement
+    typeInElement,
+    UP_ARROW
 } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
-import { BIG_STEP, KbqInput, KbqInputModule, KbqNumberInput, SMALL_STEP, add, getPrecision } from './index';
+import { add, BIG_STEP, getPrecision, KbqInput, KbqInputModule, KbqNumberInput, SMALL_STEP } from './index';
 
-import type { Mock } from 'vitest';
 const defaultLocaleGroupSep = ruRUFormattersData.input.number.viewGroupSeparator;
 
 // The stepper's long-press timings, which are internal to the form-field entry point.
@@ -356,7 +356,7 @@ class NumberInputWithNativeNumberTypeAndFormControl {
 @Component({
     imports: [KbqInputModule],
     template: `
-        <input kbqNumberInput [value]="$any(value)" />
+        <input kbqNumberInput [value]="value" />
     `
 })
 class NumberInputWithBoundValue {
@@ -666,7 +666,7 @@ describe('KbqNumberInput', () => {
             const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
             const [iconUp, iconDown] = stepper.queryAll(By.css('.kbq-icon'));
 
-            const testLongPressFor = async (icon, emitter) => {
+            const testLongPressFor = async (icon: DebugElement, emitter: Mock) => {
                 dispatchFakeEvent(icon.nativeElement, 'mousedown');
 
                 fixture.detectChanges();
@@ -692,7 +692,7 @@ describe('KbqNumberInput', () => {
             const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
             const [iconUp, iconDown] = stepper.queryAll(By.css('.kbq-icon'));
 
-            const testLongPressFor = async (icon, emitter) => {
+            const testLongPressFor = async (icon: DebugElement, emitter: Mock) => {
                 dispatchFakeEvent(icon.nativeElement, 'mousedown');
                 fixture.detectChanges();
                 await vi.advanceTimersByTimeAsync(KBQ_STEPPER_INITIAL_TIMEOUT);
@@ -721,7 +721,7 @@ describe('KbqNumberInput', () => {
             const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
             const [iconUp, iconDown] = stepper.queryAll(By.css('.kbq-icon'));
 
-            const testLongPressFor = async (icon, emitter) => {
+            const testLongPressFor = async (icon: DebugElement, emitter: Mock) => {
                 dispatchFakeEvent(icon.nativeElement, 'mousedown');
                 fixture.detectChanges();
                 await vi.advanceTimersByTimeAsync(KBQ_STEPPER_INITIAL_TIMEOUT);
@@ -747,7 +747,7 @@ describe('KbqNumberInput', () => {
 
             expect(debugElement.query(By.directive(KbqFormField)).nativeElement).toBeTruthy();
 
-            const testLongPressFor = async (queryIconFn, emitter: Mock) => {
+            const testLongPressFor = async (queryIconFn: (icons: DebugElement[]) => DebugElement, emitter: Mock) => {
                 const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
                 const icon = queryIconFn(stepper.queryAll(By.css('.kbq-icon')));
 
@@ -1591,8 +1591,8 @@ describe('KbqNumberInput', () => {
 
         describe('negative values', () => {
             let fixture: ComponentFixture<NumberInputMaxMinStepInput>;
-            let inputElementDebug;
-            let inputElement;
+            let inputElementDebug: DebugElement;
+            let inputElement: HTMLInputElement;
 
             beforeEach(async () => {
                 vi.useFakeTimers();

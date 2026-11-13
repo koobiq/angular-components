@@ -1,5 +1,5 @@
 @use '../core/styles/common/animation';
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 @use '../core/styles/common/input';
 
 .kbq-tag-list {
@@ -70,11 +70,11 @@
 
 .kbq-form-field-type-tag-list {
     & .kbq-form-field__container {
-        padding-top: kbq-difference-series-css-variables(
+        padding-top: tokens.kbq-difference-series-css-variables(
             [tag-input-size-padding-vertical,
             form-field-size-border-width]
         );
-        padding-bottom: kbq-difference-series-css-variables(
+        padding-bottom: tokens.kbq-difference-series-css-variables(
             [tag-input-size-padding-vertical,
             form-field-size-border-width]
         );

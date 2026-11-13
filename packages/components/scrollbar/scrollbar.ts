@@ -7,8 +7,8 @@ import { _CdkPrivateStyleLoader } from '@angular/cdk/private';
 import {
     CdkScrollable,
     CdkVirtualScrollViewport,
-    ScrollDispatcher,
-    type ExtendedScrollToOptions
+    type ExtendedScrollToOptions,
+    ScrollDispatcher
 } from '@angular/cdk/scrolling';
 import { DOCUMENT } from '@angular/common';
 import {
@@ -17,6 +17,7 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
+    type ComponentRef,
     createComponent,
     DestroyRef,
     Directive,
@@ -29,13 +30,11 @@ import {
     input,
     NgZone,
     numberAttribute,
+    type Provider,
     Renderer2,
-    ViewEncapsulation,
-    type ComponentRef,
-    type Provider
+    ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { KBQ_WINDOW, kbqAnimationsDisabled, kbqInjectNativeElement } from '@koobiq/components/core';
 import {
     asapScheduler,
     asyncScheduler,
@@ -47,22 +46,23 @@ import {
     fromEvent,
     map,
     merge,
+    type MonoTypeOperatorFunction,
     NEVER,
     Observable,
     observeOn,
     of,
+    type SchedulerAction,
+    type SchedulerLike,
     share,
     startWith,
     Subject,
+    type Subscription,
     switchMap,
     take,
     takeUntil,
-    timer,
-    type MonoTypeOperatorFunction,
-    type SchedulerAction,
-    type SchedulerLike,
-    type Subscription
+    timer
 } from 'rxjs';
+import { KBQ_WINDOW, kbqAnimationsDisabled, kbqInjectNativeElement } from '@koobiq/components/core';
 
 /**
  * The next animation frame, requested on subscription and only then, so an idle page schedules none.
@@ -121,7 +121,7 @@ function zoneOptimized<T>(): MonoTypeOperatorFunction<T> {
         new Observable<T>((subscriber) =>
             source.subscribe({
                 next: (value) => ngZone.run(() => subscriber.next(value)),
-                error: (error) => subscriber.error(error),
+                error: (error: unknown) => subscriber.error(error),
                 complete: () => subscriber.complete()
             })
         );

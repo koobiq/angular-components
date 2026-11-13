@@ -1,7 +1,8 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
-import { KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
+import { map, type Observable, startWith } from 'rxjs';
+import { KbqAutocompleteModule, type KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -9,11 +10,9 @@ import {
     AutocompleteOverviewExample,
     AutocompleteSearchSmartExample,
     AutocompleteTextareaExample,
-    AutocompleteTriggersExample
+    AutocompleteTriggersExample,
+    AutocompleteWithFooterExample
 } from 'packages/docs-examples/components/autocomplete';
-import { AutocompleteWithFooterExample } from 'packages/docs-examples/components/autocomplete/autocomplete-with-footer/autocomplete-with-footer-example';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
@@ -55,11 +54,11 @@ export class DevDocsExamples {}
         DevThemeToggle
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class DevApp implements OnInit {
+export class DevApp {
     options = [
         'One',
         'Two',
@@ -94,19 +93,15 @@ export class DevApp implements OnInit {
         'Челябинск'
     ];
 
-    filteredOptions: Observable<string[]>;
-
     formControl = new UntypedFormControl('', Validators.required);
+
+    filteredOptions: Observable<string[]> = this.formControl.valueChanges.pipe(
+        startWith(''),
+        map((value) => this.filter(value))
+    );
 
     onSelectionChange($event: KbqAutocompleteSelectedEvent) {
         console.log(`onSelectionChange: ${$event}`);
-    }
-
-    ngOnInit(): void {
-        this.filteredOptions = this.formControl.valueChanges.pipe(
-            startWith(''),
-            map((value) => this.filter(value))
-        );
     }
 
     private filter(value: string): string[] {

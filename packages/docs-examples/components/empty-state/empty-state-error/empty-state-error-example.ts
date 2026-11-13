@@ -18,8 +18,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
             <i
                 kbq-empty-state-icon
                 kbq-icon-item="kbq-triangle-exclamation_16"
+                color="contrast"
                 [big]="true"
-                [color]="'contrast'"
                 [fade]="true"
             ></i>
             <h2 kbq-empty-state-title>Не удалось показать записи</h2>
@@ -27,7 +27,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 {{ emptyStateText }}
             </div>
             <div kbq-empty-state-actions>
-                <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'">Обновить</button>
+                <button kbq-button type="button" color="theme" kbqStyle="transparent">Обновить</button>
             </div>
         </kbq-empty-state>
     `,

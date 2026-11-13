@@ -42,10 +42,10 @@ export class DevDocsExamples {}
     selector: 'dev-app',
     imports: [KbqTextareaModule, FormsModule, DevDocsExamples, DevThemeToggle],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
-    value: string;
+    value = '';
 }

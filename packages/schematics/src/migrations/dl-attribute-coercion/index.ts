@@ -1,7 +1,7 @@
-import { Path } from '@angular-devkit/core';
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Path } from '@angular-devkit/core';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
-import { visitAll, Visitor } from '../../utils/ast';
+import { visitAll, type Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
@@ -18,7 +18,7 @@ import {
     truthyBooleanMessage,
     UNPARSEABLE_TEMPLATE_MESSAGE
 } from './data';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 const LABEL = '[dl-attribute-coercion]';
 const TS_EXT = '.ts';
@@ -37,7 +37,7 @@ function referencesDl(content: string): boolean {
  * full - stripping a leading `[` and a trailing `]` off `[(dtWidth)]` leaves `(dtWidth)`, which
  * matches no input and was silently skipped.
  */
-const BINDING_SYNTAX = /^(?:\[\(([^()\]]+)\)\]|\[([^\[\]]+)\]|bindon-(.+)|bind-(.+))$/;
+const BINDING_SYNTAX = /^(?:\[\(([^()\]]+)\)\]|\[([^[\]]+)\]|bindon-(.+)|bind-(.+))$/;
 
 /**
  * Walks a template's HTML AST collecting what changed meaning on every `<kbq-dl>`.

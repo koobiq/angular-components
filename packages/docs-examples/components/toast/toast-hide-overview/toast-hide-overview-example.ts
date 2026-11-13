@@ -1,10 +1,10 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, type TemplateRef } from '@angular/core';
+import { switchMap, timer } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
-import { switchMap, timer } from 'rxjs';
 
 /**
  * @title Toast hide
@@ -17,11 +17,11 @@ import { switchMap, timer } from 'rxjs';
         KbqProgressBarModule,
         NgTemplateOutlet
     ],
-    templateUrl: 'toast-hide-overview-example.html',
+    templateUrl: './toast-hide-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastHideOverviewExample {
-    progress: boolean;
+    progress = false;
 
     readonly toastService = inject(KbqToastService);
 

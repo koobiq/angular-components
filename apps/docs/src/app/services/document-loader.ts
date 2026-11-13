@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { catchError, shareReplay } from 'rxjs/operators';
+import { type Observable, shareReplay, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class DocsDocumentLoader {
@@ -21,12 +20,8 @@ export class DocsDocumentLoader {
                 this.httpClient.get(url, { responseType: 'text' }).pipe(
                     // Evict the cache entry on error so a transient failure does not stick; combined
                     // with `shareReplay`'s default `resetOnError`, the next subscriber re-fetches.
-                    catchError((error) => {
-                        this.cache.delete(url);
-
-                        return throwError(() => error);
-                    }),
-                    shareReplay(1)
+                    tap({ error: () => this.cache.delete(url) }),
+                    shareReplay({ bufferSize: 1, refCount: false })
                 )
             );
         }

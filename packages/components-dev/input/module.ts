@@ -3,7 +3,7 @@ import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KBQ_LOCALE_SERVICE,
-    KbqLocaleService,
+    type KbqLocaleService,
     KbqLocaleServiceModule,
     KbqNormalizeWhitespace,
     PasswordValidators
@@ -58,7 +58,7 @@ export class DevDocsExamples {}
         InputReadonlyExample
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

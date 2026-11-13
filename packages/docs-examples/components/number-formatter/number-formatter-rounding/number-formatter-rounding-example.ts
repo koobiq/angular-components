@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
-import { KBQ_LOCALE_SERVICE, KbqFormattersModule, KbqLocaleService } from '@koobiq/components/core';
+import { delay, distinctUntilChanged } from 'rxjs';
+import { KBQ_LOCALE_SERVICE, KbqFormattersModule, type KbqLocaleService } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
-import { delay } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
 
 /**
  * @title Number-formatter rounding

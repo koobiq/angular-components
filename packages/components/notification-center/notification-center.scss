@@ -1,5 +1,5 @@
-@use './notification-center-theme' as *;
-@use '../core/styles/common/squircle' as *;
+@use './notification-center-theme';
+@use '../core/styles/common/squircle';
 
 .kbq-notification-center {
     position: relative;
@@ -23,7 +23,7 @@
         margin-top: var(--kbq-size-xxs);
         margin-bottom: var(--kbq-size-xxs);
 
-        @include kbq-squircle(var(--kbq-notification-center-size-container-border-radius));
+        @include squircle.kbq-squircle(var(--kbq-notification-center-size-container-border-radius));
 
         height: var(
             --kbq-notification-center-popover-height,
@@ -120,7 +120,7 @@
 
     overflow: auto;
 
-    @include kbq-squircle-inherit();
+    @include squircle.kbq-squircle-inherit();
 
     padding-bottom: var(--kbq-size-xl);
 
@@ -142,7 +142,7 @@
     }
 
     & .kbq-loader-overlay_parent {
-        @include kbq-squircle-inherit();
+        @include squircle.kbq-squircle-inherit();
     }
 }
 
@@ -190,5 +190,5 @@
     }
 }
 
-@include kbq-notification-center-theme();
-@include kbq-notification-center-typography();
+@include notification-center-theme.kbq-notification-center-theme();
+@include notification-center-theme.kbq-notification-center-typography();

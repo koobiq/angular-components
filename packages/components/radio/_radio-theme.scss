@@ -1,4 +1,4 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-radio-state($type, $state-name) {
     $base-path: radio-#{$type}-#{$state-name};
@@ -78,10 +78,10 @@
 
 @mixin kbq-radio-typography() {
     .kbq-radio-button {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
     .kbq-radio-button.kbq-radio-button_big {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-big);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
     }
 }

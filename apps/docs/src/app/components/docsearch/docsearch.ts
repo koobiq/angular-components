@@ -14,10 +14,9 @@
 
 import { afterNextRender, DestroyRef, Directive, inject } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import docsearch, { DocSearchInstance, DocSearchProps } from '@docsearch/js/docsearch';
+import docsearch, { type DocSearchInstance, type DocSearchProps } from '@docsearch/js/docsearch';
+import { combineLatest, distinctUntilChanged, map } from 'rxjs';
 import { KBQ_WINDOW, KbqThemeService } from '@koobiq/components/core';
-import { combineLatest } from 'rxjs';
-import { distinctUntilChanged, map } from 'rxjs/operators';
 import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleState } from '../../services/locale';
 

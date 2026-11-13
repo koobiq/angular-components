@@ -4,24 +4,24 @@ import { KbqHighlightModule } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import {
     FlatTreeControl,
-    FlatTreeControlFilter,
+    type FlatTreeControlFilter,
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
     KbqTreeModule
 } from '@koobiq/components/tree';
 
 export class FileNode {
-    children: FileNode[];
-    name: string;
+    children?: FileNode[];
+    name = '';
     type: any;
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-    name: string;
+    name = '';
     type: any;
-    level: number;
-    expandable: boolean;
+    level = 0;
+    expandable = false;
     parent: any;
 }
 
@@ -103,7 +103,7 @@ export const DATA_OBJECT = {
 };
 
 export class CustomTreeControlFilter<T> implements FlatTreeControlFilter<T> {
-    result: T[];
+    result: T[] = [];
 
     constructor(private control: FlatTreeControl<T>) {}
 
@@ -354,7 +354,7 @@ export class TreeCustomFilteringExample {
         return node.expandable;
     };
 
-    private getChildren = (node: FileNode): FileNode[] => {
+    private getChildren = (node: FileNode): FileNode[] | undefined => {
         return node.children;
     };
 

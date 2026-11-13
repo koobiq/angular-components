@@ -2,12 +2,12 @@ import {
     ChangeDetectionStrategy,
     Component,
     Directive,
-    Injector,
-    OnInit,
-    TemplateRef,
-    ViewContainerRef,
     inject,
-    input
+    Injector,
+    input,
+    type OnInit,
+    type TemplateRef,
+    ViewContainerRef
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KBQ_DROPDOWN_PANEL, KbqDropdown, KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -54,7 +54,7 @@ export class ExampleDropdownPortal implements OnInit {
         ExampleDropdownPortal
     ],
     template: `
-        <button kbq-button [kbqDropdownTriggerFor]="egDropdown">
+        <button kbq-button type="button" [kbqDropdownTriggerFor]="egDropdown">
             dropdown
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
@@ -69,7 +69,7 @@ export class ExampleDropdownPortal implements OnInit {
 
             <ng-template #dropdownItemTpl let-item="item">
                 @if (item.children) {
-                    <button kbq-dropdown-item [kbqDropdownTriggerFor]="egDropdownNested">
+                    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="egDropdownNested">
                         {{ item.label }}
                     </button>
 
@@ -82,7 +82,7 @@ export class ExampleDropdownPortal implements OnInit {
                         }
                     </kbq-dropdown>
                 } @else {
-                    <button kbq-dropdown-item>{{ item.label }}</button>
+                    <button kbq-dropdown-item type="button">{{ item.label }}</button>
                 }
             </ng-template>
         </kbq-dropdown>

@@ -1,9 +1,17 @@
-import { computed, inject, Injectable, Signal, signal, TemplateRef, untracked, WritableSignal } from '@angular/core';
+import {
+    computed,
+    inject,
+    Injectable,
+    type Signal,
+    signal,
+    type TemplateRef,
+    untracked,
+    type WritableSignal
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { BehaviorSubject, map, merge, type Observable, skip, Subject } from 'rxjs';
 import { DateAdapter, DateFormatter, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
-import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
-import { BehaviorSubject, merge, Observable, Subject } from 'rxjs';
-import { map, skip } from 'rxjs/operators';
+import { KbqToastService, type KbqToastStyle } from '@koobiq/components/toast';
 
 /** A single notification rendered by the notification center. */
 export interface KbqNotificationItem {
@@ -181,8 +189,8 @@ export class KbqNotificationCenterService {
         // Newest notifications first within each day.
         groups.forEach((group) => group.items.sort(this.compareByDateDesc));
 
-        // Newest day first.
-        return groups.sort((a, b) => this.compareByDateDesc(a.items[0], b.items[0]));
+        // Newest day first. A group is created together with its first item, so `items` is never empty.
+        return groups.sort((a, b) => this.compareByDateDesc(a.items[0]!, b.items[0]!));
     });
 
     /**

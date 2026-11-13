@@ -1,4 +1,4 @@
-import { addFile, MAX_FILE_LENGTH, SectionParent, splitSections } from './site-files';
+import { addFile, MAX_FILE_LENGTH, type SectionParent, splitSections } from './site-files';
 
 const GUIDE: SectionParent = {
     path: 'en/main/migration',

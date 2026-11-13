@@ -1,7 +1,14 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, TemplateRef, ViewEncapsulation, inject, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    type TemplateRef,
+    viewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOptionModule, KbqOverlayLayer, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -26,7 +33,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     }
 })
 export class DevToastComponent extends KbqToastComponent {
-    readonly data: KbqToastData;
+    override readonly data: KbqToastData;
     readonly service: KbqToastService;
 
     constructor() {
@@ -61,7 +68,7 @@ export class DevToastComponent extends KbqToastComponent {
         NgTemplateOutlet
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

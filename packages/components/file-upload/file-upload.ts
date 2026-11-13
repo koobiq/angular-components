@@ -6,20 +6,20 @@ import {
     ElementRef,
     inject,
     Renderer2,
-    Signal,
+    type Signal,
     signal,
-    WritableSignal
+    type WritableSignal
 } from '@angular/core';
-import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
+import { FormGroupDirective, NgControl, NgForm, type UntypedFormControl } from '@angular/forms';
+import { type BehaviorSubject, combineLatest, of, Subject, type Subscription } from 'rxjs';
 import {
     ErrorStateMatcher,
-    KbqEnumValues,
-    KbqFileUploadLocaleConfiguration,
+    type KbqEnumValues,
+    type KbqFileUploadLocaleConfiguration,
     kbqInjectA11yLocaleConfiguration,
     KbqLocaleOverridesDirective
 } from '@koobiq/components/core';
 import { kbqHintParentFactoryProvider } from '@koobiq/components/form-field';
-import { BehaviorSubject, combineLatest, of, Subject, Subscription } from 'rxjs';
 import { KbqFullScreenDropzoneService } from './dropzone';
 import { KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION } from './file-upload.tokens';
 import { KbqFileList, KbqFileUploadContext } from './primitives';

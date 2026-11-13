@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, ElementRef, forwardRef, inject, sig
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KBQ_NAVBAR_ITEM_TRIGGER, KbqNavbarItemTrigger, KbqNavbarModule } from '@koobiq/components/navbar';
+import { KBQ_NAVBAR_ITEM_TRIGGER, type KbqNavbarItemTrigger, KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { injectExampleText } from '../localized-data';
 
@@ -56,26 +56,24 @@ export class ExampleNavbarNotifications implements KbqNavbarItemTrigger {
 @Component({
     selector: 'navbar-item-custom-component-example',
     imports: [KbqBadgeModule, KbqIconModule, KbqNavbarModule, ExampleNavbarNotifications],
-    templateUrl: 'navbar-item-custom-component-example.html',
-    styles: [
-        `
-            .example-navbar-item-leading {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
+    templateUrl: './navbar-item-custom-component-example.html',
+    styles: `
+        .example-navbar-item-leading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-            .kbq-expanded .example-navbar-item-leading {
-                justify-content: flex-start;
-            }
+        .kbq-expanded .example-navbar-item-leading {
+            justify-content: flex-start;
+        }
 
-            /* A titled item has an icon-sized leading slot, so its title starts on the plain item's text axis. */
-            .example-navbar-item_compact-leading.kbq-expanded {
-                --kbq-navbar-item-size-custom-content-width: var(--kbq-size-l);
-                --kbq-navbar-item-size-custom-content-height: var(--kbq-size-l);
-            }
-        `
-    ],
+        /* A titled item has an icon-sized leading slot, so its title starts on the plain item's text axis. */
+        .example-navbar-item_compact-leading.kbq-expanded {
+            --kbq-navbar-item-size-custom-content-width: var(--kbq-size-l);
+            --kbq-navbar-item-size-custom-content-height: var(--kbq-size-l);
+        }
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarItemCustomComponentExample {

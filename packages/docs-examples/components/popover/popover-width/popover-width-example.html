@@ -23,10 +23,11 @@
     <button
         kbq-button
         kbqPopover
+        type="button"
+        kbqPopoverClass="popover-width-example"
+        kbqPopoverHeader="Medium"
         [kbqPopoverHasCloseButton]="true"
-        [kbqPopoverClass]="'popover-width-example'"
         [kbqPopoverContent]="customLargeContent"
-        [kbqPopoverHeader]="'Medium'"
         [kbqPopoverSize]="selectedSize"
         (click)="selectedSize = popUpSizes.Medium"
     >
@@ -35,10 +36,11 @@
     <button
         kbq-button
         kbqPopover
+        type="button"
+        kbqPopoverClass="popover-width-example"
+        kbqPopoverHeader="Large"
         [kbqPopoverHasCloseButton]="true"
-        [kbqPopoverClass]="'popover-width-example'"
         [kbqPopoverContent]="customLargeContent"
-        [kbqPopoverHeader]="'Large'"
         [kbqPopoverSize]="selectedSize"
         (click)="selectedSize = popUpSizes.Large"
     >
@@ -47,10 +49,11 @@
     <button
         kbq-button
         kbqPopover
+        type="button"
+        kbqPopoverClass="popover-width-custom-example"
+        kbqPopoverHeader="Custom Width"
         [kbqPopoverHasCloseButton]="true"
-        [kbqPopoverClass]="'popover-width-custom-example'"
         [kbqPopoverContent]="customContent"
-        [kbqPopoverHeader]="'Custom Width'"
     >
         Custom Width
     </button>

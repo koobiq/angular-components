@@ -1,4 +1,4 @@
-import { KbqLocaleStringsData } from './types';
+import type { KbqLocaleStringsData } from './types';
 
 export const ptBRLocaleData = {
     a11y: {

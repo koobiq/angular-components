@@ -42,7 +42,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit,
     get isMultiple(): boolean;
     readonly items: Signal<readonly KbqAccordionItem[]>;
     keydownHandler(event: KeyboardEvent): void;
-    protected keyManager: FocusKeyManager<KbqAccordionItem>;
+    protected keyManager: FocusKeyManager<KbqAccordionItem> | undefined;
     readonly level: _angular_core.InputSignalWithTransform<number, unknown>;
     // (undocumented)
     ngAfterContentChecked(): void;

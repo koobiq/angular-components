@@ -1,9 +1,9 @@
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
 import { SUMMARY, TABS_PACKAGE, TABS_TYPE, warnPatterns } from './data';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 const LABEL = '[tabs-signals-and-aria]';
 const EXTENSIONS = ['.ts', '.html'];

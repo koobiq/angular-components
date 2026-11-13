@@ -11,8 +11,8 @@ import {
     inject,
     InjectionToken,
     input,
-    OnInit,
-    Provider,
+    type OnInit,
+    type Provider,
     TemplateRef,
     viewChild,
     viewChildren,
@@ -20,11 +20,12 @@ import {
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
+import { EMPTY, merge, skip, switchMap } from 'rxjs';
 import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import {
     KBQ_A11Y_LOCALE_CONFIGURATION,
     KbqComponentColors,
-    KbqDefaultSizes,
+    type KbqDefaultSizes,
     kbqInjectNativeElement,
     KbqLocaleOverridesDirective,
     PopUpPlacements
@@ -38,8 +39,7 @@ import {
     KbqOverflowItemsResult
 } from '@koobiq/components/overflow-items';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { EMPTY, merge, skip, switchMap } from 'rxjs';
-import { KbqBreadcrumbsConfiguration, KbqBreadcrumbsWrapMode } from './breadcrumbs.types';
+import type { KbqBreadcrumbsConfiguration, KbqBreadcrumbsWrapMode } from './breadcrumbs.types';
 import { RdxRovingFocusGroupDirective } from './roving-focus-group.directive';
 import { RdxRovingFocusItemDirective } from './roving-focus-item.directive';
 
@@ -346,9 +346,9 @@ export class KbqBreadcrumbs {
             .sort((a, b) => a.order - b.order)
             .map(({ item }) => item);
 
-        for (let i = 0; i < extraToHide && i < hideable.length; i++) {
-            hideable[i].hide();
-            this.maxHiddenItems.add(hideable[i]);
+        for (const item of hideable.slice(0, extraToHide)) {
+            item.hide();
+            this.maxHiddenItems.add(item);
             result?.show();
         }
     }

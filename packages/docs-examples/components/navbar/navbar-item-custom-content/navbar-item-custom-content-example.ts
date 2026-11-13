@@ -7,7 +7,7 @@ import { KbqNavbarModule } from '@koobiq/components/navbar';
 @Component({
     selector: 'navbar-item-custom-content-example',
     imports: [KbqNavbarModule],
-    templateUrl: 'navbar-item-custom-content-example.html',
+    templateUrl: './navbar-item-custom-content-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarItemCustomContentExample {}

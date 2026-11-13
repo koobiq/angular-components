@@ -1,13 +1,13 @@
-import { ChangeDetectionStrategy, Component, inject, signal, viewChild, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, viewChild, type WritableSignal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import type { DateTime } from 'luxon';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/core';
-import { KbqDatepicker, KbqDatepickerModule } from '@koobiq/components/datepicker';
-import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
+import { type KbqDatepicker, KbqDatepickerModule } from '@koobiq/components/datepicker';
+import { type KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqInlineEdit, KbqInlineEditMode, KbqInlineEditPlaceholder } from '@koobiq/components/inline-edit';
+import { KbqInlineEdit, type KbqInlineEditMode, KbqInlineEditPlaceholder } from '@koobiq/components/inline-edit';
 import { KbqTimepicker } from '@koobiq/components/timepicker';
-import { DateTime } from 'luxon';
 
 /**
  * @title Inline edit date time

@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component } from '@angular/core';
+import { type AfterViewInit, ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqOptionActionComponent, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -14,16 +14,16 @@ import {
 } from '@koobiq/components/tree';
 
 class FileNode {
-    children: FileNode[];
-    name: string;
+    children?: FileNode[];
+    name = '';
     type: any;
 }
 
 class FileFlatNode {
-    name: string;
+    name = '';
     type: any;
-    level: number;
-    expandable: boolean;
+    level = 0;
+    expandable = false;
     parent: any;
 }
 
@@ -143,7 +143,7 @@ function buildFileTree(value: any, level: number): FileNode[] {
             >
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>
 
-                <kbq-option-action [kbqTooltip]="'Tooltip text'" />
+                <kbq-option-action kbqTooltip="Tooltip text" />
             </kbq-tree-option>
 
             <kbq-tree-option
@@ -224,7 +224,7 @@ export class E2eTreeStates implements AfterViewInit {
         return node.expandable;
     };
 
-    protected getChildren = (node: FileNode): FileNode[] => {
+    protected getChildren = (node: FileNode): FileNode[] | undefined => {
         return node.children;
     };
 
@@ -337,7 +337,7 @@ export class E2eTreeOptionActionVisibility {
 
     protected isExpandable = (node: FileFlatNode) => node.expandable;
 
-    protected getChildren = (node: FileNode): FileNode[] => node.children;
+    protected getChildren = (node: FileNode): FileNode[] | undefined => node.children;
 
     protected getValue = (node: FileFlatNode): string => node.name;
 
@@ -385,7 +385,7 @@ export class E2eTreeOptionActionVisibility {
                 <div>{{ treeControl.getViewValue(node) }}</div>
                 <div class="kbq-option-caption">caption</div>
 
-                <kbq-option-action [kbqTooltip]="'Tooltip text'" />
+                <kbq-option-action kbqTooltip="Tooltip text" />
             </kbq-tree-option>
 
             <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
@@ -461,7 +461,7 @@ export class E2eTreeTwoLineNode implements AfterViewInit {
         return node.expandable;
     };
 
-    protected getChildren = (node: FileNode): FileNode[] => {
+    protected getChildren = (node: FileNode): FileNode[] | undefined => {
         return node.children;
     };
 

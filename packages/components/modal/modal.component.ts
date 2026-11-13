@@ -1,15 +1,15 @@
-import { CdkTrapFocus, FocusMonitor, FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
+import { CdkTrapFocus, FocusMonitor, type FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ComponentRef,
+    type ComponentRef,
     computed,
     createComponent,
     ElementRef,
@@ -21,12 +21,12 @@ import {
     isDevMode,
     linkedSignal,
     model,
-    OnChanges,
-    OnDestroy,
-    OnInit,
+    type OnChanges,
+    type OnDestroy,
+    type OnInit,
     Renderer2,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     TemplateRef,
     Type,
     untracked,
@@ -36,7 +36,8 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { outputFromObservable } from '@angular/core/rxjs-interop';
-import { KbqButtonColor, KbqButtonModule } from '@koobiq/components/button';
+import { type Observable, type Subscription, take } from 'rxjs';
+import { type KbqButtonColor, KbqButtonModule } from '@koobiq/components/button';
 import {
     ENTER,
     ESCAPE,
@@ -46,29 +47,27 @@ import {
     KbqLocaleOverridesDirective,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
-    KbqOverflowShadowState,
+    type KbqOverflowShadowState,
     KbqOverflowShadowTop
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { Observable, Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { CssUnitPipe } from './css-unit.pipe';
-import { KbqModalControlService } from './modal-control.service';
-import { KbqModalRef } from './modal-ref.class';
 import {
-    IModalButtonOptions,
+    type IModalButtonOptions,
     KBQ_MODAL,
     KBQ_MODAL_OPTIONS,
-    KbqModal,
-    KbqModalAutoFocus,
+    type KbqModal,
+    type KbqModalAutoFocus,
     MODAL_ANIMATE_DURATION,
-    ModalOptions,
+    type ModalOptions,
     ModalSize,
-    ModalType,
-    OnClickCallback
+    type ModalType,
+    type OnClickCallback
 } from './modal.type';
+import { KbqModalControlService } from './modal-control.service';
+import { KbqModalRef } from './modal-ref.class';
 
 /** Phase of the open/close animation the dialog is in, or `null` between phases. */
 export type AnimationState = 'enter' | 'leave' | null;
@@ -89,6 +88,12 @@ function slotKind(value: unknown): KbqModalSlotKind {
     return 'none';
 }
 
+/** The template a slot value took, for the `template` case of its kind. */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type -- the context type the slot inputs declare
+function slotTemplate(value: unknown): TemplateRef<{}> | null {
+    return value instanceof TemplateRef ? value : null;
+}
+
 let uniqueIdCounter = 0;
 
 @Component({
@@ -106,7 +111,7 @@ let uniqueIdCounter = 0;
         KbqTitleModule
     ],
     templateUrl: './modal.component.html',
-    styleUrls: ['./modal.scss', 'modal-tokens.scss'],
+    styleUrls: ['./modal.scss', './modal-tokens.scss'],
     providers: [{ provide: KBQ_MODAL, useExisting: KbqModalComponent }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -349,6 +354,21 @@ export class KbqModalComponent<T = any, R = any>
     /** @docs-private */
     protected readonly footerKind = computed(() => slotKind(this.footer()));
 
+    /** @docs-private */
+    protected readonly titleTemplate = computed(() => slotTemplate(this.kbqTitle()));
+    /** @docs-private */
+    protected readonly captionTemplate = computed(() => slotTemplate(this.kbqCaption()));
+    /** @docs-private */
+    protected readonly contentTemplate = computed(() => slotTemplate(this.kbqContent()));
+    /** @docs-private */
+    protected readonly footerTemplate = computed(() => slotTemplate(this.footer()));
+    /** @docs-private */
+    protected readonly footerButtons = computed(() => {
+        const footer = this.footer();
+
+        return Array.isArray(footer) ? footer : [];
+    });
+
     /** Whether the dialog renders a footer — a predefined button is enough, `kbqFooter` is not required. */
     protected get hasFooter(): boolean {
         return this.composedFooter || !!(this.kbqFooter() || this.kbqOkText() || this.kbqCancelText());
@@ -428,9 +448,9 @@ export class KbqModalComponent<T = any, R = any>
         return triggerType === 'ok' ? this.okLoading() : this.cancelLoading();
     }
 
-    private focusedElementBeforeOpen: HTMLElement | null;
+    private focusedElementBeforeOpen?: HTMLElement | null;
 
-    private previouslyFocusedElementOrigin: FocusOrigin;
+    private previouslyFocusedElementOrigin: FocusOrigin = null;
 
     private monitoredContainer: ElementRef | null = null;
     private focusMonitorSubscription: Subscription | null = null;
@@ -450,10 +470,10 @@ export class KbqModalComponent<T = any, R = any>
     private handledVisible = false;
 
     // Handle the reference when using kbqContent as Component
-    private contentComponentRef: ComponentRef<T>;
+    private contentComponentRef?: ComponentRef<T>;
     // Current animation state
-    private animationState: AnimationState;
-    private container: HTMLElement | OverlayRef;
+    private animationState?: AnimationState;
+    private container?: HTMLElement | OverlayRef;
 
     /** Element or overlay the dialog is rendered into. Read once, on init. */
     readonly kbqGetContainer = input<HTMLElement | OverlayRef | (() => HTMLElement | OverlayRef) | null>(
@@ -470,7 +490,7 @@ export class KbqModalComponent<T = any, R = any>
     ngOnChanges(changes: SimpleChanges) {
         // A `model()` reports a write from inside through `ngOnChanges` as well, and that write has
         // already run the flow, so the guard inside is what keeps it from running twice.
-        if (changes.kbqVisible) this.syncVisibleState(changes.kbqVisible.firstChange);
+        if (changes['kbqVisible']) this.syncVisibleState(changes['kbqVisible'].firstChange);
     }
 
     ngOnInit() {
@@ -587,12 +607,13 @@ export class KbqModalComponent<T = any, R = any>
         return this;
     }
 
+    // Both return `undefined` for text and template content, which their published return types do not show.
     getContentComponentRef(): ComponentRef<T> {
-        return this.contentComponentRef;
+        return this.contentComponentRef!;
     }
 
     getContentComponent(): T {
-        return this.contentComponentRef && this.contentComponentRef.instance;
+        return this.contentComponentRef?.instance as T;
     }
 
     getElement(): HTMLElement {
@@ -752,13 +773,23 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     /**
+     * The color of a footer button: the published options type `type` as any string, which the button reads as its
+     * color.
+     *
+     * @docs-private
+     */
+    protected buttonColor(button: IModalButtonOptions<T>): KbqButtonColor {
+        return button.type as KbqButtonColor;
+    }
+
+    /**
      * Lookup a button's property, if the prop is a function, call & then return the result, otherwise, return itself.
      *
      * @docs-private
      */
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     protected getButtonCallableProp(options: IModalButtonOptions<T>, prop: string): {} {
-        const value = options[prop];
+        const value: any = options[prop as keyof IModalButtonOptions<T>];
         const args: any[] = [];
 
         if (this.contentComponentRef) {
@@ -811,6 +842,7 @@ export class KbqModalComponent<T = any, R = any>
             Promise.resolve(animation && this.animateTo(visible))
                 // Emit open/close event after animations over
                 .then(() => {
+                    // eslint-disable-next-line promise/always-return -- the outputs are emitted, nothing is returned
                     if (visible) {
                         this.scrollbarViewports().forEach((viewport) => viewport.flashScrollIndicators());
                         this.kbqAfterOpen.emit();
@@ -918,7 +950,7 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     // Change kbqVisible from inside
-    private changeVisibleFromInside(visible: boolean, closeResult?: R): Promise<void> {
+    private changeVisibleFromInside(visible: boolean, closeResult?: R): Promise<any> {
         if (this.kbqVisible() === visible) return Promise.resolve();
 
         // Claimed before the write, because `model.set()` reports it through `ngOnChanges` too and
@@ -1067,7 +1099,7 @@ export class KbqModalComponent<T = any, R = any>
     }
 }
 
-function isPromise(obj: unknown | void): boolean {
+function isPromise(obj: unknown): boolean {
     return (
         !!obj &&
         (typeof obj === 'object' || typeof obj === 'function') &&

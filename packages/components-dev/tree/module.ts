@@ -1,10 +1,11 @@
 import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { debounceTime, Subject } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqButtonToggleChange, KbqButtonToggleModule } from '@koobiq/components/button-toggle';
+import { type KbqButtonToggleChange, KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import { KbqHighlightModule, KbqMultipleInput, PopUpPlacements } from '@koobiq/components/core';
+import { KbqHighlightModule, type KbqMultipleInput, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -15,26 +16,30 @@ import {
     FilterByViewValue,
     FilterParentsForNodes,
     FlatTreeControl,
+    type KbqTreeCopyEvent,
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
-    KbqTreeModule
+    KbqTreeModule,
+    type KbqTreeNavigationChange,
+    type KbqTreeOption,
+    type KbqTreeSelectAllEvent,
+    type KbqTreeSelectionChange
 } from '@koobiq/components/tree';
-import { Subject, debounceTime } from 'rxjs';
 import { TreeExamplesModule } from '../../docs-examples/components/tree';
 import { DEV_TREE_DATA } from './mock';
 
 export class DevFileNode {
-    children: DevFileNode[];
-    name: string;
+    children?: DevFileNode[];
+    name = '';
     type: any;
 }
 
 /** Flat node with expandable and level information */
 export class DevFileFlatNode {
-    name: string;
+    name = '';
     type: any;
-    level: number;
-    expandable: boolean;
+    level = 0;
+    expandable = false;
     parent: any;
 }
 
@@ -140,7 +145,7 @@ export class DevDocsExamples {}
         DevDocsExamples
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -214,11 +219,11 @@ export class DevApp {
         this.filterValueChanged.pipe(debounceTime(300)).subscribe((value) => this.treeControl.applyFilter(value));
     }
 
-    onModelValueChange(values) {
+    onModelValueChange(values: string[]) {
         this.filterByValues.setValues(values);
     }
 
-    onFilterChange(value): void {
+    onFilterChange(value: string): void {
         this.filterValueChanged.next(value);
     }
 
@@ -226,20 +231,20 @@ export class DevApp {
         return nodeData.expandable;
     }
 
-    onSelectAll($event) {
-        console.log('onSelectAll', $event);
+    onSelectAll(event: KbqTreeSelectAllEvent<KbqTreeOption>) {
+        console.log('onSelectAll', event);
     }
 
-    onCopy($event) {
-        console.log('onCopy', $event);
+    onCopy(event: KbqTreeCopyEvent<KbqTreeOption>) {
+        console.log('onCopy', event);
     }
 
-    onNavigationChange($event) {
-        console.log('onNavigationChange', $event);
+    onNavigationChange(event: KbqTreeNavigationChange<KbqTreeOption>) {
+        console.log('onNavigationChange', event);
     }
 
-    onSelectionChange($event) {
-        console.log('onSelectionChange', $event);
+    onSelectionChange(event: KbqTreeSelectionChange<KbqTreeOption>) {
+        console.log('onSelectionChange', event);
     }
 
     switchToDataSource(dataSourceType: 'small' | 'big') {
@@ -282,7 +287,7 @@ export class DevApp {
         return node.expandable;
     };
 
-    private getChildren = (node: DevFileNode): DevFileNode[] => {
+    private getChildren = (node: DevFileNode): DevFileNode[] | undefined => {
         return node.children;
     };
 

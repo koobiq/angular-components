@@ -3,7 +3,12 @@ import { ChangeDetectionStrategy, Component, ElementRef, viewChild } from '@angu
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTagInput, KbqTagInputEvent, KbqTagsModule, kbqTagsDefaultOptionsProvider } from '@koobiq/components/tags';
+import {
+    KbqTagInput,
+    type KbqTagInputEvent,
+    kbqTagsDefaultOptionsProvider,
+    KbqTagsModule
+} from '@koobiq/components/tags';
 
 /**
  * @title Tag input onpaste off
@@ -16,7 +21,7 @@ import { KbqTagInput, KbqTagInputEvent, KbqTagsModule, kbqTagsDefaultOptionsProv
         KbqIconModule,
         KbqFormFieldModule
     ],
-    templateUrl: 'tag-input-onpaste-off-example.html',
+    templateUrl: './tag-input-onpaste-off-example.html',
     // turn off tag add on paste with InjectionToken
     providers: [kbqTagsDefaultOptionsProvider({ separatorKeyCodes: [ENTER], addOnPaste: false })],
     changeDetection: ChangeDetectionStrategy.OnPush

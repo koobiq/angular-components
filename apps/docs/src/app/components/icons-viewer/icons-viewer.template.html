@@ -20,12 +20,13 @@
             @if (filterBySize(icons, size).length) {
                 <div class="layout-column">
                     <div class="docs-icons-viewer__table-row-header">{{ size }}px</div>
-                    <div class="docs-icons-viewer__table-row docs-icons-viewer__table-row_{{ size }}">
+                    <div class="docs-icons-viewer__table-row" [class]="`docs-icons-viewer__table-row_${size}`">
                         @for (icon of filterBySize(icons, size); track icon) {
                             <div
-                                class="docs-icons-viewer__table-cell docs-icons-viewer__table-cell_{{ size }}"
+                                class="docs-icons-viewer__table-cell"
                                 role="button"
                                 tabindex="0"
+                                [class]="`docs-icons-viewer__table-cell_${size}`"
                                 [attr.aria-label]="icon.name"
                                 (click)="setActiveIcon(icon)"
                                 (keydown.enter)="setActiveIcon(icon)"

@@ -16,7 +16,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
             </kbq-tab-group>
         </div>
     `,
-    styleUrls: ['tabs-with-scroll-vertical-example.css'],
+    styleUrl: 'tabs-with-scroll-vertical-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

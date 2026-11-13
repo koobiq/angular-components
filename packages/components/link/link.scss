@@ -4,11 +4,11 @@
 
 // Sass writes an escape in a quoted string as the character itself, an invisible one here. Unquoted, the
 // joiner reaches the CSS as the `\2060` escape.
-$_kbq-link-word-joiner: string.unquote('"\\2060"');
+$-kbq-link-word-joiner: string.unquote('"\\2060"');
 
 // Only an icon or an image after the text keeps its distance from it: the punctuation ending a sentence
 // follows the last word immediately.
-@mixin _kbq-link-gaps($gap, $external-icon-gap) {
+@mixin -kbq-link-gaps($gap, $external-icon-gap) {
     .kbq-link__prefix + .kbq-link__text {
         margin-inline-start: $gap;
     }
@@ -82,8 +82,8 @@ $_kbq-link-word-joiner: string.unquote('"\\2060"');
 
         &:not(:empty)::before {
             // Firefox before 128 and Safari before 17.4 drop the declaration with the alternative text
-            content: $_kbq-link-word-joiner;
-            content: $_kbq-link-word-joiner / '';
+            content: $-kbq-link-word-joiner;
+            content: $-kbq-link-word-joiner / '';
         }
 
         // Only the joint stays on one line: a suffix, such as a caption, wraps inside like the text
@@ -92,7 +92,7 @@ $_kbq-link-word-joiner: string.unquote('"\\2060"');
         }
     }
 
-    @include _kbq-link-gaps(var(--kbq-link-size-normal-content-padding), 1px);
+    @include -kbq-link-gaps(var(--kbq-link-size-normal-content-padding), 1px);
 
     &.kbq-link_size_compact {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
@@ -109,12 +109,12 @@ $_kbq-link-word-joiner: string.unquote('"\\2060"');
             margin-bottom: 1px;
         }
 
-        @include _kbq-link-gaps(var(--kbq-link-size-compact-content-padding), 0px);
+        @include -kbq-link-gaps(var(--kbq-link-size-compact-content-padding), 0px);
     }
 
     &.kbq-link_size_big {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
-        @include _kbq-link-gaps(var(--kbq-link-size-big-content-padding), 2px);
+        @include -kbq-link-gaps(var(--kbq-link-size-big-content-padding), 2px);
     }
 
     // An icon without a color of its own takes the color of the link in every state

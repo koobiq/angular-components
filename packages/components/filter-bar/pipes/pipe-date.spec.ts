@@ -1,20 +1,20 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { ChangeDetectorRef, Component, DebugElement, inject, LOCALE_ID } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChangeDetectorRef, Component, type DebugElement, inject, LOCALE_ID } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import type { DateTime } from 'luxon';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, dispatchKeyboardEvent, TAB } from '@koobiq/components/core';
 import {
-    KbqFilter,
+    type KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
-    KbqPipe,
-    KbqPipeTemplate,
+    type KbqPipe,
+    type KbqPipeTemplate,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
-import { DateTime } from 'luxon';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeDateComponent } from './pipe-date';
 import { registerPipeStatesTests, setInputModality, stubReturnButton } from './pipe-states.spec-helper';

@@ -1,8 +1,16 @@
 import { ChangeDetectionStrategy, Component, computed, inject, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AgGridModule } from 'ag-grid-angular';
 import {
-    KbqAgGridCopyEvent,
-    KbqAgGridCopyFormatter,
+    AllCommunityModule,
+    type ColDef,
+    type FirstDataRenderedEvent,
+    ModuleRegistry,
+    type RowSelectionOptions
+} from 'ag-grid-community';
+import {
+    type KbqAgGridCopyEvent,
+    type KbqAgGridCopyFormatter,
     kbqAgGridCopyFormatterCsv,
     kbqAgGridCopyFormatterJson,
     kbqAgGridCopyFormatterTsv,
@@ -10,14 +18,6 @@ import {
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToastService } from '@koobiq/components/toast';
-import { AgGridModule } from 'ag-grid-angular';
-import {
-    AllCommunityModule,
-    ColDef,
-    FirstDataRenderedEvent,
-    ModuleRegistry,
-    RowSelectionOptions
-} from 'ag-grid-community';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

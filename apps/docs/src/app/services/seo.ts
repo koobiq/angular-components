@@ -6,8 +6,8 @@ import { docsGetPageMarkdownPath, docsHasMarkdown } from '../page-paths';
 import { DOCS_SEO_DESCRIPTIONS } from '../seo-descriptions';
 import {
     docsGetItemById,
-    DocsStructureCategoryId,
-    DocsStructureItem,
+    type DocsStructureCategoryId,
+    type DocsStructureItem,
     DocsStructureItemId,
     DocsStructureItemTab,
     DocsStructureTokensTab
@@ -158,9 +158,9 @@ export const docsResolveSeo = (
     fallbackLocale: DocsLocale = DOCS_DEFAULT_LOCALE,
     routeTitle?: string
 ): DocsResolvedSeo => {
-    const path = rawPath.split(/[?#]/)[0];
+    const path = rawPath.replace(/[?#].*/, '');
     const segments = path.split('/').filter(Boolean);
-    const hasSupportedLocale = DOCS_SUPPORTED_LOCALES.includes(segments[0]);
+    const hasSupportedLocale = DOCS_SUPPORTED_LOCALES.includes(segments[0] ?? '');
     const locale = hasSupportedLocale ? (segments[0] as DocsLocale) : fallbackLocale;
     const canonicalUrl = hasSupportedLocale ? `${SITE_ORIGIN}${path}` : null;
     const alternates = hasSupportedLocale

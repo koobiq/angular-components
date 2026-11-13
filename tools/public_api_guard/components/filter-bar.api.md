@@ -95,7 +95,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     protected focusTrigger(): void;
     get isEmpty(): boolean;
     isMac: boolean;
-    isTemplateRef(value: unknown): boolean;
+    isTemplateRef<C>(value: unknown): value is TemplateRef<C>;
     readonly localeConfiguration: _angular_core.Signal<KbqFilterBarLocaleConfiguration>;
     protected lockedValues?: unknown[];
     protected multilineOptions?: boolean;
@@ -467,7 +467,10 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     get formattedValue(): string;
     // (undocumented)
     protected readonly formatter: DateFormatter<any>;
-    protected formGroup: FormGroup;
+    protected formGroup: FormGroup<{
+        start: FormControl<D | null>;
+        end: FormControl<D | null>;
+    }>;
     protected readonly fromLabelId: string;
     protected abstract getDefaultEnd(): D;
     protected abstract getDefaultStart(): D;

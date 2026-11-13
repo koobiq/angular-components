@@ -11,20 +11,22 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
     selector: 'dropdown-item-progress-example',
     imports: [KbqDropdownModule, KbqButtonModule, KbqIconModule, KbqProgressSpinnerModule],
     template: `
-        <button kbq-button [kbqDropdownTriggerFor]="appDropdown">
+        <button kbq-button type="button" [kbqDropdownTriggerFor]="appDropdown">
             Trigger
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
 
         <kbq-dropdown #appDropdown="kbqDropdown">
-            <button kbq-dropdown-item>Menu item 1</button>
-            <button kbq-dropdown-item>Menu item 2</button>
-            <button kbq-dropdown-item>Menu item 3</button>
-            <button kbq-dropdown-item progress [kbqDropdownTriggerFor]="loadingSubmenu">Menu item 4</button>
-            <button kbq-dropdown-item>Menu item 5</button>
-            <button kbq-dropdown-item>Menu item 6</button>
-            <button kbq-dropdown-item progress disabled>Menu item 7</button>
-            <button kbq-dropdown-item>Menu item 8</button>
+            <button kbq-dropdown-item type="button">Menu item 1</button>
+            <button kbq-dropdown-item type="button">Menu item 2</button>
+            <button kbq-dropdown-item type="button">Menu item 3</button>
+            <button kbq-dropdown-item progress type="button" [kbqDropdownTriggerFor]="loadingSubmenu">
+                Menu item 4
+            </button>
+            <button kbq-dropdown-item type="button">Menu item 5</button>
+            <button kbq-dropdown-item type="button">Menu item 6</button>
+            <button kbq-dropdown-item progress disabled type="button">Menu item 7</button>
+            <button kbq-dropdown-item type="button">Menu item 8</button>
         </kbq-dropdown>
 
         <kbq-dropdown #loadingSubmenu="kbqDropdown">

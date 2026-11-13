@@ -31,8 +31,17 @@ const distDir = join(projectRoot, 'dist');
 
 const rootPackageJson: PackageJson = JSON.parse(readFileSync(join(projectRoot, 'package.json'), { encoding: 'utf-8' }));
 
-const angularVersion = rootPackageJson.dependencies!['@angular/core'];
-const cdkVersion = rootPackageJson.dependencies!['@angular/cdk'];
+/** The range the root manifest holds for a package it depends on. */
+const rootRange = (name: string): string => {
+    const range = rootPackageJson.dependencies?.[name] ?? rootPackageJson.devDependencies?.[name];
+
+    if (!range) throw new Error(`package.json does not depend on ${name}`);
+
+    return range;
+};
+
+const angularVersion = rootRange('@angular/core');
+const cdkVersion = rootRange('@angular/cdk');
 
 /** Mirrors `version()` in packages/schematics/rollup.config.js, which shapes what `ng add` writes. */
 const caret = (range: string): string => (range.startsWith('^') ? range : `^${range}`);
@@ -89,14 +98,14 @@ const angularAppWithPeers = () => ({
  */
 const ngAddInstalls = [
     `@angular/cdk@${caret(cdkVersion)}`,
-    `@koobiq/luxon-date-adapter@${caret(rootPackageJson.devDependencies!['@koobiq/luxon-date-adapter'])}`,
-    `@koobiq/date-formatter@${caret(rootPackageJson.dependencies!['@koobiq/date-formatter'])}`,
-    `@koobiq/date-adapter@${caret(rootPackageJson.dependencies!['@koobiq/date-adapter'])}`,
-    `@koobiq/icons@${caret(rootPackageJson.dependencies!['@koobiq/icons'])}`,
-    `@koobiq/design-tokens@${caret(rootPackageJson.devDependencies!['@koobiq/design-tokens'])}`,
-    `luxon@${caret(rootPackageJson.devDependencies!.luxon)}`,
+    `@koobiq/luxon-date-adapter@${caret(rootRange('@koobiq/luxon-date-adapter'))}`,
+    `@koobiq/date-formatter@${caret(rootRange('@koobiq/date-formatter'))}`,
+    `@koobiq/date-adapter@${caret(rootRange('@koobiq/date-adapter'))}`,
+    `@koobiq/icons@${caret(rootRange('@koobiq/icons'))}`,
+    `@koobiq/design-tokens@${caret(rootRange('@koobiq/design-tokens'))}`,
+    `luxon@${caret(rootRange('luxon'))}`,
     // Pinned rather than widened: the schematic injects the root pin verbatim for this one.
-    `overlayscrollbars@${rootPackageJson.dependencies!.overlayscrollbars}`
+    `overlayscrollbars@${rootRange('overlayscrollbars')}`
 ];
 
 /**
@@ -110,10 +119,10 @@ const ngAddInstalls = [
 const documentedInstalls = [
     `@angular/cdk@${ngNewRange(cdkVersion)}`,
     // The guide pins this one, because the scrollbar relies on a specific build of it.
-    `overlayscrollbars@${rootPackageJson.dependencies!.overlayscrollbars}`,
+    `overlayscrollbars@${rootRange('overlayscrollbars')}`,
     '@koobiq/icons',
     // The guide holds this one to the major the peer range allows; bare, it takes whatever major is `latest`.
-    `@koobiq/design-tokens@${caret(rootPackageJson.devDependencies!['@koobiq/design-tokens'])}`,
+    `@koobiq/design-tokens@${caret(rootRange('@koobiq/design-tokens'))}`,
     '@koobiq/date-adapter',
     '@koobiq/date-formatter',
     '@koobiq/luxon-date-adapter',
@@ -146,7 +155,7 @@ const fixtures = [
         // The range comes from the root manifest, the way the schematic resolves it at build time —
         // NOT from `@latest`. Pinning to the registry tip would make an unrelated @koobiq/icons
         // release fail this check on every open pull request, for a version nothing has adopted yet.
-        extraInstalls: [`@koobiq/icons@${caret(rootPackageJson.dependencies!['@koobiq/icons'])}`]
+        extraInstalls: [`@koobiq/icons@${caret(rootRange('@koobiq/icons'))}`]
     }
 ];
 
@@ -205,7 +214,7 @@ const tarballs = packagesToCheck.map((name) => {
     }
 
     // npm prints notices on stderr and the JSON report on stdout.
-    const [{ filename, files }]: { filename: string; files: { path: string }[] }[] = JSON.parse(packed.stdout);
+    const [{ filename, files }]: [{ filename: string; files: { path: string }[] }] = JSON.parse(packed.stdout);
     const packedFiles = new Set(files.map(({ path }) => path));
 
     for (const dir of shippedWhole[name] ?? []) {

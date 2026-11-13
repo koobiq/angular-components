@@ -1,7 +1,5 @@
-@use '../core/styles/common/squircle' as *;
-@use '../core/styles/common/tokens' as *;
-
-@use './badge-theme' as *;
+@use '../core/styles/common/squircle';
+@use './badge-theme';
 
 .kbq-badge {
     display: inline-flex;
@@ -21,7 +19,7 @@
     padding-left: var(--kbq-badge-size-normal-horizontal-padding);
 
     border-width: var(--kbq-badge-size-normal-border-width);
-    @include kbq-squircle(var(--kbq-badge-size-normal-border-radius));
+    @include squircle.kbq-squircle(var(--kbq-badge-size-normal-border-radius));
 
     & .kbq-badge-caption {
         padding-left: var(--kbq-badge-size-normal-content-padding);
@@ -43,7 +41,7 @@
         padding-left: var(--kbq-badge-size-compact-horizontal-padding);
 
         border-width: var(--kbq-badge-size-compact-border-width);
-        @include kbq-squircle(var(--kbq-badge-size-compact-border-radius));
+        @include squircle.kbq-squircle(var(--kbq-badge-size-compact-border-radius));
 
         & .kbq-badge-caption {
             padding-left: var(--kbq-badge-size-compact-content-padding);
@@ -59,5 +57,5 @@
     }
 }
 
-@include kbq-badge-theme();
-@include kbq-badge-typography();
+@include badge-theme.kbq-badge-theme();
+@include badge-theme.kbq-badge-typography();

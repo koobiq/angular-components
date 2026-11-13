@@ -7,7 +7,7 @@ import { KbqAccordionModule } from '@koobiq/components/accordion';
 @Component({
     selector: 'accordion-inactive-section-example',
     imports: [KbqAccordionModule],
-    templateUrl: 'accordion-inactive-section-example.html',
+    templateUrl: './accordion-inactive-section-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionInactiveSectionExample {}

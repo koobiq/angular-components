@@ -1,28 +1,32 @@
 import { FocusMonitor, InputModalityDetector } from '@angular/cdk/a11y';
 import {
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ElementRef,
+    type ElementRef,
     inject,
     input,
     output,
-    TemplateRef,
+    type TemplateRef,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { distinctUntilChanged, filter, merge } from 'rxjs';
 import { KbqAlertModule } from '@koobiq/components/alert';
-import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
+import { type KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqPopoverTrigger } from '@koobiq/components/popover';
-import { merge } from 'rxjs';
-import { distinctUntilChanged, filter } from 'rxjs/operators';
+import type { KbqPopoverTrigger } from '@koobiq/components/popover';
 import type { KbqFilterBar } from './filter-bar';
-import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuses } from './filter-bar.types';
+import {
+    type KbqFilter,
+    type KbqSaveFilterError,
+    type KbqSaveFilterEvent,
+    KbqSaveFilterStatuses
+} from './filter-bar.types';
 
 /**
  * The "save / rename filter" popover, extracted from `KbqFilters` (SRP). Owns the save form state, the
@@ -48,8 +52,8 @@ import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuse
                 <kbq-alert
                     class="layout-margin-bottom-m"
                     role="alert"
-                    [alertColor]="'error'"
-                    [alertStyle]="'colored'"
+                    alertColor="error"
+                    alertStyle="colored"
                     [compact]="true"
                 >
                     {{ filterSavingErrorText }}
@@ -75,19 +79,21 @@ import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuse
             <button
                 #saveFilterButton
                 kbq-button
+                type="button"
                 class="layout-margin-right-l"
+                color="contrast"
+                kbqStyle="filled"
                 [class.kbq-progress]="isSaving"
                 [disabled]="isSaving"
-                [color]="'contrast'"
-                [kbqStyle]="'filled'"
                 (click)="saveAsNew()"
             >
                 {{ strings.saveButton }}
             </button>
             <button
                 kbq-button
-                [color]="'contrast-fade'"
-                [kbqStyle]="'filled'"
+                type="button"
+                color="contrast-fade"
+                kbqStyle="filled"
                 [disabled]="isSaving"
                 (click)="close(true)"
             >

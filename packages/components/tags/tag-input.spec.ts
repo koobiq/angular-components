@@ -2,24 +2,35 @@
 import { DASH } from '@angular/cdk/keycodes';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { PlatformModule } from '@angular/cdk/platform';
-import { APP_ID, Component, DebugElement, effect, Provider, signal, Type, viewChild } from '@angular/core';
-import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import {
-    AbstractControl,
+    APP_ID,
+    Component,
+    type DebugElement,
+    effect,
+    type Provider,
+    signal,
+    type Type,
+    viewChild
+} from '@angular/core';
+import { type ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import {
+    type AbstractControl,
     FormControl,
     FormGroup,
     ReactiveFormsModule,
-    ValidationErrors,
-    ValidatorFn,
+    type ValidationErrors,
+    type ValidatorFn,
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { Subject } from 'rxjs';
 import {
     KbqAutocompleteModule,
-    KbqAutocompleteSelectedEvent,
+    type KbqAutocompleteSelectedEvent,
     KbqAutocompleteTrigger
 } from '@koobiq/components/autocomplete';
 import {
+    BACKSPACE,
     COMMA,
     createKeyboardEvent,
     dispatchFakeEvent,
@@ -32,9 +43,8 @@ import {
     TAB
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { Subject } from 'rxjs';
 import { KbqTagsModule } from './index';
-import { KbqTagInput, KbqTagInputEvent, kbqTagsDefaultOptionsProvider } from './tag-input';
+import { KbqTagInput, type KbqTagInputEvent, kbqTagsDefaultOptionsProvider } from './tag-input';
 import { KbqTagList } from './tag-list.component';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
@@ -741,7 +751,7 @@ describe(KbqTagInput.name, () => {
                     .query(By.directive(KbqAutocompleteTrigger))
                     .injector.get(KbqAutocompleteTrigger);
 
-                expect(trigger['positionStrategy']._origin).toEqual(
+                expect(trigger['positionStrategy']!._origin).toEqual(
                     expect.objectContaining({ x: expect.any(Number), width: 0, height: expect.any(Number) })
                 );
                 expect((overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement).style.width).toBe(
@@ -1066,7 +1076,7 @@ describe('KbqTagInput', () => {
     describe('[addOnPaste]', () => {
         const clipboardEventData = {
             clipboardData: {
-                getData: (_) => 'test test test'
+                getData: (_: string) => 'test test test'
             },
             preventDefault: () => {},
             stopPropagation: () => {}
@@ -1101,7 +1111,7 @@ describe('KbqTagInput', () => {
 
             const clipboardEventData = {
                 clipboardData: {
-                    getData: (_) => '36.185.103.120 16.229.226.236,160.249.196.235;144.132.144.37'
+                    getData: (_: string) => '36.185.103.120 16.229.226.236,160.249.196.235;144.132.144.37'
                 },
                 preventDefault: () => {},
                 stopPropagation: () => {}
@@ -1287,6 +1297,20 @@ describe('KbqTagInput', () => {
 
             // The list reports the registered input's id as its own, so this is the registration landing.
             expect(host.tagListInstance().id()).toBe(directive.id());
+        });
+
+        it('should handle focus, keys and blur before a tag list is registered', () => {
+            const fixture = createComponent(TestTagInputLateTagList);
+
+            fixture.detectChanges();
+
+            const input: HTMLInputElement = fixture.debugElement.query(By.directive(KbqTagInput)).nativeElement;
+
+            expect(() => {
+                dispatchFakeEvent(input, 'focus');
+                dispatchKeyboardEvent(input, 'keydown', BACKSPACE);
+                dispatchFakeEvent(input, 'blur');
+            }).not.toThrow();
         });
     });
 });

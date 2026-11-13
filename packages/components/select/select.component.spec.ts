@@ -5,23 +5,23 @@ import { AsyncPipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
-    DebugElement,
-    OnInit,
-    TemplateRef,
-    Type,
+    type DebugElement,
     effect,
     getDebugNode,
     inject as inject_1,
+    type OnInit,
     signal,
+    type TemplateRef,
+    type Type,
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { type ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import {
-    AsyncValidatorFn,
-    ControlValueAccessor,
+    type AsyncValidatorFn,
+    type ControlValueAccessor,
     FormControl,
-    FormControlStatus,
+    type FormControlStatus,
     FormGroup,
     FormGroupDirective,
     FormsModule,
@@ -29,62 +29,61 @@ import {
     ReactiveFormsModule,
     UntypedFormControl,
     UntypedFormGroup,
-    ValidationErrors,
+    type ValidationErrors,
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { map, merge, type Observable, of, Subject, type Subscription, take, timer } from 'rxjs';
+import type { MockInstance } from 'vitest';
 import {
     A,
-    DOWN_ARROW,
-    END,
-    ENTER,
-    ESCAPE,
-    ErrorStateMatcher,
-    HOME,
-    KBQ_LOCALE_SERVICE,
-    KBQ_SELECT_SCROLL_STRATEGY,
-    KbqComponentColors,
-    KbqLocaleService,
-    KbqLocaleServiceModule,
-    KbqOption,
-    KbqOptionBase,
-    KbqOptionSelectionChange,
-    KbqOverlayLayer,
-    KbqPanelMaxHeight,
-    KbqPanelWidth,
-    KbqPartialLocaleData,
-    KbqRepositionScrollStrategy,
-    KbqVirtualOption,
-    LEFT_ARROW,
-    RIGHT_ARROW,
-    SPACE,
-    ShowOnControlDirtyErrorStateMatcher,
-    ShowOnFormSubmitErrorStateMatcher,
-    TAB,
-    UP_ARROW,
     createKeyboardEvent,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
+    DOWN_ARROW,
+    END,
+    ENTER,
+    ErrorStateMatcher,
+    ESCAPE,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
     getKbqSelectNonFunctionValueError,
+    HOME,
+    KBQ_LOCALE_SERVICE,
+    KBQ_SELECT_SCROLL_STRATEGY,
+    KbqComponentColors,
     kbqErrorStateMatcherProvider,
+    type KbqLocaleService,
+    KbqLocaleServiceModule,
+    KbqOption,
+    type KbqOptionBase,
+    KbqOptionSelectionChange,
+    KbqOverlayLayer,
+    type KbqPanelMaxHeight,
+    type KbqPanelWidth,
+    type KbqPartialLocaleData,
+    KbqRepositionScrollStrategy,
+    KbqVirtualOption,
+    LEFT_ARROW,
+    RIGHT_ARROW,
     ruRULocaleData,
+    ShowOnControlDirtyErrorStateMatcher,
+    ShowOnFormSubmitErrorStateMatcher,
+    SPACE,
+    TAB,
+    UP_ARROW,
     wrappedErrorMessage
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagsModule } from '@koobiq/components/tags';
-import { Observable, Subject, Subscription, merge, of, timer } from 'rxjs';
-import { map, take } from 'rxjs/operators';
-import type { MockInstance } from 'vitest';
 import { KbqSelectHiddenItemsMeasurer } from './hidden-items-measurer';
-import { KbqOptionTooltip } from './select-option.directive';
-import { KbqSelect, delayBeforeDisplayingResultWithoutOptions, kbqSelectOptionsProvider } from './select.component';
+import { delayBeforeDisplayingResultWithoutOptions, KbqSelect, kbqSelectOptionsProvider } from './select.component';
 import { KbqSelectModule } from './select.module';
+import { KbqOptionTooltip } from './select-option.directive';
 
 const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component], providers }).compileComponents();
@@ -158,7 +157,7 @@ function stubTagLayout(): () => void {
             if (original) {
                 Object.defineProperty(proto, prop, original);
             } else {
-                delete proto[prop];
+                Reflect.deleteProperty(proto, prop);
             }
         });
     };
@@ -513,14 +512,14 @@ class BasicEvents {
     template: `
         <kbq-form-field>
             <kbq-select placeholder="First">
-                <kbq-option [value]="'one'">one</kbq-option>
-                <kbq-option [value]="'two'">two</kbq-option>
+                <kbq-option value="one">one</kbq-option>
+                <kbq-option value="two">two</kbq-option>
             </kbq-select>
         </kbq-form-field>
         <kbq-form-field>
             <kbq-select placeholder="Second">
-                <kbq-option [value]="'three'">three</kbq-option>
-                <kbq-option [value]="'four'">four</kbq-option>
+                <kbq-option value="three">three</kbq-option>
+                <kbq-option value="four">four</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `
@@ -1008,8 +1007,8 @@ class SelectEarlyAccessSibling {}
     template: `
         <kbq-form-field [color]="theme">
             <kbq-select placeholder="Food">
-                <kbq-option [value]="'steak - 0'">Steak</kbq-option>
-                <kbq-option [value]="'pizza - 1'">Pizza</kbq-option>
+                <kbq-option value="steak - 0">Steak</kbq-option>
+                <kbq-option value="pizza - 1">Pizza</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `
@@ -1123,7 +1122,7 @@ class FalsyValueSelect {
                         }
                     </kbq-optgroup>
                 }
-                <kbq-option [value]="'mime - 11'">Mr. Mime</kbq-option>
+                <kbq-option value="mime - 11">Mr. Mime</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `
@@ -1525,7 +1524,7 @@ class SelectWithoutOptionCentering {
             <!--<kbq-label>Select a thing</kbq-label>-->
 
             <kbq-select [placeholder]="placeholder">
-                <kbq-option [value]="'thing'">A thing</kbq-option>
+                <kbq-option value="thing">A thing</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `
@@ -1543,16 +1542,16 @@ class SelectWithFormFieldLabel {
     template: `
         <kbq-form-field>
             <kbq-select>
-                <kbq-option [value]="'value1'">Not long text</kbq-option>
-                <kbq-option style="max-width: 200px;" [value]="'value2'" [kbqTooltipDisabled]="tooltipDisabled">
+                <kbq-option value="value1">Not long text</kbq-option>
+                <kbq-option style="max-width: 200px;" value="value2" [kbqTooltipDisabled]="tooltipDisabled">
                     Long long long long Long long long long Long long long long Long long long long Long long long long
                     Long long long long text
                 </kbq-option>
-                <kbq-option style="max-width: 200px;" [value]="'value3'">
+                <kbq-option style="max-width: 200px;" value="value3">
                     {{ changingLabel }}
                 </kbq-option>
                 <!-- Two-line option: each line clips itself, so the overflow never reaches the option text. -->
-                <kbq-option style="max-width: 200px;" [value]="'value4'" [viewValue]="'Two line option'">
+                <kbq-option style="max-width: 200px;" value="value4" viewValue="Two line option">
                     <div class="name-line">Two line option</div>
                     <div class="kbq-option-caption">caption</div>
                 </kbq-option>
@@ -1592,12 +1591,12 @@ class SelectWithLongOptionText {
     template: `
         <kbq-form-field>
             <kbq-select #select style="max-width: 300px" [multiple]="true" [value]="selected">
-                <kbq-option [value]="'value1'">value</kbq-option>
-                <kbq-option [value]="'value2'">value2</kbq-option>
-                <kbq-option [value]="'value3'">value3</kbq-option>
-                <kbq-option [value]="'value4'">Not long text</kbq-option>
-                <kbq-option [value]="'value5'">Not long text</kbq-option>
-                <kbq-option [value]="'value6'">Not long text</kbq-option>
+                <kbq-option value="value1">value</kbq-option>
+                <kbq-option value="value2">value2</kbq-option>
+                <kbq-option value="value3">value3</kbq-option>
+                <kbq-option value="value4">Not long text</kbq-option>
+                <kbq-option value="value5">Not long text</kbq-option>
+                <kbq-option value="value6">Not long text</kbq-option>
                 <ng-template #kbqSelectTagContent let-option let-select="select">
                     <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.viewValue }}
@@ -1701,15 +1700,15 @@ class CdkVirtualScrollViewportSelectOptionAsObject extends CdkVirtualScrollViewp
     id: number;
     name: string;
 }> {
-    scrollDispatcher: ScrollDispatcher;
+    override scrollDispatcher: ScrollDispatcher;
 
-    values: any[] = [
+    override values: any[] = [
         { id: 3, name: 'Anapa' },
         { id: 55, name: 'Lyubertsy' },
         { id: 114, name: 'Tomsk' }
     ];
 
-    options: { id: number; name: string }[] = OPTIONS.sort().map((option, index) => {
+    override options: { id: number; name: string }[] = OPTIONS.sort().map((option, index) => {
         return { id: index, name: option, active: true };
     });
 
@@ -2023,7 +2022,7 @@ class NgIfSelect {
     template: `
         <kbq-form-field>
             <kbq-select [style.display]="isVisible ? 'block' : 'none'">
-                <kbq-option [value]="'value'">There are no other options</kbq-option>
+                <kbq-option value="value">There are no other options</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `
@@ -2040,7 +2039,7 @@ class BasicSelectInitiallyHidden {
     template: `
         <kbq-form-field>
             <kbq-select>
-                <kbq-option [value]="'value'">There are no other options</kbq-option>
+                <kbq-option value="value">There are no other options</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `
@@ -2052,13 +2051,13 @@ class BasicSelectNoPlaceholder {}
     template: `
         <kbq-form-field style="width: 300px">
             <kbq-select [panelWidth]="panelWidth">
-                <kbq-option [value]="'option1'">
+                <kbq-option value="option1">
                     Long long long long long long long long long long long long long long long long long long long long
                     long long long long long long long long long long long long long long long long long long long long
                     long long long long long long long long long option
                 </kbq-option>
-                <kbq-option [value]="'option2'">Option2</kbq-option>
-                <kbq-option [value]="'option3'">Option3</kbq-option>
+                <kbq-option value="option2">Option2</kbq-option>
+                <kbq-option value="option3">Option3</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `,
@@ -2073,8 +2072,8 @@ class SelectWithPanelWidth {
     template: `
         <kbq-form-field style="width: 300px">
             <kbq-select [multilineOptions]="multilineOptions" [panelWidth]="panelWidth" [panelClass]="panelClass">
-                <kbq-option [value]="'option1'">Option1</kbq-option>
-                <kbq-option [value]="'option2'">Option2</kbq-option>
+                <kbq-option value="option1">Option1</kbq-option>
+                <kbq-option value="option2">Option2</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `
@@ -2108,9 +2107,9 @@ class SelectWithMultilineOptionsAndVirtualScroll {
     template: `
         <kbq-form-field style="width: 300px">
             <kbq-select [panelMaxHeight]="panelMaxHeight">
-                <kbq-option [value]="'option1'">Option1</kbq-option>
-                <kbq-option [value]="'option2'">Option2</kbq-option>
-                <kbq-option [value]="'option3'">Option3</kbq-option>
+                <kbq-option value="option1">Option1</kbq-option>
+                <kbq-option value="option2">Option2</kbq-option>
+                <kbq-option value="option3">Option3</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `,
@@ -2128,11 +2127,11 @@ class SelectWithPanelMaxHeight {
                 <kbq-form-field kbqSelectSearch>
                     <input kbqInput type="text" [formControl]="searchCtrl" />
                 </kbq-form-field>
-                <kbq-option [value]="'option1'">
+                <kbq-option value="option1">
                     Long long long long long long long long long long long long long long long long option
                 </kbq-option>
-                <kbq-option [value]="'option2'">Option2</kbq-option>
-                <kbq-option [value]="'option3'">Option3</kbq-option>
+                <kbq-option value="option2">Option2</kbq-option>
+                <kbq-option value="option3">Option3</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `,
@@ -2149,9 +2148,9 @@ class SelectWithSearchAndPanelWidth {
     template: `
         <kbq-form-field style="width: 300px">
             <kbq-select>
-                <kbq-option [value]="'option1'">Option1</kbq-option>
-                <kbq-option [value]="'option2'">Option2</kbq-option>
-                <kbq-option [value]="'option3'">Option3</kbq-option>
+                <kbq-option value="option1">Option1</kbq-option>
+                <kbq-option value="option2">Option2</kbq-option>
+                <kbq-option value="option3">Option3</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `
@@ -2523,7 +2522,7 @@ class SelectWithLabel {
     template: `
         <kbq-form-field>
             <kbq-select aria-label="Pick a food">
-                <kbq-option [value]="'steak-0'">Steak</kbq-option>
+                <kbq-option value="steak-0">Steak</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `
@@ -2542,7 +2541,7 @@ class SelectWithAriaLabel {
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Country">
-                <kbq-option [value]="'ru'">Russia</kbq-option>
+                <kbq-option value="ru">Russia</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `
@@ -6177,7 +6176,7 @@ describe('KbqSelect', () => {
             fixture.detectChanges();
             fixture.detectChanges();
 
-            expect(testInstance.select().selectionModel.selected.map((option) => option.value)).toEqual([
+            expect(testInstance.select().selectionModel!.selected.map((option) => option.value)).toEqual([
                 'steak-0',
                 'pizza-1',
                 'tacos-2'
@@ -6401,7 +6400,7 @@ describe('KbqSelect', () => {
             await shiftClickDisabledOption();
 
             expect(testInstance.options()[2].selected).toBe(true);
-            expect(testInstance.select().selectionModel.isSelected(testInstance.options()[2])).toBe(true);
+            expect(testInstance.select().selectionModel!.isSelected(testInstance.options()[2])).toBe(true);
             expect(testInstance.control.value).toEqual(['tacos-2']);
             // A rejected click must leave the range anchor alone: parking it on an option the user cannot
             // toggle would let that option's frozen selected state dictate the next shift-range.
@@ -6429,7 +6428,7 @@ describe('KbqSelect', () => {
             await vi.advanceTimersByTimeAsync(0);
             await vi.runOnlyPendingTimersAsync();
 
-            expect(select.selectionModel.selected.length).toBe(0);
+            expect(select.selectionModel!.selected.length).toBe(0);
             expect(options[0].classList).not.toContain('kbq-selected');
             expect(nonSelectableFixture.componentInstance.control.value).toBeFalsy();
         });
@@ -6740,7 +6739,7 @@ describe('KbqSelect', () => {
             await vi.advanceTimersByTimeAsync(0);
             await vi.runOnlyPendingTimersAsync();
 
-            HTMLElement.prototype.querySelector = function (selectors: string) {
+            HTMLElement.prototype.querySelector = function (this: HTMLElement, selectors: string) {
                 if (selectors === '.kbq-select__match-hidden-text') return null;
 
                 return originalQuerySelector.call(this, selectors);
@@ -7019,7 +7018,7 @@ describe('KbqSelect', () => {
 
             const selectedOptions: string[] = testInstance
                 .select()
-                .selectionModel.selected.map((option) => option.value);
+                .selectionModel!.selected.map((option) => option.value);
 
             testInstance
                 .select()
@@ -7027,7 +7026,7 @@ describe('KbqSelect', () => {
                 .subscribe(() => {
                     const currentSelectedOptions: string[] = testInstance
                         .select()
-                        .selectionModel.selected.map((option) => option.value);
+                        .selectionModel!.selected.map((option) => option.value);
 
                     expect(selectedOptions.length).toEqual(currentSelectedOptions.length);
                     expect(selectedOptions).toEqual(currentSelectedOptions);
@@ -7171,7 +7170,7 @@ describe('KbqSelect', () => {
 
                 // The selected entry must be a KbqVirtualOption produced by the factory,
                 // and its viewValue must come from the factory-supplied `_viewValue`.
-                expect(instance.select().selectionModel.selected[0]).toBeInstanceOf(KbqVirtualOption);
+                expect(instance.select().selectionModel!.selected[0]).toBeInstanceOf(KbqVirtualOption);
                 expect(triggerText).toBe(target.name);
             });
 
@@ -7209,7 +7208,7 @@ describe('KbqSelect', () => {
                 multiFixture.detectChanges();
                 await vi.runOnlyPendingTimersAsync();
 
-                const selected = instance.select().selectionModel.selected;
+                const selected = instance.select().selectionModel!.selected;
                 const disabledStates = selected.map((opt) => opt.disabled);
 
                 expect(disabledStates).toContain(true);
@@ -7393,7 +7392,7 @@ describe('KbqSelect', () => {
                 instance.visible = [...instance.options];
                 await finishInit(fixture);
 
-                const selected = instance.select().selectionModel.selected;
+                const selected = instance.select().selectionModel!.selected;
 
                 expect(selected.length).toBe(1);
                 expect(selected[0]).toBeInstanceOf(KbqOption);
@@ -7750,7 +7749,7 @@ describe('KbqSelect', () => {
             const triggerText = fixture.debugElement.query(By.css('.kbq-select__matcher-text')).nativeElement
                 .textContent;
 
-            expect(testInstance.select().selectionModel.selected[0]).toBeInstanceOf(KbqVirtualOption);
+            expect(testInstance.select().selectionModel!.selected[0]).toBeInstanceOf(KbqVirtualOption);
             expect(triggerText.trim()).toBe('Option #0');
         });
 
@@ -7771,7 +7770,7 @@ describe('KbqSelect', () => {
         it('should replace the preselected virtual option with the matching one once it is rendered', async () => {
             await openPanelWithFirstPage();
 
-            const selected = testInstance.select().selectionModel.selected[0];
+            const selected = testInstance.select().selectionModel!.selected[0];
 
             expect(selected).not.toBeInstanceOf(KbqVirtualOption);
             expect(selected.value.id).toBe(0);

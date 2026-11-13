@@ -1,5 +1,5 @@
 import {
-    AfterContentInit,
+    type AfterContentInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
@@ -8,14 +8,14 @@ import {
     inject,
     input,
     numberAttribute,
-    OnChanges,
+    type OnChanges,
     Renderer2,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqColorDirective, KbqComponentColors } from '@koobiq/components/core';
 import { defer, of, Subscription } from 'rxjs';
+import { KbqColorDirective, KbqComponentColors } from '@koobiq/components/core';
 import { KBQ_ICON_ERROR_STATE_CONTEXT } from './icon-error-state-context';
 import { KbqIconRegistry, parseIconName } from './icon-registry';
 
@@ -34,7 +34,7 @@ const ICON_NAME_ATTRIBUTE = 'data-kbq-icon-name';
 @Component({
     selector: '[kbq-icon]',
     template: '<ng-content />',
-    styleUrls: ['icon.scss', 'icon-tokens.scss'],
+    styleUrls: ['./icon.scss', './icon-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

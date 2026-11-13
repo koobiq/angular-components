@@ -1,7 +1,7 @@
-import { InjectionToken, Provider, Type } from '@angular/core';
+import { InjectionToken, type Provider, type Type } from '@angular/core';
+import type { Observable } from 'rxjs';
 import { SizeM } from '@koobiq/design-tokens';
-import { Observable } from 'rxjs';
-import { KbqEnumValues } from '../utils';
+import type { KbqEnumValues } from '../utils';
 
 export interface KbqParentPopup {
     closedStream: Observable<boolean>;

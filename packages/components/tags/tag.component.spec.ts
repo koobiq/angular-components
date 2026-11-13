@@ -4,31 +4,31 @@ import { BACKSPACE, DELETE, ENTER, ESCAPE, F2, SPACE } from '@angular/cdk/keycod
 import {
     ChangeDetectionStrategy,
     Component,
-    DebugElement,
+    type DebugElement,
     effect,
     model,
-    Provider,
+    type Provider,
     signal,
-    Type,
+    type Type,
     viewChild
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { Subject } from 'rxjs';
 import { createKeyboardEvent, dispatchFakeEvent } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { Subject } from 'rxjs';
-import { KbqTagList } from './tag-list.component';
 import {
     KbqTag,
     KbqTagEditInput,
     KbqTagEditSubmit,
-    KbqTagEvent,
+    type KbqTagEvent,
     KbqTagRemove,
-    KbqTagSelectionChange,
+    type KbqTagSelectionChange,
     KbqTagSuffix
 } from './tag.component';
 import { KbqTagsModule } from './tag.module';
+import { KbqTagList } from './tag-list.component';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({

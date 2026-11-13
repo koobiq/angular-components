@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, InjectionToken } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -8,13 +9,12 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import {
     KBQ_CUSTOM_TIME_RANGE_TYPES,
     KBQ_DEFAULT_TIME_RANGE_TYPES,
-    KbqCustomTimeRangeType,
+    type KbqCustomTimeRangeType,
     KbqTimeRangeModule,
-    KbqTimeRangeTranslationType,
-    KbqTimeRangeType,
-    KbqTimeRangeUnits
+    type KbqTimeRangeTranslationType,
+    type KbqTimeRangeType,
+    type KbqTimeRangeUnits
 } from '@koobiq/components/time-range';
-import { of } from 'rxjs';
 
 const customTypes: KbqCustomTimeRangeType[] = [
     { type: 'last3Minutes', units: { minutes: -3 }, translationType: 'minutes' },
@@ -72,7 +72,7 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', strin
                         {{ optionLabel(context.type) }}
                     }
                 </kbq-time-range-title-as-control>
-                <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix [color]="'contrast-fade'"></i>
+                <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix color="contrast-fade"></i>
             </kbq-form-field>
         </ng-template>
 
@@ -107,14 +107,14 @@ export class TimeRangeCustomRangeTypesExample {
     });
 
     private readonly data = inject(ExampleLocalizedData);
-    protected readonly placeholder = computed(() => this.data[this.localeId() || 'default'] ?? this.data.default);
+    protected readonly placeholder = computed(() => this.data[this.localeId() || 'default'] ?? this.data['default']);
 
     protected optionLabel(type: string): string {
         const localeConfig = this.localeConfig();
-
-        if (!localeConfig) return type;
-
         const units = customTypeUnits[type];
+
+        if (!localeConfig || !units) return type;
+
         const translationType = customTypeTranslation[type];
         const startDate = this.dateAdapter.addCalendarUnits(this.dateAdapter.today(), units);
 

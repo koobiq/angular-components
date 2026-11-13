@@ -1,4 +1,4 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-progress-bar-theme() {
     .kbq-progress-bar {
@@ -39,10 +39,10 @@
 
 @mixin kbq-progress-bar-typography() {
     .kbq-progress-bar-text {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
     .kbq-progress-bar-caption {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
     }
 }

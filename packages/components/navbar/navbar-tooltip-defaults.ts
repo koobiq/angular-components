@@ -1,4 +1,4 @@
-import { Provider } from '@angular/core';
+import type { Provider } from '@angular/core';
 import type { KbqTooltipDefaultOptions } from '@koobiq/components/tooltip';
 import { KBQ_TOOLTIP_DEFAULT_OPTIONS } from '@koobiq/components/tooltip';
 

@@ -7,7 +7,7 @@ import {
     inject,
     input,
     NgZone,
-    OnDestroy
+    type OnDestroy
 } from '@angular/core';
 import { RdxRovingFocusGroupDirective } from './roving-focus-group.directive';
 import { focusFirst, generateId, getFocusIntent, wrapArray } from './utils';
@@ -145,7 +145,7 @@ export class RdxRovingFocusItemDirective implements OnDestroy {
             }
 
             this.ngZone.runOutsideAngular(() => {
-                Promise.resolve().then(() => {
+                void Promise.resolve().then(() => {
                     focusFirst(candidateNodes, false);
                 });
             });

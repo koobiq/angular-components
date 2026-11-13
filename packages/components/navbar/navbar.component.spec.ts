@@ -2,9 +2,10 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, DebugElement, effect, ElementRef, forwardRef, signal, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, type DebugElement, effect, ElementRef, forwardRef, signal, viewChild } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { type Observable, Subject } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     dispatchKeyboardEvent,
@@ -24,9 +25,8 @@ import {
     TAB
 } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { Observable, Subject } from 'rxjs';
-import { KbqIconModule } from './../icon/icon.module';
 import {
     KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION,
     KBQ_NAVBAR_ITEM_TRIGGER,
@@ -37,7 +37,7 @@ import {
     KbqNavbarDivider,
     KbqNavbarFocusableItem,
     KbqNavbarItem,
-    KbqNavbarItemTrigger,
+    type KbqNavbarItemTrigger,
     kbqNavbarLocaleConfigurationProvider,
     KbqNavbarModule,
     KbqNavbarRectangleElement,
@@ -3183,21 +3183,21 @@ class TestExternalConfigApp {}
     template: `
         <kbq-navbar>
             <kbq-navbar-container>
-                <a href="#" kbq-navbar-brand [tooltipText]="'Brand'">
+                <a href="#" kbq-navbar-brand tooltipText="Brand">
                     <kbq-navbar-logo>
                         <i kbq-icon="kbq-circle-info_16"></i>
                     </kbq-navbar-logo>
                 </a>
-                <kbq-navbar-item [tooltipText]="'Notifications'">
+                <kbq-navbar-item tooltipText="Notifications">
                     <i kbq-icon="kbq-circle-info_16"></i>
                 </kbq-navbar-item>
-                <button kbq-navbar-item [tooltipText]="'Settings'">
+                <button kbq-navbar-item tooltipText="Settings">
                     <i kbq-icon="kbq-play_16"></i>
                 </button>
             </kbq-navbar-container>
         </kbq-navbar>
 
-        <button id="plain" [kbqTooltip]="'Plain'"></button>
+        <button id="plain" kbqTooltip="Plain"></button>
     `
 })
 class TestTooltipApp {}
@@ -3208,7 +3208,7 @@ class TestTooltipApp {}
     template: `
         <kbq-navbar>
             <kbq-navbar-container>
-                <kbq-navbar-item [kbqTooltip]="'Notifications'">
+                <kbq-navbar-item kbqTooltip="Notifications">
                     <i kbq-icon="kbq-circle-info_16"></i>
                 </kbq-navbar-item>
             </kbq-navbar-container>

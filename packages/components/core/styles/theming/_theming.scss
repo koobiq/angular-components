@@ -28,7 +28,7 @@
 }
 
 // The helpers below build the maps of `kbq-light-theme()` and `kbq-dark-theme()` and go with them.
-@function _theme_foreground($tokens, $scheme) {
+@function -theme-foreground($tokens, $scheme) {
     @return (
         white: map.get($tokens, '#{$scheme}-foreground-white'),
         white-secondary: map.get($tokens, '#{$scheme}-foreground-white-secondary'),
@@ -53,7 +53,7 @@
     );
 }
 
-@function _theme_background($tokens, $scheme) {
+@function -theme-background($tokens, $scheme) {
     @return (
         bg: map.get($tokens, '#{$scheme}-background-bg'),
         bg-secondary: map.get($tokens, '#{$scheme}-background-bg-secondary'),
@@ -77,7 +77,7 @@
     );
 }
 
-@function _theme_icon($tokens, $scheme) {
+@function -theme-icon($tokens, $scheme) {
     @return (
         on-contrast: map.get($tokens, '#{$scheme}-icon-on-contrast'),
         white: map.get($tokens, '#{$scheme}-icon-white'),
@@ -92,7 +92,7 @@
     );
 }
 
-@function _theme_line($tokens, $scheme) {
+@function -theme-line($tokens, $scheme) {
     @return (
         theme: map.get($tokens, '#{$scheme}-line-theme'),
         theme-fade: map.get($tokens, '#{$scheme}-line-theme-fade'),
@@ -109,7 +109,7 @@
     );
 }
 
-@function _theme_states-background($tokens, $scheme) {
+@function -theme-states-background($tokens, $scheme) {
     @return (
         disabled: map.get($tokens, '#{$scheme}-states-background-disabled'),
         transparent-hover: map.get($tokens, '#{$scheme}-states-background-transparent-hover'),
@@ -129,7 +129,7 @@
     );
 }
 
-@function _theme_states-foreground($tokens, $scheme) {
+@function -theme-states-foreground($tokens, $scheme) {
     @return (
         disabled: map.get($tokens, '#{$scheme}-states-foreground-disabled'),
         theme-hover: map.get($tokens, '#{$scheme}-states-foreground-theme-hover'),
@@ -139,7 +139,7 @@
     );
 }
 
-@function _theme_states-icon($tokens, $scheme) {
+@function -theme-states-icon($tokens, $scheme) {
     @return (
         theme-hover: map.get($tokens, '#{$scheme}-states-icon-theme-hover'),
         theme-active: map.get($tokens, '#{$scheme}-states-icon-theme-active'),
@@ -159,7 +159,7 @@
     );
 }
 
-@function _theme_states-line($tokens, $scheme) {
+@function -theme-states-line($tokens, $scheme) {
     @return (
         focus: map.get($tokens, '#{$scheme}-states-line-focus'),
         focus-theme: map.get($tokens, '#{$scheme}-states-line-focus-theme'),
@@ -168,18 +168,18 @@
     );
 }
 
-@function _theme_states($tokens, $scheme) {
+@function -theme-states($tokens, $scheme) {
     @return (
-        background: _theme_states-background($tokens, $scheme),
-        foreground: _theme_states-foreground($tokens, $scheme),
-        icon: _theme_states-icon($tokens, $scheme),
-        line: _theme_states-line($tokens, $scheme),
+        background: -theme-states-background($tokens, $scheme),
+        foreground: -theme-states-foreground($tokens, $scheme),
+        icon: -theme-states-icon($tokens, $scheme),
+        line: -theme-states-line($tokens, $scheme),
         // будет удалено, после удаления из компонентов ↓
         disabled-opacity: map.get($tokens, '#{$scheme}-states-disabled-opacity')
     );
 }
 
-@function _theme_palette($tokens, $scheme, $name) {
+@function -theme-palette($tokens, $scheme, $name) {
     @return map.merge(
         map.get($tokens, '#{$scheme}-#{$name}-palette'),
         (
@@ -198,19 +198,19 @@
     @return (
         is-dark: false,
 
-        background: _theme_background($tokens, $scheme),
-        foreground: _theme_foreground($tokens, $scheme),
-        icon: _theme_icon($tokens, $scheme),
-        line: _theme_line($tokens, $scheme),
-        states: _theme_states($tokens, $scheme),
-        theme: _theme_palette($tokens, $scheme, theme),
-        success: _theme_palette($tokens, $scheme, success),
-        warning: _theme_palette($tokens, $scheme, warning),
-        error: _theme_palette($tokens, $scheme, error),
-        contrast: _theme_palette($tokens, $scheme, contrast),
-        white: _theme_palette($tokens, $scheme, white),
-        black: _theme_palette($tokens, $scheme, black),
-        purple: _theme_palette($tokens, $scheme, purple),
+        background: -theme-background($tokens, $scheme),
+        foreground: -theme-foreground($tokens, $scheme),
+        icon: -theme-icon($tokens, $scheme),
+        line: -theme-line($tokens, $scheme),
+        states: -theme-states($tokens, $scheme),
+        theme: -theme-palette($tokens, $scheme, theme),
+        success: -theme-palette($tokens, $scheme, success),
+        warning: -theme-palette($tokens, $scheme, warning),
+        error: -theme-palette($tokens, $scheme, error),
+        contrast: -theme-palette($tokens, $scheme, contrast),
+        white: -theme-palette($tokens, $scheme, white),
+        black: -theme-palette($tokens, $scheme, black),
+        purple: -theme-palette($tokens, $scheme, purple),
         tokens: $tokens
     );
 }
@@ -225,19 +225,19 @@
     @return (
         is-dark: true,
 
-        background: _theme_background($tokens, $scheme),
-        foreground: _theme_foreground($tokens, $scheme),
-        icon: _theme_icon($tokens, $scheme),
-        line: _theme_line($tokens, $scheme),
-        states: _theme_states($tokens, $scheme),
-        theme: _theme_palette($tokens, $scheme, theme),
-        success: _theme_palette($tokens, $scheme, success),
-        warning: _theme_palette($tokens, $scheme, warning),
-        error: _theme_palette($tokens, $scheme, error),
-        contrast: _theme_palette($tokens, $scheme, contrast),
-        white: _theme_palette($tokens, $scheme, white),
-        black: _theme_palette($tokens, $scheme, black),
-        purple: _theme_palette($tokens, $scheme, purple),
+        background: -theme-background($tokens, $scheme),
+        foreground: -theme-foreground($tokens, $scheme),
+        icon: -theme-icon($tokens, $scheme),
+        line: -theme-line($tokens, $scheme),
+        states: -theme-states($tokens, $scheme),
+        theme: -theme-palette($tokens, $scheme, theme),
+        success: -theme-palette($tokens, $scheme, success),
+        warning: -theme-palette($tokens, $scheme, warning),
+        error: -theme-palette($tokens, $scheme, error),
+        contrast: -theme-palette($tokens, $scheme, contrast),
+        white: -theme-palette($tokens, $scheme, white),
+        black: -theme-palette($tokens, $scheme, black),
+        purple: -theme-palette($tokens, $scheme, purple),
         tokens: $tokens
     );
 }

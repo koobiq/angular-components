@@ -4,7 +4,7 @@ import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { ENTER, KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTagInputEvent, KbqTagsModule, kbqTagsDefaultOptionsProvider } from '@koobiq/components/tags';
+import { type KbqTagInputEvent, kbqTagsDefaultOptionsProvider, KbqTagsModule } from '@koobiq/components/tags';
 
 @Component({
     selector: 'e2e-tag-state-and-style',

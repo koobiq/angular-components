@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { DocsLocale } from './constants/locale';
+import type { DocsLocale } from './constants/locale';
 
 export enum DocsStructureItemId {
     // Main

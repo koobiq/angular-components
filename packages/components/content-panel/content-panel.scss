@@ -1,10 +1,10 @@
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
 .kbq-content-panel {
     display: flex;
     flex-grow: 1;
     min-width: 0;
-    @include kbq-squircle(var(--kbq-content-panel-border-radius));
+    @include squircle.kbq-squircle(var(--kbq-content-panel-border-radius));
     background-color: var(--kbq-content-panel-background-color);
     border: var(--kbq-content-panel-border);
     height: 100%;
@@ -16,6 +16,6 @@
         flex: 1;
         flex-direction: column;
         min-width: 0;
-        @include kbq-squircle-inherit(border-top-right-radius border-bottom-right-radius);
+        @include squircle.kbq-squircle-inherit(border-top-right-radius border-bottom-right-radius);
     }
 }

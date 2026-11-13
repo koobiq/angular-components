@@ -1,5 +1,5 @@
 import {
-    AfterContentInit,
+    type AfterContentInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
@@ -9,11 +9,11 @@ import {
     effect,
     input,
     isDevMode,
-    OnChanges,
-    SimpleChanges,
+    type OnChanges,
+    type SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqButton, KbqButtonColor, KbqButtonStyleInput, KbqButtonStyles } from '@koobiq/components/button';
+import { KbqButton, type KbqButtonColor, type KbqButtonStyleInput, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqColorDirective, KbqComponentColors, kbqInjectNativeElement } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 
@@ -22,7 +22,7 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
     template: `
         <ng-content select="[kbq-button]" />
     `,
-    styleUrls: ['./split-button.scss'],
+    styleUrl: './split-button.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

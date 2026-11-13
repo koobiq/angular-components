@@ -1,21 +1,22 @@
 import {
-    AfterContentInit,
+    type AfterContentInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    OnChanges,
-    OnDestroy,
-    SimpleChanges,
-    ViewEncapsulation,
     inject,
     input,
+    type OnChanges,
+    type OnDestroy,
     output,
-    viewChild
+    type SimpleChanges,
+    viewChild,
+    ViewEncapsulation
 } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
-import { KbqCalendarCellCssClasses } from './calendar-body.component';
+import type { KbqCalendarCellCssClasses } from './calendar-body.component';
 import { KbqCalendarHeader } from './calendar-header.component';
 import { injectRequiredDateAdapter } from './datepicker-errors';
+import type { KbqDatepickerInput } from './datepicker-input.directive';
 import { KbqMonthView } from './month-view.component';
 
 /**
@@ -29,8 +30,8 @@ import { KbqMonthView } from './month-view.component';
         KbqCalendarHeader,
         KbqMonthView
     ],
-    templateUrl: 'calendar.html',
-    styleUrls: ['calendar.scss'],
+    templateUrl: './calendar.html',
+    styleUrl: './calendar.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -54,7 +55,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
             deserializedValue !== null ? this.adapter.clampDate(deserializedValue, this.minDate, this.maxDate) : null;
     }
 
-    private _startAt: D | null;
+    private _startAt: D | null = null;
 
     /** The currently selected date. */
     get selected(): D | null {
@@ -65,7 +66,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
         this._selected = this.adapter.deserialize(value);
     }
 
-    private _selected: D | null;
+    private _selected: D | null = null;
 
     /** The minimum selectable date. */
     get minDate(): D | null {
@@ -78,7 +79,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
         this.startAt = this._startAt;
     }
 
-    private _minDate: D | null;
+    private _minDate: D | null = null;
 
     /** The maximum selectable date. */
     get maxDate(): D | null {
@@ -91,7 +92,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
         this.startAt = this._startAt;
     }
 
-    private _maxDate: D | null;
+    private _maxDate: D | null = null;
 
     /** @docs-private */
     readonly startAtInput = input<D | null | undefined>(undefined, { alias: 'startAt' });
@@ -119,7 +120,8 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
         this.stateChanges.next();
     }
 
-    private _activeDate: D;
+    // What the setter gives before any bound or `startAt` is set; `ngAfterContentInit` resolves it against them.
+    private _activeDate: D = this.adapter.today();
 
     /** Function used to filter which dates are selectable. */
     readonly dateFilter = input<(date: D) => boolean>(undefined!);
@@ -154,7 +156,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     stateChanges = new Subject<void>();
 
     /** The input element this datepicker is associated with. */
-    datepickerInput;
+    datepickerInput: any;
 
     /** Subscription to value changes in the associated input element. */
     private inputSubscription = Subscription.EMPTY;
@@ -201,7 +203,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
      *
      * @param input The calendar input to register with this calendar.
      */
-    registerInput(input): void {
+    registerInput(input: KbqDatepickerInput<D>): void {
         if (this.datepickerInput) {
             throw Error('A KbqDatepicker can only be associated with a single input.');
         }

@@ -10,7 +10,7 @@
                 Overlay container:
                 <b>{{ config.useShadow ? 'shadow root (fix) ✅' : 'document.body (bug) ❌' }}</b>
             </span>
-            <button kbq-button [color]="'contrast'" (click)="toggleContainerMode()">
+            <button kbq-button color="contrast" (click)="toggleContainerMode()">
                 Switch to {{ config.useShadow ? '?container=default' : '?container=shadow' }} (reloads)
             </button>
         </div>
@@ -25,8 +25,8 @@
     </p>
 
     <div class="dev-mfe__buttons">
-        <button kbq-button [color]="'contrast'" (click)="openModal()">Open modal</button>
-        <button kbq-button [color]="'contrast'" (click)="openSidepanel()">Open sidepanel</button>
+        <button kbq-button color="contrast" (click)="openModal()">Open modal</button>
+        <button kbq-button color="contrast" (click)="openSidepanel()">Open sidepanel</button>
         <button kbq-button (click)="showToast(toastStyle.Contrast)">toast: contrast</button>
         <button kbq-button (click)="showToast(toastStyle.Success)">toast: success</button>
         <button kbq-button (click)="showToast(toastStyle.Warning)">toast: warning</button>
@@ -47,7 +47,7 @@
 
 <ng-template #modalContent>
     <p>Modal body — MFE level {{ config.level }}.</p>
-    <button kbq-button [color]="'contrast'" (click)="showToast(toastStyle.Error)">Show toast over modal</button>
+    <button kbq-button color="contrast" (click)="showToast(toastStyle.Error)">Show toast over modal</button>
 </ng-template>
 
 <ng-template #sidepanelContent>
@@ -55,9 +55,7 @@
 
     <kbq-sidepanel-body class="layout-padding">
         <p>Sidepanel body.</p>
-        <button kbq-button [color]="'contrast'" (click)="showToast(toastStyle.Success)">
-            Show toast over sidepanel
-        </button>
+        <button kbq-button color="contrast" (click)="showToast(toastStyle.Success)">Show toast over sidepanel</button>
     </kbq-sidepanel-body>
 
     <kbq-sidepanel-footer>

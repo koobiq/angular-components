@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqDefaultSizes } from '@koobiq/components/core';
+import type { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLink, KbqLinkPrefix, KbqLinkSuffix, KbqLinkUnderline } from '@koobiq/components/link';
+import { KbqLink, KbqLinkPrefix, KbqLinkSuffix, type KbqLinkUnderline } from '@koobiq/components/link';
 
 const states = [
     { name: 'default', class: '', disabled: false },
@@ -363,7 +363,7 @@ export class E2eLinkMultiline {
                 <a kbqLink print href="https://www.cvedetails.com/cve/CVE-2019-1020010/">CVE-2019-1020010</a>
             </div>
             <div>
-                <a kbqLink href="https://koobiq.io/en/components/link" [print]="'koobiq.io/link'">Link</a>
+                <a kbqLink href="https://koobiq.io/en/components/link" print="koobiq.io/link">Link</a>
             </div>
             <div>
                 <a kbqLink href="https://koobiq.io/en/components/link">Link</a>

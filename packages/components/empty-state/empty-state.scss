@@ -1,6 +1,4 @@
-@use '../core/styles/common/tokens' as *;
-
-@use './empty-state-theme' as *;
+@use './empty-state-theme';
 
 // The custom properties every rule below reads. Loaded here, not from a second `styleUrls` entry,
 // so that the stylesheet is self-contained for anything reusing it.
@@ -109,5 +107,5 @@
     }
 }
 
-@include kbq-empty-state-theme();
-@include kbq-empty-state-typography();
+@include empty-state-theme.kbq-empty-state-theme();
+@include empty-state-theme.kbq-empty-state-typography();

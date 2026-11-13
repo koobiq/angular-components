@@ -28,6 +28,7 @@ import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
                 message text
                 <button
                     kbq-alert-close-button
+                    type="button"
                     kbq-icon-button="kbq-xmark-s_16"
                     aria-label="Close"
                     [color]="colors.ContrastFade"

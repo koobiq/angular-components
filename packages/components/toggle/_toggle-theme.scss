@@ -1,6 +1,6 @@
 @use '../core/styles/common/tokens';
 
-@mixin _kbq-toggle-state($type, $state-name) {
+@mixin -kbq-toggle-state($type, $state-name) {
     $base: toggle-#{$type}-#{$state-name};
 
     .kbq-toggle-bar {
@@ -13,24 +13,24 @@
     }
 }
 
-@mixin _kbq-toggle-color($type) {
-    @include _kbq-toggle-state($type, default);
+@mixin -kbq-toggle-color($type) {
+    @include -kbq-toggle-state($type, default);
 
     &:is(:hover, .kbq-hovered) {
-        @include _kbq-toggle-state($type, states-hover);
+        @include -kbq-toggle-state($type, states-hover);
     }
 
     &.kbq-active,
     &.kbq-indeterminate {
-        @include _kbq-toggle-state($type, states-checked);
+        @include -kbq-toggle-state($type, states-checked);
 
         &:is(:hover, .kbq-hovered) {
-            @include _kbq-toggle-state($type, states-checked-hover);
+            @include -kbq-toggle-state($type, states-checked-hover);
         }
     }
 
     &.cdk-keyboard-focused {
-        @include _kbq-toggle-state($type, states-focused);
+        @include -kbq-toggle-state($type, states-focused);
 
         & .kbq-toggle-bar {
             border-color: var(--kbq-toggle-#{$type}-states-focused-focus-outline);
@@ -40,7 +40,7 @@
 
     &.kbq-active.cdk-keyboard-focused,
     &.kbq-indeterminate.cdk-keyboard-focused {
-        @include _kbq-toggle-state($type, states-checked-focused);
+        @include -kbq-toggle-state($type, states-checked-focused);
 
         & .kbq-toggle-bar {
             border-color: var(--kbq-toggle-#{$type}-states-checked-focused-focus-outline);
@@ -49,12 +49,12 @@
     }
 
     &.kbq-disabled {
-        @include _kbq-toggle-state($type, states-disabled);
+        @include -kbq-toggle-state($type, states-disabled);
     }
 
     &.kbq-active.kbq-disabled,
     &.kbq-indeterminate.kbq-disabled {
-        @include _kbq-toggle-state($type, states-active-disabled);
+        @include -kbq-toggle-state($type, states-active-disabled);
 
         .kbq-toggle-bar {
             opacity: var(--kbq-opacity-disabled);
@@ -64,11 +64,11 @@
 
 @mixin kbq-toggle-theme() {
     .kbq-toggle {
-        @include _kbq-toggle-color(theme);
+        @include -kbq-toggle-color(theme);
 
         &.kbq-error,
         &.kbq-invalid {
-            @include _kbq-toggle-color(error);
+            @include -kbq-toggle-color(error);
         }
 
         &.kbq-disabled {

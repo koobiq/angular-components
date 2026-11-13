@@ -8,8 +8,8 @@
 
     <ng-template #customFooter>
         <div style="gap: 16px" class="layout-row layout-wrap">
-            <button kbq-button [color]="'contrast'" (click)="activePopover.hide(0)">Сохранить</button>
-            <button kbq-button (click)="activePopover.hide(0)">Отмена</button>
+            <button kbq-button type="button" color="contrast" (click)="activePopover?.hide(0)">Сохранить</button>
+            <button kbq-button type="button" (click)="activePopover?.hide(0)">Отмена</button>
         </div>
     </ng-template>
 
@@ -18,6 +18,7 @@
             #kbqLeftPopover="kbqPopover"
             kbq-button
             kbqPopover
+            type="button"
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
             [kbqPopoverPlacement]="placements.Left"
@@ -31,6 +32,7 @@
             #kbqTopPopover="kbqPopover"
             kbq-button
             kbqPopover
+            type="button"
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
             [kbqPopoverPlacement]="placements.Top"
@@ -42,6 +44,7 @@
             #kbqBottomPopover="kbqPopover"
             kbq-button
             kbqPopover
+            type="button"
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
             [kbqPopoverPlacement]="placements.Bottom"
@@ -55,6 +58,7 @@
             #kbqRightPopover="kbqPopover"
             kbq-button
             kbqPopover
+            type="button"
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
             [kbqPopoverPlacement]="placements.Right"

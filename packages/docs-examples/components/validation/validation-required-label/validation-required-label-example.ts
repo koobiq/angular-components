@@ -148,7 +148,7 @@ export class ValidationRequiredLabelExample {
         lastName: new FormControl<string>('', { nonNullable: true }),
         thirdName: new FormControl<string>('', { nonNullable: true }),
         email: new FormControl<string>('', { nonNullable: true, validators: [Validators.email] }),
-        reason: new FormControl<number>(this.docsReasons[2].value, { nonNullable: true }),
+        reason: new FormControl<number>(3, { nonNullable: true }),
         estimation: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
         comment: new FormControl<string>('', { nonNullable: true })
     });

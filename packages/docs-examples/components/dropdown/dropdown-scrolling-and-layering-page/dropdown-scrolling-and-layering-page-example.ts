@@ -30,7 +30,7 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
                 <div kbqTopBarSpacer></div>
 
                 <div kbqTopBarContainer placement="end">
-                    <button kbq-button [kbqDropdownTriggerFor]="actions">
+                    <button kbq-button type="button" [kbqDropdownTriggerFor]="actions">
                         Actions
                         <i kbq-icon="kbq-chevron-down-s_16"></i>
                     </button>
@@ -43,7 +43,7 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
                     toolbar, while the Actions menu of the toolbar stays above it.
                 </p>
 
-                <button kbq-button [kbqDropdownTriggerFor]="menu">
+                <button kbq-button type="button" [kbqDropdownTriggerFor]="menu">
                     Open menu
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
@@ -73,17 +73,17 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
         </div>
 
         <kbq-dropdown #actions="kbqDropdown" xPosition="before">
-            <button kbq-dropdown-item>Export</button>
-            <button kbq-dropdown-item>Share</button>
-            <button kbq-dropdown-item>Archive</button>
+            <button kbq-dropdown-item type="button">Export</button>
+            <button kbq-dropdown-item type="button">Share</button>
+            <button kbq-dropdown-item type="button">Archive</button>
         </kbq-dropdown>
 
         <kbq-dropdown #menu="kbqDropdown">
-            <button kbq-dropdown-item>Edit</button>
-            <button kbq-dropdown-item>Duplicate</button>
-            <button kbq-dropdown-item>Move to folder</button>
-            <button kbq-dropdown-item>Copy link</button>
-            <button kbq-dropdown-item>Delete</button>
+            <button kbq-dropdown-item type="button">Edit</button>
+            <button kbq-dropdown-item type="button">Duplicate</button>
+            <button kbq-dropdown-item type="button">Move to folder</button>
+            <button kbq-dropdown-item type="button">Copy link</button>
+            <button kbq-dropdown-item type="button">Delete</button>
         </kbq-dropdown>
     `,
     styles: `

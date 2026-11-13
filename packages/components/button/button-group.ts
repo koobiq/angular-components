@@ -7,12 +7,12 @@ import {
     Directive,
     effect,
     input,
-    OnChanges,
-    SimpleChanges,
+    type OnChanges,
+    type SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqColorDirective, KbqComponentColors, KbqOrientation } from '@koobiq/components/core';
-import { KbqButton, KbqButtonColor, KbqButtonStyleInput, KbqButtonStyles } from './button.component';
+import { KbqColorDirective, KbqComponentColors, type KbqOrientation } from '@koobiq/components/core';
+import { KbqButton, type KbqButtonColor, type KbqButtonStyleInput, KbqButtonStyles } from './button.component';
 
 /**
  * Root directive that groups related buttons,
@@ -138,7 +138,7 @@ export class KbqButtonGroupRoot extends KbqColorDirective<KbqButtonColor> implem
     template: `
         <ng-content />
     `,
-    styleUrls: ['./button-group.scss'],
+    styleUrl: './button-group.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

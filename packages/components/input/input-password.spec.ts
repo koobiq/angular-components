@@ -1,6 +1,6 @@
 ﻿import { F8 } from '@angular/cdk/keycodes';
-import { Component, Directive, ElementRef, inject, Provider, Type, viewChild } from '@angular/core';
-import { ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
+import { Component, Directive, ElementRef, inject, type Provider, type Type, viewChild } from '@angular/core';
+import { type ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { dispatchFakeEvent, PasswordValidators } from '@koobiq/components/core';
@@ -45,9 +45,9 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
         <kbq-form-field>
             <input kbqInputPassword [disabled]="disabled" [readonly]="readonly" [(ngModel)]="value" />
             <kbq-password-toggle
-                [kbqTooltipNotHidden]="'Скрыть пароль'"
+                kbqTooltipNotHidden="Скрыть пароль"
+                kbqTooltipHidden="Показать пароль"
                 [kbqTooltipDisabled]="disabled"
-                [kbqTooltipHidden]="'Показать пароль'"
             />
 
             <kbq-reactive-password-hint>От 8 до 64 символов</kbq-reactive-password-hint>
@@ -212,7 +212,7 @@ describe('KbqPasswordInput', () => {
         fixture.detectChanges();
         await vi.advanceTimersByTimeAsync(1000);
 
-        expect(kbqPasswordToggle.styles.visibility).toEqual('hidden');
+        expect(kbqPasswordToggle.styles['visibility']).toEqual('hidden');
         expect(kbqPasswordToggle.classes['cdk-visually-hidden']).toBe(true);
         expect(kbqPasswordToggle.attributes['aria-hidden']).toBe('true');
 
@@ -221,7 +221,7 @@ describe('KbqPasswordInput', () => {
         fixture.detectChanges();
         await vi.advanceTimersByTimeAsync(1000);
 
-        expect(kbqPasswordToggle.styles.visibility).toEqual('visible');
+        expect(kbqPasswordToggle.styles['visibility']).toEqual('visible');
         expect(kbqPasswordToggle.classes['cdk-visually-hidden']).toBeFalsy();
         expect(kbqPasswordToggle.attributes['aria-hidden']).toBe('false');
     });

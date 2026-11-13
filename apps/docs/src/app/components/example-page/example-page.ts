@@ -5,7 +5,7 @@ import {
     Component,
     inject,
     signal,
-    Type,
+    type Type,
     ViewEncapsulation
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -19,7 +19,8 @@ import { loadExampleComponent } from '@koobiq/docs-examples/loader';
     imports: [NgComponentOutlet],
     template: `
         <div
-            class="docs-live-example__example docs-live-example__example_{{ id }}"
+            class="docs-live-example__example"
+            [class]="exampleClass"
             [attr.aria-busy]="component() === undefined || null"
         >
             @if (component(); as component) {
@@ -42,7 +43,9 @@ export class DocsExamplePage {
      * Id of the example: the segment the route has found in the catalogue. Read once, as the page is only opened by
      * loading its URL, and the links inside an example lead below it or away from it.
      */
-    protected readonly id = inject(ActivatedRoute).snapshot.url[0].path;
+    protected readonly id = inject(ActivatedRoute).snapshot.url[0]!.path;
+
+    protected readonly exampleClass = `docs-live-example__example_${this.id}`;
 
     /** Class of the example: `undefined` while it loads, `null` if it has failed to. */
     protected readonly component = signal<Type<unknown> | null | undefined>(undefined);

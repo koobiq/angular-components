@@ -1,4 +1,4 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-badge-style($type, $sub-type, $style-name) {
     $base-path: badge-#{$type}-#{$sub-type}-#{$style-name};
@@ -99,7 +99,7 @@
 // line box sits up to a device pixel above the middle. Baseline alignment leaves the line box out of it: the empty
 // `::before` puts the baseline half a cap height below the middle of the badge, which centres the capitals.
 // Goes last in `kbq-badge-typography()`, whose line height it replaces.
-@mixin _kbq-badge-label-alignment() {
+@mixin -kbq-badge-label-alignment() {
     @supports (height: 1cap) {
         .kbq-badge {
             align-items: baseline;
@@ -126,20 +126,20 @@
 
 @mixin kbq-badge-typography() {
     .kbq-badge {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
 
         & .kbq-badge-caption {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
         }
     }
 
     .kbq-badge_compact {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-compact-medium);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact-medium);
 
         & .kbq-badge-caption {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
         }
     }
 
-    @include _kbq-badge-label-alignment();
+    @include -kbq-badge-label-alignment();
 }

@@ -11,7 +11,8 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { auditTime, BehaviorSubject, combineLatest, distinctUntilChanged, map, startWith } from 'rxjs';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqHighlightModule } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
@@ -22,14 +23,13 @@ import { KbqModalService } from '@koobiq/components/modal';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import type { KbqIconsMetadata } from '@koobiq/icons/types/icons';
-import { auditTime, BehaviorSubject, combineLatest, distinctUntilChanged, map, startWith } from 'rxjs';
-import { DocsIconItem, DocsIconItems } from 'src/app/services/icon-items';
+import { type DocsIconItem, DocsIconItems } from 'src/app/services/icon-items';
 import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsDocStates } from '../../services/doc-states';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 import {
     DocsIconPreviewModalComponent,
-    DocsIconPreviewModalData
+    type DocsIconPreviewModalData
 } from './icon-preview-modal/icon-preview-modal.component';
 
 const SEARCH_DEBOUNCE_TIME = 300;
@@ -49,7 +49,7 @@ const SEARCH_DEBOUNCE_TIME = 300;
         KbqCheckboxModule
     ],
     templateUrl: './icons-viewer.template.html',
-    styleUrls: ['./icons-viewer.scss'],
+    styleUrl: './icons-viewer.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -71,12 +71,11 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
 
     searchControl = new FormControl<string>('');
     accentColorFilterControl = new FormControl<boolean>(false, { nonNullable: true });
-    filteredIcons = new BehaviorSubject<DocsIconItem[]>([]);
+    filteredIcons = new BehaviorSubject<DocsIconItem[] | undefined>([]);
 
-    availableSizes: number[];
+    availableSizes: number[] = [];
 
-    private iconItems: DocsIconItems;
-    private queryParamMap: Params = {};
+    private searchQuery: string | null = null;
 
     constructor() {
         super();
@@ -85,11 +84,11 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
             .get<KbqIconsMetadata>('assets/SVGIcons/kbq-icons-info.json', { responseType: 'json' })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((data) => {
-                this.iconItems = new DocsIconItems(data);
+                const iconItems = new DocsIconItems(data);
 
-                this.availableSizes = Array.from(this.iconItems.sizes).sort((a, b) => a - b);
+                this.availableSizes = Array.from(iconItems.sizes).sort((a, b) => a - b);
 
-                this.init();
+                this.init(iconItems);
 
                 this.changeDetectorRef.markForCheck();
             });
@@ -100,26 +99,26 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
 
         this.destroyRef.onDestroy(() => locationSubscription.unsubscribe());
 
-        this.activeRoute.queryParamMap.pipe(takeUntilDestroyed()).subscribe(({ params }: Params) => {
-            this.searchControl.setValue(params.s);
-            this.queryParamMap = params;
+        this.activeRoute.queryParamMap.pipe(takeUntilDestroyed()).subscribe((params) => {
+            this.searchQuery = params.get('s');
+            this.searchControl.setValue(this.searchQuery);
         });
 
         this.docStates.registerHeaderScrollContainer(this.elementRef.nativeElement);
     }
 
-    init() {
+    init(iconItems: DocsIconItems) {
         combineLatest([
             this.searchControl.valueChanges.pipe(auditTime(SEARCH_DEBOUNCE_TIME), distinctUntilChanged()),
             this.accentColorFilterControl.valueChanges.pipe(startWith(this.accentColorFilterControl.value))
         ])
             .pipe(
                 map(([value, accentColorOnly]) => {
-                    this.syncSearchQuery(value!);
+                    this.syncSearchQuery(value);
 
                     const lowered = value?.toLowerCase() || '';
 
-                    const items = this.iconItems.getItems().filter((item) => {
+                    const items = iconItems.getItems().filter((item) => {
                         if (accentColorOnly && !item.hasAccentColor) {
                             return false;
                         }
@@ -136,11 +135,13 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
                 }),
                 takeUntilDestroyed(this.destroyRef)
             )
-            .subscribe((filteredItems) => this.filteredIcons.next(filteredItems!));
+            .subscribe((filteredItems) => this.filteredIcons.next(filteredItems));
 
-        this.activeRoute.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
-            if (params.id) {
-                const iconItem = this.iconItems.getItemById(params.id);
+        this.activeRoute.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+            const id = params.get('id');
+
+            if (id) {
+                const iconItem = iconItems.getItemById(id);
 
                 if (iconItem) {
                     this.openIconPreview(iconItem);
@@ -151,7 +152,7 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
                 return;
             }
 
-            this.searchControl.setValue(params.s);
+            this.searchControl.setValue(params.get('s'));
         });
     }
 
@@ -187,8 +188,8 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
             });
     }
 
-    private syncSearchQuery(value: string) {
-        if (value === this.queryParamMap.s) {
+    private syncSearchQuery(value: string | null) {
+        if (value === this.searchQuery) {
             return;
         }
 

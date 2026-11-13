@@ -1,7 +1,6 @@
-@use 'button-base' as *;
-@use '../core/styles/common/tokens' as *;
-
-@use './button-theme' as *;
+@use 'button-base';
+@use '../core/styles/common/tokens';
+@use './button-theme';
 
 // The `.kbq-progress` loading state used by this component is emitted globally by `kbq-core()`.
 // `.kbq-button-icon_left` / `.kbq-button-icon_right` are set by `KbqButtonCssStyler` and styled by
@@ -20,8 +19,14 @@
     @extend %kbq-button-clamped-to-container;
 
     // base padding - border-width
-    padding-left: kbq-difference-series-css-variables([button-size-horizontal-padding, button-size-border-width]);
-    padding-right: kbq-difference-series-css-variables([button-size-horizontal-padding, button-size-border-width]);
+    padding-left: tokens.kbq-difference-series-css-variables(
+        [button-size-horizontal-padding,
+        button-size-border-width]
+    );
+    padding-right: tokens.kbq-difference-series-css-variables(
+        [button-size-horizontal-padding,
+        button-size-border-width]
+    );
 }
 
 .kbq-light-button {
@@ -32,8 +37,14 @@
 .kbq-button-icon {
     @extend %kbq-button-base;
 
-    padding-left: kbq-difference-series-css-variables([button-icon-size-horizontal-padding, button-size-border-width]);
-    padding-right: kbq-difference-series-css-variables([button-icon-size-horizontal-padding, button-size-border-width]);
+    padding-left: tokens.kbq-difference-series-css-variables(
+        [button-icon-size-horizontal-padding,
+        button-size-border-width]
+    );
+    padding-right: tokens.kbq-difference-series-css-variables(
+        [button-icon-size-horizontal-padding,
+        button-size-border-width]
+    );
 
     // an icon button has no label for the slots to space themselves from, so a marker directive on
     // a lone icon must not push it off centre. Must stay logical to match the base rules: a physical
@@ -56,5 +67,5 @@
     }
 }
 
-@include kbq-button-theme();
-@include kbq-button-typography();
+@include button-theme.kbq-button-theme();
+@include button-theme.kbq-button-typography();

@@ -1,15 +1,18 @@
 ﻿import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewEncapsulation } from '@angular/core';
 import {
-    AbstractControl,
+    type AbstractControl,
+    FormControl,
+    FormGroup,
     FormsModule,
-    NgForm,
+    type NgForm,
     ReactiveFormsModule,
     UntypedFormBuilder,
     UntypedFormControl,
-    UntypedFormGroup,
-    ValidatorFn,
+    type UntypedFormGroup,
+    type ValidatorFn,
     Validators
 } from '@angular/forms';
+import type { DateTime } from 'luxon';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -18,14 +21,14 @@ import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { type KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
 import { ValidationExamplesModule } from '../../docs-examples/components/validation';
-import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, DevFileNode } from '../tree/module';
+import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, type DevFileNode } from '../tree/module';
 
 function ldapLoginValidator(loginRegex: RegExp): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
@@ -81,7 +84,7 @@ export class DevDocsExamples {}
         DevDocsExamples
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -103,18 +106,28 @@ export class DevApp {
 
     value = '';
 
-    date;
-    time;
+    date?: DateTime | null;
+    time?: DateTime | null;
 
-    reactiveForm: UntypedFormGroup;
+    reactiveForm = new FormGroup({
+        time: new FormControl<DateTime | null>(null, Validators.required),
+        date: new FormControl<DateTime | null>(null, Validators.required),
+        reactiveInputValue: new FormControl('', [
+            Validators.required,
+            Validators.pattern('[a-zA-Z]*')
+        ]),
+        reactiveSelectValue: new FormControl('', [Validators.required]),
+        reactiveTreeSelectValue: new FormControl('', [Validators.required]),
+        reactiveTypeaheadValue: new FormControl<string[]>([], Validators.required)
+    });
     reactiveFormControl: UntypedFormGroup;
 
-    formWithCustomValidator = new UntypedFormGroup({
-        login: new UntypedFormControl('', [
+    formWithCustomValidator = new FormGroup({
+        login: new FormControl('', [
             Validators.required,
             ldapLoginValidator(/^[a-zA-Z0-9_\-.+]+@[a-zA-Z0-9_\-.]+$/)
         ]),
-        password: new UntypedFormControl('', Validators.required)
+        password: new FormControl('', Validators.required)
     });
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -144,18 +157,6 @@ export class DevApp {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
         this.dataSource.data = devBuildFileTree(DEV_DATA_OBJECT, 0);
-
-        this.reactiveForm = this.formBuilder.group({
-            time: new UntypedFormControl(null, Validators.required),
-            date: new UntypedFormControl(null, Validators.required),
-            reactiveInputValue: new UntypedFormControl('', [
-                Validators.required,
-                Validators.pattern('[a-zA-Z]*')
-            ]),
-            reactiveSelectValue: new UntypedFormControl('', [Validators.required]),
-            reactiveTreeSelectValue: new UntypedFormControl('', [Validators.required]),
-            reactiveTypeaheadValue: new UntypedFormControl([], Validators.required)
-        });
 
         this.reactiveForm.valueChanges.subscribe((value) => {
             console.log('reactiveForm valueChanges: ', value);
@@ -200,7 +201,7 @@ export class DevApp {
         console.log(event);
         const input = event.input;
         const value = event.value;
-        const control = this.reactiveForm.controls['reactiveTypeaheadValue'];
+        const control = this.reactiveForm.controls.reactiveTypeaheadValue;
 
         if ((value || '').trim()) {
             this.reactiveTypeaheadItems.push(value.trim());
@@ -228,7 +229,7 @@ export class DevApp {
     reactiveInputOnRemoveTag(tag: string): void {
         const index = this.reactiveTypeaheadItems.indexOf(tag);
 
-        const control = this.reactiveForm.controls['reactiveTypeaheadValue'];
+        const control = this.reactiveForm.controls.reactiveTypeaheadValue;
 
         if (index >= 0) {
             this.reactiveTypeaheadItems.splice(index, 1);
@@ -239,7 +240,7 @@ export class DevApp {
     reactiveFormControlInputOnRemoveTag(tag: string): void {
         const index = this.reactiveFormControlTypeaheadItems.indexOf(tag);
 
-        const control = this.reactiveForm.controls['reactiveTypeaheadValue'];
+        const control = this.reactiveForm.controls.reactiveTypeaheadValue;
 
         if (index >= 0) {
             this.reactiveFormControlTypeaheadItems.splice(index, 1);
@@ -288,7 +289,7 @@ export class DevApp {
         return node.expandable;
     };
 
-    private getChildren = (node: DevFileNode): DevFileNode[] => {
+    private getChildren = (node: DevFileNode): DevFileNode[] | undefined => {
         return node.children;
     };
 

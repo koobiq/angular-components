@@ -1,7 +1,5 @@
 @use '../core/styles/common/list';
 
-@use '../core/styles/common/tokens' as *;
-
 .kbq-navbar-item.kbq-horizontal {
     position: relative;
 
@@ -24,14 +22,14 @@
     // click both reach it. `:after` below paints the highlight, at the item's own box. The same
     // technique is written twice more: `select.item-active-area()` for a plain vertical list, and
     // `--kbq-button-toggle-size-item-hit-area-*` for a group whose `gap` two neighbours have to tile.
-    &:before {
+    &::before {
         top: calc(-1 * #{var(--kbq-size-s)});
         left: calc(-1 * #{var(--kbq-size-s)});
         right: calc(-1 * #{var(--kbq-size-s)});
         bottom: calc(-1 * #{var(--kbq-size-s)});
     }
 
-    &:after {
+    &::after {
         top: 0;
         right: 0;
         bottom: 0;
@@ -57,7 +55,7 @@
         padding-right: var(--kbq-size-m);
         padding-left: var(--kbq-size-m);
 
-        &:before {
+        &::before {
             left: 0;
             right: 0;
         }
@@ -74,7 +72,7 @@
 
         margin-right: var(--kbq-size-xxs);
 
-        &:before {
+        &::before {
             right: calc(-1 * #{var(--kbq-size-xxs)});
         }
     }
@@ -100,7 +98,7 @@
         margin-left: var(--kbq-size-m);
         margin-right: var(--kbq-size-m);
 
-        &:before {
+        &::before {
             left: calc(-1 * #{var(--kbq-size-m)});
             right: calc(-1 * #{var(--kbq-size-m)});
         }

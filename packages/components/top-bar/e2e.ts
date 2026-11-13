@@ -3,10 +3,10 @@ import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbItem, KbqBreadcrumbs } from '@koobiq/components/breadcrumbs';
 import {
     KbqButton,
-    KbqButtonColor,
+    type KbqButtonColor,
     KbqButtonCssStyler,
     KbqButtonDropdownTrigger,
-    KbqButtonStyleInput,
+    type KbqButtonStyleInput,
     KbqButtonStyles
 } from '@koobiq/components/button';
 import { KbqComponentColors, KbqDecimalPipe, PopUpPlacements } from '@koobiq/components/core';

@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
+import { combineLatest } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { combineLatest } from 'rxjs';
 
 const E2E_BUTTON_STATES: ButtonState[] = [
     { title: 'disabled', disabled: true },
@@ -57,18 +57,18 @@ type DevButton = ButtonState & ButtonOrientation;
                         <td>
                             <kbq-button-toggle-group
                                 aria-label="states"
-                                [vertical]="button.vertical!"
-                                [multiple]="button.multiple!"
+                                [vertical]="button.vertical"
+                                [multiple]="button.multiple"
                             >
                                 <kbq-button-toggle
                                     [value]="1"
-                                    [aria-label]="button.title!"
-                                    [checked]="button.checked!"
+                                    [aria-label]="button.title ?? null"
+                                    [checked]="button.checked"
                                     [class.cdk-keyboard-focused]="button.focused"
                                     [class.kbq-active]="button.active"
                                     [class.kbq-hover]="button.hover"
                                     [class.kbq-progress]="button.progress"
-                                    [disabled]="button.disabled!"
+                                    [disabled]="button.disabled"
                                 >
                                     @if (showPrefixIcon()) {
                                         <i kbq-icon="kbq-play_16"></i>
@@ -80,7 +80,7 @@ type DevButton = ButtonState & ButtonOrientation;
                                         <i kbq-icon="kbq-chevron-down-s_16"></i>
                                     }
                                 </kbq-button-toggle>
-                                <kbq-button-toggle [value]="2" [checked]="button.multiple! && button.checked!">
+                                <kbq-button-toggle [value]="2" [checked]="button.multiple && button.checked">
                                     default 2
                                 </kbq-button-toggle>
                                 <kbq-button-toggle [value]="3">default 3</kbq-button-toggle>
@@ -160,13 +160,13 @@ export class E2eButtonToggleStates {
                 <kbq-button-toggle-group stretched aria-label="states">
                     <kbq-button-toggle
                         [value]="1"
-                        [aria-label]="state.title!"
-                        [checked]="state.checked!"
+                        [aria-label]="state.title ?? null"
+                        [checked]="state.checked"
                         [class.cdk-keyboard-focused]="state.focused"
                         [class.kbq-active]="state.active"
                         [class.kbq-hover]="state.hover"
                         [class.kbq-progress]="state.progress"
-                        [disabled]="state.disabled!"
+                        [disabled]="state.disabled"
                     >
                         <!-- the marker slots, i.e. the placement that keeps both the icons and the
                              ellipsis; the legacy default slot is covered by E2eButtonToggleStates -->

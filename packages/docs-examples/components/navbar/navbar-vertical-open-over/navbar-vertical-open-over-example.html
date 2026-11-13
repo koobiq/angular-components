@@ -1,12 +1,12 @@
 <kbq-dropdown #verticalNavbarDropdown_1="kbqDropdown" [overlapTriggerX]="false" [overlapTriggerY]="true">
     @for (app of text().apps; track $index) {
-        <button kbq-dropdown-item>{{ app }}</button>
+        <button kbq-dropdown-item type="button">{{ app }}</button>
     }
 </kbq-dropdown>
 
 <kbq-dropdown #verticalNavbarDropdown_3="kbqDropdown" [overlapTriggerX]="false" [overlapTriggerY]="true">
-    <button kbq-dropdown-item>{{ text().point(1) }}</button>
-    <button kbq-dropdown-item>{{ text().point(2) }}</button>
+    <button kbq-dropdown-item type="button">{{ text().point(1) }}</button>
+    <button kbq-dropdown-item type="button">{{ text().point(2) }}</button>
 </kbq-dropdown>
 
 <div style="height: 480px" class="layout-row">
@@ -37,7 +37,7 @@
                 <kbq-navbar-title>{{ text().dashboards }}</kbq-navbar-title>
             </a>
 
-            <button kbq-navbar-item>
+            <button kbq-navbar-item type="button">
                 <i kbq-icon="kbq-stop_16" color="contrast"></i>
                 <span kbq-navbar-title>{{ text().tasks }}</span>
             </button>
@@ -45,15 +45,16 @@
             <kbq-navbar-item>
                 <button
                     kbq-button
+                    type="button"
+                    color="contrast"
+                    kbqStyle="filled"
                     [class.kbq-button-icon]="!verticalNavbar.expanded()"
-                    [color]="'contrast'"
                     [kbqPlacement]="popUpPlacements.Right"
-                    [kbqStyle]="'filled'"
                     [attr.aria-label]="text().newTask"
                     [kbqTooltip]="text().newTask"
                     [kbqTooltipDisabled]="verticalNavbar.expanded()"
                 >
-                    <i kbq-icon="kbq-plus_16" [color]="'empty'"></i>
+                    <i kbq-icon="kbq-plus_16" color="empty"></i>
                     @if (verticalNavbar.expanded()) {
                         <span>{{ text().newTask }}</span>
                     }
@@ -77,7 +78,7 @@
             </kbq-navbar-item>
         </kbq-navbar-container>
 
-        <button kbq-navbar-toggle></button>
+        <button kbq-navbar-toggle type="button"></button>
     </kbq-vertical-navbar>
 
     <div style="overflow: auto; padding-left: 20px; padding-right: 20px" class="kbq-text-normal">

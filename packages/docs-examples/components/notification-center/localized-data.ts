@@ -1,6 +1,6 @@
-import { computed, Signal, TemplateRef } from '@angular/core';
+import { computed, type Signal, type TemplateRef } from '@angular/core';
 import { kbqInjectLocaleService } from '@koobiq/components/core';
-import { KbqNotificationItem } from '@koobiq/components/notification-center';
+import type { KbqNotificationItem } from '@koobiq/components/notification-center';
 import { KbqToastStyle } from '@koobiq/components/toast';
 
 /** Resolves `data` for the active locale of the examples, falling back to `default` (English). */
@@ -264,8 +264,8 @@ const NOTIFICATIONS: { date: string; style: KbqToastStyle; actions?: boolean; ri
 ];
 
 /**
- * The example notification list in the language of `text`. The ids are stable, so a list rebuilt on a
- * locale switch keeps the read state it had in `current`.
+ * The example notification list in the language of `text`, whose `list` has an entry per notification. The ids
+ * are stable, so a list rebuilt on a locale switch keeps the read state it had in `current`.
  */
 export const createNotifications = (
     text: ExampleText,
@@ -277,7 +277,7 @@ export const createNotifications = (
 
     return NOTIFICATIONS.map(({ date, actions, richCaption, ...item }, index) => {
         const id = String(index + 1);
-        const { title, caption } = text.list[index];
+        const { title, caption } = text.list[index]!;
 
         return {
             ...item,

@@ -1,8 +1,8 @@
 @use '../core/option/action-container-mixins' as action-container;
 @use '../core/styles/common';
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 @use '../core/styles/common/vendor-prefixes';
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
 .kbq-tree-option {
     @include vendor-prefixes.user-select(none);
@@ -22,17 +22,17 @@
     border-width: var(--kbq-tree-size-container-focus-outline-width);
     border-style: solid;
     border-color: transparent;
-    @include kbq-squircle(var(--kbq-tree-option-border-radius));
+    @include squircle.kbq-squircle(var(--kbq-tree-option-border-radius));
 
-    padding-top: kbq-difference-series-css-variables(
+    padding-top: tokens.kbq-difference-series-css-variables(
         [tree-size-container-padding-vertical,
         tree-size-container-focus-outline-width]
     );
-    padding-right: kbq-difference-series-css-variables(
+    padding-right: tokens.kbq-difference-series-css-variables(
         [tree-size-container-padding-right,
         tree-size-container-focus-outline-width]
     );
-    padding-bottom: kbq-difference-series-css-variables(
+    padding-bottom: tokens.kbq-difference-series-css-variables(
         [tree-size-container-padding-vertical,
         tree-size-container-focus-outline-width]
     );

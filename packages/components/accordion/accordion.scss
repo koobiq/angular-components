@@ -1,5 +1,5 @@
 @use '../core/styles/common/animation';
-@use './accordion-theme' as *;
+@use './accordion-theme';
 
 .kbq-accordion {
     display: block;
@@ -68,5 +68,5 @@
     }
 }
 
-@include kbq-accordion-theme();
-@include kbq-accordion-typography();
+@include accordion-theme.kbq-accordion-theme();
+@include accordion-theme.kbq-accordion-typography();

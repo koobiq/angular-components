@@ -1,44 +1,45 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
-import { GlobalPositionStrategy, Overlay, OverlayContainer, OverlayRef } from '@angular/cdk/overlay';
+import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
+import { type GlobalPositionStrategy, Overlay, OverlayContainer, type OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
 import {
-    ComponentRef,
-    EmbeddedViewRef,
+    type ComponentRef,
+    type EmbeddedViewRef,
+    inject,
     Injectable,
     InjectionToken,
     Injector,
     NgZone,
-    OnDestroy,
-    Signal,
-    TemplateRef,
-    Type,
-    inject,
+    type OnDestroy,
+    type Signal,
     signal,
+    type TemplateRef,
+    type Type,
     untracked
 } from '@angular/core';
 import {
     BehaviorSubject,
-    EMPTY,
-    Observable,
-    Subscription,
     distinctUntilChanged,
+    EMPTY,
     filter,
     map,
+    Observable,
     share,
+    type Subscription,
     switchMap,
     timer
 } from 'rxjs';
-import { KbqToastContainerComponent } from './toast-container.component';
 import { KbqToastComponent } from './toast.component';
 import {
     KBQ_TOAST_CONFIG,
     KBQ_TOAST_STACK,
-    KbqToastData,
+    type KbqToastData,
     KbqToastPosition,
-    KbqToastStack,
-    KbqToastTemplateContext
+    type KbqToastStack,
+    type KbqToastTemplateContext
 } from './toast.type';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
+import { KbqToastContainerComponent } from './toast-container.component';
 
 export const KBQ_TOAST_FACTORY = new InjectionToken('KBQ_TOAST_FACTORY', {
     factory: () => KbqToastComponent
@@ -124,15 +125,13 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     private readonly toastConfig = inject(KBQ_TOAST_CONFIG);
 
     get toasts(): ComponentRef<T>[] {
-        return Object.values(this.toastsDict)
+        return [...this.toastsDict.values()]
             .map(({ componentRef }) => componentRef)
             .filter((componentRef) => !componentRef.hostView.destroyed);
     }
 
     get templates(): EmbeddedViewRef<KbqToastTemplateContext>[] {
-        return Object.values(this.templatesDict)
-            .map(({ viewRef }) => viewRef)
-            .filter((viewRef) => !viewRef.destroyed);
+        return [...this.templatesDict.values()].map(({ viewRef }) => viewRef).filter((viewRef) => !viewRef.destroyed);
     }
 
     readonly read = new BehaviorSubject<KbqToastData | null>(null);
@@ -174,8 +173,9 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     /** Toasts taken off the stack that still play their exit animation in the container. */
     private readonly leaving = new Set<ComponentRef<T>>();
 
-    private toastsDict: { [id: number]: KbqToastRecord<T> } = {};
-    private templatesDict: { [id: number]: KbqToastTemplateRecord } = {};
+    // Keyed by id, in the order the toasts were created: the oldest first.
+    private readonly toastsDict = new Map<number, KbqToastRecord<T>>();
+    private readonly templatesDict = new Map<number, KbqToastTemplateRecord>();
 
     private readonly hoveredToasts = new Set<number>();
     private readonly focusedToasts = new Map<number, FocusOrigin>();
@@ -186,9 +186,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     }
 
     constructor() {
-        this.ngZone.runOutsideAngular(() => {
-            this.timerSubscription = this.timer.subscribe(this.processToasts);
-        });
+        this.timerSubscription = this.ngZone.runOutsideAngular(() => this.timer.subscribe(this.processToasts));
     }
 
     ngOnDestroy(): void {
@@ -198,8 +196,8 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         this.containerInstance = undefined;
         this.portal = undefined;
         this.currentPosition = undefined;
-        this.toastsDict = {};
-        this.templatesDict = {};
+        this.toastsDict.clear();
+        this.templatesDict.clear();
         this.hoveredToasts.clear();
         this.focusedToasts.clear();
         this.stackSize.next(0);
@@ -236,7 +234,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
             throw new Error('KBQ_TOAST_FACTORY must provide a component extending KbqToastComponent: `id` is missing.');
         }
 
-        this.toastsDict[id] = { componentRef, ttl: duration, previouslyFocused };
+        this.toastsDict.set(id, { componentRef, ttl: duration, previouslyFocused });
         this.syncStackSize();
 
         return { ref: componentRef, id };
@@ -262,7 +260,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         const viewRef = container.createTemplate(data, template, onTop);
         const id = templateId++;
 
-        this.templatesDict[id] = { viewRef, ttl: duration };
+        this.templatesDict.set(id, { viewRef, ttl: duration });
         this.syncStackSize();
 
         return { ref: viewRef, id };
@@ -274,7 +272,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
 
     /** Body of `hide()`. */
     private removeToast(id: number): void {
-        const record = this.toastsDict[id];
+        const record = this.toastsDict.get(id);
 
         if (!record) {
             return;
@@ -286,7 +284,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
 
         this.removeAfterExit(record.componentRef);
 
-        delete this.toastsDict[id];
+        this.toastsDict.delete(id);
 
         this.setHovered(id, false);
         this.setFocused(id, null);
@@ -308,7 +306,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
 
     /** Body of `hideTemplate()`. */
     private removeTemplate(id: number): void {
-        const record = this.templatesDict[id];
+        const record = this.templatesDict.get(id);
 
         if (!record) {
             return;
@@ -316,7 +314,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
 
         this.containerInstance?.remove(record.viewRef);
 
-        delete this.templatesDict[id];
+        this.templatesDict.delete(id);
 
         this.renewLifetimes();
         this.syncStackSize();
@@ -441,23 +439,23 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     private purgeDestroyed(): void {
         let purged = false;
 
-        for (const [id, { componentRef }] of Object.entries(this.toastsDict)) {
+        for (const [id, { componentRef }] of this.toastsDict) {
             if (!componentRef.hostView.destroyed) {
                 continue;
             }
 
-            delete this.toastsDict[+id];
-            this.setHovered(+id, false);
-            this.setFocused(+id, null);
+            this.toastsDict.delete(id);
+            this.setHovered(id, false);
+            this.setFocused(id, null);
             purged = true;
         }
 
-        for (const [id, { viewRef }] of Object.entries(this.templatesDict)) {
+        for (const [id, { viewRef }] of this.templatesDict) {
             if (!viewRef.destroyed) {
                 continue;
             }
 
-            delete this.templatesDict[+id];
+            this.templatesDict.delete(id);
             purged = true;
         }
 
@@ -472,7 +470,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     private processToasts = () => {
         this.purgeDestroyed();
 
-        for (const [id, record] of Object.entries(this.toastsDict)) {
+        for (const [id, record] of this.toastsDict) {
             if (record.ttl <= 0) {
                 continue;
             }
@@ -480,13 +478,13 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
             record.ttl -= CHECK_INTERVAL;
 
             if (record.ttl <= 0) {
-                this.ngZone.run(() => this.hide(+id));
+                this.ngZone.run(() => this.hide(id));
 
                 return;
             }
         }
 
-        for (const [id, record] of Object.entries(this.templatesDict)) {
+        for (const [id, record] of this.templatesDict) {
             if (record.ttl <= 0) {
                 continue;
             }
@@ -494,7 +492,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
             record.ttl -= CHECK_INTERVAL;
 
             if (record.ttl <= 0) {
-                this.ngZone.run(() => this.hideTemplate(+id));
+                this.ngZone.run(() => this.hideTemplate(id));
 
                 return;
             }
@@ -503,7 +501,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
 
     /** Keeps every survivor on screen for at least the configured delay after a dismissal or a pause. */
     private renewLifetimes() {
-        const records = [...Object.values(this.toastsDict), ...Object.values(this.templatesDict)];
+        const records = [...this.toastsDict.values(), ...this.templatesDict.values()];
 
         for (const record of records) {
             if (record.ttl > 0) {
@@ -548,7 +546,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         // sibling for a node that is already last and falls through to `insertBefore(x, null)`, whose
         // insert steps take `x` out of its parent first — a real detach and re-attach of the wrapper
         // holding every live toast, on every `show()`.
-        if (overlays.length < 2 || last === host) {
+        if (overlays.length < 2 || !last || last === host) {
             return;
         }
 
@@ -596,8 +594,9 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     }
 
     private clear(): void {
-        Object.keys(this.toastsDict).forEach((id) => this.hide(+id));
-        Object.keys(this.templatesDict).forEach((id) => this.hideTemplate(+id));
+        // A copy, since hiding deletes from the map it walks.
+        [...this.toastsDict.keys()].forEach((id) => this.hide(id));
+        [...this.templatesDict.keys()].forEach((id) => this.hideTemplate(id));
     }
 
     private getPositionStrategy(position?: KbqToastPosition): GlobalPositionStrategy {

@@ -1,7 +1,6 @@
 @use '../core/styles/common/input';
-@use '../core/styles/common/tokens' as *;
-
-@use './input-theme' as *;
+@use '../core/styles/common/tokens';
+@use './input-theme';
 
 .kbq-input {
     @include input.kbq-reset-input();
@@ -12,7 +11,7 @@
     text-overflow: ellipsis;
 
     width: 100%;
-    min-height: kbq-difference-series-css-variables([size-3xl, calc(var(--kbq-size-border-width) * 2)]);
+    min-height: tokens.kbq-difference-series-css-variables([size-3xl, calc(var(--kbq-size-border-width) * 2)]);
 
     padding: var(--kbq-input-size-padding-vertical) var(--kbq-input-size-padding-horizontal);
 }
@@ -40,4 +39,4 @@ input.kbq-input::placeholder {
     opacity: 1;
 }
 
-@include kbq-input-typography();
+@include input-theme.kbq-input-typography();

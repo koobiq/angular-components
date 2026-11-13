@@ -17,7 +17,7 @@
             <kbq-navbar-title>{{ text().popoverAppName }}</kbq-navbar-title>
         </a>
 
-        <button kbq-navbar-item class="kbq-active">
+        <button kbq-navbar-item type="button" class="kbq-active">
             <i kbq-icon="kbq-dashboard_16" color="contrast"></i>
         </button>
 
@@ -34,13 +34,10 @@
         <kbq-navbar-item
             #trigger="kbqNotificationCenterTrigger"
             kbqNotificationCenterTrigger
+            popoverHeight="430px"
             [popoverMode]="true"
-            [popoverHeight]="'430px'"
         >
-            <i
-                kbq-icon="{{ notificationService.silentMode() ? 'kbq-bell-slash_16' : 'kbq-bell_16' }}"
-                color="contrast"
-            ></i>
+            <i color="contrast" [kbq-icon]="notificationService.silentMode() ? 'kbq-bell-slash_16' : 'kbq-bell_16'"></i>
             @if (trigger.unreadItemsCounter(); as unreadItems) {
                 <kbq-badge [badgeColor]="notificationService.silentMode() ? 'fade-contrast' : 'error'" [compact]="true">
                     {{ unreadItems }}

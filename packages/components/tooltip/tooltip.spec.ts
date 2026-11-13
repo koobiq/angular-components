@@ -1,15 +1,17 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceElement } from '@angular/cdk/coercion';
 import {
-    ConnectedOverlayPositionChange,
-    FlexibleConnectedPositionStrategy,
+    type ConnectedOverlayPositionChange,
+    type FlexibleConnectedPositionStrategy,
     Overlay,
     OverlayContainer
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { Component, Directive, ElementRef, viewChild } from '@angular/core';
-import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { Subject } from 'rxjs';
+import type { Mock } from 'vitest';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import {
     dispatchFakeEvent,
@@ -18,21 +20,19 @@ import {
     ENTER,
     ESCAPE,
     KBQ_PARENT_POPUP,
-    KbqParentPopup,
-    KbqPopUpPlacementValues,
-    KbqSiblingPopup,
+    type KbqParentPopup,
+    type KbqPopUpPlacementValues,
+    type KbqSiblingPopup,
     kbqSiblingPopupProvider,
     TAB
 } from '@koobiq/components/core';
 import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqModalService } from '@koobiq/components/modal';
-import { Subject } from 'rxjs';
-import type { Mock } from 'vitest';
+import { KBQ_TOOLTIP_INSTANT_SHOW_WINDOW, type KbqCaretVerticalAnchor, KbqTooltipTrigger } from './tooltip.component';
+import { KbqToolTipModule } from './tooltip.module';
 import { KBQ_TOOLTIP_DEFAULT_OPTIONS } from './tooltip-config';
 import { KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, KbqTooltipRegistry } from './tooltip-registry';
-import { KBQ_TOOLTIP_INSTANT_SHOW_WINDOW, KbqCaretVerticalAnchor, KbqTooltipTrigger } from './tooltip.component';
-import { KbqToolTipModule } from './tooltip.module';
 
 // KbqPopUpTrigger default enter delay (400ms) plus a buffer for the deferred show.
 const tooltipDefaultEnterDelayWithDefer = 410;
@@ -1959,7 +1959,7 @@ describe('KbqTooltip', () => {
 
             trigger.createOverlay();
 
-            const setOrigin = vi.spyOn(trigger['strategy'], 'setOrigin');
+            const setOrigin = vi.spyOn(trigger['strategy']!, 'setOrigin');
 
             await showByHover(fixture, component.trigger().nativeElement);
 
@@ -2024,7 +2024,7 @@ describe('KbqTooltip', () => {
         const showAndSpy = async (trigger: KbqTooltipTrigger) => {
             trigger.createOverlay();
 
-            const setOrigin = vi.spyOn(trigger['strategy'], 'setOrigin');
+            const setOrigin = vi.spyOn(trigger['strategy']!, 'setOrigin');
 
             trigger.show();
             await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
@@ -2090,7 +2090,7 @@ describe('KbqTooltip', () => {
 
             trigger.createOverlay();
             // Outside the browser the position strategy skips layout, and the server DOM has no geometry to read.
-            Object.assign(trigger['strategy'], { _platform: { isBrowser: false } });
+            Object.assign(trigger['strategy']!, { _platform: { isBrowser: false } });
             Object.defineProperty(component.field().nativeElement, 'getBoundingClientRect', {
                 value: undefined,
                 configurable: true
@@ -2138,7 +2138,7 @@ describe('KbqTooltip', () => {
             await showAndSpy(trigger);
 
             const updatePosition = vi.spyOn(trigger['overlayRef']!, 'updatePosition');
-            const withLockedPosition = vi.spyOn(trigger['strategy'], 'withLockedPosition');
+            const withLockedPosition = vi.spyOn(trigger['strategy']!, 'withLockedPosition');
 
             dispatchFakeEvent(component.field().nativeElement, 'input');
 
@@ -2370,7 +2370,7 @@ describe('KbqTooltip', () => {
             trigger.arrowCentered = true;
             trigger.createOverlay();
 
-            const setOrigin = vi.spyOn(trigger['strategy'], 'setOrigin');
+            const setOrigin = vi.spyOn(trigger['strategy']!, 'setOrigin');
 
             trigger.showForElement(host);
             await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
@@ -3086,8 +3086,8 @@ class SiblingPopup implements KbqSiblingPopup {
     selector: 'tooltip-with-sibling-popup',
     imports: [KbqToolTipModule, SiblingPopup],
     template: `
-        <button #trigger siblingPopup [kbqTooltip]="'SIBLING'">Show</button>
-        <button #manualTrigger siblingPopup [kbqTooltip]="'MANUAL'" [kbqTrigger]="'manual'">Show</button>
+        <button #trigger siblingPopup kbqTooltip="SIBLING">Show</button>
+        <button #manualTrigger siblingPopup kbqTooltip="MANUAL" kbqTrigger="manual">Show</button>
     `
 })
 class TooltipWithSiblingPopup {
@@ -3102,16 +3102,14 @@ class TooltipWithSiblingPopup {
     imports: [KbqToolTipModule],
     template: `
         @if (hoverTriggerRendered) {
-            <span #hoverTrigger [kbqTooltip]="'HOVER-A'">A</span>
+            <span #hoverTrigger kbqTooltip="HOVER-A">A</span>
         }
 
-        <span #focusTrigger [kbqTrigger]="'focus'" [kbqTooltip]="'FOCUS-B'">B</span>
-        <span #manualTrigger [kbqTrigger]="'manual'" [kbqTooltip]="'MANUAL-C'">C</span>
-        <span #independentTrigger [kbqTooltip]="'INDEPENDENT-D'" [kbqTooltipSingleInstance]="false">D</span>
-        <span #clickTrigger [kbqTrigger]="'click'" [kbqTooltip]="'CLICK-E'">E</span>
-        <span #toggleableTrigger [kbqTooltip]="'TOGGLE-F'" [kbqTooltipSingleInstance]="toggleableSingleInstance">
-            F
-        </span>
+        <span #focusTrigger kbqTrigger="focus" kbqTooltip="FOCUS-B">B</span>
+        <span #manualTrigger kbqTrigger="manual" kbqTooltip="MANUAL-C">C</span>
+        <span #independentTrigger kbqTooltip="INDEPENDENT-D" [kbqTooltipSingleInstance]="false">D</span>
+        <span #clickTrigger kbqTrigger="click" kbqTooltip="CLICK-E">E</span>
+        <span #toggleableTrigger kbqTooltip="TOGGLE-F" [kbqTooltipSingleInstance]="toggleableSingleInstance">F</span>
     `
 })
 class KbqTooltipSingleInstanceComponent {
@@ -3133,7 +3131,7 @@ class KbqTooltipSingleInstanceComponent {
     selector: 'kbq-tooltip-reactive-inputs',
     imports: [KbqToolTipModule],
     template: `
-        <span #trigger [kbqTooltip]="'CONTENT'" [kbqTooltipModifier]="modifier" [kbqTooltipHeader]="header">Show</span>
+        <span #trigger kbqTooltip="CONTENT" [kbqTooltipModifier]="modifier" [kbqTooltipHeader]="header">Show</span>
     `
 })
 export class KbqTooltipReactiveInputsComponent {
@@ -3148,7 +3146,7 @@ export class KbqTooltipReactiveInputsComponent {
     selector: 'tooltip-simple',
     imports: [KbqToolTipModule],
     template: `
-        <button [kbqTooltip]="'MOST-SIMPLE'" [kbqTooltipArrow]="true">Show</button>
+        <button kbqTooltip="MOST-SIMPLE" [kbqTooltipArrow]="true">Show</button>
     `
 })
 export class TooltipSimple {
@@ -3160,12 +3158,12 @@ export class TooltipSimple {
     selector: 'kbq-tooltip-test-wrapper',
     imports: [KbqToolTipModule],
     template: `
-        <a #mostSimpleTrigger [kbqTooltip]="'MOST-SIMPLE'">Show</a>
+        <a #mostSimpleTrigger kbqTooltip="MOST-SIMPLE">Show</a>
 
-        <span #normalTrigger [kbqTooltip]="'NORMAL'" [kbqTrigger]="'hover'" [kbqPlacement]="'right'">Show</span>
+        <span #normalTrigger kbqTooltip="NORMAL" kbqTrigger="hover" kbqPlacement="right">Show</span>
 
-        <span #focusTrigger [kbqTooltip]="'FOCUS'" [kbqTrigger]="'focus'">Show</span>
-        <span #dynamicArrowAndOffsetTrigger [kbqTooltip]="'ArrowAndOffset'" [kbqTooltipArrow]="arrow">Show</span>
+        <span #focusTrigger kbqTooltip="FOCUS" kbqTrigger="focus">Show</span>
+        <span #dynamicArrowAndOffsetTrigger kbqTooltip="ArrowAndOffset" [kbqTooltipArrow]="arrow">Show</span>
     `
 })
 class KbqTooltipTestWrapperComponent {
@@ -3181,9 +3179,7 @@ class KbqTooltipTestWrapperComponent {
     selector: 'kbq-tooltip-disabled-wrapper',
     imports: [KbqToolTipModule],
     template: `
-        <span #disabledAttribute [kbqTooltip]="'DISABLED'" [kbqTrigger]="'manual'" [kbqTooltipDisabled]="true">
-            Disabled
-        </span>
+        <span #disabledAttribute kbqTooltip="DISABLED" kbqTrigger="manual" [kbqTooltipDisabled]="true">Disabled</span>
     `
 })
 class KbqTooltipDisabledComponent {
@@ -3250,10 +3246,10 @@ class KbqTooltipForDisabledComponent {
     selector: 'tooltip-accessibility',
     imports: [KbqToolTipModule],
     template: `
-        <span #trigger [kbqTooltip]="'HINT'" [kbqTooltipArrow]="true">Trigger</span>
-        <span #describedTrigger aria-describedby="external-hint" [kbqTooltip]="'HINT'">Trigger</span>
-        <span #selfDescribingTrigger [kbqTooltip]="'Self'">Self</span>
-        <span #manualTrigger [kbqTrigger]="'manual'" [kbqTooltip]="'PINNED'">Trigger</span>
+        <span #trigger kbqTooltip="HINT" [kbqTooltipArrow]="true">Trigger</span>
+        <span #describedTrigger aria-describedby="external-hint" kbqTooltip="HINT">Trigger</span>
+        <span #selfDescribingTrigger kbqTooltip="Self">Self</span>
+        <span #manualTrigger kbqTrigger="manual" kbqTooltip="PINNED">Trigger</span>
     `
 })
 class TooltipAccessibility {
@@ -3268,7 +3264,7 @@ class TooltipAccessibility {
     selector: 'tooltip-focus-trigger',
     imports: [KbqToolTipModule],
     template: `
-        <span #trigger tabindex="0" [kbqTrigger]="'focus, keydown'" [kbqTooltip]="'FOCUS'">Show</span>
+        <span #trigger tabindex="0" kbqTrigger="focus, keydown" kbqTooltip="FOCUS">Show</span>
     `
 })
 class TooltipFocusTrigger {
@@ -3280,8 +3276,8 @@ class TooltipFocusTrigger {
     selector: 'tooltip-pair',
     imports: [KbqToolTipModule],
     template: `
-        <span #first [kbqTooltip]="'FIRST'">First</span>
-        <span #second [kbqTooltip]="'SECOND'">Second</span>
+        <span #first kbqTooltip="FIRST">First</span>
+        <span #second kbqTooltip="SECOND">Second</span>
     `
 })
 class TooltipPair {
@@ -3295,9 +3291,7 @@ class TooltipPair {
     selector: 'tooltip-hide-with-timeout',
     imports: [KbqToolTipModule],
     template: `
-        <span #trigger [kbqTooltip]="'TIMED'" [kbqTrigger]="'hover'" [kbqLeaveDelay]="1000" [hideWithTimeout]="true">
-            Show
-        </span>
+        <span #trigger kbqTooltip="TIMED" kbqTrigger="hover" [kbqLeaveDelay]="1000" [hideWithTimeout]="true">Show</span>
     `
 })
 class TooltipHideWithTimeout {
@@ -3309,7 +3303,7 @@ class TooltipHideWithTimeout {
     selector: 'tooltip-leave-delay',
     imports: [KbqToolTipModule],
     template: `
-        <span #trigger tabindex="0" [kbqTooltip]="'DELAYED'" [kbqLeaveDelay]="1000">Show</span>
+        <span #trigger tabindex="0" kbqTooltip="DELAYED" [kbqLeaveDelay]="1000">Show</span>
     `
 })
 class TooltipLeaveDelay {
@@ -3323,7 +3317,7 @@ class TooltipLeaveDelay {
     template: `
         <span
             #trigger
-            [kbqTooltip]="'ARROW'"
+            kbqTooltip="ARROW"
             [kbqTooltipArrow]="arrow"
             [kbqTooltipArrowCentered]="arrowCentered"
             [kbqTooltipOffset]="offset"
@@ -3365,7 +3359,7 @@ class TooltipWithDefaultOptions {
     selector: 'tooltip-color',
     imports: [KbqToolTipModule],
     template: `
-        <span #trigger [kbqTooltip]="'COLORED'" [kbqTooltipColor]="color">Show</span>
+        <span #trigger kbqTooltip="COLORED" [kbqTooltipColor]="color">Show</span>
     `
 })
 class TooltipColor {
@@ -3391,12 +3385,7 @@ class TooltipFalsyContext {
     selector: 'tooltip-relative-to-pointer',
     imports: [KbqToolTipModule],
     template: `
-        <span
-            #trigger
-            [kbqTooltip]="'POINTER'"
-            [kbqRelativeToPointer]="true"
-            [kbqPlacementPriority]="['top', 'bottom']"
-        >
+        <span #trigger kbqTooltip="POINTER" [kbqRelativeToPointer]="true" [kbqPlacementPriority]="['top', 'bottom']">
             Show
         </span>
     `
@@ -3412,22 +3401,22 @@ class TooltipRelativeToPointer {
     template: `
         <input
             #field
+            kbqTooltip="CARET"
+            kbqTrigger="manual"
             [kbqRelativeToCaret]="true"
             [kbqRelativeToCaretVertical]="fieldVertical"
             [kbqRelativeToPointer]="true"
-            [kbqTooltip]="'CARET'"
-            [kbqTrigger]="'manual'"
         />
         <div
             #wrapper
+            kbqTooltip="WRAPPED"
+            kbqTrigger="manual"
             [kbqRelativeToCaret]="true"
             [kbqRelativeToCaretVertical]="wrapperVertical"
-            [kbqTooltip]="'WRAPPED'"
-            [kbqTrigger]="'manual'"
         >
             <textarea #textarea></textarea>
         </div>
-        <span #plain [kbqTooltip]="'PLAIN'" [kbqRelativeToCaret]="true" [kbqTrigger]="'manual'">Show</span>
+        <span #plain kbqTooltip="PLAIN" kbqTrigger="manual" [kbqRelativeToCaret]="true">Show</span>
     `
 })
 class TooltipRelativeToCaret {
@@ -3447,8 +3436,8 @@ class TooltipRelativeToCaret {
     imports: [KbqToolTipModule],
     template: `
         <span #emptyTrigger [kbqTooltip]="content">Show</span>
-        <span #disabledTrigger [kbqTooltip]="'DISABLED'" [kbqTooltipDisabled]="true">Show</span>
-        <span #enabledTrigger [kbqTrigger]="'manual'" [kbqTooltip]="'ENABLED'">Show</span>
+        <span #disabledTrigger kbqTooltip="DISABLED" [kbqTooltipDisabled]="true">Show</span>
+        <span #enabledTrigger kbqTrigger="manual" kbqTooltip="ENABLED">Show</span>
     `
 })
 class TooltipImperative {
@@ -3465,7 +3454,7 @@ class TooltipImperative {
     selector: 'tooltip-shared-by-cells',
     imports: [KbqToolTipModule],
     template: `
-        <span #owner [kbqTrigger]="'manual'" [kbqTooltip]="'SHARED'">Owner</span>
+        <span #owner kbqTrigger="manual" kbqTooltip="SHARED">Owner</span>
         <span #cellA>A</span>
         <span #cellB>B</span>
     `
@@ -3499,7 +3488,7 @@ class ParentPopup implements KbqParentPopup {
     imports: [KbqToolTipModule, ParentPopup],
     template: `
         <div parentPopup>
-            <span #trigger [kbqTooltip]="'CHILD'">Show</span>
+            <span #trigger kbqTooltip="CHILD">Show</span>
         </div>
     `
 })
@@ -3513,9 +3502,9 @@ class TooltipInsideParentPopup {
     selector: 'tooltip-pointer-events',
     imports: [KbqToolTipModule],
     template: `
-        <span #hoverable [kbqTooltip]="'HOVERABLE'">Show</span>
-        <span #clickThrough [kbqTooltip]="'CLICK-THROUGH'" [ignoreTooltipPointerEvents]="true">Show</span>
-        <span #manual [kbqTooltip]="'MANUAL'" [kbqTrigger]="'manual'">Show</span>
+        <span #hoverable kbqTooltip="HOVERABLE">Show</span>
+        <span #clickThrough kbqTooltip="CLICK-THROUGH" [ignoreTooltipPointerEvents]="true">Show</span>
+        <span #manual kbqTooltip="MANUAL" kbqTrigger="manual">Show</span>
     `
 })
 class TooltipPointerEvents {

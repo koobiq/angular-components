@@ -1,7 +1,5 @@
 @use '../styles/common/vendor-prefixes';
-@use '../styles/common/tokens' as *;
-
-@use './optgroup-theme' as *;
+@use './optgroup-theme';
 
 .kbq-optgroup-label {
     display: flex;
@@ -13,5 +11,5 @@
     cursor: default;
 }
 
-@include kbq-optgroup-theme();
-@include kbq-optgroup-typography();
+@include optgroup-theme.kbq-optgroup-theme();
+@include optgroup-theme.kbq-optgroup-typography();

@@ -1,4 +1,4 @@
-import { AfterViewInit, Directive, OnInit, viewChild } from '@angular/core';
+import { type AfterViewInit, Directive, type OnInit, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
 import {
@@ -9,7 +9,7 @@ import {
     KbqTreeFlattener
 } from '@koobiq/components/tree';
 import { KbqTreeSelect } from '@koobiq/components/tree-select';
-import { KbqSelectValue, KbqTreeSelectFlatNode, KbqTreeSelectNode } from '../filter-bar.types';
+import { type KbqSelectValue, KbqTreeSelectFlatNode, type KbqTreeSelectNode } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
 
 /**

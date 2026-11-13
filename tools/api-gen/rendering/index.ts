@@ -2,9 +2,9 @@ import { mkdirSync, readdirSync, rmSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import type { DocsApiEntryPoint } from '../../../apps/docs/src/app/components/api-page/api-page.types';
 import { docsGetItems, DocsStructureItemTab } from '../../../apps/docs/src/app/structure';
-import { EntryCollection } from '../types';
-import { DocEntry, EntryType } from './entities';
-import { ApiEntryPage, getApiEntryPoint } from './entry-point';
+import type { EntryCollection } from '../types';
+import { type DocEntry, EntryType } from './entities';
+import { type ApiEntryPage, getApiEntryPoint } from './entry-point';
 
 // A sibling of `dist/docs-pages`, not a subdirectory of it: `tools/docs-pages`'s own generator recursively
 // deletes anything under its output root that its latest run did not just write, which would otherwise

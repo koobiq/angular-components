@@ -1,4 +1,4 @@
-/* stylelint-disable scss/at-extend-no-missing-placeholder */
+/* stylelint-disable scss/at-extend-no-missing-placeholder -- the callout icon extends the classes of the icon font */
 
 /**
     Usage:
@@ -14,7 +14,7 @@
 @use '@koobiq/icons/fonts/kbq-icons';
 @use '../dist/components/core/styles/common/tokens';
 
-%kbq-callout_contrast {
+%kbq-callout-contrast {
     border-color: var(--kbq-line-contrast-less);
     background-color: var(--kbq-background-bg-secondary);
 
@@ -58,10 +58,10 @@
     }
 
     // setup contrast theme by default
-    @extend %kbq-callout_contrast;
+    @extend %kbq-callout-contrast;
 
     &.kbq-callout_contrast {
-        @extend %kbq-callout_contrast;
+        @extend %kbq-callout-contrast;
     }
 
     &.kbq-callout_theme {

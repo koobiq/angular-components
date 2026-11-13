@@ -21,10 +21,10 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 #inputTooltip="kbqTooltip"
                 kbqInput
                 placeholder="Type here"
-                [kbqPlacement]="'top'"
+                kbqPlacement="top"
+                kbqTooltip="Follows the caret"
+                kbqTrigger="manual"
                 [kbqRelativeToCaret]="true"
-                [kbqTooltip]="'Follows the caret'"
-                [kbqTrigger]="'manual'"
                 (input)="inputTooltip.show()"
                 (blur)="inputTooltip.hide()"
             />
@@ -35,10 +35,10 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 #textareaTooltip="kbqTooltip"
                 kbqTextarea
                 placeholder="Type here"
-                [kbqPlacement]="'top'"
+                kbqPlacement="top"
+                kbqTooltip="Follows the caret"
+                kbqTrigger="manual"
                 [kbqRelativeToCaret]="true"
-                [kbqTooltip]="'Follows the caret'"
-                [kbqTrigger]="'manual'"
                 (input)="textareaTooltip.show()"
                 (blur)="textareaTooltip.hide()"
             ></textarea>

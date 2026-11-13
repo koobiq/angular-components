@@ -1,14 +1,14 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { SelectionModel } from '@angular/cdk/collections';
-import { CDK_DRAG_HANDLE, CdkDrag, CdkDragDrop, CdkDragPreview, CdkDropList } from '@angular/cdk/drag-drop';
+import { CDK_DRAG_HANDLE, CdkDrag, type CdkDragDrop, CdkDragPreview, CdkDropList } from '@angular/cdk/drag-drop';
 import { _getFocusedElementPierceShadowDom, Platform } from '@angular/cdk/platform';
 import { CdkVirtualForOf } from '@angular/cdk/scrolling';
 import {
-    AfterContentChecked,
-    AfterContentInit,
+    type AfterContentChecked,
+    type AfterContentInit,
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -27,10 +27,10 @@ import {
     input,
     isDevMode,
     NgZone,
-    OnDestroy,
-    OnInit,
+    type OnDestroy,
+    type OnInit,
     output,
-    Provider,
+    type Provider,
     QueryList,
     signal,
     untracked,
@@ -38,7 +38,18 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+    auditTime,
+    fromEvent,
+    merge,
+    type Observable,
+    startWith,
+    Subject,
+    type Subscription,
+    switchMap,
+    take
+} from 'rxjs';
 import {
     DOWN_ARROW,
     END,
@@ -48,7 +59,7 @@ import {
     getSelectAllState,
     hasModifierKey,
     HOME,
-    IFocusableOption,
+    type IFocusableOption,
     isCopy,
     isSelectAll,
     isVerticalMovement,
@@ -61,16 +72,16 @@ import {
     kbqGetElementHeight,
     kbqInjectLocaleConfiguration,
     kbqLeaveTabOrderOnTabOut,
-    KbqMultipleInput,
+    type KbqMultipleInput,
     KbqOptgroup,
     KbqOptionActionComponent,
     kbqOptionalNumberAttribute,
     KbqPseudoCheckbox,
-    KbqPseudoCheckboxState,
+    type KbqPseudoCheckboxState,
     kbqQueryListFrom,
-    KbqSelectAllAdapter,
+    type KbqSelectAllAdapter,
     kbqSelectAllHandlerTransform,
-    KbqTitleTextRef,
+    type KbqTitleTextRef,
     LEFT_ARROW,
     MultipleMode,
     PAGE_DOWN,
@@ -85,8 +96,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { fromEvent, merge, Observable, Subject, Subscription } from 'rxjs';
-import { auditTime, startWith, switchMap, take } from 'rxjs/operators';
 
 /** How long consecutive `window.resize` ticks are collapsed before the scroll size is recalculated. */
 const RESIZE_AUDIT_TIME = 100;
@@ -217,7 +226,7 @@ export type KbqListSelectionDroppedEvent = Pick<CdkDragDrop<KbqListSelection>, '
             ></div>
         }
     `,
-    styleUrls: ['./list.scss', 'list-tokens.scss'],
+    styleUrls: ['./list.scss', './list-tokens.scss'],
     providers: [KBQ_SELECTION_LIST_VALUE_ACCESSOR],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -560,7 +569,7 @@ export class KbqListSelection<T = any>
         return merge(...this.navigableOptions.map((option) => option.onBlur));
     }
 
-    _value: T[] | null;
+    _value: T[] | null = null;
 
     private readonly destroyRef = inject(DestroyRef);
     private readonly platform = inject(Platform);
@@ -577,7 +586,7 @@ export class KbqListSelection<T = any>
     /** Gap the indicator currently marks, used as `currentIndex` when the drag is dropped here. */
     private dropIndex: number | null = null;
 
-    private pendingMoveSubscription: Subscription | null;
+    private pendingMoveSubscription?: Subscription | null;
 
     private hasWarnedOnDragContainer = false;
 
@@ -602,6 +611,10 @@ export class KbqListSelection<T = any>
 
     constructor() {
         this.destroyRef.onDestroy(() => (this.destroyed = true));
+
+        // Over `navigableOptions`, which stays empty until the content is initialized. The orientation follows the
+        // `horizontal` input, so it is set once the content is initialized.
+        this.keyManager = new FocusKeyManager<KbqListOption<T>>(this.navigableOptions).withTypeAhead();
 
         // Single selection until the `multiple` input says otherwise. A model has to exist this early
         // because `KbqListOption.setSelected` refuses to touch the selection without one, and a static
@@ -823,7 +836,7 @@ export class KbqListSelection<T = any>
 
         this.pendingValueReport = true;
 
-        Promise.resolve().then(() => {
+        void Promise.resolve().then(() => {
             this.pendingValueReport = false;
 
             if (!this.destroyed) {
@@ -853,8 +866,7 @@ export class KbqListSelection<T = any>
 
     ngAfterContentInit(): void {
         this.contentReady = true;
-        this.keyManager = new FocusKeyManager<KbqListOption<T>>(this.navigableOptions)
-            .withTypeAhead()
+        this.keyManager
             .withVerticalOrientation(!this.horizontal())
             .withHorizontalOrientation(this.horizontal() ? 'ltr' : null);
 
@@ -1039,7 +1051,7 @@ export class KbqListSelection<T = any>
         const anchor = options[fromIndex];
 
         // The row carries no selection of its own, so a range anchored on it has no state to apply.
-        if (this.isSelectAllRow(anchor)) {
+        if (!anchor || this.isSelectAllRow(anchor)) {
             return;
         }
 
@@ -1109,11 +1121,11 @@ export class KbqListSelection<T = any>
             const focusedIndex = this.keyManager.activeItemIndex;
 
             if (focusedIndex != null && this.isValidIndex(focusedIndex)) {
-                const focusedOption: KbqListOption<T> = this.navigableOptions.toArray()[focusedIndex];
+                const focusedOption = this.navigableOptions.toArray()[focusedIndex];
 
                 // The row holds no selection of its own, so `toggle()` would be a no-op on it. Space and
                 // Enter have to reach the batch toggle instead, exactly as a click on the row does.
-                if (this.isSelectAllRow(focusedOption)) {
+                if (focusedOption && this.isSelectAllRow(focusedOption)) {
                     this.toggleSelectAll();
 
                     return;
@@ -1265,7 +1277,7 @@ export class KbqListSelection<T = any>
 
         // Defer setting the value in order to avoid the "Expression
         // has changed after it was checked" errors from Angular.
-        Promise.resolve().then(() => {
+        void Promise.resolve().then(() => {
             this.pendingSelectionInit = false;
 
             // `options` is a content query: the comparator effect can reach this before it has settled.
@@ -1575,11 +1587,8 @@ export class KbqListSelection<T = any>
 
         // The gap sits before the first option, or right after the one that precedes it. An empty list
         // has no options to measure, so the indicator goes to the top of its content box.
-        let boundary = startOf(container);
-
-        if (rects.length) {
-            boundary = index === 0 ? startOf(rects[0]) : endOf(rects[index - 1]);
-        }
+        const previous = rects[index - 1];
+        const boundary = previous ? endOf(previous) : startOf(rects[0] ?? container);
 
         this.dropIndex = index;
         this.dropIndicatorOffset.set(boundary - startOf(container) + scrolled);
@@ -2053,7 +2062,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
         // available options. Also it can happen that the ControlValueAccessor has an initial value
         // that should be used instead. Deferring the value change report to the next tick ensures
         // that the form control value is not being overwritten.
-        Promise.resolve().then(() => {
+        void Promise.resolve().then(() => {
             if (this._selected || wasSelected) {
                 this.setSelected(true);
             }
@@ -2072,7 +2081,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
         if (this.selected) {
             // We have to delay this until the next tick in order
             // to avoid changed after checked errors.
-            Promise.resolve().then(() => this.setSelected(false));
+            void Promise.resolve().then(() => this.setSelected(false));
         }
 
         this.listSelection.removeOptionFromList(this);
@@ -2197,7 +2206,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
 
             this.onFocus.next({ option: this });
 
-            Promise.resolve().then(() => (this.hasFocus = true));
+            void Promise.resolve().then(() => (this.hasFocus = true));
         });
     }
 

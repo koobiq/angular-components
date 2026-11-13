@@ -19,10 +19,8 @@ export class DocsIconItems {
     sizes: Set<number> = new Set();
 
     constructor(ICONS: KbqIconsMetadata) {
-        this.allIcons = Object.keys(ICONS).map((id) => {
-            const { codepoint, tags, description } = ICONS[id];
-
-            const size = parseInt(id.split('_')[1]);
+        this.allIcons = Object.entries(ICONS).map(([id, { codepoint, tags, description }]) => {
+            const size = parseInt(id.split('_')[1] ?? '');
 
             this.sizes.add(size);
 

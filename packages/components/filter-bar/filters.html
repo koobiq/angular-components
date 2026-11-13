@@ -7,14 +7,15 @@
     kbq-title
     kbqFilterBarButton
     kbqPopover
+    type="button"
+    kbqPopoverClass="kbq-filters__save-as-new-filter-popover"
+    kbqTrigger="manual"
     [kbqDropdownTriggerFor]="savedFilters"
     [kbqPopoverArrow]="false"
     [kbqPopoverOffset]="popoverOffset"
-    [kbqPopoverClass]="'kbq-filters__save-as-new-filter-popover'"
     [kbqPopoverPlacement]="placements.BottomLeft"
     [kbqPopoverPlacementPriority]="[placements.BottomLeft, placements.TopLeft]"
     [kbqPopoverSize]="popoverSize"
-    [kbqTrigger]="'manual'"
     [disabled]="savePopover.isSaving"
     [class.kbq-active]="focusedElementBeforeIs(mainButton) && opened"
     (dropdownClosed)="searchControl.setValue('')"
@@ -22,7 +23,7 @@
 >
     <span #kbqTitleText class="kbq-filters__filter-name">
         @if (filter?.name) {
-            {{ filter!.name }}
+            {{ filter?.name }}
         } @else {
             <ng-content>
                 <i kbq-icon="kbq-list_16"></i>
@@ -35,10 +36,11 @@
 @if (filterBar.isChanged() && !filterBar.isSaved()) {
     <button
         #saveNewFilterButton
-        kbqTooltip="{{ strings.saveNewFilterTooltip }}"
         kbq-button
         kbqFilterBarButton
+        type="button"
         class="kbq-button_action"
+        [kbqTooltip]="strings.saveNewFilterTooltip"
         [attr.aria-label]="strings.saveNewFilterTooltip"
         [class.kbq-active]="focusedElementBeforeIs(saveNewFilterButton) && opened"
         [disabled]="savePopover.isSaving"
@@ -53,6 +55,7 @@
         #filterActionsButton
         kbq-button
         kbqFilterBarButton
+        type="button"
         class="kbq-button_action"
         [attr.aria-label]="strings.actionsTooltip"
         [kbqDropdownTriggerFor]="filterActions"
@@ -63,7 +66,7 @@
         <i kbq-icon="kbq-ellipsis-vertical_16" aria-hidden="true"></i>
     </button>
 
-    <i kbq-icon="kbq-chevron-right-s_16" class="kbq-filter-bar__arrow" [color]="'theme'"></i>
+    <i kbq-icon="kbq-chevron-right-s_16" class="kbq-filter-bar__arrow" color="theme"></i>
 } @else {
     <kbq-divider class="kbq-filter-bar__separator" [vertical]="true" />
 }
@@ -75,9 +78,9 @@
 
             <input
                 #search
-                placeholder="{{ strings.searchPlaceholder }}"
                 autocomplete="off"
                 kbqInput
+                [placeholder]="strings.searchPlaceholder"
                 [attr.aria-label]="strings.searchPlaceholder"
                 [formControl]="searchControl"
                 (click)="stopEventPropagation($event)"
@@ -92,13 +95,14 @@
             <button
                 kbq-dropdown-item
                 kbq-title
+                type="button"
                 [class.kbq-selected]="filterBar.filter()?.name === filter.name"
                 (click)="selectFilter(filter)"
             >
                 {{ filter.name }}
             </button>
         } @empty {
-            <button kbq-dropdown-item [disabled]="true">
+            <button kbq-dropdown-item type="button" [disabled]="true">
                 {{ strings.searchEmptyResult }}
             </button>
         }
@@ -106,7 +110,7 @@
         <kbq-divider />
     </div>
 
-    <button kbq-dropdown-item (click)="savePopover.openSaveAsNewFilterPopover()">
+    <button kbq-dropdown-item type="button" (click)="savePopover.openSaveAsNewFilterPopover()">
         <i kbq-icon="kbq-plus_16"></i>
         {{ strings.saveAsNewFilter }}
     </button>
@@ -116,6 +120,7 @@
     @if (filterBar.isSavedAndChanged() && !filterBar.isReadOnly()) {
         <button
             kbq-dropdown-item
+            type="button"
             [class]="{ 'kbq-button_changed-saved-filter': filterBar.isSavedAndChanged() }"
             (click)="saveChanges()"
         >
@@ -126,13 +131,13 @@
             }
         </button>
     }
-    <button kbq-dropdown-item (click)="savePopover.openSaveAsNewFilterPopover()">
+    <button kbq-dropdown-item type="button" (click)="savePopover.openSaveAsNewFilterPopover()">
         <i kbq-icon="kbq-plus_16"></i>
         {{ strings.saveAsNewButton }}
     </button>
 
     @if (!filterBar.isReadOnly()) {
-        <button kbq-dropdown-item (click)="savePopover.openChangeFilterNamePopover()">
+        <button kbq-dropdown-item type="button" (click)="savePopover.openChangeFilterNamePopover()">
             <i kbq-icon="kbq-pencil_16"></i>
             {{ strings.change }}
         </button>
@@ -143,13 +148,13 @@
     }
 
     @if (filterBar.isSavedAndChanged()) {
-        <button kbq-dropdown-item (click)="resetFilterChanges()">
+        <button kbq-dropdown-item type="button" (click)="resetFilterChanges()">
             <i kbq-icon="kbq-circle-xmark_16"></i>
             {{ strings.resetChanges }}
         </button>
     }
     @if (!filterBar.isReadOnly()) {
-        <button kbq-dropdown-item (click)="removeFilter()">
+        <button kbq-dropdown-item type="button" (click)="removeFilter()">
             <i kbq-icon="kbq-trash_16"></i>
             {{ strings.remove }}
         </button>

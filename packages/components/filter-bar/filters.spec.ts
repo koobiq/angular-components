@@ -1,17 +1,17 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ChangeDetectorRef, Component, DebugElement, effect, ElementRef, inject, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChangeDetectorRef, Component, type DebugElement, effect, ElementRef, inject, viewChild } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqButton } from '@koobiq/components/button';
 import { enUSLocaleData, KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import {
     KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
-    KbqFilter,
+    type KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
     KbqFilters,
-    KbqPipe,
-    KbqPipeTemplate,
+    type KbqPipe,
+    type KbqPipeTemplate,
     KbqPipeTypes,
     KbqSaveFilterStatuses
 } from '@koobiq/components/filter-bar';

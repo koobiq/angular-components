@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { NavigationError, provideRouter, Router } from '@angular/router';
-import { KBQ_WINDOW } from '@koobiq/components/core';
 import type { Mock } from 'vitest';
+import { KBQ_WINDOW } from '@koobiq/components/core';
 import { docsReloadOnChunkLoadError } from './chunk-load-error';
 
 const TARGET_URL = '/en/components/button/overview';

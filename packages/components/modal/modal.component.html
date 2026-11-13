@@ -1,3 +1,4 @@
+<!-- eslint-disable @angular-eslint/template/no-autofocus -- the dialog moves the focus to the element marked autofocus when it opens -->
 <!-- Compatible: the <ng-content> can appear only once -->
 <ng-template #tplOriginContent>
     <ng-content />
@@ -8,16 +9,18 @@
 <div [attr.inert]="inert ? '' : null">
     @if (isMaskEnabled()) {
         <div
-            class="kbq-modal-mask {{ maskAnimationClasses() }}"
+            class="kbq-modal-mask"
+            [class]="maskAnimationClasses()"
             [class.kbq-modal-mask-hidden]="hidden"
             [style]="kbqMaskStyle()"
         ></div>
     }
 
     <div
-        class="kbq-modal-wrap {{ kbqWrapClassName() }}"
+        class="kbq-modal-wrap"
         kbqScrollbarViewport
         tabindex="-1"
+        [class]="kbqWrapClassName()"
         [style.display]="hidden ? 'none' : ''"
         (mousedown)="onClickMask($event)"
     >
@@ -63,7 +66,7 @@
         @if (contentKind() !== 'component') {
             @switch (contentKind()) {
                 @case ('template') {
-                    <ng-container [ngTemplateOutlet]="$any(kbqContent())" />
+                    <ng-container [ngTemplateOutlet]="contentTemplate()" />
                 }
                 @case ('string') {
                     <div [innerHTML]="kbqContent()"></div>
@@ -85,7 +88,7 @@
                     <div class="kbq-modal-title" kbq-title [attr.id]="titleId">
                         @switch (titleKind()) {
                             @case ('template') {
-                                <ng-container [ngTemplateOutlet]="$any(kbqTitle())" />
+                                <ng-container [ngTemplateOutlet]="titleTemplate()" />
                             }
                             @case ('string') {
                                 <div [innerHTML]="kbqTitle()"></div>
@@ -97,7 +100,7 @@
                     <div class="kbq-modal-caption" kbq-title [attr.id]="captionId">
                         @switch (captionKind()) {
                             @case ('template') {
-                                <ng-container [ngTemplateOutlet]="$any(kbqCaption())" />
+                                <ng-container [ngTemplateOutlet]="captionTemplate()" />
                             }
                             @case ('string') {
                                 <div [innerHTML]="kbqCaption()"></div>
@@ -111,8 +114,8 @@
                     kbq-button
                     type="button"
                     class="kbq-modal-close kbq-button_transparent"
+                    color="contrast"
                     [attr.aria-label]="a11yLocaleConfiguration().close"
-                    [color]="'contrast'"
                     (click)="onClickCloseBtn()"
                 >
                     <i kbq-icon="kbq-xmark_16" [color]="componentColors.Contrast"></i>
@@ -133,20 +136,21 @@
         <div class="kbq-modal-footer" [kbqOverflowShadowBottom]="modalBodyOverflow">
             @switch (footerKind()) {
                 @case ('template') {
-                    <ng-container [ngTemplateOutlet]="$any(footer())" />
+                    <ng-container [ngTemplateOutlet]="footerTemplate()" />
                 }
                 @case ('string') {
                     <div [innerHTML]="footer()"></div>
                 }
                 @case ('buttons') {
-                    @for (button of $any(footer()); track button) {
+                    @for (button of footerButtons(); track button) {
                         @if (getButtonCallableProp(button, 'show')) {
                             <button
                                 kbq-button
+                                type="button"
                                 [attr.autofocus]="button.autoFocus ? '' : null"
                                 [attr.kbq-modal-main-action]="button.kbqModalMainAction ? '' : null"
                                 [class.kbq-progress]="getButtonCallableProp(button, 'loading')"
-                                [color]="button.type"
+                                [color]="buttonColor(button)"
                                 [disabled]="!!getButtonCallableProp(button, 'disabled')"
                                 (click)="onButtonClick(button)"
                             >
@@ -159,6 +163,7 @@
                     @if (kbqOkText()) {
                         <button
                             kbq-button
+                            type="button"
                             [attr.autofocus]="true"
                             [class.kbq-progress]="loading('ok')"
                             [color]="componentColors.Contrast"
@@ -168,7 +173,12 @@
                         </button>
                     }
                     @if (kbqCancelText()) {
-                        <button kbq-button [class.kbq-progress]="loading('cancel')" (click)="onClickOkCancel('cancel')">
+                        <button
+                            kbq-button
+                            type="button"
+                            [class.kbq-progress]="loading('cancel')"
+                            (click)="onClickOkCancel('cancel')"
+                        >
                             {{ kbqCancelText() }}
                         </button>
                     }
@@ -195,6 +205,7 @@
             @if (kbqOkText()) {
                 <button
                     kbq-button
+                    type="button"
                     [attr.autofocus]="true"
                     [class.kbq-progress]="loading('ok')"
                     [color]="kbqOkType()"
@@ -204,7 +215,12 @@
                 </button>
             }
             @if (kbqCancelText()) {
-                <button kbq-button [class.kbq-progress]="loading('cancel')" (click)="onClickOkCancel('cancel')">
+                <button
+                    kbq-button
+                    type="button"
+                    [class.kbq-progress]="loading('cancel')"
+                    (click)="onClickOkCancel('cancel')"
+                >
                     {{ kbqCancelText() }}
                 </button>
             }

@@ -11,7 +11,7 @@ import { KbqThemeService } from '@koobiq/components/core';
     template: `
         <div class="theme-css-variables-example__card">
             <p class="theme-css-variables-example__caption">Current theme: {{ themeService.colorScheme() }}</p>
-            <button kbq-button (click)="themeService.toggle()">Switch theme</button>
+            <button kbq-button type="button" (click)="themeService.toggle()">Switch theme</button>
         </div>
     `,
     styles: `

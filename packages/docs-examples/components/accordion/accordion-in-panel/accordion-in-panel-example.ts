@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, TemplateRef, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, type TemplateRef, viewChild } from '@angular/core';
 import { KbqAccordionModule } from '@koobiq/components/accordion';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
@@ -14,7 +14,7 @@ import {
 @Component({
     selector: 'accordion-in-panel-example',
     imports: [KbqAccordionModule, KbqSidepanelModule, KbqButtonModule],
-    templateUrl: 'accordion-in-panel-example.html',
+    templateUrl: './accordion-in-panel-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionInPanelExample {

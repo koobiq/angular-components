@@ -11,7 +11,7 @@ import { KbqInputModule } from '@koobiq/components/input';
         KbqFormsModule
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

@@ -77,7 +77,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                             class="layout-flex layout-row layout-gap-xxs"
                             style="flex-wrap: wrap"
                         >
-                            @if (form.controls.selectMultiple.value!.length > 0) {
+                            @if (form.controls.selectMultiple.value?.length) {
                                 @for (badge of form.controls.selectMultiple.value; track badge) {
                                     <kbq-badge>{{ badge }}</kbq-badge>
                                 }

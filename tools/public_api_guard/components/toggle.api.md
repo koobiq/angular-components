@@ -23,6 +23,9 @@ import { TransitionCheckState } from '@koobiq/components/core';
 
 // @public
 export class KbqToggleChange {
+    constructor(
+    source: KbqToggleComponent,
+    checked: boolean);
     checked: boolean;
     source: KbqToggleComponent;
 }

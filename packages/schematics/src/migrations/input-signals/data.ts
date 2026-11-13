@@ -1,4 +1,4 @@
-import { WarnPattern } from '../../utils/warn-only-migration';
+import type { WarnPattern } from '../../utils/warn-only-migration';
 
 /**
  * Data for the `input-signals` migration.

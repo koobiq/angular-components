@@ -2,28 +2,28 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInput, KbqInputModule } from '@koobiq/components/input';
+import { type KbqInput, KbqInputModule } from '@koobiq/components/input';
 import {
     FlatTreeControl,
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
     KbqTreeModule,
-    KbqTreeOption
+    type KbqTreeOption
 } from '@koobiq/components/tree';
-import { KbqTreeSelect, KbqTreeSelectChange, KbqTreeSelectModule } from '@koobiq/components/tree-select';
+import { type KbqTreeSelect, type KbqTreeSelectChange, KbqTreeSelectModule } from '@koobiq/components/tree-select';
 
 export class FileNode {
-    children: FileNode[];
-    name: string;
+    children?: FileNode[];
+    name = '';
     type: any;
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-    name: string;
+    name = '';
     type: any;
-    level: number;
-    expandable: boolean;
+    level = 0;
+    expandable = false;
     parent: any;
 }
 
@@ -193,7 +193,7 @@ export class TreeSelectCustomMatcherWithInputExample {
         console.log('input.focus();: ');
     }
 
-    handleKeydown(event, treeSelect: KbqTreeSelect) {
+    handleKeydown(event: KeyboardEvent, treeSelect: KbqTreeSelect) {
         console.log('handleKeydown: ', event);
 
         if (!treeSelect.disabled()) {
@@ -229,7 +229,7 @@ export class TreeSelectCustomMatcherWithInputExample {
         return node.expandable;
     };
 
-    private getChildren = (node: FileNode): FileNode[] => {
+    private getChildren = (node: FileNode): FileNode[] | undefined => {
         return node.children;
     };
 

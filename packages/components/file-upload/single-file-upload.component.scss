@@ -1,7 +1,7 @@
-@use '../core/styles/common/tokens' as *;
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/tokens';
+@use '../core/styles/common/squircle';
 
-@mixin _kbq-single-file-upload-theme() {
+@mixin -kbq-single-file-upload-theme() {
     background-color: var(--kbq-file-upload-single-default-container-background);
     border-color: var(--kbq-file-upload-single-default-container-border) !important;
 
@@ -80,11 +80,11 @@
 
     &.kbq-single-file-upload_selected .kbq-file-upload {
         .kbq-file-item {
-            padding: kbq-difference-series-css-variables(
+            padding: tokens.kbq-difference-series-css-variables(
                     [ file-upload-size-single-container-padding-vertical,
                     file-upload-size-single-container-border-width]
                 )
-                kbq-difference-series-css-variables(
+                tokens.kbq-difference-series-css-variables(
                     [ file-upload-size-single-container-padding-horizontal,
                     file-upload-size-single-container-border-width]
                 );
@@ -108,7 +108,7 @@
     .kbq-file-upload {
         min-height: var(--kbq-file-upload-single-min-height);
 
-        @include kbq-squircle(var(--kbq-file-upload-size-single-container-border-radius));
+        @include squircle.kbq-squircle(var(--kbq-file-upload-size-single-container-border-radius));
         border-width: var(--kbq-file-upload-size-single-container-border-width);
         border-style: dashed;
 
@@ -145,6 +145,6 @@
             padding: var(--kbq-file-upload-size-single-action-padding);
         }
 
-        @include _kbq-single-file-upload-theme();
+        @include -kbq-single-file-upload-theme();
     }
 }

@@ -1,5 +1,5 @@
 import { escapeRegExp, kbqResolveTimezoneOffset } from '@koobiq/components/core';
-import { KbqTimezoneGroup, KbqTimezonesByCountry, KbqTimezoneZone } from './timezone.models';
+import type { KbqTimezoneGroup, KbqTimezonesByCountry, KbqTimezoneZone } from './timezone.models';
 
 const minusUnicode = 0x2212; // Minus Sign U+2212
 
@@ -65,11 +65,12 @@ export function getZonesGroupedByCountry(data: readonly KbqTimezoneZone[]): KbqT
     }, {});
 
     return Object.values(byCountry)
-        .map<KbqTimezoneGroup>((zones: KbqTimezoneZone[]) => ({
-            countryCode: zones[0].countryCode,
-            countryName: zones[0].countryName,
-            zones: sortZonesByOffset(zones)
-        }))
+        .map<KbqTimezoneGroup>((zones: KbqTimezoneZone[]) => {
+            // A group is created together with its first zone.
+            const { countryCode, countryName } = zones[0]!;
+
+            return { countryCode, countryName, zones: sortZonesByOffset(zones) };
+        })
         .sort((first, second) => first.countryName.localeCompare(second.countryName));
 }
 
@@ -87,10 +88,11 @@ export function promoteCountry(
     countryCode: string | null | undefined
 ): KbqTimezoneGroup[] {
     const index = countryCode ? groups.findIndex((group) => isCountry(group, countryCode)) : -1;
+    const group = groups[index];
 
-    if (index < 1) return [...groups];
+    if (index < 1 || !group) return [...groups];
 
-    return [groups[index], ...groups.slice(0, index), ...groups.slice(index + 1)];
+    return [group, ...groups.slice(0, index), ...groups.slice(index + 1)];
 }
 
 /**

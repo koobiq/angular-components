@@ -1,15 +1,15 @@
-import { FocusableOption, FocusKeyManager } from '@angular/cdk/a11y';
-import { Direction, Directionality } from '@angular/cdk/bidi';
+import { type FocusableOption, FocusKeyManager } from '@angular/cdk/a11y';
+import { type Direction, Directionality } from '@angular/cdk/bidi';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { ENTER, hasModifierKey, SPACE } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { normalizePassiveListenerOptions, Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
 import {
-    AfterContentChecked,
-    AfterContentInit,
+    type AfterContentChecked,
+    type AfterContentInit,
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectorRef,
     DestroyRef,
@@ -20,14 +20,25 @@ import {
     Injector,
     input,
     NgZone,
-    OnChanges,
-    OnDestroy,
-    QueryList,
+    type OnChanges,
+    type OnDestroy,
+    type QueryList,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     untracked
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+    auditTime,
+    debounceTime,
+    fromEvent,
+    merge,
+    of as observableOf,
+    ReplaySubject,
+    Subject,
+    takeUntil,
+    timer
+} from 'rxjs';
 import {
     DOWN_ARROW,
     END,
@@ -42,8 +53,6 @@ import {
     UP_ARROW
 } from '@koobiq/components/core';
 import { KBQ_SCROLLBAR_OPTIONS, type KbqScrollbarMode, type KbqScrollbarViewport } from '@koobiq/components/scrollbar';
-import { fromEvent, merge, of as observableOf, ReplaySubject, Subject, timer } from 'rxjs';
-import { auditTime, debounceTime, takeUntil } from 'rxjs/operators';
 
 /** Config used to bind passive event listeners */
 const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: true }) as EventListenerOptions;
@@ -243,13 +252,13 @@ export abstract class KbqPaginatedTabHeader
      * The number of tab labels that are displayed on the header. When this changes, the header
      * should re-evaluate the scroll position.
      */
-    private tabLabelCount: number;
+    private tabLabelCount?: number;
 
     /** Used to manage focus between the tabs. */
-    private keyManager: FocusKeyManager<KbqPaginatedTabHeaderItem>;
+    private keyManager?: FocusKeyManager<KbqPaginatedTabHeaderItem>;
 
     /** Cached text content of the header. */
-    private currentTextContent: string;
+    private currentTextContent?: string;
 
     /** Stream that will stop the automated scrolling. */
     private stopScrolling = new Subject<void>();
@@ -511,11 +520,12 @@ export abstract class KbqPaginatedTabHeader
             this.changeDetectorRef.markForCheck();
         };
 
-        this.keyManager = new FocusKeyManager<KbqPaginatedTabHeaderItem>(this.items).withHorizontalOrientation(
+        const keyManager = new FocusKeyManager<KbqPaginatedTabHeaderItem>(this.items).withHorizontalOrientation(
             this.getLayoutDirection()
         );
 
-        this.keyManager.updateActiveItem(this.selectedIndex);
+        this.keyManager = keyManager;
+        keyManager.updateActiveItem(this.selectedIndex);
 
         // Defer the first call in order to allow for slower browsers to lay out the elements.
         // This helps in cases where the user lands directly on a page with paginated tabs.
@@ -535,13 +545,13 @@ export abstract class KbqPaginatedTabHeader
                 // because the direction change handler can run outside of Angular.
                 this.ngZone.run(() => Promise.resolve().then(realign));
 
-                this.keyManager.withHorizontalOrientation(this.getLayoutDirection());
+                keyManager.withHorizontalOrientation(this.getLayoutDirection());
             });
 
         // If there is a change in the focus key manager we need to emit the `indexFocused`
         // event in order to provide a public event that notifies about focus changes. Also we realign
         // the tabs container by scrolling the new focused tab into the visible section.
-        this.keyManager.change.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((newFocusIndex) => {
+        keyManager.change.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((newFocusIndex) => {
             // `change` only fires for deliberate focus moves (`setActiveItem`), never for the
             // bookkeeping `updateActiveItem` the `selectedIndex` setter does — which is exactly the
             // distinction `focusedItemIndex` has to preserve.
@@ -614,17 +624,17 @@ export abstract class KbqPaginatedTabHeader
         const key = event.keyCode;
 
         if (key === HOME) {
-            this.keyManager.setFirstItemActive();
+            this.keyManager?.setFirstItemActive();
         } else if (key === END) {
-            this.keyManager.setLastItemActive();
+            this.keyManager?.setLastItemActive();
         } else if (key === UP_ARROW && this.vertical) {
-            this.keyManager.setPreviousItemActive();
+            this.keyManager?.setPreviousItemActive();
         } else if (key === DOWN_ARROW && this.vertical) {
-            this.keyManager.setNextItemActive();
+            this.keyManager?.setNextItemActive();
         } else if (key === RIGHT_ARROW && !this.vertical) {
-            this.keyManager.setNextItemActive();
+            this.keyManager?.setNextItemActive();
         } else if (key === LEFT_ARROW && !this.vertical) {
-            this.keyManager.setPreviousItemActive();
+            this.keyManager?.setPreviousItemActive();
         } else if ([ENTER, SPACE].includes(key)) {
             this.selectFocusedIndex.emit(this.focusIndex);
         }
@@ -686,9 +696,9 @@ export abstract class KbqPaginatedTabHeader
      * scrolling is enabled.
      */
     setTabFocus(tabIndex: number) {
-        if (!this.items?.length) return;
+        const item = this.items?.toArray()[tabIndex];
 
-        const item = this.items.toArray()[tabIndex];
+        if (!item) return;
 
         // Prevent the browser's own scroll-into-view behavior so the scroll-correction request
         // below is the only thing driving the scroll position.

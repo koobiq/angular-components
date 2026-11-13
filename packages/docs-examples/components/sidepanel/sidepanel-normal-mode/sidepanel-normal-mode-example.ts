@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, TemplateRef, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
+import { take } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
-import { take } from 'rxjs/operators';
 
 /**
  * @title Sidepanel normal mode
@@ -10,7 +10,7 @@ import { take } from 'rxjs/operators';
 @Component({
     selector: 'sidepanel-normal-mode-example',
     imports: [KbqSelectModule, KbqButtonModule, KbqSidepanelModule],
-    templateUrl: 'sidepanel-normal-mode-example.html',
+    templateUrl: './sidepanel-normal-mode-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelNormalModeExample {

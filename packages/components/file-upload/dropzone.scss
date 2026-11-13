@@ -1,5 +1,5 @@
 @use '../core/styles/common/animation';
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
 // `--kbq-background-overlay-theme` was dropped in @koobiq/design-tokens v4; it is now an opaque base
 // plus `--kbq-opacity-overlay`. The two are normally composed with `opacity`, which is not available
@@ -42,7 +42,7 @@
         align-items: center;
         justify-content: center;
 
-        @include kbq-squircle(var(--kbq-size-border-radius));
+        @include squircle.kbq-squircle(var(--kbq-size-border-radius));
         border: var(--kbq-size-border-width) dashed var(--kbq-dropzone-border-color);
         background-color: var(--kbq-dropzone-component-background);
 

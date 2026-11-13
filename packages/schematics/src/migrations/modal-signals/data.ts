@@ -16,7 +16,7 @@
  * context — an option object and an `[kbqOnOk]` input binding move, a `(kbqOnOk)` listener does not.
  */
 
-import { SignalMembersConfig } from '../../utils/signal-members-migration';
+import type { SignalMembersConfig } from '../../utils/signal-members-migration';
 
 /** Import specifier that marks a file as a modal consumer. */
 export const MODAL_PACKAGE = '@koobiq/components/modal';

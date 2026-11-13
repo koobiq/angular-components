@@ -1,6 +1,6 @@
 @use '../core/styles/common/animation';
-@use './toast-theme' as *;
-@use '../core/styles/common/squircle' as *;
+@use './toast-theme';
+@use '../core/styles/common/squircle';
 
 .kbq-toast {
     display: flex;
@@ -10,7 +10,7 @@
 
     height: auto;
 
-    @include kbq-squircle(var(--kbq-toast-size-container-border-radius));
+    @include squircle.kbq-squircle(var(--kbq-toast-size-container-border-radius));
 
     padding-left: var(--kbq-toast-size-container-padding-left);
     padding-right: var(--kbq-toast-size-container-padding-right);
@@ -138,5 +138,5 @@
     }
 }
 
-@include kbq-toast-theme();
-@include kbq-toast-typography();
+@include toast-theme.kbq-toast-theme();
+@include toast-theme.kbq-toast-typography();

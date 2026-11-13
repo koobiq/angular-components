@@ -1,7 +1,7 @@
 import { afterNextRender, ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import { ErrorStateMatcher, KbqComponentColors, kbqInjectNativeElement } from '@koobiq/components/core';
+import { type ErrorStateMatcher, KbqComponentColors, kbqInjectNativeElement } from '@koobiq/components/core';
 import { KbqError, KbqHint } from '@koobiq/components/form-field';
 
 @Component({

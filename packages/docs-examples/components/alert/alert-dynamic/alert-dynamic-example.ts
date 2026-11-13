@@ -19,15 +19,15 @@ import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
         KbqIconButton
     ],
     template: `
-        <button #trigger kbq-button (click)="visible.set(true)">Show alert</button>
+        <button #trigger kbq-button type="button" (click)="visible.set(true)">Show alert</button>
 
         @if (visible()) {
             <!-- role="alert" makes assistive technology announce the alert when it is inserted. -->
             <kbq-alert
                 class="layout-margin-top-m"
                 role="alert"
-                [alertColor]="'error'"
-                [alertStyle]="'colored'"
+                alertColor="error"
+                alertStyle="colored"
                 [compact]="true"
                 (closed)="dismiss()"
             >
@@ -35,6 +35,7 @@ import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
                 Failed to save changes. Please try again.
                 <button
                     kbq-alert-close-button
+                    type="button"
                     kbq-icon-button="kbq-xmark-s_16"
                     aria-label="Close"
                     [color]="colors.ContrastFade"

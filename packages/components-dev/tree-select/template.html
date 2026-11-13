@@ -10,8 +10,8 @@
             [disabled]="disabledState"
             [formControl]="control"
             [multiple]="true"
-            (closed)="closed($event)"
-            (opened)="opened($event)"
+            (closed)="closed()"
+            (opened)="opened()"
             (openedChange)="openedChange($event)"
             (selectionChange)="onSelectionChange($event)"
         >
@@ -61,8 +61,8 @@
             [disabled]="disabledState"
             [formControl]="control"
             [multiple]="true"
-            (closed)="closed($event)"
-            (opened)="opened($event)"
+            (closed)="closed()"
+            (opened)="opened()"
             (openedChange)="openedChange($event)"
             (selectionChange)="onSelectionChange($event)"
         >
@@ -110,8 +110,8 @@
             placeholder="placeholder for single tree-select"
             [disabled]="disabledState"
             [multiple]="true"
-            (closed)="closed($event)"
-            (opened)="opened($event)"
+            (closed)="closed()"
+            (opened)="opened()"
             (openedChange)="openedChange($event)"
             (selectionChange)="onSelectionChange($event)"
         >
@@ -159,8 +159,8 @@
             placeholder="placeholder for multiple tree-select"
             [disabled]="disabledState"
             [multiple]="true"
-            (closed)="closed($event)"
-            (opened)="opened($event)"
+            (closed)="closed()"
+            (opened)="opened()"
             (openedChange)="openedChange($event)"
             (selectionChange)="onSelectionChange($event)"
         >
@@ -212,8 +212,8 @@
             [disabled]="disabledState"
             [formControl]="control"
             [multiple]="true"
-            (closed)="closed($event)"
-            (opened)="opened($event)"
+            (closed)="closed()"
+            (opened)="opened()"
             (openedChange)="openedChange($event)"
             (selectionChange)="onSelectionChange($event)"
         >
@@ -269,14 +269,14 @@
             <kbq-form-field class="kbq-form__control flex-80">
                 <kbq-tree-select
                     placeholder="this is placeholder"
+                    hiddenItemsText="еще"
+                    id="select-test"
                     [disabled]="disabledState"
                     [formControl]="control"
-                    [hiddenItemsText]="'еще'"
                     [hiddenItemsTextFormatter]="hiddenItemsTextFormatter"
-                    [id]="'select-test'"
                     [multiple]="true"
-                    (closed)="closed($event)"
-                    (opened)="opened($event)"
+                    (closed)="closed()"
+                    (opened)="opened()"
                     (openedChange)="openedChange($event)"
                     (selectionChange)="onSelectionChange($event)"
                 >

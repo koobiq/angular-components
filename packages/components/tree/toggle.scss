@@ -1,5 +1,3 @@
-@use '../core/styles/common/tokens' as *;
-
 // The tree theme is emitted once, from `tree-selection.scss`. Every rule in it is scoped to
 // `.kbq-tree-selection` or `.kbq-tree-option`, and a toggle only ever renders inside one of those.
 .kbq-tree-node-toggle {

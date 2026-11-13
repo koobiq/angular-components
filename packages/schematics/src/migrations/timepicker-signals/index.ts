@@ -1,13 +1,14 @@
-import { Path } from '@angular-devkit/core';
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Path } from '@angular-devkit/core';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
-import { visitAll, Visitor } from '../../utils/ast';
+import { visitAll, type Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
+import { capturedGroups } from '../../utils/regexp';
 import { collectInlineTemplateRanges, parseTemplate } from '../../utils/typescript';
 import {
-    MigrationTarget,
+    type MigrationTarget,
     reportedMessage,
     SIGNAL_API_METHODS,
     signalQueryMessage,
@@ -18,7 +19,7 @@ import {
     UNRESOLVED_RECEIVER_MESSAGE,
     writeMessage
 } from './data';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 const LABEL = '[timepicker-signals]';
 const TS_EXT = '.ts';
@@ -670,10 +671,11 @@ class TemplateScanner implements Visitor {
             this.expressions.push({ start: span.start.offset, end: span.end.offset });
 
             // `@for (item of items; track item)` and `@if (x; as y)` introduce names of their own.
-            for (const match of String(parameter.expression ?? '').matchAll(
+            for (const name of capturedGroups(
+                String(parameter.expression ?? ''),
                 /(?:^\s*|\b(?:as|let)\s+)([A-Za-z_$][\w$]*)\s*(?:\bof\b|\bin\b|=|$)/g
             )) {
-                this.otherNames.add(match[1]);
+                this.otherNames.add(name);
             }
         }
 
@@ -734,7 +736,7 @@ class TemplateScanner implements Visitor {
         for (const match of this.template.slice(start, end).matchAll(/\{\{([\s\S]*?)\}\}/g)) {
             const from = start + match.index + 2;
 
-            this.expressions.push({ start: from, end: from + match[1].length });
+            this.expressions.push({ start: from, end: from + match[0].length - 4 });
         }
     }
 
@@ -805,8 +807,8 @@ function collectRefReportedMembers(template: string, refs: TemplateRef[], expres
         for (const ref of refs) {
             if (start < ref.start || end > ref.end || ref.target.reportedMembers.length === 0) continue;
 
-            for (const match of source.matchAll(memberAccessPattern(ref.name, ref.target.reportedMembers))) {
-                found.add(match[2]);
+            for (const member of capturedGroups(source, memberAccessPattern(ref.name, ref.target.reportedMembers), 2)) {
+                found.add(member);
             }
         }
     }

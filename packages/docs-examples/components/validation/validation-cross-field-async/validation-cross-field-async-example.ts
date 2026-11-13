@@ -1,21 +1,21 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
-    AbstractControl,
+    type AbstractControl,
     type AsyncValidatorFn,
     FormControl,
     FormGroup,
     ReactiveFormsModule,
-    ValidationErrors,
+    type ValidationErrors,
     Validators
 } from '@angular/forms';
+import { map, type Observable, of, timer } from 'rxjs';
 import {
     kbqErrorStateMatcherProvider,
     KbqFormsModule,
     ShowOnCrossFieldErrorStateMatcher
 } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
-import { map, Observable, of, timer } from 'rxjs';
 
 /**
  * Payload the cross-field validator publishes, so that the `ErrorStateMatcher` can tell which controls a
@@ -35,7 +35,7 @@ const exampleCheckOnServer = (current: string, next: string): Observable<boolean
 
 /** Asks the server whether the pair of values is acceptable. */
 const exampleAsyncRule =
-    (controls: string[], check: (values: string[]) => Observable<boolean>): AsyncValidatorFn =>
+    (controls: string[], check: (...values: string[]) => Observable<boolean>): AsyncValidatorFn =>
     (group: AbstractControl): Observable<ValidationErrors | null> => {
         const values = controls.map((name) => group.get(name)?.value);
 
@@ -45,7 +45,7 @@ const exampleAsyncRule =
             return of(null);
         }
 
-        return check(values as string[]).pipe(
+        return check(...(values as string[])).pipe(
             map((accepted) => (accepted ? null : { tooSimilar: { controls } satisfies ExampleCrossFieldError }))
         );
     };
@@ -119,9 +119,7 @@ export class ValidationCrossFieldAsyncExample {
             newPassword: new FormControl('', Validators.required)
         },
         {
-            asyncValidators: exampleAsyncRule(['currentPassword', 'newPassword'], ([current, next]) =>
-                exampleCheckOnServer(current, next)
-            ),
+            asyncValidators: exampleAsyncRule(['currentPassword', 'newPassword'], exampleCheckOnServer),
             // Without this the request would leave on every keystroke. It also means the model lags behind the
             // input until the field is left.
             updateOn: 'blur'

@@ -16,7 +16,7 @@
 
 <ng-template #toastPermanentContentTemplate>
     @if (progress) {
-        <kbq-progress-bar class="layout-margin-top-m layout-margin-bottom-m" [mode]="'indeterminate'" />
+        <kbq-progress-bar class="layout-margin-top-m layout-margin-bottom-m" mode="indeterminate" />
     } @else {
         <div>
             <span>Импорт файлов завершен</span>
@@ -30,9 +30,13 @@
 </ng-template>
 
 <div style="gap: 16px" class="layout-row">
-    <button kbq-button (click)="showDefaultToast(toastActionInfo)">По таймеру</button>
-    <button kbq-button (click)="showPermanentToast(toastPermanentContentTemplate, toastPermanentActionsTemplate)">
+    <button kbq-button type="button" (click)="showDefaultToast(toastActionInfo)">По таймеру</button>
+    <button
+        kbq-button
+        type="button"
+        (click)="showPermanentToast(toastPermanentContentTemplate, toastPermanentActionsTemplate)"
+    >
         По команде
     </button>
-    <button kbq-button (click)="showWarningToast(toastActionWarning)">Ховер или фокус</button>
+    <button kbq-button type="button" (click)="showWarningToast(toastActionWarning)">Ховер или фокус</button>
 </div>

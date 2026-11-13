@@ -1,8 +1,8 @@
-import { Component, Provider, signal, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, type Provider, signal, type Type, viewChild } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KBQ_WINDOW } from '@koobiq/components/core';
-import { KbqResizable, KbqResizer, KbqResizerDirection } from './resizer';
+import { KbqResizable, KbqResizer, type KbqResizerDirection } from './resizer';
 
 /**
  * Geometry of a resizable element whose two box models disagree: 100x50 of content, 10px of padding

@@ -4,23 +4,23 @@ import {
     computed,
     inject,
     linkedSignal,
-    TemplateRef,
+    type TemplateRef,
     viewChild
 } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateFormatter } from '@koobiq/components/core';
 import {
-    KbqFilter,
-    KbqFilterBar,
+    type KbqFilter,
+    type KbqFilterBar,
     KbqFilterBarModule,
-    KbqPipe,
-    KbqPipeTemplate,
+    type KbqPipe,
+    type KbqPipeTemplate,
     KbqPipeTypes,
-    KbqSaveFilterEvent,
+    type KbqSaveFilterEvent,
     KbqSaveFilterStatuses
 } from '@koobiq/components/filter-bar';
 import { KbqLink } from '@koobiq/components/link';
-import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
+import { type KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { injectLocalizedPeriods, injectLocalizedText } from '../localized-data';
 
 interface ExampleFilter extends KbqFilter {
@@ -116,7 +116,7 @@ export class FilterBarSavedFiltersExample {
     readonly savedFilters = computed(() => this.createSavedFilters());
 
     readonly defaultFilter = computed<KbqFilter | null>(() => this.getDefaultFilter());
-    readonly activeFilter = linkedSignal<KbqFilter | null>(() => this.createFilters()[0]);
+    readonly activeFilter = linkedSignal<KbqFilter | null>(() => this.createFilters()[0] ?? null);
 
     readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
         {
@@ -442,7 +442,7 @@ export class FilterBarSavedFiltersExample {
      * the same name above, so the bar starts with unsaved changes to demonstrate.
      */
     createSavedFilters(): KbqFilter[] {
-        const [, saveError, deleteError] = this.createFilters();
+        const [, ...filtersWithErrors] = this.createFilters();
 
         return [
             {
@@ -482,8 +482,7 @@ export class FilterBarSavedFiltersExample {
                     }
                 ]
             },
-            structuredClone(saveError),
-            structuredClone(deleteError)
+            ...structuredClone(filtersWithErrors)
         ];
     }
 

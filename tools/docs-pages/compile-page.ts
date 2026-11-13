@@ -337,9 +337,10 @@ export function compilePage(
 
         const id = attribute.value;
 
-        if (!Object.hasOwn(examples, id)) return fail(element, `there is no example "${id}" in packages/docs-examples`);
+        const example = Object.hasOwn(examples, id) ? examples[id] : undefined;
 
-        const example = examples[id];
+        if (!example) return fail(element, `there is no example "${id}" in packages/docs-examples`);
+
         const pageExamples = canRenderExampleOnServer(id, example) ? page.examples : page.browserExamples;
 
         if (!pageExamples.includes(example)) pageExamples.push(example);
@@ -489,6 +490,9 @@ export function compilePage(
             }
             case 'table': {
                 const [head, ...rows] = node.children;
+
+                if (!head) return fail(node, 'a table without rows');
+
                 const align = node.align ?? [];
                 const body = rows.length
                     ? `<tbody class="${CLASS_PREFIX}__tbody">${rows.map((row) => renderTableRow(row, 'td', align, context)).join('')}</tbody>`

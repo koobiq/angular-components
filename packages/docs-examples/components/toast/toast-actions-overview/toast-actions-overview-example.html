@@ -22,19 +22,22 @@
     </a>
 </ng-template>
 <kbq-dropdown #dropdown="kbqDropdown">
-    <button kbq-dropdown-item>Второстепенное действие 1</button>
-    <button kbq-dropdown-item>Второстепенное действие 2</button>
-    <button kbq-dropdown-item>Второстепенное действие 3</button>
-    <button kbq-dropdown-item>Второстепенное действие 4</button>
+    <button kbq-dropdown-item type="button">Второстепенное действие 1</button>
+    <button kbq-dropdown-item type="button">Второстепенное действие 2</button>
+    <button kbq-dropdown-item type="button">Второстепенное действие 3</button>
+    <button kbq-dropdown-item type="button">Второстепенное действие 4</button>
 </kbq-dropdown>
 
 <div style="gap: 16px" class="layout-row">
     <button
         kbq-button
+        type="button"
         (click)="showSingleActionToast(toastSingleActonContentTemplate, toastSingleActonActionsTemplate)"
     >
         Одно действие
     </button>
-    <button kbq-button (click)="showTwoActionToast(toastTwoActonActionsTemplate)">Два действия</button>
-    <button kbq-button (click)="showManyActionToast(toastManyActionActionsTemplate)">Много действий</button>
+    <button kbq-button type="button" (click)="showTwoActionToast(toastTwoActonActionsTemplate)">Два действия</button>
+    <button kbq-button type="button" (click)="showManyActionToast(toastManyActionActionsTemplate)">
+        Много действий
+    </button>
 </div>

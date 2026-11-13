@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
-import { KbqActionsPanel, KbqActionsPanelRef } from '@koobiq/components/actions-panel';
+import { KbqActionsPanel, type KbqActionsPanelRef } from '@koobiq/components/actions-panel';
 import { KbqButtonModule } from '@koobiq/components/button';
 
 /**
@@ -9,14 +9,26 @@ import { KbqButtonModule } from '@koobiq/components/button';
     selector: 'actions-panel-global-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="open()">open</button>
+        <button kbq-button type="button" (click)="open()">open</button>
 
         <ng-template>
-            <button color="contrast" kbq-button (click)="action('Action1')">Action 1</button>
-            <button color="contrast" kbq-button class="layout-margin-left-xxs" (click)="action('Action2')">
+            <button type="button" color="contrast" kbq-button (click)="action('Action1')">Action 1</button>
+            <button
+                type="button"
+                color="contrast"
+                kbq-button
+                class="layout-margin-left-xxs"
+                (click)="action('Action2')"
+            >
                 Action 2
             </button>
-            <button color="contrast" kbq-button class="layout-margin-left-xxs" (click)="action('Action3')">
+            <button
+                type="button"
+                color="contrast"
+                kbq-button
+                class="layout-margin-left-xxs"
+                (click)="action('Action3')"
+            >
                 Action 3
             </button>
         </ng-template>

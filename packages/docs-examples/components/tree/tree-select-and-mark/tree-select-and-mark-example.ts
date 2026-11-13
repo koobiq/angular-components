@@ -4,19 +4,19 @@ import { KbqPseudoCheckboxModule } from '@koobiq/components/core';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 
 export class FileNode {
-    children: FileNode[];
-    name: string;
-    description: string;
+    children?: FileNode[];
+    name = '';
+    description = '';
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-    name: string;
-    description: string;
-    level: number;
-    expandable: boolean;
+    name = '';
+    description = '';
+    level = 0;
+    expandable = false;
     parent: any;
-    checked: boolean;
+    checked = false;
 }
 
 /**
@@ -199,7 +199,7 @@ export class TreeSelectAndMarkExample {
         return node.expandable;
     };
 
-    private getChildren = (node: FileNode): FileNode[] => {
+    private getChildren = (node: FileNode): FileNode[] | undefined => {
         return node.children;
     };
 

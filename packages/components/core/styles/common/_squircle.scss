@@ -8,7 +8,7 @@
 // dividing a length by a length, which some browsers that support `corner-shape` cannot do. Browsers without
 // `corner-shape` keep the radius as given.
 
-@function _kbq-squircle-corner($radius) {
+@function -kbq-squircle-corner($radius) {
     @if meta.type-of($radius) == number {
         @if math.is-unitless($radius) and $radius == 0 {
             @return $radius;
@@ -29,7 +29,7 @@
     $result: ();
 
     @each $value in $radius {
-        $result: list.append($result, _kbq-squircle-corner($value), space);
+        $result: list.append($result, -kbq-squircle-corner($value), space);
     }
 
     @return $result;

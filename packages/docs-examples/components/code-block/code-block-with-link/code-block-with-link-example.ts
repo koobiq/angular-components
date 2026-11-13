@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
-    KbqCodeBlockFile,
+    type KbqCodeBlockFile,
     kbqCodeBlockHighlightJsConfigProvider,
     KbqCodeBlockModule
 } from '@koobiq/components/code-block';

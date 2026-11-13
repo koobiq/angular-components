@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
-import { AbstractControl, FormGroupDirective, FormsModule, NgForm } from '@angular/forms';
-import { ErrorStateMatcher, KbqOptgroup, KbqSelectFooter, KbqSelectSearch } from '@koobiq/components/core';
+import { type AbstractControl, type FormGroupDirective, FormsModule, type NgForm } from '@angular/forms';
+import { type ErrorStateMatcher, KbqOptgroup, KbqSelectFooter, KbqSelectSearch } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import {
     getZonesGroupedByCountry,
-    KbqTimezoneGroup,
+    type KbqTimezoneGroup,
     KbqTimezoneModule,
-    KbqTimezoneZone
+    type KbqTimezoneZone
 } from '@koobiq/components/timezone';
 
 // prettier-ignore
@@ -29,6 +29,15 @@ class BaseTimezoneStates {
     selected = 'Europe/Kaliningrad';
 
     data: KbqTimezoneGroup[];
+
+    // The panel states show zones the fixture is known to have
+    protected zone(group: KbqTimezoneGroup, index: number): KbqTimezoneZone {
+        const zone = group.zones[index];
+
+        if (!zone) throw new Error(`The fixture has no zone ${index} in ${group.countryName}`);
+
+        return zone;
+    }
 
     constructor() {
         const zones: KbqTimezoneZone[] = timezones.map(({ associatedZones, ...zone }) => ({
@@ -74,7 +83,7 @@ class BaseTimezoneStates {
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-timezone-select [placeholder]="'Empty timezone'" />
+            <kbq-timezone-select placeholder="Empty timezone" />
         </kbq-form-field>
 
         <kbq-form-field>
@@ -134,18 +143,18 @@ export class E2eTimezoneStates extends BaseTimezoneStates {
     ],
     template: `
         <kbq-form-field>
-            <kbq-timezone-select data-testid="e2eTimezoneSelect" [panelClass]="'custom-select-panel'">
+            <kbq-timezone-select data-testid="e2eTimezoneSelect" panelClass="custom-select-panel">
                 @for (group of data; track group) {
                     <kbq-optgroup class="cdk-keyboard-focused" [label]="group.countryName">
-                        <kbq-timezone-option [timezone]="group.zones[0]" />
+                        <kbq-timezone-option [timezone]="zone(group, 0)" />
 
-                        <kbq-timezone-option class="kbq-active" [timezone]="group.zones[2]" />
+                        <kbq-timezone-option class="kbq-active" [timezone]="zone(group, 2)" />
 
-                        <kbq-timezone-option class="kbq-selected" [timezone]="group.zones[3]" />
+                        <kbq-timezone-option class="kbq-selected" [timezone]="zone(group, 3)" />
 
-                        <kbq-timezone-option [disabled]="true" [timezone]="group.zones[4]" />
+                        <kbq-timezone-option [disabled]="true" [timezone]="zone(group, 4)" />
 
-                        <kbq-timezone-option class="kbq-active kbq-selected" [timezone]="group.zones[6]" />
+                        <kbq-timezone-option class="kbq-active kbq-selected" [timezone]="zone(group, 6)" />
                     </kbq-optgroup>
                 }
             </kbq-timezone-select>
@@ -317,7 +326,7 @@ export class E2eTimezoneScrollbarNoOverflow extends BaseTimezoneStates {
     constructor() {
         super();
 
-        this.data = [{ ...this.data[0], zones: this.data[0].zones.slice(0, 3) }];
+        this.data = this.data.slice(0, 1).map((group) => ({ ...group, zones: group.zones.slice(0, 3) }));
     }
 }
 

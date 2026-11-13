@@ -1,4 +1,5 @@
 import { inject, TestBed } from '@angular/core/testing';
+import fc from 'fast-check';
 import {
     KBQ_INVALID_VALUE_ERROR,
     KBQ_LOCALE_ID,
@@ -8,11 +9,10 @@ import {
     KbqFormattersModule,
     KbqLocaleService,
     KbqLocaleServiceModule,
-    KbqSizeUnitsLocaleConfiguration,
+    type KbqSizeUnitsLocaleConfiguration,
     ruRUFormattersData
 } from '@koobiq/components/core';
-import fc from 'fast-check';
-import { KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION, KbqMeasurementSystem, KbqUnitSystem } from './config';
+import { KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION, KbqMeasurementSystem, type KbqUnitSystem } from './config';
 import { getFormattedSizeParts, getHumanizedBytes } from './size';
 
 describe('Filesize formatter', () => {

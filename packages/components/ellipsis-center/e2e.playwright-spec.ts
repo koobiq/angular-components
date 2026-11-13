@@ -1,4 +1,4 @@
-import { expect, Page, test } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
 
 const tooltip = (page: Page) => page.locator('.kbq-tooltip');
 

@@ -13,7 +13,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
         FormsModule,
         KbqIconModule
     ],
-    templateUrl: 'button-toggle-alignment-overview-example.html',
+    templateUrl: './button-toggle-alignment-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonToggleAlignmentOverviewExample {

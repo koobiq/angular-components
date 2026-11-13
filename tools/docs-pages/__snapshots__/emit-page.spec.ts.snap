@@ -16,12 +16,12 @@ import { DocsLiveExampleViewerComponent } from 'src/app/components/live-example-
     host: { class: 'docs-page kbq-markdown' }
 })
 export default class DocsAlertOverviewEnPage {
-    protected readonly codeBlocks: KbqCodeBlockFile[] = [
+    protected readonly codeBlocks = [
         {
             "content": "const a = \`{{ b }}\`;",
             "language": "ts"
         }
-    ];
+    ] as const satisfies readonly KbqCodeBlockFile[];
     protected readonly examples = { AlertStatusExample, ButtonOverviewExample, AlertOverviewExample, AgGridOverviewExample: { load: () => import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridOverviewExample) } };
 }
 "

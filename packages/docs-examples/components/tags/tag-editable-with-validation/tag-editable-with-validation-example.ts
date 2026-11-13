@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, model, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTagEditChange, KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { type KbqTagEditChange, type KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 const TAG = 'Editable tag with validation';
 
@@ -28,9 +28,9 @@ const TAG = 'Editable tag with validation';
             >
                 {{ tagValue() }}
                 <input
-                    kbqTooltip="Maximum {{ initialMaxLength }} characters (actual: {{ trimmedTagModel().length }})"
                     kbqTagEditInput
                     kbqTrigger="none"
+                    [kbqTooltip]="lengthTooltip()"
                     [kbqTooltipColor]="color.Error"
                     [(ngModel)]="tagModel"
                 />
@@ -70,6 +70,9 @@ export class TagEditableWithValidationExample {
     protected readonly initialMaxLength = this.tagValue().length;
     protected readonly tagModel = model(this.tagValue());
     protected readonly trimmedTagModel = computed(() => this.tagModel().trim());
+    protected readonly lengthTooltip = computed(
+        () => `Maximum ${this.initialMaxLength} characters (actual: ${this.trimmedTagModel().length})`
+    );
     protected readonly isModelValid = computed(() => this.trimmedTagModel().length <= this.initialMaxLength);
     protected readonly tagColor = computed(() => (this.isModelValid() ? this.color.ContrastFade : this.color.Error));
 

@@ -1,29 +1,29 @@
 import { coerceBooleanProperty, coerceCssPixelValue, coerceNumberProperty } from '@angular/cdk/coercion';
 import { Platform } from '@angular/cdk/platform';
 import {
-    AfterContentInit,
-    AfterViewInit,
+    type AfterContentInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ContentChildren,
     Directive,
     ElementRef,
-    Input,
-    NgZone,
-    OnDestroy,
-    OnInit,
-    QueryList,
-    Renderer2,
-    ViewEncapsulation,
     forwardRef,
     inject,
+    Input,
+    NgZone,
+    type OnDestroy,
+    type OnInit,
     output,
+    QueryList,
+    Renderer2,
     viewChild,
-    viewChildren
+    viewChildren,
+    ViewEncapsulation
 } from '@angular/core';
-import { KBQ_WINDOW } from '@koobiq/components/core';
 import { Subscription } from 'rxjs';
+import { KBQ_WINDOW } from '@koobiq/components/core';
 
 interface IArea {
     area: KbqSplitterAreaDirective;
@@ -44,7 +44,7 @@ const enum StyleProperty {
     Height = 'height',
     MaxWidth = 'max-width',
     MinHeight = 'min-height',
-    MinWidth = 'minWidth',
+    MinWidth = 'min-width',
     OffsetHeight = 'offsetHeight',
     OffsetWidth = 'offsetWidth',
     Order = 'order',
@@ -177,7 +177,7 @@ export class KbqGutterGhostDirective {
 
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
-    @Input() visible: boolean;
+    @Input() visible = false;
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -260,7 +260,7 @@ export class KbqGutterGhostDirective {
     selector: 'kbq-splitter',
     imports: [KbqGutterDirective, KbqGutterGhostDirective],
     templateUrl: './splitter.component.html',
-    styleUrls: ['splitter.scss'],
+    styleUrl: 'splitter.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -282,7 +282,9 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
     readonly gutters = viewChildren(KbqGutterDirective);
     readonly ghost = viewChild.required(KbqGutterGhostDirective);
 
-    @ContentChildren(forwardRef(() => KbqSplitterAreaDirective)) areaRefs: QueryList<KbqSplitterAreaDirective>;
+    // Replaced by the query's own list before `ngAfterContentInit`, the first place that reads it.
+    @ContentChildren(forwardRef(() => KbqSplitterAreaDirective))
+    areaRefs: QueryList<KbqSplitterAreaDirective> = new QueryList<KbqSplitterAreaDirective>();
 
     get isDragging(): boolean {
         return this._isDragging;
@@ -318,7 +320,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
         this._direction = direction;
     }
 
-    private _direction: Direction;
+    private _direction: Direction = Direction.Horizontal;
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -405,6 +407,9 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
         const leftArea = this.areas[leftAreaIndex];
         const rightArea = this.areas[rightAreaIndex];
+
+        // `removeArea` shortens the list without a check, so a gutter still on screen can outlive its area.
+        if (!leftArea || !rightArea) return;
 
         leftArea.initialSize = leftArea.area.getSize();
         rightArea.initialSize = rightArea.area.getSize();
@@ -664,7 +669,7 @@ export class KbqSplitterAreaDirective implements OnInit, AfterViewInit, OnDestro
     getSize(): number {
         if (!this.platform.isBrowser) return 0;
 
-        return this.elementRef.nativeElement[this.getOffsetSizeProperty()];
+        return this.elementRef.nativeElement[this.getOffsetSizeProperty() as 'offsetHeight' | 'offsetWidth'];
     }
 
     getPosition(): IPoint {
@@ -677,7 +682,7 @@ export class KbqSplitterAreaDirective implements OnInit, AfterViewInit, OnDestro
     getMinSize(): number {
         const styles = this.window.getComputedStyle(this.elementRef.nativeElement);
 
-        return parseFloat(styles[this.getMinSizeProperty()]);
+        return parseFloat(styles.getPropertyValue(this.getMinSizeProperty()));
     }
 
     private isVertical(): boolean {

@@ -9,16 +9,16 @@ import {
     isDevMode,
     numberAttribute,
     PendingTasks,
-    Provider,
+    type Provider,
     Renderer2,
     SecurityContext,
     signal
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { kbqInjectNativeElement } from '@koobiq/components/core';
 import type { HLJSApi, LanguageFn } from 'highlight.js';
+import { kbqInjectNativeElement } from '@koobiq/components/core';
 import { KbqCodeBlockHighlightJsLoader, PLAIN_TEXT_LANGUAGE } from './code-block-highlight-js-loader';
-import { KbqCodeBlockFile } from './types';
+import type { KbqCodeBlockFile } from './types';
 
 /**
  * Configuration of highlight.js, which highlights the code of a code block: how to load it and which languages to
@@ -172,7 +172,8 @@ export class KbqCodeBlockHighlight {
             this._pending.set(true);
             const removeTask = keepsServerMarkup ? null : this.pendingTasks.add();
 
-            this.loader
+            // The load resolves to `null` rather than rejecting
+            void this.loader
                 .load(this.config)
                 .then((loaded) => {
                     if (loaded && !cancelled) this.highlight(loaded, file);

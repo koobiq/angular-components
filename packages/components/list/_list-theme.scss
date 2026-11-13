@@ -5,7 +5,7 @@
 /// Every color falls back to the matching `default`-state token: a state that only redefines the
 /// background then keeps the base text/icon/caption colors instead of resolving to an undefined
 /// `var()` — which, for inherited properties such as `color`, silently degrades to `inherit`.
-@mixin _kbq-list-item($state-name) {
+@mixin -kbq-list-item($state-name) {
     --kbq-option-background: var(--kbq-list-#{$state-name}-container-background, transparent);
 
     background: var(--kbq-list-#{$state-name}-container-background, transparent);
@@ -29,7 +29,7 @@
 
 /// Emits the background-only `:active` treatment. The active states deliberately reuse the colors of
 /// the state they sit on top of (default / selected), so only the background token is redefined.
-@mixin _kbq-list-item-active($state-name) {
+@mixin -kbq-list-item-active($state-name) {
     --kbq-option-background: var(--kbq-list-#{$state-name}-container-background);
 
     background: var(--kbq-list-#{$state-name}-container-background);
@@ -37,35 +37,35 @@
 
 @mixin kbq-list-theme() {
     .kbq-list-option {
-        @include _kbq-list-item(default);
+        @include -kbq-list-item(default);
 
         &.kbq-hovered:not(.kbq-disabled),
         &:hover:not(.kbq-disabled),
         &.kbq-action-button-focused:not(.kbq-disabled) {
-            @include _kbq-list-item(states-hover);
+            @include -kbq-list-item(states-hover);
         }
 
         &.kbq-active:not(.kbq-disabled),
         &:active:not(.kbq-disabled) {
-            @include _kbq-list-item-active(states-active);
+            @include -kbq-list-item-active(states-active);
         }
 
         &.kbq-selected:not(.kbq-disabled) {
-            @include _kbq-list-item(states-selected);
+            @include -kbq-list-item(states-selected);
 
             &.kbq-hovered,
             &:hover {
-                @include _kbq-list-item(states-selected-hover);
+                @include -kbq-list-item(states-selected-hover);
             }
 
             &.kbq-active,
             &:active {
-                @include _kbq-list-item-active(states-selected-active);
+                @include -kbq-list-item-active(states-selected-active);
             }
         }
 
         &.kbq-disabled {
-            @include _kbq-list-item(states-disabled);
+            @include -kbq-list-item(states-disabled);
         }
 
         &.kbq-selected.kbq-disabled {
@@ -77,16 +77,16 @@
 
     .kbq-list-option.kbq-list-option_multiple {
         &.kbq-selected:not(.kbq-disabled) {
-            @include _kbq-list-item(multiple-states-selected);
+            @include -kbq-list-item(multiple-states-selected);
 
             &.kbq-hovered,
             &:hover {
-                @include _kbq-list-item(multiple-states-selected-hover);
+                @include -kbq-list-item(multiple-states-selected-hover);
             }
 
             &.kbq-active,
             &:active {
-                @include _kbq-list-item-active(multiple-states-selected-active);
+                @include -kbq-list-item-active(multiple-states-selected-active);
             }
         }
 

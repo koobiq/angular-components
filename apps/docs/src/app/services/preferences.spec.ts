@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
-import { KBQ_LOCALE_SERVICE, kbqLocaleServiceProvider } from '@koobiq/components/core';
 import type { Mock, MockInstance } from 'vitest';
+import { KBQ_LOCALE_SERVICE, kbqLocaleServiceProvider } from '@koobiq/components/core';
 import { DocsLocale } from '../constants/locale';
 import { DocsLocaleService } from './locale';
 import { DocsLanguagePreferences } from './preferences';

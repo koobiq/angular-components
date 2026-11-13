@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import { request as httpsRequest } from 'https';
-import { ChangelogReleaseNotes } from './extract-release-notes';
+import type { ChangelogReleaseNotes } from './extract-release-notes';
 
 const { cyan, green, red } = chalk;
 

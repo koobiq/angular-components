@@ -1,75 +1,86 @@
-import { FocusOrigin } from '@angular/cdk/a11y';
-import { Direction } from '@angular/cdk/bidi';
+import type { FocusOrigin } from '@angular/cdk/a11y';
+import type { Direction } from '@angular/cdk/bidi';
 import { DOWN_ARROW, ENTER, UP_ARROW } from '@angular/cdk/keycodes';
 import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
 import {
-    AfterContentInit,
-    AfterRenderRef,
+    type AfterContentInit,
+    afterNextRender,
+    type AfterRenderRef,
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    DestroyRef,
-    Directive,
-    ElementRef,
-    Injector,
-    NgZone,
-    OnDestroy,
-    QueryList,
-    Renderer2,
-    Signal,
-    TemplateRef,
-    ViewEncapsulation,
-    afterNextRender,
-    booleanAttribute,
     computed,
     contentChild,
     contentChildren,
+    DestroyRef,
+    Directive,
     effect,
+    ElementRef,
     inject,
+    Injector,
     input,
     model,
+    NgZone,
     numberAttribute,
+    type OnDestroy,
     output,
+    QueryList,
+    Renderer2,
+    type Signal,
     signal,
+    TemplateRef,
     untracked,
-    viewChild
+    viewChild,
+    ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+    delay,
+    filter,
+    map,
+    merge,
+    type Observable,
+    startWith,
+    Subject,
+    Subscription,
+    switchMap,
+    takeUntil,
+    timer
+} from 'rxjs';
 import {
     ActiveDescendantKeyManager,
     ESCAPE,
     FocusKeyManager,
-    KBQ_PANEL_DEFAULT_MIN_WIDTH,
-    KbqPanelMaxWidth,
-    KbqPanelMinWidth,
-    KbqPanelWidth,
-    KbqPoint,
-    LEFT_ARROW,
-    ListKeyManager,
-    RIGHT_ARROW,
     getSafeTriangleVertices,
     isExplicitPanelWidth,
     isPointInRect,
     isPointInTriangle,
-    isVerticalMovement
+    isVerticalMovement,
+    KBQ_PANEL_DEFAULT_MIN_WIDTH,
+    type KbqPanelMaxWidth,
+    type KbqPanelMinWidth,
+    type KbqPanelWidth,
+    type KbqPoint,
+    LEFT_ARROW,
+    type ListKeyManager,
+    RIGHT_ARROW
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
-import { Observable, Subject, Subscription, merge, timer } from 'rxjs';
-import { delay, filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
+import {
+    type DropdownCloseReason,
+    KBQ_DROPDOWN_DEFAULT_OPTIONS,
+    KBQ_DROPDOWN_PANEL,
+    type KbqDropdownDefaultOptions,
+    type KbqDropdownPanel,
+    type KbqDropdownPositionX,
+    type KbqDropdownPositionY
+} from './dropdown.types';
 import { KbqDropdownContent } from './dropdown-content.directive';
 import { throwKbqDropdownInvalidPositionX, throwKbqDropdownInvalidPositionY } from './dropdown-errors';
 import { KbqDropdownItem } from './dropdown-item.component';
 import { KbqDropdownSearch } from './dropdown-search';
-import {
-    DropdownCloseReason,
-    KBQ_DROPDOWN_DEFAULT_OPTIONS,
-    KBQ_DROPDOWN_PANEL,
-    KbqDropdownDefaultOptions,
-    KbqDropdownPanel,
-    KbqDropdownPositionX,
-    KbqDropdownPositionY
-} from './dropdown.types';
 
 /** Options for binding a passive event listener. */
 const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: true }) as EventListenerOptions;
@@ -106,9 +117,9 @@ export class KbqDropdownGroupHeader {}
 @Component({
     selector: 'kbq-dropdown',
     imports: [KbqScrollbarViewport],
-    templateUrl: 'dropdown.html',
+    templateUrl: './dropdown.html',
     /* Component inherits styles from `list`, so `list` variables are imported as the single source of truth. */
-    styleUrls: ['dropdown.scss', 'dropdown-tokens.scss'],
+    styleUrls: ['./dropdown.scss', './dropdown-tokens.scss'],
     providers: [
         { provide: KBQ_DROPDOWN_PANEL, useExisting: KbqDropdown }
     ],
@@ -213,8 +224,8 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     /** Parent dropdown of the current dropdown panel. */
     parent: KbqDropdownPanel | undefined;
 
-    /** Layout direction of the dropdown. */
-    direction: Direction;
+    /** Layout direction of the dropdown, which its trigger sets on opening. */
+    direction: Direction | undefined;
 
     /** Class to be added to the backdrop element. */
     readonly backdropClass = input<string>(this.defaultOptions.backdropClass);
@@ -295,7 +306,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     readonly lazyContent = contentChild(KbqDropdownContent);
 
     /** Event emitted when the dropdown is closed. */
-    readonly closed = output<void | 'click' | 'keydown' | 'tab'>();
+    readonly closed = output<DropdownCloseReason>();
 
     /**
      * Whether the `closed` being emitted closes the panels this one is nested in too, see `closeChain`.
@@ -304,7 +315,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
      */
     closingChain = false;
 
-    private keyManager: ListKeyManager<KbqDropdownItem>;
+    private keyManager?: ListKeyManager<KbqDropdownItem>;
 
     private activeDescendantKeyManager?: ActiveDescendantKeyManager<KbqDropdownItem>;
     private focusKeyManager?: FocusKeyManager<KbqDropdownItem>;
@@ -411,7 +422,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
                 startWith(this.directDescendantItems),
                 switchMap((items) => merge(...items.map((item: KbqDropdownItem) => item.focused)))
             )
-            .subscribe((focusedItem) => this.keyManager.updateActiveItem(focusedItem as KbqDropdownItem));
+            .subscribe((focusedItem) => this.keyManager?.updateActiveItem(focusedItem as KbqDropdownItem));
 
         this.panelFormField()?.inOverlay.set(true);
 
@@ -430,7 +441,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
                 // stale instance still has to be dropped, or ENTER would replay a click on a detached
                 // element and the arrows would resume from its index.
                 if (this.search()?.value()) {
-                    this.keyManager.setFirstItemActive();
+                    this.keyManager?.setFirstItemActive();
                 } else {
                     this.resetActiveItem();
                 }
@@ -443,7 +454,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
             // Hovering doesn't focus the item in search mode, so arrowing on has to resume from it.
             // Disabled items are skipped, the same way the key manager skips them for the arrows.
             if (this.inSearchMode() && !item.disabled()) {
-                this.keyManager.setActiveItem(item);
+                this.keyManager?.setActiveItem(item);
             }
         });
     }
@@ -605,31 +616,34 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
                 }
 
                 break;
-            case ENTER:
+            case ENTER: {
                 // The highlighted item never sees the key event itself, so replay it as a click and let
                 // consumer handlers and nested triggers behave exactly as they do for the mouse.
-                if (this.inSearchMode() && this.keyManager.activeItem) {
+                const activeItem = this.keyManager?.activeItem;
+
+                if (this.inSearchMode() && activeItem) {
                     event.preventDefault();
                     // The click can close the dropdown synchronously, unregistering the overlay from the
                     // CDK keyboard dispatcher before this keydown reaches `body` — where it would be
                     // handed to whichever overlay was opened earlier.
                     event.stopPropagation();
-                    this.keyManager.activeItem.getHostElement().click();
+                    activeItem.getHostElement().click();
                 }
 
                 return;
+            }
             default:
                 // Home/End too: with a stale `mouse` origin the item they move to is not scrolled into view.
                 if (isVerticalMovement(event)) {
                     this.setFocusOrigin('keyboard');
-                    this.keyManager.onKeydown(event);
+                    this.keyManager?.onKeydown(event);
 
                     // Only the arrows reveal: other keys would scroll the list back on each keystroke.
                     if (keyCode === UP_ARROW || keyCode === DOWN_ARROW) {
                         this.revealActiveItem();
                     }
                 } else {
-                    this.keyManager.onKeydown(event);
+                    this.keyManager?.onKeydown(event);
                 }
 
                 return;
@@ -686,7 +700,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
         } else if (origin === 'mouse' || origin === 'touch') {
             this.focusPanel();
         } else {
-            this.keyManager.setFirstItemActive();
+            this.keyManager?.setFirstItemActive();
         }
     }
 
@@ -720,6 +734,8 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
      * the user to start from the first option when pressing the down arrow.
      */
     resetActiveItem() {
+        if (!this.keyManager) return;
+
         this.keyManager.activeItem?.resetStyles();
         this.keyManager.setActiveItem(-1);
     }
@@ -765,7 +781,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
             () => {
                 // Focus moves to the first item before the panel has rendered, which can throw the browser off
                 // when it determines the scroll position.
-                if (this.keyManager.activeItemIndex <= 0) {
+                if (!this.keyManager || this.keyManager.activeItemIndex <= 0) {
                     this.scrollbarViewport()?.scrollToTop();
                 }
 
@@ -840,7 +856,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     }
 
     private isActiveItemStale(): boolean {
-        const activeItem = this.keyManager.activeItem;
+        const activeItem = this.keyManager?.activeItem;
 
         return !activeItem || !this.directDescendantItems.some((item) => item === activeItem);
     }
@@ -852,7 +868,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     private revealActiveItem(): void {
         if (!this.inSearchMode()) return;
 
-        this.keyManager.activeItem?.getHostElement().scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
+        this.keyManager?.activeItem?.getHostElement().scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
     }
 
     /**

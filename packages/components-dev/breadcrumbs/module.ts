@@ -2,15 +2,15 @@ import {
     afterRenderEffect,
     ChangeDetectionStrategy,
     Component,
-    ElementRef,
+    type ElementRef,
     model,
     signal,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink, RouterOutlet, Routes } from '@angular/router';
-import { KbqBreadcrumbsModule, KbqBreadcrumbsWrapMode } from '@koobiq/components/breadcrumbs';
+import { RouterLink, RouterOutlet, type Routes } from '@angular/router';
+import { KbqBreadcrumbsModule, type KbqBreadcrumbsWrapMode } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';

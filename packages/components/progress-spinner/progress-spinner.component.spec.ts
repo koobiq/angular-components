@@ -1,8 +1,13 @@
 import { Component, signal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KBQ_ANIMATIONS_CONFIG, KbqComponentColors } from '@koobiq/components/core';
-import { KbqProgressSpinner, KbqProgressSpinnerModule, ProgressSpinnerMode, ProgressSpinnerSize } from './index';
+import {
+    type KbqProgressSpinner,
+    KbqProgressSpinnerModule,
+    type ProgressSpinnerMode,
+    type ProgressSpinnerSize
+} from './index';
 
 /** `MAX_DASH_ARRAY - percentage * MAX_DASH_ARRAY`, with `MAX_DASH_ARRAY = 295`. */
 const dashOffsetPairs: [value: number, dashOffset: string][] = [

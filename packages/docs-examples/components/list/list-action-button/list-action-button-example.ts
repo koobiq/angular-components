@@ -14,13 +14,13 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     imports: [KbqListModule, FormsModule, KbqDropdownModule, KbqToolTipModule, KbqBadgeModule],
     template: `
         <kbq-list-selection style="width: 400px" aria-label="Elements" [autoSelect]="false" [(ngModel)]="selected">
-            <kbq-list-option [value]="'An element with a very very very long name'">
+            <kbq-list-option value="An element with a very very very long name">
                 <div>Element with a very very very very very very long name</div>
 
                 <kbq-option-action
+                    kbqTooltip="Tooltip text"
                     [kbqDropdownTriggerFor]="dropdown"
                     [kbqPlacement]="PopUpPlacements.Right"
-                    [kbqTooltip]="'Tooltip text'"
                 />
             </kbq-list-option>
             @for (item of [1, 2, 3, 4, 5, 6, 7, 8, 9]; track item) {
@@ -30,9 +30,9 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                         <kbq-badge style="align-self: center" badgeColor="theme" [compact]="true">badge</kbq-badge>
                     </div>
                     <kbq-option-action
+                        kbqTooltip="Tooltip text"
                         [kbqDropdownTriggerFor]="dropdown"
                         [kbqPlacement]="PopUpPlacements.Right"
-                        [kbqTooltip]="'Tooltip text'"
                     />
                 </kbq-list-option>
             }
@@ -41,9 +41,9 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         <div>Selected: {{ selected }}</div>
 
         <kbq-dropdown #dropdown>
-            <button kbq-dropdown-item>item 1</button>
-            <button kbq-dropdown-item>item 2</button>
-            <button kbq-dropdown-item>item 3</button>
+            <button kbq-dropdown-item type="button">item 1</button>
+            <button kbq-dropdown-item type="button">item 2</button>
+            <button kbq-dropdown-item type="button">item 3</button>
         </kbq-dropdown>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

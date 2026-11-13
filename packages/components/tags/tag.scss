@@ -1,8 +1,7 @@
 @use '../core/styles/common/animation';
-@use '../core/styles/common/tokens' as *;
 @use '../core/styles/common/vendor-prefixes';
 @use '../core/styles/common/input';
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
 .kbq-tag {
     @include vendor-prefixes.user-select(none);
@@ -16,7 +15,7 @@
 
     padding: var(--kbq-tag-size-padding-vertical) var(--kbq-tag-size-padding-horizontal);
 
-    @include kbq-squircle(4px);
+    @include squircle.kbq-squircle(4px);
 
     cursor: default;
 

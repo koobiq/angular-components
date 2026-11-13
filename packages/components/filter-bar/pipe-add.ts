@@ -10,12 +10,12 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqOption, KbqOptionModule } from '@koobiq/components/core';
+import { type KbqOption, KbqOptionModule } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { KBQ_FILTER_BAR_HOST, KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
+import { KBQ_FILTER_BAR_HOST, type KbqFilter, type KbqPipe, type KbqPipeTemplate } from './filter-bar.types';
 import { getId } from './pipes/base-pipe';
 
 @Component({
@@ -31,12 +31,13 @@ import { getId } from './pipes/base-pipe';
     template: `
         <kbq-select #select [tabIndex]="-1" [multiple]="true" [value]="addedPipes()" [compareWith]="compareWith">
             <button
-                kbqTooltip="{{ filterBar.localeConfiguration().add.tooltip }}"
                 kbq-button
                 kbq-select-matcher
+                type="button"
+                color="contrast-fade"
+                kbqStyle="outline"
+                [kbqTooltip]="filterBar.localeConfiguration().add.tooltip"
                 [attr.aria-label]="filterBar.localeConfiguration().add.tooltip"
-                [color]="'contrast-fade'"
-                [kbqStyle]="'outline'"
                 [class]="{ 'kbq-active': select.panelOpen }"
             >
                 <i kbq-icon="kbq-plus_16" aria-hidden="true"></i>

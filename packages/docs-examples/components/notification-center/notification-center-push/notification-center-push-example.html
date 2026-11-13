@@ -93,12 +93,12 @@
                 #trigger="kbqNotificationCenterTrigger"
                 kbq-navbar-item
                 kbqNotificationCenterTrigger
-                [popoverHeight]="'500px'"
-                [kbqNotificationCenterPanelClass]="'example-notification-center-panel'"
+                popoverHeight="500px"
+                kbqNotificationCenterPanelClass="example-notification-center-panel"
             >
                 <i
-                    kbq-icon="{{ notificationService.silentMode() ? 'kbq-bell-slash_16' : 'kbq-bell_16' }}"
                     color="contrast"
+                    [kbq-icon]="notificationService.silentMode() ? 'kbq-bell-slash_16' : 'kbq-bell_16'"
                 ></i>
                 <div kbq-navbar-title>{{ text().notifications }}</div>
                 @if (trigger.unreadItemsCounter(); as unreadItems) {
@@ -128,6 +128,7 @@
     <div class="layout layout-fill layout-align-center-center">
         <button
             kbq-button
+            type="button"
             [color]="KbqComponentColors.Contrast"
             [kbqStyle]="KbqButtonStyles.Filled"
             (click)="pushNotification()"

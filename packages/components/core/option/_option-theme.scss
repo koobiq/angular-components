@@ -1,4 +1,4 @@
-@use '../styles/common/tokens' as *;
+@use '../styles/common/tokens';
 
 @mixin kbq-option($style-name) {
     background: var(--kbq-list-#{$style-name}-container-background);
@@ -84,13 +84,13 @@
 
 @mixin kbq-option-typography() {
     .kbq-option {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
     // Ties with `kbq-normalize-text()`'s `& > * { font-size: inherit }` and wins only on source order,
     // so keep this mixin included after `.kbq-option-text`.
     .kbq-option-caption,
     .kbq-list-option-caption {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
     }
 }

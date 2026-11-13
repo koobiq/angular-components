@@ -9,7 +9,7 @@
                     [kbqPopoverPlacement]="popUpPlacements.Right"
                 />
                 <kbq-navbar-title>{{ text().notifications }}</kbq-navbar-title>
-                <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
+                <kbq-badge badgeColor="error" [compact]="true">2</kbq-badge>
             </kbq-navbar-item>
 
             <kbq-navbar-item class="example-navbar-item_compact-leading">
@@ -17,7 +17,7 @@
                     <i kbq-icon="kbq-bell_16" color="contrast"></i>
                 </span>
                 <kbq-navbar-title>{{ text().notifications }}</kbq-navbar-title>
-                <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
+                <kbq-badge badgeColor="error" [compact]="true">2</kbq-badge>
             </kbq-navbar-item>
 
             <a href="#" kbq-navbar-item>
@@ -26,6 +26,6 @@
             </a>
         </kbq-navbar-container>
 
-        <button kbq-navbar-toggle></button>
+        <button kbq-navbar-toggle type="button"></button>
     </kbq-vertical-navbar>
 </div>

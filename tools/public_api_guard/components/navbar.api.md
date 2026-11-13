@@ -175,7 +175,7 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
     setTooltip(value: KbqTooltipTrigger): void;
     get tabIndex(): number;
     readonly title: Signal<KbqNavbarTitle | undefined>;
-    get tooltip(): KbqTooltipTrigger;
+    get tooltip(): KbqTooltipTrigger | undefined;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarFocusableItem, "kbq-navbar-item, [kbq-navbar-item], kbq-navbar-brand, [kbq-navbar-brand], kbq-navbar-toggle", never, { "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, ["title", "button", "formField", "customTrigger"], never, true, never>;
     // (undocumented)

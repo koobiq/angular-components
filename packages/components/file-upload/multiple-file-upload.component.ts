@@ -1,21 +1,21 @@
-import { CdkMonitorFocus, FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { CdkMonitorFocus, FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
 import { isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
 import {
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     computed,
     contentChild,
     contentChildren,
-    DoCheck,
+    type DoCheck,
     effect,
     ElementRef,
     inject,
     input,
-    OnChanges,
+    type OnChanges,
     output,
     PLATFORM_ID,
-    SimpleChanges,
+    type SimpleChanges,
     TemplateRef,
     untracked,
     viewChild,
@@ -23,12 +23,13 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor } from '@angular/forms';
+import type { ControlValueAccessor } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs';
 import {
-    ErrorStateMatcher,
+    type ErrorStateMatcher,
     KbqDataSizePipe,
     KbqLocaleOverridesDirective,
-    KbqMultipleFileUploadLocaleConfiguration,
+    type KbqMultipleFileUploadLocaleConfiguration,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
@@ -36,19 +37,18 @@ import { KbqHint } from '@koobiq/components/form-field';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqListModule } from '@koobiq/components/list';
-import { KbqProgressSpinnerModule, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
+import { KbqProgressSpinnerModule, type ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
-import { BehaviorSubject } from 'rxjs';
-import { KbqDropzoneData, KbqFileUploadEmptyState, KbqFullScreenDropzoneService } from './dropzone';
+import { type KbqDropzoneData, KbqFileUploadEmptyState, KbqFullScreenDropzoneService } from './dropzone';
 import {
-    KbqFile,
-    KbqFileItem,
+    type KbqFile,
+    type KbqFileItem,
     KbqFileUploadAddStrategy,
-    KbqFileUploadAddStrategyValues,
+    type KbqFileUploadAddStrategyValues,
     KbqFileUploadAllowedType,
-    KbqFileUploadAllowedTypeValues,
+    type KbqFileUploadAllowedTypeValues,
     KbqFileUploadBase,
-    KbqFileUploadCaptionContext,
+    type KbqFileUploadCaptionContext,
     kbqFileUploadHintParentProvider
 } from './file-upload';
 import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext } from './primitives';
@@ -111,8 +111,8 @@ export class KbqMultipleFileUploadComponent
      */
     readonly inputId = input<string>(`kbq-multiple-file-upload-${nextMultipleFileUploadUniqueId++}`);
 
-    /** An object used to control the error state of the component. */
-    errorStateMatcher: ErrorStateMatcher;
+    /** An object used to control the error state of the component. Defaults to the injected `ErrorStateMatcher`. */
+    errorStateMatcher: ErrorStateMatcher = this.defaultErrorStateMatcher;
 
     /**
      * The selected files.
@@ -208,7 +208,7 @@ export class KbqMultipleFileUploadComponent
 
         switch (this.allowed()) {
             case KbqFileUploadAllowedType.Mixed: {
-                const [before, after] = config.captionTextWithFolder.split('{{ browseLink }}');
+                const [before = '', after = ''] = config.captionTextWithFolder.split('{{ browseLink }}');
 
                 const [captionTextSeparator] = after.split('{{ browseLinkFolderMixed }}');
 
@@ -220,14 +220,14 @@ export class KbqMultipleFileUploadComponent
                 };
             }
             case KbqFileUploadAllowedType.Folder: {
-                const [before] = config.captionTextOnlyFolder.split('{{ browseLinkFolder }}');
+                const [before = ''] = config.captionTextOnlyFolder.split('{{ browseLinkFolder }}');
 
                 return { captionText: before, browseLinkFolder: config.browseLinkFolder };
             }
             case KbqFileUploadAllowedType.File:
             default: {
                 const caption = this.size() === 'compact' ? config.captionTextForCompactSize : config.captionText;
-                const [before] = caption.split('{{ browseLink }}');
+                const [before = ''] = caption.split('{{ browseLink }}');
 
                 return { captionText: before, browseLink: config.browseLink };
             }
@@ -275,7 +275,7 @@ export class KbqMultipleFileUploadComponent
 
     /** @docs-private */
     protected get captionTextWhenSelected(): string {
-        return this.localeConfiguration().multiple.captionTextWhenSelected.split('{{ browseLink }}')[0];
+        return this.localeConfiguration().multiple.captionTextWhenSelected.split('{{ browseLink }}')[0] ?? '';
     }
 
     private readonly focusMonitor = inject(FocusMonitor);

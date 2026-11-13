@@ -10,8 +10,8 @@ import { KbqComponentColors } from '@koobiq/components/core';
     imports: [
         KbqButtonModule
     ],
-    templateUrl: 'button-fill-and-style-example.html',
-    styleUrls: ['button-fill-and-style-example.css'],
+    templateUrl: './button-fill-and-style-example.html',
+    styleUrl: './button-fill-and-style-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonFillAndStyleExample {

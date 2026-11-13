@@ -1,4 +1,4 @@
-import { KoobiqTheme } from './workspace-styles';
+import type { KoobiqTheme } from './workspace-styles';
 
 const KNOWN_THEME_CLASSES = ['kbq-app-background', 'kbq-light', 'kbq-dark'];
 const COMMENT_START = '<!--';
@@ -35,7 +35,9 @@ function findBodyTagStart(html: string): number {
             continue;
         }
 
-        if (lower.startsWith('<body', i) && (html[i + 5] === undefined || /[\s/>]/.test(html[i + 5]))) {
+        const afterName = html[i + 5];
+
+        if (lower.startsWith('<body', i) && (afterName === undefined || /[\s/>]/.test(afterName))) {
             return i;
         }
 
@@ -75,7 +77,7 @@ function findTagEnd(html: string, tagStart: number): number {
  */
 function parseAttrs(html: string, start: number, end: number): Attr[] {
     const attrs: Attr[] = [];
-    const isSpace = (char: string) => /\s/.test(char);
+    const isSpace = (char = '') => /\s/.test(char);
     let i = start;
 
     while (i < end) {

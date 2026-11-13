@@ -30,7 +30,7 @@ type ExampleSection = {
         KbqInputModule,
         FormsModule
     ],
-    templateUrl: 'accordion-interactive-elements-example.html',
+    templateUrl: './accordion-interactive-elements-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionInteractiveElementsExample {

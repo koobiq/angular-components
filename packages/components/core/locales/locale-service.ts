@@ -1,5 +1,14 @@
 import { DOCUMENT } from '@angular/common';
-import { computed, inject, Injectable, InjectionToken, InjectOptions, Provider, Signal, signal } from '@angular/core';
+import {
+    computed,
+    inject,
+    Injectable,
+    InjectionToken,
+    type InjectOptions,
+    type Provider,
+    type Signal,
+    signal
+} from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { kbqDeepMerge } from '../utils';
 import { enUSLocaleData } from './en-US';
@@ -14,7 +23,7 @@ import {
 import { ptBRLocaleData } from './pt-BR';
 import { ruRULocaleData } from './ru-RU';
 import { tkTMLocaleData } from './tk-TM';
-import {
+import type {
     KbqInputNumberLocaleConfiguration,
     KbqLocaleData,
     KbqLocaleDataInput,
@@ -69,9 +78,11 @@ const { items: shippedLocaleItems, ...shippedLocales } = KBQ_DEFAULT_LOCALE_DATA
  */
 const SHIPPED_LOCALE_DATA = asLocaleDataMap(shippedLocales, shippedLocaleItems);
 
+const DEFAULT_LOCALE_DATA: KbqLocaleData = shippedLocales[KBQ_DEFAULT_LOCALE_ID];
+
 /** Completes one locale from the shipped locale of the same id, falling back to the default locale. */
 const resolveLocaleData = (id: KbqLocaleIdLike, data: KbqPartialLocaleData | undefined): KbqLocaleData =>
-    kbqDeepMerge(SHIPPED_LOCALE_DATA[id] ?? SHIPPED_LOCALE_DATA[KBQ_DEFAULT_LOCALE_ID], data);
+    kbqDeepMerge(SHIPPED_LOCALE_DATA[id] ?? DEFAULT_LOCALE_DATA, data);
 
 const resolveLocaleDataMap = (input: KbqLocaleDataInput | null): KbqLocaleDataMap => {
     const source = input ?? SHIPPED_LOCALE_DATA;
@@ -157,7 +168,7 @@ export class KbqLocaleService {
     }
 
     private readonly _localeId = signal<KbqLocaleIdLike>(KBQ_DEFAULT_LOCALE_ID);
-    private readonly _data = signal<KbqLocaleData>(SHIPPED_LOCALE_DATA[KBQ_DEFAULT_LOCALE_ID]);
+    private readonly _data = signal<KbqLocaleData>(DEFAULT_LOCALE_DATA);
     private readonly _items = signal<KbqLocaleItem[]>(SHIPPED_LOCALE_DATA.items);
 
     private readonly langAttrName = inject(KBQ_LOCALE_SERVICE_LANG_ATTR_NAME);
@@ -211,7 +222,9 @@ export class KbqLocaleService {
     getParams<K extends KbqLocaleSection>(section: K): KbqLocaleData[K];
     getParams(section: string): any;
     getParams(section: string) {
-        return this._data()?.[section] ?? SHIPPED_LOCALE_DATA[KBQ_DEFAULT_LOCALE_ID][section];
+        const key = section as KbqLocaleSection;
+
+        return this._data()?.[key] ?? DEFAULT_LOCALE_DATA[key];
     }
 
     /** Reactive counterpart of {@link getParams}: re-emits whenever the locale changes. */
@@ -301,7 +314,10 @@ export function numberByParts(
             .replace(fractionSeparator, '')
             .replace(/\D/g, '');
     } else {
-        result.integer = numberByParts.join().replace(groupSeparator[0], '').replace(/\D/g, '');
+        result.integer = numberByParts
+            .join()
+            .replace(groupSeparator[0] ?? '', '')
+            .replace(/\D/g, '');
     }
 
     if (isNegative) result.integer = `-${result.integer}`;
@@ -334,7 +350,7 @@ export function normalizeNumber(
 export function checkAndNormalizeLocalizedNumber(num: string | null | undefined, locale?: string): number | null {
     if (num === null || num === undefined) return null;
 
-    const locales = KBQ_DEFAULT_LOCALE_DATA_FACTORY();
+    const locales = SHIPPED_LOCALE_DATA;
 
     if (locale && locales[locale]) {
         const config = locales[locale].input.number;
@@ -358,7 +374,7 @@ export function checkAndNormalizeLocalizedNumber(num: string | null | undefined,
     /* if some locale input config satisfies pasted number, try to normalise with selected locale config */
     let numberOutput: number | null = null;
 
-    for (const config of locales.items.map(({ id }) => locales[id].input.number)) {
+    for (const config of locales.items.map(({ id }) => locales[id]!.input.number)) {
         const normalized = +normalizeNumber(num, config);
 
         if (!Number.isNaN(normalized)) {

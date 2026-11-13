@@ -1,12 +1,12 @@
 import { _IdGenerator } from '@angular/cdk/a11y';
-import { AfterViewInit, Directive, ElementRef, inject, signal, untracked, viewChild } from '@angular/core';
+import { type AfterViewInit, Directive, ElementRef, inject, signal, untracked, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ValidatorFn } from '@angular/forms';
+import { FormControl, FormGroup, type ValidatorFn } from '@angular/forms';
 import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
 import { DateAdapter, DateFormatter, ENTER, KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqListSelection } from '@koobiq/components/list';
-import { KbqPopoverTrigger } from '@koobiq/components/popover';
-import { KbqDateTimeValue, KbqPipeTemplate } from '../filter-bar.types';
+import type { KbqPopoverTrigger } from '@koobiq/components/popover';
+import type { KbqDateTimeValue, KbqPipeTemplate } from '../filter-bar.types';
 import { getId, KbqBasePipe } from './base-pipe';
 
 /**
@@ -32,8 +32,11 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     /** Whether the current state is list of periods. When false will displayed control for set custom period */
     protected readonly isListMode = signal(true);
 
-    /** @docs-private */
-    protected formGroup: FormGroup;
+    /** The custom period being edited, replaced with a filled one each time the period view opens. @docs-private */
+    protected formGroup: FormGroup<{ start: FormControl<D | null>; end: FormControl<D | null> }> = new FormGroup({
+        start: new FormControl<D | null>(null),
+        end: new FormControl<D | null>(null)
+    });
 
     /** @docs-private */
     protected readonly showStartCalendar = signal(false);
@@ -122,7 +125,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
         this.minInterval = this.toValidInterval(template.minInterval);
         this.maxInterval = this.toValidInterval(template.maxInterval);
         // Re-validate an already open editor if the template (hence the interval limits) changes.
-        this.formGroup?.updateValueAndValidity();
+        this.formGroup.updateValueAndValidity();
 
         this.changeDetectorRef.markForCheck();
     };
@@ -194,8 +197,8 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
      * (months/years) are respected; unset intervals impose no constraint.
      */
     private validateInterval: ValidatorFn = (group) => {
-        const start = (group as FormGroup).controls.start?.value;
-        const end = (group as FormGroup).controls.end?.value;
+        const start = group.get('start')?.value;
+        const end = group.get('end')?.value;
 
         if (!this.adapter.isDateInstance(start) || !this.adapter.isDateInstance(end)) return null;
 
@@ -232,7 +235,6 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     /** Whether the current pipe is disabled. */
     get disabled(): boolean {
         return (
-            !this.formGroup ||
             !this.adapter.isDateInstance(this.formGroup.controls.start.value) ||
             !this.adapter.isDateInstance(this.formGroup.controls.end.value) ||
             this.formGroup.invalid
@@ -416,8 +418,8 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
 
     onApplyPeriod() {
         this.data.value = {
-            start: this.formGroup.controls.start.value.toISO(),
-            end: this.formGroup.controls.end.value.toISO()
+            start: this.adapter.toIso8601(this.formGroup.controls.start.value),
+            end: this.adapter.toIso8601(this.formGroup.controls.end.value)
         };
         this.stateChanges.next();
 

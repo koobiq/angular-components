@@ -9,9 +9,9 @@ import { KbqModalService, ModalSize } from '@koobiq/components/modal';
     selector: 'modal-overview-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="showConfirmModal()">Open Confirm Modal</button>
-        <button kbq-button (click)="showSuccessModal()">Open Success Modal</button>
-        <button kbq-button (click)="showDeleteModal()">Open Delete Modal</button>
+        <button kbq-button type="button" (click)="showConfirmModal()">Open Confirm Modal</button>
+        <button kbq-button type="button" (click)="showSuccessModal()">Open Success Modal</button>
+        <button kbq-button type="button" (click)="showDeleteModal()">Open Delete Modal</button>
     `,
     styles: `
         :host {

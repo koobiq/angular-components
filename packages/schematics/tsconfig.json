@@ -7,15 +7,10 @@
         "module": "commonjs",
         "moduleResolution": "node",
         "noEmitOnError": true,
-        "noFallthroughCasesInSwitch": true,
-        "noImplicitAny": false,
-        "noImplicitThis": true,
-        "noUnusedParameters": true,
-        "noUnusedLocals": true,
         "skipDefaultLibCheck": true,
-        "skipLibCheck": true,
-        "strict": true,
         "types": ["node", "vitest/globals"]
     },
-    "include": ["./**/*.ts"]
+    "include": ["./**/*.ts"],
+    // The rollup build type-checks what is included here, so the specs stay with tsconfig.spec.json and its strictness.
+    "exclude": ["node_modules", "dist", "**/*.spec.ts"]
 }

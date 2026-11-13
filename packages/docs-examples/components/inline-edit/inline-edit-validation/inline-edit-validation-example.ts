@@ -24,7 +24,7 @@ const restSymbolsRegex = /[^0-9.]+/g;
         KbqToolTipModule
     ],
     template: `
-        <kbq-inline-edit [validationTooltip]="'Error message'" [tooltipPlacement]="tooltipPlacement">
+        <kbq-inline-edit validationTooltip="Error message" [tooltipPlacement]="tooltipPlacement">
             <kbq-label>Not empty</kbq-label>
 
             <div class="example-inline-text" kbqInlineEditViewMode>
@@ -41,7 +41,7 @@ const restSymbolsRegex = /[^0-9.]+/g;
             </kbq-form-field>
         </kbq-inline-edit>
 
-        <kbq-inline-edit [validationTooltip]="'Invalid IP: RFC non-compliant'" [tooltipPlacement]="tooltipPlacement">
+        <kbq-inline-edit validationTooltip="Invalid IP: RFC non-compliant" [tooltipPlacement]="tooltipPlacement">
             <kbq-label>IP-address</kbq-label>
 
             <div class="example-inline-text" kbqInlineEditViewMode>
@@ -56,11 +56,11 @@ const restSymbolsRegex = /[^0-9.]+/g;
             <kbq-form-field kbqInlineEditEditMode>
                 <input
                     kbqInput
+                    kbqTrigger="manual"
+                    kbqTooltip="Numbers and dots only"
                     [formControl]="ipAddressControl"
                     [kbqEnterDelay]="10"
                     [kbqPlacement]="tooltipPlacement"
-                    [kbqTrigger]="'manual'"
-                    [kbqTooltip]="'Numbers and dots only'"
                     [kbqTooltipColor]="tooltipColor"
                     [kbqTooltipArrow]="false"
                     (input)="onInput($event)"

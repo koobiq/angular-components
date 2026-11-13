@@ -3,12 +3,12 @@ import { FormsModule } from '@angular/forms';
 import { KbqContentPanelModule } from '@koobiq/components/content-panel';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import {
-    KbqFileItem,
+    type KbqFileItem,
     KbqFullScreenDropzoneService,
     KbqMultipleFileUploadComponent
 } from '@koobiq/components/file-upload';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqToggleChange, KbqToggleComponent } from '@koobiq/components/toggle';
+import { type KbqToggleChange, KbqToggleComponent } from '@koobiq/components/toggle';
 
 /**
  * @title File-upload Dropzone

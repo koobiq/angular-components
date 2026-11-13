@@ -1,5 +1,5 @@
-import checker from 'license-checker';
 import * as path from 'node:path';
+import checker from 'license-checker';
 import spdxSatisfies from 'spdx-satisfies';
 
 type License = string;
@@ -143,12 +143,17 @@ async function validateLicense(): Promise<ReturnCode> {
 
         return ReturnCode.Success;
     } catch (error) {
-        console.error(`Something happened:\n${error.message}`);
+        console.error('Something happened:', error);
 
         return ReturnCode.Error;
     }
 }
 
 if (require.main === module) {
-    validateLicense().then((code) => process.exit(code));
+    validateLicense()
+        .then((code) => process.exit(code))
+        .catch((error: unknown) => {
+            console.error(error);
+            process.exit(ReturnCode.Error);
+        });
 }

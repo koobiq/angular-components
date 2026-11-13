@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { Overlay, ScrollStrategy } from '@angular/cdk/overlay';
+import { Overlay, type ScrollStrategy } from '@angular/cdk/overlay';
 import { ChangeDetectionStrategy, Component, ElementRef, forwardRef, inject, signal } from '@angular/core';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -8,7 +8,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { KBQ_NAVBAR_ITEM_TRIGGER, KbqNavbarItemTrigger } from './index';
+import { KBQ_NAVBAR_ITEM_TRIGGER, type KbqNavbarItemTrigger } from './index';
 import { KbqNavbarModule } from './navbar.module';
 
 @Component({
@@ -66,7 +66,7 @@ import { KbqNavbarModule } from './navbar.module';
                     </kbq-navbar-item>
 
                     <kbq-navbar-item>
-                        <button kbq-button [color]="'contrast'">
+                        <button kbq-button color="contrast">
                             <span>Новая задача</span>
                         </button>
                     </kbq-navbar-item>
@@ -75,7 +75,7 @@ import { KbqNavbarModule } from './navbar.module';
                 <kbq-navbar-container>
                     <kbq-navbar-item>
                         <i kbq-icon="kbq-bell_16"></i>
-                        <kbq-badge [badgeColor]="'error'" [compact]="true">5</kbq-badge>
+                        <kbq-badge badgeColor="error" [compact]="true">5</kbq-badge>
                     </kbq-navbar-item>
 
                     <kbq-navbar-item>
@@ -176,9 +176,9 @@ export class E2eHorizontalNavbarStates {}
                     <kbq-navbar-item>
                         <button
                             kbq-button
+                            color="contrast"
+                            kbqStyle="filled"
                             [class.kbq-button-icon]="!verticalNavbar.expanded()"
-                            [color]="'contrast'"
-                            [kbqStyle]="'filled'"
                         >
                             <i kbq-icon="kbq-bell_16"></i>
                             @if (verticalNavbar.expanded()) {
@@ -192,7 +192,7 @@ export class E2eHorizontalNavbarStates {}
                     <kbq-navbar-item>
                         <i kbq-icon="kbq-bell_16"></i>
                         <kbq-navbar-title>Уведомления</kbq-navbar-title>
-                        <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
+                        <kbq-badge badgeColor="error" [compact]="true">2</kbq-badge>
                     </kbq-navbar-item>
 
                     <kbq-navbar-divider />
@@ -262,9 +262,9 @@ export class E2eHorizontalNavbarStates {}
                     <kbq-navbar-item>
                         <button
                             kbq-button
+                            color="contrast"
+                            kbqStyle="filled"
                             [class.kbq-button-icon]="!verticalNavbar_2.expanded()"
-                            [color]="'contrast'"
-                            [kbqStyle]="'filled'"
                         >
                             <i kbq-icon="kbq-bell_16"></i>
                             @if (verticalNavbar_2.expanded()) {
@@ -278,7 +278,7 @@ export class E2eHorizontalNavbarStates {}
                     <kbq-navbar-item>
                         <i kbq-icon="kbq-bell_16"></i>
                         <kbq-navbar-title>Уведомления</kbq-navbar-title>
-                        <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
+                        <kbq-badge badgeColor="error" [compact]="true">2</kbq-badge>
                     </kbq-navbar-item>
 
                     <kbq-navbar-divider />
@@ -348,9 +348,9 @@ export class E2eHorizontalNavbarStates {}
                     <kbq-navbar-item>
                         <button
                             kbq-button
+                            color="contrast"
+                            kbqStyle="filled"
                             [class.kbq-button-icon]="!verticalNavbar_3.expanded()"
-                            [color]="'contrast'"
-                            [kbqStyle]="'filled'"
                         >
                             <i kbq-icon="kbq-bell_16"></i>
                             @if (verticalNavbar_3.expanded()) {
@@ -364,7 +364,7 @@ export class E2eHorizontalNavbarStates {}
                     <kbq-navbar-item>
                         <i kbq-icon="kbq-bell_16"></i>
                         <kbq-navbar-title>Уведомления</kbq-navbar-title>
-                        <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
+                        <kbq-badge badgeColor="error" [compact]="true">2</kbq-badge>
                     </kbq-navbar-item>
 
                     <kbq-navbar-divider />
@@ -434,9 +434,9 @@ export class E2eHorizontalNavbarStates {}
                     <kbq-navbar-item>
                         <button
                             kbq-button
+                            color="contrast"
+                            kbqStyle="filled"
                             [class.kbq-button-icon]="!verticalNavbar_4.expanded()"
-                            [color]="'contrast'"
-                            [kbqStyle]="'filled'"
                         >
                             <i kbq-icon="kbq-bell_16"></i>
                             @if (verticalNavbar_4.expanded()) {
@@ -450,7 +450,7 @@ export class E2eHorizontalNavbarStates {}
                     <kbq-navbar-item>
                         <i kbq-icon="kbq-bell_16"></i>
                         <kbq-navbar-title>Уведомления</kbq-navbar-title>
-                        <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
+                        <kbq-badge badgeColor="error" [compact]="true">2</kbq-badge>
                     </kbq-navbar-item>
 
                     <kbq-navbar-divider />
@@ -909,8 +909,8 @@ export class E2eVerticalNavbarItemClippedTitle {}
                             data-testid="nested-tooltip-trigger"
                             kbqTooltip="Nested tooltip"
                             kbqPlacement="right"
-                            [color]="'contrast'"
-                            [kbqStyle]="'filled'"
+                            color="contrast"
+                            kbqStyle="filled"
                         >
                             +
                         </button>
@@ -1051,7 +1051,7 @@ export class E2eNavbarItemCustomContent {}
     selector: 'e2e-notifications-trigger',
     imports: [KbqIconModule],
     template: `
-        <i kbq-icon="kbq-bell_16" [color]="'empty'"></i>
+        <i kbq-icon="kbq-bell_16" color="empty"></i>
     `,
     providers: [{ provide: KBQ_NAVBAR_ITEM_TRIGGER, useExisting: forwardRef(() => E2eNotificationsTrigger) }],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1110,15 +1110,15 @@ class E2eNotificationsTrigger implements KbqNavbarItemTrigger {
                             kbqPopoverPlacement="right"
                         />
                         <kbq-navbar-title>Notifications</kbq-navbar-title>
-                        <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
+                        <kbq-badge badgeColor="error" [compact]="true">2</kbq-badge>
                     </kbq-navbar-item>
 
                     <kbq-navbar-item data-testid="plain-notifications" class="e2e-navbar-item_compact-leading">
                         <span kbqNavbarItemContent class="e2e-navbar-item-leading">
-                            <i kbq-icon="kbq-bell_16" [color]="'empty'"></i>
+                            <i kbq-icon="kbq-bell_16" color="empty"></i>
                         </span>
                         <kbq-navbar-title>Notifications</kbq-navbar-title>
-                        <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
+                        <kbq-badge badgeColor="error" [compact]="true">2</kbq-badge>
                     </kbq-navbar-item>
                 </kbq-navbar-container>
 
@@ -1126,25 +1126,23 @@ class E2eNotificationsTrigger implements KbqNavbarItemTrigger {
             </kbq-vertical-navbar>
         </div>
     `,
-    styles: [
-        `
-            .e2e-navbar-item-leading {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
+    styles: `
+        .e2e-navbar-item-leading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-            .kbq-expanded .e2e-navbar-item-leading {
-                justify-content: flex-start;
-            }
+        .kbq-expanded .e2e-navbar-item-leading {
+            justify-content: flex-start;
+        }
 
-            /* A titled item has an icon-sized leading slot, so its title starts on the plain item's text axis. */
-            .e2e-navbar-item_compact-leading.kbq-expanded {
-                --kbq-navbar-item-size-custom-content-width: var(--kbq-size-l);
-                --kbq-navbar-item-size-custom-content-height: var(--kbq-size-l);
-            }
-        `
-    ],
+        /* A titled item has an icon-sized leading slot, so its title starts on the plain item's text axis. */
+        .e2e-navbar-item_compact-leading.kbq-expanded {
+            --kbq-navbar-item-size-custom-content-width: var(--kbq-size-l);
+            --kbq-navbar-item-size-custom-content-height: var(--kbq-size-l);
+        }
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eNavbarItemCustomComponent'

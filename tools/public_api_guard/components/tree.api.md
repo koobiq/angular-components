@@ -53,7 +53,6 @@ export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
     collapse(dataNode: T): void;
     collapseAll(): void;
     collapseDescendants(dataNode: T): void;
-    // (undocumented)
     dataNodes: T[];
     expand(dataNode: T): void;
     abstract expandAll(): void;
@@ -65,11 +64,11 @@ export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
     filterQuery: string | null;
     // @deprecated
     filterValue: BehaviorSubject<string | T[] | null>;
-    getChildren: (dataNode: T) => Observable<T[]>;
+    getChildren: ((dataNode: T) => Observable<T[]>) | undefined;
     abstract getDescendants(dataNode: T): T[];
-    getLevel: (dataNode: T) => number;
+    getLevel: ((dataNode: T) => number) | undefined;
     get hasActiveFilter(): boolean;
-    isExpandable: (dataNode: T) => boolean;
+    isExpandable: ((dataNode: T) => boolean) | undefined;
     isExpanded(dataNode: T): boolean;
     toggle(dataNode: T): void;
     toggleDescendants(dataNode: T): void;
@@ -88,7 +87,7 @@ export class FilterByValues<T, K = T> implements FlatTreeControlFilter<T> {
     // (undocumented)
     getValues(): string[];
     // (undocumented)
-    handle(_: any, prevFilter?: FlatTreeControlFilter<T>): T[];
+    handle(_: string | null, prevFilter?: FlatTreeControlFilter<T>): T[];
     // (undocumented)
     result: T[];
     // (undocumented)
@@ -108,7 +107,7 @@ export class FilterByViewValue<T, K = T> implements FlatTreeControlFilter<T> {
 export class FilterParentsForNodes<T, K = T> implements FlatTreeControlFilter<T> {
     constructor(control: FlatTreeControl<T, K>);
     // (undocumented)
-    handle(_: any, prevFilter: FlatTreeControlFilter<T>): T[];
+    handle(_: string | null, prevFilter: FlatTreeControlFilter<T>): T[];
     // (undocumented)
     result: T[];
 }
@@ -301,8 +300,7 @@ export class KbqTreeNestedDataSource<T> extends DataSource<T> {
 // @public (undocumented)
 export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
     constructor();
-    // (undocumented)
-    get data(): T;
+    get data(): T | undefined;
     set data(value: T);
     // (undocumented)
     protected destroyed: Subject<void>;
@@ -334,7 +332,7 @@ export class KbqTreeNodeDef<T> {
     readonly data: _angular_core.InputSignal<T>;
     // (undocumented)
     template: TemplateRef<any>;
-    when: (index: number, nodeData: T) => boolean;
+    when: ((index: number, nodeData: T) => boolean) | undefined;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTreeNodeDef<any>, "[kbqTreeNodeDef]", never, { "when": { "alias": "kbqTreeNodeDefWhen"; "required": false; }; "data": { "alias": "kbqTreeNode"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
@@ -479,7 +477,7 @@ export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements OnInit, Af
     readonly onBlur: Observable<KbqTreeOptionEvent>;
     readonly onFocus: Observable<KbqTreeOptionEvent>;
     // (undocumented)
-    onKeydown($event: any): void;
+    onKeydown(event: KeyboardEvent): void;
     protected onMouseenter(): void;
     // @deprecated (undocumented)
     readonly onSelectionChange: _angular_core.OutputEmitterRef<KbqTreeOptionChange>;
@@ -598,7 +596,7 @@ export class KbqTreeSelection<T = any, K = T> extends KbqTreeBase<T, FlatTreeCon
     protected emitChangeEvent(option: KbqTreeOption<T>): void;
     protected emitNavigationEvent(option: KbqTreeOption<T>): void;
     // (undocumented)
-    focus($event: any): void;
+    focus(event?: Event | null): void;
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
     getSelectedValues(): any[];
@@ -738,11 +736,11 @@ export interface TreeControl<T, K = T> {
     readonly filterQuery: string | null;
     // @deprecated
     filterValue: BehaviorSubject<T[] | string | null>;
-    getChildren(dataNode: T): Observable<T[]>;
+    getChildren: ((dataNode: T) => Observable<T[]>) | undefined;
     getDescendants(dataNode: T): any[];
-    getLevel(dataNode: T): number;
+    getLevel: ((dataNode: T) => number) | undefined;
     readonly hasActiveFilter: boolean;
-    isExpandable(dataNode: T): boolean;
+    isExpandable: ((dataNode: T) => boolean) | undefined;
     isExpanded(dataNode: T): boolean;
     toggle(dataNode: T): void;
     toggleDescendants(dataNode: T): void;

@@ -7,5 +7,7 @@
         "module": "nodenext",
         "moduleResolution": "nodenext",
         "types": ["node", "vitest/globals"]
-    }
+    },
+    // The editor finds them through tools/tsconfig.json, under the strictness of the specs.
+    "exclude": ["**/*.spec.ts"]
 }

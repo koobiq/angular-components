@@ -1,9 +1,9 @@
 import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { ChangeDetectionStrategy, Component, effect, Injectable, signal, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, effect, Injectable, signal, type Type, viewChild } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { type Observable, Subject } from 'rxjs';
 import { dispatchKeyboardEvent } from '@koobiq/components/core';
-import { Observable, Subject } from 'rxjs';
 import { KbqClampedText } from './clamped-text';
 
 const AXE_TIMEOUT = 15000;

@@ -187,7 +187,7 @@ export class KbqSidepanelRef<T = any, R = any> {
     readonly containerInstance: KbqSidepanelContainerComponent;
     // (undocumented)
     readonly id: string;
-    instance: T;
+    instance: T | undefined;
     // (undocumented)
     readonly overlayRef: OverlayRef;
 }

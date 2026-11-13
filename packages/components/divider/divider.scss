@@ -1,4 +1,4 @@
-@use './divider-theme' as *;
+@use './divider-theme';
 
 .kbq-divider {
     display: block;
@@ -27,4 +27,4 @@
     }
 }
 
-@include kbq-divider-theme();
+@include divider-theme.kbq-divider-theme();

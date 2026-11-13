@@ -6,8 +6,8 @@ import {
     inject,
     InjectionToken,
     input,
-    Provider,
-    Signal,
+    type Provider,
+    type Signal,
     ViewEncapsulation
 } from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';

@@ -1,4 +1,4 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-table-theme() {
     .kbq-table {
@@ -50,7 +50,7 @@
                 font-weight: normal;
             }
 
-            @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
         }
 
         & > tbody,
@@ -59,7 +59,7 @@
                 font-weight: normal;
             }
 
-            @include kbq-typography-level-to-styles-css-variables(typography, tabular-normal);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, tabular-normal);
         }
     }
 }

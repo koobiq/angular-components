@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqAccordionModule, KbqAccordionVariant } from '@koobiq/components/accordion';
+import { KbqAccordionModule, type KbqAccordionVariant } from '@koobiq/components/accordion';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 
 /**
@@ -8,7 +8,7 @@ import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 @Component({
     selector: 'accordion-states-example',
     imports: [KbqAccordionModule, KbqButtonToggleModule],
-    templateUrl: 'accordion-states-example.html',
+    templateUrl: './accordion-states-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionStatesExample {

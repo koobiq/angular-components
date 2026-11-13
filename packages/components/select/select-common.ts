@@ -11,7 +11,7 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
              application that does not ship them. -->
         <ng-content select="kbq-progress-spinner">
             <div class="kbq-select-loading__spinner">
-                <kbq-progress-spinner [mode]="'indeterminate'" />
+                <kbq-progress-spinner mode="indeterminate" />
             </div>
         </ng-content>
     `,

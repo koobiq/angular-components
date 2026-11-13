@@ -1,60 +1,59 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
-import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Point } from '@angular/cdk/drag-drop';
-import { Overlay, OverlayConfig, OverlayRef, ScrollStrategy } from '@angular/cdk/overlay';
+import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
+import { type BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
+import type { Point } from '@angular/cdk/drag-drop';
+import { Overlay, type OverlayConfig, type OverlayRef, type ScrollStrategy } from '@angular/cdk/overlay';
 import { NgTemplateOutlet } from '@angular/common';
 import {
-    AfterViewInit,
+    type AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     Directive,
-    ElementRef,
+    effect,
+    type ElementRef,
     EventEmitter,
+    inject,
     Injectable,
     InjectionToken,
-    InputSignal,
-    OnChanges,
-    OnDestroy,
-    Renderer2,
-    SimpleChanges,
-    TemplateRef,
-    Type,
-    ViewEncapsulation,
-    WritableSignal,
-    booleanAttribute,
-    effect,
-    inject,
     input,
+    type InputSignal,
+    type OnChanges,
+    type OnDestroy,
+    Renderer2,
+    type SimpleChanges,
+    type TemplateRef,
+    type Type,
     untracked,
-    viewChild
+    viewChild,
+    ViewEncapsulation,
+    type WritableSignal
 } from '@angular/core';
 import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { EMPTY, filter, merge } from 'rxjs';
 import {
+    applyPopupMargins,
     ESCAPE,
     KBQ_PARENT_POPUP,
     KBQ_SIBLING_POPUP,
-    KbqCaretRect,
+    type KbqCaretRect,
     KbqComponentColors,
-    KbqEnumValues,
-    KbqParentPopup,
-    KbqPopUp,
-    KbqPopUpPlacementValues,
-    KbqPopUpTrigger,
-    KbqSiblingPopup,
-    KbqTextAnchor,
-    POSITION_TO_CSS_MAP,
-    PopUpPlacements,
-    PopUpTriggers,
-    applyPopupMargins,
     kbqCreateCaretOrigin,
+    type KbqEnumValues,
     kbqGetSelectionRect,
     kbqListenForCaretMoves,
-    kbqOptionalNumberAttribute
+    kbqOptionalNumberAttribute,
+    type KbqParentPopup,
+    KbqPopUp,
+    type KbqPopUpPlacementValues,
+    KbqPopUpTrigger,
+    type KbqSiblingPopup,
+    type KbqTextAnchor,
+    PopUpPlacements,
+    PopUpTriggers,
+    POSITION_TO_CSS_MAP
 } from '@koobiq/components/core';
-import { EMPTY, merge } from 'rxjs';
-import { filter } from 'rxjs/operators';
-import { KBQ_TOOLTIP_DEFAULT_OPTIONS, KbqTooltipDefaultOptions } from './tooltip-config';
-import { KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, KbqExclusiveTooltip, KbqTooltipRegistry } from './tooltip-registry';
+import { KBQ_TOOLTIP_DEFAULT_OPTIONS, type KbqTooltipDefaultOptions } from './tooltip-config';
+import { KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, type KbqExclusiveTooltip, KbqTooltipRegistry } from './tooltip-registry';
 
 /**
  * What the tooltip is vertically anchored to when it is positioned relative to the caret:
@@ -146,7 +145,7 @@ let nextTooltipUniqueId = 0;
 export class KbqTooltipComponent extends KbqPopUp implements AfterViewInit {
     private readonly delayTracker = inject(KbqTooltipDelayTracker);
 
-    prefix = 'kbq-tooltip';
+    override prefix = 'kbq-tooltip';
 
     // Safe arrow inset from tooltip.scss: ($arrow-footprint + $trigger-margin) / 2 with the default arrow token.
     protected override arrowCenterInset = 19;
@@ -184,7 +183,7 @@ export class KbqTooltipComponent extends KbqPopUp implements AfterViewInit {
         }
     }
 
-    show(delay: number) {
+    override show(delay: number) {
         if (!this.content) {
             return;
         }
@@ -211,7 +210,11 @@ export class KbqTooltipComponent extends KbqPopUp implements AfterViewInit {
         applyPopupMargins(this.renderer, this.elementRef.nativeElement, this.prefix, margin);
     }
 
-    updateClassMap(placement: string, customClass: string, { modifier }: { modifier: KbqEnumValues<TooltipModifier> }) {
+    override updateClassMap(
+        placement: string,
+        customClass: string,
+        { modifier }: { modifier: KbqEnumValues<TooltipModifier> }
+    ) {
         const classMap = {
             [`${this.prefix}_${modifier}`]: true
         };
@@ -397,7 +400,7 @@ export class KbqTooltipTrigger
      * Setting hideWithTimeout to true will delay tooltip hiding and will not hide when the mouse moves from trigger
      * to tooltip.
      */
-    hideWithTimeout: boolean = false;
+    override hideWithTimeout: boolean = false;
 
     /** Input (`kbqVisible`) that programmatically shows or hides the tooltip; reflects the current `visible` state. */
     get tooltipVisible(): boolean {
@@ -490,9 +493,9 @@ export class KbqTooltipTrigger
     private derivedDisabled: boolean | undefined;
 
     /** Input (`kbqEnterDelay`) — delay in milliseconds before the tooltip is shown. Defaults to `400`. */
-    enterDelay = defaultEnterDelay;
+    override enterDelay = defaultEnterDelay;
     /** Input (`kbqLeaveDelay`) — delay in milliseconds before the tooltip is hidden. Defaults to `0`. */
-    leaveDelay = 0;
+    override leaveDelay = 0;
 
     /** Input (`kbqTrigger`) with the comma-separated trigger events. An empty value resets to hover + focus and rebinds listeners. */
     get trigger(): string {
@@ -609,9 +612,9 @@ export class KbqTooltipTrigger
 
     /**
      * Header text or template, rendered above the tooltip content. Only meaningful with
-     * `kbqTooltipModifier="extended"`. Replaces the removed `KbqExtendedTooltipTrigger.header`.
+     * `kbqTooltipModifier="extended"`. Replaces the removed `KbqExtendedTooltipTrigger.header`. Defaults to `''`.
      */
-    header: string | TemplateRef<unknown>;
+    header: string | TemplateRef<unknown> = '';
 
     /**
      * Hands each bound input to its member, and pushes a later change of `modifier`, `header`, `arrow`,
@@ -955,7 +958,7 @@ export class KbqTooltipTrigger
     }
 
     /** Stops focus monitoring on the host element and runs the base-class teardown. */
-    ngOnDestroy() {
+    override ngOnDestroy() {
         this.focusMonitor.stopMonitoring(this.elementRef.nativeElement);
 
         super.ngOnDestroy();
@@ -1005,7 +1008,7 @@ export class KbqTooltipTrigger
      * anchor or on a focus trigger that did not originate from the keyboard, and applies cursor-relative
      * positioning when `relativeToPointer` is enabled.
      */
-    show(delay: number = this.enterDelay) {
+    override show(delay: number = this.enterDelay) {
         if (this.mutedBySiblingPopup) {
             const pointerReturned =
                 this.triggerName === 'mouseenter' && this.pointerLeftWhileMuted && !this.siblingPopupAttached;
@@ -1057,7 +1060,7 @@ export class KbqTooltipTrigger
      * backdrop steals the hover from the trigger while the pointer stands still, and that `mouseleave` must
      * not be mistaken for the user leaving.
      */
-    hide(delay: number = this.leaveDelay) {
+    override hide(delay: number = this.leaveDelay) {
         if (RELEASE_TRIGGERS.includes(this.triggerName) && !this.siblingPopupAttached) {
             this.mutedBySiblingPopup = false;
         }
@@ -1235,7 +1238,7 @@ export class KbqTooltipTrigger
      *
      * @docs-private
      */
-    createOverlay(): OverlayRef {
+    override createOverlay(): OverlayRef {
         if (this.overlayRef) {
             return this.overlayRef;
         }
@@ -1407,7 +1410,7 @@ export class KbqTooltipTrigger
     }
 
     /** @docs-private */
-    protected getAnchorSize(): { width: number; height: number } {
+    protected override getAnchorSize(): { width: number; height: number } {
         return this.relativeToCaret ? this.caretOrigin : super.getAnchorSize();
     }
 
@@ -1476,7 +1479,7 @@ export class KbqTooltipTrigger
      * this pass.
      */
     private repositionAtCaret(): void {
-        if (!this.overlayRef) return;
+        if (!this.overlayRef || !this.strategy) return;
 
         this.strategy.withLockedPosition(false);
         this.overlayRef.updatePosition();

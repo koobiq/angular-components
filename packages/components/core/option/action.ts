@@ -1,6 +1,6 @@
-﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+﻿import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
 import {
-    AfterViewInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
@@ -9,10 +9,10 @@ import {
     inject,
     InjectionToken,
     input,
-    OnDestroy,
-    OutputRef,
+    type OnDestroy,
+    type OutputRef,
     ViewEncapsulation,
-    WritableSignal
+    type WritableSignal
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ENTER, SPACE, TAB } from '../keycodes';
@@ -41,7 +41,7 @@ export const KBQ_OPTION_ACTION_PARENT = new InjectionToken<KbqOptionActionParent
             <i class="kbq kbq-icon kbq-contrast-fade kbq-ellipsis-vertical_16"></i>
         </ng-content>
     `,
-    styleUrls: ['./action.scss'],
+    styleUrl: './action.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -153,23 +153,23 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
         this.hasFocus = this.nativeElement.ownerDocument.activeElement === this.nativeElement;
     }
 
-    onClick($event) {
-        $event.stopPropagation();
+    onClick(event: Event) {
+        event.stopPropagation();
     }
 
-    onKeyDown($event) {
-        if ([SPACE, ENTER].includes($event.keyCode) && this.option.dropdownTrigger) {
+    onKeyDown(event: KeyboardEvent) {
+        if ([SPACE, ENTER].includes(event.keyCode) && this.option.dropdownTrigger) {
             this.option.dropdownTrigger.openedBy = 'keyboard';
-        } else if ($event.shiftKey && $event.keyCode === TAB) {
+        } else if (event.shiftKey && event.keyCode === TAB) {
             this.hasFocus = false;
 
             this.option.focus();
-        } else if ($event.keyCode === TAB) {
+        } else if (event.keyCode === TAB) {
             return;
         }
 
-        $event.preventDefault();
-        $event.stopPropagation();
+        event.preventDefault();
+        event.stopPropagation();
     }
 }
 

@@ -1,15 +1,17 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, type ElementRef, viewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
+import { map, type Observable, startWith } from 'rxjs';
+import { KbqAutocompleteModule, type KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { KbqTagInput, type KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 
-const autocompleteValueCoercion = (value): string => (value?.new ? value.value : value) || '';
+type AutocompleteValue = string | { new: true; value: string } | null;
+
+const autocompleteValueCoercion = (value: AutocompleteValue): string =>
+    (typeof value === 'string' ? value : value?.value) || '';
 const getAutocompleteOptions = () => [
     'BruteForce',
     'Complex Attack',
@@ -90,7 +92,7 @@ const getAutocompleteOptions = () => [
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
+export class TagAutocompleteOptionOperationsExample {
     protected readonly allTags = getAutocompleteOptions();
     protected readonly selectedTags = [...this.allTags.slice(0, 2)];
     protected readonly separatorKeysCodes = [];
@@ -100,7 +102,9 @@ export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
 
     control = new FormControl();
 
-    filteredTags: Observable<string[]>;
+    filteredTags: Observable<string[]> = this.control.valueChanges
+        .pipe(map((e) => this.onControlValueChanges(e)))
+        .pipe(startWith(this.allTags.filter((tag) => !this.selectedTags.includes(tag))));
     hasDuplicates: boolean = false;
 
     readonly kbqOptionTagName = 'KBQ-OPTION';
@@ -111,12 +115,6 @@ export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
         return (
             !!cleanedValue && [...new Set(this.allTags.concat(this.selectedTags))].every((tag) => tag !== cleanedValue)
         );
-    }
-
-    ngAfterViewInit(): void {
-        this.filteredTags = this.control.valueChanges
-            .pipe(map((e) => this.onControlValueChanges(e)))
-            .pipe(startWith(this.allTags.filter((tag) => !this.selectedTags.includes(tag))));
     }
 
     onCreate({ input, value }: KbqTagInputEvent): void {

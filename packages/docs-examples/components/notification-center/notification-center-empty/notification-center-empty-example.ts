@@ -1,9 +1,16 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
-import { KbqButtonColor, KbqButtonModule, KbqButtonStyleInput, KbqButtonStyles } from '@koobiq/components/button';
+import {
+    type KbqButtonColor,
+    KbqButtonModule,
+    type KbqButtonStyleInput,
+    KbqButtonStyles
+} from '@koobiq/components/button';
 import { KbqComponentColors, KbqFormattersModule, KbqThemeService, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
@@ -11,7 +18,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koobiq/components/notification-center';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
-import { map } from 'rxjs/operators';
 import { injectExampleText } from '../localized-data';
 
 type ExampleAction = {
@@ -46,9 +52,10 @@ enum NavbarIcItems {
         KbqDropdownModule,
         LuxonDateModule,
         KbqFormattersModule,
-        KbqNavbarModule
+        KbqNavbarModule,
+        NgOptimizedImage
     ],
-    templateUrl: 'notification-center-empty-example.html',
+    templateUrl: './notification-center-empty-example.html',
     styles: `
         ::ng-deep .example-notification-center-panel {
             margin-top: -139px;
@@ -66,12 +73,6 @@ export class NotificationCenterEmptyExample {
 
     private readonly themeService = inject(KbqThemeService, { optional: true });
     protected readonly currentTheme = computed(() => this.themeService?.colorScheme() ?? 'light');
-
-    protected readonly srcSet = computed(() => {
-        const currentTheme = this.currentTheme();
-
-        return `https://koobiq.io/assets/images/${currentTheme}/empty_192.webp 1x, https://koobiq.io/assets/images/${currentTheme}/empty_192@2x.webp 2x`;
-    });
 
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)

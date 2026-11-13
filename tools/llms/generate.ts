@@ -9,11 +9,11 @@ import { mkdirSync, rmSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { format, resolveConfig } from 'prettier';
 import { DocsLocale } from '../../apps/docs/src/app/constants/locale';
-import { docsGetCategories, docsGetItems, DocsStructureItem } from '../../apps/docs/src/app/structure';
+import { docsGetCategories, docsGetItems, type DocsStructureItem } from '../../apps/docs/src/app/structure';
 import { COMPONENT_GUIDE_PATH, parseComponentGuide, renderComponentGuide } from './component-guide';
 import { renderItemMarkdown } from './item-markdown';
-import { renderItemPage, SiteFilesContext } from './item-page';
-import { LLMS_FULL_TXT, LlmsCategory, LlmsHeader, renderLlmsFullTxt, renderLlmsTxt } from './llms-txt';
+import { renderItemPage, type SiteFilesContext } from './item-page';
+import { LLMS_FULL_TXT, type LlmsCategory, type LlmsHeader, renderLlmsFullTxt, renderLlmsTxt } from './llms-txt';
 import {
     collectPageSources,
     getIconsVersion,

@@ -1,5 +1,5 @@
-﻿import { Component, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+﻿import { Component, type Type, viewChild } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { dispatchMouseEvent } from '@koobiq/components/core';
 import {
@@ -175,6 +175,14 @@ describe('KbqSplitter', () => {
             expect(sized.style.maxWidth).toBe('50%');
             expect(plain.style.width).toBe('');
             expect(plain.style.maxWidth).toBe('');
+        });
+
+        it('should read the min-width of an area in a horizontal splitter', () => {
+            const fixture = createTestComponent(KbqSplitterGhost);
+
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.areaB().getMinSize()).toBe(50);
         });
     });
 

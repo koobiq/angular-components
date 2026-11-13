@@ -1,5 +1,5 @@
-import { Component, DebugElement, effect, signal, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, type DebugElement, effect, signal, viewChild } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import {
     FormControl,
     FormGroup,
@@ -12,8 +12,8 @@ import {
 import { By } from '@angular/platform-browser';
 import { dispatchFakeEvent, ErrorStateMatcher } from '@koobiq/components/core';
 import { KbqError, KbqHint } from '@koobiq/components/form-field';
-import { KBQ_CHECKBOX_CLICK_ACTION, KbqCheckboxClickAction } from './checkbox-config';
-import { KbqCheckbox, KbqCheckboxChange, KbqCheckboxModule } from './index';
+import { KBQ_CHECKBOX_CLICK_ACTION, type KbqCheckboxClickAction } from './checkbox-config';
+import { KbqCheckbox, type KbqCheckboxChange, KbqCheckboxModule } from './index';
 
 describe('KbqCheckbox', () => {
     let fixture: ComponentFixture<any>;

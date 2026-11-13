@@ -14,5 +14,7 @@
     "include": [
         "**/*.ts",
         "../../tools/vitest/*.d.ts"
-    ]
+    ],
+    // The editor finds them through packages/tsconfig.json, under the strictness of the specs.
+    "exclude": ["**/*.spec.ts", "**/*.spec-helper.ts", "**/*.playwright-spec.ts"]
 }

@@ -2,17 +2,37 @@
     "extends": "./tsconfig.json",
     "compilerOptions": {
         "noEmit": true,
-        "incremental": true
+        "incremental": true,
+        // The type-aware rules lint the JavaScript of the repository too
+        "allowJs": true
     },
+    // `include` skips the dotfiles, and a script with a declaration file next to it, which takes its place
+    "files": [
+        ".commitlintrc.js",
+        ".lintstagedrc.js",
+        ".prettierrc.js",
+        "tools/e2e/changed-specs.mjs"
+    ],
     "include": [
         "**/*.ts",
         "**/*.cts",
         "**/*.mts",
+        "**/*.js",
+        "**/*.cjs",
+        "**/*.mjs",
         "**/*.html"
     ],
     "exclude": [
-        "node_modules",
+        "**/node_modules",
         "**/dist",
+        "**/coverage",
+        "**/playwright-report",
+        "**/playwright-report-docs",
+        "**/test-results",
+        ".yarn",
+        ".angular",
+        ".ai",
+        ".claude",
         "tools/check-angular"
     ]
 }

@@ -50,13 +50,13 @@ import { KbqSelectModule } from '@koobiq/components/select';
                 </div>
             </div>
             <div class="layout-row example-block layout-margin-top-4xl">
-                <div class="flex example-block {{ selectedFirstBlockOrder }}">Block 1</div>
-                <div class="flex example-block {{ selectedSecondBlockOrder }}">Block 2</div>
-                <div class="flex example-block {{ selectedThirdBlockOrder }}">Block 3</div>
+                <div class="flex example-block" [class]="selectedFirstBlockOrder">Block 1</div>
+                <div class="flex example-block" [class]="selectedSecondBlockOrder">Block 2</div>
+                <div class="flex example-block" [class]="selectedThirdBlockOrder">Block 3</div>
             </div>
         </div>
     `,
-    styleUrls: ['layout-flex-order-example.css'],
+    styleUrl: 'layout-flex-order-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LayoutFlexOrderExample {

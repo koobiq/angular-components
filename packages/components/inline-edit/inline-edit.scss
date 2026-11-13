@@ -1,8 +1,8 @@
 @use '../core/styles/common/animation';
 @use '../core/styles/common/tokens';
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
-@mixin _inline-edit-theme {
+@mixin -inline-edit-theme {
     background: var(--kbq-inline-edit-background);
 
     // The tab stop is the view content (or the focus anchor), while the ring is drawn on the host
@@ -59,7 +59,7 @@
  * with the error color: each of its selectors is more specific than the plain `.kbq-inline-edit_save-error` rule,
  * so leaving one out would drop the marking in that state.
  */
-@mixin _inline-edit-save-error-theme {
+@mixin -inline-edit-save-error-theme {
     &.kbq-inline-edit_view.kbq-inline-edit_save-error {
         --kbq-inline-edit-background: var(--kbq-inline-edit-error-background);
 
@@ -78,7 +78,7 @@
     }
 }
 
-@mixin _inline-edit-typography {
+@mixin -inline-edit-typography {
     @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
 }
 
@@ -90,13 +90,13 @@
     box-sizing: border-box;
 
     border: var(--kbq-size-border-width) solid transparent;
-    @include kbq-squircle(var(--kbq-size-border-radius));
+    @include squircle.kbq-squircle(var(--kbq-size-border-radius));
     padding: var(--kbq-inline-edit-padding-vertical) var(--kbq-inline-edit-padding-horizontal);
     min-height: var(--kbq-inline-edit-height);
 
-    @include _inline-edit-theme();
-    @include _inline-edit-save-error-theme();
-    @include _inline-edit-typography();
+    @include -inline-edit-theme();
+    @include -inline-edit-save-error-theme();
+    @include -inline-edit-typography();
 
     &:not(.kbq-inline-edit_with-label) {
         --kbq-inline-edit-padding-horizontal: calc(var(--kbq-size-m) - var(--kbq-size-border-width));
@@ -151,7 +151,10 @@
         opacity: 0;
         height: calc(100% + 2 * var(--kbq-size-border-width));
         justify-content: flex-end;
-        @include kbq-squircle(var(--kbq-size-border-radius), border-top-right-radius border-bottom-right-radius);
+        @include squircle.kbq-squircle(
+            var(--kbq-size-border-radius),
+            border-top-right-radius border-bottom-right-radius
+        );
 
         &:has(.kbq-inline-edit__menu.kbq-pressed, .kbq-inline-edit__menu.cdk-keyboard-focused) {
             opacity: 1;
@@ -167,7 +170,7 @@
             display: flex;
             justify-content: flex-end;
             min-width: 40px;
-            @include kbq-squircle-inherit();
+            @include squircle.kbq-squircle-inherit();
             background: var(--kbq-mask-background, transparent);
         }
 
@@ -206,7 +209,7 @@
     .kbq-inline-edit__action-button {
         box-shadow: var(--kbq-inline-edit-panel-shadow);
         background-color: var(--kbq-background-bg);
-        @include kbq-squircle(var(--kbq-size-border-radius));
+        @include squircle.kbq-squircle(var(--kbq-size-border-radius));
     }
 }
 

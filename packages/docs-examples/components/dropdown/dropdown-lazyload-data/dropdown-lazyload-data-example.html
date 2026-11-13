@@ -2,18 +2,23 @@
     <input autocomplete="off" kbqInput style="max-width: 200px" type="text" [(ngModel)]="someValue" />
 </kbq-form-field>
 
-<button kbq-button [kbqDropdownTriggerData]="{ someValue: someValue }" [kbqDropdownTriggerFor]="appDropdownLazy">
+<button
+    kbq-button
+    type="button"
+    [kbqDropdownTriggerData]="{ someValue: someValue }"
+    [kbqDropdownTriggerFor]="appDropdownLazy"
+>
     dropdown lazy
     <i kbq-icon="kbq-chevron-down-s_16"></i>
 </button>
 
 <kbq-dropdown #appDropdownLazy="kbqDropdown">
     <ng-template let-someValue="someValue" kbqDropdownContent>
-        <button kbq-dropdown-item>dropdown</button>
-        <button kbq-dropdown-item>
+        <button kbq-dropdown-item type="button">dropdown</button>
+        <button kbq-dropdown-item type="button">
             Point 1
             <span kbqDropdownItemCaption>Some info</span>
         </button>
-        <button kbq-dropdown-item>Value: {{ someValue }}</button>
+        <button kbq-dropdown-item type="button">Value: {{ someValue }}</button>
     </ng-template>
 </kbq-dropdown>

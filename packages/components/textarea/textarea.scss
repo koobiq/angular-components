@@ -1,5 +1,4 @@
-@use '../core/styles/common/tokens' as *;
-@use './textarea-tokens' as *;
+@use './textarea-tokens';
 
 .kbq-textarea {
     display: inline-block;

@@ -1,9 +1,9 @@
 import {
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     computed,
-    OnInit,
+    type OnInit,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -17,11 +17,11 @@ import {
     defaultFilterBarPipes,
     KBQ_FILTER_BAR_PIPES,
     KbqBasePipe,
-    KbqFilter,
+    type KbqFilter,
     KbqFilterBarModule,
     KbqPipeButton,
     KbqPipeState,
-    KbqPipeTemplate,
+    type KbqPipeTemplate,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -48,11 +48,12 @@ import { injectLocalizedPeriods } from '../localized-data';
         <button
             kbq-button
             kbqPopover
+            type="button"
+            kbqPopoverClass="kbq-pipe__popover"
             [disabled]="data.disabled"
             [kbqPipeState]="data"
             [kbq-title]="pipeTooltip"
             [kbqPopoverArrow]="false"
-            [kbqPopoverClass]="'kbq-pipe__popover'"
             [kbqPopoverContent]="content"
             [kbqPopoverOffset]="4"
             [kbqPopoverPlacement]="placements.BottomLeft"
@@ -83,7 +84,7 @@ import { injectLocalizedPeriods } from '../localized-data';
             <div class="kbq-pipe-tooltip__value kbq-text-compact">{{ data.value }}</div>
         </ng-template>
     `,
-    styleUrls: ['../../../../components/filter-bar/pipes/base-pipe.scss'],
+    styleUrl: '../../../../components/filter-bar/pipes/base-pipe.scss',
     providers: [
         {
             provide: KbqBasePipe,
@@ -98,11 +99,11 @@ export class ColorPipeComponent extends KbqBasePipe<string | null> implements Af
 
     readonly popover = viewChild.required(KbqPopoverTrigger);
 
-    get isEmpty(): boolean {
+    override get isEmpty(): boolean {
         return this.data.value === null || this.data.value === undefined;
     }
 
-    get showRemoveButton(): boolean {
+    override get showRemoveButton(): boolean {
         return this.data.removable || (this.data.cleanable && !this.isEmpty);
     }
 
@@ -116,7 +117,7 @@ export class ColorPipeComponent extends KbqBasePipe<string | null> implements Af
         this.control.setValue(this.data.value);
     }
 
-    ngAfterViewInit() {
+    override ngAfterViewInit() {
         super.ngAfterViewInit();
 
         this.popover()

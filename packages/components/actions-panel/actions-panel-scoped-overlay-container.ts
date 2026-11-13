@@ -1,5 +1,5 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { ElementRef, inject, Injectable, InjectionToken } from '@angular/core';
+import { type ElementRef, inject, Injectable, InjectionToken } from '@angular/core';
 import { KBQ_WINDOW } from '@koobiq/components/core';
 
 /**

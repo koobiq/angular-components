@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, TemplateRef, ViewEncapsulation, inject, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    type TemplateRef,
+    viewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -74,7 +81,7 @@ export class DevDocsExamples {}
 
         <kbq-sidepanel-footer>
             <kbq-sidepanel-actions>
-                <button kbq-button [color]="'contrast'" (click)="openComponentSidepanel()">
+                <button kbq-button color="contrast" (click)="openComponentSidepanel()">
                     <span>Open another sidepanel</span>
                 </button>
 
@@ -113,7 +120,7 @@ export class DevSidepanelComponent {
         DevDocsExamples
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

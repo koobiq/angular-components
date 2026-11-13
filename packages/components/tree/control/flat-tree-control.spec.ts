@@ -82,7 +82,7 @@ describe('FlatTreeControl', () => {
             const numGrandChildren = 2;
             const nodes = generateData(numNodes, numChildren, numGrandChildren);
 
-            const data = [];
+            const data: TestData[] = [];
 
             flatten(nodes, data);
             treeControl.dataNodes = data;
@@ -109,7 +109,7 @@ describe('FlatTreeControl', () => {
             const numChildren = 4;
             const numGrandChildren = 2;
             const nodes = generateData(numNodes, numChildren, numGrandChildren);
-            const data = [];
+            const data: TestData[] = [];
 
             flatten(nodes, data);
             treeControl.dataNodes = data;
@@ -125,6 +125,22 @@ describe('FlatTreeControl', () => {
             const totalNumber = numNodes + numNodes * numChildren + numNodes * numChildren * numGrandChildren;
 
             expect(treeControl.expansionModel.selected.length).toBe(totalNumber);
+        });
+    });
+
+    describe('filtering', () => {
+        // A filter value set before the first `filterNodes` leaves no saved expansion state to restore
+        it('should collapse everything when the filter clears without a saved expansion state', async () => {
+            treeControl.dataNodes = [];
+            treeControl.filterValue.next('a_0');
+
+            treeControl.filterNodes('');
+            // the filter value and then the expansion state are restored in microtasks
+            await Promise.resolve();
+
+            // an empty query is a reset
+            expect(treeControl.filterValue.value).toBeNull();
+            expect(treeControl.expansionModel.selected).toEqual([]);
         });
     });
 

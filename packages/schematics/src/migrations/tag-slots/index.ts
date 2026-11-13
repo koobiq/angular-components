@@ -1,12 +1,12 @@
-import { Path } from '@angular-devkit/core';
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Path } from '@angular-devkit/core';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
-import { visitAll, Visitor } from '../../utils/ast';
+import { visitAll, type Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
 import { forEachClass, parseTemplate } from '../../utils/typescript';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 const TS_EXT = '.ts';
 const HTML_EXT = '.html';

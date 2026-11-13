@@ -140,11 +140,7 @@ export class ClampedListOverviewExample {
         const isExpanded = !isCollapsed;
 
         if (isExpanded) {
-            const links = this.clampedListItems();
-
-            if (links.length) {
-                links[0].focus();
-            }
+            this.clampedListItems()[0]?.focus();
         }
     }
 }

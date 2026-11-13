@@ -12,30 +12,35 @@ import {
     contentChildren,
     DestroyRef,
     effect,
-    ElementRef,
+    type ElementRef,
     inject,
     InjectionToken,
     input,
-    InputSignal,
+    type InputSignal,
     isDevMode,
     model,
-    ModelSignal,
+    type ModelSignal,
     numberAttribute,
-    Provider,
-    Signal,
+    type Provider,
+    type Signal,
     signal,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { startWith } from 'rxjs';
 import {
     hasModifierKey,
     KBQ_WINDOW,
     kbqInjectA11yLocaleConfiguration,
     kbqInjectNativeElement
 } from '@koobiq/components/core';
-import { KbqResizable, KbqResizer, KbqResizerDirection, KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
-import { startWith } from 'rxjs/operators';
+import {
+    KbqResizable,
+    KbqResizer,
+    type KbqResizerDirection,
+    type KbqResizerSizeChangeEvent
+} from '@koobiq/components/resizer';
 
 /** Direction the panels of a splitter are laid out in. */
 export type KbqSplitterOrientation = 'horizontal' | 'vertical';
@@ -118,22 +123,24 @@ export function fitSplitterSizes(
     max: readonly number[],
     total: number
 ): number[] {
-    const next = sizes.map((size, index) => clamp(size, min[index], max[index]));
+    // `min` and `max` hold one entry per size: every caller builds the three from the same panels.
+    const clampAt = (size: number, index: number) => clamp(size, min[index]!, max[index]!);
+    const next = sizes.map(clampAt);
 
     for (let pass = 0; pass <= next.length; pass++) {
         const diff = total - sumOf(next);
 
         if (Math.abs(diff) < EPSILON) break;
 
-        const open = next
-            .map((_, index) => index)
-            .filter((index) => (diff > 0 ? next[index] < max[index] : next[index] > min[index]));
+        const open = [...next.entries()].filter(([index, size]) =>
+            diff > 0 ? size < max[index]! : size > min[index]!
+        );
 
         if (!open.length) break;
 
         const step = diff / open.length;
 
-        open.forEach((index) => (next[index] = clamp(next[index] + step, min[index], max[index])));
+        open.forEach(([index, size]) => (next[index] = clampAt(size + step, index)));
     }
 
     return next;
@@ -152,9 +159,10 @@ function collapseSplitterSizes(
     strips: readonly number[]
 ): number[] {
     const open = collapsed.filter((isCollapsed) => !isCollapsed).length;
-    const freed = sizes.reduce((sum, size, index) => (collapsed[index] ? sum + size - strips[index] : sum), 0);
+    // `strips` holds one entry per size: the caller builds both from the same panels.
+    const freed = sizes.reduce((sum, size, index) => (collapsed[index] ? sum + size - strips[index]! : sum), 0);
 
-    return sizes.map((size, index) => (collapsed[index] ? strips[index] : size + (open ? freed / open : 0)));
+    return sizes.map((size, index) => (collapsed[index] ? strips[index]! : size + (open ? freed / open : 0)));
 }
 
 /**
@@ -168,8 +176,9 @@ function keepSplitterRestoreSizes(
     restore: readonly (number | undefined)[]
 ): number[] {
     const open = collapsed.filter((isCollapsed) => !isCollapsed).length;
+    // `restore` holds one entry per size: the callers map it from the same panels.
     const added = restore.reduce<number>(
-        (sum, size, index) => (size === undefined ? sum : sum + size - sizes[index]),
+        (sum, size, index) => (size === undefined ? sum : sum + size - sizes[index]!),
         0
     );
 
@@ -200,8 +209,9 @@ export function resizeSplitterSizesAt(
     const leading = Array.from({ length: index + 1 }, (_, offset) => index - offset);
     const trailing = Array.from({ length: sizes.length - index - 1 }, (_, offset) => index + 1 + offset);
     const growing = delta > 0;
-    const roomOf = (indices: number[], grow: boolean) =>
-        indices.reduce((room, panel) => room + (grow ? max[panel] - sizes[panel] : sizes[panel] - min[panel]), 0);
+    // `min` and `max` hold one entry per size: every caller builds the three from the same panels.
+    const roomAt = (panel: number, grow: boolean) => (grow ? max[panel]! - sizes[panel]! : sizes[panel]! - min[panel]!);
+    const roomOf = (indices: number[], grow: boolean) => indices.reduce((room, panel) => room + roomAt(panel, grow), 0);
 
     // The boundary travels as far as the tighter of its two sides allows.
     const travel = Math.min(Math.abs(delta), roomOf(leading, growing), roomOf(trailing, !growing));
@@ -212,9 +222,9 @@ export function resizeSplitterSizesAt(
         for (const panel of indices) {
             if (remaining <= EPSILON) break;
 
-            const taken = Math.min(remaining, grow ? max[panel] - sizes[panel] : sizes[panel] - min[panel]);
+            const taken = Math.min(remaining, roomAt(panel, grow));
 
-            next[panel] = sizes[panel] + (grow ? taken : -taken);
+            next[panel] = sizes[panel]! + (grow ? taken : -taken);
             remaining -= taken;
         }
     };
@@ -599,7 +609,7 @@ type KbqSplitterDragSnapshot = {
 @Component({
     selector: 'kbq-splitter',
     template: '<ng-content />',
-    styleUrls: ['splitter.scss', 'splitter-tokens.scss'],
+    styleUrls: ['./splitter.scss', './splitter-tokens.scss'],
     providers: [{ provide: KBQ_SPLITTER, useExisting: KbqSplitter }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -624,6 +634,9 @@ export class KbqSplitter implements KbqSplitterGroup {
     private readonly viewportRuler = inject(ViewportRuler);
     private readonly directionality = inject(Directionality, { optional: true });
     private readonly options = inject(KBQ_SPLITTER_OPTIONS);
+
+    // The numeric arrays below hold one entry per panel: each is mapped from `panels()`, and `sizes` drops a layout of
+    // another length. An index comes from a panel's place in the group, or has been checked against the group's length.
 
     /** Direction the panels are laid out in. */
     readonly orientation = input<KbqSplitterOrientation>('horizontal');
@@ -690,7 +703,7 @@ export class KbqSplitter implements KbqSplitterGroup {
             const max = this.resolveSize(panel.maxSize()) ?? Number.POSITIVE_INFINITY;
 
             // A maximum below the minimum would make every clamp order-dependent; the minimum wins.
-            return Math.max(min[index], max);
+            return Math.max(min[index]!, max);
         });
     });
 
@@ -724,14 +737,14 @@ export class KbqSplitter implements KbqSplitterGroup {
      */
     private readonly minSizes = computed<number[]>(() =>
         this.panels().map((panel, index) =>
-            panel.collapsed() ? this.collapsedSizes()[index] : this.expandedMinSizes()[index]
+            panel.collapsed() ? this.collapsedSizes()[index]! : this.expandedMinSizes()[index]!
         )
     );
 
     /** Largest size of each panel in pixels; a collapsed panel is pinned to its collapsed size. */
     private readonly maxSizes = computed<number[]>(() =>
         this.panels().map((panel, index) =>
-            panel.collapsed() ? this.collapsedSizes()[index] : this.expandedMaxSizes()[index]
+            panel.collapsed() ? this.collapsedSizes()[index]! : this.expandedMaxSizes()[index]!
         )
     );
 
@@ -858,14 +871,14 @@ export class KbqSplitter implements KbqSplitterGroup {
 
         if (total <= 0) return { now: 0, min: 0, max: 100 };
 
-        const sizes = this.sizes();
+        const current = this.sizes()[index]!;
         const { grow, shrink } = this.panelRoom(index);
         const toPercent = (size: number) => Math.round((size / total) * 100);
 
         return {
-            now: toPercent(sizes[index]),
-            min: toPercent(sizes[index] - shrink),
-            max: toPercent(sizes[index] + grow)
+            now: toPercent(current),
+            min: toPercent(current - shrink),
+            max: toPercent(current + grow)
         };
     }
 
@@ -882,7 +895,7 @@ export class KbqSplitter implements KbqSplitterGroup {
             sizes,
             total: this.containerSize(),
             layout: this.layout(),
-            origin: origin ?? sizes[index],
+            origin: origin ?? sizes[index]!,
             moved: false
         };
         this.dragBoundary.set(index);
@@ -909,7 +922,7 @@ export class KbqSplitter implements KbqSplitterGroup {
         // host binds to `collapsed` has to agree with the screen for the whole gesture, not catch up on release.
         // Compared first, so a host hears `collapsedChange` once per crossing rather than on every move.
         this.panels().forEach((panel, panelIndex) => {
-            if (free[panelIndex] && panel.collapsed() !== pins[panelIndex]) panel.collapsed.set(pins[panelIndex]);
+            if (free[panelIndex] && panel.collapsed() !== pins[panelIndex]) panel.collapsed.set(pins[panelIndex]!);
         });
 
         this.applySizes(resizeSplitterSizesAt(snapshot.sizes, index, delta, this.minSizes(), this.maxSizes()));
@@ -965,6 +978,8 @@ export class KbqSplitter implements KbqSplitterGroup {
         const sign = horizontal && this.rtl() ? -1 : 1;
         const panel = this.panels()[index];
 
+        if (!panel) return;
+
         switch (event.key) {
             case 'ArrowLeft':
                 if (!horizontal) return;
@@ -984,12 +999,13 @@ export class KbqSplitter implements KbqSplitterGroup {
                 return this.commitKeydown(event, () => this.resizeBy(index, KEYBOARD_STEP));
             case 'Home':
                 return this.commitKeydown(event, () => {
-                    const min = this.expandedMinSizes()[index];
+                    const min = this.expandedMinSizes()[index]!;
+                    const size = this.sizes()[index]!;
 
                     // A panel already at its minimum has nowhere left to go but away, when it may collapse.
-                    if (panel.collapsible() && this.sizes()[index] <= min + EPSILON) return panel.collapsed.set(true);
+                    if (panel.collapsible() && size <= min + EPSILON) return panel.collapsed.set(true);
 
-                    this.resizeBy(index, min - this.sizes()[index]);
+                    this.resizeBy(index, min - size);
                 });
             case 'End':
                 return this.commitKeydown(event, () => {
@@ -999,9 +1015,9 @@ export class KbqSplitter implements KbqSplitterGroup {
 
                     // `resizeBy` is bounded by what the trailing panels can give up, so the splitter's own size
                     // is a safe stand-in for an unbounded maximum.
-                    const max = Math.min(this.expandedMaxSizes()[index], this.containerSize());
+                    const max = Math.min(this.expandedMaxSizes()[index]!, this.containerSize());
 
-                    this.resizeBy(index, max - this.sizes()[index]);
+                    this.resizeBy(index, max - this.sizes()[index]!);
                 });
             case 'Enter':
                 if (!panel.collapsible()) return;
@@ -1020,7 +1036,7 @@ export class KbqSplitter implements KbqSplitterGroup {
         // to its minimum, which is the optional second step of the double-click behaviour.
         if (this.layout() !== null) return this.layout.set(null);
 
-        this.resizeBy(index, this.minSizes()[index] - this.sizes()[index]);
+        this.resizeBy(index, this.minSizes()[index]! - this.sizes()[index]!);
     }
 
     /** Resolves a size in the units a panel understands into pixels, with `total` as the splitter's own size. */
@@ -1064,16 +1080,17 @@ export class KbqSplitter implements KbqSplitterGroup {
         const sizes = this.sizes();
         const min = this.expandedMinSizes();
         const max = this.expandedMaxSizes();
-        const room = (available: number) => Math.max(0, available);
+        const growRoom = (panel: number) => Math.max(0, max[panel]! - sizes[panel]!);
+        const shrinkRoom = (panel: number) => Math.max(0, sizes[panel]! - min[panel]!);
         const sumOver = (panels: number[], take: (panel: number) => number) => sumOf(panels.map(take));
         const leading = Array.from({ length: index + 1 }, (_, offset) => offset);
         const trailing = Array.from({ length: sizes.length - index - 1 }, (_, offset) => index + 1 + offset);
 
         return {
-            leadingGrow: sumOver(leading, (panel) => room(max[panel] - sizes[panel])),
-            leadingShrink: sumOver(leading, (panel) => room(sizes[panel] - min[panel])),
-            trailingGive: sumOver(trailing, (panel) => room(sizes[panel] - min[panel])),
-            trailingTake: sumOver(trailing, (panel) => room(max[panel] - sizes[panel]))
+            leadingGrow: sumOver(leading, growRoom),
+            leadingShrink: sumOver(leading, shrinkRoom),
+            trailingGive: sumOver(trailing, shrinkRoom),
+            trailingTake: sumOver(trailing, growRoom)
         };
     }
 
@@ -1107,10 +1124,11 @@ export class KbqSplitter implements KbqSplitterGroup {
 
         const { trailingGive, trailingTake } = this.sideRoom(index);
         const room = (available: number) => Math.max(0, available);
+        const size = sizes[index]!;
 
         return {
-            grow: room(Math.min(this.expandedMaxSizes()[index] - sizes[index], trailingGive)),
-            shrink: room(Math.min(sizes[index] - this.expandedMinSizes()[index], trailingTake))
+            grow: room(Math.min(this.expandedMaxSizes()[index]! - size, trailingGive)),
+            shrink: room(Math.min(size - this.expandedMinSizes()[index]!, trailingTake))
         };
     }
 
@@ -1145,23 +1163,24 @@ export class KbqSplitter implements KbqSplitterGroup {
         const leading = panels[index];
         const trailing = panels[index + 1];
 
-        if (!leading.snapSizes().length && !trailing?.snapSizes().length) return delta;
+        if (!leading || (!leading.snapSizes().length && !trailing?.snapSizes().length)) return delta;
 
         // A size declared on the trailing panel is a position of the same boundary, so it is mapped into a size
         // for the leading one before it can compete with the leading panel's own points.
-        const pairSize = snapshot.sizes[index] + (snapshot.sizes[index + 1] ?? 0);
+        const current = snapshot.sizes[index]!;
+        const pairSize = current + (snapshot.sizes[index + 1] ?? 0);
         const snapPointsOf = (panel: KbqSplitterPanelRef, toLeadingSize: (size: number) => number) =>
             [...panel.snapSizes(), panel.minSize(), panel.maxSize()]
                 .map((size) => this.resolveSize(size, snapshot.total))
                 .filter((size): size is number => size !== null)
                 .map((size) => ({ size: toLeadingSize(size), tolerance: panel.snapTolerance() }));
 
-        const target = snapSplitterSize(snapshot.sizes[index] + delta, [
+        const target = snapSplitterSize(current + delta, [
             ...snapPointsOf(leading, (size) => size),
             ...(trailing ? snapPointsOf(trailing, (size) => pairSize - size) : [])
         ]);
 
-        return target - snapshot.sizes[index];
+        return target - current;
     }
 
     /**
@@ -1175,11 +1194,11 @@ export class KbqSplitter implements KbqSplitterGroup {
     private pinsFor(index: number, delta: number, snapshot: { sizes: number[] }): boolean[] {
         const min = this.expandedMinSizes();
         const aimed: Record<number, number> = {
-            [index]: snapshot.sizes[index] + delta,
+            [index]: snapshot.sizes[index]! + delta,
             [index + 1]: (snapshot.sizes[index + 1] ?? 0) - delta
         };
 
-        return this.panels().map((_, panel) => panel in aimed && aimed[panel] < min[panel] / 2);
+        return min.map((limit, panel) => panel in aimed && aimed[panel]! < limit / 2);
     }
 
     /** Clears the drag, so the panels go back to their settled limits. */
@@ -1213,7 +1232,7 @@ export class KbqSplitter implements KbqSplitterGroup {
                 panels.map((panel) => panel.collapsed()),
                 layout.map((_, index) =>
                     collapsing.includes(index)
-                        ? (snapshot.layout?.[index] ?? (snapshot.sizes[index] / snapshot.total) * 100)
+                        ? (snapshot.layout?.[index] ?? (snapshot.sizes[index]! / snapshot.total) * 100)
                         : undefined
                 )
             )

@@ -14,8 +14,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqIconModule
     ],
     template: `
-        @for (item of [1, 2, 3, 4, 5, 6]; track item) {
-            <button kbqTooltip="Action{{ item }}" kbq-button aria-label="Diamond">
+        @for (action of ['Action1', 'Action2', 'Action3', 'Action4', 'Action5', 'Action6']; track action) {
+            <button kbq-button type="button" aria-label="Diamond" [kbqTooltip]="action">
                 <i kbq-icon="kbq-diamond_16"></i>
             </button>
         }

@@ -1,5 +1,4 @@
 @use '../core/styles/common/animation';
-@use '../core/styles/common/tokens' as *;
 
 .kbq-navbar-item.kbq-vertical {
     height: var(--kbq-navbar-item-vertical-size-height);
@@ -16,7 +15,7 @@
     padding-right: var(--kbq-size-xl);
     padding-left: var(--kbq-size-xl);
 
-    &:after {
+    &::after {
         top: 0;
         right: var(--kbq-size-s);
         bottom: 1px;
@@ -33,7 +32,7 @@
 
         padding-top: var(--kbq-size-s);
 
-        &:after {
+        &::after {
             top: var(--kbq-size-s);
             bottom: 0;
         }
@@ -41,7 +40,7 @@
         & + .kbq-navbar-brand.kbq-vertical {
             padding: var(--kbq-size-xxs) var(--kbq-size-m) var(--kbq-size-m);
 
-            &:after {
+            &::after {
                 top: 0;
             }
         }

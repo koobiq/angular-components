@@ -20,10 +20,10 @@
         <kbq-form-field noBorders kbqSelectSearch>
             <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
             <input
-                placeholder="{{ localeConfiguration().search.placeholder }}"
                 autocomplete="off"
                 kbqInput
                 type="text"
+                [placeholder]="localeConfiguration().search.placeholder"
                 [attr.aria-label]="localeConfiguration().search.placeholder"
                 [formControl]="searchControl"
                 (keydown.enter)="searchKeydownHandler()"
@@ -41,6 +41,7 @@
     <button
         kbq-button
         kbq-select-matcher
+        type="button"
         [disabled]="data.disabled"
         [kbqPipeState]="data"
         [class]="{ 'kbq-active': select.panelOpen }"
@@ -55,7 +56,7 @@
             select.selected?.length > 1 &&
             (!selectedAllEqualsSelectedNothing || (selectedAllEqualsSelectedNothing && !allOptionsSelected))
         ) {
-            <kbq-badge [badgeColor]="'contrast'" [compact]="true">
+            <kbq-badge badgeColor="contrast" [compact]="true">
                 {{ numberOfSelectedLeaves }}
             </kbq-badge>
         }
@@ -99,10 +100,7 @@
 
 <ng-template #nodeContent let-node>
     @if (isTemplateRef(valueTemplate)) {
-        <ng-container
-            [ngTemplateOutlet]="$any(valueTemplate)"
-            [ngTemplateOutletContext]="getValueTemplateContext(node)"
-        />
+        <ng-container [ngTemplateOutlet]="valueTemplate" [ngTemplateOutletContext]="getValueTemplateContext(node)" />
     } @else {
         <div
             [class.kbq-truncate-line]="!multilineOptions"

@@ -1,9 +1,15 @@
-import { ChangeDetectionStrategy, Component, OnInit, untracked, viewChild, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    type OnInit,
+    untracked,
+    viewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { distinctUntilChanged, filter, map, Subject, switchMap, takeUntil, timer } from 'rxjs';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
-import { Subject, timer } from 'rxjs';
-import { distinctUntilChanged, filter, map, switchMap, takeUntil } from 'rxjs/operators';
 import { KbqBasePipe } from './base-pipe';
 
 @Component({
@@ -28,7 +34,7 @@ import { KbqBasePipe } from './base-pipe';
             }
         </kbq-form-field>
     `,
-    styleUrls: ['base-pipe.scss', 'pipe-input.scss'],
+    styleUrls: ['./base-pipe.scss', './pipe-input.scss'],
     providers: [
         {
             provide: KbqBasePipe,

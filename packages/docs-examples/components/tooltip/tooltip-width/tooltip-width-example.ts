@@ -13,9 +13,10 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule
     ],
     template: `
-        <button kbq-button kbqTooltip="Tooltip">Tooltip</button>
+        <button kbq-button type="button" kbqTooltip="Tooltip">Tooltip</button>
         <button
             kbq-button
+            type="button"
             kbqTooltip="A tooltip is a hint that appears when the pointer hovers over or focuses on an interface element. A tooltip cannot contain interactive elements."
         >
             Max Width

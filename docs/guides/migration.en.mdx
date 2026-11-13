@@ -39,6 +39,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 - **21.0.0**: the tag list cleaner removes the tags itself and leaves the disabled ones in place.
 - **21.0.0**: the move to `@koobiq/design-tokens` 4 — a new palette scale, DTCG sources and opt-in component tokens.
 - **21.1.0**: the code block loads the highlight.js core instead of the full bundle by default.
+- **21.1.0**: the types of fields and getters that can be empty say so, and the events and `KbqFormFieldControl` got constructors and abstract members.
 
 ### Upgrade to 18.5.3
 
@@ -3522,6 +3523,84 @@ The migration keeps the full bundle where the code block loaded it. An applicati
 - **A configuration the root providers get through a function.** The added root provider overrides it: remove the added one. The migration reports a project that provides a configuration outside its root providers.
 - **A library that renders code blocks.** The applications that use it provide the configuration.
 - **Specs** get none of the application's providers: add the configuration to the `TestBed` of a spec that checks highlighted markup.
+
+### Types of fields that can be empty (21.1.0)
+
+{/* migration-step-components(accordion, app-switcher, autocomplete, checkbox, core, datepicker, dropdown, filter-bar, form-field, modal, navbar, notification-center, number-formatter, popover, select, sidepanel, tabs, timepicker, toggle, tooltip, tree, tree-select) */}
+
+The library fills some fields only in a lifecycle hook or when it creates an overlay, and some getters return `undefined`, while their types promised a value. The types say so now: `| undefined`. Behavior is unchanged: a read that used to throw `TypeError` no longer compiles.
+
+#### Fields and getters that became `| undefined`
+
+| Component                                   | Members                                                                                                                                                       | When there is no value                                                                                                                                         |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| select                                      | `KbqSelect.selectionModel`, `triggerRect`, the `selected` getter                                                                                              | the model is created in `ngOnInit`; `selected` is empty in single selection without a value                                                                    |
+| tree-select                                 | `KbqTreeSelect.selectionModel`, `triggerRect`, `options`, the `selected` getter                                                                               | before `ngAfterContentInit` and without a tree inside                                                                                                          |
+| tree                                        | `TreeControl` and `BaseTreeControl`: `getLevel`, `isExpandable`, `getChildren`; the `data` getter of `KbqTreeNode` and `KbqTreeOption`; `KbqTreeNodeDef.when` | a flat control has no `getChildren`, a nested one no `getLevel` or `isExpandable`; the "Select all" row has no data; the default node definition has no `when` |
+| datepicker                                  | `KbqDatepickerInput.datepicker`, `calendar`; `KbqDatepicker.datepickerInput`                                                                                  | until `[kbqDatepicker]`, `[kbqCalendar]` or an input is bound                                                                                                  |
+| accordion, app-switcher, autocomplete       | `keyManager`                                                                                                                                                  | before the content is initialized                                                                                                                              |
+| core, popover, tooltip, notification-center | `KbqPopUp.trigger`; `KbqPopUpTrigger.portal`, `strategy`, `externalNativeElement`; `trigger` and `panelId` of the panels                                      | before the overlay is created                                                                                                                                  |
+| dropdown                                    | `KbqDropdown.direction`                                                                                                                                       | until the trigger opens the menu                                                                                                                               |
+| tabs                                        | `KbqTabChangeEvent.tab`, the `KbqTab.templateLabel` getter, `KbqTabLabelWrapper.tab`, `KbqTabBody.bodyPosition` and `origin`                                  | the event also fires after every tab was removed; a tab with a text label has no template                                                                      |
+| sidepanel                                   | `KbqSidepanelRef.instance`                                                                                                                                    | the panel was opened with a `TemplateRef`                                                                                                                      |
+| notification-center                         | the `KbqNotificationItemComponent.data` getter, `context`                                                                                                     | until a notification is passed                                                                                                                                 |
+| navbar                                      | the `KbqNavbarFocusableItem.tooltip` getter                                                                                                                   | the brand and the collapse button have no tooltip                                                                                                              |
+| number-formatter                            | the fields of `KBQ_NUMBER_FORMATTER_OPTIONS` and `KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS`                                                                       | the option is not set                                                                                                                                          |
+
+#### Constructors and abstract members
+
+- `KbqCheckboxChange` and `KbqToggleChange` take `source` and `checked` in the constructor, `KbqTabChangeEvent` takes `index` and `tab`. The fields stay writable.
+- The members of `KbqFormFieldControl` are abstract. A class that extends it declares `value`, `id`, `placeholder`, `ngControl`, `focused`, `empty`, `required`, `disabled` and `errorState`; a class that implements it already does.
+- `KbqPopUp.prefix` is abstract: a subclass declares the prefix of its CSS classes.
+
+#### Narrowed parameter types
+
+Parameters and return values declared as `any` got exact types. A call with what the component expects compiles as before; a call with another type and a subclass that overrides the member with an incompatible signature no longer compile.
+
+- Event handlers take the event type: `onClick` (`Event`) and `onKeyDown` (`KeyboardEvent`) of `KbqOptionActionComponent`, `onPaste` (`ClipboardEvent`) of `KbqDatepickerInput` and `KbqTimepicker`, `KbqTreeOption.onKeydown` (`KeyboardEvent`), `KbqTreeSelection.focus` (an optional `Event | null`). This shows in tests that call them with a stub object.
+- `KbqCalendar.registerInput` takes a `KbqDatepickerInput<D>`.
+- `KbqPopUpTrigger.updatePlacementPriority` takes `string | string[] | null | undefined`.
+- `handle` of the flat tree filters `FilterByValues` and `FilterParentsForNodes` takes `string | null`, as `FlatTreeControlFilter` declares.
+- `KbqModalRef.markForCheck` and `KbqDatepickerInput.onPaste` return `void`.
+- `KbqPipeDateBaseComponent.formGroup` is typed: a `FormGroup` with the `start` and `end` controls.
+- `isTemplateRef` of `KbqPopUp` and `KbqBasePipe` returns `value is TemplateRef<C>` instead of `boolean`: a subclass that overrides it with `boolean` no longer compiles.
+
+#### Initial values
+
+Some fields got an initial value of the same type instead of `undefined`. The type is unchanged, but a strict comparison with `undefined` before initialization is now false:
+
+- `KbqPopUp`: `header` and `content` are `''`, `arrow` and `defaultPaddings` are `false`, `context` and `offset` are `null`. `KbqPopUpTrigger.overlayRef` is `null`.
+- `BaseTreeControl.dataNodes` is `[]`.
+- The `keyManager` of `KbqSelect`, `KbqTreeSelection`, `KbqListSelection`, `KbqTagList` and the navbar is created right away.
+- The `errorStateMatcher` of the file upload is the default `ErrorStateMatcher`.
+- `KbqDatepicker.startAt` without the input is `null`, and `dateFilter` without the input accepts any date.
+- `KbqDatepickerInput`: `min` and `max` are `null`.
+- `KbqPopoverTrigger`: `header` and `footer` are `''`.
+- `popoverHeight` of `KbqNotificationCenterTrigger` and `KbqNotificationCenterComponent` is `''`.
+- `KbqSelect.withVirtualScroll` and `KbqTreeSelect.isEmptySearchResult` are `false`.
+- `level` of `KbqTreeNodeOutletContext` and `KbqTreeNodePadding` is `0`, `KbqTreeNodePadding.withIcon` is `false`.
+- `FlatTreeControl.expandedItemsBeforeFiltration` and `result` of the flat tree filters are `[]`.
+- `KbqTreeSelectFlatNode`: `name` is `''`, `level` is `0`, `expandable` is `false`.
+
+An empty array, unlike `undefined`, is truthy: a check `if (treeControl.expandedItemsBeforeFiltration)` before the first filtering now passes.
+
+#### Running the migration
+
+`uninitialized-members` is registered for 21.1.0, so an `ng update` to that version runs it:
+
+```bash
+ng g @koobiq/components:uninitialized-members --project "<your project>"
+```
+
+#### What is fixed automatically
+
+Nothing. The schematic only reports where a member of the table is read, an event is created without arguments, or `KbqFormFieldControl` or `KbqPopUp` is extended. It matches by name in files that use these types, so it can point at an unrelated object.
+
+#### What to fix manually
+
+- **A read of a member.** Check the value, for example `select.selectionModel?.selected ?? []`, or add `!` where the code runs after the component is initialized: `!` keeps the old behavior and throws where the old code threw.
+- **An event you create.** Pass the values to the constructor: `new KbqCheckboxChange(checkbox, true)`.
+- **A subclass of `KbqFormFieldControl` or `KbqPopUp`.** Declare the abstract members.
 
 ### After the migration
 

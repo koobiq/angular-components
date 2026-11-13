@@ -1,5 +1,5 @@
 import type { DocsApiBlock } from '../../../../apps/docs/src/app/components/api-page/api-page.types';
-import { CompiledBlock, compilePage } from '../../../docs-pages/compile-page';
+import { type CompiledBlock, compilePage } from '../../../docs-pages/compile-page';
 
 /** `{@link Foo}` / `{@link Foo | label}` — the compiler leaves these in the text verbatim. */
 const INLINE_LINK_TAG = /\{\s*@link\s+([^}|]+?)(?:\s*\|\s*([^}]+))?\s*\}/g;

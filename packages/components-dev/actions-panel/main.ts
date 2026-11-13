@@ -7,7 +7,7 @@ import { DevApp, devPageRoutes } from './module';
 
 @Injectable()
 export class DevCustomOverlayContainer extends OverlayContainer {
-    getContainerElement(): HTMLElement {
+    override getContainerElement(): HTMLElement {
         const container = super.getContainerElement();
 
         container.classList.add('DEV_CUSTOM_OVERLAY_CONTAINER');

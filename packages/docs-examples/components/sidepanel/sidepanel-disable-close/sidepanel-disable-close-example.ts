@@ -13,7 +13,7 @@ import { KbqSidepanelModule, KbqSidepanelService } from '@koobiq/components/side
         </kbq-sidepanel-body>
         <kbq-sidepanel-footer>
             <kbq-sidepanel-actions>
-                <button kbq-button color="contrast" kbq-sidepanel-close>
+                <button kbq-button type="button" color="contrast" kbq-sidepanel-close>
                     <span>Close</span>
                 </button>
             </kbq-sidepanel-actions>
@@ -30,7 +30,7 @@ export class ExampleSidepanelDisableCloseContent {}
     selector: 'sidepanel-disable-close-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="open()">
+        <button kbq-button type="button" (click)="open()">
             <span>Open</span>
         </button>
     `,

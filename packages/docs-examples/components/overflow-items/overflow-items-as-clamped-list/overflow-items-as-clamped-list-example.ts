@@ -18,7 +18,7 @@ import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
             #kbqOverflowItems="kbqOverflowItems"
             kbqOverflowItems
             style="max-height: 48px; min-width: 60px"
-            [wrap]="'wrap'"
+            wrap="wrap"
         >
             @for (item of countries; track item) {
                 <span [kbqOverflowItem]="item" [class.layout-margin-right-xs]="!$last">

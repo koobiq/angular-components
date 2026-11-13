@@ -1,61 +1,61 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    DebugElement,
-    Type,
+    type DebugElement,
     effect,
     inject,
     signal,
+    type Type,
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import {
-    AsyncValidatorFn,
+    type AsyncValidatorFn,
     FormControl,
-    FormControlStatus,
+    type FormControlStatus,
     FormGroup,
     FormsModule,
-    NgModel,
+    type NgModel,
     ReactiveFormsModule,
     UntypedFormControl,
-    ValidationErrors,
+    type ValidationErrors,
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { DateTime } from 'luxon';
+import { map, type Observable, timer } from 'rxjs';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
-    DOWN_ARROW,
-    DateAdapter,
-    ErrorStateMatcher,
-    KBQ_LOCALE_SERVICE,
-    KbqDateTimezoneService,
-    LEFT_ARROW,
-    ONE,
-    SPACE,
-    ShowOnControlDirtyErrorStateMatcher,
-    ShowOnFormSubmitErrorStateMatcher,
-    TWO,
-    UP_ARROW,
     createKeyboardEvent,
+    DateAdapter,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
+    DOWN_ARROW,
+    ErrorStateMatcher,
+    KBQ_LOCALE_SERVICE,
+    KbqDateTimezoneService,
     kbqErrorStateMatcherProvider,
+    LEFT_ARROW,
+    ONE,
+    ShowOnControlDirtyErrorStateMatcher,
+    ShowOnFormSubmitErrorStateMatcher,
+    SPACE,
+    TWO,
+    UP_ARROW,
     validationTooltipHideDelay
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { DateTime } from 'luxon';
-import { Observable, map, timer } from 'rxjs';
 import {
     DEFAULT_TIME_FORMAT,
     KbqTimepicker,
     KbqTimepickerModule,
     TIMEFORMAT_PLACEHOLDERS,
-    TimeFormatToLocaleKeys,
-    TimeFormats
+    TimeFormats,
+    TimeFormatToLocaleKeys
 } from './index';
 
 const createStandaloneComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
@@ -112,8 +112,8 @@ class TestApp {
     readonly ngModel = viewChild.required<NgModel>('ngModel');
 
     timeFormat: TimeFormats;
-    minTime: string;
-    maxTime: string;
+    minTime: DateTime;
+    maxTime: DateTime;
     timeValue: DateTime;
     isDisabled: boolean;
 
@@ -127,8 +127,8 @@ class TestApp {
 describe(KbqTimepicker.name, () => {
     let fixture: ComponentFixture<TestApp>;
     let testComponent: TestApp;
-    let inputElementDebug;
-    let adapter;
+    let inputElementDebug: DebugElement;
+    let adapter: DateAdapter<DateTime>;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -270,7 +270,7 @@ describe(KbqTimepicker.name, () => {
             testComponent = fixture.debugElement.componentInstance;
             inputElementDebug = fixture.debugElement.query(By.directive(KbqTimepicker));
 
-            testComponent.timeValue = adapter.createDateTime(1970, 1, 11, 12, 18, 28);
+            testComponent.timeValue = adapter.createDateTime(1970, 1, 11, 12, 18, 28, 0);
             fixture.detectChanges();
         });
 
@@ -281,20 +281,20 @@ describe(KbqTimepicker.name, () => {
         it('Should invalidate time lower then min-time', async () => {
             vi.useFakeTimers();
 
-            testComponent.minTime = adapter.createDateTime(1970, 1, 11, 13, 59, 0);
+            testComponent.minTime = adapter.createDateTime(1970, 1, 11, 13, 59, 0, 0);
             fixture.detectChanges();
             await vi.advanceTimersByTimeAsync(1);
             expect(inputElementDebug.nativeElement.classList.contains('ng-invalid')).toBe(true);
         });
 
         it('Should invalidate time higher then max-time', () => {
-            testComponent.maxTime = adapter.createDateTime(1970, 1, 11, 11, 0, 0);
+            testComponent.maxTime = adapter.createDateTime(1970, 1, 11, 11, 0, 0, 0);
             fixture.detectChanges();
             expect(inputElementDebug.nativeElement.classList.contains('ng-invalid')).toBe(true);
         });
 
         it('Should invalidate time lower then min-time after typing while focused and blurring', () => {
-            testComponent.minTime = adapter.createDateTime(1970, 1, 11, 13, 59, 0);
+            testComponent.minTime = adapter.createDateTime(1970, 1, 11, 13, 59, 0, 0);
             fixture.detectChanges();
 
             inputElementDebug.triggerEventHandler('focus', { target: inputElementDebug.nativeElement });
@@ -346,7 +346,7 @@ describe(KbqTimepicker.name, () => {
         it('When the format updates', async () => {
             vi.useFakeTimers();
 
-            testComponent.timeValue = adapter.createDateTime(1970, 1, 11, 0, 0, 0);
+            testComponent.timeValue = adapter.createDateTime(1970, 1, 11, 0, 0, 0, 0);
             fixture.detectChanges();
             await vi.advanceTimersByTimeAsync(0);
 
@@ -612,7 +612,7 @@ describe(KbqTimepicker.name, () => {
 
     describe('Keyboard value control', () => {
         beforeEach(async () => {
-            testComponent.timeValue = adapter.createDateTime(1970, 1, 11, 23, 0, 0);
+            testComponent.timeValue = adapter.createDateTime(1970, 1, 11, 23, 0, 0, 0);
             testComponent.timeFormat = TimeFormats.HHmmss;
             fixture.detectChanges();
             await fixture.whenStable();
@@ -805,7 +805,7 @@ describe(KbqTimepicker.name, () => {
     describe('with null formControl value', () => {
         let fixture: ComponentFixture<TimePickerWithNullFormControlValue>;
         let testComponent: TimePickerWithNullFormControlValue;
-        let inputElementDebug;
+        let inputElementDebug: DebugElement;
 
         beforeEach(() => {
             TestBed.resetTestingModule();
@@ -899,7 +899,7 @@ describe(KbqTimepicker.name, () => {
     describe('with null model value', () => {
         let fixture: ComponentFixture<TimePickerWithNullModelValue>;
         let testComponent: TimePickerWithNullModelValue;
-        let inputElementDebug;
+        let inputElementDebug: DebugElement;
 
         beforeEach(() => {
             TestBed.resetTestingModule();
@@ -1439,7 +1439,7 @@ describe(KbqTimepicker.name, () => {
             fixture.componentInstance.min = DateTime.fromObject({ hour: 12, minute: 0 });
             fixture.detectChanges();
 
-            expect(control.errors?.kbqTimepickerLowerThenMin).toBeTruthy();
+            expect(control.hasError('kbqTimepickerLowerThenMin')).toBe(true);
         });
 
         it('should report an unbound disabled and required as false', () => {

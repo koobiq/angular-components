@@ -15,7 +15,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
             </div>
         </div>
     `,
-    styleUrls: ['./title-multiple-text-example.css'],
+    styleUrl: './title-multiple-text-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleMultipleTextExample {

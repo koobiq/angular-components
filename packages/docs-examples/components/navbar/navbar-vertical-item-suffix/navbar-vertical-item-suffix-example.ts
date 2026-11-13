@@ -9,7 +9,7 @@ import { injectExampleText } from '../localized-data';
 @Component({
     selector: 'navbar-vertical-item-suffix-example',
     imports: [KbqNavbarModule, KbqIconModule],
-    templateUrl: 'navbar-vertical-item-suffix-example.html',
+    templateUrl: './navbar-vertical-item-suffix-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarVerticalItemSuffixExample {

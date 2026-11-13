@@ -1,8 +1,8 @@
 import { Component, contentChild, signal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { KbqIconItem } from './icon-item.component';
 import { KbqIcon } from './icon.component';
+import { KbqIconItem } from './icon-item.component';
 
 @Component({
     selector: 'icon-item-test-app',

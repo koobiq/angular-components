@@ -19,7 +19,7 @@ import { injectExampleText } from '../localized-data';
         KbqBadgeModule,
         KbqIconModule
     ],
-    templateUrl: 'navbar-app-long-name-example.html',
+    templateUrl: './navbar-app-long-name-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarAppLongNameExample {
