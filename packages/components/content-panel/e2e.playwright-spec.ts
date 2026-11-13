@@ -49,6 +49,42 @@ test.describe('KbqContentPanelModule', () => {
         });
     });
 
+    test.describe('E2eContentPanelBodyPadding', () => {
+        const getComponent = (page: Page): Locator => page.getByTestId('e2eContentPanelBodyPadding');
+
+        const getRoomAfterScrollingToEnd = (page: Page): Promise<number> =>
+            getComponent(page)
+                .getByTestId('e2eContentPanelBody')
+                .locator('.kbq-scrollbar-viewport')
+                .evaluate((viewport) => {
+                    viewport.scrollTop = viewport.scrollHeight;
+
+                    const lastItem = viewport.querySelector('.kbq-content-panel-body__content > :last-child')!;
+
+                    return viewport.getBoundingClientRect().bottom - lastItem.getBoundingClientRect().bottom;
+                });
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2eContentPanelBodyPadding');
+            await expect(getComponent(page)).toBeVisible();
+        });
+
+        test('leaves room under the content when there is no footer', async ({ page }) => {
+            const room = await getRoomAfterScrollingToEnd(page);
+
+            expect(room).toBeCloseTo(80, 0);
+        });
+
+        test('ends the content at the footer once it is shown', async ({ page }) => {
+            await getComponent(page).getByTestId('e2eContentPanelToggleFooter').click();
+            await expect(getComponent(page).getByTestId('e2eContentPanelFooter')).toBeVisible();
+
+            const room = await getRoomAfterScrollingToEnd(page);
+
+            expect(room).toBeCloseTo(0, 0);
+        });
+    });
+
     test.describe('E2eContentPanelWideContent', () => {
         test('stays inside the panel with a wide body', async ({ page }) => {
             await page.goto('/E2eContentPanelWideContent');
