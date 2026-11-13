@@ -169,6 +169,12 @@
 		<loc>https://koobiq.io/en/components/datepicker/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/datetime/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/datetime/api</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/dl/overview</loc>
 	</url>
 	<url>
@@ -761,6 +767,12 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/datepicker/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/datetime/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/datetime/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/dl/overview</loc>

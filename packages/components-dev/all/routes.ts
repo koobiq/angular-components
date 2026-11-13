@@ -42,6 +42,7 @@ export const devAppRoutes: Routes = [
     { path: 'date-formatter', loadChildren: () => import('../date-formatter/module').then((m) => m.devRoutes) },
     { path: 'date-pipes', loadComponent: () => import('../date-pipes/module').then((m) => m.DevApp) },
     { path: 'datepicker', loadComponent: () => import('../datepicker/module').then((m) => m.DevApp) },
+    { path: 'datetime', loadComponent: () => import('../datetime/module').then((m) => m.DevApp) },
     { path: 'divider', loadComponent: () => import('../divider/module').then((m) => m.DevApp) },
     { path: 'dl', loadComponent: () => import('../dl/module').then((m) => m.DevApp) },
     { path: 'dropdown', loadComponent: () => import('../dropdown/module').then((m) => m.DevApp) },

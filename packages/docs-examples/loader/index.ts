@@ -261,6 +261,12 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/datepicker').then((m) => m.DatepickerRangeExample);
         case 'datepicker-required':
             return import('@koobiq/docs-examples/components/datepicker').then((m) => m.DatepickerRequiredExample);
+        case 'datetime-overview':
+            return import('@koobiq/docs-examples/components/datetime').then((m) => m.DatetimeOverviewExample);
+        case 'datetime-validation':
+            return import('@koobiq/docs-examples/components/datetime').then((m) => m.DatetimeValidationExample);
+        case 'datetime-with-seconds':
+            return import('@koobiq/docs-examples/components/datetime').then((m) => m.DatetimeWithSecondsExample);
         case 'divider-overview':
             return import('@koobiq/docs-examples/components/divider').then((m) => m.DividerOverviewExample);
         case 'divider-vertical':

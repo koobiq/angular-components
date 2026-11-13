@@ -147,6 +147,7 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     ngOnDestroy(): void;
     readonly noBorders: i0.InputSignalWithTransform<boolean | undefined, unknown>;
     onContainerClick(event: MouseEvent): void;
+    protected onLabelClick(event: MouseEvent): void;
     readonly passwordToggle: Signal<KbqPasswordToggle | undefined>;
     readonly prefix: Signal<readonly KbqPrefix[]>;
     readonly readonly: Signal<boolean>;

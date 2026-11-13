@@ -1,0 +1,23 @@
+<dev-locale-selector />
+
+<dev-examples />
+
+<div class="layout-column layout-gap-l layout-margin-5xl">
+    <div>value: {{ control.value?.toISO() }}</div>
+    <div>errors: {{ control.errors | json }}</div>
+    <div>touched: {{ control.touched }}</div>
+
+    <kbq-form-field>
+        <kbq-label>Min, max and seconds</kbq-label>
+        <kbq-datetime #datetime [formControl]="control" [format]="timeFormats.HHmmss" [max]="max" [min]="min" />
+        <kbq-cleaner />
+        <kbq-datepicker-toggle-icon kbqSuffix [for]="datetime.datepicker()" />
+        <kbq-hint>From {{ min.toISO() }} to {{ max.toISO() }}</kbq-hint>
+    </kbq-form-field>
+
+    <kbq-form-field>
+        <kbq-label>Disabled</kbq-label>
+        <kbq-datetime #disabledDatetime [formControl]="disabledControl" />
+        <kbq-datepicker-toggle-icon kbqSuffix [for]="disabledDatetime.datepicker()" />
+    </kbq-form-field>
+</div>

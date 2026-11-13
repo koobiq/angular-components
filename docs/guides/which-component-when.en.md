@@ -135,19 +135,20 @@ it can only act on options currently rendered.
 
 ### Editing existing data
 
-| Task                                               | Use                     | Not                     | Why not                                                            |
-| -------------------------------------------------- | ----------------------- | ----------------------- | ------------------------------------------------------------------ |
-| Change one or two fields among many, saved at once | `inline-edit`           | a form                  | Docs: inline edit saves on change, without a global Save           |
-| Create a new entity                                | a form (`form-field`)   | `inline-edit`           | Docs rule out inline edit for creation                             |
-| Fields that validate each other, masks, prompts    | a form                  | `inline-edit`           | Docs rule out inline edit for dependent or complex validation      |
-| Critical data, or a save that needs confirmation   | `modal` with a form     | `inline-edit`           | Docs rule out inline edit here too                                 |
-| Pick a date                                        | `datepicker`            | `input`                 | Masking, parsing and calendar come with the component              |
-| Pick a date range                                  | two `datepicker` inputs | one datepicker          | There is no range widget; bind `minDate`/`maxDate` and `min`/`max` |
-| Pick a time                                        | `timepicker`            | `input`                 | Same reason as the datepicker                                      |
-| Pick a period ("last 24 hours", or a manual range) | `time-range`            | two `timepicker` fields | The menu carries the presets                                       |
-| Pick a timezone                                    | `timezone`              | `select`                | It extends select with the timezone option template                |
-| Upload files                                       | `file-upload`           | `input[file]`           | Drag area, size, errors and the list come with it                  |
-| A search field that should stay small until used   | `search-expandable`     | `input`                 | It collapses into an icon button; bind it to a form control        |
+| Task                                               | Use                     | Not                                   | Why not                                                            |
+| -------------------------------------------------- | ----------------------- | ------------------------------------- | ------------------------------------------------------------------ |
+| Change one or two fields among many, saved at once | `inline-edit`           | a form                                | Docs: inline edit saves on change, without a global Save           |
+| Create a new entity                                | a form (`form-field`)   | `inline-edit`                         | Docs rule out inline edit for creation                             |
+| Fields that validate each other, masks, prompts    | a form                  | `inline-edit`                         | Docs rule out inline edit for dependent or complex validation      |
+| Critical data, or a save that needs confirmation   | `modal` with a form     | `inline-edit`                         | Docs rule out inline edit here too                                 |
+| Pick a date                                        | `datepicker`            | `input`                               | Masking, parsing and calendar come with the component              |
+| Pick a date range                                  | two `datepicker` inputs | one datepicker                        | There is no range widget; bind `minDate`/`maxDate` and `min`/`max` |
+| Pick a time                                        | `timepicker`            | `input`                               | Same reason as the datepicker                                      |
+| Pick a date and a time                             | `datetime`              | a `datepicker` next to a `timepicker` | One value, one label and one error for both inputs                 |
+| Pick a period ("last 24 hours", or a manual range) | `time-range`            | two `timepicker` fields               | The menu carries the presets                                       |
+| Pick a timezone                                    | `timezone`              | `select`                              | It extends select with the timezone option template                |
+| Upload files                                       | `file-upload`           | `input[file]`                         | Drag area, size, errors and the list come with it                  |
+| A search field that should stay small until used   | `search-expandable`     | `input`                               | It collapses into an icon button; bind it to a form control        |
 
 ### Labels, marks, identity
 
@@ -189,6 +190,7 @@ One line each: when to reach for it. `→` names the neighbor to prefer in the c
 - `input` — text, number and password entry with formatting, masks and validation.
 - `textarea` — multi-line text.
 - `datepicker` — a date, typed or picked from the calendar; `minDate`/`maxDate` bound the calendar, `min`/`max` on the input drive validation.
+- `datetime` — a date and a time in one field: the date is typed or picked from the calendar, the time is typed; `min`/`max` bound both the calendar and the value.
 - `timepicker` — a time, typed into a masked field.
 - `file-upload` — files, single or multiple, with a drop area, sizes, icons and per-file errors.
 - `search-expandable` — a search field that expands from an icon button; it is a form control and throws without one.

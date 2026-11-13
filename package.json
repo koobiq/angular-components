@@ -233,6 +233,7 @@
         "dev:date-formatter": "ng serve dev-date-formatter --port 3003",
         "dev:date-pipes": "ng serve dev-date-pipes --port 3003",
         "dev:datepicker": "ng serve dev-datepicker --port 3003",
+        "dev:datetime": "ng serve dev-datetime --port 3003",
         "dev:divider": "ng serve dev-divider --port 3003",
         "dev:dl": "ng serve dev-dl --port 3003",
         "dev:dropdown": "ng serve dev-dropdown --port 3003",
