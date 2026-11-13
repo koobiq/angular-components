@@ -297,9 +297,13 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         this.stateChanges.next();
     }
 
-    /** Resolved display name of a select option. */
+    /**
+     * Resolved display name of an option in the panel and in the search. Only the option's own `nameKey`
+     * applies: the id lookup is meaningful solely for a committed value in the trigger, and running it here
+     * would scan the whole option list once per option per change detection.
+     */
     protected optionName(item: KbqSelectValue): string {
-        return this.resolveName(item, 'select-option', kbqFilterSelectValueNameKey(item, this.values));
+        return this.resolveName(item, 'select-option');
     }
 
     /**
@@ -329,7 +333,9 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         if (!value) return '';
 
         // Without a key the trigger keeps its existing behavior — including a custom template's text.
-        return kbqFilterSelectValueNameKey(value, this.values) ? this.optionName(value) : select.triggerValue;
+        const nameKey = kbqFilterSelectValueNameKey(value, this.values);
+
+        return nameKey ? this.resolveName(value, 'select-option', nameKey) : select.triggerValue;
     }
 
     /** Comparator of selected options. Two null/absent values never match (aligned with the select pipe). */

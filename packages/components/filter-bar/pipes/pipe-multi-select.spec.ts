@@ -1864,6 +1864,43 @@ describe('KbqPipeMultiSelectComponent', () => {
 
         const pipe = (): KbqPipeMultiSelectComponent => getPipeComponent();
 
+        it('should resolve a panel option name without scanning the option list by id', () => {
+            const values: KbqSelectValue[] = [
+                { name: 'Status', id: '1', value: 'status' },
+                { name: 'Active', nameKey: 'filters.active', id: '2', value: 'active' },
+                { name: 'Blocked', id: '3', value: 'blocked' }
+            ];
+            const originalFilter = values.filter;
+            let scans = 0;
+
+            values.filter = function (this: KbqSelectValue[], ...args: Parameters<typeof originalFilter>) {
+                scans++;
+
+                return originalFilter.apply(this, args);
+            } as typeof originalFilter;
+
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiSelect,
+                    values,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: [] })]);
+            fixture.detectChanges();
+
+            for (const value of values) {
+                (pipe() as any).optionName(value);
+            }
+
+            // A panel option has only its own key: borrowing by id is reserved for the trigger.
+            expect(scans).toBe(0);
+        });
+
         it('should resolve option and trigger names through the resolver', () => {
             fixture.componentInstance.pipeTemplates = [
                 {
