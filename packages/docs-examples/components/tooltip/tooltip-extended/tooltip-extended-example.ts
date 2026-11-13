@@ -6,8 +6,8 @@ import { KbqDivider } from '@koobiq/components/divider';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqTableModule } from '@koobiq/components/table';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Tooltip extended
@@ -131,7 +131,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-margin-5xl layout-column layout-align-center-start layout-gap-l'
     }
 })
-export class TooltipExtendedExample extends BaseLocalizedExample<ExampleTranslation> {
+export class TooltipExtendedExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly extendedTooltipPreferredColor = KbqComponentColors.ContrastFade;
 
     protected readonly data = computed(() => [
@@ -156,8 +158,4 @@ export class TooltipExtendedExample extends BaseLocalizedExample<ExampleTranslat
             updated: 'Feb 18, 15:33'
         }
     ]);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

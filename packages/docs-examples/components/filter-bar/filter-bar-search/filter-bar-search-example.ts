@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, linkedSignal } from '@angular/core';
 import { createSearchPredicate } from '@koobiq/components/core';
 import { KbqFilter, KbqFilterBarModule, KbqPipe, KbqPipeTypes } from '@koobiq/components/filter-bar';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 interface Network {
     name: string;
@@ -61,7 +61,9 @@ const createSearchPipe = (name: string): KbqPipe => ({
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilterBarSearchExample extends BaseLocalizedExample<ExampleTranslation> {
+export class FilterBarSearchExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly networks: Network[] = [
         { name: '10.125.123.0/24 - all', description: 'Development network' },
         { name: '10.125.10.0/24 - admin', description: 'Admin network' },
@@ -98,9 +100,5 @@ export class FilterBarSearchExample extends BaseLocalizedExample<ExampleTranslat
             saved: false,
             pipes: [createSearchPipe(this.t().search)]
         };
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

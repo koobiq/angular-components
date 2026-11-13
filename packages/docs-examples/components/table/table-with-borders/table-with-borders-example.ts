@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqTableModule } from '@koobiq/components/table';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Table with borders
@@ -35,15 +35,13 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableWithBordersExample extends BaseLocalizedExample<ExampleTranslation> {
+export class TableWithBordersExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly rows = computed(() => [
         { name: '000.txt', owner: 'User 1', modified: '27 May 2024', size: '17 KB' },
         { name: this.t().bigBook, owner: 'User 2', modified: '1 Dec 2023', size: '998 KB' },
         { name: 'notes.doc', owner: 'User 3', modified: '7 Mar 1993', size: '502 KB' },
         { name: 'recipe.txt', owner: 'User 4', modified: '24 Aug 2022', size: '128 KB' }
     ]);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

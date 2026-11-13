@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Loader-overlay large
@@ -25,8 +25,6 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoaderOverlayLargeExample extends BaseLocalizedExample<ExampleTranslation> {
-    constructor() {
-        super(TRANSLATIONS);
-    }
+export class LoaderOverlayLargeExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

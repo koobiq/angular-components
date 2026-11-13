@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, Directive, signal } from '@angular/
 import { AbstractControl, FormsModule, NG_VALIDATORS, ValidationErrors, Validator, Validators } from '@angular/forms';
 import { PasswordValidators } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /** Template-driven forms take validators from directives, so this one hands `PasswordValidators` to `ngModel`. */
 @Directive({
@@ -68,10 +68,8 @@ class ExamplePasswordRules implements Validator {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InputPasswordTemplateDrivenExample extends BaseLocalizedExample<ExampleTranslation> {
-    protected readonly password = signal('');
+export class InputPasswordTemplateDrivenExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    constructor() {
-        super(TRANSLATIONS);
-    }
+    protected readonly password = signal('');
 }

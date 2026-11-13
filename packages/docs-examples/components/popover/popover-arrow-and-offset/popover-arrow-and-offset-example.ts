@@ -6,8 +6,8 @@ import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqToggleChange, KbqToggleModule } from '@koobiq/components/toggle';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Popover arrow and offset example
@@ -84,7 +84,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PopoverArrowAndOffsetExample extends BaseLocalizedExample<ExampleTranslation> implements AfterViewInit {
+export class PopoverArrowAndOffsetExample implements AfterViewInit {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected arrow = true;
     protected arrowCentered = false;
     protected offset: number | null = null;
@@ -113,9 +115,5 @@ export class PopoverArrowAndOffsetExample extends BaseLocalizedExample<ExampleTr
     onOffsetChange({ value }: KbqButtonToggleChange) {
         this.offsetChanged = true;
         this.offset = value;
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

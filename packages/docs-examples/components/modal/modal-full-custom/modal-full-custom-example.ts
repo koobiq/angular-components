@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 @Component({
     selector: 'custom-modal',
@@ -29,14 +29,12 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomModalComponent extends BaseLocalizedExample<ExampleTranslation> {
+export class CustomModalComponent {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly modalRef = inject(KbqModalRef);
 
     readonly items = Array.from({ length: 30 }, (_, i) => 'Item #' + i);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }
 
 /**
@@ -50,16 +48,14 @@ export class CustomModalComponent extends BaseLocalizedExample<ExampleTranslatio
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ModalFullCustomExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ModalFullCustomExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly modalService = inject(KbqModalService);
 
     openModal(): void {
         this.modalService.open({
             kbqComponent: CustomModalComponent
         });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

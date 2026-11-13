@@ -7,10 +7,10 @@ import {
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, IRowNode, ModuleRegistry } from 'ag-grid-community';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -56,7 +56,9 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridExternalFilterStateExample extends BaseLocalizedExample<ExampleTranslation> {
+export class AgGridExternalFilterStateExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     // Option values and the row field are category indexes, so the filter state survives a locale switch.
     readonly options = this.t().categories.map((_, index) => index);
     readonly filter = model<number | null>(null);
@@ -77,8 +79,4 @@ export class AgGridExternalFilterStateExample extends BaseLocalizedExample<Examp
         column3: 'Text ' + index,
         column4: 'Text ' + index
     }));
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

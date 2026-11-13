@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqListModule } from '@koobiq/components/list';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title List multiple keyboard
@@ -28,10 +28,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListMultipleKeyboardExample extends BaseLocalizedExample<ExampleTranslation> {
-    selected = [];
+export class ListMultipleKeyboardExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    constructor() {
-        super(TRANSLATIONS);
-    }
+    selected = [];
 }

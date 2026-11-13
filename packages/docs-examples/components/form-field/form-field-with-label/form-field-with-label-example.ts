@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /** @title Form field with kbq-label */
 @Component({
@@ -19,10 +19,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormFieldWithLabelExample extends BaseLocalizedExample<ExampleTranslation> {
-    protected readonly showRequiredMarker = signal(false);
+export class FormFieldWithLabelExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    constructor() {
-        super(TRANSLATIONS);
-    }
+    protected readonly showRequiredMarker = signal(false);
 }

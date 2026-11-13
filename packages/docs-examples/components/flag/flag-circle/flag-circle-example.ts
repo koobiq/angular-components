@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { KbqFlag } from '@koobiq/components/flag';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import * as flags1x1 from 'country-flag-icons/string/1x1';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Circular flags
@@ -26,7 +26,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-row layout-align-center-center layout-gap-m'
     }
 })
-export class FlagCircleExample extends BaseLocalizedExample<ExampleTranslation> {
+export class FlagCircleExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly sanitizer = inject(DomSanitizer);
 
     private readonly countryCodes = ['AO', 'MY', 'UY'];
@@ -38,8 +40,4 @@ export class FlagCircleExample extends BaseLocalizedExample<ExampleTranslation> 
             svg: this.sanitizer.bypassSecurityTrustHtml(flags1x1[code])
         }))
     );
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

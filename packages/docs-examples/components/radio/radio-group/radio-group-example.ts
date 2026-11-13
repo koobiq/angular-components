@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqRadioModule } from '@koobiq/components/radio';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Radio group
@@ -27,8 +27,6 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RadioGroupExample extends BaseLocalizedExample<ExampleTranslation> {
-    constructor() {
-        super(TRANSLATIONS);
-    }
+export class RadioGroupExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

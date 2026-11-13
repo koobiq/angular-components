@@ -3,8 +3,8 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqContentPanelModule } from '@koobiq/components/content-panel';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Content panel overview
@@ -71,11 +71,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContentPanelOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ContentPanelOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly componentColors = KbqComponentColors;
     protected readonly buttonStyles = KbqButtonStyles;
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

@@ -6,8 +6,8 @@ import {
     KbqCodeBlockModule
 } from '@koobiq/components/code-block';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Code-block with tabs
@@ -47,7 +47,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CodeBlockWithTabsExample extends BaseLocalizedExample<ExampleTranslation> {
+export class CodeBlockWithTabsExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly files: KbqCodeBlockFile[] = [
         {
             language: 'html',
@@ -69,8 +71,4 @@ export class CodeBlockWithTabsExample extends BaseLocalizedExample<ExampleTransl
     readonly hideTabs = model(false);
     readonly filled = model(false);
     readonly lineNumbers = model(true);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

@@ -4,8 +4,8 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Breadcrumbs Truncate By Abbreviation Items
@@ -47,15 +47,13 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BreadcrumbsTruncateByAbbrevItemsExample extends BaseLocalizedExample<ExampleTranslation> {
+export class BreadcrumbsTruncateByAbbrevItemsExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly breadcrumbs = computed(() => [
         { longText: this.t().main, url: '/main' },
         { longText: this.t().reviews, url: '/main/reviews' },
         { longText: this.t().aes, shortText: 'AES', url: '/main/reviews/advanced-encryption-standard' }
     ]);
     protected readonly PopUpPlacements = PopUpPlacements;
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Button loading state
@@ -18,10 +18,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ButtonLoadingStateExample extends BaseLocalizedExample<ExampleTranslation> {
-    colors = KbqComponentColors;
+export class ButtonLoadingStateExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    constructor() {
-        super(TRANSLATIONS);
-    }
+    colors = KbqComponentColors;
 }

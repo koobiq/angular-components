@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqTableModule } from '@koobiq/components/table';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Table full width
@@ -14,10 +14,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     templateUrl: 'table-full-width-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableFullWidthExample extends BaseLocalizedExample<ExampleTranslation> {
-    protected readonly rows = computed(() => this.t().rows);
+export class TableFullWidthExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    constructor() {
-        super(TRANSLATIONS);
-    }
+    protected readonly rows = computed(() => this.t().rows);
 }

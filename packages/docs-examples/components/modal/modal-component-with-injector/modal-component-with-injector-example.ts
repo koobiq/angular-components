@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, Injectable, Injector } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 @Injectable()
 export class ComponentLevelService {
@@ -30,16 +30,14 @@ export class ComponentLevelService {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomModalComponent extends BaseLocalizedExample<ExampleTranslation> {
+export class CustomModalComponent {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly modalRef = inject(KbqModalRef);
     protected readonly customService = inject(ComponentLevelService);
 
     destroyModal(action: 'save' | 'close') {
         this.modalRef.destroy(action);
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }
 
@@ -55,7 +53,9 @@ export class CustomModalComponent extends BaseLocalizedExample<ExampleTranslatio
     providers: [ComponentLevelService],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ModalComponentWithInjectorExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ModalComponentWithInjectorExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly modalService = inject(KbqModalService);
     private readonly injector = inject(Injector);
 
@@ -75,9 +75,5 @@ export class ModalComponentWithInjectorExample extends BaseLocalizedExample<Exam
         this.modalRef.afterClose.subscribe((action) => {
             console.log(`[afterClose] emitted, chosen action: ${action}`);
         });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

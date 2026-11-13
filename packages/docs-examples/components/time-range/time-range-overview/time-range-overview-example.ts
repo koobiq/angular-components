@@ -3,8 +3,8 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/core';
 import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeType } from '@koobiq/components/time-range';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Time range overview
@@ -28,7 +28,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-flex layout-row layout-align-center-center layout-gap-xxs'
     }
 })
-export class TimeRangeOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
+export class TimeRangeOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly control = new FormControl<KbqTimeRangeRange>(
         {
             type: 'last5Minutes'
@@ -54,8 +56,4 @@ export class TimeRangeOverviewExample extends BaseLocalizedExample<ExampleTransl
         'allTime',
         'range'
     ];
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

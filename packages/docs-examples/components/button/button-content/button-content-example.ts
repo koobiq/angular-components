@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Button content
@@ -55,10 +55,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     styleUrls: ['button-content-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ButtonContentExample extends BaseLocalizedExample<ExampleTranslation> {
-    colors = KbqComponentColors;
+export class ButtonContentExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    constructor() {
-        super(TRANSLATIONS);
-    }
+    colors = KbqComponentColors;
 }

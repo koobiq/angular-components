@@ -5,8 +5,8 @@ import { FileValidators, KbqFileTypeSpecifier, ShowOnFormSubmitErrorStateMatcher
 import { KbqFileItem, KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title File upload single mixed validation example
@@ -46,7 +46,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadSingleMixedValidationExample extends BaseLocalizedExample<ExampleTranslation> {
+export class FileUploadSingleMixedValidationExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly customErrorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
     protected readonly accept: KbqFileTypeSpecifier = ['.txt'];
 
@@ -59,9 +61,5 @@ export class FileUploadSingleMixedValidationExample extends BaseLocalizedExample
 
     onSubmit(): void {
         console.log('perform action on submit');
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

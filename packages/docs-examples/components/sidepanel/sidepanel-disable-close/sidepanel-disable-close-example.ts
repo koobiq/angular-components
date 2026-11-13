@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidepanelModule, KbqSidepanelService } from '@koobiq/components/sidepanel';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 @Component({
     selector: 'example-sidepanel-disable-close-content',
@@ -23,10 +23,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleSidepanelDisableCloseContent extends BaseLocalizedExample<ExampleTranslation> {
-    constructor() {
-        super(TRANSLATIONS);
-    }
+export class ExampleSidepanelDisableCloseContent {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }
 
 /**
@@ -42,7 +40,9 @@ export class ExampleSidepanelDisableCloseContent extends BaseLocalizedExample<Ex
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidepanelDisableCloseExample extends BaseLocalizedExample<ExampleTranslation> {
+export class SidepanelDisableCloseExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly sidepanelService = inject(KbqSidepanelService);
 
     open() {
@@ -50,9 +50,5 @@ export class SidepanelDisableCloseExample extends BaseLocalizedExample<ExampleTr
             hasBackdrop: true,
             disableClose: true
         });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

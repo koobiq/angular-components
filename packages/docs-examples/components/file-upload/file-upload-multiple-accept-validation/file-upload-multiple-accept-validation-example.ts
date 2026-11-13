@@ -4,8 +4,8 @@ import { FileValidators, KbqFileTypeSpecifier } from '@koobiq/components/core';
 import { KbqFileItem, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title File upload multiple accept validation
@@ -41,7 +41,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadMultipleAcceptValidationExample extends BaseLocalizedExample<ExampleTranslation> {
+export class FileUploadMultipleAcceptValidationExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected accept: KbqFileTypeSpecifier = ['.txt'];
     protected get fileExtensionMismatchErrorMessage(): string {
         return this.t().provideValidExtension;
@@ -50,7 +52,6 @@ export class FileUploadMultipleAcceptValidationExample extends BaseLocalizedExam
     protected readonly fileList = new FormArray<FormControl<KbqFileItem | null>>([]);
 
     constructor() {
-        super(TRANSLATIONS);
         this.fileList.statusChanges.subscribe(() => {
             this.fileList.controls.forEach((control) => {
                 if (control?.value && 'hasError' in control.value) {

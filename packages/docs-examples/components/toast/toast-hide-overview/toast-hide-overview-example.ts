@@ -4,9 +4,9 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { switchMap, timer } from 'rxjs';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Toast hide
@@ -22,7 +22,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     templateUrl: 'toast-hide-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ToastHideOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ToastHideOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     progress: boolean;
 
     readonly toastService = inject(KbqToastService);
@@ -61,9 +63,5 @@ export class ToastHideOverviewExample extends BaseLocalizedExample<ExampleTransl
 
     showWarningToast(actions: TemplateRef<any>) {
         this.toastService.show({ style: KbqToastStyle.Warning, caption: this.t().passwordExpires, actions });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

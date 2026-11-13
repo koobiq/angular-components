@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Checkbox multiline example
@@ -30,8 +30,6 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CheckboxMultilineExample extends BaseLocalizedExample<ExampleTranslation> {
-    constructor() {
-        super(TRANSLATIONS);
-    }
+export class CheckboxMultilineExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

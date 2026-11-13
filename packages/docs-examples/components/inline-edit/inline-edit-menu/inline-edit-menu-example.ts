@@ -9,8 +9,8 @@ import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit menu
@@ -193,7 +193,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-flex layout-column layout-gap-m'
     }
 })
-export class InlineEditMenuExample extends BaseLocalizedExample<ExampleTranslation> {
+export class InlineEditMenuExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly maxRows = 20;
     protected readonly clipboard = inject(Clipboard);
     protected get placeholder(): string {
@@ -211,9 +213,5 @@ export class InlineEditMenuExample extends BaseLocalizedExample<ExampleTranslati
 
     protected update(): void {
         this.displayValue.set(this.form.controls.style.value);
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

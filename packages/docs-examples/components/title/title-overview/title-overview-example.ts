@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Title
@@ -23,16 +23,14 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     styleUrls: ['./title-overview-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TitleOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
+export class TitleOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly defaultValue = computed(() => this.t().justText);
     readonly longValue = computed(() => `${this.defaultValue()}` + this.t().andLongText.repeat(6));
     field = this.defaultValue();
 
     onAddText() {
         this.field = `${this.field}` + this.t().andLongText.repeat(3);
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

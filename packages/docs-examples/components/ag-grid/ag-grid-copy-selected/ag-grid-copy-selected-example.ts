@@ -10,7 +10,7 @@ import {
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToastService } from '@koobiq/components/toast';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -19,7 +19,7 @@ import {
     ModuleRegistry,
     RowSelectionOptions
 } from 'ag-grid-community';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -78,7 +78,9 @@ const customCopyFormatterWithHeaderRow: KbqAgGridCopyFormatter = (api) => {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridCopySelectedExample extends BaseLocalizedExample<ExampleTranslation> {
+export class AgGridCopySelectedExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly toast = inject(KbqToastService);
 
     protected readonly copyFormatOptions = ['TSV', 'CSV', 'JSON', 'Custom'] as const;
@@ -146,9 +148,5 @@ export class AgGridCopySelectedExample extends BaseLocalizedExample<ExampleTrans
                 caption: this.t().dataCopiedCaption(this.copyFormat())
             });
         }
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

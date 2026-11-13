@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqRadioModule } from '@koobiq/components/radio';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Radio multiline example
@@ -32,10 +32,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RadioMultilineExample extends BaseLocalizedExample<ExampleTranslation> {
-    readonly options = computed(() => this.t().practiceOptions);
+export class RadioMultilineExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    constructor() {
-        super(TRANSLATIONS);
-    }
+    readonly options = computed(() => this.t().practiceOptions);
 }

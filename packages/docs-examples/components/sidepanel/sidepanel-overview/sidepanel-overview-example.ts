@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, TemplateRef, inject, viewChild } fr
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Sidepanel modal mode
@@ -14,7 +14,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     templateUrl: 'sidepanel-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidepanelOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
+export class SidepanelOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private sidepanelService = inject(KbqSidepanelService);
 
     position = KbqSidepanelPosition.Right;
@@ -29,9 +31,5 @@ export class SidepanelOverviewExample extends BaseLocalizedExample<ExampleTransl
             position: this.position,
             hasBackdrop: true
         });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

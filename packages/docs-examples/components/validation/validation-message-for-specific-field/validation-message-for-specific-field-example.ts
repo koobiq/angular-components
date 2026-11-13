@@ -8,8 +8,8 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Validation message for specific field
@@ -69,7 +69,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ValidationMessageForSpecificFieldExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ValidationMessageForSpecificFieldExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly form = new FormGroup({
         first: new FormControl('', [Validators.required]),
         last: new FormControl('', [Validators.required])
@@ -87,9 +89,5 @@ export class ValidationMessageForSpecificFieldExample extends BaseLocalizedExamp
 
             invalidControl?.focus();
         });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

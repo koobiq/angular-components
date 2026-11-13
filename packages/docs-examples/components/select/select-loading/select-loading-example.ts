@@ -12,17 +12,19 @@ import {
     KbqSelectModule,
     minimumTimeToDisplayLoading
 } from '@koobiq/components/select';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { BehaviorSubject, catchError, Observable, of, race, switchMap, throwError, timer } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 type Option = {
     id: number;
     label: string;
 };
 
-export class OptionsApiService extends BaseLocalizedExample<ExampleTranslation> {
+export class OptionsApiService {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private delay: number = 100;
 
     private readonly data = Array.from({ length: 10 }, (_, i) => ({ id: i, label: 'Option #' + i }));
@@ -42,13 +44,11 @@ export class OptionsApiService extends BaseLocalizedExample<ExampleTranslation> 
 
         return timer(this.delay).pipe(map(() => filtered));
     }
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }
 
-export class SelectFacade extends BaseLocalizedExample<ExampleTranslation> {
+export class SelectFacade {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly api = inject(OptionsApiService);
     private readonly search$ = new BehaviorSubject<string | null>(null);
 
@@ -100,10 +100,6 @@ export class SelectFacade extends BaseLocalizedExample<ExampleTranslation> {
         }),
         startWith({ status: 'error', error: { message: 'error message' } } as const)
     );
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }
 
 /**
@@ -198,7 +194,9 @@ export class SelectFacade extends BaseLocalizedExample<ExampleTranslation> {
         class: 'layout-margin-5xl layout-column layout-align-center-center'
     }
 })
-export class SelectLoadingExample extends BaseLocalizedExample<ExampleTranslation> {
+export class SelectLoadingExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly facade = inject(SelectFacade);
 
     protected selectedOption: Option = { id: 0, label: 'Option #0' };
@@ -225,7 +223,6 @@ export class SelectLoadingExample extends BaseLocalizedExample<ExampleTranslatio
     }
 
     constructor() {
-        super(TRANSLATIONS);
         this.searchControl.valueChanges
             .pipe(takeUntilDestroyed())
             .subscribe((value) => this.facade.setSearch(value ?? ''));

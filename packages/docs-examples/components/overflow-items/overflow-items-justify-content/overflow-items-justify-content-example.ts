@@ -3,8 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Overflow items justify content
@@ -61,12 +61,10 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OverflowItemsJustifyContentExample extends BaseLocalizedExample<ExampleTranslation> {
+export class OverflowItemsJustifyContentExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly items = Array.from({ length: 7 }, (_, i) => `Item${i}`);
     readonly justifyContentOptions = ['center', 'start', 'end', 'space-between', 'space-around'] as const;
     readonly justifyContent = model(this.justifyContentOptions[0]);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

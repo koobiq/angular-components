@@ -5,9 +5,9 @@ import { DateAdapter } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Timepicker validation symbols
@@ -25,7 +25,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimepickerOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
+export class TimepickerOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
     timeFormats = TimeFormats;
@@ -33,7 +35,6 @@ export class TimepickerOverviewExample extends BaseLocalizedExample<ExampleTrans
     time: DateTime;
 
     constructor() {
-        super(TRANSLATIONS);
         this.time = this.adapter.today().startOf('hour');
     }
 }

@@ -3,8 +3,8 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 import { KbqToastService } from '@koobiq/components/toast';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Toast progress bar
@@ -31,7 +31,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ToastProgressBarOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ToastProgressBarOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly toastService = inject(KbqToastService);
 
     showStickyToast(content: TemplateRef<any>, actions: TemplateRef<any>) {
@@ -45,9 +47,5 @@ export class ToastProgressBarOverviewExample extends BaseLocalizedExample<Exampl
             },
             0
         );
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

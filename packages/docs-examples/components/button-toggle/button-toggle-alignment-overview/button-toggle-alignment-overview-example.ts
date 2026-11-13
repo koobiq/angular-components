@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Button toggle alignment
@@ -18,12 +18,10 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     templateUrl: 'button-toggle-alignment-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ButtonToggleAlignmentOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ButtonToggleAlignmentOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly group = computed(() => [this.t().courier, this.t().donkeyExpress, this.t().middleEarthPost]);
 
     model = 0;
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

@@ -26,10 +26,10 @@ import {
 } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { fromEvent, switchMap } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 const IP_PATTERN =
     /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
@@ -107,14 +107,15 @@ class ExampleResetTouchedOnFirstInput {
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ValidationOnBlurFilledExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ValidationOnBlurFilledExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly tooltip = viewChild(KbqTooltipTrigger);
     protected readonly ipAddressControl = new FormControl('123...12123123', [
         Validators.pattern(IP_PATTERN)
     ]);
 
     constructor() {
-        super(TRANSLATIONS);
         afterNextRender(() => {
             this.ipAddressControl.markAsTouched();
             this.ipAddressControl.updateValueAndValidity();

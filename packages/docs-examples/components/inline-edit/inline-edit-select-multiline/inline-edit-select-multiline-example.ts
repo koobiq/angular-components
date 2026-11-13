@@ -4,8 +4,8 @@ import { KbqOptionModule } from '@koobiq/components/core';
 import { KbqFormFieldModule, KbqLabel } from '@koobiq/components/form-field';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 const COMMENTS: string[] = [
     'Issue resolved after restarting the affected service. No further action required.',
@@ -70,14 +70,12 @@ const COMMENTS: string[] = [
         class: 'layout-column layout-align-center-center'
     }
 })
-export class InlineEditSelectMultilineExample extends BaseLocalizedExample<ExampleTranslation> {
+export class InlineEditSelectMultilineExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly notSetLabel = 'Not specified';
 
     protected readonly comments = COMMENTS;
 
     protected readonly control = new FormControl<string | null>(COMMENTS[0]);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

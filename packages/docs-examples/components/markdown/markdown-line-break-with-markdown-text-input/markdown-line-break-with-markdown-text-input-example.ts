@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqMarkdown, kbqMarkdownMarkedOptionsProvider } from '@koobiq/components/markdown';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Markdown line break
@@ -16,8 +16,6 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     providers: [kbqMarkdownMarkedOptionsProvider({ breaks: true })],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarkdownLineBreakWithMarkdownTextInputExample extends BaseLocalizedExample<ExampleTranslation> {
-    constructor() {
-        super(TRANSLATIONS);
-    }
+export class MarkdownLineBreakWithMarkdownTextInputExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

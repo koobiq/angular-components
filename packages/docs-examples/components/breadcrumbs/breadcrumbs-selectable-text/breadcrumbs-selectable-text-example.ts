@@ -4,8 +4,8 @@ import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Breadcrumbs selectable text
@@ -76,7 +76,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BreadcrumbsSelectableTextExample extends BaseLocalizedExample<ExampleTranslation> {
+export class BreadcrumbsSelectableTextExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly clipboard = inject(Clipboard, { optional: true });
 
     readonly breadcrumbs = computed(() => [
@@ -91,9 +93,5 @@ export class BreadcrumbsSelectableTextExample extends BaseLocalizedExample<Examp
         event.preventDefault();
         event.stopImmediatePropagation();
         this.clipboard?.copy(text);
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

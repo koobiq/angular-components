@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqLink, KbqLinkUnderline } from '@koobiq/components/link';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Link underline
@@ -39,10 +39,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LinkUnderlineExample extends BaseLocalizedExample<ExampleTranslation> {
-    readonly underline = model<KbqLinkUnderline>('always');
+export class LinkUnderlineExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    constructor() {
-        super(TRANSLATIONS);
-    }
+    readonly underline = model<KbqLinkUnderline>('always');
 }

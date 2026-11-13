@@ -10,9 +10,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { map } from 'rxjs/operators';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title TopBar Breadcrumbs
@@ -107,7 +107,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     providers: [kbqBreadcrumbsConfigurationProvider({ firstItemNegativeMargin: false })],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopBarBreadcrumbsExample extends BaseLocalizedExample<ExampleTranslation> {
+export class TopBarBreadcrumbsExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
@@ -121,8 +123,4 @@ export class TopBarBreadcrumbsExample extends BaseLocalizedExample<ExampleTransl
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

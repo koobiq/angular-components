@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, ViewEncapsulation } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Breadcrumbs Truncate Head Items
@@ -38,7 +38,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class BreadcrumbsTruncateHeadItemsExample extends BaseLocalizedExample<ExampleTranslation> {
+export class BreadcrumbsTruncateHeadItemsExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly breadcrumbs = computed(() => [
         { label: this.t().components, url: '/components' },
         { label: this.t().commit, url: '/components/commit' },
@@ -47,8 +49,4 @@ export class BreadcrumbsTruncateHeadItemsExample extends BaseLocalizedExample<Ex
             url: '/components/commit/cacb86c728451b57740706d19429e6629140b7c5'
         }
     ]);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

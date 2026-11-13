@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angula
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Toast user data
@@ -17,7 +17,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     templateUrl: 'toast-user-data-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ToastUserDataExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ToastUserDataExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly toastService = inject(KbqToastService);
 
     showToast(actions: TemplateRef<any>) {
@@ -35,9 +37,5 @@ export class ToastUserDataExample extends BaseLocalizedExample<ExampleTranslatio
             userData: 'AnyUserData',
             userButtonName: this.t().update
         });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

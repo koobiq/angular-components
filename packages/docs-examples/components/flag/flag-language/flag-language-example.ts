@@ -3,8 +3,8 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Flag is not a language
@@ -32,14 +32,12 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-row layout-align-center-center layout-padding-l'
     }
 })
-export class FlagLanguageExample extends BaseLocalizedExample<ExampleTranslation> {
+export class FlagLanguageExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     // Languages are picked with a neutral icon, not a flag: one language spans several countries.
     // Language names stay in their own tongue by convention.
     protected readonly languages = ['English (UK)', 'English (US)', 'Español', 'Français', 'Русский', 'हिन्दी', '中文'];
 
     protected readonly control = new FormControl(this.languages[0]);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

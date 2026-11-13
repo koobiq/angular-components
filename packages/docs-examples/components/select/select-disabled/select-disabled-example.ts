@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Select disabled
@@ -64,12 +64,10 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectDisabledExample extends BaseLocalizedExample<ExampleTranslation> {
+export class SelectDisabledExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly options = Array.from({ length: 5 }, (_, i) => 'Option #' + i);
     readonly groups = Array.from({ length: 3 }, (_, i) => 'Group #' + i);
     readonly selected = this.options[0];
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

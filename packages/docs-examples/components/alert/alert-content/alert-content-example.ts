@@ -4,8 +4,8 @@ import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import { kbqAnimationsDisabled, KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon, KbqIconButton, KbqIconItem } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Alert content
@@ -29,13 +29,11 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     styleUrls: ['alert-content-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AlertContentExample extends BaseLocalizedExample<ExampleTranslation> {
+export class AlertContentExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly animationsDisabled = kbqAnimationsDisabled();
     colors = KbqComponentColors;
     firstState = true;
     secondState = true;
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

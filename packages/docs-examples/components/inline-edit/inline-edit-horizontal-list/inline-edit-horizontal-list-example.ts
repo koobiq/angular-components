@@ -4,8 +4,8 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit horizontal list
@@ -92,7 +92,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InlineEditHorizontalListExample extends BaseLocalizedExample<ExampleTranslation> {
+export class InlineEditHorizontalListExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected get placeholder(): string {
         return this.t().placeholder;
     }
@@ -102,8 +104,4 @@ export class InlineEditHorizontalListExample extends BaseLocalizedExample<Exampl
         capital: new FormControl('Madrid'),
         currency: new FormControl('Euro')
     });
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

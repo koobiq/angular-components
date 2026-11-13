@@ -3,8 +3,8 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Form fieldset
@@ -52,15 +52,13 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-row'
     }
 })
-export class FormFieldsetOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
+export class FormFieldsetOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     options = [
         'https://',
         'http://'
     ];
 
     control = new FormControl(this.options[0]);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

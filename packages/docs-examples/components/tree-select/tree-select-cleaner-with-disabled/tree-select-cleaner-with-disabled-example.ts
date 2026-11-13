@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import {
     FlatNode,
     getChildren,
@@ -15,7 +15,7 @@ import {
     Node,
     transformer
 } from '../tree-select-cleaner-data';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 /** Ids of the nodes the user is not allowed to deselect. */
 const lockedNodes = ['loadBalancer'];
@@ -88,7 +88,9 @@ const lockedNodes = ['loadBalancer'];
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TreeSelectCleanerWithDisabledExample extends BaseLocalizedExample<ExampleTranslation> {
+export class TreeSelectCleanerWithDisabledExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly kept = model(['database', 'loadBalancer', 'messageQueue']);
     protected readonly cleared = model(['database', 'loadBalancer', 'messageQueue']);
 
@@ -120,7 +122,6 @@ export class TreeSelectCleanerWithDisabledExample extends BaseLocalizedExample<E
     }
 
     constructor() {
-        super(TRANSLATIONS);
         effect(() => {
             // The nodes are keyed by stable ids, so a rebuild on a locale switch keeps the selection.
             this.keptDataSource.data = getTreeData(this.t());

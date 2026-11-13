@@ -1,8 +1,8 @@
 import { afterNextRender, ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqInputModule } from '@koobiq/components/input';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Form fieldset
@@ -51,7 +51,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-row'
     }
 })
-export class FormFieldsetInvalidExample extends BaseLocalizedExample<ExampleTranslation> {
+export class FormFieldsetInvalidExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     form = new FormGroup({
         surname: new FormControl('', Validators.required),
         name: new FormControl('', Validators.required),
@@ -59,7 +61,6 @@ export class FormFieldsetInvalidExample extends BaseLocalizedExample<ExampleTran
     });
 
     constructor() {
-        super(TRANSLATIONS);
         afterNextRender(() =>
             Object.values(this.form.controls).forEach((control) => {
                 control.markAsTouched();

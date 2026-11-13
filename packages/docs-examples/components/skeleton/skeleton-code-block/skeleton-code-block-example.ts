@@ -7,8 +7,8 @@ import {
 } from '@koobiq/components/code-block';
 import { KbqSkeleton } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Skeleton in place of a code block
@@ -42,7 +42,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonCodeBlockExample extends BaseLocalizedExample<ExampleTranslation> {
+export class SkeletonCodeBlockExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly loading = model(true);
 
     protected readonly files: KbqCodeBlockFile[] = [
@@ -51,8 +53,4 @@ export class SkeletonCodeBlockExample extends BaseLocalizedExample<ExampleTransl
             language: 'javascript'
         }
     ];
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

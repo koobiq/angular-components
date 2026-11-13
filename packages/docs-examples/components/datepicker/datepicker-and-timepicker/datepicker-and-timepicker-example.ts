@@ -5,9 +5,9 @@ import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTimepickerModule } from '@koobiq/components/timepicker';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Datepicker and timepicker
@@ -45,10 +45,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DatepickerAndTimepickerExample extends BaseLocalizedExample<ExampleTranslation> {
-    selectedDateTime: DateTime;
+export class DatepickerAndTimepickerExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    constructor() {
-        super(TRANSLATIONS);
-    }
+    selectedDateTime: DateTime;
 }

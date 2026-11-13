@@ -4,8 +4,8 @@ import { KbqOptionModule } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Dropdown navigation wrap
@@ -22,8 +22,6 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     templateUrl: 'dropdown-navigation-wrap-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DropdownNavigationWrapExample extends BaseLocalizedExample<ExampleTranslation> {
-    constructor() {
-        super(TRANSLATIONS);
-    }
+export class DropdownNavigationWrapExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

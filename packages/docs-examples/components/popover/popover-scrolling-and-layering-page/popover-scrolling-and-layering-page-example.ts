@@ -4,8 +4,8 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOverflowShadowContainer, KbqOverlayLayer } from '@koobiq/components/core';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Popover scrolling and layering page
@@ -101,11 +101,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PopoverScrollingAndLayeringPageExample extends BaseLocalizedExample<ExampleTranslation> {
+export class PopoverScrollingAndLayeringPageExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly popoverContent =
         'Think of a popover as a lightweight, floating window that is directly tethered to the element that summoned it. Unlike a modal dialog, it doesn\'t usually block interaction with the rest of the page entirely, allowing for a faster, more "in-context" workflow. It\'s often activated by clicking a button, icon, or link, and it disappears when the user moves their focus away.';
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

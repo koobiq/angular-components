@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Button toggle disabled partial
@@ -16,8 +16,6 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     templateUrl: 'button-toggle-disabled-partial-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ButtonToggleDisabledPartialOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
-    constructor() {
-        super(TRANSLATIONS);
-    }
+export class ButtonToggleDisabledPartialOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

@@ -6,8 +6,8 @@ import {
     KbqPipeTypes,
     KbqSelectValue
 } from '@koobiq/components/filter-bar';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 const ATTACK_TYPES: KbqSelectValue[] = [
     'Adversary-in-the-Middle',
@@ -49,7 +49,9 @@ const ATTACK_TYPES: KbqSelectValue[] = [
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilterBarNotSpecifiedExample extends BaseLocalizedExample<ExampleTranslation> {
+export class FilterBarNotSpecifiedExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     /** Text the example owns; the option is worded to agree with the name of the filter. */
 
     /** Objects whose attack type is not set: the first option of the list. */
@@ -95,8 +97,4 @@ export class FilterBarNotSpecifiedExample extends BaseLocalizedExample<ExampleTr
             }
         ]
     }));
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

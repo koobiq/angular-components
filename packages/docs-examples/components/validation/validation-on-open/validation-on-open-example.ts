@@ -9,9 +9,9 @@ import {
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KBQ_MODAL_DATA, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { take } from 'rxjs';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 type DocsFormData = {
     firstName: string;
@@ -50,7 +50,9 @@ type DocsFormData = {
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocsNameFormComponent extends BaseLocalizedExample<ExampleTranslation> {
+export class DocsNameFormComponent {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly modalData = inject<DocsFormData>(KBQ_MODAL_DATA, { optional: true });
     protected readonly modalRef = inject(KbqModalRef);
     protected readonly formFieldList = viewChildren(KbqFormField);
@@ -73,10 +75,6 @@ export class DocsNameFormComponent extends BaseLocalizedExample<ExampleTranslati
 
             invalidControl?.focus();
         });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }
 
@@ -110,7 +108,9 @@ export class DocsNameFormComponent extends BaseLocalizedExample<ExampleTranslati
         class: 'layout-margin-5xl layout-align-center-center layout-row layout-gap-l'
     }
 })
-export class ValidationOnOpenExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ValidationOnOpenExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly modalService = inject(KbqModalService);
     protected modalRef: KbqModalRef<DocsNameFormComponent>;
 
@@ -140,9 +140,5 @@ export class ValidationOnOpenExample extends BaseLocalizedExample<ExampleTransla
         this.modalRef.afterOpen.pipe(take(1)).subscribe(() => {
             this.modalRef.getElement().getElementsByTagName('button').item(0)?.click();
         });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

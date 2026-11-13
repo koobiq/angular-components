@@ -3,8 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqLink } from '@koobiq/components/link';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Link size
@@ -33,10 +33,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: { class: 'layout-column layout-align-center-center' }
 })
-export class LinkSizeExample extends BaseLocalizedExample<ExampleTranslation> {
-    readonly size = model<KbqDefaultSizes>('normal');
+export class LinkSizeExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    constructor() {
-        super(TRANSLATIONS);
-    }
+    readonly size = model<KbqDefaultSizes>('normal');
 }

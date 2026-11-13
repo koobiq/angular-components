@@ -10,10 +10,10 @@ import {
     kbqAgGridSettingsMenuSortItem,
     KbqAgGridThemeModule
 } from '@koobiq/ag-grid-angular-theme';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -44,7 +44,9 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridSettingsMenuExample extends BaseLocalizedExample<ExampleTranslation> {
+export class AgGridSettingsMenuExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     // Row heights of --kbq-size-3xl and --kbq-size-4xl, the default row height of the theme.
     private readonly densities = computed(() => [
         { id: 'compact', label: this.t().compact, rowHeight: 32 },
@@ -100,8 +102,4 @@ export class AgGridSettingsMenuExample extends BaseLocalizedExample<ExampleTrans
             affectedHost: `srv-0${(index % 9) + 1}`
         }))
     );
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

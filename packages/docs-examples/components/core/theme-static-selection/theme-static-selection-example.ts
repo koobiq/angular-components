@@ -3,8 +3,8 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqThemeConfig, KbqThemeSelector, KbqThemeService } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /** A custom theme with a locale-independent `name` and a label that follows the examples locale. */
 interface ExampleThemeConfig extends KbqThemeConfig {
@@ -30,7 +30,9 @@ interface ExampleThemeConfig extends KbqThemeConfig {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ThemeStaticSelectionExample extends BaseLocalizedExample<ExampleTranslation> implements OnDestroy {
+export class ThemeStaticSelectionExample implements OnDestroy {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     /**
      * Custom names pinned to the library's own light/dark classes (`KbqThemeSelector`) — reusing them, rather
      * than inventing unstyled classes, keeps the docs page's own styling intact when this example is live.
@@ -56,7 +58,6 @@ export class ThemeStaticSelectionExample extends BaseLocalizedExample<ExampleTra
     private readonly previousStaticTheme = this.theme.staticTheme();
 
     constructor() {
-        super(TRANSLATIONS);
         this.theme.setThemes([...this.previousThemes, ...this.customThemes()]);
     }
 

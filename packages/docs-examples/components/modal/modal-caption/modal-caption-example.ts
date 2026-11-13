@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalService, ModalSize } from '@koobiq/components/modal';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Modal with caption
@@ -27,7 +27,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-row layout-gap-m'
     }
 })
-export class ModalCaptionExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ModalCaptionExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly modalService = inject(KbqModalService);
 
     openWithStringCaption(): void {
@@ -49,9 +51,5 @@ export class ModalCaptionExample extends BaseLocalizedExample<ExampleTranslation
             kbqCancelText: this.t().cancel,
             kbqSize: ModalSize.Small
         });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

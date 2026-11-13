@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
 import { KbqActionsPanel, KbqActionsPanelRef } from '@koobiq/components/actions-panel';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Actions panel opened globally
@@ -34,7 +34,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     providers: [KbqActionsPanel],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActionsPanelGlobalExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ActionsPanelGlobalExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     private readonly templateRef = viewChild.required(TemplateRef);
     private actionsPanelRef?: KbqActionsPanelRef | null;
@@ -51,9 +53,5 @@ export class ActionsPanelGlobalExample extends BaseLocalizedExample<ExampleTrans
         this.actionsPanelRef = this.actionsPanel.open(this.templateRef());
 
         this.actionsPanelRef.afterClosed.subscribe(() => (this.actionsPanelRef = null));
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

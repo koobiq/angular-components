@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAccordionModule } from '@koobiq/components/accordion';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Accordion state saving
@@ -13,8 +13,6 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     templateUrl: 'accordion-state-saving-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AccordionStateSavingExample extends BaseLocalizedExample<ExampleTranslation> {
-    constructor() {
-        super(TRANSLATIONS);
-    }
+export class AccordionStateSavingExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

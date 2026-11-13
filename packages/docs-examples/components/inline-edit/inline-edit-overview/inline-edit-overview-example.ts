@@ -5,8 +5,8 @@ import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit overview
@@ -44,7 +44,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InlineEditOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
+export class InlineEditOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected get placeholder(): string {
         return this.t().placeholder;
     }
@@ -54,9 +56,5 @@ export class InlineEditOverviewExample extends BaseLocalizedExample<ExampleTrans
 
     protected update(): void {
         this.displayValue.set(this.value);
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

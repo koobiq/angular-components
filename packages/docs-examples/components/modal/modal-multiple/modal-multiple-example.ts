@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalService, ModalSize } from '@koobiq/components/modal';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Modal multiple
@@ -15,7 +15,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ModalMultipleExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ModalMultipleExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly modalService = inject(KbqModalService);
 
     showConfirmModal(): void {
@@ -45,9 +47,5 @@ export class ModalMultipleExample extends BaseLocalizedExample<ExampleTranslatio
             kbqOkClick: () => console.log('OK'),
             kbqCancelClick: () => console.log('Cancel')
         });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

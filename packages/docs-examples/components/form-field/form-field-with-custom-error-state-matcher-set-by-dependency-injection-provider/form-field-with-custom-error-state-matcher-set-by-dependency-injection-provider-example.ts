@@ -11,8 +11,8 @@ import {
 import { KbqButtonModule } from '@koobiq/components/button';
 import { ErrorStateMatcher, kbqErrorStateMatcherProvider } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * Error state matcher that matches when a control is invalid and form is submitted.
@@ -49,12 +49,10 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
     providers: [kbqErrorStateMatcherProvider(CustomErrorStateMatcher)],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormFieldWithCustomErrorStateMatcherSetByDependencyInjectionProviderExample extends BaseLocalizedExample<ExampleTranslation> {
+export class FormFieldWithCustomErrorStateMatcherSetByDependencyInjectionProviderExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly formGroup = new FormGroup({
         email: new FormControl('', [Validators.required, Validators.email])
     });
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

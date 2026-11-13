@@ -9,8 +9,8 @@ import {
     KbqSidepanelService
 } from '@koobiq/components/sidepanel';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 type ExampleComponentData = {
     open: () => void;
@@ -38,7 +38,9 @@ type ExampleComponentData = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleSidepanelComponent extends BaseLocalizedExample<ExampleTranslation> {
+export class ExampleSidepanelComponent {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly sidepanelRef = inject(KbqSidepanelRef);
     private readonly data: ExampleComponentData = inject(KBQ_SIDEPANEL_DATA);
 
@@ -46,7 +48,6 @@ export class ExampleSidepanelComponent extends BaseLocalizedExample<ExampleTrans
     protected readonly open = this.data.open;
 
     constructor() {
-        super(TRANSLATIONS);
         toObservable(this.disableClose)
             .pipe(takeUntilDestroyed())
             .subscribe((value) => {
@@ -68,16 +69,14 @@ export class ExampleSidepanelComponent extends BaseLocalizedExample<ExampleTrans
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidepanelWithDynamicConfigUpdateExample extends BaseLocalizedExample<ExampleTranslation> {
+export class SidepanelWithDynamicConfigUpdateExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly sidepanelService = inject(KbqSidepanelService);
 
     open() {
         this.sidepanelService.open<ExampleSidepanelComponent, ExampleComponentData>(ExampleSidepanelComponent, {
             data: { open: () => this.open() }
         });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

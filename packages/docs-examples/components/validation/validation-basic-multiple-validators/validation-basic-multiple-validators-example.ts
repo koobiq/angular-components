@@ -8,8 +8,8 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Validation: multiple validators
@@ -54,7 +54,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ValidationBasicMultipleValidatorsExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ValidationBasicMultipleValidatorsExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly form = new FormGroup({
         username: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(20)])
     });
@@ -67,9 +69,5 @@ export class ValidationBasicMultipleValidatorsExample extends BaseLocalizedExamp
                 .find((f) => f.invalid)
                 ?.focus();
         });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AbstractControl, FormControl, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 import { PasswordValidators } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * Allows printable ASCII only: latin letters, digits, spaces and special characters. An empty password fails too,
@@ -50,7 +50,9 @@ const latinAndSpecialSymbols = ({ value }: AbstractControl): ValidationErrors | 
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InputPasswordOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
+export class InputPasswordOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly control = new FormControl('', [
         PasswordValidators.minLength(8),
         PasswordValidators.maxLength(15),
@@ -59,8 +61,4 @@ export class InputPasswordOverviewExample extends BaseLocalizedExample<ExampleTr
         PasswordValidators.minNumber(1),
         latinAndSpecialSymbols
     ]);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

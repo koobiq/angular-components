@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule, ICellRendererAngularComp } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -10,7 +10,7 @@ import {
     ModuleRegistry,
     RowSelectionOptions
 } from 'ag-grid-community';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -30,20 +30,15 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridLoadTextExampleLoadingText
-    extends BaseLocalizedExample<ExampleTranslation>
-    implements ICellRendererAngularComp
-{
+export class AgGridLoadTextExampleLoadingText implements ICellRendererAngularComp {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly label = computed(() => this.t().loading);
 
     agInit(): void {}
 
     refresh(): boolean {
         return true;
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }
 
@@ -75,7 +70,9 @@ export class AgGridLoadTextExampleLoadingText
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridLoadTextExample extends BaseLocalizedExample<ExampleTranslation> {
+export class AgGridLoadTextExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly loadingTextRenderer = AgGridLoadTextExampleLoadingText;
 
     protected readonly columnDefs = computed(() =>
@@ -108,8 +105,4 @@ export class AgGridLoadTextExample extends BaseLocalizedExample<ExampleTranslati
     }));
 
     protected readonly isFullWidthRow = ({ rowNode }: IsFullWidthRowParams): boolean => rowNode.data === undefined;
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

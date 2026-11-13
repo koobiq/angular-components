@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Button toggle tooltip
@@ -35,7 +35,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ButtonToggleTooltipOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ButtonToggleTooltipOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly group = computed(() => [
         this.t().longToggleText,
         this.t().donkeyExpress,
@@ -43,8 +45,4 @@ export class ButtonToggleTooltipOverviewExample extends BaseLocalizedExample<Exa
     ]);
 
     model = 1;
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

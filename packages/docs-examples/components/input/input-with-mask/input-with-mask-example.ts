@@ -9,11 +9,11 @@ import {
 } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { MaskitoDirective } from '@maskito/angular';
 import { MaskitoOptions, MaskitoPlugin, maskitoUpdateElement } from '@maskito/core';
 import { maskitoNumberOptionsGenerator, maskitoWithPlaceholder } from '@maskito/kit';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Input with mask
@@ -90,7 +90,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InputWithMaskExample extends BaseLocalizedExample<ExampleTranslation> {
+export class InputWithMaskExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly ipAddressControl = new FormControl('192.168.0.1', [this.ipAddressValidator()]);
     readonly macAddressControl = new FormControl('AA:BB:CC:DD:EE:FF', [
         Validators.pattern(/^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$/)
@@ -287,9 +289,5 @@ export class InputWithMaskExample extends BaseLocalizedExample<ExampleTranslatio
                 alphanumeric
             ]
         };
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

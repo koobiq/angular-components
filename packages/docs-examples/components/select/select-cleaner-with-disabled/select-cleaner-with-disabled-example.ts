@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqOptionBase } from '@koobiq/components/core';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Select cleaner with disabled options
@@ -43,7 +43,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectCleanerWithDisabledExample extends BaseLocalizedExample<ExampleTranslation> {
+export class SelectCleanerWithDisabledExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly options = Array.from({ length: 4 }, (_, i) => ({
         value: 'Option #' + i,
         disabled: i === 1
@@ -53,8 +55,4 @@ export class SelectCleanerWithDisabledExample extends BaseLocalizedExample<Examp
 
     /** Opts out of the default, which leaves the disabled options selected. */
     readonly clearEverything = (_option: KbqOptionBase) => true;
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

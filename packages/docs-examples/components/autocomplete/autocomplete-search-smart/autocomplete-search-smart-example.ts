@@ -9,10 +9,10 @@ import {
     tokenizeSearchQuery
 } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Autocomplete smart search
@@ -54,7 +54,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AutocompleteSearchSmartExample extends BaseLocalizedExample<ExampleTranslation> implements OnInit {
+export class AutocompleteSearchSmartExample implements OnInit {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     // The suggested queries in the label are English, so the options they match stay English in every locale.
     options = [
         'United Kingdom',
@@ -84,9 +86,5 @@ export class AutocompleteSearchSmartExample extends BaseLocalizedExample<Example
         this.searchTokens = tokenizeSearchQuery(value ?? '');
 
         return this.options.filter(createSearchPredicate(value ?? ''));
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

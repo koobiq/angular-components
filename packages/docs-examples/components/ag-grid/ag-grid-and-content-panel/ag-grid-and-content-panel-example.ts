@@ -8,7 +8,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -21,7 +21,7 @@ import {
     ModuleRegistry,
     RowSelectionOptions
 } from 'ag-grid-community';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -52,7 +52,9 @@ type ExampleRowData = Record<string, string>;
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleGrid extends BaseLocalizedExample<ExampleTranslation> {
+export class ExampleGrid {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly cellClicked = output<CellClickedEvent>();
     readonly cellFocused = output<CellFocusedEvent>();
     readonly cellKeyDown = output<CellKeyDownEvent | FullWidthCellKeyDownEvent>();
@@ -93,10 +95,6 @@ export class ExampleGrid extends BaseLocalizedExample<ExampleTranslation> {
                 node.setSelected(true);
             }
         });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }
 
@@ -279,7 +277,9 @@ export class ExampleGrid extends BaseLocalizedExample<ExampleTranslation> {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleContentPanel extends BaseLocalizedExample<ExampleTranslation> {
+export class ExampleContentPanel {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly modalRef = inject(KbqModalRef);
 
     protected readonly componentColors = KbqComponentColors;
@@ -304,10 +304,6 @@ export class ExampleContentPanel extends BaseLocalizedExample<ExampleTranslation
             this.opened.set(true);
         }
     }
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }
 
 /**
@@ -329,7 +325,9 @@ export class ExampleContentPanel extends BaseLocalizedExample<ExampleTranslation
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridAndContentPanelExample extends BaseLocalizedExample<ExampleTranslation> {
+export class AgGridAndContentPanelExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly modal = inject(KbqModalService);
 
     openModal(): void {
@@ -338,9 +336,5 @@ export class AgGridAndContentPanelExample extends BaseLocalizedExample<ExampleTr
             kbqWidth: '90vw',
             kbqClosable: false
         });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

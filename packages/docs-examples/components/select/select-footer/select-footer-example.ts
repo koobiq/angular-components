@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Select footer
@@ -82,13 +82,11 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectFooterExample extends BaseLocalizedExample<ExampleTranslation> {
+export class SelectFooterExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     // Enough options to overflow the panel's default 256px — exactly eight rows fit — so the footer is
     // seen doing its job: staying put while the list scrolls under it.
     protected readonly options = Array.from({ length: 10 }, (_, i) => 'Option #' + i);
     protected readonly selected = this.options[0];
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

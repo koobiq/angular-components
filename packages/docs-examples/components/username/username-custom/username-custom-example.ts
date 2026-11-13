@@ -12,8 +12,8 @@ import {
     KbqUsernameModule,
     KbqUsernameStyle
 } from '@koobiq/components/username';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 const mapping: KbqFormatKeyToProfileMappingExtended = {
     [KbqUsernameFormatKey.FirstNameShort]: 'firstName',
@@ -88,7 +88,9 @@ const mapping: KbqFormatKeyToProfileMappingExtended = {
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UsernameCustomExample extends BaseLocalizedExample<ExampleTranslation> {
+export class UsernameCustomExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     userInfo: KbqUserInfo = {
         firstName: 'Maxwell',
         middleName: 'Alan',
@@ -101,8 +103,4 @@ export class UsernameCustomExample extends BaseLocalizedExample<ExampleTranslati
 
     modes: KbqUsernameMode[] = ['inline', 'stacked', 'text'];
     types: KbqUsernameStyle[] = ['default', 'error', 'accented', 'inherit'];
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

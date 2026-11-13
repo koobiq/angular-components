@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAccordionModule } from '@koobiq/components/accordion';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Accordion content
@@ -14,10 +14,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     styleUrls: ['accordion-content-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AccordionContentExample extends BaseLocalizedExample<ExampleTranslation> {
-    image: boolean = false;
+export class AccordionContentExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    constructor() {
-        super(TRANSLATIONS);
-    }
+    image: boolean = false;
 }

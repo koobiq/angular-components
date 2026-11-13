@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { KBQ_AG_GRID_ROW_ACTIONS_PARAMS, KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToastService } from '@koobiq/components/toast';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -12,7 +12,7 @@ import {
     ModuleRegistry,
     RowSelectionOptions
 } from 'ag-grid-community';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -36,7 +36,9 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleRowActionsComponent extends BaseLocalizedExample<ExampleTranslation> {
+export class ExampleRowActionsComponent {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly clipboard = inject(Clipboard);
     private readonly toast = inject(KbqToastService);
     private readonly params = inject(KBQ_AG_GRID_ROW_ACTIONS_PARAMS);
@@ -49,10 +51,6 @@ export class ExampleRowActionsComponent extends BaseLocalizedExample<ExampleTran
     protected delete(): void {
         this.params.api.applyTransaction({ remove: [this.params.data] });
         this.toast.show({ title: this.t().rowArchived(this.params.rowIndex ?? 0) });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }
 
@@ -82,7 +80,9 @@ export class ExampleRowActionsComponent extends BaseLocalizedExample<ExampleTran
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridRowActionsExample extends BaseLocalizedExample<ExampleTranslation> {
+export class AgGridRowActionsExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly rowActionsComponent = ExampleRowActionsComponent;
 
     protected readonly defaultColDef: ColDef = {
@@ -121,9 +121,5 @@ export class AgGridRowActionsExample extends BaseLocalizedExample<ExampleTransla
                 node.setSelected(true);
             }
         });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

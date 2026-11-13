@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { KbqFlag } from '@koobiq/components/flag';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import * as flags3x2 from 'country-flag-icons/string/3x2';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Flag overview
@@ -29,7 +29,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-column layout-align-center-center layout-gap-m'
     }
 })
-export class FlagOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
+export class FlagOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly sanitizer = inject(DomSanitizer);
 
     // A mix of flags, including several that are prone to blending into light or dark backgrounds.
@@ -43,8 +45,4 @@ export class FlagOverviewExample extends BaseLocalizedExample<ExampleTranslation
             svg: this.sanitizer.bypassSecurityTrustHtml(flags3x2[code])
         }))
     );
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

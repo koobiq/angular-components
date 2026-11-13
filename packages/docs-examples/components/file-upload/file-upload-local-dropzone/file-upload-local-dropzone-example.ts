@@ -4,8 +4,8 @@ import { KbqContentPanelModule } from '@koobiq/components/content-panel';
 import { KbqLocalDropzone, KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSidebar, KbqSidebarClosed, KbqSidebarOpened, SidebarPositions } from '@koobiq/components/sidebar';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title File-upload local dropzone
@@ -72,11 +72,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadLocalDropzoneExample extends BaseLocalizedExample<ExampleTranslation> {
+export class FileUploadLocalDropzoneExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly value = signal(false);
     readonly position = SidebarPositions;
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

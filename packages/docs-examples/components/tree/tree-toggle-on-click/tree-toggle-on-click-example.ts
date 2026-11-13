@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqPseudoCheckboxModule } from '@koobiq/components/core';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 export class FileNode {
     children: FileNode[];
@@ -126,7 +126,9 @@ export const DATA_OBJECT = [
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TreeToggleOnClickExample extends BaseLocalizedExample<ExampleTranslation> {
+export class TreeToggleOnClickExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
 
@@ -135,7 +137,6 @@ export class TreeToggleOnClickExample extends BaseLocalizedExample<ExampleTransl
     modelValue: any = '';
 
     constructor() {
-        super(TRANSLATIONS);
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         this.treeControl = new FlatTreeControl<FileFlatNode>(

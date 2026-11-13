@@ -15,8 +15,8 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 const LATIN_PATTERN = /^[a-zA-Z]+$/;
 
@@ -90,7 +90,9 @@ const latinValidator = (): ValidatorFn => {
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ValidationTagListExample extends BaseLocalizedExample<ExampleTranslation> implements OnInit {
+export class ValidationTagListExample implements OnInit {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly reactiveForm: FormGroup;
     protected readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -101,7 +103,6 @@ export class ValidationTagListExample extends BaseLocalizedExample<ExampleTransl
     private readonly formBuilder = inject(FormBuilder);
 
     constructor() {
-        super(TRANSLATIONS);
         this.reactiveForm = this.formBuilder.group({
             reactiveTypeaheadValue: this.formBuilder.control([], [Validators.required, latinValidator()])
         });

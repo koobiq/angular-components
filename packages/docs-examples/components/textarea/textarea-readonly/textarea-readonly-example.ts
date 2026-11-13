@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Textarea readonly
@@ -29,11 +29,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-margin-xl layout-column'
     }
 })
-export class TextareaReadonlyExample extends BaseLocalizedExample<ExampleTranslation> {
+export class TextareaReadonlyExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly readonly = model(true);
     protected readonly value = model('Text');
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

@@ -13,8 +13,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Filesize formatter
@@ -137,7 +137,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'example-filesize-formatter__container layout-gap-3xl layout-margin-bottom-s'
     }
 })
-export class FilesizeFormatterOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
+export class FilesizeFormatterOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     protected readonly cdr = inject(ChangeDetectorRef);
     protected readonly precisionControl = new FormControl(2, { nonNullable: true });
@@ -150,7 +152,6 @@ export class FilesizeFormatterOverviewExample extends BaseLocalizedExample<Examp
     protected readonly popUpPlacements = PopUpPlacements;
 
     constructor() {
-        super(TRANSLATIONS);
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(() => this.cdr.markForCheck());
     }
 }

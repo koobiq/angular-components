@@ -5,8 +5,8 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule } from '@koobiq/components/popover';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Popover content
@@ -24,7 +24,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     styleUrls: ['popover-content-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PopoverContentExample extends BaseLocalizedExample<ExampleTranslation> {
+export class PopoverContentExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly members = computed<Record<string, string>[]>(() => [
         { name: 'Alex Unipraise', role: this.t().editor },
         { name: 'Serge Vox', role: this.t().editor },
@@ -38,8 +40,4 @@ export class PopoverContentExample extends BaseLocalizedExample<ExampleTranslati
         { name: 'Corina McCoy', role: this.t().viewer }
     ]);
     protected readonly componentColors = KbqComponentColors;
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

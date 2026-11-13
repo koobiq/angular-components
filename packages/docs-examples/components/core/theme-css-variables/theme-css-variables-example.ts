@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqThemeService } from '@koobiq/components/core';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Theme values in your own styles
@@ -32,12 +32,10 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ThemeCssVariablesExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ThemeCssVariablesExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     // The app's shared service, so the switch flips the whole page — that is the point here: nothing
     // in the styles above reacts to it explicitly, the variables simply resolve to the other theme.
     protected readonly themeService = inject(KbqThemeService);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

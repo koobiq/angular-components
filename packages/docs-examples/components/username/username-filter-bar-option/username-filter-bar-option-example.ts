@@ -7,8 +7,8 @@ import {
     KbqUserInfo,
     KbqUsernameModule
 } from '@koobiq/components/username';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 const USERS: KbqUserInfo[] = [
     { firstName: 'Maxwell', middleName: 'Alan', lastName: 'Root', login: 'mroot', site: 'corp' },
@@ -66,7 +66,9 @@ const USERS: KbqUserInfo[] = [
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class UsernameFilterBarOptionExample extends BaseLocalizedExample<ExampleTranslation> implements AfterViewInit {
+export class UsernameFilterBarOptionExample implements AfterViewInit {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly formatUsername = kbqInjectUsernameFormatter();
     private readonly userOptionTemplate = viewChild<TemplateRef<any>>('userOption');
 
@@ -94,7 +96,6 @@ export class UsernameFilterBarOptionExample extends BaseLocalizedExample<Example
     protected readonly tokenizeSearchQuery = tokenizeSearchQuery;
 
     constructor() {
-        super(TRANSLATIONS);
         effect(() => {
             const assignee = this.t().assignee;
 

@@ -5,8 +5,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 const IP_PATTERN =
     /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
@@ -82,7 +82,9 @@ const restSymbolsRegex = /[^0-9.]+/g;
         class: 'layout-flex layout-column'
     }
 })
-export class InlineEditValidationExample extends BaseLocalizedExample<ExampleTranslation> {
+export class InlineEditValidationExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly tooltip = viewChild(KbqTooltipTrigger);
     protected readonly tooltipPlacement = PopUpPlacements.BottomLeft;
     protected readonly tooltipColor = KbqComponentColors.Warning;
@@ -119,9 +121,5 @@ export class InlineEditValidationExample extends BaseLocalizedExample<ExampleTra
                 setTimeout(() => tooltip.hide(), 3000);
             }
         }
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

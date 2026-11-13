@@ -2,8 +2,8 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Scrollbar with virtual scroll
@@ -42,7 +42,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ScrollbarVirtualScrollExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ScrollbarVirtualScrollExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly items = signal(Array.from({ length: 100 }).map((_, i) => `Item #${i}`));
 
     protected addItems(): void {
@@ -50,9 +52,5 @@ export class ScrollbarVirtualScrollExample extends BaseLocalizedExample<ExampleT
         const newItems = Array.from({ length: 100 }).map((_, i) => `Item #${nextIndex + i}`);
 
         this.items.update((items) => [...items, ...newItems]);
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

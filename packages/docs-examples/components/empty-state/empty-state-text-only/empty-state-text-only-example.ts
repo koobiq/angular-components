@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Empty-state text only
@@ -20,11 +20,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EmptyStateTextOnlyExample extends BaseLocalizedExample<ExampleTranslation> {
+export class EmptyStateTextOnlyExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly styles = KbqButtonStyles;
     readonly colors = KbqComponentColors;
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }
