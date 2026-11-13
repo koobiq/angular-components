@@ -1,8 +1,8 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, InjectionToken } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, of } from 'rxjs';
 import {
     type KbqButtonColor,
     KbqButtonModule,
@@ -22,27 +22,26 @@ interface ExampleLocalizedText {
     compressRight: string;
 }
 
-const ExampleLocalizedData = new InjectionToken<Record<string | 'default', ExampleLocalizedText>>(
-    'ExampleLocalizedData',
-    {
-        factory: () => ({
-            'ru-RU': {
-                fullDisplay: 'Когда есть свободное пространство заголовок и действия отображаются полностью',
-                truncatedTitle:
-                    'Минимальная ширина левой стороны зависит от заголовка страницы, который может быть обрезан до 3 символов с добавлением трех точек (…).',
-                compressRight:
-                    'После достижения минимальной ширины у левой стороны можно приступить к сжатию правой стороны с действиями. '
-            } satisfies ExampleLocalizedText,
-            default: {
-                fullDisplay: 'When there is free space, the title and actions are fully displayed.',
-                truncatedTitle:
-                    'The minimum width of the left side depends on the page title, which can be truncated to 3 characters with the addition of three dots (…).',
-                compressRight:
-                    'After reaching the minimum width of the left side, you can start compressing the right side with the actions.'
-            } satisfies ExampleLocalizedText
-        })
-    }
-);
+const ExampleLocalizedData = new InjectionToken<
+    Record<string, ExampleLocalizedText> & { default: ExampleLocalizedText }
+>('ExampleLocalizedData', {
+    factory: () => ({
+        'ru-RU': {
+            fullDisplay: 'Когда есть свободное пространство заголовок и действия отображаются полностью',
+            truncatedTitle:
+                'Минимальная ширина левой стороны зависит от заголовка страницы, который может быть обрезан до 3 символов с добавлением трех точек (…).',
+            compressRight:
+                'После достижения минимальной ширины у левой стороны можно приступить к сжатию правой стороны с действиями. '
+        } satisfies ExampleLocalizedText,
+        default: {
+            fullDisplay: 'When there is free space, the title and actions are fully displayed.',
+            truncatedTitle:
+                'The minimum width of the left side depends on the page title, which can be truncated to 3 characters with the addition of three dots (…).',
+            compressRight:
+                'After reaching the minimum width of the left side, you can start compressing the right side with the actions.'
+        } satisfies ExampleLocalizedText
+    })
+});
 
 type ExampleAction = {
     id: string;
@@ -62,7 +61,8 @@ type ExampleAction = {
         KbqIconModule,
         KbqDropdownModule,
         KbqOverflowItemsModule,
-        KbqFormattersModule
+        KbqFormattersModule,
+        NgOptimizedImage
     ],
     template: `
         <kbq-top-bar withShadow>
@@ -72,7 +72,7 @@ type ExampleAction = {
                 placement="start"
             >
                 <div class="layout-row layout-margin-right-l flex-none">
-                    <img alt="example icon" src="https://koobiq.io/assets/example-icon.svg" width="24" height="24" />
+                    <img alt="example icon" ngSrc="https://koobiq.io/assets/example-icon.svg" width="24" height="24" />
                 </div>
                 <div class="kbq-title kbq-truncate-line example-kbq-top-bar__title">
                     <span class="kbq-truncate-line layout-margin-right-xs">Page Header</span>
@@ -88,6 +88,7 @@ type ExampleAction = {
                     @for (action of actions; track action.id) {
                         <button
                             kbq-button
+                            type="button"
                             [kbqOverflowItem]="action.id"
                             [kbqStyle]="action.style"
                             [color]="action.color"
@@ -108,6 +109,7 @@ type ExampleAction = {
                     <div kbqOverflowItemsResult>
                         <button
                             kbq-button
+                            type="button"
                             aria-label="More"
                             [kbqStyle]="KbqButtonStyles.Transparent"
                             [color]="KbqComponentColors.Contrast"
@@ -119,7 +121,7 @@ type ExampleAction = {
                         <kbq-dropdown #appDropdown="kbqDropdown">
                             @for (action of actions; track action.id) {
                                 @if (kbqOverflowItems.hiddenItemIDs().has(action.id)) {
-                                    <button kbq-dropdown-item>
+                                    <button kbq-dropdown-item type="button">
                                         {{ action.text || action.id }}
                                     </button>
                                 }

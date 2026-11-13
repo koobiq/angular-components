@@ -49,8 +49,8 @@ export interface KbqMultiTreeSelectValueTemplateContext<T extends KbqTreeSelectN
         KbqSelectNoOptions,
         NgTemplateOutlet
     ],
-    templateUrl: 'pipe-multi-tree-select.html',
-    styleUrls: ['base-pipe.scss', 'pipe-multi-tree-select.scss'],
+    templateUrl: './pipe-multi-tree-select.html',
+    styleUrls: ['./base-pipe.scss', './pipe-multi-tree-select.scss'],
     providers: [
         {
             provide: KbqBasePipe,
@@ -87,7 +87,9 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     }
 
     get numberOfSelectedLeaves(): number {
-        return this.select().selectionModel.selected.filter(({ value }) => value !== kbqTreeSelectAllValue).length;
+        return (
+            this.select().selectionModel?.selected.filter(({ value }) => value !== kbqTreeSelectAllValue).length ?? 0
+        );
     }
 
     /** true if all options selected */
@@ -254,9 +256,12 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
             // relying on the tree's own guards.
             const visibleNodes = this.tree()
                 .renderedOptions.filter((option) => option.value !== kbqTreeSelectAllValue && !option.disabled)
-                .map((option) => option.data);
+                .map((option) => option.data)
+                .filter((data) => data !== undefined);
             // Same model the tree owns, written once rather than once per row.
             const { selectionModel } = this.select();
+
+            if (!selectionModel) return;
 
             if (this.allVisibleOptionsSelected) {
                 selectionModel.deselect(...visibleNodes);
@@ -266,6 +271,8 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
         } else {
             // Same model the tree owns — see the note in `enforceLockedNodes`.
             const { selectionModel } = this.select();
+
+            if (!selectionModel) return;
 
             if (this.allOptionsSelected) {
                 // `clear()` would drop the locked nodes along with the rest. Matched by value rather than
@@ -379,6 +386,9 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     private enforceLockedNodes(): void {
         // The tree-select exposes the very same model the tree owns.
         const { selectionModel } = this.select();
+
+        if (!selectionModel) return;
+
         const missing = this.lockedDataNodes.filter((node) => !selectionModel.isSelected(node));
 
         if (missing.length) {
@@ -387,21 +397,20 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     }
 
     private toggleParents(parent: KbqTreeSelectFlatNode | undefined) {
-        if (!parent) {
+        const { selectionModel } = this.select();
+
+        if (!parent || !selectionModel) {
             return;
         }
 
         const descendants = this.treeControl.getDescendants(parent);
-        const isParentSelected = this.select().selectionModel.selected.includes(parent);
+        const isParentSelected = selectionModel.selected.includes(parent);
 
-        if (
-            !isParentSelected &&
-            descendants.every((d: KbqTreeSelectFlatNode) => this.select().selectionModel.selected.includes(d))
-        ) {
-            this.select().selectionModel.select(parent);
+        if (!isParentSelected && descendants.every((d: KbqTreeSelectFlatNode) => selectionModel.selected.includes(d))) {
+            selectionModel.select(parent);
             this.toggleParents(parent.parent);
         } else if (isParentSelected) {
-            this.select().selectionModel.deselect(parent);
+            selectionModel.deselect(parent);
             this.toggleParents(parent.parent);
         }
     }

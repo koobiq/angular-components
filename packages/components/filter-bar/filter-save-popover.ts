@@ -14,8 +14,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { merge } from 'rxjs';
-import { distinctUntilChanged, filter } from 'rxjs/operators';
+import { distinctUntilChanged, filter, merge } from 'rxjs';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { type KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormsModule } from '@koobiq/components/core';
@@ -53,8 +52,8 @@ import {
                 <kbq-alert
                     class="layout-margin-bottom-m"
                     role="alert"
-                    [alertColor]="'error'"
-                    [alertStyle]="'colored'"
+                    alertColor="error"
+                    alertStyle="colored"
                     [compact]="true"
                 >
                     {{ filterSavingErrorText }}
@@ -80,19 +79,21 @@ import {
             <button
                 #saveFilterButton
                 kbq-button
+                type="button"
                 class="layout-margin-right-l"
+                color="contrast"
+                kbqStyle="filled"
                 [class.kbq-progress]="isSaving"
                 [disabled]="isSaving"
-                [color]="'contrast'"
-                [kbqStyle]="'filled'"
                 (click)="saveAsNew()"
             >
                 {{ strings.saveButton }}
             </button>
             <button
                 kbq-button
-                [color]="'contrast-fade'"
-                [kbqStyle]="'filled'"
+                type="button"
+                color="contrast-fade"
+                kbqStyle="filled"
                 [disabled]="isSaving"
                 (click)="close(true)"
             >

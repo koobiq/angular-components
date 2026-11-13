@@ -12,7 +12,7 @@ import { type KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/compo
         KbqLink,
         KbqButtonModule
     ],
-    templateUrl: 'toast-user-data-example.html',
+    templateUrl: './toast-user-data-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastUserDataExample {

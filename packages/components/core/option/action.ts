@@ -41,7 +41,7 @@ export const KBQ_OPTION_ACTION_PARENT = new InjectionToken<KbqOptionActionParent
             <i class="kbq kbq-icon kbq-contrast-fade kbq-ellipsis-vertical_16"></i>
         </ng-content>
     `,
-    styleUrls: ['./action.scss'],
+    styleUrl: './action.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

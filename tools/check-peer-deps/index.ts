@@ -75,18 +75,27 @@ const caret = (range: string): string => (range.startsWith('^') ? range : `^${ra
 const ngAddPath = join(projectRoot, 'packages', 'schematics', 'src', 'ng-add', 'index.ts');
 const rollupConfigPath = join(projectRoot, 'packages', 'schematics', 'rollup.config.js');
 
+/** The range the root manifest holds for a package it depends on. */
+const rootRange = (name: string): string => {
+    const range = rootPackageJson.dependencies?.[name] ?? rootPackageJson.devDependencies?.[name];
+
+    if (!range) throw new Error(`package.json does not depend on ${name}`);
+
+    return range;
+};
+
 const schematicInjectedRanges: Record<string, string> = {
-    '@angular/cdk': caret(rootPackageJson.dependencies!['@angular/cdk']),
+    '@angular/cdk': caret(rootRange('@angular/cdk')),
     '@koobiq/angular-luxon-adapter': caret(rootPackageJson.version!),
-    '@koobiq/luxon-date-adapter': caret(rootPackageJson.devDependencies!['@koobiq/luxon-date-adapter']),
-    '@koobiq/date-formatter': caret(rootPackageJson.dependencies!['@koobiq/date-formatter']),
-    '@koobiq/date-adapter': caret(rootPackageJson.dependencies!['@koobiq/date-adapter']),
-    '@koobiq/icons': caret(rootPackageJson.dependencies!['@koobiq/icons']),
-    '@koobiq/design-tokens': caret(rootPackageJson.devDependencies!['@koobiq/design-tokens']),
-    luxon: caret(rootPackageJson.devDependencies!['luxon']),
+    '@koobiq/luxon-date-adapter': caret(rootRange('@koobiq/luxon-date-adapter')),
+    '@koobiq/date-formatter': caret(rootRange('@koobiq/date-formatter')),
+    '@koobiq/date-adapter': caret(rootRange('@koobiq/date-adapter')),
+    '@koobiq/icons': caret(rootRange('@koobiq/icons')),
+    '@koobiq/design-tokens': caret(rootRange('@koobiq/design-tokens')),
+    luxon: caret(rootRange('luxon')),
     // No caret: the scrollbar relies on a specific `overlayscrollbars` build, so the schematic
     // injects the root pin verbatim. See packages/schematics/rollup.config.js.
-    overlayscrollbars: rootPackageJson.dependencies!['overlayscrollbars']
+    overlayscrollbars: rootRange('overlayscrollbars')
 };
 
 for (const pkg of publishedPackages) {
@@ -135,7 +144,7 @@ for (const pkg of publishedPackages) {
 const checkSchematicRangesInSync = () => {
     const ngAdd = readFileSync(ngAddPath, { encoding: 'utf-8' });
     const installed = new Set(
-        [...ngAdd.matchAll(/addPackageToPackageJson\(\s*tree,\s*'([^']+)'/g)].map((match) => match[1])
+        [...ngAdd.matchAll(/addPackageToPackageJson\(\s*tree,\s*'([^']+)'/g)].flatMap(([, name]) => name ?? [])
     );
 
     for (const dependency of installed) {
@@ -203,7 +212,10 @@ const listSourceFiles = (packageName: string): string[] => {
 
 /** Reduces `@scope/pkg/entry-point` and `pkg/entry-point` to the installable package name. */
 const toPackageName = (specifier: string): string =>
-    specifier.startsWith('@') ? specifier.split('/').slice(0, 2).join('/') : specifier.split('/')[0];
+    specifier
+        .split('/')
+        .slice(0, specifier.startsWith('@') ? 2 : 1)
+        .join('/');
 
 const isRelative = (specifier: string): boolean => specifier.startsWith('.') || specifier.startsWith('~');
 
@@ -225,8 +237,8 @@ const scanImports = (source: string, file: string): ImportRecord[] => {
         .join('\n');
 
     const records: ImportRecord[] = [];
-    const add = (specifier: string, kind: ImportKind) => {
-        if (isRelative(specifier)) return;
+    const add = (specifier: string | undefined, kind: ImportKind) => {
+        if (!specifier || isRelative(specifier)) return;
 
         records.push({ packageName: toPackageName(specifier), specifier, file, kind });
     };
@@ -267,7 +279,7 @@ const scanImports = (source: string, file: string): ImportRecord[] => {
  * `@koobiq/components/markdown`. Files directly under the package root belong to the root entry
  * point, which every consumer loads.
  */
-const entryPointOf = (file: string): string => (file.includes('/') ? file.split('/')[0] : '');
+const entryPointOf = (file: string): string => (file.includes('/') ? (file.split('/')[0] ?? '') : '');
 
 /** Entry points every consumer of the package ends up loading, so nothing they import is avoidable. */
 const alwaysLoadedEntryPoints = ['', 'core'];
@@ -292,7 +304,7 @@ const entryPointsReachableFromOthers = (records: ImportRecord[], packageName: st
         if (record.kind !== 'value') continue;
 
         const from = entryPointOf(record.file);
-        const to = record.specifier.slice(packageName.length).replace(/^\//, '').split('/')[0];
+        const [to = ''] = record.specifier.slice(packageName.length).replace(/^\//, '').split('/');
 
         if (from === to) continue;
 

@@ -56,7 +56,7 @@ type SidepanelState = {
 
                 <kbq-sidepanel-footer>
                     <kbq-sidepanel-actions align="left">
-                        <button cdkFocusInitial kbq-button [color]="'contrast'">
+                        <button cdkFocusInitial kbq-button color="contrast">
                             <span>Button</span>
                         </button>
                     </kbq-sidepanel-actions>

@@ -10,7 +10,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { filter } from 'rxjs/operators';
+import { filter } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { DateAdapter, KbqReadStateDirective } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -29,7 +29,7 @@ import { KBQ_NOTIFICATION_CENTER_PANEL } from './notification-center.tokens';
         KbqButtonModule
     ],
     templateUrl: './notification-item.html',
-    styleUrls: ['./notification-item.scss'],
+    styleUrl: './notification-item.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -46,30 +46,31 @@ export class KbqNotificationItemComponent implements OnChanges {
     protected readonly panel = inject(KBQ_NOTIFICATION_CENTER_PANEL);
 
     /** Time of day the notification happened; empty when its `date` could not be parsed. */
-    protected time: string;
+    protected time: string = '';
 
     /** Style modifier class of the host, recomputed with `data` instead of allocated on every check. */
     protected styleClass: string = '';
 
     /** Context handed to the consumer's templates. Exposes the item only, never this component. */
-    protected context: { $implicit: KbqNotificationItem };
+    protected context: { $implicit: KbqNotificationItem } | undefined;
 
     // `KbqToastService` used to write these defaults into the item handed to `push()`; it now leaves the
     // caller's object untouched, so the row resolves them itself instead of rendering an unstyled,
     // icon-less notification.
     protected get style(): string | KbqToastStyle {
-        return this.data.style || KbqToastStyle.Contrast;
+        return this.data?.style || KbqToastStyle.Contrast;
     }
 
     protected get icon(): boolean | TemplateRef<unknown> {
-        return this.data.icon ?? true;
+        return this.data?.icon ?? true;
     }
 
     protected get read(): boolean {
-        return this.service.isRead(this.data);
+        return !!this.data && this.service.isRead(this.data);
     }
 
-    get data(): KbqNotificationItem {
+    /** The notification the row renders, `undefined` until one is set. */
+    get data(): KbqNotificationItem | undefined {
         return this._data;
     }
 
@@ -87,7 +88,7 @@ export class KbqNotificationItemComponent implements OnChanges {
         this.time = parsed !== null && this.adapter.isValid(parsed) ? this.adapter.format(parsed, 'HH:mm') : '';
     }
 
-    private _data: KbqNotificationItem;
+    private _data?: KbqNotificationItem;
 
     /** @docs-private */
     readonly dataInput = input<KbqNotificationItem | undefined>(undefined, { alias: 'data' });
@@ -108,24 +109,28 @@ export class KbqNotificationItemComponent implements OnChanges {
                 takeUntilDestroyed()
             )
             .subscribe(() => {
-                if (this.data.read) {
+                const data = this.data;
+
+                if (!data || data.read) {
                     return;
                 }
 
-                this.data.read = true;
+                data.read = true;
 
-                this.service.onRead.next(this.data);
+                this.service.onRead.next(data);
             });
     }
 
     /** Removes this notification, keeping keyboard focus inside the panel once the button unmounts. */
     protected remove(): void {
+        if (!this.data) return;
+
         this.panel.restoreFocusAfterRemove();
 
         this.service.remove(this.data);
     }
 
-    protected isTemplateRef(value: unknown): boolean {
+    protected isTemplateRef<C>(value: unknown): value is TemplateRef<C> {
         return value instanceof TemplateRef;
     }
 }

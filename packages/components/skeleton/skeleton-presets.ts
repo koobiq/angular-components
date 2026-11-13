@@ -492,17 +492,13 @@ export class KbqSkeletonTabs {
     imports: [KbqSkeleton],
     template: `
         @for (row of rowList(); track row) {
-            <div class="kbq-skeleton-tree__node kbq-skeleton-tree__node_{{ (row % 3) + 1 }}">
+            <div class="kbq-skeleton-tree__node" [class]="nodeClass(row)">
                 <div kbqSkeleton class="kbq-skeleton-tree__toggle"></div>
                 <div kbqSkeleton class="kbq-skeleton-tree__label"></div>
             </div>
             @if (row === 1) {
                 @for (child of childList(); track child) {
-                    <div
-                        class="kbq-skeleton-tree__node kbq-skeleton-tree__node_nested kbq-skeleton-tree__node_{{
-                            (child % 3) + 1
-                        }}"
-                    >
+                    <div class="kbq-skeleton-tree__node kbq-skeleton-tree__node_nested" [class]="nodeClass(child)">
                         <div kbqSkeleton class="kbq-skeleton-tree__toggle"></div>
                         <div kbqSkeleton class="kbq-skeleton-tree__label"></div>
                     </div>
@@ -530,4 +526,9 @@ export class KbqSkeletonTree {
 
     protected readonly rowList = computed(() => range(this.rows()));
     protected readonly childList = computed(() => range(this.children()));
+
+    /** The width of a node, one of three that alternate down the tree. */
+    protected nodeClass(index: number): string {
+        return `kbq-skeleton-tree__node_${(index % 3) + 1}`;
+    }
 }

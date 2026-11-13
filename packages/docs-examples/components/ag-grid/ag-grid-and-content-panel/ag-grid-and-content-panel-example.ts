@@ -107,9 +107,12 @@ export class ExampleGrid {
         <kbq-modal-title class="example-modal-title">
             <div>Click any table row to open Content panel</div>
             <div class="example-modal-title-actions">
-                <button kbq-button [color]="componentColors.Contrast" (click)="modalRef.close()">Close window</button>
+                <button kbq-button type="button" [color]="componentColors.Contrast" (click)="modalRef.close()">
+                    Close window
+                </button>
                 <button
                     kbq-button
+                    type="button"
                     aria-label="More"
                     [color]="componentColors.Contrast"
                     [kbqStyle]="buttonStyles.Transparent"
@@ -130,6 +133,7 @@ export class ExampleGrid {
                         @for (_i of [0, 1, 2, 3]; track $index) {
                             <button
                                 kbq-button
+                                type="button"
                                 aria-label="Report a bug"
                                 [class.kbq-active]="$first"
                                 [color]="componentColors.Contrast"
@@ -148,6 +152,7 @@ export class ExampleGrid {
                         <div class="example-content-header-actions" kbqContentPanelHeaderActions>
                             <button
                                 kbq-button
+                                type="button"
                                 aria-label="Copy link"
                                 [color]="componentColors.Contrast"
                                 [kbqStyle]="buttonStyles.Transparent"
@@ -156,6 +161,7 @@ export class ExampleGrid {
                             </button>
                             <button
                                 kbq-button
+                                type="button"
                                 aria-label="Expand"
                                 [color]="componentColors.Contrast"
                                 [kbqStyle]="buttonStyles.Transparent"
@@ -164,6 +170,7 @@ export class ExampleGrid {
                             </button>
                             <button
                                 kbq-button
+                                type="button"
                                 aria-label="More"
                                 [color]="componentColors.Contrast"
                                 [kbqStyle]="buttonStyles.Transparent"
@@ -173,15 +180,15 @@ export class ExampleGrid {
                         </div>
                         <div class="example-content-header-caption">Caption</div>
                         <div class="example-content-header-buttons">
-                            <button kbq-button [color]="componentColors.ContrastFade">
+                            <button kbq-button type="button" [color]="componentColors.ContrastFade">
                                 <i kbq-icon="kbq-pencil_16"></i>
                                 Edit
                             </button>
-                            <button kbq-button [color]="componentColors.ContrastFade">
+                            <button kbq-button type="button" [color]="componentColors.ContrastFade">
                                 <i kbq-icon="kbq-square-multiple-o_16"></i>
                                 Copy
                             </button>
-                            <button kbq-button [color]="componentColors.ContrastFade">
+                            <button kbq-button type="button" [color]="componentColors.ContrastFade">
                                 <i kbq-icon="kbq-trash_16"></i>
                                 Delete
                             </button>
@@ -203,9 +210,9 @@ export class ExampleGrid {
                         }
                     </kbq-content-panel-body>
                     <kbq-content-panel-footer>
-                        <button kbq-button [color]="componentColors.Contrast">Button 1</button>
-                        <button kbq-button [color]="componentColors.ContrastFade">Button 2</button>
-                        <button kbq-button [color]="componentColors.ContrastFade">Button 3</button>
+                        <button kbq-button type="button" [color]="componentColors.Contrast">Button 1</button>
+                        <button kbq-button type="button" [color]="componentColors.ContrastFade">Button 2</button>
+                        <button kbq-button type="button" [color]="componentColors.ContrastFade">Button 3</button>
                     </kbq-content-panel-footer>
                 </kbq-content-panel>
             </kbq-content-panel-container>
@@ -313,7 +320,7 @@ export class ExampleContentPanel {
     selector: 'ag-grid-and-content-panel-example',
     imports: [KbqButtonModule, KbqModalModule],
     template: `
-        <button kbq-button (click)="openModal()">Show example</button>
+        <button kbq-button type="button" (click)="openModal()">Show example</button>
     `,
     styles: `
         :host {

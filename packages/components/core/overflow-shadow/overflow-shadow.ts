@@ -11,8 +11,7 @@ import {
     signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { fromEvent, type Observable } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, fromEvent, type Observable } from 'rxjs';
 import { kbqInjectNativeElement } from '../utils';
 
 /** Shadow visibility state — which of the two shadows should be rendered. */

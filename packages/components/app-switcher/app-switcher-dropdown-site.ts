@@ -28,7 +28,7 @@ import type { KbqAppSwitcherSite } from './app-switcher';
             ></i>
         }
     `,
-    styleUrls: ['app-switcher-dropdown-site.scss'],
+    styleUrl: 'app-switcher-dropdown-site.scss',
     providers: [
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqAppSwitcherDropdownSite },
         { provide: KbqDropdownItem, useExisting: KbqAppSwitcherDropdownSite }

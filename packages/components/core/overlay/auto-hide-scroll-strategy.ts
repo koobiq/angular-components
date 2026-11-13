@@ -8,8 +8,7 @@ import {
 } from '@angular/cdk/overlay';
 import type { ViewportRuler } from '@angular/cdk/scrolling';
 import { ElementRef, isDevMode, type NgZone } from '@angular/core';
-import { type Observable, Subject, type Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, type Observable, Subject, type Subscription } from 'rxjs';
 import { isScrollFromInsideOverlay } from './scroll-strategy-utils';
 
 /** Configuration options for `KbqAutoHideScrollStrategy`. */

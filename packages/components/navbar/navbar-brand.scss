@@ -1,6 +1,6 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 @use './navbar-theme';
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
 .kbq-navbar-logo {
     display: flex;
@@ -11,15 +11,15 @@
 
     display: flex;
 
-    @include kbq-squircle(var(--kbq-size-s));
+    @include squircle.kbq-squircle(var(--kbq-size-s));
 
-    &:after {
+    &::after {
         position: absolute;
         content: '';
 
         display: none;
 
-        @include kbq-squircle(var(--kbq-navbar-item-size-content-border-radius));
+        @include squircle.kbq-squircle(var(--kbq-navbar-item-size-content-border-radius));
     }
 
     &:not(.kbq-disabled) .kbq-navbar-title {
@@ -38,7 +38,7 @@ a.kbq-navbar-brand {
 
     gap: var(--kbq-size-s);
 
-    &:after {
+    &::after {
         top: var(--kbq-size-xxs);
         right: var(--kbq-size-xxs);
         bottom: var(--kbq-size-xxs);
@@ -64,7 +64,7 @@ a.kbq-navbar-brand {
 
     padding: var(--kbq-size-m);
 
-    &:after {
+    &::after {
         top: var(--kbq-size-s);
         right: var(--kbq-size-s);
         bottom: var(--kbq-size-s);
@@ -131,7 +131,7 @@ a.kbq-navbar-brand {
             &.cdk-focused.cdk-keyboard-focused:not(.kbq-disabled) {
                 outline: none;
 
-                &:after {
+                &::after {
                     display: block;
                     box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
                 }
@@ -164,13 +164,13 @@ a.kbq-navbar-brand {
 @mixin kbq-navbar-brand-typography() {
     .kbq-navbar-brand {
         & .kbq-navbar-title {
-            @include kbq-typography-level-to-styles-css-variables(typography, navbar-title);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, navbar-title);
         }
 
         // Both orientations: two lines of the 18px/28px default would grow the navbar (48px -> 72px
         // horizontally), which is what the compact type exists to prevent.
         &.kbq-navbar-brand_long-title .kbq-navbar-title {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-normal-strong);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-strong);
             line-height: 16px;
         }
     }

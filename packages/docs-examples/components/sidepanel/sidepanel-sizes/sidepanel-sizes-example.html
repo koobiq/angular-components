@@ -1,9 +1,9 @@
 <div style="width: 200px" class="layout-column">
-    <button kbq-button class="layout-margin-bottom-l" (click)="showSmall()">Small</button>
+    <button kbq-button type="button" class="layout-margin-bottom-l" (click)="showSmall()">Small</button>
 
-    <button kbq-button class="layout-margin-bottom-l" (click)="showMedium()">Medium</button>
+    <button kbq-button type="button" class="layout-margin-bottom-l" (click)="showMedium()">Medium</button>
 
-    <button kbq-button (click)="showLarge()">Large</button>
+    <button kbq-button type="button" (click)="showLarge()">Large</button>
 </div>
 
 <ng-template>
@@ -22,7 +22,7 @@
 
     <kbq-sidepanel-footer>
         <kbq-sidepanel-actions align="left">
-            <button cdkFocusInitial kbq-button [color]="'contrast'">
+            <button cdkFocusInitial kbq-button type="button" color="contrast">
                 <span>Button</span>
             </button>
         </kbq-sidepanel-actions>

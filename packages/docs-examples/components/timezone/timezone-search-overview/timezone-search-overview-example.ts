@@ -1,8 +1,7 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, type OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { merge, type Observable, of } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, merge, type Observable, of } from 'rxjs';
 import { createSearchPredicate, kbqInjectLocaleConfiguration, tokenizeSearchQuery } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -66,7 +65,7 @@ function normalizeOffsetDash(value: string): string {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimezoneSearchOverviewExample implements OnInit {
+export class TimezoneSearchOverviewExample {
     filteredOptions$: Observable<KbqTimezoneGroup[]>;
     searchControl: FormControl = new FormControl();
     selected = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -88,9 +87,7 @@ export class TimezoneSearchOverviewExample implements OnInit {
         }));
 
         this.priorityCountry = kbqResolveHostCountry(this.data);
-    }
 
-    ngOnInit(): void {
         this.filteredOptions$ = merge(
             of(this.group(this.data)),
             this.searchControl.valueChanges.pipe(

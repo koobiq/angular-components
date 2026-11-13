@@ -29,9 +29,10 @@ import { KbqPipeState } from './pipe-state';
         @let strings = localeConfiguration().pipe;
 
         <button
-            kbqTooltip="{{ pipe.data.cleanable ? strings.clearButtonTooltip : strings.removeButtonTooltip }}"
+            type="button"
             class="kbq-pipe__remove-button"
             kbq-button
+            [kbqTooltip]="pipe.data.cleanable ? strings.clearButtonTooltip : strings.removeButtonTooltip"
             [attr.aria-label]="pipe.data.cleanable ? strings.clearButtonTooltip : strings.removeButtonTooltip"
             [disabled]="pipe.data.disabled"
             [kbqPipeState]="pipe.data"

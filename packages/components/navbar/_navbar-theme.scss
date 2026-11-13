@@ -1,8 +1,8 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-navbar-item($state-name) {
     &:not(.kbq-navbar-item_has-nested) {
-        &:after {
+        &::after {
             display: block;
             background: var(--kbq-navbar-item-#{$state-name}-content-background);
         }
@@ -56,7 +56,7 @@ button {
         &.cdk-focused.cdk-keyboard-focused {
             outline: none;
 
-            &:after {
+            &::after {
                 display: block;
                 box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
             }
@@ -86,6 +86,6 @@ button {
 
 @mixin kbq-navbar-typography() {
     .kbq-navbar-title {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
     }
 }

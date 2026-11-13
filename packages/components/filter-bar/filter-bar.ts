@@ -81,7 +81,7 @@ const normalizeFilterBarState = (parsed: unknown): KbqFilterBarState | null => {
             <ng-content select="kbq-filter-refresher, [kbq-filter-refresher]" />
         </div>
     `,
-    styleUrls: ['filter-bar-tokens.scss', 'filter-bar.scss'],
+    styleUrls: ['./filter-bar-tokens.scss', './filter-bar.scss'],
     providers: [{ provide: KBQ_FILTER_BAR_HOST, useExisting: forwardRef(() => KbqFilterBar) }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,

@@ -105,7 +105,7 @@ describe(DocsLiveExampleViewerComponent.name, () => {
         try {
             httpMock.verify();
         } finally {
-            delete EXAMPLE_COMPONENTS[EXAMPLE_ID];
+            Reflect.deleteProperty(EXAMPLE_COMPONENTS, EXAMPLE_ID);
 
             for (const [target, property, descriptor] of [
                 [document, 'fullscreenEnabled', fullscreenEnabledDescriptor],

@@ -26,7 +26,7 @@ export class DevDocsExamples {}
     selector: 'dev-app',
     imports: [KbqProgressBarModule, FormsModule, DevDocsExamples, DevThemeToggle],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

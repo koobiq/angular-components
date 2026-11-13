@@ -29,8 +29,7 @@ import {
     type WritableSignal
 } from '@angular/core';
 import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { EMPTY, merge } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { EMPTY, filter, merge } from 'rxjs';
 import {
     applyPopupMargins,
     ESCAPE,
@@ -572,9 +571,9 @@ export class KbqTooltipTrigger
 
     /**
      * Header text or template, rendered above the tooltip content. Only meaningful with
-     * `kbqTooltipModifier="extended"`. Replaces the removed `KbqExtendedTooltipTrigger.header`.
+     * `kbqTooltipModifier="extended"`. Replaces the removed `KbqExtendedTooltipTrigger.header`. Defaults to `''`.
      */
-    header: string | TemplateRef<unknown>;
+    header: string | TemplateRef<unknown> = '';
 
     /**
      * Hands each bound input to its member, and pushes a later change of `modifier`, `header`, `arrow` or
@@ -1404,7 +1403,7 @@ export class KbqTooltipTrigger
      * this pass.
      */
     private repositionAtCaret(): void {
-        if (!this.overlayRef) return;
+        if (!this.overlayRef || !this.strategy) return;
 
         this.strategy.withLockedPosition(false);
         this.overlayRef.updatePosition();

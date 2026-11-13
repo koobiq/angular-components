@@ -17,12 +17,13 @@ import { injectExampleText } from '../localized-data';
         KbqToolTipModule
     ],
     template: `
-        {{ text().app }} {{ selectedApp.name }}
+        {{ text().app }} {{ selectedApp?.name }}
         <br />
         <br />
         <button
             kbq-button
             kbqAppSwitcher
+            type="button"
             [attr.aria-label]="text().allApps"
             [kbqTooltip]="text().allApps"
             [sites]="sites"
@@ -94,5 +95,5 @@ export class AppSwitcherOverviewExample {
             ]
         }
     ];
-    selectedApp: KbqAppSwitcherApp = this.sites[0].apps[1];
+    selectedApp: KbqAppSwitcherApp | undefined = this.sites[0]?.apps[1];
 }

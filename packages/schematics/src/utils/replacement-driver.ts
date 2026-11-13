@@ -123,7 +123,7 @@ export function applyReplacements(content: string, replacements: readonly Compil
 
 /** The import specifiers that bind the name `local`: whether each is type-only, the name it imports, its module. */
 function importBindings(content: string, local: string): { typeOnly: boolean; name: string; from: string }[] {
-    return [...content.matchAll(NAMED_IMPORT)].flatMap(([, typeClause, specifiers, from]) =>
+    return [...content.matchAll(NAMED_IMPORT)].flatMap(([, typeClause, specifiers = '', from = '']) =>
         specifiers
             .replace(COMMENT, '')
             .split(',')
@@ -192,8 +192,8 @@ export function ensureImport(content: string, symbol: string, from: string): str
     let insertAt = 0;
     let inBlockComment = false;
 
-    for (let i = 0; i < lines.length; i++) {
-        const trimmed = lines[i].trim();
+    for (const [i, line] of lines.entries()) {
+        const trimmed = line.trim();
 
         if (inBlockComment) {
             if (trimmed.endsWith('*/')) inBlockComment = false;
@@ -278,7 +278,7 @@ export function removeImport(content: string, symbol: string, from: string): str
     let end = 0;
 
     for (const match of content.matchAll(declaration)) {
-        const [statement, keyword, modifier, clause, close] = match;
+        const [statement, keyword, modifier, clause = '', close] = match;
         const rest = keyword === 'import' ? clause.replace(specifier, '') : clause;
 
         result += content.slice(end, match.index);
@@ -360,21 +360,19 @@ function dedupeClause(clause: string): string {
 
         const first = kept.get(key);
 
-        if (first === undefined || (specifiers[first].typeOnly && !typeOnly)) kept.set(key, index);
+        if (first === undefined || (specifiers[first]?.typeOnly && !typeOnly)) kept.set(key, index);
     });
 
     const dropped = specifiers.map(({ key }, index) => key !== null && kept.get(key) !== index);
     let result = clause;
 
     // From the last, so that the positions of the others hold.
-    for (let index = specifiers.length - 1; index >= 0; index--) {
+    for (const [index, { comma: before, start, end }] of [...specifiers.entries()].reverse()) {
         if (!dropped[index]) continue;
 
-        const { comma: before, start, end } = specifiers[index];
+        const next = specifiers[index + 1];
         // With the comma before it after a specifier that stays, else with the comma after it.
-        const [from, to] = dropped.slice(0, index).includes(false)
-            ? [before, end]
-            : [start, specifiers[index + 1].start];
+        const [from, to] = dropped.slice(0, index).includes(false) || !next ? [before, end] : [start, next.start];
 
         result = result.slice(0, from) + result.slice(to);
     }

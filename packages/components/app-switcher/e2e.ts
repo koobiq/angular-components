@@ -91,7 +91,7 @@ export class E2eAppSwitcherStates {
             ]
         }
     ];
-    selected: KbqAppSwitcherApp = this.sites[0].apps[0];
+    selected: KbqAppSwitcherApp | undefined = this.sites[0]?.apps[0];
 }
 
 @Component({
@@ -407,6 +407,6 @@ export class E2eAppSwitcherWithSitesStates {
         }
     ];
 
-    selectedSite: KbqAppSwitcherSite = this.sites[0];
-    selectedApp: KbqAppSwitcherApp = this.sites[0].apps[0];
+    selectedSite: KbqAppSwitcherSite | undefined = this.sites[0];
+    selectedApp: KbqAppSwitcherApp | undefined = this.sites[0]?.apps[0];
 }

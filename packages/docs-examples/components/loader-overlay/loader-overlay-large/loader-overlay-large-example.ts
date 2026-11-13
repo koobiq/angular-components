@@ -16,8 +16,8 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
             text text text text text text text text text text text text text text text text text text text text text
             text text text text text text text text text text text text text text text text text text text text text
             text text text text text text text text text text text text text text text
-            <kbq-loader-overlay [text]="'Загрузка данных'">
-                <kbq-progress-spinner size="big" kbq-loader-overlay-indicator [mode]="'indeterminate'" />
+            <kbq-loader-overlay text="Загрузка данных">
+                <kbq-progress-spinner size="big" kbq-loader-overlay-indicator mode="indeterminate" />
             </kbq-loader-overlay>
         </div>
     `,

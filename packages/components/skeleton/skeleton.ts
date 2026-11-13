@@ -27,7 +27,7 @@ const findWave = (host: HTMLElement): Animation | undefined =>
 @Component({
     selector: 'skeleton-style-loader',
     template: '',
-    styleUrls: ['skeleton.scss', 'skeleton-presets.scss', 'skeleton-tokens.scss'],
+    styleUrls: ['./skeleton.scss', './skeleton-presets.scss', './skeleton-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

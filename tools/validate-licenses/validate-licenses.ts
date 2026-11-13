@@ -150,5 +150,10 @@ async function validateLicense(): Promise<ReturnCode> {
 }
 
 if (require.main === module) {
-    validateLicense().then((code) => process.exit(code));
+    validateLicense()
+        .then((code) => process.exit(code))
+        .catch((error: unknown) => {
+            console.error(error);
+            process.exit(ReturnCode.Error);
+        });
 }

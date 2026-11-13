@@ -39,39 +39,33 @@ import { KbqIconModule } from '@koobiq/components/icon';
             }
         </nav>
     `,
-    styles: [
-        `
-            .example__selectable-label {
-                -webkit-user-select: text;
-                user-select: text;
-            }
+    styles: `
+        .example__selectable-label {
+            -webkit-user-select: text;
+            user-select: text;
+        }
 
-            .example-item__copy-icon {
-                position: absolute;
-                right: 0;
-                top: 0;
-                bottom: 0;
-                display: flex;
-                align-items: center;
-                padding: 0 var(--kbq-size-xs);
-                background: linear-gradient(
-                    to right,
-                    transparent,
-                    var(--kbq-background-overlay-inverse) var(--kbq-size-s)
-                );
-                border-radius: var(--kbq-size-xxs);
-                opacity: 0;
-                pointer-events: none;
-                transition: opacity 0.2s ease;
-            }
+        .example-item__copy-icon {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            padding: 0 var(--kbq-size-xs);
+            background: linear-gradient(to right, transparent, var(--kbq-background-overlay-inverse) var(--kbq-size-s));
+            border-radius: var(--kbq-size-xxs);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
 
-            a:hover .example-item__copy-icon,
-            a:focus-visible .example-item__copy-icon {
-                opacity: 1;
-                pointer-events: auto;
-            }
-        `
-    ],
+        a:hover .example-item__copy-icon,
+        a:focus-visible .example-item__copy-icon {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsSelectableTextExample {

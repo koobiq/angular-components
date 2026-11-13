@@ -18,7 +18,9 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
         </ng-template>
 
         <div class="demo-block">
-            <button class="example-button" kbq-button (click)="showToast(toastAction)">Показать тост</button>
+            <button type="button" class="example-button" kbq-button (click)="showToast(toastAction)">
+                Показать тост
+            </button>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

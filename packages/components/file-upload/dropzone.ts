@@ -98,10 +98,6 @@ export class KbqFullScreenDropzoneService extends KbqDrop implements OnDestroy {
     private readonly animationsDisabled = kbqAnimationsDisabled();
     private overlayRef?: OverlayRef;
 
-    constructor() {
-        super();
-    }
-
     ngOnDestroy() {
         // The service is provided per component, and the listeners live on `document.body`: without
         // this they would outlive the component and keep calling `open()` against a disposed view.
@@ -463,7 +459,7 @@ export class KbqFileUploadEmptyState extends KbqEmptyState {
             [caption]="config?.caption ?? ''"
         />
     `,
-    styleUrls: ['./dropzone.scss'],
+    styleUrl: './dropzone.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

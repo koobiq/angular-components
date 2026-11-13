@@ -172,7 +172,8 @@ export class KbqCodeBlockHighlight {
             this._pending.set(true);
             const removeTask = keepsServerMarkup ? null : this.pendingTasks.add();
 
-            this.loader
+            // The load resolves to `null` rather than rejecting
+            void this.loader
                 .load(this.config)
                 .then((loaded) => {
                     if (loaded && !cancelled) this.highlight(loaded, file);

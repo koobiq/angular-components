@@ -1,6 +1,5 @@
-@use '../core/styles/common/select' as *;
-@use '../core/styles/theming/theming' as *;
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/select';
+@use '../core/styles/common/tokens';
 
 @mixin kbq-select-theme() {
     .kbq-select {
@@ -26,7 +25,7 @@
 
     // Placeholder, search container and empty-result message: styled identically wherever a select-shaped
     // panel is rendered, so the rules live next to the structure they belong to.
-    @include kbq-select-shared-theme();
+    @include select.kbq-select-shared-theme();
 
     .kbq-select__panel {
         box-shadow: var(--kbq-select-panel-dropdown-shadow);
@@ -36,13 +35,13 @@
             border-color: var(--kbq-divider-color, var(--kbq-line-contrast-less));
         }
 
-        @include kbq-select-footer-item-theme();
+        @include select.kbq-select-footer-item-theme();
     }
 }
 
 @mixin kbq-select-typography() {
     .kbq-select {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
     // The footer's action row is projected as a native `button`, whose user-agent `font` shorthand resets
@@ -51,6 +50,6 @@
     // `.kbq-dropdown-item` do.
     .kbq-select__panel,
     .kbq-select__footer-item {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }

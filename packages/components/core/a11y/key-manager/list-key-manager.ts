@@ -1,6 +1,5 @@
 import { QueryList, type Signal } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
-import { debounceTime, filter, map, tap } from 'rxjs/operators';
+import { debounceTime, filter, map, Subject, Subscription, tap } from 'rxjs';
 import { A, DOWN_ARROW, END, HOME, LEFT_ARROW, NINE, RIGHT_ARROW, TAB, UP_ARROW, Z, ZERO } from '../../keycodes';
 
 // This interface is for items that can be passed to a ListKeyManager.
@@ -184,6 +183,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
                     const item = items[index];
 
                     if (
+                        item &&
                         !isOptionDisabled(item) &&
                         item.getLabel!().toUpperCase().trim().indexOf(inputString) === searchLetterIndex
                     ) {
@@ -428,7 +428,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
             const index = (this._activeItemIndex + delta * i + items.length) % items.length;
             const item = items[index];
 
-            if (!this.skipPredicateFn(item)) {
+            if (item && !this.skipPredicateFn(item)) {
                 this.setActiveItem(index);
 
                 return;
@@ -459,7 +459,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
         let curIndex = index;
 
-        while (this.skipPredicateFn(items[curIndex])) {
+        while (this.skipPredicateFn(items[curIndex]!)) {
             curIndex += fallbackDelta;
 
             if (!items[curIndex]) {

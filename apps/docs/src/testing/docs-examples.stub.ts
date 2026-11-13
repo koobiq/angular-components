@@ -31,6 +31,6 @@ export class ExampleData {
 
     // As the real class, knows only an id a spec has put into `EXAMPLE_COMPONENTS`.
     constructor(example: string) {
-        this.isKnown = !!example && EXAMPLE_COMPONENTS.hasOwnProperty(example);
+        this.isKnown = !!example && Object.hasOwn(EXAMPLE_COMPONENTS, example);
     }
 }

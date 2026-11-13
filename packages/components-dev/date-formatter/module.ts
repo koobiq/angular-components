@@ -36,8 +36,8 @@ import { DevLocaleSelector } from '../locale-selector';
         KbqButtonModule,
         DevLocaleSelector
     ],
-    templateUrl: 'template.html',
-    styleUrls: ['styles.scss'],
+    templateUrl: './template.html',
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

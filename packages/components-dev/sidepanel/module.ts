@@ -81,7 +81,7 @@ export class DevDocsExamples {}
 
         <kbq-sidepanel-footer>
             <kbq-sidepanel-actions>
-                <button kbq-button [color]="'contrast'" (click)="openComponentSidepanel()">
+                <button kbq-button color="contrast" (click)="openComponentSidepanel()">
                     <span>Open another sidepanel</span>
                 </button>
 
@@ -120,7 +120,7 @@ export class DevSidepanelComponent {
         DevDocsExamples
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

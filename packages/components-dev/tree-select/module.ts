@@ -164,18 +164,20 @@ export class DevApp implements OnInit {
     }
 
     private toggleParents(parent: DevFileFlatNode | null) {
-        if (!parent) {
+        const selectionModel = this.select().selectionModel;
+
+        if (!parent || !selectionModel) {
             return;
         }
 
         const descendants = this.treeControl.getDescendants(parent);
-        const isParentSelected = this.select().selectionModel.selected.includes(parent);
+        const isParentSelected = selectionModel.selected.includes(parent);
 
-        if (!isParentSelected && descendants.every((d: any) => this.select().selectionModel.selected.includes(d))) {
-            this.select().selectionModel.select(parent);
+        if (!isParentSelected && descendants.every((d: any) => selectionModel.selected.includes(d))) {
+            selectionModel.select(parent);
             this.toggleParents(parent.parent);
         } else if (isParentSelected) {
-            this.select().selectionModel.deselect(parent);
+            selectionModel.deselect(parent);
             this.toggleParents(parent.parent);
         }
     }
@@ -200,7 +202,7 @@ export class DevApp implements OnInit {
         return node.expandable;
     };
 
-    private getChildren = (node: DevFileNode): DevFileNode[] => {
+    private getChildren = (node: DevFileNode): DevFileNode[] | undefined => {
         return node.children;
     };
 

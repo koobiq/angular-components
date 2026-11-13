@@ -10,17 +10,17 @@ import {
 } from '@koobiq/components/tree';
 
 export class FileNode {
-    children: FileNode[];
-    name: string;
+    children?: FileNode[];
+    name = '';
     type: any;
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-    name: string;
+    name = '';
     type: any;
-    level: number;
-    expandable: boolean;
+    level = 0;
+    expandable = false;
     parent: any;
 }
 
@@ -223,10 +223,6 @@ export class TreeAccessRightsExample extends TreeParams implements AfterViewInit
     selectionChangeSubscription: Subscription = Subscription.EMPTY;
 
     readonly tree = viewChild.required(KbqTreeSelection);
-
-    constructor() {
-        super();
-    }
 
     ngAfterViewInit(): void {
         const handleSingleOption = (items: FileFlatNode[], cb: (item: FileFlatNode) => void) => {

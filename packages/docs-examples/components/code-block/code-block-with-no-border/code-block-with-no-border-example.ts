@@ -18,7 +18,7 @@ import { KbqSidepanelModule, KbqSidepanelService } from '@koobiq/components/side
         KbqButtonModule
     ],
     template: `
-        <button kbq-button (click)="sidepanel.open(template)">Open sidepanel</button>
+        <button kbq-button type="button" (click)="sidepanel.open(template)">Open sidepanel</button>
         <ng-template #template>
             <kbq-code-block
                 canToggleSoftWrap

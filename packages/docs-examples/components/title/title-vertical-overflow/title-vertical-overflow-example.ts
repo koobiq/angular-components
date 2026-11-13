@@ -12,7 +12,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
             {{ longValue }}
         </div>
     `,
-    styleUrls: ['./title-vertical-overflow-example.css'],
+    styleUrl: './title-vertical-overflow-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleVerticalOverflowExample {

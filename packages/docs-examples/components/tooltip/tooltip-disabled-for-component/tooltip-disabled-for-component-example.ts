@@ -11,10 +11,10 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     selector: 'tooltip-disabled-for-component-example',
     imports: [KbqToolTipModule, KbqButtonModule, KbqIconModule, KbqLink],
     template: `
-        <button kbq-button (click)="disableState = !disableState">toggle</button>
+        <button kbq-button type="button" (click)="disableState = !disableState">toggle</button>
 
         <div kbqTooltip="kbq-button" [forDisabledComponent]="button">
-            <button #button kbq-button aria-label="Add" [disabled]="disableState">
+            <button #button kbq-button type="button" aria-label="Add" [disabled]="disableState">
                 <i kbq-icon="kbq-plus_16"></i>
             </button>
         </div>

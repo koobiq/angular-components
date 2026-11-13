@@ -307,7 +307,7 @@ export class KbqLink implements AfterViewChecked {
     // Without a subscription, which would run change detection on every focus and blur. The children count too: a
     // `<label>` link shows the focus of the control inside it.
     private monitorFocus(): void {
-        this.focusMonitor.monitor(this.nativeElement, true);
+        void this.focusMonitor.monitor(this.nativeElement, true);
         this.destroyRef.onDestroy(() => this.focusMonitor.stopMonitoring(this.nativeElement));
     }
 
@@ -404,8 +404,8 @@ export class KbqLink implements AfterViewChecked {
         let from = 0;
         let to = source.length;
 
-        while (start && from < to && COLLAPSIBLE_SPACES.includes(source[from])) from++;
-        while (end && to > from && COLLAPSIBLE_SPACES.includes(source[to - 1])) to--;
+        while (start && from < to && COLLAPSIBLE_SPACES.includes(source.charAt(from))) from++;
+        while (end && to > from && COLLAPSIBLE_SPACES.includes(source.charAt(to - 1))) to--;
 
         const trimmed = source.slice(from, to);
 

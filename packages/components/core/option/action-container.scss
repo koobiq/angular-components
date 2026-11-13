@@ -1,5 +1,4 @@
-@use '../styles/common/squircle' as *;
-@use '../styles/common/tokens' as *;
+@use '../styles/common/squircle';
 
 .kbq-action-container {
     box-sizing: border-box;
@@ -16,7 +15,7 @@
     overflow: hidden;
 
     border: 1px solid transparent;
-    @include kbq-squircle(var(--kbq-size-xs), border-top-right-radius border-bottom-right-radius);
+    @include squircle.kbq-squircle(var(--kbq-size-xs), border-top-right-radius border-bottom-right-radius);
 }
 
 .kbq-action-container__gradient {

@@ -1,7 +1,8 @@
 <div class="docs-live-example__container">
     <div
         #exampleElement
-        class="docs-live-example__example docs-live-example__example_{{ exampleId() }}"
+        class="docs-live-example__example"
+        [class]="`docs-live-example__example_${exampleId()}`"
         [attr.aria-busy]="isLoading() || null"
     >
         @if (exampleComponentType(); as exampleComponentType) {
@@ -29,6 +30,7 @@
             <div class="docs-live-example__footer-icon-buttons">
                 <button
                     kbq-button
+                    type="button"
                     color="theme"
                     kbqStyle="transparent"
                     kbqPlacement="bottom"
@@ -41,6 +43,7 @@
                 @if (fullscreenAvailable()) {
                     <button
                         kbq-button
+                        type="button"
                         color="theme"
                         kbqStyle="transparent"
                         kbqPlacement="bottom"

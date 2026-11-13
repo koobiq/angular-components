@@ -239,7 +239,7 @@ class LeadingIconTestApp {}
     selector: 'string-false-test-app',
     imports: [KbqBadgeModule],
     template: `
-        <kbq-badge [compact]="'false'">badge</kbq-badge>
+        <kbq-badge compact="false">badge</kbq-badge>
     `
 })
 class StringFalseTestApp {}

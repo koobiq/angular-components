@@ -43,7 +43,7 @@ export class DevDocsExamples {}
 export class DevApp {
     readonly colors = KbqComponentColors;
 
-    favoriteFruit: string;
+    favoriteFruit = '';
 
     isDisabled: boolean = true;
 

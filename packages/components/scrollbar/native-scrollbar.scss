@@ -1,5 +1,3 @@
-/* stylelint-disable selector-pseudo-class-no-unknown */
-
 // `scrollbar-color` is inherited. Reset it on descendants unless the directive explicitly opts into
 // styling them; the zero-specificity selector lets a descendant's own scrollbar styles override this.
 @supports not selector(::-webkit-scrollbar) {

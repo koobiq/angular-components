@@ -76,7 +76,9 @@ const checkLlms = async (): Promise<void> => {
         }
     }
 
-    for (const [path, text] of [[LLMS_TXT, llmsTxt], ...files].filter(([path]) => !copies.has(path))) {
+    const checked: [string, string][] = [[LLMS_TXT, llmsTxt], ...files];
+
+    for (const [path, text] of checked.filter(([path]) => !copies.has(path))) {
         errors.push(...findMarkdownProblems(text, served).map((problem) => `${path}: ${problem}`));
 
         // llms-full.txt is for the tools that index it, not for reading; the newline a file ends with does not count.

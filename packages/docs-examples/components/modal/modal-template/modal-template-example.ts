@@ -17,7 +17,7 @@ import { KbqSplitButton } from '@koobiq/components/split-button';
         KbqDropdownModule
     ],
     template: `
-        <button kbq-button (click)="createModal(title, content, footer, sizes.Small)">Open Modal</button>
+        <button kbq-button type="button" (click)="createModal(title, content, footer, sizes.Small)">Open Modal</button>
 
         <ng-template #title>DoS attack</ng-template>
 
@@ -27,20 +27,20 @@ import { KbqSplitButton } from '@koobiq/components/split-button';
             disrupting services of a host connected to a network.
 
             <kbq-split-button class="layout-margin-top-m">
-                <button kbq-button (click)="createModal(title, content, footer)">Open next modal</button>
-                <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
+                <button kbq-button type="button" (click)="createModal(title, content, footer)">Open next modal</button>
+                <button kbq-button type="button" aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
             </kbq-split-button>
 
             <kbq-dropdown #dropdown="kbqDropdown">
-                <button kbq-dropdown-item (click)="createModal(title, content, footer, sizes.Small)">
+                <button kbq-dropdown-item type="button" (click)="createModal(title, content, footer, sizes.Small)">
                     Open small modal
                 </button>
-                <button kbq-dropdown-item (click)="createModal(title, content, footer, sizes.Medium)">
+                <button kbq-dropdown-item type="button" (click)="createModal(title, content, footer, sizes.Medium)">
                     Open medium modal
                 </button>
-                <button kbq-dropdown-item (click)="createModal(title, content, footer, sizes.Large)">
+                <button kbq-dropdown-item type="button" (click)="createModal(title, content, footer, sizes.Large)">
                     Open large modal
                 </button>
             </kbq-dropdown>
@@ -48,19 +48,20 @@ import { KbqSplitButton } from '@koobiq/components/split-button';
 
         <ng-template #footer>
             <div class="layout-row flex-grow layout-align-space-between">
-                <button kbq-button (click)="destroyModal()">Add. action</button>
+                <button kbq-button type="button" (click)="destroyModal()">Add. action</button>
 
                 <div>
                     <button
+                        type="button"
                         class="layout-margin-right-m"
                         kbq-button
                         kbq-modal-main-action
-                        [color]="'contrast'"
+                        color="contrast"
                         (click)="destroyModal()"
                     >
                         Save
                     </button>
-                    <button kbq-button (click)="destroyModal()">Cancel</button>
+                    <button kbq-button type="button" (click)="destroyModal()">Cancel</button>
                 </div>
             </div>
         </ng-template>
@@ -70,7 +71,7 @@ import { KbqSplitButton } from '@koobiq/components/split-button';
 export class ModalTemplateExample {
     private readonly modalService = inject(KbqModalService);
 
-    modalRef: KbqModalRef;
+    modalRef?: KbqModalRef;
     sizes = ModalSize;
 
     createModal(
@@ -90,6 +91,6 @@ export class ModalTemplateExample {
     }
 
     destroyModal(): void {
-        this.modalRef.triggerOk();
+        this.modalRef?.triggerOk();
     }
 }

@@ -1,3 +1,4 @@
+import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -16,10 +17,11 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
         KbqButtonModule,
         KbqInputModule,
         KbqIconModule,
-        KbqPopoverModule
+        KbqPopoverModule,
+        NgOptimizedImage
     ],
-    templateUrl: 'popover-content-example.html',
-    styleUrls: ['popover-content-example.css'],
+    templateUrl: './popover-content-example.html',
+    styleUrl: './popover-content-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverContentExample {

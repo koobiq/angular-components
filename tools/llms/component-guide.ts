@@ -69,9 +69,9 @@ const findPart = (parts: Part[], shape: RegExp, name: string, path: string): Par
 
 /** The names in backticks ahead of the dash of a component line. */
 const namesOfLine = (line: string): string[] => {
-    const head = line.split(/\s[—–-]\s/)[0];
+    const [head = ''] = line.split(/\s[—–-]\s/);
 
-    return [...head.matchAll(/`([^`]+)`/g)].map(([, code]) => code);
+    return [...head.matchAll(/`([^`]+)`/g)].flatMap(([, code]) => code ?? []);
 };
 
 /**
@@ -102,9 +102,9 @@ export const parseComponentGuide = (text: string, path: string = COMPONENT_GUIDE
     );
 
     const keywords = findPart(parts, ROUTE_LINE, 'the keyword index', path).lines.flatMap((line) => {
-        const match = ROUTE_LINE.exec(line);
+        const [, words, cluster] = ROUTE_LINE.exec(line) ?? [];
 
-        return match ? [{ words: match[1], cluster: match[2] }] : [];
+        return words && cluster ? [{ words, cluster }] : [];
     });
 
     return { clusters, componentGroups, keywords };

@@ -67,7 +67,7 @@ import {
             </span>
         }
     `,
-    styleUrls: ['./clamped-text.scss'],
+    styleUrl: './clamped-text.scss',
     providers: [
         { provide: KbqClampedRoot, useExisting: KbqClampedText }
     ],
@@ -180,7 +180,7 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
             );
 
             if (this.scrollOnCollapse() && this.collapsedState()) {
-                settled.then(() =>
+                void settled.then(() =>
                     this.elementRef.nativeElement.scrollIntoView({ block: 'nearest', inline: 'nearest' })
                 );
             }

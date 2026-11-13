@@ -34,7 +34,7 @@ describe(DocsStackblitzButtonComponent.name, () => {
     });
 
     afterEach(() => {
-        delete EXAMPLE_COMPONENTS[EXAMPLE_ID];
+        Reflect.deleteProperty(EXAMPLE_COMPONENTS, EXAMPLE_ID);
     });
 
     it('loads the files of the example on hover and on focus, before the click', () => {

@@ -53,7 +53,6 @@ export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
     collapse(dataNode: T): void;
     collapseAll(): void;
     collapseDescendants(dataNode: T): void;
-    // (undocumented)
     dataNodes: T[];
     expand(dataNode: T): void;
     abstract expandAll(): void;
@@ -64,10 +63,10 @@ export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
     filterModel: SelectionModel<T>;
     // (undocumented)
     filterValue: BehaviorSubject<string | T[] | null>;
-    getChildren: (dataNode: T) => Observable<T[]>;
+    getChildren: ((dataNode: T) => Observable<T[]>) | undefined;
     abstract getDescendants(dataNode: T): T[];
-    getLevel: (dataNode: T) => number;
-    isExpandable: (dataNode: T) => boolean;
+    getLevel: ((dataNode: T) => number) | undefined;
+    isExpandable: ((dataNode: T) => boolean) | undefined;
     isExpanded(dataNode: T): boolean;
     toggle(dataNode: T): void;
     toggleDescendants(dataNode: T): void;
@@ -297,8 +296,7 @@ export class KbqTreeNestedDataSource<T> extends DataSource<T> {
 // @public (undocumented)
 export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
     constructor();
-    // (undocumented)
-    get data(): T;
+    get data(): T | undefined;
     set data(value: T);
     // (undocumented)
     protected destroyed: Subject<void>;
@@ -330,7 +328,7 @@ export class KbqTreeNodeDef<T> {
     readonly data: _angular_core.InputSignal<T>;
     // (undocumented)
     template: TemplateRef<any>;
-    when: (index: number, nodeData: T) => boolean;
+    when: ((index: number, nodeData: T) => boolean) | undefined;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTreeNodeDef<any>, "[kbqTreeNodeDef]", never, { "when": { "alias": "kbqTreeNodeDefWhen"; "required": false; }; "data": { "alias": "kbqTreeNode"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
@@ -733,10 +731,10 @@ export interface TreeControl<T, K = T> {
     filterModel: SelectionModel<T>;
     // (undocumented)
     filterValue: BehaviorSubject<T[] | string | null>;
-    getChildren(dataNode: T): Observable<T[]>;
+    getChildren: ((dataNode: T) => Observable<T[]>) | undefined;
     getDescendants(dataNode: T): any[];
-    getLevel(dataNode: T): number;
-    isExpandable(dataNode: T): boolean;
+    getLevel: ((dataNode: T) => number) | undefined;
+    isExpandable: ((dataNode: T) => boolean) | undefined;
     isExpanded(dataNode: T): boolean;
     toggle(dataNode: T): void;
     toggleDescendants(dataNode: T): void;

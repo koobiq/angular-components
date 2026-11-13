@@ -5,6 +5,7 @@ import { visitAll, type Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
+import { capturedGroups } from '../../utils/regexp';
 import { collectInlineTemplateRanges, parseTemplate } from '../../utils/typescript';
 import {
     type MigrationTarget,
@@ -658,10 +659,11 @@ class TemplateScanner implements Visitor {
             this.expressions.push({ start: span.start.offset, end: span.end.offset });
 
             // `@for (item of items; track item)` and `@if (x; as y)` introduce names of their own.
-            for (const match of String(parameter.expression ?? '').matchAll(
+            for (const name of capturedGroups(
+                String(parameter.expression ?? ''),
                 /(?:^\s*|\b(?:as|let)\s+)([A-Za-z_$][\w$]*)\s*(?:\bof\b|\bin\b|=|$)/g
             )) {
-                this.otherNames.add(match[1]);
+                this.otherNames.add(name);
             }
         }
 
@@ -722,7 +724,7 @@ class TemplateScanner implements Visitor {
         for (const match of this.template.slice(start, end).matchAll(/\{\{([\s\S]*?)\}\}/g)) {
             const from = start + match.index + 2;
 
-            this.expressions.push({ start: from, end: from + match[1].length });
+            this.expressions.push({ start: from, end: from + match[0].length - 4 });
         }
     }
 

@@ -127,6 +127,21 @@ describe('FlatTreeControl', () => {
         });
     });
 
+    describe('filtering', () => {
+        // A filter value set before the first `filterNodes` leaves no saved expansion state to restore
+        it('should collapse everything when the filter clears without a saved expansion state', async () => {
+            treeControl.dataNodes = [];
+            treeControl.filterValue.next('a_0');
+
+            treeControl.filterNodes('');
+            // the filter value and then the expansion state are restored in microtasks
+            await Promise.resolve();
+
+            expect(treeControl.filterValue.value).toEqual([]);
+            expect(treeControl.expansionModel.selected).toEqual([]);
+        });
+    });
+
     describe('lookups over flattened data', () => {
         let control: FlatTreeControl<FlatNode>;
         let nodes: FlatNode[];

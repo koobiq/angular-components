@@ -133,7 +133,7 @@ function isPastSafeInteger(value: number): boolean {
  * `0` that reading `'1e-7'.split('.')` would give.
  */
 function getFractionDigits(value: number): number {
-    const [mantissa, negativeExponent] = value.toString().split(/e-/i);
+    const [mantissa = '', negativeExponent] = value.toString().split(/e-/i);
     const digits = mantissa.split(KBQ_DEFAULT_PRECISION_SEPARATOR)[1]?.length ?? 0;
 
     return negativeExponent ? digits + Number(negativeExponent) : digits;
@@ -612,8 +612,8 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     private correctCaretForSeparator(previousValueLength: number, previousSelectionStart: number): void {
         const offsetWhenSeparatorAdded = 2;
 
-        this.ngZone.runOutsideAngular(() =>
-            Promise.resolve().then(() => {
+        this.ngZone.runOutsideAngular(() => {
+            void Promise.resolve().then(() => {
                 const lengthDelta = this.viewValue.length - previousValueLength;
 
                 if (this.value && Math.abs(this.value) >= 1000 && Math.abs(lengthDelta) === offsetWhenSeparatorAdded) {
@@ -622,8 +622,8 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
                     this.renderer.setProperty(this.nativeElement, 'selectionStart', cursorPosition);
                     this.renderer.setProperty(this.nativeElement, 'selectionEnd', cursorPosition);
                 }
-            })
-        );
+            });
+        });
     }
 
     private setViewValue(value: string | null, savePosition: boolean = false) {
@@ -711,7 +711,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
             .split(separator)
             .map((valuePart) => normalizeNumber(valuePart, this.config));
 
-        const integer = +intPart;
+        const integer = Number(intPart);
 
         // A lone sign before the decimal separator (`-,5`) is no number yet: clear the field, do not print NaN.
         if (!Number.isFinite(integer)) return null;

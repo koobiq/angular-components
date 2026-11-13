@@ -91,7 +91,7 @@ export function customTypesFactory<D>(adapter: DateAdapter<D>): KbqCustomTimeRan
                         {{ context.type | titlecase }}
                     }
                 </kbq-time-range-title-as-control>
-                <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix [color]="'contrast-fade'"></i>
+                <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix color="contrast-fade"></i>
             </kbq-form-field>
         </ng-template>
 

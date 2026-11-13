@@ -95,7 +95,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     protected focusTrigger(): void;
     get isEmpty(): boolean;
     isMac: boolean;
-    isTemplateRef(value: unknown): boolean;
+    isTemplateRef<C>(value: unknown): value is TemplateRef<C>;
     readonly localeConfiguration: _angular_core.Signal<KbqFilterBarLocaleConfiguration>;
     protected lockedValues?: unknown[];
     protected multilineOptions?: boolean;

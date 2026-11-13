@@ -5,6 +5,7 @@ import { visitAll, type Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
+import { capturedGroups } from '../../utils/regexp';
 import { collectInlineTemplateRanges, parseTemplate } from '../../utils/typescript';
 import {
     SIGNAL_API_METHODS,
@@ -368,8 +369,8 @@ async function migrateTemplate(template: string): Promise<TemplateResult> {
     let changed = false;
 
     for (const ref of refs) {
-        for (const match of template.matchAll(memberAccessPattern(ref, VALUE_CHANGED_MEMBERS))) {
-            manual.add(match[3]);
+        for (const member of capturedGroups(template, memberAccessPattern(ref, VALUE_CHANGED_MEMBERS), 3)) {
+            manual.add(member);
         }
 
         const next = content.replace(memberAccessPattern(ref, SIGNAL_MEMBERS), '$1$2$3()');

@@ -17,35 +17,35 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
     ],
     template: `
         <kbq-split-button>
-            <button kbq-button>
+            <button kbq-button type="button">
                 <i kbqButtonPrefix kbq-icon="kbq-plus_16"></i>
                 Split Button
             </button>
-            <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
+            <button kbq-button type="button" aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </kbq-split-button>
 
         <kbq-split-button>
-            <button kbq-button>Split Button</button>
-            <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
+            <button kbq-button type="button">Split Button</button>
+            <button kbq-button type="button" aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </kbq-split-button>
 
         <kbq-split-button>
-            <button kbq-button aria-label="Add">
+            <button kbq-button type="button" aria-label="Add">
                 <i kbq-icon="kbq-plus_16"></i>
             </button>
-            <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
+            <button kbq-button type="button" aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </kbq-split-button>
 
         <kbq-dropdown #dropdown="kbqDropdown">
-            <button kbq-dropdown-item>Extra Action 1</button>
-            <button kbq-dropdown-item>Extra Action 2</button>
-            <button kbq-dropdown-item>Extra Action 3</button>
+            <button kbq-dropdown-item type="button">Extra Action 1</button>
+            <button kbq-dropdown-item type="button">Extra Action 2</button>
+            <button kbq-dropdown-item type="button">Extra Action 3</button>
         </kbq-dropdown>
     `,
     styles: `

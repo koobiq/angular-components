@@ -1,8 +1,8 @@
 @use '../core/styles/common/animation';
 @use '../core/styles/common/tokens';
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
-@mixin _overflow-items-margins {
+@mixin -overflow-items-margins {
     padding: var(--kbq-size-border-width);
 
     > .kbq-overflow-item {
@@ -34,7 +34,7 @@
     inset-block-start: var(--kbq-top-bar-inset-block-start);
     background-color: var(--kbq-top-bar-background);
     padding: var(--kbq-top-bar-padding-vertical) var(--kbq-top-bar-padding-horizontal);
-    @include kbq-squircle(var(--kbq-top-bar-border-radius));
+    @include squircle.kbq-squircle(var(--kbq-top-bar-border-radius));
 
     &.kbq-top-bar_with-shadow {
         box-shadow: var(--kbq-top-bar-shadow-bottom);
@@ -60,7 +60,7 @@
 
         &.kbq-overflow-items,
         > .kbq-overflow-items {
-            @include _overflow-items-margins;
+            @include -overflow-items-margins;
         }
 
         &.kbq-top-bar-container_start {

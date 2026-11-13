@@ -1,12 +1,12 @@
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
-@mixin _kbq-list-item($state-name) {
+@mixin -kbq-list-item($state-name) {
     --kbq-option-background: var(--kbq-list-#{$state-name}-container-background);
 
     background: var(--kbq-list-#{$state-name}-container-background);
 }
 
-@mixin _kbq-multiple-file-upload-theme() {
+@mixin -kbq-multiple-file-upload-theme() {
     background-color: var(--kbq-file-upload-multiple-default-container-background);
     border-color: var(--kbq-file-upload-multiple-default-container-border) !important;
 
@@ -141,13 +141,13 @@
                 &:hover,
                 &.kbq-hovered {
                     .kbq-file-upload__row {
-                        @include _kbq-list-item(states-hover);
+                        @include -kbq-list-item(states-hover);
                     }
                 }
 
                 &.kbq-disabled {
                     .kbq-file-upload__row {
-                        @include _kbq-list-item(states-disabled);
+                        @include -kbq-list-item(states-disabled);
                     }
                 }
             }
@@ -171,7 +171,7 @@
 
 // TODO: needs a refactor — the nesting and specificity below are hard to follow.
 .kbq-multiple-file-upload .kbq-file-upload {
-    @include kbq-squircle(var(--kbq-file-upload-size-multiple-big-container-border-radius));
+    @include squircle.kbq-squircle(var(--kbq-file-upload-size-multiple-big-container-border-radius));
     border-width: var(--kbq-file-upload-size-multiple-big-container-border-width);
     border-style: dashed;
 
@@ -296,9 +296,9 @@
         padding: 0 calc(var(--kbq-size-xxs) - var(--kbq-size-border-width));
 
         .kbq-file-upload__row {
-            @include kbq-squircle(var(--kbq-size-xs));
+            @include squircle.kbq-squircle(var(--kbq-size-xs));
         }
     }
 
-    @include _kbq-multiple-file-upload-theme();
+    @include -kbq-multiple-file-upload-theme();
 }

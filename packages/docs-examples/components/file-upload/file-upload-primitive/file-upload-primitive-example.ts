@@ -35,7 +35,7 @@ import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
             kbqFileUploadContext
             kbqFileDrop
             multiple
-            [id]="'custom-file-upload'"
+            id="custom-file-upload"
             [disabled]="false"
             (filesDropped)="onFilesDropped($event)"
         >
@@ -43,8 +43,8 @@ import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
                 <i
                     kbq-empty-state-icon
                     kbq-icon-item="kbq-arrow-up-from-line_16"
+                    color="contrast"
                     [big]="true"
-                    [color]="'contrast'"
                     [fade]="true"
                 ></i>
                 <div kbq-empty-state-title>Click to upload or drag and drop</div>
@@ -55,7 +55,7 @@ import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
                         (click)="ref.input().nativeElement.click()"
                         (fileChange)="onFileClicked($event)"
                     >
-                        <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'">Choose a file</button>
+                        <button kbq-button type="button" color="theme" kbqStyle="transparent">Choose a file</button>
                     </label>
                 </div>
             </kbq-empty-state>
@@ -71,9 +71,10 @@ import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
                         <kbq-badge>{{ item.file.name }}</kbq-badge>
                         <button
                             kbq-button
+                            type="button"
                             aria-label="Delete"
-                            [kbqStyle]="'transparent'"
-                            [color]="'contrast'"
+                            kbqStyle="transparent"
+                            color="contrast"
                             (click)="list.removeAt($index)"
                         >
                             <i kbq-icon="kbq-trash_16"></i>

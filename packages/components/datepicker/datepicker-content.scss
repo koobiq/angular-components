@@ -1,6 +1,6 @@
 @use '../core/styles/common/animation';
-@use './datepicker-theme' as *;
-@use '../core/styles/common/squircle' as *;
+@use './datepicker-theme';
+@use '../core/styles/common/squircle';
 
 $kbq-datepicker-non-touch-calendar-cell-size: 40px;
 $kbq-datepicker-size-grid-padding-horizontal: var(--kbq-datepicker-size-grid-padding-horizontal);
@@ -15,7 +15,7 @@ $kbq-datepicker-non-touch-calendar-height: 270px;
 .kbq-datepicker__content {
     display: block;
 
-    @include kbq-squircle(var(--kbq-datepicker-size-container-border-radius));
+    @include squircle.kbq-squircle(var(--kbq-datepicker-size-container-border-radius));
 
     .kbq-calendar {
         width: $kbq-datepicker-non-touch-calendar-width;
@@ -57,5 +57,5 @@ $kbq-datepicker-non-touch-calendar-height: 270px;
     }
 }
 
-@include kbq-datepicker-theme();
-@include kbq-datepicker-typography();
+@include datepicker-theme.kbq-datepicker-theme();
+@include datepicker-theme.kbq-datepicker-typography();

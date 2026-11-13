@@ -1819,9 +1819,9 @@ class ChildSelection {
 
     pseudoCheckboxState(option: KbqTreeOption<FileFlatNode>): KbqPseudoCheckboxState {
         if (option.isExpandable) {
-            if (this.descendantsAllSelected(option.data)) {
+            if (this.descendantsAllSelected(option.data!)) {
                 return 'checked';
-            } else if (this.descendantsPartiallySelected(option.data)) {
+            } else if (this.descendantsPartiallySelected(option.data!)) {
                 return 'indeterminate';
             }
         }
@@ -1833,9 +1833,9 @@ class ChildSelection {
         const valuesToChange = this.treeControl.getDescendants($event.value.data);
 
         if ($event.value.selected) {
-            this.select().selectionModel.deselect(...valuesToChange);
+            this.select().selectionModel!.deselect(...valuesToChange);
         } else {
-            this.select().selectionModel.select(...valuesToChange);
+            this.select().selectionModel!.select(...valuesToChange);
         }
     }
 
@@ -1845,13 +1845,13 @@ class ChildSelection {
         }
 
         const descendants = this.treeControl.getDescendants(parent);
-        const isParentSelected = this.select().selectionModel.selected.includes(parent);
+        const isParentSelected = this.select().selectionModel!.selected.includes(parent);
 
-        if (!isParentSelected && descendants.every((d) => this.select().selectionModel.selected.includes(d))) {
-            this.select().selectionModel.select(parent);
+        if (!isParentSelected && descendants.every((d) => this.select().selectionModel!.selected.includes(d))) {
+            this.select().selectionModel!.select(parent);
             this.toggleParents(parent.parent);
         } else if (isParentSelected) {
-            this.select().selectionModel.deselect(parent);
+            this.select().selectionModel!.deselect(parent);
             this.toggleParents(parent.parent);
         }
     }
@@ -3455,7 +3455,7 @@ describe('KbqTreeSelect', () => {
 
                 let written = false;
                 // Writes on the first change of the next write, before that write has selected its own node.
-                const subscription = select.selectionModel.changed.subscribe(() => {
+                const subscription = select.selectionModel!.changed.subscribe(() => {
                     if (written) return;
 
                     written = true;
@@ -5919,9 +5919,9 @@ describe('KbqTreeSelect', () => {
             expectTypeOf<KbqTreeSelect<FileFlatNode>['clearPredicate']>().toEqualTypeOf<
                 InputSignalWithTransform<(node: FileFlatNode) => boolean, (node: FileFlatNode) => boolean>
             >();
-            expectTypeOf<KbqTreeSelect['selectionModel']>().toEqualTypeOf<SelectionModel<any>>();
-            expectTypeOf(select.selectionModel).toEqualTypeOf<SelectionModel<FileFlatNode>>();
-            expectTypeOf(select.selected).toEqualTypeOf<FileFlatNode | FileFlatNode[]>();
+            expectTypeOf<KbqTreeSelect['selectionModel']>().toEqualTypeOf<SelectionModel<any> | undefined>();
+            expectTypeOf(select.selectionModel).toEqualTypeOf<SelectionModel<FileFlatNode> | undefined>();
+            expectTypeOf(select.selected).toEqualTypeOf<FileFlatNode | FileFlatNode[] | undefined>();
             expectTypeOf(tree.selectionModel).toEqualTypeOf<SelectionModel<FileFlatNode>>();
             expectTypeOf<KbqTreeSelect<FileFlatNode>['tree']>().toEqualTypeOf<
                 Signal<KbqTreeSelection<FileFlatNode, FileFlatNode> | undefined>
@@ -5930,7 +5930,7 @@ describe('KbqTreeSelect', () => {
                 Signal<KbqTreeSelection<FileFlatNode, string> | undefined>
             >();
             expect(tree.selectionModel).toBe(select.selectionModel);
-            expect(select.selectionModel.selected.map(({ name }) => name).sort()).toEqual(['Downloads', 'rootNode_1']);
+            expect(select.selectionModel!.selected.map(({ name }) => name).sort()).toEqual(['Downloads', 'rootNode_1']);
         });
     });
 

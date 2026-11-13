@@ -1,5 +1,5 @@
 @use '../core/styles/common/animation';
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 @use '../core/styles/common/tokens';
 @use '../core/styles/common/vendor-prefixes';
 
@@ -32,7 +32,7 @@
         color: transparent;
     }
 
-    @include kbq-squircle(var(--kbq-tabs-size-tab-item-border-radius));
+    @include squircle.kbq-squircle(var(--kbq-tabs-size-tab-item-border-radius));
 
     outline: none;
 
@@ -56,14 +56,14 @@
         gap: var(--kbq-tabs-size-tab-item-content-gap-horizontal);
     }
 
-    &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical):before {
+    &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical)::before {
         content: '';
         position: absolute;
         inset: calc(-1 * (var(--kbq-size-s) + var(--kbq-tabs-size-tab-item-focus-outline-width)))
             calc(-1 * var(--kbq-tabs-size-tab-item-focus-outline-width));
     }
 
-    &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical):not(.kbq-tab-label_icon-only):after {
+    &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical):not(.kbq-tab-label_icon-only)::after {
         content: '';
         position: absolute;
         left: calc(
@@ -93,12 +93,12 @@
             width: var(--kbq-tabs-size-tab-item-underlined-icon-only-size);
             height: var(--kbq-tabs-size-tab-item-underlined-icon-only-size);
 
-            &:before {
+            &::before {
                 left: calc(-1 * (var(--kbq-size-xxs) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
                 right: calc(-1 * (var(--kbq-size-xxs) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
             }
 
-            &:after {
+            &::after {
                 top: auto;
                 bottom: calc(-1 * (var(--kbq-size-s) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
                 height: 3px;
@@ -110,7 +110,7 @@
             }
         }
 
-        &:not(.kbq-tab-label_vertical):after {
+        &:not(.kbq-tab-label_vertical)::after {
             content: '';
             display: block;
             position: absolute;
@@ -279,7 +279,7 @@
         }
     }
 
-    .kbq-tab-header_underlined:not(.kbq-tab-header_vertical):after {
+    .kbq-tab-header_underlined:not(.kbq-tab-header_vertical)::after {
         content: '';
         position: absolute;
         left: 0;

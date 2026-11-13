@@ -45,13 +45,13 @@ export class SelectVirtualScrollExample {
     readonly options: OptionItem[] = Array.from({ length: 10000 }).map((_, i) => ({ id: i, label: `Option #${i}` }));
     readonly virtualScrollViewport = viewChild.required(CdkVirtualScrollViewport);
 
-    selected: OptionItem = this.options[0];
+    selected: OptionItem | undefined = this.options[0];
 
     readonly compareWith = (a: OptionItem | null, b: OptionItem | null) => a?.id === b?.id;
     readonly virtualOptionFactory = (value: OptionItem) => new KbqVirtualOption(value, false, value.label);
 
     openedChange(isOpened: boolean): void {
-        if (!isOpened) return;
+        if (!isOpened || !this.selected) return;
         this.virtualScrollViewport().scrollToIndex(this.selected.id);
     }
 }

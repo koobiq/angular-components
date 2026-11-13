@@ -46,6 +46,7 @@ type Format = (typeof FORMATS)[number];
                 @for (format of formats; track format.tag) {
                     <button
                         kbq-button
+                        type="button"
                         kbqStyle="transparent"
                         [attr.aria-label]="format.label"
                         [attr.aria-pressed]="active().includes(format.tag)"
@@ -164,13 +165,15 @@ export class PopoverTextSelectionExample {
         if (wrapper) {
             // The whole wrapper goes, so a selection inside a longer formatted run unformats that run.
             const contents = Array.from(wrapper.childNodes);
+            const first = contents.at(0);
+            const last = contents.at(-1);
 
-            if (!contents.length) return;
+            if (!first || !last) return;
 
             wrapper.replaceWith(...contents);
 
-            next.setStartBefore(contents[0]);
-            next.setEndAfter(contents[contents.length - 1]);
+            next.setStartBefore(first);
+            next.setEndAfter(last);
         } else {
             const element = this.document.createElement(format.tag);
 

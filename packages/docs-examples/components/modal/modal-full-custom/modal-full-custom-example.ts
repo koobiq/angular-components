@@ -21,8 +21,9 @@ import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components
         </kbq-modal-body>
 
         <div kbq-modal-footer>
-            <button kbq-button [color]="'contrast'" (click)="modalRef.close()">Save</button>
-            <button kbq-button autofocus (click)="modalRef.close()">Close</button>
+            <button kbq-button type="button" color="contrast" (click)="modalRef.close()">Save</button>
+            <!-- eslint-disable-next-line @angular-eslint/template/no-autofocus -- the dialog moves the focus to the element marked autofocus when it opens -->
+            <button kbq-button autofocus type="button" (click)="modalRef.close()">Close</button>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -40,7 +41,7 @@ export class CustomModalComponent {
     selector: 'modal-full-custom-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="openModal()">Open Modal</button>
+        <button kbq-button type="button" (click)="openModal()">Open Modal</button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

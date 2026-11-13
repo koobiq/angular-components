@@ -20,8 +20,7 @@ import {
     signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { distinctUntilChanged, EMPTY, from, map, merge, type Observable } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, EMPTY, from, map, merge, type Observable } from 'rxjs';
 import { kbqInjectNativeElement, PopUpPlacements, PopUpTriggers } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqNavbarFocusableItem, KbqNavbarRectangleElement, KbqNavbarTitle } from './navbar-item.component';
@@ -34,9 +33,7 @@ const LONG_TITLE_CLASS = 'kbq-navbar-brand_long-title';
     template: `
         <ng-content />
     `,
-    styleUrls: [
-        './navbar-brand.scss'
-    ],
+    styleUrl: './navbar-brand.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-navbar-brand',

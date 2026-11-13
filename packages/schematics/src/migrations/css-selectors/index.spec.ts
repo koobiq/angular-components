@@ -115,14 +115,14 @@ describe(SCHEMATIC_NAME, () => {
         const [firstProjectKey] = projects.keys();
         const messages: string[] = [];
 
-        runner.logger.subscribe(
-            ({ message }) => {
+        runner.logger.subscribe({
+            next: ({ message }) => {
                 messages.push(message);
                 expect(message).toBeTruthy();
             },
-            () => {},
-            () => expect(messages).toMatchSnapshot()
-        );
+            error: () => {},
+            complete: () => expect(messages).toMatchSnapshot()
+        });
 
         try {
             await runner.runSchematic(SCHEMATIC_NAME, { project: firstProjectKey }, appTree);
@@ -135,14 +135,14 @@ describe(SCHEMATIC_NAME, () => {
         const [firstProjectKey] = projects.keys();
         const messages: string[] = [];
 
-        runner.logger.subscribe(
-            ({ message }) => {
+        runner.logger.subscribe({
+            next: ({ message }) => {
                 messages.push(message);
                 expect(message).toBeTruthy();
             },
-            () => {},
-            () => expect(messages).toMatchSnapshot()
-        );
+            error: () => {},
+            complete: () => expect(messages).toMatchSnapshot()
+        });
 
         projects.forEach((project) => {
             const p = projectPaths(project, appTree);

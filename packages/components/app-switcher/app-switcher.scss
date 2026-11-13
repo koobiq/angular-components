@@ -1,5 +1,5 @@
-@use './app-switcher-theme' as *;
-@use '../core/styles/common/squircle' as *;
+@use './app-switcher-theme';
+@use '../core/styles/common/squircle';
 
 .kbq-app-switcher {
     position: relative;
@@ -12,7 +12,7 @@
 
     width: var(--kbq-app-switcher-size-container-width, 320px);
 
-    @include kbq-squircle(var(--kbq-size-xs));
+    @include squircle.kbq-squircle(var(--kbq-size-xs));
 
     box-shadow: var(--kbq-shadow-popup);
 
@@ -70,5 +70,5 @@
     padding: var(--kbq-size-xxs);
 }
 
-@include kbq-app-switcher-theme();
-@include kbq-app-switcher-typography();
+@include app-switcher-theme.kbq-app-switcher-theme();
+@include app-switcher-theme.kbq-app-switcher-typography();

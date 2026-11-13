@@ -102,7 +102,7 @@ export class KbqNavbarToggleRegistry implements OnDestroy {
             </ng-content>
         </span>
     `,
-    styleUrls: ['./navbar-toggle.scss'],
+    styleUrl: './navbar-toggle.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

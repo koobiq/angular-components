@@ -46,7 +46,7 @@ export class KbqTabLabelWrapper implements OnChanges, AfterViewInit {
         transform: booleanAttribute
     });
 
-    tab: KbqTab;
+    tab: KbqTab | undefined;
 
     get disabled(): boolean {
         return this._disabled;
@@ -102,6 +102,8 @@ export class KbqTabLabelWrapper implements OnChanges, AfterViewInit {
     }
 
     checkOverflow() {
+        if (!this.tab) return;
+
         this.tab.overflowTooltipTitle = this.isOverflown() ? this.getInnerText() : '';
     }
 
@@ -119,7 +121,7 @@ export class KbqTabLabelWrapper implements OnChanges, AfterViewInit {
         const twoIcons = 2;
         const [firstIconElement, secondIconElement] = icons;
 
-        if (icons.length === 1) {
+        if (firstIconElement && icons.length === 1) {
             const COMMENT_NODE = 8;
 
             if (firstIconElement.nextSibling && firstIconElement.nextSibling.nodeType !== COMMENT_NODE) {

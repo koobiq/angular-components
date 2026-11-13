@@ -19,6 +19,7 @@ export enum KbqComponentColors {
     Warning = 'warning',
     Success = 'success',
 
+    // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values -- a published alias of `Contrast`
     Default = 'contrast',
     Empty = 'empty'
 }

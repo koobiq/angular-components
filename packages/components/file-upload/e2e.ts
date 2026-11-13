@@ -164,7 +164,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                         </kbq-file-upload>
                     </td>
                     <td>
-                        <kbq-file-upload [file]="indeterminateFile" [progressMode]="'indeterminate'">
+                        <kbq-file-upload progressMode="indeterminate" [file]="indeterminateFile">
                             <i kbq-icon="" [class]="iconClass.default"></i>
                         </kbq-file-upload>
                     </td>
@@ -183,14 +183,14 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                         </kbq-multiple-file-upload>
                     </td>
                     <td>
-                        <kbq-multiple-file-upload [files]="indeterminateFiles" [progressMode]="'indeterminate'">
+                        <kbq-multiple-file-upload progressMode="indeterminate" [files]="indeterminateFiles">
                             <ng-template #kbqFileIcon>
                                 <i kbq-icon="" [class]="iconClass.default"></i>
                             </ng-template>
                         </kbq-multiple-file-upload>
                     </td>
                     <td class="dev-focused-link">
-                        <kbq-multiple-file-upload [size]="'compact'" [files]="noFiles">
+                        <kbq-multiple-file-upload size="compact" [files]="noFiles">
                             <ng-template #kbqFileIcon>
                                 <i kbq-icon="" [class]="iconClass.default"></i>
                             </ng-template>

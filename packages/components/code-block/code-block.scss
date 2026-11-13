@@ -84,7 +84,7 @@
             }
         }
 
-        /* stylelint-disable-next-line selector-class-pattern */
+        /* stylelint-disable-next-line selector-class-pattern -- the class highlight.js puts on the code it renders */
         .hljs {
             display: block;
         }

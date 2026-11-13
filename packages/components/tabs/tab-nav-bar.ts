@@ -23,7 +23,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { startWith } from 'rxjs/operators';
+import { startWith } from 'rxjs';
 import { isUndefined, kbqOptionalNumberAttribute, kbqQueryListFrom } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
@@ -194,8 +194,8 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
 
         const items = this.items.toArray();
 
-        for (let i = 0; i < items.length; i++) {
-            if (items[i].active) {
+        for (const [i, item] of items.entries()) {
+            if (item.active) {
                 this.selectedIndex = i;
                 // Also marks the ancestors, whose check runs `ngAfterContentChecked` and scrolls to the link.
                 this.changeDetectorRef.markForCheck();
@@ -203,7 +203,7 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
                 const tabNavPanel = this.tabNavPanel();
 
                 if (tabNavPanel) {
-                    tabNavPanel.activeTabId = items[i].id;
+                    tabNavPanel.activeTabId = item.id;
                 }
 
                 return;
@@ -366,7 +366,7 @@ export class KbqTabLink implements OnChanges, OnDestroy, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.focusMonitor.monitor(this.elementRef.nativeElement);
+        void this.focusMonitor.monitor(this.elementRef.nativeElement);
 
         this.addClassModifierForIcons(Array.from(this.elementRef.nativeElement.querySelectorAll('.kbq-icon')));
     }
@@ -379,7 +379,7 @@ export class KbqTabLink implements OnChanges, OnDestroy, AfterViewInit {
         const twoIcons = 2;
         const [firstIconElement, secondIconElement] = icons;
 
-        if (icons.length === 1) {
+        if (firstIconElement && icons.length === 1) {
             const COMMENT_NODE = 8;
 
             if (firstIconElement.nextSibling && firstIconElement.nextSibling.nodeType !== COMMENT_NODE) {

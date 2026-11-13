@@ -152,7 +152,7 @@ export function analyzeDecorators(
 
     const metadata =
         decorator &&
-        decorator.expression.arguments.length > 0 &&
+        decorator.expression.arguments[0] &&
         ts.isObjectLiteralExpression(decorator.expression.arguments[0])
             ? decorator.expression.arguments[0]
             : null;

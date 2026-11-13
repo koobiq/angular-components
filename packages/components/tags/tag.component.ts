@@ -225,7 +225,7 @@ export class KbqTagEditInput {
             <ng-content select="[kbqTagSuffix]" />
         </div>
     `,
-    styleUrls: ['./tag.scss'],
+    styleUrl: './tag.scss',
     providers: [{ provide: KBQ_TITLE_TEXT_REF, useExisting: KbqTag }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -554,22 +554,19 @@ export class KbqTag
      * @docs-private
      */
     addClassModificatorForIcons(): void {
-        const icons = this.contentChildren().map((item) => item.elementRef.nativeElement);
+        const [firstIconElement, secondIconElement] = this.contentChildren().map(
+            (item) => item.elementRef.nativeElement
+        );
 
-        if (icons.length === 1) {
-            const iconElement = icons[0];
-
-            if (iconElement.classList.contains('kbq-tag-remove')) {
-                iconElement.classList.add('kbq-icon_right');
+        if (firstIconElement && !secondIconElement) {
+            if (firstIconElement.classList.contains('kbq-tag-remove')) {
+                firstIconElement.classList.add('kbq-icon_right');
                 this.nativeElement.classList.add('kbq-right-icon');
             } else {
-                iconElement.classList.add('kbq-icon_left');
+                firstIconElement.classList.add('kbq-icon_left');
                 this.nativeElement.classList.add('kbq-left-icon');
             }
-        } else if (icons.length > 1) {
-            const firstIconElement = icons[0];
-            const secondIconElement = icons[1];
-
+        } else if (firstIconElement && secondIconElement) {
             firstIconElement.classList.add('kbq-icon_left');
             secondIconElement.classList.add('kbq-icon_right');
         }

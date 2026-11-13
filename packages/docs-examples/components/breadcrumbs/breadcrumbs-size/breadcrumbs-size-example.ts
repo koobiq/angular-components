@@ -26,9 +26,9 @@ import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
                     <nav kbq-breadcrumbs [size]="size">
                         @for (breadcrumb of breadcrumbs; track breadcrumb; let last = $last) {
                             <kbq-breadcrumb-item
+                                fragment="fragment"
                                 [routerLink]="breadcrumb.url"
                                 [queryParams]="{ queryParams: 'queryParams' }"
-                                [fragment]="'fragment'"
                                 [text]="breadcrumb.label"
                             />
                         }

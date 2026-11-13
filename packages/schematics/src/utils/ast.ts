@@ -76,7 +76,7 @@ export interface Visitor {
 // attr can be naked or in [ ]
 // attr.value can be {{ value }} , 'value'
 export function getSimpleAttributeName(attrName: string): string {
-    return attrName.replace(/[\[\]]/g, '');
+    return attrName.replace(/[[\]]/g, '');
 }
 
 export function getSimpleAttributeValue(attrValue: string): string {

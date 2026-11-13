@@ -12,17 +12,17 @@ import {
 } from '@koobiq/components/tree';
 
 export class FileNode {
-    children: FileNode[];
-    name: string;
+    children?: FileNode[];
+    name = '';
     type: any;
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-    name: string;
+    name = '';
     type: any;
-    level: number;
-    expandable: boolean;
+    level = 0;
+    expandable = false;
     parent: any;
 }
 
@@ -192,10 +192,6 @@ export class TreeDescendantsSubcategoriesExample extends TreeParams {
     modelValue: any = ['docs'];
 
     readonly tree = viewChild.required(KbqTreeSelection);
-
-    constructor() {
-        super();
-    }
 
     onSelectionChange($event: KbqTreeSelectionChange<KbqTreeOption>) {
         const option: KbqTreeOption = $event.option;

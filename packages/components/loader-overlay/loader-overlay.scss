@@ -1,8 +1,6 @@
-@use '../core/styles/common/squircle' as *;
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/squircle';
 @use '../core/styles/common/vendor-prefixes';
-
-@use './loader-overlay-theme' as *;
+@use './loader-overlay-theme';
 
 .kbq-loader-overlay_parent {
     position: relative;
@@ -34,7 +32,7 @@
     right: 0;
     bottom: 0;
     left: 0;
-    @include kbq-squircle-inherit();
+    @include squircle.kbq-squircle-inherit();
     @include vendor-prefixes.user-select(text);
 
     // todo
@@ -81,5 +79,5 @@
     }
 }
 
-@include kbq-loader-overlay-theme();
-@include kbq-loader-overlay-typography();
+@include loader-overlay-theme.kbq-loader-overlay-theme();
+@include loader-overlay-theme.kbq-loader-overlay-typography();

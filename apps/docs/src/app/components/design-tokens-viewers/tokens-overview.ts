@@ -105,7 +105,7 @@ interface DocsTokensInfoRaw {
             </table>
         }
     `,
-    styleUrls: ['design-tokens.scss'],
+    styleUrl: 'design-tokens.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocsTokensTable extends DocsLocaleState {
@@ -131,10 +131,6 @@ export class DocsTokensTable extends DocsLocaleState {
         [DocsStructureTokensTab.Sizes]: 'width',
         [DocsStructureTokensTab.Shadows]: 'box-shadow'
     };
-
-    constructor() {
-        super();
-    }
 
     getStyle(token: string) {
         const cssProp = this.mapTabToCssProp[this.tab()];
@@ -184,7 +180,7 @@ export class DocsTokensTable extends DocsLocaleState {
         </docs-component-viewer-wrapper>
 
         <div class="docs-component-viewer__sticky-wrapper">
-            <docs-anchors [headerSelectors]="'.docs-header-link'" />
+            <docs-anchors headerSelectors=".docs-header-link" />
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -205,7 +201,7 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
     protected readonly tokensInfo = signal<DocsTokensInfo[]>([]);
     protected readonly activatedTab = toSignal(
         this.activatedRoute.url.pipe(
-            map(([{ path: id }]: UrlSegment[]) => <DocsTokensTab>id),
+            map(([tab]: UrlSegment[]) => <DocsTokensTab>(tab?.path ?? DocsStructureTokensTab.Colors)),
             takeUntilDestroyed()
         ),
         { initialValue: DocsStructureTokensTab.Colors }

@@ -78,8 +78,8 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
 
     private readonly _withIndent = signal(inject(KBQ_SIDEPANEL_WITH_INDENT));
 
-    /** ID for the container DOM element. */
-    id: string;
+    /** ID for the container DOM element, assigned by the `KbqSidepanelRef` created along with the container. */
+    id = '';
 
     /**
      * Id of the element naming the sidepanel. Comes from the config, or from `kbq-sidepanel-header`.

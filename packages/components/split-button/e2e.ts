@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { combineLatest } from 'rxjs';
 import { type KbqButtonColor, KbqButtonModule, type KbqButtonStyle, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -46,7 +45,7 @@ type DevButton = DevButtonState & DevButtonStyle;
                 <tr>
                     @for (button of buttons; track button.title) {
                         <td>
-                            <kbq-split-button [color]="button.color!" [kbqStyle]="button.style!">
+                            <kbq-split-button [color]="button.color" [kbqStyle]="button.style">
                                 <button
                                     kbq-button
                                     [class.cdk-keyboard-focused]="button.focused"
@@ -133,10 +132,10 @@ export class E2eSplitButtonStateAndStyle {
     readonly rows: DevButton[][] = this.styles.map((style) => this.states.map((state) => ({ ...state, ...style })));
 
     constructor() {
-        combineLatest([toObservable(this.showPrefixIcon)])
+        toObservable(this.showPrefixIcon)
             .pipe(takeUntilDestroyed())
-            .subscribe((args) => {
-                if (args.every((a) => a === false)) this.showTitle.set(true);
+            .subscribe((shown) => {
+                if (shown === false) this.showTitle.set(true);
             });
     }
 }

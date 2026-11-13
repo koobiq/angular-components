@@ -49,7 +49,7 @@ const SEARCH_DEBOUNCE_TIME = 300;
         KbqCheckboxModule
     ],
     templateUrl: './icons-viewer.template.html',
-    styleUrls: ['./icons-viewer.scss'],
+    styleUrl: './icons-viewer.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

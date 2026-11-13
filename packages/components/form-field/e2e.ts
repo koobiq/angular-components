@@ -54,7 +54,7 @@ import { KbqTimepickerModule } from '@koobiq/components/timepicker';
             </div>
         </div>
     `,
-    styleUrls: ['../core/styles/common/_groups.scss'],
+    styleUrl: '../core/styles/common/_groups.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

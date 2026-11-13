@@ -38,7 +38,7 @@ import { DocsAnchorsComponent } from '../anchors/anchors.component';
 
         @if (withAnchors()) {
             <div class="docs-component-viewer__sticky-wrapper">
-                <docs-anchors [headerSelectors]="'.docs-header-link'" />
+                <docs-anchors headerSelectors=".docs-header-link" />
             </div>
         }
     `,

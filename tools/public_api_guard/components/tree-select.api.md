@@ -160,8 +160,7 @@ export class KbqTreeSelect<T = any, K = T> extends KbqAbstractSelect implements 
     readonly openedChangeOutput: _angular_core.OutputRef<boolean>;
     readonly openedOutput: _angular_core.OutputRef<void>;
     readonly openedStream: Observable<void>;
-    // (undocumented)
-    protected options: QueryList<KbqTreeOption<T>>;
+    protected options: QueryList<KbqTreeOption<T>> | undefined;
     protected readonly optionsContainer: _angular_core.Signal<ElementRef<HTMLElement> | undefined>;
     readonly optionSelectionChanges: Observable<KbqTreeSelectChange>;
     protected get overlayDir(): CdkConnectedOverlay;
@@ -201,12 +200,11 @@ export class KbqTreeSelect<T = any, K = T> extends KbqAbstractSelect implements 
     get selectAllHandler(): (event: KeyboardEvent, select: KbqTreeSelect<T, K>) => void;
     readonly selectAllHandlerInput: _angular_core.InputSignalWithTransform<((event: KeyboardEvent, select: KbqTreeSelect<T, K>) => void) | undefined, ((event: KeyboardEvent, select: KbqTreeSelect<T, K>) => void) | undefined>;
     readonly selectAllToggle: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    // (undocumented)
-    get selected(): T | T[];
+    get selected(): T | T[] | undefined;
     // (undocumented)
     get selectedValues(): any;
     readonly selectionChange: _angular_core.OutputEmitterRef<KbqTreeSelectChange<any>>;
-    selectionModel: SelectionModel<T>;
+    selectionModel: SelectionModel<T> | undefined;
     setDisabledState(isDisabled: boolean): void;
     protected shouldShowSearch(): boolean;
     readonly sortComparator: InputSignal<KbqTreeSelectSortComparator>;
@@ -222,7 +220,7 @@ export class KbqTreeSelect<T = any, K = T> extends KbqAbstractSelect implements 
     triggerFontSize: number;
     // (undocumented)
     triggerKeydownHandler(event: KeyboardEvent): void;
-    protected triggerRect: DOMRect;
+    protected triggerRect: DOMRect | undefined;
     // (undocumented)
     get triggerValue(): string;
     // (undocumented)

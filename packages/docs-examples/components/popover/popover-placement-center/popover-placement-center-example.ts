@@ -10,7 +10,7 @@ import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/pop
 @Component({
     selector: 'popover-placement-center-example',
     imports: [KbqInputModule, KbqButtonModule, KbqPopoverModule],
-    templateUrl: 'popover-placement-center-example.html',
+    templateUrl: './popover-placement-center-example.html',
     styles: `
         .popover-placement-center-example {
             display: flex;
@@ -36,5 +36,5 @@ import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/pop
 })
 export class PopoverPlacementCenterExample {
     placements = PopUpPlacements;
-    activePopover: KbqPopoverTrigger;
+    activePopover?: KbqPopoverTrigger;
 }

@@ -21,9 +21,9 @@ import { KbqTagsModule } from '@koobiq/components/tags';
                     <kbq-tag
                         [selectable]="false"
                         [disabled]="option.disabled || select.disabled()"
-                        [color]="severities[option.value].color"
+                        [color]="severities[option.value]?.color"
                     >
-                        <i kbqTagPrefix [kbq-icon]="severities[option.value].icon"></i>
+                        <i kbqTagPrefix [kbq-icon]="severities[option.value]?.icon"></i>
                         {{ option.viewValue }}
                         <!-- The custom template replaces the built-in markup, so the remove control is up to us. -->
                         @if (!option.disabled && !select.disabled()) {

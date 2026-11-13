@@ -15,11 +15,11 @@ import { KbqIcon } from '@koobiq/components/icon';
     template: `
         @for (style of buttonStyles; track style) {
             <div class="layout-row layout-gap-xl">
-                <div kbq-button-group [orientation]="'vertical'" [color]="style.color" [kbqStyle]="style.appearance">
-                    <button kbq-button aria-label="Plus">
+                <div kbq-button-group orientation="vertical" [color]="style.color" [kbqStyle]="style.appearance">
+                    <button kbq-button type="button" aria-label="Plus">
                         <i kbq-icon="kbq-plus_16"></i>
                     </button>
-                    <button kbq-button aria-label="Minus">
+                    <button kbq-button type="button" aria-label="Minus">
                         <i kbq-icon="kbq-minus_16"></i>
                     </button>
                 </div>

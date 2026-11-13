@@ -231,11 +231,13 @@ export class KbqTreeOption<T = any>
 
     /** Whether the option is disabled: through its own input, the tree, or the tree control's `isDisabled`. */
     get disabled(): boolean {
-        if (this.selectAllRow()) {
+        const { data } = this;
+
+        if (this.selectAllRow() || data === undefined) {
             return this.disabledInput() || this.tree.disabled;
         }
 
-        return this.disabledInput() || this.tree.disabled || this.tree.treeControl.isDisabled(this.data);
+        return this.disabledInput() || this.tree.disabled || this.tree.treeControl.isDisabled(data);
     }
 
     /**
@@ -337,11 +339,13 @@ export class KbqTreeOption<T = any>
     private focusReported = false;
 
     get isExpandable(): boolean {
-        if (this.selectAllRow()) {
+        const { data } = this;
+
+        if (this.selectAllRow() || data === undefined) {
             return false;
         }
 
-        return !this.toggleElement?.disabled && this.tree.treeControl.isExpandable(this.data);
+        return !this.toggleElement?.disabled && this.tree.treeControl.isExpandable(data);
     }
 
     /** The "select all" row sits above the tree at root depth; `getLevel` has no node to resolve for it. */
@@ -415,7 +419,11 @@ export class KbqTreeOption<T = any>
     ngOnInit(): void {
         // Selected from its first check: the tree's sweep reaches a new row a macrotask later, and a row it marked
         // would render unselected first and then report a selection nobody made.
-        if (!this.selectAllRow()) this.selectedState.set(!!this.tree.selectionModel?.isSelected(this.data));
+        const { data } = this;
+
+        if (!this.selectAllRow()) {
+            this.selectedState.set(data !== undefined && !!this.tree.selectionModel?.isSelected(data));
+        }
     }
 
     ngDoCheck(): void {
@@ -451,9 +459,11 @@ export class KbqTreeOption<T = any>
 
         // Its own state only: rendering a row changes no ancestor's, and the tree recomputes every row once the data
         // nodes change.
-        Promise.resolve().then(() => this.syncCheckboxState());
+        void Promise.resolve().then(() => this.syncCheckboxState());
 
-        this.value = this.tree.treeControl.getValue(this.data);
+        const { data } = this;
+
+        if (data !== undefined) this.value = this.tree.treeControl.getValue(data);
     }
 
     /**
@@ -468,19 +478,23 @@ export class KbqTreeOption<T = any>
 
         if (this.selectAllRow()) return;
 
-        this.value = this.tree.treeControl.getValue(this.data);
+        const { data } = this;
+
+        if (data !== undefined) this.value = this.tree.treeControl.getValue(data);
 
         this.markForCheck();
     }
 
     descendantsAllSelected(): boolean {
-        const descendants = this.tree.treeControl.getDescendants(this.data);
+        const { data } = this;
+        const descendants = data === undefined ? [] : this.tree.treeControl.getDescendants(data);
 
         return descendants.every((child) => this.tree?.selectionModel.isSelected(child));
     }
 
     descendantsPartiallySelected(): boolean {
-        const descendants = this.tree.treeControl.getDescendants(this.data);
+        const { data } = this;
+        const descendants = data === undefined ? [] : this.tree.treeControl.getDescendants(data);
 
         return descendants.some((child) => this.tree?.selectionModel.isSelected(child));
     }
@@ -492,7 +506,9 @@ export class KbqTreeOption<T = any>
 
         // Each ancestor reads its state off the selection rather than off its children, so recomputing it is enough.
         this.tree.unorderedOptions.forEach((option) => {
-            if (parents.has(option.data)) option.syncCheckboxState();
+            const { data } = option;
+
+            if (data !== undefined && parents.has(data)) option.syncCheckboxState();
         });
     }
 
@@ -500,7 +516,10 @@ export class KbqTreeOption<T = any>
         if (this.selectAllRow()) return;
 
         this.syncCheckboxState();
-        this.updateParentsCheckboxState(this.data);
+
+        const { data } = this;
+
+        if (data !== undefined) this.updateParentsCheckboxState(data);
     };
 
     toggle(): void {
@@ -511,16 +530,23 @@ export class KbqTreeOption<T = any>
 
     setSelected(selected: boolean): void {
         untracked(() => {
-            if (this.selectAllRow() || this.selectedState() === selected || !this.tree.selectionModel) {
+            const { data } = this;
+
+            if (
+                this.selectAllRow() ||
+                data === undefined ||
+                this.selectedState() === selected ||
+                !this.tree.selectionModel
+            ) {
                 return;
             }
 
             this.selectedState.set(selected);
 
             if (selected) {
-                this.tree.selectionModel.select(this.data);
+                this.tree.selectionModel.select(data);
             } else {
-                this.tree.selectionModel.deselect(this.data);
+                this.tree.selectionModel.deselect(data);
             }
 
             if (this.showCheckbox) {
@@ -543,7 +569,7 @@ export class KbqTreeOption<T = any>
                 this.focusEvents.next(event);
                 this.tree.reportOptionFocus?.(event);
 
-                Promise.resolve().then(() => {
+                void Promise.resolve().then(() => {
                     this.focusReported = false;
                     this.hasFocus = true;
 
@@ -692,10 +718,12 @@ export class KbqTreeOption<T = any>
     private syncCheckboxState(): void {
         if (this.selectAllRow()) return;
 
-        if (this.checkboxThirdState() && this.isExpandable) {
+        const { data } = this;
+
+        if (this.checkboxThirdState() && this.isExpandable && data !== undefined) {
             // One descendant walk, not two: each walk covers the whole subtree, and the roll-up runs this method for
             // every ancestor.
-            const descendants = this.tree.treeControl.getDescendants(this.data);
+            const descendants = this.tree.treeControl.getDescendants(data);
             const selectedCount = descendants.filter((child) => this.tree.selectionModel.isSelected(child)).length;
 
             if (selectedCount === descendants.length) {
@@ -715,7 +743,8 @@ export class KbqTreeOption<T = any>
     }
 
     private resolvePredicates(): TreeOptionPredicates {
-        const branch = !this.selectAllRow() && this.tree.treeControl.isExpandable(this.data);
+        const { data } = this;
+        const branch = !this.selectAllRow() && data !== undefined && this.tree.treeControl.isExpandable(data);
 
         return { disabled: this.disabled, expanded: branch ? this.isExpanded : null };
     }

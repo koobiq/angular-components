@@ -8,7 +8,7 @@
  */
 
 /** A version, split for comparison. `Infinity` in a part means "the top of what came before it". */
-export type DocsVersion = readonly number[];
+export type DocsVersion = readonly [major: number, ...rest: number[]];
 
 export type DocsMigrationVersionOption = {
     /** Serialized into `?from=` / `?to=`, e.g. `20.2.0` or `19`. */
@@ -35,9 +35,14 @@ export type DocsMigrationVersionChoice = DocsMigrationVersionOption & { disabled
  */
 const LINES_WITHOUT_STEPS = ['17', '19', '20.3', '20.4'] as const;
 
+const parseVersionPart = (part: string): number => (/^\d+$/.test(part) ? Number(part) : Infinity);
+
 /** Parses `20.2.0` or `19.x` into comparable parts. */
-export const docsParseVersion = (value: string): DocsVersion =>
-    value.split('.').map((part) => (/^\d+$/.test(part) ? Number(part) : Infinity));
+export const docsParseVersion = (value: string): DocsVersion => {
+    const [major = '', ...rest] = value.split('.');
+
+    return [parseVersionPart(major), ...rest.map(parseVersionPart)];
+};
 
 export const docsCompareVersions = (a: DocsVersion, b: DocsVersion): number => {
     const length = Math.max(a.length, b.length);

@@ -11,22 +11,21 @@ import {
     FlatTreeControl,
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
-    KbqTreeModule,
-    type KbqTreeSelection
+    KbqTreeModule
 } from '@koobiq/components/tree';
 
 export class FileNode {
-    children: FileNode[];
-    name: string;
+    children?: FileNode[];
+    name = '';
     type: any;
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-    name: string;
+    name = '';
     type: any;
-    level: number;
-    expandable: boolean;
+    level = 0;
+    expandable = false;
     parent: any;
 }
 
@@ -112,7 +111,6 @@ abstract class TreeParams {
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
     treeData: FileNode[];
-    tree: KbqTreeSelection;
 
     constructor() {
         this.treeControl = new FlatTreeControl(this.getLevel, this.isExpandable, this.getValue, this.getViewValue);

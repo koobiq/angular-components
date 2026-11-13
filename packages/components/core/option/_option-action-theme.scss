@@ -1,5 +1,3 @@
-@use '../styles/common/tokens' as *;
-
 @mixin kbq-option-action-theme() {
     .kbq-option-action {
         &.cdk-keyboard-focused {

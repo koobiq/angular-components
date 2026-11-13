@@ -33,8 +33,23 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { AbstractControl, type ControlValueAccessor, NgControl } from '@angular/forms';
-import { concat, debounceTime, merge, type Observable, of, startWith, timer } from 'rxjs';
-import { catchError, concatMap, defaultIfEmpty, ignoreElements, map, take, takeUntil, takeWhile } from 'rxjs/operators';
+import {
+    catchError,
+    concat,
+    concatMap,
+    debounceTime,
+    defaultIfEmpty,
+    ignoreElements,
+    map,
+    merge,
+    type Observable,
+    of,
+    startWith,
+    take,
+    takeUntil,
+    takeWhile,
+    timer
+} from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     isElement,
@@ -1192,7 +1207,12 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
         if (!formFieldRefList.length || !Array.isArray(value)) return;
 
         value.forEach((controlValue, index) => {
-            const control = this.coerceControl(formFieldRefList[index]);
+            const formFieldRef = formFieldRefList[index];
+
+            // `getValueHandler` can return more values than there are fields, and a field can leave the view mid-edit.
+            if (!formFieldRef) return;
+
+            const control = this.coerceControl(formFieldRef);
 
             if (control instanceof AbstractControl) {
                 control.setValue(controlValue);

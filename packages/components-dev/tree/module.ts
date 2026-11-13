@@ -29,17 +29,17 @@ import { TreeExamplesModule } from '../../docs-examples/components/tree';
 import { DEV_TREE_DATA } from './mock';
 
 export class DevFileNode {
-    children: DevFileNode[];
-    name: string;
+    children?: DevFileNode[];
+    name = '';
     type: any;
 }
 
 /** Flat node with expandable and level information */
 export class DevFileFlatNode {
-    name: string;
+    name = '';
     type: any;
-    level: number;
-    expandable: boolean;
+    level = 0;
+    expandable = false;
     parent: any;
 }
 
@@ -145,7 +145,7 @@ export class DevDocsExamples {}
         DevDocsExamples
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -287,7 +287,7 @@ export class DevApp {
         return node.expandable;
     };
 
-    private getChildren = (node: DevFileNode): DevFileNode[] => {
+    private getChildren = (node: DevFileNode): DevFileNode[] | undefined => {
         return node.children;
     };
 

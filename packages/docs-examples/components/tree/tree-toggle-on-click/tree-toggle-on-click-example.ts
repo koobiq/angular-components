@@ -4,16 +4,16 @@ import { KbqPseudoCheckboxModule } from '@koobiq/components/core';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 
 export class FileNode {
-    children: FileNode[];
-    name: string;
+    children?: FileNode[];
+    name = '';
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-    name: string;
-    description: string;
-    level: number;
-    expandable: boolean;
+    name = '';
+    description = '';
+    level = 0;
+    expandable = false;
     parent: any;
 }
 
@@ -169,7 +169,7 @@ export class TreeToggleOnClickExample {
         return node.expandable;
     };
 
-    private getChildren = (node: FileNode): FileNode[] => {
+    private getChildren = (node: FileNode): FileNode[] | undefined => {
         return node.children;
     };
 

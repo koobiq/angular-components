@@ -59,7 +59,7 @@ export class KbqLoaderOverlayCaption {}
     selector: 'kbq-loader-overlay',
     imports: [KbqProgressSpinner],
     templateUrl: './loader-overlay.component.html',
-    styleUrls: ['./loader-overlay.scss', 'loader-overlay-tokens.scss'],
+    styleUrls: ['./loader-overlay.scss', './loader-overlay-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

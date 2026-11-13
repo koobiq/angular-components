@@ -20,7 +20,7 @@ import {
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, type Params, Router } from '@angular/router';
-import { map } from 'rxjs/operators';
+import { map } from 'rxjs';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { createSearchPredicate, kbqInjectNativeElement } from '@koobiq/components/core';
@@ -103,7 +103,7 @@ const componentsOf = (element: Element): string[] =>
         ReactiveFormsModule
     ],
     templateUrl: './docs-migration-guide.html',
-    styleUrls: ['./docs-migration-guide.scss'],
+    styleUrl: './docs-migration-guide.scss',
     providers: [DocsMigrationProgress],
     changeDetection: ChangeDetectionStrategy.OnPush,
     // The guide is a page component rendered through an outlet, so the step styles have to reach

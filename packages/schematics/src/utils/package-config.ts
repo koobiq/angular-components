@@ -9,13 +9,7 @@ import { visitProjectFiles } from './project-files';
  * @returns A new object instance with sorted keys
  */
 function sortObjectByKeys(obj: Record<string, string>) {
-    return Object.keys(obj)
-        .sort()
-        .reduce<Record<string, string>>((result, key) => {
-            result[key] = obj[key];
-
-            return result;
-        }, {});
+    return Object.fromEntries(Object.entries(obj).sort(([a], [b]) => (a < b ? -1 : 1)));
 }
 
 /**

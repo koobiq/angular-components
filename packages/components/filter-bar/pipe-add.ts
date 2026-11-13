@@ -31,12 +31,13 @@ import { getId } from './pipes/base-pipe';
     template: `
         <kbq-select #select [tabIndex]="-1" [multiple]="true" [value]="addedPipes()" [compareWith]="compareWith">
             <button
-                kbqTooltip="{{ filterBar.localeConfiguration().add.tooltip }}"
                 kbq-button
                 kbq-select-matcher
+                type="button"
+                color="contrast-fade"
+                kbqStyle="outline"
+                [kbqTooltip]="filterBar.localeConfiguration().add.tooltip"
                 [attr.aria-label]="filterBar.localeConfiguration().add.tooltip"
-                [color]="'contrast-fade'"
-                [kbqStyle]="'outline'"
                 [class]="{ 'kbq-active': select.panelOpen }"
             >
                 <i kbq-icon="kbq-plus_16" aria-hidden="true"></i>

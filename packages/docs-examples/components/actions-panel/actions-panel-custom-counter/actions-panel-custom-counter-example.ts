@@ -36,7 +36,7 @@ type ExampleAction = {
         KbqToolTipModule
     ],
     template: `
-        <button kbq-button (click)="open()">open</button>
+        <button kbq-button type="button" (click)="open()">open</button>
 
         <ng-template let-data>
             <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
@@ -44,10 +44,10 @@ type ExampleAction = {
                     <div class="example-counter">
                         <div class="kbq-text-normal-medium">Selected: {{ data.selected }}</div>
                         <span
-                            aria-label="Total number of items in selected groups: +{{ data.counter }}"
                             class="example-counter-extra kbq-text-normal"
                             kbqTooltip="Total number of items in selected groups"
                             tabindex="0"
+                            [attr.aria-label]="counterLabel(data.counter)"
                             [kbqTooltipOffset]="22"
                         >
                             +{{ data.counter }}
@@ -62,6 +62,7 @@ type ExampleAction = {
                             <kbq-divider class="example-divider-vertical" [vertical]="true" />
                         }
                         <button
+                            type="button"
                             color="contrast"
                             kbq-button
                             [class.layout-margin-left-xxs]="!$first"
@@ -79,6 +80,7 @@ type ExampleAction = {
             @if (hiddenItemIDs.size > 1) {
                 <button
                     kbqOverflowItemsResult
+                    type="button"
                     color="contrast"
                     kbq-button
                     aria-label="More"
@@ -92,10 +94,10 @@ type ExampleAction = {
                 <div class="example-counter-dropdown">
                     <div>Selected: {{ data.selected }}</div>
                     <span
-                        aria-label="Total number of items in selected groups: +{{ data.counter }}"
                         class="example-counter-extra kbq-text-normal"
                         kbqTooltip="Total number of items in selected groups"
                         tabindex="0"
+                        [attr.aria-label]="counterLabel(data.counter)"
                         [kbqTooltipOffset]="22"
                     >
                         +{{ data.counter }}
@@ -105,10 +107,10 @@ type ExampleAction = {
 
                 @for (action of actions; track action.id) {
                     @if (hiddenItemIDs.has(action.id)) {
-                        @if (action.divider && hiddenItemIDs.has(actions[$index - 1].id)) {
+                        @if (action.divider && hiddenItemIDs.has(actions[$index - 1]?.id)) {
                             <kbq-divider />
                         }
-                        <button kbq-dropdown-item (click)="onAction(action)">
+                        <button kbq-dropdown-item type="button" (click)="onAction(action)">
                             <i [kbq-icon]="action.icon"></i>
                             {{ action.id }}
                         </button>
@@ -186,6 +188,10 @@ export class ActionsPanelCustomCounterExample {
 
     constructor() {
         afterNextRender(() => this.open());
+    }
+
+    protected counterLabel(counter: number): string {
+        return `Total number of items in selected groups: +${counter}`;
     }
 
     protected open(): void {

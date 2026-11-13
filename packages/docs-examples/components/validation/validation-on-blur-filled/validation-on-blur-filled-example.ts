@@ -18,8 +18,7 @@ import {
     ReactiveFormsModule,
     Validators
 } from '@angular/forms';
-import { fromEvent, switchMap } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { fromEvent, switchMap, take } from 'rxjs';
 import {
     type ErrorStateMatcher,
     KbqComponentColors,
@@ -82,11 +81,11 @@ class ExampleResetTouchedOnFirstInput {
             <input
                 kbqInput
                 exampleResetTouchedOnFirstInput
+                kbqTrigger="manual"
+                kbqTooltip="Numbers and dot only"
                 [formControl]="ipAddressControl"
                 [kbqEnterDelay]="10"
                 [kbqPlacement]="popUpPlacements.Top"
-                [kbqTrigger]="'manual'"
-                [kbqTooltip]="'Numbers and dot only'"
                 [kbqTooltipColor]="colors.Error"
                 (blur)="onBlur()"
                 (input)="onInput($event)"

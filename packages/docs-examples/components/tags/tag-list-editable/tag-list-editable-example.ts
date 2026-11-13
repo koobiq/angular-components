@@ -76,7 +76,11 @@ export class TagListEditableExample {
                     tag.remove();
                 } else {
                     this.tags.update((tags) => {
-                        tags[index].value = this.editInputModel();
+                        const editedTag = tags[index];
+
+                        if (editedTag) {
+                            editedTag.value = this.editInputModel();
+                        }
 
                         return tags;
                     });

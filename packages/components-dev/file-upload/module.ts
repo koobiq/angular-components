@@ -165,7 +165,7 @@ export class DevDocsExamples {}
     selector: 'dev-file-upload-compact',
     imports: [KbqFileUploadModule, KbqIconModule, KbqFormFieldModule],
     template: `
-        <kbq-multiple-file-upload size="compact" [disabled]="disabled()" [inputId]="'test-compact'" [(files)]="files">
+        <kbq-multiple-file-upload size="compact" inputId="test-compact" [disabled]="disabled()" [(files)]="files">
             <ng-template #kbqFileIcon>
                 <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
             </ng-template>
@@ -206,8 +206,8 @@ export class DevMultipleFileUploadCompact {
         E2eFileUploadStateAndStyle,
         E2eFileUploadDropzone
     ],
-    templateUrl: 'template.html',
-    styleUrls: ['./styles.scss'],
+    templateUrl: './template.html',
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -216,7 +216,7 @@ export class DevApp {
     validation: FileValidatorFn[] = [maxFileExceededFiveMbs];
     hintMessage = hintMessage;
 
-    file: KbqFileItem | null;
+    file: KbqFileItem | null = null;
     files: KbqFileItem[] = [];
     filesForDefaultValidation: KbqFileItem[] = [];
 

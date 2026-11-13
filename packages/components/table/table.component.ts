@@ -21,7 +21,7 @@ import { kbqGetElementHeight } from '@koobiq/components/core';
 @Component({
     selector: 'table[kbq-table]',
     template: '<ng-content />',
-    styleUrls: ['table.scss', 'table-tokens.scss'],
+    styleUrls: ['./table.scss', './table-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

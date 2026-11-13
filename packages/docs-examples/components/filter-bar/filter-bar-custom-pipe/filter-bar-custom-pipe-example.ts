@@ -48,11 +48,12 @@ import { injectLocalizedPeriods } from '../localized-data';
         <button
             kbq-button
             kbqPopover
+            type="button"
+            kbqPopoverClass="kbq-pipe__popover"
             [disabled]="data.disabled"
             [kbqPipeState]="data"
             [kbq-title]="pipeTooltip"
             [kbqPopoverArrow]="false"
-            [kbqPopoverClass]="'kbq-pipe__popover'"
             [kbqPopoverContent]="content"
             [kbqPopoverOffset]="4"
             [kbqPopoverPlacement]="placements.BottomLeft"
@@ -83,7 +84,7 @@ import { injectLocalizedPeriods } from '../localized-data';
             <div class="kbq-pipe-tooltip__value kbq-text-compact">{{ data.value }}</div>
         </ng-template>
     `,
-    styleUrls: ['../../../../components/filter-bar/pipes/base-pipe.scss'],
+    styleUrl: '../../../../components/filter-bar/pipes/base-pipe.scss',
     providers: [
         {
             provide: KbqBasePipe,

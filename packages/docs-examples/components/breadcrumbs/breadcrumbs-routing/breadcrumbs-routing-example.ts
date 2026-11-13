@@ -53,10 +53,7 @@ export class BreadcrumbsRoutingExample {
                 url += `/${routeURL}`;
             }
 
-            const label =
-                child.snapshot.data['breadcrumb'] ||
-                (child.snapshot.url.length && child.snapshot.url[0].path) ||
-                'test';
+            const label = child.snapshot.data['breadcrumb'] || child.snapshot.url[0]?.path || 'test';
 
             if (label) {
                 breadcrumbs.push({ label, url });

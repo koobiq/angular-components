@@ -587,7 +587,7 @@ class OverlayBeforeDisabledButton {
         <div class="loader-overlay-container">
             text text text text text text text text text text text text text text text text text text text text
 
-            <kbq-loader-overlay [text]="'Создание отчета'" [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'" />
+            <kbq-loader-overlay text="Создание отчета" caption="18,7 МБ из 25 МБ — осталось 2 мин" />
         </div>
     `
 })
@@ -651,7 +651,7 @@ class OverlayNoParams {}
             text text text text text text text text text text text text text text text text text text text text
 
             <kbq-loader-overlay>
-                <kbq-progress-spinner kbq-loader-overlay-indicator [mode]="'indeterminate'" [color]="colors.Error" />
+                <kbq-progress-spinner kbq-loader-overlay-indicator mode="indeterminate" [color]="colors.Error" />
 
                 <div kbq-loader-overlay-text>Создание отчета</div>
                 <div kbq-loader-overlay-caption>18,7 МБ из 25 МБ — осталось 2 мин</div>

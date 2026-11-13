@@ -30,7 +30,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                     <kbq-form-field
                         #tooltip="kbqTooltip"
                         kbqTooltipModifier="warning"
-                        [kbqTooltip]="'Only numbers'"
+                        kbqTooltip="Only numbers"
                         (click)="datepicker.toggle()"
                     >
                         <input

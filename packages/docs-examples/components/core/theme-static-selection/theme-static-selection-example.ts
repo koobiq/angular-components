@@ -20,13 +20,13 @@ const CUSTOM_THEMES: KbqThemeConfig[] = [
     selector: 'theme-static-selection-example',
     imports: [KbqButtonModule, KbqDropdownModule, KbqIconModule],
     template: `
-        <button kbq-button [kbqDropdownTriggerFor]="menu">
+        <button kbq-button type="button" [kbqDropdownTriggerFor]="menu">
             {{ theme.staticTheme() ?? 'Pick a theme' }}
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         <kbq-dropdown #menu="kbqDropdown">
             @for (t of customThemes; track t.name) {
-                <button kbq-dropdown-item (click)="theme.selectTheme(t.name)">{{ t.name }}</button>
+                <button kbq-dropdown-item type="button" (click)="theme.selectTheme(t.name)">{{ t.name }}</button>
             }
         </kbq-dropdown>
     `,

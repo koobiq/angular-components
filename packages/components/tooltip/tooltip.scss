@@ -1,13 +1,10 @@
 @use '../core/pop-up/pop-up';
 @use '../core/styles/common/animation';
-
-@use '../core/styles/common/tokens' as *;
-
-@use './tooltip-theme' as *;
-@use '../core/styles/common/squircle' as *;
+@use './tooltip-theme';
+@use '../core/styles/common/squircle';
 
 $trigger-margin: 8px;
-$trigger-margin_without-arrow: 4px;
+$trigger-margin-without-arrow: 4px;
 
 // `KbqNavbarItem` puts this class on the overlay pane — the parent of `.kbq-tooltip` — so the shared
 // `pop-up.popup-margins` mixin, which matches the placement class on the tooltip itself, cannot express it.
@@ -47,7 +44,7 @@ $navbar-trigger-margin: $trigger-margin + 1px;
 }
 
 .kbq-tooltip__inner {
-    @include kbq-squircle(var(--kbq-tooltip-size-border-radius));
+    @include squircle.kbq-squircle(var(--kbq-tooltip-size-border-radius));
     overflow-wrap: break-word;
 }
 
@@ -56,7 +53,7 @@ $navbar-trigger-margin: $trigger-margin + 1px;
 
     // Kept alongside the radius of `.kbq-tooltip__inner`: this element is the one carrying `box-shadow`
     // (see `_tooltip-theme.scss`), and without a radius here the shadow is cast with square corners.
-    @include kbq-squircle(var(--kbq-tooltip-size-border-radius));
+    @include squircle.kbq-squircle(var(--kbq-tooltip-size-border-radius));
 
     white-space: pre-line;
 
@@ -73,7 +70,7 @@ $navbar-trigger-margin: $trigger-margin + 1px;
     }
 
     &.kbq-tooltip_arrowless {
-        @include pop-up.popup-margins(kbq-tooltip, $trigger-margin_without-arrow);
+        @include pop-up.popup-margins(kbq-tooltip, $trigger-margin-without-arrow);
     }
 
     &.kbq-tooltip_visible {
@@ -89,7 +86,7 @@ $navbar-trigger-margin: $trigger-margin + 1px;
 }
 
 @keyframes kbq-tooltip-enter {
-    from {
+    0% {
         opacity: 0;
         transform: scale(0);
     }
@@ -100,8 +97,8 @@ $navbar-trigger-margin: $trigger-margin + 1px;
     }
 }
 
-@include kbq-tooltip-theme();
-@include kbq-tooltip-typography();
+@include tooltip-theme.kbq-tooltip-theme();
+@include tooltip-theme.kbq-tooltip-typography();
 
 .kbq-tooltip__arrow {
     position: absolute;

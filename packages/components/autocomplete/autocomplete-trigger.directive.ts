@@ -39,8 +39,22 @@ import {
 } from '@angular/core';
 import { outputToObservable, toObservable } from '@angular/core/rxjs-interop';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { EMPTY, fromEvent, merge, Observable, of as observableOf, Subject, Subscription } from 'rxjs';
-import { delay, filter, map, startWith, switchMap, take, tap } from 'rxjs/operators';
+import {
+    delay,
+    EMPTY,
+    filter,
+    fromEvent,
+    map,
+    merge,
+    Observable,
+    of as observableOf,
+    startWith,
+    Subject,
+    Subscription,
+    switchMap,
+    take,
+    tap
+} from 'rxjs';
 import {
     defaultOffsetY,
     DOWN_ARROW,
@@ -181,7 +195,7 @@ export class KbqAutocompleteTrigger
 
     /** The currently active option, coerced to MatOption type. */
     get activeOption(): KbqOption | null {
-        return this.autocomplete()?.keyManager?.activeItem;
+        return this.autocomplete()?.keyManager?.activeItem ?? null;
     }
 
     get panelOpen(): boolean {
@@ -358,10 +372,10 @@ export class KbqAutocompleteTrigger
     private previousValue?: string | number | null;
 
     /** Strategy that is used to position the panel. */
-    private positionStrategy: FlexibleConnectedPositionStrategy;
+    private positionStrategy: FlexibleConnectedPositionStrategy | undefined;
 
     /** The subscription for closing actions (some are bound to document). */
-    private closingActionsSubscription: Subscription;
+    private closingActionsSubscription = Subscription.EMPTY;
 
     /** Subscription to viewport size changes. */
     private viewportSubscription = Subscription.EMPTY;
@@ -411,7 +425,7 @@ export class KbqAutocompleteTrigger
                     // Focus returns to the input on every arrow key; it must not drag the scroll with it.
                     this.elementRef.nativeElement.focus({ preventScroll: true });
                     this.updateInlineHint();
-                } else if (!this.panelOpen && autocompleteValue.keyManager.activeItem) {
+                } else if (!this.panelOpen && autocompleteValue.keyManager?.activeItem) {
                     autocompleteValue.keyManager.activeItem?.selectViaInteraction();
                 }
             });
@@ -492,7 +506,7 @@ export class KbqAutocompleteTrigger
     get panelClosingActions(): Observable<KbqOptionSelectionChange | null> {
         return merge(
             this.optionSelections,
-            this.autocomplete().keyManager.tabOut.pipe(filter(() => this.overlayAttached())),
+            this.autocomplete().keyManager?.tabOut.pipe(filter(() => this.overlayAttached())) ?? observableOf(),
             this.closeKeyEventStream,
             this.getOutsideClickStream(),
             this.overlayRef ? this.overlayRef.detachments().pipe(filter(() => this.overlayAttached())) : observableOf()
@@ -504,7 +518,7 @@ export class KbqAutocompleteTrigger
 
     // Implemented as part of ControlValueAccessor.
     writeValue(value: any): void {
-        Promise.resolve(null).then(() => {
+        void Promise.resolve(null).then(() => {
             this.setTriggerValue(value);
 
             // The text changed without an input event: the query, its options and its hint belong to the old text.
@@ -569,7 +583,7 @@ export class KbqAutocompleteTrigger
             this.resetActiveItem();
             event.preventDefault();
         } else if (autocomplete) {
-            const prevActiveItem = autocomplete.keyManager.activeItem;
+            const prevActiveItem = autocomplete.keyManager?.activeItem;
 
             if (this.panelOpen || keyCode === TAB) {
                 autocomplete.onKeydown(event);
@@ -580,8 +594,10 @@ export class KbqAutocompleteTrigger
 
             const isArrowKey = keyCode === UP_ARROW || keyCode === DOWN_ARROW;
 
-            if (isArrowKey && event.shiftKey && autocomplete.keyManager.activeItem !== prevActiveItem) {
-                autocomplete.keyManager.activeItem?.selectViaInteraction();
+            const activeItem = autocomplete.keyManager?.activeItem;
+
+            if (isArrowKey && event.shiftKey && activeItem !== prevActiveItem) {
+                activeItem?.selectViaInteraction();
             }
         }
     }
@@ -647,7 +663,7 @@ export class KbqAutocompleteTrigger
     }
 
     scrollActiveOptionIntoView(): void {
-        this.autocomplete().keyManager.activeItem?.focus();
+        this.autocomplete().keyManager?.activeItem?.focus();
     }
 
     /** Stream of clicks outside of the autocomplete panel. */
@@ -697,7 +713,7 @@ export class KbqAutocompleteTrigger
             return () => ref.destroy();
         });
         const optionChanges = this.autocomplete().options.changes.pipe(
-            tap(() => this.positionStrategy.reapplyLastPosition()),
+            tap(() => this.positionStrategy?.reapplyLastPosition()),
             // Defer emitting to the stream until the next tick, because changing
             // bindings in here will cause "changed after checked" errors.
             delay(0)
@@ -1017,9 +1033,9 @@ export class KbqAutocompleteTrigger
         const autocomplete = this.autocomplete();
 
         if (autocomplete.autoActiveFirstOption()) {
-            autocomplete.keyManager.setFirstItemActive();
+            autocomplete.keyManager?.setFirstItemActive();
         } else {
-            autocomplete.keyManager.setActiveItem(-1);
+            autocomplete.keyManager?.setActiveItem(-1);
         }
     }
 

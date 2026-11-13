@@ -301,7 +301,7 @@ describe('KbqPipeMultiSelectComponent', () => {
 
             const component = getPipeComponent();
 
-            expect(component.select().selectionModel.selected.length).toBeGreaterThan(0);
+            expect(component.select().selectionModel!.selected.length).toBeGreaterThan(0);
             expect(component.allOptionsSelected).toBe(false);
             expect(component.checkboxState).toBe('indeterminate');
         });
@@ -388,7 +388,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
-            expect(component.select().selectionModel.selected.length).toBeGreaterThan(0);
+            expect(component.select().selectionModel!.selected.length).toBeGreaterThan(0);
         });
 
         it('should deselect all options when all selected', async () => {
@@ -410,7 +410,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
-            expect(component.select().selectionModel.selected.length).toBe(0);
+            expect(component.select().selectionModel!.selected.length).toBe(0);
         });
 
         it('should set data.value to empty when selectedAllEqualsSelectedNothing and all toggled on', async () => {
@@ -1548,7 +1548,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
-            expect(component.select().selectionModel.selected.map(({ value }) => value)).toEqual([LOCKED]);
+            expect(component.select().selectionModel!.selected.map(({ value }) => value)).toEqual([LOCKED]);
             expect(component.data.value).toEqual([LOCKED]);
         });
 

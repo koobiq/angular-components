@@ -1,7 +1,5 @@
-@use '../styles/common/tokens' as *;
-
-@use './option-action-theme' as *;
-@use '../styles/common/squircle' as *;
+@use './option-action-theme';
+@use '../styles/common/squircle';
 
 .kbq-option-action {
     display: flex;
@@ -20,7 +18,7 @@
     box-sizing: content-box;
 
     border: var(--kbq-size-3xs) solid transparent;
-    @include kbq-squircle(var(--kbq-size-xs));
+    @include squircle.kbq-squircle(var(--kbq-size-xs));
 
     width: var(--kbq-size-xl);
     height: var(--kbq-size-xl);
@@ -39,4 +37,4 @@
     }
 }
 
-@include kbq-option-action-theme();
+@include option-action-theme.kbq-option-action-theme();

@@ -864,6 +864,21 @@ describe('KbqInlineEdit', () => {
             expect(componentInstance.form.value).toEqual({ firstName: 'John', lastName: 'Doe' });
         });
 
+        it('should ignore values past the last form field on cancel', async () => {
+            const fixture = setup(TestWithMoreValuesThanFormFields);
+            const { componentInstance, debugElement } = fixture;
+
+            getInlineEditDebugElement(debugElement).nativeElement.click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            dispatchEvent(getOverlayElement()!, createKeyboardEvent('keydown', ESCAPE, undefined, 'Escape'));
+            fixture.detectChanges();
+
+            expect(componentInstance.control.value).toBe('First');
+            expect(componentInstance.cancel).toHaveBeenCalled();
+        });
+
         it('should save on Tab from the last control of the panel when form is valid', async () => {
             const fixture = setup(TestWithMultipleFormFields);
             const { componentInstance, debugElement } = fixture;
@@ -2599,8 +2614,8 @@ class BaseTestComponent {
     ],
     template: `
         <kbq-inline-edit
+            overlayPanelClass="test-custom-inline-edit-panel"
             [showActions]="showActions()"
-            [overlayPanelClass]="'test-custom-inline-edit-panel'"
             (saved)="update()"
             (canceled)="cancel()"
             (modeChange)="onModeChange($event)"
@@ -2629,10 +2644,6 @@ export class TestComponent extends BaseTestComponent {
     readonly displayValue = signal(this.value);
 
     readonly showLabel = signal(false);
-
-    constructor() {
-        super();
-    }
 
     update(): void {
         this.displayValue.set(this.value);
@@ -2666,8 +2677,8 @@ export class TestComponent extends BaseTestComponent {
                 kbqInlineEditMenu
                 kbq-icon-button="kbq-ellipsis-vertical_16"
                 aria-label="Actions"
+                color="contrast-fade"
                 [kbqDropdownTriggerFor]="dropdown"
-                [color]="'contrast-fade'"
             ></i>
             <div kbqInlineEditViewMode>
                 @let viewValue = displayValue();
@@ -2690,10 +2701,6 @@ export class TestWithMenu extends BaseTestComponent {
     readonly displayValue = signal(this.value);
 
     readonly showLabel = signal(false);
-
-    constructor() {
-        super();
-    }
 
     update(): void {
         this.displayValue.set(this.value);
@@ -2745,10 +2752,6 @@ export class TestWithTextareaControl extends BaseTestComponent {
 
     readonly showLabel = signal(false);
 
-    constructor() {
-        super();
-    }
-
     update(): void {
         this.displayValue.set(this.value);
     }
@@ -2799,10 +2802,6 @@ export class TestWithValidatedControl extends BaseTestComponent {
     readonly displayValue = signal(this.control.value);
 
     readonly showLabel = signal(false);
-
-    constructor() {
-        super();
-    }
 
     update(): void {
         this.displayValue.set(this.control.value);
@@ -2863,7 +2862,7 @@ export class TestWithTagContent {
     imports: [FormsModule, KbqInputModule, KbqInlineEditModule, KbqTagsModule, KbqIconModule],
     template: `
         <kbq-inline-edit (modeChange)="onModeChange($event)">
-            <i aria-label="Reset" kbqInlineEditMenu kbq-icon-button="kbq-undo_16" [color]="'contrast-fade'"></i>
+            <i aria-label="Reset" kbqInlineEditMenu kbq-icon-button="kbq-undo_16" color="contrast-fade"></i>
             <kbq-label>
                 Tags
                 <i aria-label="About" data-testid="label-action" kbq-icon-button="kbq-circle-info_16"></i>
@@ -2926,10 +2925,6 @@ export class TestWithSelect extends BaseTestComponent {
     readonly selected = model(this.options[0]);
 
     readonly showLabel = signal(false);
-
-    constructor() {
-        super();
-    }
 
     update(): void {
         this.displayValue.set(this.value);
@@ -3084,6 +3079,24 @@ export class TestWithMultipleFormFields extends BaseTestComponent {
     cancel = vi.fn();
 
     onModeChange(_$event: 'edit' | 'view') {}
+}
+
+@Component({
+    selector: 'name',
+    imports: [ReactiveFormsModule, KbqInputModule, KbqInlineEditModule],
+    template: `
+        <kbq-inline-edit [getValueHandler]="getValueHandler" (canceled)="cancel()">
+            <div kbqInlineEditViewMode>{{ control.value }}</div>
+            <kbq-form-field kbqInlineEditEditMode>
+                <input kbqInput [formControl]="control" />
+            </kbq-form-field>
+        </kbq-inline-edit>
+    `
+})
+export class TestWithMoreValuesThanFormFields {
+    readonly control = new FormControl('Initial');
+    readonly getValueHandler = () => ['First', 'Second'];
+    readonly cancel = vi.fn();
 }
 
 @Component({

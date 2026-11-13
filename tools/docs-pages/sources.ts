@@ -48,7 +48,7 @@ export const findRoutesWithoutPage = (routePaths: string[], pages: Pick<DocsPage
 export const parsePageSource = (path: string): DocsPageSource => {
     const groups = basename(path).match(PAGE_FILE_NAME)?.groups;
 
-    if (!groups || !isLocale(groups['locale'])) {
+    if (!groups || !groups['id'] || !isLocale(groups['locale'])) {
         throw new Error(`${path}: expected a file named <id>.<locale>.mdx or examples.<id>.<locale>.mdx`);
     }
 

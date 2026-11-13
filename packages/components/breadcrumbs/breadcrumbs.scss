@@ -1,7 +1,7 @@
 @use '../core/styles/common/tokens';
 @use '../core/styles/common/vendor-prefixes';
 
-@mixin _kbq-breadcrumbs-geometry {
+@mixin -kbq-breadcrumbs-geometry {
     display: flex;
     align-items: center;
     gap: var(--kbq-breadcrumbs-gap);
@@ -115,7 +115,7 @@
     }
 }
 
-@mixin _kbq-breadcrumbs-theme {
+@mixin -kbq-breadcrumbs-theme {
     .kbq-breadcrumb-item {
         &.kbq-button,
         &.kbq-button-icon {
@@ -202,7 +202,7 @@
     }
 }
 
-@mixin _kbq-breadcrumbs-typography {
+@mixin -kbq-breadcrumbs-typography {
     &.kbq-breadcrumbs_compact {
         .kbq-breadcrumb-item {
             &.kbq-button,
@@ -235,7 +235,7 @@
 }
 
 .kbq-breadcrumbs {
-    @include _kbq-breadcrumbs-geometry();
-    @include _kbq-breadcrumbs-theme();
-    @include _kbq-breadcrumbs-typography();
+    @include -kbq-breadcrumbs-geometry();
+    @include -kbq-breadcrumbs-theme();
+    @include -kbq-breadcrumbs-typography();
 }

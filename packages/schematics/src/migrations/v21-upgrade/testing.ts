@@ -31,6 +31,9 @@ export async function runV21Upgrade(
     const appTree: Tree = await createTestApp(runner, { style: 'scss' });
     const projects = (await getWorkspace(appTree)).projects as unknown as workspaces.ProjectDefinitionCollection;
     const [project] = projects.keys();
+
+    if (project === undefined) throw new Error('createTestApp made a workspace without projects');
+
     const root = `/${projects.get(project)!.root}/src/app`;
     const messages: string[] = [];
 

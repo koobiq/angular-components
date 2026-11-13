@@ -124,7 +124,7 @@ export class KbqEmptyStateActions {}
 @Component({
     selector: 'kbq-empty-state',
     templateUrl: './empty-state.component.html',
-    styleUrls: ['./empty-state.scss'],
+    styleUrl: './empty-state.scss',
     providers: [{ provide: KBQ_EMPTY_STATE_CONTEXT, useExisting: forwardRef(() => KbqEmptyState) }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,

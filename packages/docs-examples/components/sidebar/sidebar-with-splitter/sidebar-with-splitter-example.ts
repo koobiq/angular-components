@@ -24,8 +24,8 @@ import { Direction, KbqSplitterModule } from '@koobiq/components/splitter/deprec
 
             <main kbq-splitter-area>
                 <div>Main content</div>
-                <div><button kbq-button (click)="toggle()">Toggle model</button></div>
-                <div><button kbq-button (click)="sidebar.toggle()">Toggle</button></div>
+                <div><button kbq-button type="button" (click)="toggle()">Toggle model</button></div>
+                <div><button kbq-button type="button" (click)="sidebar.toggle()">Toggle</button></div>
             </main>
         </kbq-splitter>
     `,

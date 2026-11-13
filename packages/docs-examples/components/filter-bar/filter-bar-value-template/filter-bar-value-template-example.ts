@@ -72,7 +72,7 @@ interface AgentStateValue extends KbqSelectValue {
             </div>
         </ng-template>
     `,
-    styleUrls: ['filter-bar-value-template-example.scss'],
+    styleUrl: 'filter-bar-value-template-example.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarValueTemplateExample {

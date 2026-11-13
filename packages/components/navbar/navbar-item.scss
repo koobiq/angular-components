@@ -1,10 +1,7 @@
 @use '../core/styles/common/list';
-
-@use '../core/styles/common/tokens' as *;
-
 @use 'navbar-item_vertical';
 @use 'navbar-item_horizontal';
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
 .kbq-navbar-item {
     box-sizing: border-box;
@@ -14,7 +11,7 @@
     display: flex;
     align-items: center;
 
-    @include kbq-squircle(var(--kbq-navbar-item-size-content-border-radius));
+    @include squircle.kbq-squircle(var(--kbq-navbar-item-size-content-border-radius));
 
     & .kbq-icon {
         min-width: var(--kbq-size-l);
@@ -38,18 +35,18 @@
         transform: translateY(-50%);
     }
 
-    &:before {
+    &::before {
         position: absolute;
         content: '';
     }
 
-    &:after {
+    &::after {
         position: absolute;
         content: '';
 
         display: none;
 
-        @include kbq-squircle(var(--kbq-navbar-item-size-content-border-radius));
+        @include squircle.kbq-squircle(var(--kbq-navbar-item-size-content-border-radius));
     }
 
     // The badge sits in the same corner in both orientations; only the offsets differ, and each partial

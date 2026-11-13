@@ -32,20 +32,22 @@ type DevLocaleItem = KbqLocaleItem & { selected: boolean };
         KbqSelectModule
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE);
 
-    selectedLanguage: DevLocaleItem;
+    selectedLanguage?: DevLocaleItem;
     languages: DevLocaleItem[];
 
     constructor() {
         this.languages = this.localeService.locales.items.map((item) => ({ ...item, selected: false }));
 
-        this.selectLanguage(this.languages[0]);
+        if (this.languages[0]) {
+            this.selectLanguage(this.languages[0]);
+        }
     }
 
     selectLanguage(language: DevLocaleItem) {

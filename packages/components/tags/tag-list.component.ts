@@ -32,8 +32,7 @@ import {
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import { merge, type Observable, Subject } from 'rxjs';
-import { filter, startWith, takeUntil } from 'rxjs/operators';
+import { filter, merge, type Observable, startWith, Subject, takeUntil } from 'rxjs';
 import {
     type CanUpdateErrorState,
     ErrorStateMatcher,
@@ -81,7 +80,7 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
             </div>
         }
     `,
-    styleUrls: ['tag-list.scss', 'tag-tokens.scss'],
+    styleUrls: ['./tag-list.scss', './tag-tokens.scss'],
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqTagList },
         kbqCleanerFactoryProvider(() => {
@@ -512,6 +511,11 @@ export class KbqTagList
             this.ngControl.valueAccessor = this;
         }
 
+        // The horizontal orientation follows the direction, which is read once the content is initialized.
+        this.keyManager = new FocusKeyManager<KbqTag>(this.tags)
+            .withVerticalOrientation()
+            .skipPredicate(({ disabled }) => disabled);
+
         this.setupDropListInitialProperties();
 
         // A disabled list cannot be reordered.
@@ -532,10 +536,7 @@ export class KbqTagList
     }
 
     ngAfterContentInit() {
-        this.keyManager = new FocusKeyManager<KbqTag>(this.tags)
-            .withVerticalOrientation()
-            .withHorizontalOrientation(this.dir ? this.dir.value : 'ltr')
-            .skipPredicate(({ disabled }) => disabled);
+        this.keyManager.withHorizontalOrientation(this.dir ? this.dir.value : 'ltr');
 
         if (this.dir) {
             this.dir.change
@@ -573,7 +574,7 @@ export class KbqTagList
 
                 // Defer setting the value in order to avoid the "Expression
                 // has changed after it was checked" errors from Angular.
-                Promise.resolve().then(() => {
+                void Promise.resolve().then(() => {
                     if (currentTags && this.pendingUIChange) {
                         this.pendingUIChange = false;
 

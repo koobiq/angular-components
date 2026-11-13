@@ -40,7 +40,7 @@ enum NavbarIcItems {
         LuxonDateModule,
         KbqFormattersModule
     ],
-    templateUrl: 'notification-center-push-example.html',
+    templateUrl: './notification-center-push-example.html',
     styles: `
         ::ng-deep .example-notification-center-panel {
             margin-top: -139px;

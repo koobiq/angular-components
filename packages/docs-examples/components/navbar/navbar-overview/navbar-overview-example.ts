@@ -21,7 +21,7 @@ import { injectExampleText } from '../localized-data';
         KbqBadgeModule,
         KbqIconModule
     ],
-    templateUrl: 'navbar-overview-example.html',
+    templateUrl: './navbar-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarOverviewExample {

@@ -32,8 +32,8 @@ interface DocsThemeOption {
         DocsDocsearch,
         AsyncPipe
     ],
-    templateUrl: 'navbar.template.html',
-    styleUrls: ['navbar.scss'],
+    templateUrl: './navbar.template.html',
+    styleUrl: './navbar.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

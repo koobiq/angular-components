@@ -13,7 +13,7 @@ import { KbqInputModule } from '@koobiq/components/input';
         KbqFormsModule,
         KbqInputModule
     ],
-    templateUrl: 'vertical-form-example.html',
+    templateUrl: './vertical-form-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VerticalFormExample {

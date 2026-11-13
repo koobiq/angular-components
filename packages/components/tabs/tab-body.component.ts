@@ -25,8 +25,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { outputFromObservable } from '@angular/core/rxjs-interop';
-import { Subscription } from 'rxjs';
-import { startWith } from 'rxjs/operators';
+import { startWith, Subscription } from 'rxjs';
 import { kbqAnimationsDisabled, kbqAnimationsSettled } from '@koobiq/components/core';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 
@@ -79,8 +78,8 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
         this.computePositionAnimationState();
     }
 
-    /** Tab body position state, rendered as a modifier class of the content. */
-    bodyPosition: KbqTabBodyPositionState;
+    /** Tab body position state, rendered as a modifier class of the content. `undefined` until a position is set. */
+    bodyPosition: KbqTabBodyPositionState | undefined;
 
     /** Event emitted when the tab begins to animate towards the center as the active tab. */
     readonly onCentering = output<number>();
@@ -104,10 +103,10 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
     readonly portalHost = viewChild.required(CdkPortalOutlet);
 
     /** The tab body content to display. */
-    readonly content = input<TemplatePortal>(undefined!);
+    readonly content = input<TemplatePortal | null>(null);
 
     /** Position that will be used when the tab is immediately becoming visible after creation. */
-    origin: number;
+    origin: number | undefined;
 
     /** Duration for the tab's animation. */
     readonly animationDuration = input<string>('0ms');
@@ -120,7 +119,7 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
     });
 
     /** Current position of the tab-body in the tab-group. Zero means that the tab is visible. */
-    private positionIndex: number;
+    private positionIndex = 0;
 
     /** Subscription to the directionality change observable. */
     private readonly dirChangeSubscription = Subscription.EMPTY;
@@ -167,7 +166,7 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
      */
     ngOnInit() {
         if (this.bodyPosition === 'center' && this.origin != null) {
-            this.bodyPosition = this.computePositionFromOrigin();
+            this.bodyPosition = this.computePositionFromOrigin(this.origin);
         }
 
         this.initialPosition = this.bodyPosition;
@@ -219,7 +218,7 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
                 const to = this.bodyPosition;
                 const from = this.renderedPosition ?? (to === this.initialPosition ? undefined : this.initialPosition);
 
-                if (from === to) return;
+                if (to === undefined || from === to) return;
 
                 this.renderedPosition = to;
                 this.translationStarted(to);
@@ -231,7 +230,7 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
 
                 if (!settled) return this.translationDone(from, to);
 
-                settled.then(() => {
+                void settled.then(() => {
                     if (!this.destroyRef.destroyed) this.translationDone(from, to);
                 });
             },
@@ -250,12 +249,15 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
     }
 
     private translationDone(from: KbqTabBodyPositionState | undefined, to: KbqTabBodyPositionState): void {
-        // A later translation may have started since, so the current position has the last word.
-        if (this.isCenterPosition(to) && this.isCenterPosition(this.bodyPosition)) {
+        // A later translation may have started since, so the current position has the last word. A started
+        // translation means a position was set, and it is never unset, so `to` only satisfies the type.
+        const current = this.bodyPosition ?? to;
+
+        if (this.isCenterPosition(to) && this.isCenterPosition(current)) {
             this.onCentered.emit();
         }
 
-        if (from !== undefined && this.isCenterPosition(from) && !this.isCenterPosition(this.bodyPosition)) {
+        if (from !== undefined && this.isCenterPosition(from) && !this.isCenterPosition(current)) {
             this.afterLeavingCenter.emit();
         }
     }
@@ -264,10 +266,10 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
      * Computes the position state based on the specified origin position. This is used if the
      * tab is becoming visible immediately after creation.
      */
-    private computePositionFromOrigin(): KbqTabBodyPositionState {
+    private computePositionFromOrigin(origin: number): KbqTabBodyPositionState {
         const dir = this.getLayoutDirection();
 
-        if ((dir === 'ltr' && this.origin <= 0) || (dir === 'rtl' && this.origin > 0)) {
+        if ((dir === 'ltr' && origin <= 0) || (dir === 'rtl' && origin > 0)) {
             return 'left-origin-center';
         }
 
@@ -296,10 +298,12 @@ export class KbqTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
         super.ngOnInit();
 
         this.centeringSub = this.host.beforeCentering
-            .pipe(startWith(this.host.isCenterPosition(this.host.bodyPosition)))
+            .pipe(startWith(this.host.bodyPosition !== undefined && this.host.isCenterPosition(this.host.bodyPosition)))
             .subscribe((isCentering: boolean) => {
-                if (isCentering && !this.hasAttached()) {
-                    this.attach(this.host.content());
+                const content = this.host.content();
+
+                if (isCentering && !this.hasAttached() && content) {
+                    this.attach(content);
                 }
             });
 

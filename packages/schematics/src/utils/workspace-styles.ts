@@ -13,7 +13,7 @@ function isApplicationProject(project: workspaces.ProjectDefinition): boolean {
     return project.extensions['projectType'] === 'application';
 }
 
-const KOOBIQ_STATIC_STYLE_ENTRIES = [
+const KOOBIQ_STATIC_STYLE_ENTRIES: [string, string, string] = [
     'node_modules/@koobiq/icons/fonts/kbq-icons.css',
     'node_modules/@koobiq/design-tokens/web/css-tokens.css',
     'node_modules/@koobiq/components/prebuilt-themes/theme.css'

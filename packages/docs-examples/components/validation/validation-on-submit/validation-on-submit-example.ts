@@ -156,7 +156,7 @@ export class ValidationOnSubmitExample implements AfterViewInit, OnDestroy {
         const alert = this.alertContainer();
 
         if (alert) {
-            this.focusMonitor.monitor(alert.nativeElement);
+            void this.focusMonitor.monitor(alert.nativeElement);
         }
     }
 

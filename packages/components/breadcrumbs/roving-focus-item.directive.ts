@@ -145,7 +145,7 @@ export class RdxRovingFocusItemDirective implements OnDestroy {
             }
 
             this.ngZone.runOutsideAngular(() => {
-                Promise.resolve().then(() => {
+                void Promise.resolve().then(() => {
                     focusFirst(candidateNodes, false);
                 });
             });

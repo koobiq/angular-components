@@ -114,7 +114,7 @@ const renderIntro = (blocks: readonly CompiledBlock[], release: string): string 
 const renderStep = ({ version, components, subsections, blocks }: DocsMigrationSection): string => {
     const [heading, ...body] = subsections ? subsections.intro : blocks;
     const content = [
-        heading.template,
+        heading?.template,
         '<div data-docs-migration-done></div>',
         docsJoinMigrationBlocks(body),
         ...(subsections?.items ?? []).map(

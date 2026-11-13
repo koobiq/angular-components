@@ -134,6 +134,10 @@ async function tryJsonParse<T>(path: string): Promise<T> {
 function parseAdditionalTargets(targetRef: string): { target: string; project: string } {
     const [project, target] = targetRef.split(':');
 
+    if (!project || !target) {
+        throw new Error(`Expected an additional target as <project>:<target>, got '${targetRef}'`);
+    }
+
     return { project, target };
 }
 

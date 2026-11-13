@@ -19,7 +19,7 @@ import { injectExampleText } from '../localized-data';
         KbqToolTipModule,
         KbqIconModule
     ],
-    templateUrl: 'navbar-vertical-example.html',
+    templateUrl: './navbar-vertical-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarVerticalExample {

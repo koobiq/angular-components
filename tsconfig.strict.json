@@ -4,8 +4,8 @@
     // `transpileOnly` along `extends`.
     "compilerOptions": {
         "strict": true,
-        // TODO(DS-5813): turn it on together with `noUncheckedIndexedAccess`.
-        "strictPropertyInitialization": false,
+        // tsconfig.spec.json and tsconfig.playwright-spec.json turn it off: a spec fails right away on a missing item.
+        "noUncheckedIndexedAccess": true,
         "noImplicitReturns": true,
         "noImplicitOverride": true,
         "noFallthroughCasesInSwitch": true,
@@ -14,9 +14,6 @@
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "allowUnreachableCode": false,
-        "allowUnusedLabels": false,
-        // Off, so that `?: T` also accepts `undefined`, which callers pass for "not set": under the flag every such
-        // member has to be typed `?: T | undefined`.
-        "exactOptionalPropertyTypes": false
+        "allowUnusedLabels": false
     }
 }

@@ -95,8 +95,8 @@ describe(DocsStackblitzWriter.name, () => {
 
     afterEach(() => {
         httpMock.verify();
-        delete EXAMPLE_COMPONENTS[EXAMPLE_ID];
-        delete EXAMPLE_COMPONENTS[OTHER_EXAMPLE_ID];
+        Reflect.deleteProperty(EXAMPLE_COMPONENTS, EXAMPLE_ID);
+        Reflect.deleteProperty(EXAMPLE_COMPONENTS, OTHER_EXAMPLE_ID);
         vi.restoreAllMocks();
     });
 

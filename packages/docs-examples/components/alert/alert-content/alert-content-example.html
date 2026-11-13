@@ -8,10 +8,18 @@
                 but is not underlined
                 <span kbqLinkSuffix>.</span>
             </a>
-            <button kbq-alert-control kbq-button class="example-overview__button" [color]="colors.Contrast">
+            <button
+                kbq-alert-control
+                kbq-button
+                type="button"
+                class="example-overview__button"
+                [color]="colors.Contrast"
+            >
                 Choose another file
             </button>
-            <button kbq-alert-control kbq-button [color]="colors.Theme" [kbqStyle]="'transparent'">Replace</button>
+            <button kbq-alert-control kbq-button type="button" kbqStyle="transparent" [color]="colors.Theme">
+                Replace
+            </button>
         </kbq-alert>
     </div>
     <div class="layout-column example-column">
@@ -23,10 +31,18 @@
                 but is not underlined
                 <span kbqLinkSuffix>.</span>
             </a>
-            <button kbq-alert-control kbq-button class="example-overview__button" [color]="colors.Contrast">
+            <button
+                kbq-alert-control
+                kbq-button
+                type="button"
+                class="example-overview__button"
+                [color]="colors.Contrast"
+            >
                 Choose another file
             </button>
-            <button kbq-alert-control kbq-button [color]="colors.Theme" [kbqStyle]="'transparent'">Replace</button>
+            <button kbq-alert-control kbq-button type="button" kbqStyle="transparent" [color]="colors.Theme">
+                Replace
+            </button>
         </kbq-alert>
     </div>
 </div>
@@ -37,8 +53,10 @@
             <i aria-hidden="true" kbq-icon-item="kbq-circle-info_16"></i>
             Failed to update the agent
             <span class="kbq-text-normal-strong">ekb-mail-server</span>
-            <button kbq-alert-control kbq-button [kbqStyle]="'transparent'">Retry</button>
-            <button kbq-alert-control kbq-button [kbqStyle]="'transparent'">Install a different version</button>
+            <button kbq-alert-control kbq-button type="button" kbqStyle="transparent">Retry</button>
+            <button kbq-alert-control kbq-button type="button" kbqStyle="transparent">
+                Install a different version
+            </button>
         </kbq-alert>
     </div>
     <div class="layout-column example-column">
@@ -46,8 +64,10 @@
             <i aria-hidden="true" kbq-icon="kbq-circle-info_16"></i>
             Failed to update the agent
             <span class="kbq-text-normal-strong">ekb-mail-server</span>
-            <button kbq-alert-control kbq-button [kbqStyle]="'transparent'">Retry</button>
-            <button kbq-alert-control kbq-button [kbqStyle]="'transparent'">Install a different version</button>
+            <button kbq-alert-control kbq-button type="button" kbqStyle="transparent">Retry</button>
+            <button kbq-alert-control kbq-button type="button" kbqStyle="transparent">
+                Install a different version
+            </button>
         </kbq-alert>
     </div>
 </div>
@@ -65,6 +85,7 @@
                 <a href="https://koobiq.io" kbqLink>Hypervisors</a>
                 <button
                     kbq-alert-close-button
+                    type="button"
                     kbq-icon-button="kbq-xmark-s_16"
                     aria-label="Close"
                     [color]="colors.ContrastFade"
@@ -85,6 +106,7 @@
                 <a href="https://koobiq.io" kbqLink>Hypervisors</a>
                 <button
                     kbq-alert-close-button
+                    type="button"
                     kbq-icon-button="kbq-xmark-s_16"
                     aria-label="Close"
                     [color]="colors.ContrastFade"

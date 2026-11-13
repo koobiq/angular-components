@@ -8,7 +8,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 @Component({
     selector: 'accordion-state-saving-example',
     imports: [KbqAccordionModule, KbqButtonModule],
-    templateUrl: 'accordion-state-saving-example.html',
+    templateUrl: './accordion-state-saving-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionStateSavingExample {}

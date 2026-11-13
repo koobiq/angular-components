@@ -33,8 +33,8 @@ import { KbqPipeState } from './pipe-state';
         KbqTitleModule,
         FormsModule
     ],
-    templateUrl: 'pipe-date.html',
-    styleUrls: ['base-pipe.scss', 'pipe-date.scss'],
+    templateUrl: './pipe-date.html',
+    styleUrls: ['./base-pipe.scss', './pipe-date.scss'],
     providers: [
         {
             provide: KbqBasePipe,

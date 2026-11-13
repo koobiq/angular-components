@@ -18,7 +18,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
             </div>
         </div>
     `,
-    styleUrls: ['./title-overview-example.css'],
+    styleUrl: './title-overview-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleOverviewExample {

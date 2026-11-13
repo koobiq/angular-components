@@ -47,8 +47,24 @@ import {
 } from '@angular/core';
 import { outputFromObservable, outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import { audit, defer, fromEvent, merge, type Observable, Subject, Subscription, timer } from 'rxjs';
-import { debounceTime, delay, distinctUntilChanged, filter, map, startWith, switchMap, take } from 'rxjs/operators';
+import {
+    audit,
+    debounceTime,
+    defer,
+    delay,
+    distinctUntilChanged,
+    filter,
+    fromEvent,
+    map,
+    merge,
+    type Observable,
+    startWith,
+    Subject,
+    Subscription,
+    switchMap,
+    take,
+    timer
+} from 'rxjs';
 import {
     type CanUpdateErrorState,
     defaultOffsetY,
@@ -209,7 +225,7 @@ export class KbqTreeSelectChange<T = any> {
         KbqScrollbarViewport,
         NgTemplateOutlet
     ],
-    templateUrl: 'tree-select.html',
+    templateUrl: './tree-select.html',
     styleUrls: ['./tree-select.scss', './tree-select-tokens.scss'],
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqTreeSelect },
@@ -319,8 +335,8 @@ export class KbqTreeSelect<T = any, K = T>
     /** Number of the selected items that do not fit into the trigger. */
     readonly hiddenItems = signal(0);
 
-    /** The last measured value for the trigger's client bounding rect. */
-    protected triggerRect: DOMRect;
+    /** The last measured value for the trigger's client bounding rect, or `undefined` until the panel first opens. */
+    protected triggerRect: DOMRect | undefined;
 
     /** The cached font-size of the trigger element. */
     triggerFontSize = 0;
@@ -331,8 +347,10 @@ export class KbqTreeSelect<T = any, K = T>
      * `T` is the type of the data nodes, the same as the projected tree's. A template infers it from `[clearPredicate]`
      * alone, apart from the tree; a query names it: `viewChild.required<KbqTreeSelect<Node>>(KbqTreeSelect)`, and a
      * select whose tree control has a `trackBy` names the key type too: `KbqTreeSelect<Node, string>`.
+     *
+     * Created once the content is initialized, and only with a projected tree.
      */
-    selectionModel: SelectionModel<T>;
+    selectionModel: SelectionModel<T> | undefined;
 
     /** Emits once the panel has rendered (`'showing'`) or has been removed (`'void'`). */
     protected readonly panelDoneAnimatingStream = new Subject<string>();
@@ -373,7 +391,8 @@ export class KbqTreeSelect<T = any, K = T>
         }
     ];
 
-    protected options: QueryList<KbqTreeOption<T>>;
+    /** Rendered options of the projected tree, once the content is initialized. */
+    protected options: QueryList<KbqTreeOption<T>> | undefined;
 
     /**
      * Trigger - is a clickable field to open select dropdown panel
@@ -560,10 +579,12 @@ export class KbqTreeSelect<T = any, K = T>
 
     /** Combined stream of all of the child options' change events. */
     readonly optionSelectionChanges: Observable<KbqTreeSelectChange> = defer(() => {
-        if (this.options) {
-            return this.options.changes.pipe(
-                startWith(this.options),
-                switchMap(() => merge(...this.options.map((option) => outputToObservable(option.selectionChange))))
+        const options = this.options;
+
+        if (options) {
+            return options.changes.pipe(
+                startWith(options),
+                switchMap(() => merge(...options.map((option) => outputToObservable(option.selectionChange))))
             );
         }
 
@@ -572,10 +593,12 @@ export class KbqTreeSelect<T = any, K = T>
 
     /** Combined stream of all of the child options userInteraction events. */
     readonly userInteractionChanges: Observable<void> = defer(() => {
-        if (this.options) {
-            return this.options.changes.pipe(
-                startWith(this.options),
-                switchMap(() => merge(...this.options.map((option) => option.userInteraction)))
+        const options = this.options;
+
+        if (options) {
+            return options.changes.pipe(
+                startWith(options),
+                switchMap(() => merge(...options.map((option) => option.userInteraction)))
             );
         }
 
@@ -847,7 +870,10 @@ export class KbqTreeSelect<T = any, K = T>
         const optionsByNode = new Map<T, KbqTreeOption<T>>();
 
         this.tree()?.renderedOptions.forEach((option) => {
-            if (!optionsByNode.has(option.data)) optionsByNode.set(option.data, option);
+            const { data } = option;
+
+            // The "select all" row renders no node.
+            if (data !== undefined && !optionsByNode.has(data)) optionsByNode.set(data, option);
         });
 
         return optionsByNode;
@@ -899,7 +925,7 @@ export class KbqTreeSelect<T = any, K = T>
         return this.resolvedAriaLabel();
     }
 
-    isEmptySearchResult: boolean;
+    isEmptySearchResult = false;
 
     triggerValues: KbqTreeSelectTriggerValue[] = [];
 
@@ -963,7 +989,7 @@ export class KbqTreeSelect<T = any, K = T>
             const formField = this.parentFormField;
 
             if (formField) {
-                Promise.resolve().then(() =>
+                void Promise.resolve().then(() =>
                     this.disabled() ? formField.stopFocusMonitor() : formField.runFocusMonitor()
                 );
             }
@@ -1061,11 +1087,14 @@ export class KbqTreeSelect<T = any, K = T>
         tree.resetFocusedItemOnBlur = false;
 
         this.multipleValue = this.multipleInput();
-        this.selectionModel = new SelectionModel<T>(this.multiSelection);
+
+        const selectionModel = new SelectionModel<T>(this.multiSelection);
+
+        this.selectionModel = selectionModel;
 
         this.syncSelectionState();
 
-        this.selectionModel.changed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+        selectionModel.changed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.syncSelectionState();
 
             // Neither a written value nor the tree re-pointing the selection at reloaded data is the user's change.
@@ -1081,7 +1110,7 @@ export class KbqTreeSelect<T = any, K = T>
             this.changeDetectorRef.markForCheck();
         });
 
-        this.selectionModel.changed.pipe(delay(0), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+        selectionModel.changed.pipe(delay(0), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             // A multiline trigger grows with every selected option, and this is the one signal guaranteed
             // to arrive for it. A single-row trigger keeps its height, so there is nothing to re-anchor.
             this.updatePanelAnchor();
@@ -1091,7 +1120,7 @@ export class KbqTreeSelect<T = any, K = T>
         // Hands the tree the model this component owns. Re-running `tree.ngAfterContentInit()` was the
         // old way of doing it and left the tree with a second set of subscribers on query lists that are
         // never re-created — every options change handled twice, for the lifetime of the component.
-        tree.initializeForEmbedding(this.selectionModel);
+        tree.initializeForEmbedding(selectionModel);
 
         tree.renderedOptions.changes.pipe(delay(0), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             // A value written ahead of its data, such as one loaded over HTTP, is applied once the nodes arrive.
@@ -1108,7 +1137,9 @@ export class KbqTreeSelect<T = any, K = T>
 
         this.initKeyManager();
 
-        this.options = tree.renderedOptions;
+        const options = tree.renderedOptions;
+
+        this.options = options;
         tree.autoSelect = this.autoSelect;
 
         // Single place the event is raised, so a click on the master checkbox and Ctrl/Cmd + A — which
@@ -1142,7 +1173,7 @@ export class KbqTreeSelect<T = any, K = T>
             if (!this.multiSelection && this.panelOpen) {
                 this.close();
 
-                Promise.resolve().then(() => this.focus());
+                void Promise.resolve().then(() => this.focus());
             }
         });
 
@@ -1159,14 +1190,14 @@ export class KbqTreeSelect<T = any, K = T>
         });
 
         if (!this.multiSelection) {
-            this.selectionModel.changed
+            selectionModel.changed
                 .pipe(
                     filter(({ added }) => !!added.length),
                     takeUntilDestroyed(this.destroyRef)
                 )
                 .subscribe(({ added }) => {
                     this.tree()!.keyManager.setFocusOrigin('program');
-                    this.tree()!.keyManager.setActiveItem(this.options.find(({ data }) => data === added[0]) as any);
+                    this.tree()!.keyManager.setActiveItem(options.find(({ data }) => data === added[0]) as any);
                 });
         }
 
@@ -1214,7 +1245,7 @@ export class KbqTreeSelect<T = any, K = T>
         untracked(() => {
             const targets = this.clearTargets;
 
-            this.selectionModel.deselect(...targets);
+            this.selectionModel?.deselect(...targets);
             this.tree()!.keyManager.setActiveItem(-1);
             this.changeDetectorRef.detectChanges();
 
@@ -1426,12 +1457,20 @@ export class KbqTreeSelect<T = any, K = T>
         this.disabled.set(isDisabled);
     }
 
-    get selected(): T | T[] {
-        return this.multiSelection ? this.selectionModel?.selected : this.selectionModel?.selected[0];
+    /**
+     * The selected node, or the array of them in multiple selection. `undefined` while nothing is selected in single
+     * selection, and before the content is initialized.
+     */
+    get selected(): T | T[] | undefined {
+        const [first] = this.selectionModel?.selected ?? [];
+
+        return this.multiSelection ? this.selectionModel?.selected : first;
     }
 
     get selectedValues(): any {
-        const selectedValues = this.selectionModel.selected.map((value) => this.tree()!.treeControl.getValue(value));
+        const selectedValues = (this.selectionModel?.selected ?? []).map((value) =>
+            this.tree()!.treeControl.getValue(value)
+        );
 
         return this.multiSelection ? selectedValues : selectedValues[0];
     }
@@ -1452,7 +1491,7 @@ export class KbqTreeSelect<T = any, K = T>
 
     /** First selected node that is not disabled — the one the panel highlights when it opens. */
     protected get firstSelected(): T | undefined {
-        return this.selectionModel.selected.filter((node) => !this.tree()!.treeControl.isDisabled(node))[0];
+        return (this.selectionModel?.selected ?? []).filter((node) => !this.tree()!.treeControl.isDisabled(node))[0];
     }
 
     /**
@@ -1555,18 +1594,19 @@ export class KbqTreeSelect<T = any, K = T>
             .filter(({ disabled }) => !disabled)
             .findIndex(({ value }) => value === selectedOption.value);
 
-        const removed = this.selectionModel.selected.find(
+        const selectionModel = this.selectionModel;
+        const removed = selectionModel?.selected.find(
             (node) => this.tree()!.treeControl.getValue(node) === selectedOption.value
         );
 
-        if (removed !== undefined) {
-            this.selectionModel.deselect(removed);
+        if (selectionModel && removed !== undefined) {
+            selectionModel.deselect(removed);
         }
 
         this.selectionChange.emit(
             new KbqTreeSelectChange(
                 this,
-                this.options.find((option) => option.value === selectedOption.value) || selectedOption.value
+                this.options?.find((option) => option.value === selectedOption.value) || selectedOption.value
             )
         );
 
@@ -1613,7 +1653,7 @@ export class KbqTreeSelect<T = any, K = T>
 
         const { totalItemsWidth, visibleItems } = this.measureMatcherItems();
 
-        this.hiddenItems.set(this.selectionModel.selected.length - visibleItems);
+        this.hiddenItems.set((this.selectionModel?.selected.length ?? 0) - visibleItems);
         this.changeDetectorRef.detectChanges();
 
         if (this.hiddenItems()) {
@@ -1762,7 +1802,7 @@ export class KbqTreeSelect<T = any, K = T>
         // added to it on a separate, later-processed reactive pass than the one behind `nodesCount` —
         // reading the tree's own authoritative node count instead of subtracting from `options.length`
         // sidesteps that race entirely, rather than risking the two going momentarily out of step.
-        const optionsCount = this.tree()?.nodesCount ?? this.options.length;
+        const optionsCount = this.tree()?.nodesCount ?? this.options?.length ?? 0;
 
         return (
             isUndefined(this.searchMinOptionsThreshold()) ||
@@ -1862,14 +1902,14 @@ export class KbqTreeSelect<T = any, K = T>
 
     /** Whether the trigger's tags still agree with the selection about which nodes are disabled. */
     private hasStaleTriggerValues(): boolean {
-        const selected = this.selectionModel.selected;
+        const selected = this.selectionModel?.selected ?? [];
 
         if (this.triggerValues.length !== selected.length) return false;
 
         const optionsByNode = this.renderedOptionsByNode();
 
         return selected.some(
-            (node, index) => this.triggerValues[index].disabled !== this.isNodeDisabled(node, optionsByNode)
+            (node, index) => this.triggerValues[index]?.disabled !== this.isNodeDisabled(node, optionsByNode)
         );
     }
 
@@ -1877,7 +1917,7 @@ export class KbqTreeSelect<T = any, K = T>
         const treeControl = this.tree()!.treeControl;
         const optionsByNode = this.renderedOptionsByNode();
 
-        this.triggerValues = this.selectionModel.selected.map((node) => ({
+        this.triggerValues = (this.selectionModel?.selected ?? []).map((node) => ({
             value: treeControl.getValue(node),
             viewValue: treeControl.getViewValue(node),
             // `treeControl` alone would miss a node disabled through the option's own input and give it
@@ -1952,19 +1992,21 @@ export class KbqTreeSelect<T = any, K = T>
      * A node missing from the data sorts after every node in it.
      */
     private sortValues() {
-        if (!this.multiSelection) return;
+        const selectionModel = this.selectionModel;
+
+        if (!this.multiSelection || !selectionModel) return;
 
         const nodes = this.tree()!.treeControl.dataNodes ?? [];
         const sortComparator = this.sortComparator();
 
         if (sortComparator) {
-            this.selectionModel.sort((a, b) => sortComparator(a, b, nodes));
+            selectionModel.sort((a, b) => sortComparator(a, b, nodes));
         } else {
             // Indexed once: `indexOf` in the comparator would scan the whole data set on every comparison.
             const order = new Map(nodes.map((node, index) => [node, index]));
             const indexOf = (node: T) => order.get(node) ?? nodes.length;
 
-            this.selectionModel.sort((a, b) => indexOf(a) - indexOf(b));
+            selectionModel.sort((a, b) => indexOf(a) - indexOf(b));
         }
 
         this.syncSelectionState();
@@ -1974,7 +2016,7 @@ export class KbqTreeSelect<T = any, K = T>
 
     /** Mirrors the selection into the `value` and `empty` signals. */
     private syncSelectionState(): void {
-        this.emptyValue.set(this.selectionModel.isEmpty());
+        this.emptyValue.set(this.selectionModel?.isEmpty() ?? true);
         this.valueState.set(this.selectedValues);
     }
 
@@ -1984,12 +2026,14 @@ export class KbqTreeSelect<T = any, K = T>
      */
     private highlightCorrectOption() {
         const tree = this.tree()!;
+        const options = this.options;
 
-        if (!tree.keyManager) {
+        // Assigned once the content of both the tree and the select is initialized.
+        if (!options) {
             return;
         }
 
-        const selectedOption = this.options.find((option) => option.data === this.firstSelected);
+        const selectedOption = options.find((option) => option.data === this.firstSelected);
 
         tree.keyManager.setFocusOrigin('keyboard');
 

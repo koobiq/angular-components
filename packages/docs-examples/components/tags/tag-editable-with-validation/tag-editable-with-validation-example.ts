@@ -28,9 +28,9 @@ const TAG = 'Editable tag with validation';
             >
                 {{ tagValue() }}
                 <input
-                    kbqTooltip="Maximum {{ initialMaxLength }} characters (actual: {{ trimmedTagModel().length }})"
                     kbqTagEditInput
                     kbqTrigger="none"
+                    [kbqTooltip]="lengthTooltip()"
                     [kbqTooltipColor]="color.Error"
                     [(ngModel)]="tagModel"
                 />
@@ -70,6 +70,9 @@ export class TagEditableWithValidationExample {
     protected readonly initialMaxLength = this.tagValue().length;
     protected readonly tagModel = model(this.tagValue());
     protected readonly trimmedTagModel = computed(() => this.tagModel().trim());
+    protected readonly lengthTooltip = computed(
+        () => `Maximum ${this.initialMaxLength} characters (actual: ${this.trimmedTagModel().length})`
+    );
     protected readonly isModelValid = computed(() => this.trimmedTagModel().length <= this.initialMaxLength);
     protected readonly tagColor = computed(() => (this.isModelValid() ? this.color.ContrastFade : this.color.Error));
 

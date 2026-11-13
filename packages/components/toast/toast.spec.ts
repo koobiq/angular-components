@@ -1286,7 +1286,7 @@ describe('KbqToastService in a Shadow DOM overlay container', () => {
     selector: 'toast-tooltip-wrapper',
     imports: [KbqToolTipModule],
     template: `
-        <button [kbqTooltip]="'TOOLTIP_CONTENT'">Trigger</button>
+        <button kbqTooltip="TOOLTIP_CONTENT">Trigger</button>
     `
 })
 class ToastTooltipWrapper {

@@ -39,7 +39,7 @@ import { KbqInlineEditModule } from './module';
                     <ng-container *ngTemplateOutlet="view; context: { $implicit: { value: '' } }" />
                 </div>
                 <kbq-form-field kbqInlineEditEditMode>
-                    <input kbqInput [placeholder]="'placeholder'" />
+                    <input kbqInput placeholder="placeholder" />
                 </kbq-form-field>
             </kbq-inline-edit>
 
@@ -48,7 +48,7 @@ import { KbqInlineEditModule } from './module';
                     <ng-container *ngTemplateOutlet="view; context: { $implicit: { value: 'value' } }" />
                 </div>
                 <kbq-form-field kbqInlineEditEditMode>
-                    <input kbqInput [placeholder]="'placeholder'" [value]="'value'" />
+                    <input kbqInput placeholder="placeholder" value="value" />
                 </kbq-form-field>
             </kbq-inline-edit>
 
@@ -59,7 +59,7 @@ import { KbqInlineEditModule } from './module';
                     <ng-container *ngTemplateOutlet="view; context: { $implicit: { value: 'value' } }" />
                 </div>
                 <kbq-form-field kbqInlineEditEditMode>
-                    <input kbqInput [placeholder]="'placeholder'" [value]="'value'" />
+                    <input kbqInput placeholder="placeholder" value="value" />
                 </kbq-form-field>
             </kbq-inline-edit>
 
@@ -68,7 +68,7 @@ import { KbqInlineEditModule } from './module';
                     <ng-container *ngTemplateOutlet="view; context: { $implicit: { value: 'value' } }" />
                 </div>
                 <kbq-form-field kbqInlineEditEditMode>
-                    <input kbqInput [placeholder]="'placeholder'" [value]="'value'" />
+                    <input kbqInput placeholder="placeholder" value="value" />
                 </kbq-form-field>
             </kbq-inline-edit>
         </div>
@@ -127,7 +127,7 @@ export class E2eInlineEditStates {
             <kbq-inline-edit>
                 <div class="truncated-text" kbqInlineEditViewMode>Long text value that should be truncated</div>
                 <kbq-form-field kbqInlineEditEditMode>
-                    <input kbqInput [value]="'Long text value that should be truncated'" />
+                    <input kbqInput value="Long text value that should be truncated" />
                 </kbq-form-field>
             </kbq-inline-edit>
 
@@ -135,7 +135,7 @@ export class E2eInlineEditStates {
                 <kbq-label>Label</kbq-label>
                 <div class="truncated-text" kbqInlineEditViewMode>Long text value that should be truncated</div>
                 <kbq-form-field kbqInlineEditEditMode>
-                    <input kbqInput [value]="'Long text value that should be truncated'" />
+                    <input kbqInput value="Long text value that should be truncated" />
                 </kbq-form-field>
             </kbq-inline-edit>
 
@@ -147,19 +147,19 @@ export class E2eInlineEditStates {
                     kbqInlineEditMenu
                     kbq-icon-button="kbq-ellipsis-vertical_16"
                     aria-label="Actions"
+                    color="contrast-fade"
                     [kbqDropdownTriggerFor]="dropdown"
-                    [color]="'contrast-fade'"
                 ></i>
                 <div class="truncated-text" kbqInlineEditViewMode>Long text value that should be truncated</div>
                 <kbq-form-field kbqInlineEditEditMode>
-                    <input kbqInput [value]="'Long text value that should be truncated'" />
+                    <input kbqInput value="Long text value that should be truncated" />
                 </kbq-form-field>
             </kbq-inline-edit>
 
             <kbq-inline-edit disabled>
                 <div class="truncated-text" kbqInlineEditViewMode>Long text value that should be truncated</div>
                 <kbq-form-field kbqInlineEditEditMode>
-                    <input kbqInput [value]="'Long text value that should be truncated'" />
+                    <input kbqInput value="Long text value that should be truncated" />
                 </kbq-form-field>
             </kbq-inline-edit>
         </div>
@@ -204,12 +204,12 @@ export class E2eInlineEditTruncation {}
                     kbqInlineEditMenu
                     kbq-icon-button="kbq-ellipsis-vertical_16"
                     aria-label="Actions"
+                    color="contrast-fade"
                     [kbqDropdownTriggerFor]="dropdown"
-                    [color]="'contrast-fade'"
                 ></i>
                 <div class="e2e-inline-edit-text" kbqInlineEditViewMode>value</div>
                 <kbq-form-field kbqInlineEditEditMode>
-                    <input kbqInput [value]="'value'" />
+                    <input kbqInput value="value" />
                 </kbq-form-field>
             </kbq-inline-edit>
         </div>
@@ -282,14 +282,14 @@ export class E2eInlineEditActionButtons {
                 <kbq-label>Label</kbq-label>
                 <div kbqInlineEditViewMode>value</div>
                 <kbq-form-field kbqInlineEditEditMode>
-                    <input kbqInput [ngModel]="'value'" />
+                    <input kbqInput ngModel="value" />
                 </kbq-form-field>
             </kbq-inline-edit>
 
             <kbq-inline-edit data-testid="e2eInlineEditSaveStatesPendingRow" [saveHandler]="pendingSave">
                 <div kbqInlineEditViewMode>value</div>
                 <kbq-form-field kbqInlineEditEditMode>
-                    <input kbqInput [ngModel]="'value'" />
+                    <input kbqInput ngModel="value" />
                 </kbq-form-field>
             </kbq-inline-edit>
 
@@ -297,7 +297,7 @@ export class E2eInlineEditActionButtons {
                 <kbq-label>Label</kbq-label>
                 <div kbqInlineEditViewMode>value</div>
                 <kbq-form-field kbqInlineEditEditMode>
-                    <input kbqInput [ngModel]="'value'" />
+                    <input kbqInput ngModel="value" />
                 </kbq-form-field>
             </kbq-inline-edit>
 
@@ -307,7 +307,7 @@ export class E2eInlineEditActionButtons {
                     <kbq-badge>Badge</kbq-badge>
                 </div>
                 <kbq-form-field kbqInlineEditEditMode>
-                    <input kbqInput [ngModel]="'value'" />
+                    <input kbqInput ngModel="value" />
                 </kbq-form-field>
             </kbq-inline-edit>
 
@@ -322,12 +322,12 @@ export class E2eInlineEditActionButtons {
                     data-testid="e2eInlineEditSaveStatesMenu"
                     kbq-icon-button="kbq-ellipsis-vertical_16"
                     aria-label="Actions"
+                    color="contrast-fade"
                     [kbqDropdownTriggerFor]="dropdown"
-                    [color]="'contrast-fade'"
                 ></i>
                 <div kbqInlineEditViewMode>value</div>
                 <kbq-form-field kbqInlineEditEditMode>
-                    <input kbqInput [ngModel]="'value'" />
+                    <input kbqInput ngModel="value" />
                 </kbq-form-field>
             </kbq-inline-edit>
         </div>
@@ -380,7 +380,7 @@ const E2E_COMMENTS: string[] = [
                 <kbq-form-field kbqInlineEditEditMode [noBorders]="true">
                     <kbq-select
                         panelWidth="auto"
-                        [panelClass]="'e2e-inline-edit-select-multiline__options'"
+                        panelClass="e2e-inline-edit-select-multiline__options"
                         [placeholder]="notSetLabel"
                         [formControl]="control"
                     >
@@ -415,7 +415,7 @@ const E2E_COMMENTS: string[] = [
 export class E2eInlineEditSelectMultiline {
     protected readonly notSetLabel = 'Not specified';
     protected readonly comments = E2E_COMMENTS;
-    protected readonly control = new FormControl<string | null>(E2E_COMMENTS[0]);
+    protected readonly control = new FormControl<string | null>(E2E_COMMENTS[0] ?? null);
 }
 
 @Component({
@@ -485,7 +485,7 @@ export class E2eInlineEditSelectChain {
                     <i
                         kbq-icon-button="kbq-circle-info_16"
                         data-testid="e2eInlineEditInteractiveContentLabelIcon"
-                        [color]="'contrast-fade'"
+                        color="contrast-fade"
                     ></i>
                 </kbq-label>
 
@@ -496,7 +496,7 @@ export class E2eInlineEditSelectChain {
                 </div>
 
                 <kbq-form-field kbqInlineEditEditMode>
-                    <input kbqInput [value]="'https://example.com'" />
+                    <input kbqInput value="https://example.com" />
                 </kbq-form-field>
             </kbq-inline-edit>
         </div>

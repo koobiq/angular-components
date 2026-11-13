@@ -8,7 +8,13 @@ const CONFIG: WarnOnlyConfig = {
     label: LABEL,
     warnPatterns: [
         { pattern: '\\bremovedHelper\\b', message: 'removedHelper is gone.' },
-        { anchor: '\\bKbqExample\\b', pattern: '\\.value\\s*=[^=]', message: 'KbqExample.value is read-only.' }
+        { anchor: '\\bKbqExample\\b', pattern: '\\.value\\s*=[^=]', message: 'KbqExample.value is read-only.' },
+        {
+            anchor: '<kbq-example\\b',
+            pattern: '\\.optionalMember\\b',
+            message: 'KbqExample.optionalMember may be undefined.',
+            extensions: ['.html']
+        }
     ],
     summary: ['Summary line.']
 };
@@ -51,6 +57,15 @@ describe('warnOnlyRule', () => {
         tree.create('/src/form.ts', 'form.value = 1;\n');
 
         expect(await run(tree)).not.toContain(LABEL);
+    });
+
+    it('checks a template only against the patterns of its extension', async () => {
+        tree.create('/src/app.html', '<kbq-example #example />{{ example.optionalMember.x }} {{ removedHelper }}\n');
+
+        const log = await run(tree);
+
+        expect(log).toContain(`${LABEL} /src/app.html\n  KbqExample.optionalMember may be undefined.`);
+        expect(log).not.toContain('removedHelper is gone.');
     });
 
     it('ignores other files and the skipped directories', async () => {

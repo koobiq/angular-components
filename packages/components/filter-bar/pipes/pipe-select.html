@@ -16,6 +16,7 @@
     <button
         kbq-button
         kbq-select-matcher
+        type="button"
         [disabled]="data.disabled"
         [kbqPipeState]="data"
         [class]="{ 'kbq-active': select.panelOpen }"
@@ -31,9 +32,9 @@
         <kbq-form-field noBorders kbqSelectSearch>
             <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
             <input
-                placeholder="{{ localeConfiguration().search.placeholder }}"
                 kbqInput
                 type="text"
+                [placeholder]="localeConfiguration().search.placeholder"
                 [attr.aria-label]="localeConfiguration().search.placeholder"
                 [formControl]="searchControl"
             />
@@ -49,7 +50,7 @@
 
     @for (item of filteredOptions(); track item) {
         <!-- Declared inside the loop: an `@let` among projected content fails the prerender with NG0502. -->
-        @let optionTemplate = isTemplateRef(valueTemplate) ? $any(valueTemplate) : null;
+        @let optionTemplate = isTemplateRef(valueTemplate) ? valueTemplate : null;
         @let caption = optionTemplate ? null : item.caption;
 
         <!-- Without `viewValue` a captioned option derives it from `textContent`, gluing the two lines. -->

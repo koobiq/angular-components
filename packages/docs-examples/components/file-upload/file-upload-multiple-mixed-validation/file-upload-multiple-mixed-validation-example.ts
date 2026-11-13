@@ -26,8 +26,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 class="layout-margin-bottom-s"
                 multiple
                 formControlName="fileUpload"
+                progressMode="indeterminate"
                 [errorStateMatcher]="customErrorStateMatcher"
-                [progressMode]="'indeterminate'"
                 (fileRemoved)="onFileRemoved($event)"
                 (filesAdded)="onFilesAdded($event)"
             >

@@ -65,6 +65,7 @@ export const kbqActionsPanelLocaleConfigurationProvider = (
         @if (!config.disableClose) {
             <kbq-divider class="kbq-actions-panel-container__vertical-divider" [vertical]="true" />
             <button
+                type="button"
                 class="kbq-actions-panel-container__close-button"
                 color="contrast"
                 kbq-button

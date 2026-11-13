@@ -2337,7 +2337,7 @@ class AccordionVariants {
     imports: [KbqAccordionModule],
     template: `
         <kbq-accordion [defaultValue]="defaultValue">
-            <kbq-accordion-item [value]="'item-1'">
+            <kbq-accordion-item value="item-1">
                 <kbq-accordion-header>
                     <button kbq-accordion-trigger type="button">Is it accessible?</button>
                 </kbq-accordion-header>
@@ -2355,13 +2355,13 @@ class AccordionDefaultValue {
     imports: [KbqAccordionModule],
     template: `
         <kbq-accordion [value]="value">
-            <kbq-accordion-item [value]="'item-1'">
+            <kbq-accordion-item value="item-1">
                 <kbq-accordion-header>
                     <button kbq-accordion-trigger type="button">Is it accessible?</button>
                 </kbq-accordion-header>
                 <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
             </kbq-accordion-item>
-            <kbq-accordion-item [value]="'item-2'">
+            <kbq-accordion-item value="item-2">
                 <kbq-accordion-header>
                     <button kbq-accordion-trigger type="button">Is it accessible?</button>
                 </kbq-accordion-header>
@@ -2579,7 +2579,7 @@ class AccordionOrientation {
     selector: 'accordion-horizontal',
     imports: [KbqAccordionModule],
     template: `
-        <kbq-accordion [orientation]="'horizontal'">
+        <kbq-accordion orientation="horizontal">
             <kbq-accordion-item>
                 <kbq-accordion-header>
                     <button kbq-accordion-trigger type="button">Item 1</button>
@@ -2621,13 +2621,13 @@ class AccordionDisabledOverride {
     imports: [KbqAccordionModule],
     template: `
         <kbq-accordion [value]="value">
-            <kbq-accordion-item [value]="'item-1'">
+            <kbq-accordion-item value="item-1">
                 <kbq-accordion-header>
                     <button kbq-accordion-trigger type="button">Item 1</button>
                 </kbq-accordion-header>
                 <kbq-accordion-content>Content 1</kbq-accordion-content>
             </kbq-accordion-item>
-            <kbq-accordion-item [value]="'item-10'">
+            <kbq-accordion-item value="item-10">
                 <kbq-accordion-header>
                     <button kbq-accordion-trigger type="button">Item 10</button>
                 </kbq-accordion-header>
@@ -2644,14 +2644,14 @@ class AccordionExactValue {
     selector: 'accordion-value-multiple',
     imports: [KbqAccordionModule],
     template: `
-        <kbq-accordion [type]="'multiple'" [value]="value">
-            <kbq-accordion-item [value]="'item-1'">
+        <kbq-accordion type="multiple" [value]="value">
+            <kbq-accordion-item value="item-1">
                 <kbq-accordion-header>
                     <button kbq-accordion-trigger type="button">Item 1</button>
                 </kbq-accordion-header>
                 <kbq-accordion-content>Content 1</kbq-accordion-content>
             </kbq-accordion-item>
-            <kbq-accordion-item [value]="'item-2'">
+            <kbq-accordion-item value="item-2">
                 <kbq-accordion-header>
                     <button kbq-accordion-trigger type="button">Item 2</button>
                 </kbq-accordion-header>
@@ -2707,13 +2707,13 @@ class AccordionLevel {
             [value]="value"
         >
             @if (rendered) {
-                <kbq-accordion-item [value]="'item-1'" [expanded]="expandedFirst">
+                <kbq-accordion-item value="item-1" [expanded]="expandedFirst">
                     <kbq-accordion-header>
                         <button kbq-accordion-trigger type="button">Item 1</button>
                     </kbq-accordion-header>
                     <kbq-accordion-content>Content 1</kbq-accordion-content>
                 </kbq-accordion-item>
-                <kbq-accordion-item [value]="'item-2'">
+                <kbq-accordion-item value="item-2">
                     <kbq-accordion-header>
                         <button kbq-accordion-trigger type="button">Item 2</button>
                     </kbq-accordion-header>
@@ -2741,7 +2741,7 @@ class AccordionStateSaving {
     selector: 'accordion-valueless-items',
     imports: [KbqAccordionModule],
     template: `
-        <kbq-accordion [stateSavingKey]="'valueless-key'">
+        <kbq-accordion stateSavingKey="valueless-key">
             <kbq-accordion-item>
                 <kbq-accordion-header>
                     <button kbq-accordion-trigger type="button">Item 1</button>
@@ -2784,15 +2784,15 @@ class AccordionKeyedSections {
     selector: 'accordion-late-section',
     imports: [KbqAccordionModule],
     template: `
-        <kbq-accordion [stateSavingKey]="'late-key'">
-            <kbq-accordion-item [value]="'item-1'">
+        <kbq-accordion stateSavingKey="late-key">
+            <kbq-accordion-item value="item-1">
                 <kbq-accordion-header>
                     <button kbq-accordion-trigger type="button">Item 1</button>
                 </kbq-accordion-header>
                 <kbq-accordion-content>Content 1</kbq-accordion-content>
             </kbq-accordion-item>
             @if (showLate) {
-                <kbq-accordion-item expanded [value]="'late'">
+                <kbq-accordion-item expanded value="late">
                     <kbq-accordion-header>
                         <button kbq-accordion-trigger type="button">Late</button>
                     </kbq-accordion-header>
@@ -2813,7 +2813,7 @@ class AccordionLateSection {
     selector: 'accordion-interactive-content',
     imports: [KbqAccordionModule],
     template: `
-        <kbq-accordion [type]="'multiple'">
+        <kbq-accordion type="multiple">
             <kbq-accordion-item>
                 <kbq-accordion-header>
                     <button kbq-accordion-trigger type="button">Trigger 1</button>
@@ -2850,20 +2850,20 @@ class AccordionInteractiveContent {}
     selector: 'accordion-nested',
     imports: [KbqAccordionModule],
     template: `
-        <kbq-accordion [type]="'multiple'" (valueChange)="outerValueChanges.push($event)">
-            <kbq-accordion-item [value]="'outer-1'">
+        <kbq-accordion type="multiple" (valueChange)="outerValueChanges.push($event)">
+            <kbq-accordion-item value="outer-1">
                 <kbq-accordion-header>
                     <button kbq-accordion-trigger type="button">Outer 1</button>
                 </kbq-accordion-header>
                 <kbq-accordion-content>
-                    <kbq-accordion [type]="'multiple'">
-                        <kbq-accordion-item [value]="'inner-1'">
+                    <kbq-accordion type="multiple">
+                        <kbq-accordion-item value="inner-1">
                             <kbq-accordion-header>
                                 <button kbq-accordion-trigger type="button">Inner 1</button>
                             </kbq-accordion-header>
                             <kbq-accordion-content>Inner content 1</kbq-accordion-content>
                         </kbq-accordion-item>
-                        <kbq-accordion-item [value]="'inner-2'">
+                        <kbq-accordion-item value="inner-2">
                             <kbq-accordion-header>
                                 <button kbq-accordion-trigger type="button">Inner 2</button>
                             </kbq-accordion-header>
@@ -2872,7 +2872,7 @@ class AccordionInteractiveContent {}
                     </kbq-accordion>
                 </kbq-accordion-content>
             </kbq-accordion-item>
-            <kbq-accordion-item [value]="'outer-2'">
+            <kbq-accordion-item value="outer-2">
                 <kbq-accordion-header>
                     <button kbq-accordion-trigger type="button">Outer 2</button>
                 </kbq-accordion-header>

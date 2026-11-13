@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { filter } from 'rxjs/operators';
+import { filter } from 'rxjs';
 import { type KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormsModule, PopUpPlacements, PopUpSizes } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -56,8 +56,8 @@ import { KbqFilterSavePopover } from './filter-save-popover';
         KbqFormsModule,
         KbqFilterSavePopover
     ],
-    templateUrl: 'filters.html',
-    styleUrls: ['filters.scss'],
+    templateUrl: './filters.html',
+    styleUrl: './filters.scss',
     providers: [{ provide: KBQ_FILTERS, useExisting: forwardRef(() => KbqFilters) }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,

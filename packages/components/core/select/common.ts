@@ -13,8 +13,7 @@ import {
     viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { fromEvent, Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, fromEvent, Subscription } from 'rxjs';
 import { KBQ_FORM_FIELD_REF, type KbqFormFieldRef } from '../form-field';
 import { END, ESCAPE, HOME, SPACE } from '../keycodes';
 import {
@@ -132,7 +131,7 @@ export class KbqSelectSearch implements AfterContentInit {
 
         // The subscription is deferred, so the directive can be destroyed before it even exists —
         // the captured operator owns it either way, while an `ngOnDestroy` unsubscribe would not.
-        Promise.resolve().then(() => {
+        void Promise.resolve().then(() => {
             this.ngControl!.valueChanges!.pipe(this.takeUntilDestroyed).subscribe((value) => {
                 this.isSearchChanged = true;
                 this.changes.next(value);
@@ -166,8 +165,11 @@ export abstract class KbqAbstractSelect {
     /** Overlay directive of the panel. Subclasses resolve it with their own view query. */
     protected abstract overlayDir: CdkConnectedOverlay;
 
-    /** Last measured bounding rect of the trigger. Subclasses refresh it whenever the panel opens. */
-    protected abstract triggerRect: DOMRect;
+    /**
+     * Last measured bounding rect of the trigger, or `undefined` until the panel first opens. Subclasses refresh it
+     * whenever the panel opens.
+     */
+    protected abstract triggerRect: DOMRect | undefined;
 
     /** Positions the `cdkConnectedOverlayPositions` input reads. */
     abstract positions: ConnectedPosition[];
@@ -270,7 +272,6 @@ export abstract class KbqAbstractSelect {
         // Window width without scrollbar
         const windowWidth = this.overlayDir.overlayRef?.hostElement.clientWidth;
         let offsetX: number = 0;
-        let overlayMaxWidth: number;
 
         // Determine if select overflows on either side.
         const leftOverflow = -overlayRect.left;
@@ -278,10 +279,15 @@ export abstract class KbqAbstractSelect {
 
         // If the element overflows on either side, reduce the offset to allow it to fit.
         if (leftOverflow > 0 || rightOverflow > 0) {
-            [offsetX, overlayMaxWidth] = this.calculateOverlayOffsetX(offsetX);
-            this.overlayDir.overlayRef.overlayElement.style.maxWidth = `${overlayMaxWidth}px`;
-            // reset the minWidth property
-            this.overlayDir.overlayRef.overlayElement.style.minWidth = '';
+            const [calculatedOffsetX = offsetX, overlayMaxWidth] = this.calculateOverlayOffsetX(offsetX);
+
+            offsetX = calculatedOffsetX;
+
+            if (overlayMaxWidth !== undefined) {
+                this.overlayDir.overlayRef.overlayElement.style.maxWidth = `${overlayMaxWidth}px`;
+                // reset the minWidth property
+                this.overlayDir.overlayRef.overlayElement.style.minWidth = '';
+            }
         }
 
         // Set the offset directly in order to avoid having to go through change detection and
@@ -292,6 +298,9 @@ export abstract class KbqAbstractSelect {
     }
 
     protected calculateOverlayOffsetX(baseOffsetX: number): number[] {
+        // Measured when the panel opens, which is what creates the overlay positioned here.
+        if (!this.triggerRect) return [baseOffsetX];
+
         let offsetX = baseOffsetX;
         const windowWidth = this.overlayDir.overlayRef?.hostElement.clientWidth;
         const { left: leftIndent, right: triggerRight, width: triggerWidth } = this.triggerRect;

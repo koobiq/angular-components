@@ -9,6 +9,8 @@ export interface WarnPattern {
     anchor?: string;
     pattern: string;
     message: string;
+    /** File extensions checked against `pattern`. Defaults to `.ts`; a template reads a member through `.html`. */
+    extensions?: readonly string[];
 }
 
 /** Options every warn-only migration accepts. */
@@ -27,18 +29,19 @@ export interface WarnOnlyConfig {
 }
 
 /**
- * Builds the rule of a migration that only reports: every `.ts` file of the project that matches a pattern is
- * logged with its message, then the summary. Never writes.
+ * Builds the rule of a migration that only reports: every file of the project that matches a pattern of its extension
+ * is logged with its message, then the summary. Never writes.
  *
  * The patterns are compiled once here rather than per file. None carries the `g` flag, so a shared instance
  * holds no `lastIndex`.
  */
 export function warnOnlyRule(config: WarnOnlyConfig, options: WarnOnlyOptions): Rule {
     const { label, summary } = config;
-    const warnPatterns = config.warnPatterns.map(({ anchor, pattern, message }) => ({
+    const warnPatterns = config.warnPatterns.map(({ anchor, pattern, message, extensions = ['.ts'] }) => ({
         anchor: anchor ? new RegExp(anchor) : null,
         pattern: new RegExp(pattern),
-        message
+        message,
+        extensions
     }));
 
     return async (tree: Tree, context: SchematicContext) => {
@@ -47,13 +50,15 @@ export function warnOnlyRule(config: WarnOnlyConfig, options: WarnOnlyOptions): 
         let reported = 0;
 
         visitProjectFiles(root ? tree.getDir(root) : tree.root, (filePath, entry) => {
-            if (!filePath.endsWith('.ts')) return;
+            const patterns = warnPatterns.filter(({ extensions }) => extensions.some((ext) => filePath.endsWith(ext)));
+
+            if (patterns.length === 0) return;
 
             const content = entry.content.toString();
 
             if (!content) return;
 
-            for (const { anchor, pattern, message } of warnPatterns) {
+            for (const { anchor, pattern, message } of patterns) {
                 if (anchor && !anchor.test(content)) continue;
                 if (!pattern.test(content)) continue;
 

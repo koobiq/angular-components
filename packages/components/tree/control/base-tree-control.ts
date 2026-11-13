@@ -4,7 +4,8 @@ import type { TreeControl } from './tree-control';
 
 /** Base tree control. It has basic toggle/expand/collapse operations on a single data node. */
 export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
-    dataNodes: T[];
+    /** The data nodes of the tree, which its data source assigns. Defaults to `[]`. */
+    dataNodes: T[] = [];
 
     /** A selection model with multi-selection to track expansion status: it holds the key of every expanded node. */
     expansionModel: SelectionModel<K> = new SelectionModel<K>(true);
@@ -21,17 +22,23 @@ export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
 
     filterValue = new BehaviorSubject<T[] | string | null>('');
 
-    /** Get depth of a given data node, return the level number. This is for flat tree node. */
-    getLevel: (dataNode: T) => number;
+    /**
+     * Get depth of a given data node, return the level number. This is for flat tree node: `FlatTreeControl` sets
+     * it, `NestedTreeControl` leaves it `undefined`.
+     */
+    getLevel: ((dataNode: T) => number) | undefined;
 
     /**
      * Whether the data node is expandable. Returns true if expandable.
-     * This is for flat tree node.
+     * This is for flat tree node: `FlatTreeControl` sets it, `NestedTreeControl` leaves it `undefined`.
      */
-    isExpandable: (dataNode: T) => boolean;
+    isExpandable: ((dataNode: T) => boolean) | undefined;
 
-    /** Gets a stream that emits whenever the given data node's children change. */
-    getChildren: (dataNode: T) => Observable<T[]>;
+    /**
+     * Gets a stream that emits whenever the given data node's children change. `NestedTreeControl` sets it,
+     * `FlatTreeControl` leaves it `undefined`.
+     */
+    getChildren: ((dataNode: T) => Observable<T[]>) | undefined;
 
     /** Gets a list of descendent data nodes of a subtree rooted at given data node recursively. */
     abstract getDescendants(dataNode: T): T[];

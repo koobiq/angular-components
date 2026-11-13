@@ -73,7 +73,7 @@ export function getKbqFormFieldYouCanNotUseCleanerInNumberInputError(): Error {
     template: `
         <ng-content />
     `,
-    styleUrls: ['cleaner.scss', '../icon/icon-button.scss', '../icon/icon-button-tokens.scss'],
+    styleUrls: ['./cleaner.scss', '../icon/icon-button.scss', '../icon/icon-button-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

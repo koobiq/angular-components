@@ -23,7 +23,7 @@ import { KbqInputModule } from '@koobiq/components/input';
                 <input kbqInput />
             </kbq-form-field>
 
-            <button kbq-button kbqFieldsetItem kbqStyle="outline">
+            <button kbq-button kbqFieldsetItem type="button" kbqStyle="outline">
                 <i kbq-icon="kbq-floppy-disk_16"></i>
                 Save
             </button>

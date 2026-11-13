@@ -1,5 +1,5 @@
 @use '../core/styles/common';
-@use './filter-bar-theme' as *;
+@use './filter-bar-theme';
 
 .kbq-filters {
     display: flex;
@@ -105,4 +105,4 @@
     padding-inline-end: var(--kbq-size-s);
 }
 
-@include kbq-filter-bar-filters-theme();
+@include filter-bar-theme.kbq-filter-bar-filters-theme();

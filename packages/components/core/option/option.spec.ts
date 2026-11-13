@@ -41,8 +41,8 @@ class OptionWithOwnRole {}
 @Component({
     imports: [KbqOptionModule],
     template: `
-        <kbq-optgroup [label]="'Meat'">
-            <kbq-option [value]="'steak-0'">Steak</kbq-option>
+        <kbq-optgroup label="Meat">
+            <kbq-option value="steak-0">Steak</kbq-option>
         </kbq-optgroup>
     `
 })
@@ -51,8 +51,8 @@ class OptgroupWithLabel {}
 @Component({
     imports: [KbqOptionModule],
     template: `
-        <kbq-optgroup [label]="'Meat'" [disabled]="groupDisabled()">
-            <kbq-option [value]="'steak'">Steak</kbq-option>
+        <kbq-optgroup label="Meat" [disabled]="groupDisabled()">
+            <kbq-option value="steak">Steak</kbq-option>
         </kbq-optgroup>
     `
 })
@@ -74,7 +74,7 @@ class ActionWithDisable {
 @Component({
     imports: [KbqOptionModule],
     template: `
-        <kbq-option [value]="'steak'">Steak</kbq-option>
+        <kbq-option value="steak">Steak</kbq-option>
     `,
     providers: [{ provide: KBQ_OPTION_PARENT_COMPONENT, useValue: { multiSelection: true } }]
 })

@@ -12,8 +12,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { merge, startWith } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, merge, startWith } from 'rxjs';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
@@ -53,8 +52,8 @@ import { kbqFilterSelectValuesBySearch } from './select-pipe-search';
         KbqPseudoCheckboxModule,
         KbqHighlightModule
     ],
-    templateUrl: 'pipe-multi-select.html',
-    styleUrls: ['base-pipe.scss', 'pipe-multiselect.scss'],
+    templateUrl: './pipe-multi-select.html',
+    styleUrls: ['./base-pipe.scss', './pipe-multiselect.scss'],
     providers: [
         {
             provide: KbqBasePipe,

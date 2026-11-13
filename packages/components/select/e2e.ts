@@ -19,13 +19,13 @@ import { KbqSelectModule } from './select.module';
     ],
     template: `
         <kbq-form-field>
-            <kbq-select data-testid="e2eSelect" [value]="'selected'">
-                <kbq-optgroup class="cdk-keyboard-focused" [label]="'group'">
-                    <kbq-option [value]="'default'">default</kbq-option>
-                    <kbq-option [value]="'selected'">selected</kbq-option>
-                    <kbq-option class="kbq-active" [value]="'focused'">focused</kbq-option>
-                    <kbq-option class="kbq-pressed" [value]="'pressed'">pressed</kbq-option>
-                    <kbq-option [disabled]="true" [value]="'disabled'">disabled</kbq-option>
+            <kbq-select data-testid="e2eSelect" value="selected">
+                <kbq-optgroup class="cdk-keyboard-focused" label="group">
+                    <kbq-option value="default">default</kbq-option>
+                    <kbq-option value="selected">selected</kbq-option>
+                    <kbq-option class="kbq-active" value="focused">focused</kbq-option>
+                    <kbq-option class="kbq-pressed" value="pressed">pressed</kbq-option>
+                    <kbq-option value="disabled" [disabled]="true">disabled</kbq-option>
                 </kbq-optgroup>
             </kbq-select>
         </kbq-form-field>
@@ -57,17 +57,17 @@ export class E2eSelectStates {}
     template: `
         <kbq-form-field style="width: 200px">
             <kbq-select data-testid="e2eMultiSelect" [multiple]="true" [value]="['selected', 'default', 'default1']">
-                <kbq-optgroup class="cdk-keyboard-focused" [label]="'group'">
-                    <kbq-option [value]="'default'">default</kbq-option>
-                    <kbq-option [value]="'default'">
+                <kbq-optgroup class="cdk-keyboard-focused" label="group">
+                    <kbq-option value="default">default</kbq-option>
+                    <kbq-option value="default">
                         <div>default + caption</div>
                         <div class="kbq-option-caption">caption</div>
                     </kbq-option>
-                    <kbq-option [value]="'default1'">default1 long name long name long name</kbq-option>
-                    <kbq-option [value]="'selected'">selected</kbq-option>
-                    <kbq-option class="kbq-active" [value]="'focused'">focused</kbq-option>
-                    <kbq-option class="kbq-pressed" [value]="'pressed'">pressed</kbq-option>
-                    <kbq-option [disabled]="true" [value]="'disabled'">disabled</kbq-option>
+                    <kbq-option value="default1">default1 long name long name long name</kbq-option>
+                    <kbq-option value="selected">selected</kbq-option>
+                    <kbq-option class="kbq-active" value="focused">focused</kbq-option>
+                    <kbq-option class="kbq-pressed" value="pressed">pressed</kbq-option>
+                    <kbq-option value="disabled" [disabled]="true">disabled</kbq-option>
                 </kbq-optgroup>
             </kbq-select>
         </kbq-form-field>
@@ -104,13 +104,13 @@ export class E2eMultiSelectStates {}
                 [multiline]="true"
                 [value]="['selected', 'default', 'default1']"
             >
-                <kbq-optgroup class="cdk-keyboard-focused" [label]="'group'">
-                    <kbq-option [value]="'default'">default</kbq-option>
-                    <kbq-option [value]="'default1'">default1 long name long name long name</kbq-option>
-                    <kbq-option [value]="'selected'">selected</kbq-option>
-                    <kbq-option class="kbq-active" [value]="'focused'">focused</kbq-option>
-                    <kbq-option class="kbq-pressed" [value]="'pressed'">pressed</kbq-option>
-                    <kbq-option [disabled]="true" [value]="'disabled'">disabled</kbq-option>
+                <kbq-optgroup class="cdk-keyboard-focused" label="group">
+                    <kbq-option value="default">default</kbq-option>
+                    <kbq-option value="default1">default1 long name long name long name</kbq-option>
+                    <kbq-option value="selected">selected</kbq-option>
+                    <kbq-option class="kbq-active" value="focused">focused</kbq-option>
+                    <kbq-option class="kbq-pressed" value="pressed">pressed</kbq-option>
+                    <kbq-option value="disabled" [disabled]="true">disabled</kbq-option>
                 </kbq-optgroup>
             </kbq-select>
         </kbq-form-field>
@@ -143,8 +143,8 @@ export class E2eMultilineSelectStates {}
                 [multilineOptions]="multilineOptions()"
                 (toggleMultilineOptions)="toggleMultilineOptions()"
             >
-                <kbq-option data-testid="e2eOption-short" [value]="'short'">Short option</kbq-option>
-                <kbq-option data-testid="e2eOption-long" [value]="'long'">
+                <kbq-option data-testid="e2eOption-short" value="short">Short option</kbq-option>
+                <kbq-option data-testid="e2eOption-long" value="long">
                     Long option text with spaces and SupercalifragilisticexpialidociousUnbrokenToken
                 </kbq-option>
             </kbq-select>
@@ -217,21 +217,21 @@ export class E2eSelectSelectionState {
     ],
     template: `
         <kbq-form-field style="width: 200px">
-            <kbq-select data-testid="e2eSelect" [value]="'selected'">
+            <kbq-select data-testid="e2eSelect" value="selected">
                 <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-                    <input kbqInput type="text" [ngModel]="''" />
+                    <input kbqInput type="text" ngModel="" />
                     <kbq-cleaner />
                 </kbq-form-field>
 
                 <div kbq-select-search-empty-result>Nothing found</div>
 
-                <kbq-optgroup class="cdk-keyboard-focused" [label]="'group'">
-                    <kbq-option [value]="'default'">default</kbq-option>
-                    <kbq-option [value]="'default1'">default1 long name long name long name</kbq-option>
-                    <kbq-option [value]="'selected'">selected</kbq-option>
-                    <kbq-option class="kbq-active" [value]="'focused'">focused</kbq-option>
-                    <kbq-option [disabled]="true" [value]="'disabled'">disabled</kbq-option>
+                <kbq-optgroup class="cdk-keyboard-focused" label="group">
+                    <kbq-option value="default">default</kbq-option>
+                    <kbq-option value="default1">default1 long name long name long name</kbq-option>
+                    <kbq-option value="selected">selected</kbq-option>
+                    <kbq-option class="kbq-active" value="focused">focused</kbq-option>
+                    <kbq-option value="disabled" [disabled]="true">disabled</kbq-option>
                 </kbq-optgroup>
 
                 <kbq-select-footer>Caption ⌥+⌘+F</kbq-select-footer>
@@ -402,7 +402,7 @@ export class E2eMultiSelectPositioning {
                         }
                     </kbq-optgroup>
                 }
-                <kbq-option [attr.data-testid]="'e2eOption-mime-11'" [value]="'mime-11'">Mr. Mime</kbq-option>
+                <kbq-option value="mime-11" [attr.data-testid]="'e2eOption-mime-11'">Mr. Mime</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `,
@@ -675,12 +675,12 @@ export class E2eVirtualScrollMultiSelectNarrow {
     template: `
         <kbq-form-field>
             <kbq-select data-testid="e2eSelect">
-                <kbq-option data-testid="e2eOption-short" [value]="'value1'">Not long text</kbq-option>
-                <kbq-option data-testid="e2eOption-long" style="max-width: 200px;" [value]="'value2'">
+                <kbq-option data-testid="e2eOption-short" value="value1">Not long text</kbq-option>
+                <kbq-option data-testid="e2eOption-long" style="max-width: 200px;" value="value2">
                     Long long long long Long long long long Long long long long Long long long long Long long long long
                     Long long long long text
                 </kbq-option>
-                <kbq-option data-testid="e2eOption-changing" style="max-width: 200px;" [value]="'value3'">
+                <kbq-option data-testid="e2eOption-changing" style="max-width: 200px;" value="value3">
                     {{ changingLabel() }}
                 </kbq-option>
             </kbq-select>
@@ -793,23 +793,23 @@ export class E2eVirtualScrollSelectPanelMaxHeight {
         <div style="display: flex; gap: 16px;">
             <kbq-form-field>
                 <kbq-select data-testid="e2eSelectEmpty" multiple selectAll placeholder="Empty">
-                    <kbq-option [value]="'a'">Option A</kbq-option>
-                    <kbq-option [value]="'b'">Option B</kbq-option>
-                    <kbq-option [value]="'c'">Option C</kbq-option>
+                    <kbq-option value="a">Option A</kbq-option>
+                    <kbq-option value="b">Option B</kbq-option>
+                    <kbq-option value="c">Option C</kbq-option>
                 </kbq-select>
             </kbq-form-field>
             <kbq-form-field>
                 <kbq-select data-testid="e2eSelectPartial" multiple selectAll placeholder="Partial" [value]="['a']">
-                    <kbq-option [value]="'a'">Option A</kbq-option>
-                    <kbq-option [value]="'b'">Option B</kbq-option>
-                    <kbq-option [value]="'c'">Option C</kbq-option>
+                    <kbq-option value="a">Option A</kbq-option>
+                    <kbq-option value="b">Option B</kbq-option>
+                    <kbq-option value="c">Option C</kbq-option>
                 </kbq-select>
             </kbq-form-field>
             <kbq-form-field>
                 <kbq-select data-testid="e2eSelectFull" multiple selectAll placeholder="Full" [value]="['a', 'b', 'c']">
-                    <kbq-option [value]="'a'">Option A</kbq-option>
-                    <kbq-option [value]="'b'">Option B</kbq-option>
-                    <kbq-option [value]="'c'">Option C</kbq-option>
+                    <kbq-option value="a">Option A</kbq-option>
+                    <kbq-option value="b">Option B</kbq-option>
+                    <kbq-option value="c">Option C</kbq-option>
                 </kbq-select>
             </kbq-form-field>
         </div>
@@ -837,7 +837,7 @@ export class E2eSelectSelectAllStates {}
     ],
     template: `
         <kbq-form-field>
-            <kbq-select data-testid="e2eSelect" [value]="'Option 0'">
+            <kbq-select data-testid="e2eSelect" value="Option 0">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
@@ -927,7 +927,7 @@ export class E2eVirtualScrollSelectScrollbar {
     protected selected = this.options[0];
 
     protected openedChange(isOpened: boolean): void {
-        if (!isOpened) return;
+        if (!isOpened || !this.selected) return;
         this.viewport().scrollToIndex(this.options.indexOf(this.selected));
     }
 }

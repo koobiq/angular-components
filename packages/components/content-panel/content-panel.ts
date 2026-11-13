@@ -20,8 +20,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, Subject } from 'rxjs';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import {
     KBQ_A11Y_LOCALE_CONFIGURATION,

@@ -16,7 +16,7 @@ if (params === 'onlyCheck') {
 } else if (params) {
     buildConfig.components = [];
 
-    const [folder, component] = params.split('/');
+    const [folder = '', component] = params.split('/');
 
     buildConfig[folder] = [component];
 }

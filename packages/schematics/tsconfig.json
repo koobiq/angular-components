@@ -1,8 +1,6 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
-        // tsconfig.strict.json leaves it off until DS-5813, and this project already passes it.
-        "strictPropertyInitialization": true,
         "rootDir": "./",
         "baseUrl": "./",
         "outDir": "dist",
@@ -12,5 +10,7 @@
         "skipDefaultLibCheck": true,
         "types": ["node", "vitest/globals"]
     },
-    "include": ["./**/*.ts"]
+    "include": ["./**/*.ts"],
+    // The rollup build type-checks what is included here, so the specs stay with tsconfig.spec.json and its strictness.
+    "exclude": ["node_modules", "dist", "**/*.spec.ts"]
 }

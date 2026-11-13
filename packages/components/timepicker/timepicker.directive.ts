@@ -317,7 +317,7 @@ export class KbqTimepicker<D>
     get timeFormatPlaceholder(): string {
         return (
             this.localeConfiguration().placeholder[TimeFormatToLocaleKeys[this.format()]] ||
-            TIMEFORMAT_PLACEHOLDERS[this.format()]
+            TIMEFORMAT_PLACEHOLDERS[this.format()]!
         );
     }
 
@@ -646,7 +646,7 @@ export class KbqTimepicker<D>
         if (match?.groups) {
             const { number, symbol } = match.groups;
 
-            formattedValue = value.replace(number + symbol, `0${number}`);
+            formattedValue = value.replace(`${number}${symbol}`, `0${number}`);
         }
 
         return formattedValue;
@@ -660,15 +660,15 @@ export class KbqTimepicker<D>
         if (match?.groups) {
             const { hours, minutes, seconds } = match.groups;
 
-            if (hours.length) {
+            if (hours) {
                 formattedValue = formattedValue.replace(hours, this.normalizeTimePart(hours, HOURS_PER_DAY));
             }
 
-            if (minutes.length) {
+            if (minutes) {
                 formattedValue = formattedValue.replace(minutes, this.normalizeTimePart(minutes, MINUTES_PER_HOUR));
             }
 
-            if (seconds.length) {
+            if (seconds) {
                 formattedValue = formattedValue.replace(seconds, this.normalizeTimePart(seconds, SECONDS_PER_MINUTE));
             }
         }
@@ -951,7 +951,9 @@ export class KbqTimepicker<D>
             hours = Number(amPm[1]);
             minutes = Number(amPm[2]);
 
-            if (/[p]/i.test(amPm[3]) || (/[a]/i.test(amPm[3]) && hours === 12)) {
+            const meridiem = amPm[3]!;
+
+            if (/[p]/i.test(meridiem) || (/[a]/i.test(meridiem) && hours === 12)) {
                 hours += 12;
             }
         } else if (HMS && this.isShortFormat) {

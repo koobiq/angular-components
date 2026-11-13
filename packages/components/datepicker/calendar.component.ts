@@ -30,8 +30,8 @@ import { KbqMonthView } from './month-view.component';
         KbqCalendarHeader,
         KbqMonthView
     ],
-    templateUrl: 'calendar.html',
-    styleUrls: ['calendar.scss'],
+    templateUrl: './calendar.html',
+    styleUrl: './calendar.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -55,7 +55,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
             deserializedValue !== null ? this.adapter.clampDate(deserializedValue, this.minDate, this.maxDate) : null;
     }
 
-    private _startAt: D | null;
+    private _startAt: D | null = null;
 
     /** The currently selected date. */
     get selected(): D | null {
@@ -66,7 +66,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
         this._selected = this.adapter.deserialize(value);
     }
 
-    private _selected: D | null;
+    private _selected: D | null = null;
 
     /** The minimum selectable date. */
     get minDate(): D | null {
@@ -79,7 +79,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
         this.startAt = this._startAt;
     }
 
-    private _minDate: D | null;
+    private _minDate: D | null = null;
 
     /** The maximum selectable date. */
     get maxDate(): D | null {
@@ -92,7 +92,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
         this.startAt = this._startAt;
     }
 
-    private _maxDate: D | null;
+    private _maxDate: D | null = null;
 
     /** @docs-private */
     readonly startAtInput = input<D | null | undefined>(undefined, { alias: 'startAt' });
@@ -120,7 +120,8 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
         this.stateChanges.next();
     }
 
-    private _activeDate: D;
+    // What the setter gives before any bound or `startAt` is set; `ngAfterContentInit` resolves it against them.
+    private _activeDate: D = this.adapter.today();
 
     /** Function used to filter which dates are selectable. */
     readonly dateFilter = input<(date: D) => boolean>(undefined!);

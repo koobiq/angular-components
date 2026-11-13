@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { timer } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { take, timer } from 'rxjs';
 import {
     type KbqFileItem,
     KbqMultipleFileUploadComponent,
@@ -39,7 +38,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     }
 })
 export class FileUploadIndeterminateLoadingOverviewExample {
-    isLoading: boolean;
+    isLoading = false;
 
     onFileChange(file: KbqFileItem | null) {
         if (!file) {

@@ -145,7 +145,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
      */
     private get hasOnlyText(): boolean {
         return (
-            this.nativeElement.childNodes.length === 1 && this.nativeElement.childNodes[0].nodeType === Node.TEXT_NODE
+            this.nativeElement.childNodes.length === 1 && this.nativeElement.childNodes[0]?.nodeType === Node.TEXT_NODE
         );
     }
 

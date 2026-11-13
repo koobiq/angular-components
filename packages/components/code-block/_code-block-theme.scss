@@ -1,4 +1,4 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @function kbq-code-block-hljs-attr($attr) {
     @return var(--kbq-code-block-hljs-#{$attr});
@@ -321,7 +321,7 @@
 
 @mixin kbq-code-block-typography() {
     .kbq-code-block {
-        @include kbq-typography-level-to-styles-css-variables(typography, mono-codeblock);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-codeblock);
 
         .kbq-code-block__pre,
         .kbq-code-block__code {

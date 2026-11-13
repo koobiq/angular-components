@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { delay } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { delay, distinctUntilChanged } from 'rxjs';
 import {
     KBQ_LOCALE_SERVICE,
     KbqFormattersModule,

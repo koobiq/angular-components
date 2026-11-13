@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, fromEvent, type Observable, type Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { BehaviorSubject, debounceTime, fromEvent, type Observable, type Subscription } from 'rxjs';
 import { kbqAnimationsDisabled } from '@koobiq/components/core';
 
 export enum DocsNavbarState {
@@ -68,7 +67,7 @@ export class DocsDocStates {
             .pipe(debounceTime(10))
             .subscribe(this.checkHeaderOverflow);
 
-        Promise.resolve().then(() => this.checkHeaderOverflow());
+        void Promise.resolve().then(() => this.checkHeaderOverflow());
     }
 
     checkHeaderOverflow = () => {

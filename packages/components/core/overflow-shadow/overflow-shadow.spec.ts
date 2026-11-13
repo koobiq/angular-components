@@ -83,9 +83,9 @@ class TestHostComponent {
     selector: 'test-overflow-shadow-custom-shadow-host',
     imports: [KbqOverflowShadowContainer, KbqOverflowShadowTop, KbqOverflowShadowBottom],
     template: `
-        <header data-testid="header" [kbqOverflowShadowTop]="container" [shadow]="'10px 10px red'">header</header>
+        <header data-testid="header" shadow="10px 10px red" [kbqOverflowShadowTop]="container">header</header>
         <div #container="kbqOverflowShadowContainer" data-testid="body" kbqOverflowShadowContainer>body</div>
-        <footer data-testid="footer" [kbqOverflowShadowBottom]="container" [shadow]="'20px 20px blue'">footer</footer>
+        <footer data-testid="footer" shadow="20px 20px blue" [kbqOverflowShadowBottom]="container">footer</footer>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

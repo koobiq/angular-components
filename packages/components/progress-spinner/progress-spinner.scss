@@ -1,9 +1,6 @@
 @use '../core/styles/common/animation';
 @use '../core/styles/functions/timing';
-
-@use '../core/styles/common/tokens' as *;
-
-@use './progress-spinner-theme' as *;
+@use './progress-spinner-theme';
 
 @keyframes kbq-progress-spinner-indeterminate {
     100% {
@@ -76,5 +73,5 @@
     }
 }
 
-@include kbq-progress-spinner-theme();
-@include kbq-progress-spinner-typography();
+@include progress-spinner-theme.kbq-progress-spinner-theme();
+@include progress-spinner-theme.kbq-progress-spinner-typography();

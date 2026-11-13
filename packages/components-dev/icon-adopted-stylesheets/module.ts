@@ -37,7 +37,7 @@ type IconMode = 'style' | 'adopted' | 'adopted-layer';
         DevThemeToggle
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

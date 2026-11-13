@@ -27,7 +27,7 @@ type NavbarLink = {
         KbqIconModule,
         NgTemplateOutlet
     ],
-    templateUrl: 'navbar-template-outlet-example.html',
+    templateUrl: './navbar-template-outlet-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarTemplateOutletExample {

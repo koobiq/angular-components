@@ -13,7 +13,7 @@
     <div class="kbq-popover__container">
         <div class="kbq-popover__content" [class.kbq-popover__content_default-paddings]="defaultPaddings">
             <div>{{ confirmText }}</div>
-            <button kbq-button [color]="componentColors.Contrast" (click)="onConfirm.next()">
+            <button kbq-button type="button" [color]="componentColors.Contrast" (click)="onConfirm.next()">
                 {{ confirmButtonText }}
             </button>
         </div>

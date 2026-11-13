@@ -1238,13 +1238,11 @@ interface ITab {
             </kbq-tab-header>
         </div>
     `,
-    styles: [
-        `
-            :host {
-                width: 130px;
-            }
-        `
-    ]
+    styles: `
+        :host {
+            width: 130px;
+        }
+    `
 })
 class SimpleTabHeaderApp {
     selectedIndex: number = 0;

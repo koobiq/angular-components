@@ -3,10 +3,10 @@
         <label class="kbq-form__label">Position</label>
         <kbq-form-field style="min-width: 120px" class="kbq-form__control flex-10">
             <kbq-select [(value)]="position">
-                <kbq-option [value]="'right'">Right</kbq-option>
-                <kbq-option [value]="'left'">Left</kbq-option>
-                <kbq-option [value]="'top'">Top</kbq-option>
-                <kbq-option [value]="'bottom'">Bottom</kbq-option>
+                <kbq-option value="right">Right</kbq-option>
+                <kbq-option value="left">Left</kbq-option>
+                <kbq-option value="top">Top</kbq-option>
+                <kbq-option value="bottom">Bottom</kbq-option>
             </kbq-select>
         </kbq-form-field>
     </div>
@@ -14,7 +14,7 @@
 
 <br />
 
-<button kbq-button [color]="'contrast'" (click)="openSidepanel()">
+<button kbq-button type="button" color="contrast" (click)="openSidepanel()">
     <span>Open sidepanel</span>
 </button>
 
@@ -32,7 +32,7 @@
 
     <kbq-sidepanel-footer>
         <kbq-sidepanel-actions align="left">
-            <button cdkFocusInitial kbq-button [color]="'contrast'">
+            <button cdkFocusInitial kbq-button type="button" color="contrast">
                 <span>Button</span>
             </button>
         </kbq-sidepanel-actions>

@@ -45,9 +45,9 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
         <kbq-form-field>
             <input kbqInputPassword [disabled]="disabled" [readonly]="readonly" [(ngModel)]="value" />
             <kbq-password-toggle
-                [kbqTooltipNotHidden]="'Скрыть пароль'"
+                kbqTooltipNotHidden="Скрыть пароль"
+                kbqTooltipHidden="Показать пароль"
                 [kbqTooltipDisabled]="disabled"
-                [kbqTooltipHidden]="'Показать пароль'"
             />
 
             <kbq-reactive-password-hint>От 8 до 64 символов</kbq-reactive-password-hint>

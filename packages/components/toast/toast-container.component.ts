@@ -24,7 +24,7 @@ import { KBQ_TOAST_STACK, KbqToastData, type KbqToastTemplateContext } from './t
 @Component({
     selector: 'kbq-toast-container',
     template: '<ng-container #container />',
-    styleUrls: ['./toast-container.component.scss'],
+    styleUrl: './toast-container.component.scss',
     // A container written into a consumer's template has no stack above it — `KbqToastService` provides
     // itself only for the container it creates — so `createToast()` would leave the toast without one.
     // `forwardRef` because the service imports this file back.

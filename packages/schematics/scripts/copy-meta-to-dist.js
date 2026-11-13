@@ -18,7 +18,7 @@ const resolvePath = (...segments) => resolve(__dirname, ...segments);
 const ensureDirectoryExistence = async (filePath) => {
     try {
         await access(filePath);
-    } catch (error) {
+    } catch {
         await mkdir(filePath, { recursive: true });
     }
 };

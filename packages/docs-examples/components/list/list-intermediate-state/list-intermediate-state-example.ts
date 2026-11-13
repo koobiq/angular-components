@@ -1,8 +1,7 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
-import { merge, type Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, merge, type Observable, of } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqPseudoCheckbox, type KbqPseudoCheckboxState, PopUpPlacements, PopUpSizes } from '@koobiq/components/core';
 import { KbqEmptyState } from '@koobiq/components/empty-state';
@@ -218,10 +217,10 @@ export class ListIntermediateStateExample {
         }
     ];
 
-    usersSelectedInOtherGroups: ExampleUser[] = [this.users[0]];
+    usersSelectedInOtherGroups: ExampleUser[] = this.users.slice(0, 1);
     savedUsersSelectedInOtherGroups: ExampleUser[] = [];
 
-    selected: ExampleUser[] = [this.users[5], this.users[8], this.users[11]];
+    selected: ExampleUser[] = this.users.filter((_, index) => [5, 8, 11].includes(index));
     savedSelection: ExampleUser[] = [];
     needRestore: boolean = true;
 

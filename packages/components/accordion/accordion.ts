@@ -89,7 +89,7 @@ const normalizeAccordionState = (parsed: unknown): KbqAccordionState | null => {
 @Component({
     selector: 'kbq-accordion, [kbq-accordion]',
     template: '<ng-content />',
-    styleUrls: ['accordion.scss', 'accordion-tokens.scss'],
+    styleUrls: ['./accordion.scss', './accordion-tokens.scss'],
     providers: [
         { provide: UniqueSelectionDispatcher, useClass: UniqueSelectionDispatcher }
     ],
@@ -117,7 +117,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit,
     private readonly injector = inject(Injector);
 
     /** @docs-private */
-    protected keyManager: FocusKeyManager<KbqAccordionItem>;
+    protected keyManager: FocusKeyManager<KbqAccordionItem> | undefined;
 
     /** Emits every time `openAll()` or `closeAll()` is called. @docs-private */
     readonly openCloseAllActions = new Subject<boolean>();
@@ -292,7 +292,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit,
     }
 
     ngAfterViewInit(): void {
-        this.focusMonitor.monitor(this.elementRef, true);
+        void this.focusMonitor.monitor(this.elementRef, true);
     }
 
     ngOnDestroy(): void {
@@ -312,20 +312,17 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit,
      * @docs-private
      */
     keydownHandler(event: KeyboardEvent) {
-        const activeItem = this.keyManager?.activeItem;
+        const keyManager = this.keyManager;
+        const activeItem = keyManager?.activeItem;
 
-        if (!activeItem) return;
+        if (!keyManager || !activeItem) return;
 
-        if (
-            (event.keyCode === ENTER || event.keyCode === SPACE) &&
-            !this.keyManager.isTyping() &&
-            !activeItem.disabled
-        ) {
+        if ((event.keyCode === ENTER || event.keyCode === SPACE) && !keyManager.isTyping() && !activeItem.disabled) {
             event.preventDefault();
             activeItem.toggle();
         } else {
             // Arrow/Home/End move between headers; Tab falls through natively (WAI-ARIA APG pattern).
-            this.keyManager.onKeydown(event);
+            keyManager.onKeydown(event);
         }
     }
 

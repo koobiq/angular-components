@@ -7,9 +7,9 @@ import { DocsExamplePage } from './example-page';
  * such as its breadcrumbs, keep it on its page.
  */
 const matchExample: UrlMatcher = (segments) =>
-    segments.length > 0 && Object.hasOwn(EXAMPLE_COMPONENTS, segments[0].path) ? { consumed: segments } : null;
+    segments[0] && Object.hasOwn(EXAMPLE_COMPONENTS, segments[0].path) ? { consumed: segments } : null;
 
-const resolveExampleTitle: ResolveFn<string> = ({ url: [{ path }] }) => EXAMPLE_COMPONENTS[path].title;
+const resolveExampleTitle: ResolveFn<string> = ({ url }) => EXAMPLE_COMPONENTS[url[0]!.path]!.title;
 
 export const DOCS_EXAMPLE_PAGE_ROUTES: Routes = [
     { matcher: matchExample, component: DocsExamplePage, title: resolveExampleTitle }

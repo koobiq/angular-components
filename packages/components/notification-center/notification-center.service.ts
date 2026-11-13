@@ -9,8 +9,7 @@ import {
     type WritableSignal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, merge, type Observable, Subject } from 'rxjs';
-import { map, skip } from 'rxjs/operators';
+import { BehaviorSubject, map, merge, type Observable, skip, Subject } from 'rxjs';
 import { DateAdapter, DateFormatter, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { KbqToastService, type KbqToastStyle } from '@koobiq/components/toast';
 
@@ -190,8 +189,8 @@ export class KbqNotificationCenterService {
         // Newest notifications first within each day.
         groups.forEach((group) => group.items.sort(this.compareByDateDesc));
 
-        // Newest day first.
-        return groups.sort((a, b) => this.compareByDateDesc(a.items[0], b.items[0]));
+        // Newest day first. A group is created together with its first item, so `items` is never empty.
+        return groups.sort((a, b) => this.compareByDateDesc(a.items[0]!, b.items[0]!));
     });
 
     /**

@@ -138,7 +138,7 @@ export class KbqButtonGroupRoot extends KbqColorDirective<KbqButtonColor> implem
     template: `
         <ng-content />
     `,
-    styleUrls: ['./button-group.scss'],
+    styleUrl: './button-group.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

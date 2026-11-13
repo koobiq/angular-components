@@ -193,12 +193,12 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
         return this.button() || this.formField();
     }
 
-    /** @docs-private */
-    get tooltip(): KbqTooltipTrigger {
+    /** Tooltip of a `kbq-navbar-item`; a brand and a toggle have none. @docs-private */
+    get tooltip(): KbqTooltipTrigger | undefined {
         return this._tooltip;
     }
 
-    private _tooltip: KbqTooltipTrigger;
+    private _tooltip?: KbqTooltipTrigger;
 
     /** @docs-private */
     readonly onFocus = new Subject<KbqNavbarFocusableItemEvent>();
@@ -279,7 +279,7 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
 
     /** @docs-private */
     ngAfterViewInit(): void {
-        this.focusMonitor.monitor(this.elementRef);
+        void this.focusMonitor.monitor(this.elementRef);
     }
 
     /** @docs-private */

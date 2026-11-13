@@ -2927,21 +2927,21 @@ class TestExternalConfigApp {}
     template: `
         <kbq-navbar>
             <kbq-navbar-container>
-                <a href="#" kbq-navbar-brand [tooltipText]="'Brand'">
+                <a href="#" kbq-navbar-brand tooltipText="Brand">
                     <kbq-navbar-logo>
                         <i kbq-icon="kbq-circle-info_16"></i>
                     </kbq-navbar-logo>
                 </a>
-                <kbq-navbar-item [tooltipText]="'Notifications'">
+                <kbq-navbar-item tooltipText="Notifications">
                     <i kbq-icon="kbq-circle-info_16"></i>
                 </kbq-navbar-item>
-                <button kbq-navbar-item [tooltipText]="'Settings'">
+                <button kbq-navbar-item tooltipText="Settings">
                     <i kbq-icon="kbq-play_16"></i>
                 </button>
             </kbq-navbar-container>
         </kbq-navbar>
 
-        <button id="plain" [kbqTooltip]="'Plain'"></button>
+        <button id="plain" kbqTooltip="Plain"></button>
     `
 })
 class TestTooltipApp {}
@@ -2952,7 +2952,7 @@ class TestTooltipApp {}
     template: `
         <kbq-navbar>
             <kbq-navbar-container>
-                <kbq-navbar-item [kbqTooltip]="'Notifications'">
+                <kbq-navbar-item kbqTooltip="Notifications">
                     <i kbq-icon="kbq-circle-info_16"></i>
                 </kbq-navbar-item>
             </kbq-navbar-container>

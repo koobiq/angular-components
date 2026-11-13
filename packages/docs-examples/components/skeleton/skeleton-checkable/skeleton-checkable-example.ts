@@ -32,9 +32,9 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
                 <kbq-hint>The next synchronization starts at 12:00</kbq-hint>
             </kbq-checkbox>
             <kbq-radio-group name="protocol">
-                <kbq-radio-button [checked]="true" [value]="'ldaps'">LDAPS</kbq-radio-button>
-                <kbq-radio-button [value]="'ldap'">LDAP</kbq-radio-button>
-                <kbq-radio-button [value]="'starttls'">LDAP with StartTLS</kbq-radio-button>
+                <kbq-radio-button value="ldaps" [checked]="true">LDAPS</kbq-radio-button>
+                <kbq-radio-button value="ldap">LDAP</kbq-radio-button>
+                <kbq-radio-button value="starttls">LDAP with StartTLS</kbq-radio-button>
             </kbq-radio-group>
             <kbq-toggle>
                 Notify the administrators

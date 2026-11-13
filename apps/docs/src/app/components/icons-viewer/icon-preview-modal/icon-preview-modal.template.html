@@ -1,6 +1,12 @@
 <kbq-modal-title>
     {{ iconItem.name }}
-    <button kbq-button class="kbq-modal-close kbq-button_transparent" [color]="'contrast'" (click)="modal.close()">
+    <button
+        kbq-button
+        type="button"
+        class="kbq-modal-close kbq-button_transparent"
+        color="contrast"
+        (click)="modal.close()"
+    >
         <i kbq-icon="kbq-xmark_16" [color]="componentColors.Contrast"></i>
     </button>
 </kbq-modal-title>
@@ -31,12 +37,12 @@
         </kbq-form-field>
 
         <div class="docs-icon-preview-modal__buttons">
-            <button kbq-button (click)="downloadSVG()">
+            <button kbq-button type="button" (click)="downloadSVG()">
                 <i kbq-icon="kbq-arrow-down-to-line_16"></i>
                 {{ t('downloadSvg') }}
             </button>
 
-            <button kbq-button (click)="copySVG()">
+            <button kbq-button type="button" (click)="copySVG()">
                 <i kbq-icon="kbq-file-multiple-o_16"></i>
                 {{ t('copySvg') }}
             </button>
@@ -70,7 +76,7 @@
             <kbq-dd class="docs-icon-preview-modal__key-words">
                 @for (tag of iconItem.tags; track $index) {
                     <kbq-badge
-                        [badgeColor]="'fade-theme'"
+                        badgeColor="fade-theme"
                         [tabindex]="0"
                         (click)="onTagSelect(tag)"
                         (keydown.enter)="onTagSelect(tag)"

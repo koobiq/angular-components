@@ -22,8 +22,8 @@ import { KbqInputModule } from '@koobiq/components/input';
         <kbq-alert
             class="layout-margin-bottom-xs"
             style="width: 100%"
-            [alertColor]="'warning'"
-            [alertStyle]="'colored'"
+            alertColor="warning"
+            alertStyle="colored"
             [compact]="true"
         >
             Parameters with inline editing are visually left-aligned with other elements on the screen

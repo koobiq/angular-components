@@ -17,7 +17,7 @@ import { injectExampleText } from '../localized-data';
         KbqToolTipModule,
         KbqIconModule
     ],
-    templateUrl: 'navbar-vertical-app-long-name-example.html',
+    templateUrl: './navbar-vertical-app-long-name-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarVerticalAppLongNameExample {

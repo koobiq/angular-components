@@ -61,17 +61,16 @@ export const parseFrontmatter = (text: string): Frontmatter | null => {
         return value;
     };
 
-    for (const line of match[1].split('\n')) {
+    for (const line of match[1]?.split('\n') ?? []) {
         if (!line.trim() || line.trim().startsWith('#')) continue;
 
-        const field = FIELD.exec(line.trimEnd());
+        const [, indent, key, value] = FIELD.exec(line.trimEnd()) ?? [];
 
-        if (!field || (field[1] && !nested) || field[1].includes('\t')) {
+        if (indent === undefined || key === undefined || (indent && !nested) || indent.includes('\t')) {
             problems.push(`a line this check cannot read: ${line.trim()}`);
             continue;
         }
 
-        const [, indent, key, value] = field;
         const map = indent ? nested! : fields;
 
         if (map.has(key)) problems.push(`"${key}" is set twice`);
@@ -142,7 +141,7 @@ const createRelativeLinkCheck = (from: string, files: ReadonlySet<string>) => (u
     let path: string;
 
     try {
-        path = decodeURI(url.split('#')[0]);
+        path = decodeURI(url.split('#')[0] ?? '');
     } catch {
         return `a link with a malformed escape: ${url}`;
     }
@@ -162,7 +161,7 @@ const escapeRegExp = (text: string): string => text.replace(/[.*+?^${}()|[\]\\]/
 /** The paths of the site a skill names in code that match no file the site serves. */
 const findSitePathProblems = (text: string, served: ReadonlySet<string>): string[] =>
     [...text.matchAll(SITE_PATH)]
-        .map(([, template]) => template)
+        .flatMap(([, template]) => template ?? [])
         .filter((template) => {
             const pattern = new RegExp(
                 `^${template

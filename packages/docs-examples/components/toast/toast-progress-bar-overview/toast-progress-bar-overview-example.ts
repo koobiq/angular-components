@@ -16,14 +16,18 @@ import { KbqToastService } from '@koobiq/components/toast';
     ],
     template: `
         <ng-template #toastStickyContentTemplate let-toast>
-            <kbq-progress-bar class="layout-margin-top-m layout-margin-bottom-m" [mode]="'indeterminate'" />
+            <kbq-progress-bar class="layout-margin-top-m layout-margin-bottom-m" mode="indeterminate" />
         </ng-template>
 
         <ng-template #toastStickyActionsTemplate let-toast>
             <a kbqLink pseudo (click)="toast.close()">Отмена</a>
         </ng-template>
 
-        <button kbq-button (click)="showStickyToast(toastStickyContentTemplate, toastStickyActionsTemplate)">
+        <button
+            kbq-button
+            type="button"
+            (click)="showStickyToast(toastStickyContentTemplate, toastStickyActionsTemplate)"
+        >
             Тост с прогресс-баром, кнопкой Отмена и без крестика
         </button>
     `,

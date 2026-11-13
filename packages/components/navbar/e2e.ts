@@ -61,7 +61,7 @@ import { KbqNavbarModule } from './navbar.module';
                     </kbq-navbar-item>
 
                     <kbq-navbar-item>
-                        <button kbq-button [color]="'contrast'">
+                        <button kbq-button color="contrast">
                             <span>Новая задача</span>
                         </button>
                     </kbq-navbar-item>
@@ -70,7 +70,7 @@ import { KbqNavbarModule } from './navbar.module';
                 <kbq-navbar-container>
                     <kbq-navbar-item>
                         <i kbq-icon="kbq-bell_16"></i>
-                        <kbq-badge [badgeColor]="'error'" [compact]="true">5</kbq-badge>
+                        <kbq-badge badgeColor="error" [compact]="true">5</kbq-badge>
                     </kbq-navbar-item>
 
                     <kbq-navbar-item>
@@ -171,9 +171,9 @@ export class E2eHorizontalNavbarStates {}
                     <kbq-navbar-item>
                         <button
                             kbq-button
+                            color="contrast"
+                            kbqStyle="filled"
                             [class.kbq-button-icon]="!verticalNavbar.expanded()"
-                            [color]="'contrast'"
-                            [kbqStyle]="'filled'"
                         >
                             <i kbq-icon="kbq-bell_16"></i>
                             @if (verticalNavbar.expanded()) {
@@ -187,7 +187,7 @@ export class E2eHorizontalNavbarStates {}
                     <kbq-navbar-item>
                         <i kbq-icon="kbq-bell_16"></i>
                         <kbq-navbar-title>Уведомления</kbq-navbar-title>
-                        <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
+                        <kbq-badge badgeColor="error" [compact]="true">2</kbq-badge>
                     </kbq-navbar-item>
 
                     <kbq-navbar-divider />
@@ -257,9 +257,9 @@ export class E2eHorizontalNavbarStates {}
                     <kbq-navbar-item>
                         <button
                             kbq-button
+                            color="contrast"
+                            kbqStyle="filled"
                             [class.kbq-button-icon]="!verticalNavbar_2.expanded()"
-                            [color]="'contrast'"
-                            [kbqStyle]="'filled'"
                         >
                             <i kbq-icon="kbq-bell_16"></i>
                             @if (verticalNavbar_2.expanded()) {
@@ -273,7 +273,7 @@ export class E2eHorizontalNavbarStates {}
                     <kbq-navbar-item>
                         <i kbq-icon="kbq-bell_16"></i>
                         <kbq-navbar-title>Уведомления</kbq-navbar-title>
-                        <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
+                        <kbq-badge badgeColor="error" [compact]="true">2</kbq-badge>
                     </kbq-navbar-item>
 
                     <kbq-navbar-divider />
@@ -343,9 +343,9 @@ export class E2eHorizontalNavbarStates {}
                     <kbq-navbar-item>
                         <button
                             kbq-button
+                            color="contrast"
+                            kbqStyle="filled"
                             [class.kbq-button-icon]="!verticalNavbar_3.expanded()"
-                            [color]="'contrast'"
-                            [kbqStyle]="'filled'"
                         >
                             <i kbq-icon="kbq-bell_16"></i>
                             @if (verticalNavbar_3.expanded()) {
@@ -359,7 +359,7 @@ export class E2eHorizontalNavbarStates {}
                     <kbq-navbar-item>
                         <i kbq-icon="kbq-bell_16"></i>
                         <kbq-navbar-title>Уведомления</kbq-navbar-title>
-                        <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
+                        <kbq-badge badgeColor="error" [compact]="true">2</kbq-badge>
                     </kbq-navbar-item>
 
                     <kbq-navbar-divider />
@@ -429,9 +429,9 @@ export class E2eHorizontalNavbarStates {}
                     <kbq-navbar-item>
                         <button
                             kbq-button
+                            color="contrast"
+                            kbqStyle="filled"
                             [class.kbq-button-icon]="!verticalNavbar_4.expanded()"
-                            [color]="'contrast'"
-                            [kbqStyle]="'filled'"
                         >
                             <i kbq-icon="kbq-bell_16"></i>
                             @if (verticalNavbar_4.expanded()) {
@@ -445,7 +445,7 @@ export class E2eHorizontalNavbarStates {}
                     <kbq-navbar-item>
                         <i kbq-icon="kbq-bell_16"></i>
                         <kbq-navbar-title>Уведомления</kbq-navbar-title>
-                        <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
+                        <kbq-badge badgeColor="error" [compact]="true">2</kbq-badge>
                     </kbq-navbar-item>
 
                     <kbq-navbar-divider />

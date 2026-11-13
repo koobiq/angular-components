@@ -23,7 +23,7 @@ type DocsVersion = {
     exportAs: 'docsVersionPicker'
 })
 export class DocsVersionPickerDirective {
-    selected: DocsVersion;
+    selected?: DocsVersion;
     versions: DocsVersion[] = [];
     isNext: boolean = false;
 
@@ -119,7 +119,7 @@ export class DocsVersionPickerDirective {
 
                     return of(null);
                 }),
-                shareReplay(1)
+                shareReplay({ bufferSize: 1, refCount: false })
             );
             this.pagePaths.set(versionUrl, pagePaths);
         }

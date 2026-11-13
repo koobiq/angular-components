@@ -1,6 +1,6 @@
 @use '../core/styles/common';
 @use '../core/styles/common/tokens';
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
 .kbq-app-switcher-dropdown-app {
     display: flex;
@@ -9,7 +9,7 @@
     width: 100%;
     min-height: var(--kbq-app-switcher-size-dropdown-app-height-min, 50px);
 
-    @include kbq-squircle(var(--kbq-size-xs));
+    @include squircle.kbq-squircle(var(--kbq-size-xs));
     // transparent border to keep the box model aligned with the other list rows (matches kbq-list-item-base)
     border: var(--kbq-size-3xs) solid transparent;
 
@@ -54,7 +54,7 @@
     }
 }
 
-@mixin _kbq-app-switcher-dropdown-app-theme() {
+@mixin -kbq-app-switcher-dropdown-app-theme() {
     .kbq-app-switcher-dropdown-app {
         background: var(--kbq-list-default-container-background);
         color: var(--kbq-list-default-text-color);
@@ -76,7 +76,7 @@
     }
 }
 
-@mixin _kbq-app-switcher-dropdown-app-typography() {
+@mixin -kbq-app-switcher-dropdown-app-typography() {
     .kbq-app-switcher-dropdown-app {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
@@ -86,5 +86,5 @@
     }
 }
 
-@include _kbq-app-switcher-dropdown-app-theme();
-@include _kbq-app-switcher-dropdown-app-typography();
+@include -kbq-app-switcher-dropdown-app-theme();
+@include -kbq-app-switcher-dropdown-app-typography();

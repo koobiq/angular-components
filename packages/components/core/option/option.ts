@@ -141,9 +141,9 @@ export class KbqVirtualOption extends KbqOptionBase {
     imports: [
         KbqPseudoCheckboxModule
     ],
-    templateUrl: 'option.html',
+    templateUrl: './option.html',
     /* Component inherits styles from `list`, so `list` variables are imported as the single source of truth. */
-    styleUrls: ['option.scss', 'option-tokens.scss'],
+    styleUrls: ['./option.scss', './option-tokens.scss'],
     providers: [
         {
             provide: KBQ_TITLE_TEXT_REF,

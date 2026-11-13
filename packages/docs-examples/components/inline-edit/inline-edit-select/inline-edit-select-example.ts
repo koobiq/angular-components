@@ -47,7 +47,7 @@ const USERS: KbqUserInfo[] = [
                 <kbq-form-field kbqInlineEditEditMode [noBorders]="true">
                     <kbq-select
                         panelWidth="auto"
-                        [panelClass]="'example-inline-select__options'"
+                        panelClass="example-inline-select__options"
                         [placeholder]="notSetLabel"
                         [formControl]="control"
                         (selectionChange)="inlineEdit.commit()"
@@ -82,5 +82,5 @@ export class InlineEditSelectExample {
 
     protected readonly users = USERS;
 
-    protected readonly control = new FormControl<KbqUserInfo | null>(this.users[0]);
+    protected readonly control = new FormControl<KbqUserInfo | null>(this.users[0] ?? null);
 }

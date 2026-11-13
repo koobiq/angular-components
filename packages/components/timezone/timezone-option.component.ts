@@ -22,8 +22,8 @@ import { UtcOffsetPipe } from './utc-offset.pipe';
         KbqHighlightBackgroundPipe,
         CitiesByFilterPipe
     ],
-    templateUrl: 'timezone-option.component.html',
-    styleUrls: ['../core/option/option.scss', 'timezone-option.component.scss'],
+    templateUrl: './timezone-option.component.html',
+    styleUrls: ['../core/option/option.scss', './timezone-option.component.scss'],
     providers: [
         {
             provide: KbqOption,

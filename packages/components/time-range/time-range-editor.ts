@@ -24,7 +24,7 @@ import {
     type Validator,
     type ValidatorFn
 } from '@angular/forms';
-import { distinctUntilChanged, map } from 'rxjs/operators';
+import { distinctUntilChanged, map } from 'rxjs';
 import type { ErrorStateMatcher, KbqTimeRangeLocaleConfiguration } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqError, KbqFieldset, KbqFieldsetItem, KbqHint } from '@koobiq/components/form-field';

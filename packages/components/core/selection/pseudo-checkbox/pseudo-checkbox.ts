@@ -17,8 +17,8 @@ export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate' |
  */
 @Component({
     selector: 'kbq-pseudo-checkbox',
-    templateUrl: 'pseudo-checkbox.partial.html',
-    styleUrls: ['pseudo-checkbox.scss', 'pseudo-checkbox-tokens.scss'],
+    templateUrl: './pseudo-checkbox.partial.html',
+    styleUrls: ['./pseudo-checkbox.scss', './pseudo-checkbox-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

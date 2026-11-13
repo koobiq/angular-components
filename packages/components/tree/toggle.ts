@@ -9,7 +9,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs/operators';
+import { map } from 'rxjs';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTreeBase, KbqTreeNode } from './tree-base';
 
@@ -47,16 +47,20 @@ export class KbqTreeNodeToggleBaseDirective<T> {
     get iconState(): boolean {
         // The node `toggle()` acts on when `node` is not bound: an unbound `node` would reach the control's
         // `trackBy` as `undefined`.
-        return this.tree.treeControl.isExpanded(this.node() ?? this.treeNode.data);
+        const node = this.node() ?? this.treeNode.data;
+
+        return node !== undefined && this.tree.treeControl.isExpanded(node);
     }
 
     toggle(event: Event): void {
-        if (this.disabled) return;
+        const { data } = this.treeNode;
+
+        if (this.disabled || data === undefined) return;
 
         if (this.recursive()) {
-            this.tree.treeControl.toggleDescendants(this.treeNode.data);
+            this.tree.treeControl.toggleDescendants(data);
         } else {
-            this.tree.treeControl.toggle(this.treeNode.data);
+            this.tree.treeControl.toggle(data);
         }
 
         this.tree.saveState();
@@ -70,7 +74,7 @@ export class KbqTreeNodeToggleBaseDirective<T> {
     imports: [KbqIcon],
     template: `
         <ng-content>
-            <i kbq-icon="kbq-chevron-down-s_16" [color]="'contrast-fade'"></i>
+            <i kbq-icon="kbq-chevron-down-s_16" color="contrast-fade"></i>
         </ng-content>
     `,
     styleUrls: ['./toggle.scss', './tree-tokens.scss'],

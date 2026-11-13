@@ -144,10 +144,10 @@ const intervalsConfig = {
 };
 
 class ParsedDigitsInfo {
-    useGrouping: boolean;
-    minimumIntegerDigits: number;
-    minimumFractionDigits: number;
-    maximumFractionDigits: number;
+    useGrouping: boolean | undefined;
+    minimumIntegerDigits: number | undefined;
+    minimumFractionDigits: number | undefined;
+    maximumFractionDigits: number | undefined;
 }
 
 const defaultValueForGroupingInRULocale: number = 10000;
@@ -176,8 +176,6 @@ function parseDigitsInfo(digitsInfo: string): ParsedDigitsInfo {
 
     if (maxFractionPart != null) {
         result.maximumFractionDigits = parseInt(maxFractionPart);
-    } else if (minFractionPart != null && result.minimumFractionDigits > result.maximumFractionDigits) {
-        result.maximumFractionDigits = result.minimumFractionDigits;
     }
 
     if (useGroupingPart != null) {
@@ -339,7 +337,7 @@ function isWithin(startRange: number, endRange: number, valueToCheck: number): b
 export class KbqRoundDecimalPipe implements PipeTransform {
     private id = inject(KBQ_LOCALE_ID, { optional: true });
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
-    private roundingOptions: RoundDecimalOptions;
+    private roundingOptions: RoundDecimalOptions = ruRUFormattersData.formatters.number.rounding;
     private readonly formatters = kbqInjectLocaleConfiguration('formatters', KBQ_FORMATTERS_LOCALE_CONFIGURATION);
 
     constructor() {

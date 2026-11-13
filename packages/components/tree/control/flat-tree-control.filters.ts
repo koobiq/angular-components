@@ -15,7 +15,7 @@ export interface FlatTreeControlFilter<T> {
  * @docs-private
  */
 export class FilterByViewValue<T, K = T> implements FlatTreeControlFilter<T> {
-    result: T[];
+    result: T[] = [];
 
     constructor(
         private control: FlatTreeControl<T, K>,
@@ -49,7 +49,7 @@ export class FilterByViewValue<T, K = T> implements FlatTreeControlFilter<T> {
  * @docs-private
  */
 export class FilterParentsForNodes<T, K = T> implements FlatTreeControlFilter<T> {
-    result: T[];
+    result: T[] = [];
 
     constructor(private control: FlatTreeControl<T, K>) {}
 
@@ -71,7 +71,7 @@ export class FilterParentsForNodes<T, K = T> implements FlatTreeControlFilter<T>
 }
 
 export class FilterByValues<T, K = T> implements FlatTreeControlFilter<T> {
-    result: T[];
+    result: T[] = [];
 
     private values: string[] = [];
 

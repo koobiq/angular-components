@@ -10,8 +10,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { merge, startWith } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, merge, startWith } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqHighlightModule, tokenizeSearchQuery } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -40,8 +39,8 @@ import { kbqFilterSelectValuesBySearch } from './select-pipe-search';
         ReactiveFormsModule,
         KbqHighlightModule
     ],
-    templateUrl: 'pipe-select.html',
-    styleUrls: ['base-pipe.scss'],
+    templateUrl: './pipe-select.html',
+    styleUrl: './base-pipe.scss',
     providers: [
         {
             provide: KbqBasePipe,

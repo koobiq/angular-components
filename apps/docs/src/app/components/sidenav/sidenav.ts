@@ -13,7 +13,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { filter } from 'rxjs';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -49,7 +49,7 @@ class TreeNode {
 }
 
 /** Flat node with expandable and level information */
-class TreeFlatNode {
+interface TreeFlatNode {
     id: string;
     name: Record<DocsLocale, string>;
     level: number;
@@ -174,7 +174,7 @@ export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
      * (`Location.path()` appends it), then the locale prefix and the tab.
      */
     private getSelectedNodeIdFromUrl(): string {
-        const path = this.location.path().split('?')[0];
+        const path = this.location.path().replace(/\?.*/, '');
 
         return Object.values(DocsStructureItemTab).reduce(
             (resUrl, tab) => resUrl.replace(new RegExp(`\\/${tab}.*`), ''),
@@ -210,20 +210,16 @@ export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
         return nodeData.expandable;
     }
 
-    private transformer = (node: TreeNode, level: number, parent: TreeFlatNode | null): TreeFlatNode => {
-        const flatNode = new TreeFlatNode();
-
-        flatNode.id = parent ? `${parent.id}/${node.id}` : `${node.id}`;
-        flatNode.name = node.name;
-        flatNode.parent = parent;
-        flatNode.type = node.type;
-        flatNode.level = level;
-        flatNode.expandable = !!node.children;
-        flatNode.isNew = node.isNew;
-        flatNode.isUpdated = node.isUpdated;
-
-        return flatNode;
-    };
+    private transformer = (node: TreeNode, level: number, parent: TreeFlatNode | null): TreeFlatNode => ({
+        id: parent ? `${parent.id}/${node.id}` : `${node.id}`,
+        name: node.name,
+        parent,
+        type: node.type,
+        level,
+        expandable: !!node.children,
+        isNew: node.isNew,
+        isUpdated: node.isUpdated
+    });
 
     private getLevel = (node: TreeFlatNode): number => {
         return node.level;

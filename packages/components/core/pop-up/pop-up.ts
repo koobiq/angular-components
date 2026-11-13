@@ -49,10 +49,10 @@ export abstract class KbqPopUp implements OnDestroy {
     /** Whether the pointer is over the pop-up. */
     readonly hovered: Signal<boolean> = this.hoveredState.asReadonly();
 
-    trigger: KbqPopUpTrigger<unknown>;
-    header: string | TemplateRef<unknown>;
-    content: string | TemplateRef<unknown>;
-    context: { $implicit: unknown } | null;
+    trigger: KbqPopUpTrigger<unknown> | undefined;
+    header: string | TemplateRef<unknown> = '';
+    content: string | TemplateRef<unknown> = '';
+    context: { $implicit: unknown } | null = null;
 
     private readonly classMapState = signal({});
 
@@ -65,10 +65,10 @@ export abstract class KbqPopUp implements OnDestroy {
         this.classMapState.set(value);
     }
 
-    arrow: boolean;
-    defaultPaddings: boolean;
+    arrow: boolean = false;
+    defaultPaddings: boolean = false;
 
-    offset: number | null;
+    offset: number | null = null;
 
     private readonly visibilityState = signal(PopUpVisibility.Initial);
 
@@ -83,7 +83,7 @@ export abstract class KbqPopUp implements OnDestroy {
 
     visibleChange = new EventEmitter<boolean>();
 
-    protected prefix: string;
+    protected abstract prefix: string;
 
     /** Subject for notifying that the tooltip has been hidden from the view */
     protected readonly onHideSubject = new Subject<void>();
@@ -109,7 +109,7 @@ export abstract class KbqPopUp implements OnDestroy {
         this.visibleChange.complete();
     }
 
-    isTemplateRef(value: any): boolean {
+    isTemplateRef<C>(value: unknown): value is TemplateRef<C> {
         return value instanceof TemplateRef;
     }
 
@@ -140,7 +140,7 @@ export abstract class KbqPopUp implements OnDestroy {
                 this.waitForShowAnimation();
             }
 
-            if (this.trigger.triggerName === 'mouseenter') {
+            if (this.trigger?.triggerName === 'mouseenter') {
                 this.addEventListenerForHide();
             }
         }, delay);
@@ -249,46 +249,40 @@ export abstract class KbqPopUp implements OnDestroy {
     }
 
     protected setStickPosition() {
-        if (!this.trigger.stickToWindow) return;
+        const trigger = this.trigger;
+
+        if (!trigger?.stickToWindow) return;
 
         const oppositeSide = {
             [PopUpPlacements.Top]: PopUpPlacements.Bottom,
             [PopUpPlacements.Bottom]: PopUpPlacements.Top,
             [PopUpPlacements.Right]: PopUpPlacements.Left,
             [PopUpPlacements.Left]: PopUpPlacements.Right
-        }[this.trigger.stickToWindow];
+        }[trigger.stickToWindow];
 
         if (!oppositeSide) return;
 
         this.arrow = false;
 
-        if (this.trigger.container) {
+        if (trigger.container) {
             const { width, height } = this.elementRef.nativeElement.getBoundingClientRect();
-            const { right, left, top, bottom } = this.trigger.container.getBoundingClientRect();
+            const { right, left, top, bottom } = trigger.container.getBoundingClientRect();
 
-            if (this.trigger.stickToWindow === PopUpPlacements.Right) {
-                this.renderer.setStyle(
-                    this.trigger.overlayRef?.overlayElement,
-                    'left',
-                    coerceCssPixelValue(right - width)
-                );
-            } else if (this.trigger.stickToWindow === PopUpPlacements.Left) {
-                this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, 'left', coerceCssPixelValue(left));
-            } else if (this.trigger.stickToWindow === PopUpPlacements.Top) {
-                this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, 'top', coerceCssPixelValue(top));
-            } else if (this.trigger.stickToWindow === PopUpPlacements.Bottom) {
-                this.renderer.setStyle(
-                    this.trigger.overlayRef?.overlayElement,
-                    'top',
-                    coerceCssPixelValue(bottom - height)
-                );
+            if (trigger.stickToWindow === PopUpPlacements.Right) {
+                this.renderer.setStyle(trigger.overlayRef?.overlayElement, 'left', coerceCssPixelValue(right - width));
+            } else if (trigger.stickToWindow === PopUpPlacements.Left) {
+                this.renderer.setStyle(trigger.overlayRef?.overlayElement, 'left', coerceCssPixelValue(left));
+            } else if (trigger.stickToWindow === PopUpPlacements.Top) {
+                this.renderer.setStyle(trigger.overlayRef?.overlayElement, 'top', coerceCssPixelValue(top));
+            } else if (trigger.stickToWindow === PopUpPlacements.Bottom) {
+                this.renderer.setStyle(trigger.overlayRef?.overlayElement, 'top', coerceCssPixelValue(bottom - height));
             }
 
-            this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, 'right', 'unset');
-            this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, 'bottom', 'unset');
+            this.renderer.setStyle(trigger.overlayRef?.overlayElement, 'right', 'unset');
+            this.renderer.setStyle(trigger.overlayRef?.overlayElement, 'bottom', 'unset');
         } else {
-            this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, this.trigger.stickToWindow, 0);
-            this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, oppositeSide, 'unset');
+            this.renderer.setStyle(trigger.overlayRef?.overlayElement, trigger.stickToWindow, 0);
+            this.renderer.setStyle(trigger.overlayRef?.overlayElement, oppositeSide, 'unset');
         }
     }
 }

@@ -32,8 +32,11 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     /** Whether the current state is list of periods. When false will displayed control for set custom period */
     protected readonly isListMode = signal(true);
 
-    /** @docs-private */
-    protected formGroup: FormGroup<{ start: FormControl<D | null>; end: FormControl<D | null> }>;
+    /** The custom period being edited, replaced with a filled one each time the period view opens. @docs-private */
+    protected formGroup: FormGroup<{ start: FormControl<D | null>; end: FormControl<D | null> }> = new FormGroup({
+        start: new FormControl<D | null>(null),
+        end: new FormControl<D | null>(null)
+    });
 
     /** @docs-private */
     protected readonly showStartCalendar = signal(false);
@@ -122,7 +125,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
         this.minInterval = this.toValidInterval(template.minInterval);
         this.maxInterval = this.toValidInterval(template.maxInterval);
         // Re-validate an already open editor if the template (hence the interval limits) changes.
-        this.formGroup?.updateValueAndValidity();
+        this.formGroup.updateValueAndValidity();
 
         this.changeDetectorRef.markForCheck();
     };
@@ -232,7 +235,6 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     /** Whether the current pipe is disabled. */
     get disabled(): boolean {
         return (
-            !this.formGroup ||
             !this.adapter.isDateInstance(this.formGroup.controls.start.value) ||
             !this.adapter.isDateInstance(this.formGroup.controls.end.value) ||
             this.formGroup.invalid

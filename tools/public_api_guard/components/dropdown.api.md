@@ -75,10 +75,10 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     // (undocumented)
     close(): void;
     closeChain(reason: DropdownCloseReason): void;
-    readonly closed: _angular_core.OutputEmitterRef<void | "click" | "keydown" | "tab">;
+    readonly closed: _angular_core.OutputEmitterRef<DropdownCloseReason>;
     closingChain: boolean;
     deactivateSafeArea(): void;
-    direction: Direction;
+    direction: Direction | undefined;
     focusFirstItem(origin?: FocusOrigin): void;
     handleKeydown(event: KeyboardEvent): void;
     readonly hasBackdrop: _angular_core.InputSignalWithTransform<boolean, unknown>;

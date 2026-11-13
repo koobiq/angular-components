@@ -1,33 +1,33 @@
-<button kbq-button [kbqDropdownTriggerFor]="appDropdown">
+<button kbq-button type="button" [kbqDropdownTriggerFor]="appDropdown">
     dropdown
     <i kbq-icon="kbq-chevron-down-s_16"></i>
 </button>
 
 <kbq-dropdown #appDropdown="kbqDropdown" [panelMaxWidth]="200" [navigationWithWrap]="true">
-    <button kbq-dropdown-item>Text Normal</button>
+    <button kbq-dropdown-item type="button">Text Normal</button>
 
-    <button kbq-dropdown-item>
-        <i kbq-icon="kbq-circle-info_16" [color]="'contrast'"></i>
+    <button kbq-dropdown-item type="button">
+        <i kbq-icon="kbq-circle-info_16" color="contrast"></i>
         Text Normal
     </button>
 
-    <button kbq-dropdown-item>
-        Text Normal
-        <div kbqDropdownItemCaption>Caption</div>
-    </button>
-
-    <button kbq-dropdown-item>
-        <i kbq-icon="kbq-circle-info_16" [color]="'contrast'"></i>
+    <button kbq-dropdown-item type="button">
         Text Normal
         <div kbqDropdownItemCaption>Caption</div>
     </button>
 
-    <button kbq-dropdown-item>
-        <i kbq-icon="kbq-circle-xs_16" [color]="'contrast'"></i>
+    <button kbq-dropdown-item type="button">
+        <i kbq-icon="kbq-circle-info_16" color="contrast"></i>
+        Text Normal
+        <div kbqDropdownItemCaption>Caption</div>
+    </button>
+
+    <button kbq-dropdown-item type="button">
+        <i kbq-icon="kbq-circle-xs_16" color="contrast"></i>
         Text Normal
     </button>
 
-    <button kbq-dropdown-item kbq-title>
+    <button kbq-dropdown-item kbq-title type="button">
         Text Normal and very long text Text Normal and very long text Text Normal and very long text Text Normal and
         very long text
     </button>
@@ -36,19 +36,19 @@
 
     <div kbqDropdownGroupHeader>Header</div>
 
-    <button disabled kbq-dropdown-item>Disabled</button>
+    <button disabled kbq-dropdown-item type="button">Disabled</button>
 
     <kbq-divider />
 
     <kbq-optgroup label="Subheading" />
 
-    <button disabled kbq-dropdown-item>Disabled</button>
+    <button disabled kbq-dropdown-item type="button">Disabled</button>
 
     <kbq-divider />
 
-    <button kbq-dropdown-item>Point 2</button>
+    <button kbq-dropdown-item type="button">Point 2</button>
 
-    <button kbq-dropdown-item>Point 3</button>
+    <button kbq-dropdown-item type="button">Point 3</button>
 
-    <button kbq-dropdown-item>Link</button>
+    <button kbq-dropdown-item type="button">Link</button>
 </kbq-dropdown>

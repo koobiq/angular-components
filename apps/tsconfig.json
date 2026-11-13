@@ -1,0 +1,9 @@
+{
+    // Only for the editor: `apps/docs/tsconfig.json` leaves the specs out, so the editor looks further up, reaches this
+    // file and follows its references to the projects that type them.
+    "files": [],
+    "references": [
+        { "path": "../tsconfig.spec.json" },
+        { "path": "../tsconfig.playwright-spec.json" }
+    ]
+}

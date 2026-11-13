@@ -132,6 +132,7 @@ export class DevModalCustomComponent {
 
         <div kbq-modal-footer>
             <button kbq-button [color]="componentColors.Contrast">Save</button>
+            <!-- eslint-disable-next-line @angular-eslint/template/no-autofocus -- the dialog moves the focus to the element marked autofocus when it opens -->
             <button kbq-button autofocus (click)="destroyModal()">Close</button>
         </div>
     `,
@@ -161,7 +162,7 @@ export class DevModalFullCustomComponent {
         DevDocsExamples
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -171,7 +172,7 @@ export class DevApp {
     componentColors = KbqComponentColors;
 
     isVisible = false;
-    tplModal: KbqModalRef;
+    tplModal?: KbqModalRef;
     htmlModalVisible = false;
 
     isLoading = false;
@@ -334,6 +335,6 @@ export class DevApp {
     }
 
     destroyTplModal() {
-        this.tplModal.destroy();
+        this.tplModal?.destroy();
     }
 }

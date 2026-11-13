@@ -37,7 +37,7 @@ function referencesDl(content: string): boolean {
  * full - stripping a leading `[` and a trailing `]` off `[(dtWidth)]` leaves `(dtWidth)`, which
  * matches no input and was silently skipped.
  */
-const BINDING_SYNTAX = /^(?:\[\(([^()\]]+)\)\]|\[([^\[\]]+)\]|bindon-(.+)|bind-(.+))$/;
+const BINDING_SYNTAX = /^(?:\[\(([^()\]]+)\)\]|\[([^[\]]+)\]|bindon-(.+)|bind-(.+))$/;
 
 /**
  * Walks a template's HTML AST collecting what changed meaning on every `<kbq-dl>`.

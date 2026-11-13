@@ -8,35 +8,35 @@ import { EXAMPLE_COMPONENTS } from './example-module';
  */
 export class ExampleData {
     /** Description of the example. */
-    description: string;
+    description = '';
 
     /** List of files that are part of this example. */
-    exampleFiles: string[];
+    exampleFiles: string[] = [];
 
     /** Files shared with other examples via relative imports, needed to compile the example
      *  (e.g. in StackBlitz) but not shown as a tab of its own in the docs source viewer. */
-    localImportFiles: string[];
+    localImportFiles: string[] = [];
 
     /** Selector name of the example component. */
-    selectorName: string;
+    selectorName = '';
 
     /** Name of the file that contains the example component. */
-    indexFilename: string;
+    indexFilename = '';
 
     /** Name of the example component. */
-    componentName: string;
+    componentName = '';
 
     /** Whether the catalogue knows the key: every field above is filled only then. */
     isKnown = false;
 
     constructor(example: string) {
-        if (!example || !EXAMPLE_COMPONENTS.hasOwnProperty(example)) {
+        if (!example || !Object.hasOwn(EXAMPLE_COMPONENTS, example)) {
             return;
         }
 
         this.isKnown = true;
 
-        const { componentName, files, localImportFiles, selector, primaryFile, title } = EXAMPLE_COMPONENTS[example];
+        const { componentName, files, localImportFiles, selector, primaryFile, title } = EXAMPLE_COMPONENTS[example]!;
         const exampleName = example.replace(/(?:^\w|\b\w)/g, (letter) => letter.toUpperCase());
 
         this.exampleFiles = files;
@@ -44,7 +44,7 @@ export class ExampleData {
         this.selectorName = selector;
         this.indexFilename = primaryFile;
 
-        this.description = title || exampleName.replace(/[\-]+/g, ' ') + ' Example';
+        this.description = title || exampleName.replace(/-+/g, ' ') + ' Example';
         this.componentName = componentName;
     }
 }

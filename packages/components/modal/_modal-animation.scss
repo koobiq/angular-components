@@ -1,20 +1,20 @@
-@use '../core/styles/functions/timing' as *;
+@use '../core/styles/functions/timing';
 
 $animation-duration-base: 0.3s;
 
-@mixin _motion-common($duration: $animation-duration-base) {
+@mixin -motion-common($duration: $animation-duration-base) {
     animation-duration: $duration;
     animation-fill-mode: both;
 }
 
-@mixin _make-motion($className, $keyframeName, $duration: $animation-duration-base) {
+@mixin -make-motion($className, $keyframeName, $duration: $animation-duration-base) {
     .#{$className}-enter {
-        @include _motion-common($duration);
+        @include -motion-common($duration);
         animation-play-state: paused;
     }
 
     .#{$className}-leave {
-        @include _motion-common($duration);
+        @include -motion-common($duration);
         animation-play-state: paused;
     }
 
@@ -31,21 +31,21 @@ $animation-duration-base: 0.3s;
 }
 
 @mixin zoom-motion($className, $keyframeName, $duration: $animation-duration-base) {
-    @include _make-motion($className, $keyframeName, $duration);
+    @include -make-motion($className, $keyframeName, $duration);
 
     .#{$className}-enter {
         transform: translate(0, -25%);
-        animation-timing-function: $ease-out-circ;
+        animation-timing-function: timing.$ease-out-circ;
     }
 
     .#{$className}-leave {
         transform: translate(0, 0);
-        animation-timing-function: $ease-in-out-circ;
+        animation-timing-function: timing.$ease-in-out-circ;
     }
 }
 
 @mixin fade-motion($className, $keyframeName) {
-    @include _make-motion($className, $keyframeName);
+    @include -make-motion($className, $keyframeName);
 
     .#{$className}-enter {
         opacity: 0;
@@ -57,6 +57,7 @@ $animation-duration-base: 0.3s;
     }
 }
 
+/* stylelint-disable keyframes-name-pattern -- published names: the CSS of a consumer may refer to them */
 @keyframes mcFadeIn {
     0% {
         opacity: 0;
@@ -99,6 +100,7 @@ $animation-duration-base: 0.3s;
         transform: translate(0, -30%);
     }
 }
+/* stylelint-enable keyframes-name-pattern */
 
 // A full-viewport zoom-and-fade is the most motion-heavy thing the library renders, so it is the
 // least appropriate place to ignore the preference. The transforms have to be reset along with the

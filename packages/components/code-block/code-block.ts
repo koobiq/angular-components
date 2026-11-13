@@ -340,7 +340,7 @@ export class KbqCodeBlock implements AfterViewInit {
     readonly tabsHidden = computed(() => {
         const files = this.files();
 
-        return this.hideTabs() || (files.length === 1 && !files[0].filename);
+        return this.hideTabs() || (files.length === 1 && !files[0]?.filename);
     });
     private readonly actionbarHovered = signal(false);
 

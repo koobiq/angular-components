@@ -638,7 +638,7 @@ export class KbqButton
     }
 
     private runFocusMonitor() {
-        this.focusMonitor.monitor(this.elementRef.nativeElement, true);
+        void this.focusMonitor.monitor(this.elementRef.nativeElement, true);
     }
 
     private stopFocusMonitor() {

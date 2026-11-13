@@ -38,7 +38,7 @@ export class KbqDrop {
                 .filter((item: DataTransferItem) => item.kind === 'file')
                 .map((item: DataTransferItem) => item.webkitGetAsEntry()!);
 
-            Promise.all(fileEntries.map(unwrapDirectory))
+            void Promise.all(fileEntries.map(unwrapDirectory))
                 .then((fileList) => fileList.reduce((res, next) => res.concat(next), []))
                 .then((entries: KbqFile[]) => this.filesDropped.emit(entries));
         }

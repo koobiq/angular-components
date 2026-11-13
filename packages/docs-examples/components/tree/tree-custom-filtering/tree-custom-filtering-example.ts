@@ -11,17 +11,17 @@ import {
 } from '@koobiq/components/tree';
 
 export class FileNode {
-    children: FileNode[];
-    name: string;
+    children?: FileNode[];
+    name = '';
     type: any;
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-    name: string;
+    name = '';
     type: any;
-    level: number;
-    expandable: boolean;
+    level = 0;
+    expandable = false;
     parent: any;
 }
 
@@ -103,7 +103,7 @@ export const DATA_OBJECT = {
 };
 
 export class CustomTreeControlFilter<T> implements FlatTreeControlFilter<T> {
-    result: T[];
+    result: T[] = [];
 
     constructor(private control: FlatTreeControl<T>) {}
 
@@ -230,7 +230,7 @@ export class TreeCustomFilteringExample {
             // Promise.resolve callback has set `filterValue.value`. Otherwise `expansionModel.changed`
             // here would route through the data source's `expansionHandler` and our work would be
             // overwritten when filterValue is later set.
-            Promise.resolve().then(() => {
+            void Promise.resolve().then(() => {
                 let mutated = false;
 
                 this.baseMatches.forEach((match) => {
@@ -369,7 +369,7 @@ export class TreeCustomFilteringExample {
         return node.expandable;
     };
 
-    private getChildren = (node: FileNode): FileNode[] => {
+    private getChildren = (node: FileNode): FileNode[] | undefined => {
         return node.children;
     };
 

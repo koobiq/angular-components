@@ -289,11 +289,11 @@
             <kbq-form-field class="kbq-form__control flex-80">
                 <kbq-tree-select
                     placeholder="this is placeholder"
+                    hiddenItemsText="еще"
+                    id="select-test"
                     [disabled]="disabledState"
                     [formControl]="control"
-                    [hiddenItemsText]="'еще'"
                     [hiddenItemsTextFormatter]="hiddenItemsTextFormatter"
-                    [id]="'select-test'"
                     [multiple]="true"
                     (closed)="closed()"
                     (opened)="opened()"

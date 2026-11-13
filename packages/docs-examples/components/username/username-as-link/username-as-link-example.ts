@@ -9,7 +9,7 @@ import { type KbqUserInfo, KbqUsername } from '@koobiq/components/username';
     selector: 'username-as-link-example',
     imports: [KbqUsername, KbqLink],
     template: `
-        <a kbqLink><kbq-username [userInfo]="userInfo" [type]="'inherit'" /></a>
+        <a kbqLink><kbq-username type="inherit" [userInfo]="userInfo" /></a>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {

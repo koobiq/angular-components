@@ -46,10 +46,10 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 Tags
                 <i
                     kbq-icon-button="kbq-circle-info_16"
-                    [kbqTooltip]="'Tooltip on hover or focus'"
+                    kbqTooltip="Tooltip on hover or focus"
+                    color="contrast-fade"
                     [kbqTooltipArrow]="false"
                     [kbqPlacement]="popupPlacements.Top"
-                    [color]="'contrast-fade'"
                 ></i>
             </kbq-label>
 
@@ -88,7 +88,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                     <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                 } @else {
                     <span class="example-inline-text__content">
-                        <i kbq-icon="kbq-diamond_16" [color]="'contrast-fade'"></i>
+                        <i kbq-icon="kbq-diamond_16" color="contrast-fade"></i>
                         {{ iconControl.value }}
                     </span>
                 }

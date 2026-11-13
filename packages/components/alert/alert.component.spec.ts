@@ -342,7 +342,7 @@ class ConfigurableTestApp {
     selector: 'test-app',
     imports: [KbqAlert, KbqIcon],
     template: `
-        <kbq-alert [alertColor]="'success'">
+        <kbq-alert alertColor="success">
             <i kbq-icon="kbq-circle-info_16" [color]="colors.Error"></i>
             Alert text
         </kbq-alert>

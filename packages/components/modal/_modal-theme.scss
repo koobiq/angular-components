@@ -1,4 +1,4 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-modal-theme() {
     .kbq-modal-container {
@@ -31,11 +31,11 @@
 
 @mixin kbq-modal-typography() {
     .kbq-modal-title {
-        @include kbq-typography-level-to-styles-css-variables(typography, title);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, title);
     }
 
     .kbq-modal-caption,
     .kbq-modal-body {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }

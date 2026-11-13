@@ -1,6 +1,6 @@
 @use '../core/styles/common';
 @use '../core/styles/common/tokens';
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
 .kbq-app-switcher-dropdown-site {
     display: flex;
@@ -13,7 +13,7 @@
 
     text-decoration: none;
 
-    @include kbq-squircle(var(--kbq-size-xs));
+    @include squircle.kbq-squircle(var(--kbq-size-xs));
 
     @include common.user-select(none);
     @include common.kbq-list-item-base();
@@ -28,7 +28,7 @@
     }
 }
 
-@mixin _kbq-app-switcher-dropdown-site-theme() {
+@mixin -kbq-app-switcher-dropdown-site-theme() {
     .kbq-app-switcher-dropdown-site {
         background: var(--kbq-list-default-container-background);
         color: var(--kbq-list-default-text-color);
@@ -46,11 +46,11 @@
     }
 }
 
-@mixin _kbq-app-switcher-dropdown-site-typography() {
+@mixin -kbq-app-switcher-dropdown-site-typography() {
     .kbq-app-switcher-dropdown-site {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }
 
-@include _kbq-app-switcher-dropdown-site-theme();
-@include _kbq-app-switcher-dropdown-site-typography();
+@include -kbq-app-switcher-dropdown-site-theme();
+@include -kbq-app-switcher-dropdown-site-typography();

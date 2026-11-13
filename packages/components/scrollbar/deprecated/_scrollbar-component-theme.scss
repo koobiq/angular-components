@@ -1,5 +1,3 @@
-@use '../../core/styles/common/tokens' as *;
-
 @mixin kbq-scrollbar-component-theme() {
     .kbq-scrollbar-component {
         &.kbq-hover .os-scrollbar .os-scrollbar-handle,

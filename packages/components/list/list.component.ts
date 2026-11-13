@@ -10,7 +10,7 @@ import { ChangeDetectionStrategy, Component, ElementRef, inject, ViewEncapsulati
 @Component({
     selector: 'kbq-list',
     template: '<ng-content />',
-    styleUrls: ['./list.scss', 'list-tokens.scss'],
+    styleUrls: ['./list.scss', './list-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: { class: 'kbq-list' }

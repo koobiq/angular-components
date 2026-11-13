@@ -14,29 +14,29 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     template: `
         <kbq-toggle [checked]="safeArea()" (change)="safeArea.set($event.checked)">Safe Area</kbq-toggle>
 
-        <button kbq-button [kbqDropdownTriggerFor]="appDropdown">
+        <button kbq-button type="button" [kbqDropdownTriggerFor]="appDropdown">
             File
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
 
         <kbq-dropdown #appDropdown="kbqDropdown" [safeArea]="safeArea()">
-            <button kbq-dropdown-item>New</button>
-            <button kbq-dropdown-item>Open</button>
-            <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNested">Share</button>
-            <button kbq-dropdown-item>Save</button>
-            <button kbq-dropdown-item>Save as...</button>
-            <button kbq-dropdown-item>Rename</button>
-            <button kbq-dropdown-item>Move</button>
+            <button kbq-dropdown-item type="button">New</button>
+            <button kbq-dropdown-item type="button">Open</button>
+            <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNested">Share</button>
+            <button kbq-dropdown-item type="button">Save</button>
+            <button kbq-dropdown-item type="button">Save as...</button>
+            <button kbq-dropdown-item type="button">Rename</button>
+            <button kbq-dropdown-item type="button">Move</button>
 
             <kbq-divider />
 
-            <button kbq-dropdown-item>Print</button>
+            <button kbq-dropdown-item type="button">Print</button>
         </kbq-dropdown>
 
         <kbq-dropdown #appDropdownNested="kbqDropdown">
-            <button kbq-dropdown-item>Email as attachment</button>
-            <button kbq-dropdown-item>Publish to web</button>
-            <button kbq-dropdown-item>Share with people</button>
+            <button kbq-dropdown-item type="button">Email as attachment</button>
+            <button kbq-dropdown-item type="button">Publish to web</button>
+            <button kbq-dropdown-item type="button">Share with people</button>
         </kbq-dropdown>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

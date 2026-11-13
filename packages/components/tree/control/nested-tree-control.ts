@@ -1,5 +1,4 @@
-import type { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { type Observable, take } from 'rxjs';
 import { BaseTreeControl } from './base-tree-control';
 import type { KbqTreeControlOptions } from './tree-control';
 

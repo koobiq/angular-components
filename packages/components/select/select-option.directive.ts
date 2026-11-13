@@ -2,8 +2,7 @@ import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
 import { type AfterViewInit, Directive, inject, input, type OnDestroy } from '@angular/core';
-import { Subscription, throttleTime } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, Subscription, throttleTime } from 'rxjs';
 import { KBQ_WINDOW, KbqOption } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 
@@ -59,11 +58,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
      * condition, so a child clipping for another reason is not read as truncated text.
      */
     private hasClippedLine(textElement: HTMLElement): boolean {
-        const { children } = textElement;
-
-        for (let index = 0; index < children.length; index++) {
-            const line = children[index];
-
+        for (const line of Array.from(textElement.children)) {
             if (
                 line.clientWidth < line.scrollWidth &&
                 this.window.getComputedStyle(line).textOverflow.includes('ellipsis')
@@ -73,10 +68,6 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
         }
 
         return false;
-    }
-
-    constructor() {
-        super();
     }
 
     override ngAfterViewInit() {

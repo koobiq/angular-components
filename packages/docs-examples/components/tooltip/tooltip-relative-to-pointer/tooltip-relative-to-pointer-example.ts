@@ -12,7 +12,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule
     ],
     template: `
-        <button kbq-button kbqTooltip="relativeToPointer" [kbqRelativeToPointer]="true">
+        <button kbq-button type="button" kbqTooltip="relativeToPointer" [kbqRelativeToPointer]="true">
             Button with a tooltip positioned relative to the cursor
         </button>
     `,

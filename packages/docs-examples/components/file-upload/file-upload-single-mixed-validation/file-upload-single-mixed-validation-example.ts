@@ -24,8 +24,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 #kbqFileUpload
                 class="layout-margin-bottom-s"
                 formControlName="fileUpload"
+                progressMode="indeterminate"
                 [errorStateMatcher]="customErrorStateMatcher"
-                [progressMode]="'indeterminate'"
             >
                 <i kbq-icon="kbq-file-o_16"></i>
 

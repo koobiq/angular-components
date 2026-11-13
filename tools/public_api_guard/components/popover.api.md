@@ -91,11 +91,10 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     protected onClose(): void;
     onEscape(event?: Event): void;
     readonly overflowContainer: _angular_core.Signal<KbqOverflowShadowContainer | undefined>;
-    panelId: string;
+    panelId: string | undefined;
     // (undocumented)
     prefix: string;
-    // (undocumented)
-    trigger: KbqPopoverTrigger;
+    trigger: KbqPopoverTrigger | undefined;
     updateArrowPosition(): void;
     // (undocumented)
     updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues): void;

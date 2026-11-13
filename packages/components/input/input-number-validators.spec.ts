@@ -184,4 +184,16 @@ describe('KbqMinValidator/KbqMaxValidator', () => {
             expect(fixture.componentInstance.control.errors).toBeNull();
         });
     });
+
+    // A form can validate the control before the directive gets its first inputs
+    it('should pass any value before the bounds arrive', () => {
+        const [minValidator, maxValidator] = TestBed.runInInjectionContext(() => [
+            new KbqMinValidator(),
+            new KbqMaxValidator()
+        ]);
+        const control = new FormControl(5);
+
+        expect(minValidator.validate(control)).toBeNull();
+        expect(maxValidator.validate(control)).toBeNull();
+    });
 });

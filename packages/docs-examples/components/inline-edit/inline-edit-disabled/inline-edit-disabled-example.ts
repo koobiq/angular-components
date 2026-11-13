@@ -22,15 +22,15 @@ import { KbqInputModule } from '@koobiq/components/input';
     ],
     template: `
         <kbq-dropdown #dropdown="kbqDropdown">
-            <button kbq-dropdown-item (click)="clipboard.copy(value)">Copy text</button>
+            <button kbq-dropdown-item type="button" (click)="clipboard.copy(value)">Copy text</button>
         </kbq-dropdown>
 
         <kbq-inline-edit disabled>
             <i
                 kbqInlineEditMenu
                 kbq-icon-button="kbq-ellipsis-vertical_16"
+                color="contrast-fade"
                 [kbqDropdownTriggerFor]="dropdown"
-                [color]="'contrast-fade'"
             ></i>
             <div kbqInlineEditViewMode>
                 @if (value) {

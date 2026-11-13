@@ -93,8 +93,8 @@ const normalizeSidebarState = (parsed: unknown): KbqSidebarState | null => {
 
 @Component({
     selector: 'kbq-sidebar',
-    templateUrl: 'sidebar.component.html',
-    styleUrls: ['./sidebar.scss'],
+    templateUrl: './sidebar.component.html',
+    styleUrl: './sidebar.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

@@ -2712,7 +2712,7 @@ export abstract class KbqAbstractSelect {
     // (undocumented)
     protected setOverlayPosition(): void;
     protected subscribeToPanelResize(): void;
-    protected abstract triggerRect: DOMRect;
+    protected abstract triggerRect: DOMRect | undefined;
     protected unsubscribeFromPanelResize(): void;
     protected updateOverlayWidth(panelWidth: KbqPanelWidth, panelMinWidth: KbqPanelMinWidth, origin: KbqPanelWidthOrigin): void;
     protected updatePanelAnchor(): boolean;
@@ -3894,7 +3894,7 @@ export abstract class KbqPopUp implements OnDestroy {
     hide(delay: number): void;
     readonly hovered: Signal<boolean>;
     // (undocumented)
-    isTemplateRef(value: any): boolean;
+    isTemplateRef<C>(value: unknown): value is TemplateRef<C>;
     // (undocumented)
     isVisible(): boolean;
     // (undocumented)
@@ -3903,7 +3903,7 @@ export abstract class KbqPopUp implements OnDestroy {
     offset: number | null;
     protected readonly onHideSubject: Subject<void>;
     // (undocumented)
-    protected prefix: string;
+    protected abstract prefix: string;
     // (undocumented)
     protected readonly renderer: Renderer2;
     protected setHovered(value: boolean): void;
@@ -3912,7 +3912,7 @@ export abstract class KbqPopUp implements OnDestroy {
     // (undocumented)
     show(delay: number): void;
     // (undocumented)
-    trigger: KbqPopUpTrigger<unknown>;
+    trigger: KbqPopUpTrigger<unknown> | undefined;
     updateArrowPosition(): void;
     // (undocumented)
     updateClassMap(placement: string, customClass: string, classMap?: any): void;
@@ -3954,7 +3954,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected _disabled: boolean;
     protected readonly elementRef: ElementRef<HTMLElement>;
     enterDelay: number;
-    protected externalNativeElement: HTMLElement;
+    protected externalNativeElement: HTMLElement | undefined;
     focus(): void;
     protected getAdjustedPositions(): ConnectionPositionPair[];
     protected getAnchorSize(): {
@@ -3994,7 +3994,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected placement: KbqPopUpPlacementValues;
     abstract placementChange: EventEmitter<KbqPopUpPlacementValues>;
     protected placementPriority: string | string[] | null;
-    protected portal: ComponentPortal<T>;
+    protected portal: ComponentPortal<T> | undefined;
     protected preventClose: boolean;
     resetOrigin(): void;
     protected readonly scrollable: CdkScrollable | null;
@@ -4004,7 +4004,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected setHovered(value: boolean): void;
     show(delay?: number): void;
     stickToWindow: KbqStickToWindowPlacementValues | undefined;
-    protected strategy: FlexibleConnectedPositionStrategy;
+    protected strategy: FlexibleConnectedPositionStrategy | undefined;
     touchendHandler(): void;
     abstract trigger: string;
     triggerName: string;

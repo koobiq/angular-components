@@ -85,18 +85,12 @@ export class DocsNameFormComponent {
         KbqButtonModule
     ],
     template: `
-        <button kbq-button color="contrast" (click)="openEmptyForm(footer)">Open empty form</button>
-        <button kbq-button color="contrast-fade" (click)="openDraftForm(footer)">Open draft</button>
+        <button kbq-button type="button" color="contrast" (click)="openEmptyForm(footer)">Open empty form</button>
+        <button kbq-button type="button" color="contrast-fade" (click)="openDraftForm(footer)">Open draft</button>
 
         <ng-template #footer>
             <button type="submit" form="docs-form" kbq-button color="contrast">Save</button>
-            <button
-                kbq-button
-                color="contrast-fade"
-                (click)="modalRef.close(modalRef.getContentComponent().userDetailsForm.value)"
-            >
-                Cancel
-            </button>
+            <button kbq-button type="button" color="contrast-fade" (click)="cancel()">Cancel</button>
         </ng-template>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -106,7 +100,11 @@ export class DocsNameFormComponent {
 })
 export class ValidationOnOpenExample {
     protected readonly modalService = inject(KbqModalService);
-    protected modalRef: KbqModalRef<DocsNameFormComponent>;
+    protected modalRef?: KbqModalRef<DocsNameFormComponent>;
+
+    protected cancel(): void {
+        this.modalRef?.close(this.modalRef.getContentComponent().userDetailsForm.value);
+    }
 
     openEmptyForm(footer: TemplateRef<any>): void {
         this.modalRef = this.modalService.create({
@@ -116,7 +114,7 @@ export class ValidationOnOpenExample {
         });
 
         this.modalRef.afterOpen.pipe(take(1)).subscribe(() => {
-            this.modalRef.getElement().getElementsByTagName('input').item(0)?.focus();
+            this.modalRef?.getElement().getElementsByTagName('input').item(0)?.focus();
         });
     }
 
@@ -132,7 +130,7 @@ export class ValidationOnOpenExample {
         });
 
         this.modalRef.afterOpen.pipe(take(1)).subscribe(() => {
-            this.modalRef.getElement().getElementsByTagName('button').item(0)?.click();
+            this.modalRef?.getElement().getElementsByTagName('button').item(0)?.click();
         });
     }
 }

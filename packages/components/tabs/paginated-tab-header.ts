@@ -28,8 +28,17 @@ import {
     untracked
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { fromEvent, merge, of as observableOf, ReplaySubject, Subject, timer } from 'rxjs';
-import { auditTime, debounceTime, takeUntil } from 'rxjs/operators';
+import {
+    auditTime,
+    debounceTime,
+    fromEvent,
+    merge,
+    of as observableOf,
+    ReplaySubject,
+    Subject,
+    takeUntil,
+    timer
+} from 'rxjs';
 import {
     DOWN_ARROW,
     END,
@@ -240,7 +249,7 @@ export abstract class KbqPaginatedTabHeader
     private tabLabelCount?: number;
 
     /** Used to manage focus between the tabs. */
-    private keyManager: FocusKeyManager<KbqPaginatedTabHeaderItem>;
+    private keyManager?: FocusKeyManager<KbqPaginatedTabHeaderItem>;
 
     /** Cached text content of the header. */
     private currentTextContent?: string;
@@ -496,11 +505,12 @@ export abstract class KbqPaginatedTabHeader
             this.changeDetectorRef.markForCheck();
         };
 
-        this.keyManager = new FocusKeyManager<KbqPaginatedTabHeaderItem>(this.items).withHorizontalOrientation(
+        const keyManager = new FocusKeyManager<KbqPaginatedTabHeaderItem>(this.items).withHorizontalOrientation(
             this.getLayoutDirection()
         );
 
-        this.keyManager.updateActiveItem(this.selectedIndex);
+        this.keyManager = keyManager;
+        keyManager.updateActiveItem(this.selectedIndex);
 
         // Defer the first call in order to allow for slower browsers to lay out the elements.
         // This helps in cases where the user lands directly on a page with paginated tabs.
@@ -520,13 +530,13 @@ export abstract class KbqPaginatedTabHeader
                 // because the direction change handler can run outside of Angular.
                 this.ngZone.run(() => Promise.resolve().then(realign));
 
-                this.keyManager.withHorizontalOrientation(this.getLayoutDirection());
+                keyManager.withHorizontalOrientation(this.getLayoutDirection());
             });
 
         // If there is a change in the focus key manager we need to emit the `indexFocused`
         // event in order to provide a public event that notifies about focus changes. Also we realign
         // the tabs container by scrolling the new focused tab into the visible section.
-        this.keyManager.change.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((newFocusIndex) => {
+        keyManager.change.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((newFocusIndex) => {
             // `change` only fires for deliberate focus moves (`setActiveItem`), never for the
             // bookkeeping `updateActiveItem` the `selectedIndex` setter does — which is exactly the
             // distinction `focusedItemIndex` has to preserve.
@@ -599,17 +609,17 @@ export abstract class KbqPaginatedTabHeader
         const key = event.keyCode;
 
         if (key === HOME) {
-            this.keyManager.setFirstItemActive();
+            this.keyManager?.setFirstItemActive();
         } else if (key === END) {
-            this.keyManager.setLastItemActive();
+            this.keyManager?.setLastItemActive();
         } else if (key === UP_ARROW && this.vertical) {
-            this.keyManager.setPreviousItemActive();
+            this.keyManager?.setPreviousItemActive();
         } else if (key === DOWN_ARROW && this.vertical) {
-            this.keyManager.setNextItemActive();
+            this.keyManager?.setNextItemActive();
         } else if (key === RIGHT_ARROW && !this.vertical) {
-            this.keyManager.setNextItemActive();
+            this.keyManager?.setNextItemActive();
         } else if (key === LEFT_ARROW && !this.vertical) {
-            this.keyManager.setPreviousItemActive();
+            this.keyManager?.setPreviousItemActive();
         } else if ([ENTER, SPACE].includes(key)) {
             this.selectFocusedIndex.emit(this.focusIndex);
         }
@@ -671,9 +681,9 @@ export abstract class KbqPaginatedTabHeader
      * scrolling is enabled.
      */
     setTabFocus(tabIndex: number) {
-        if (!this.items?.length) return;
+        const item = this.items?.toArray()[tabIndex];
 
-        const item = this.items.toArray()[tabIndex];
+        if (!item) return;
 
         // Prevent the browser's own scroll-into-view behavior so the scroll-correction request
         // below is the only thing driving the scroll position.

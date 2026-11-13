@@ -23,7 +23,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { delay, filter } from 'rxjs/operators';
+import { delay, filter } from 'rxjs';
 import {
     ActiveDescendantKeyManager,
     KBQ_OPTION_PARENT_COMPONENT,
@@ -90,8 +90,8 @@ function normalizeClassInput(
 @Component({
     selector: 'kbq-autocomplete',
     imports: [KbqScrollbarViewport],
-    templateUrl: 'autocomplete.html',
-    styleUrls: ['autocomplete.scss', 'autocomplete-tokens.scss'],
+    templateUrl: './autocomplete.html',
+    styleUrls: ['./autocomplete.scss', './autocomplete-tokens.scss'],
     providers: [
         {
             provide: KBQ_OPTION_PARENT_COMPONENT,
@@ -129,7 +129,7 @@ export class KbqAutocomplete implements AfterContentChecked, AfterContentInit, K
      *
      * @docs-private
      */
-    keyManager: ActiveDescendantKeyManager<KbqOption>;
+    keyManager: ActiveDescendantKeyManager<KbqOption> | undefined;
 
     /**
      * Whether the autocomplete panel should be visible, depending on option length.
@@ -307,7 +307,7 @@ export class KbqAutocomplete implements AfterContentChecked, AfterContentInit, K
 
     /** @docs-private */
     onKeydown(event: KeyboardEvent): any {
-        this.keyManager.onKeydown(event);
+        this.keyManager?.onKeydown(event);
 
         this.updateFocusClass();
     }

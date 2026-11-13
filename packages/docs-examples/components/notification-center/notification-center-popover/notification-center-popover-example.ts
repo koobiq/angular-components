@@ -22,7 +22,7 @@ import { createNotifications, injectExampleText } from '../localized-data';
         LuxonDateModule,
         KbqFormattersModule
     ],
-    templateUrl: 'notification-center-popover-example.html',
+    templateUrl: './notification-center-popover-example.html',
     styles: `
         :host {
             display: block;

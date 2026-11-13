@@ -21,7 +21,7 @@ export class KbqMeasureScrollbarService {
         return this._scrollBarWidth;
     }
 
-    private _scrollBarWidth: number;
+    private _scrollBarWidth = 0;
     private scrollbarMeasure = {
         position: 'absolute',
         top: '-9999px',
@@ -44,7 +44,7 @@ export class KbqMeasureScrollbarService {
         const scrollDiv = this.document.createElement('div');
 
         for (const scrollProp in this.scrollbarMeasure) {
-            if (this.scrollbarMeasure.hasOwnProperty(scrollProp)) {
+            if (Object.hasOwn(this.scrollbarMeasure, scrollProp)) {
                 const key = scrollProp as keyof typeof this.scrollbarMeasure;
 
                 scrollDiv.style[key] = this.scrollbarMeasure[key];

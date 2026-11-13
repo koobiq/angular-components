@@ -85,7 +85,7 @@ const findTriggeredQuery = (
         if (start < 0 || (closest && start <= closest.start)) continue;
 
         const text = beforeCaret.slice(start + trigger.length);
-        const startsToken = start === 0 || WHITESPACE.test(beforeCaret[start - 1]);
+        const startsToken = start === 0 || WHITESPACE.test(beforeCaret.charAt(start - 1));
 
         if (!startsToken || WHITESPACE.test(text)) continue;
 

@@ -22,8 +22,7 @@ import {
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { BehaviorSubject, Observable, timer } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, map, Observable, timer } from 'rxjs';
 import {
     createFakeEvent,
     createMouseEvent,
@@ -3009,6 +3008,36 @@ describe('file upload localization', () => {
         fixture.detectChanges();
 
         expect(browseLink(fixture)).toBe('Bound');
+    });
+});
+
+describe('file upload caption without the browse link', () => {
+    @Component({
+        imports: [KbqMultipleFileUploadComponent, KbqSingleFileUploadComponent],
+        template: `
+            <kbq-multiple-file-upload allowed="mixed" />
+            <kbq-single-file-upload allowed="mixed" />
+        `
+    })
+    class TestApp {}
+
+    // A locale text without the `{{ browseLink }}` placeholder has no link to split the caption around
+    it('should show the whole text as the caption in the mixed mode', () => {
+        TestBed.configureTestingModule({
+            providers: [
+                kbqFileUploadLocaleConfigurationProvider({
+                    multiple: { captionTextWithFolder: 'Drop the files here' },
+                    single: { captionTextWithFolder: 'Drop a file here' }
+                })
+            ]
+        });
+
+        const fixture = TestBed.createComponent(TestApp);
+
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.textContent).toContain('Drop the files here');
+        expect(fixture.nativeElement.textContent).toContain('Drop a file here');
     });
 });
 

@@ -107,7 +107,7 @@ export class KbqDynamicTranslation {
 
         while ((match = slotSelector.exec(text)) !== null) {
             const [slotMatch, slotName, slotText] = match;
-            const [listMatch, listString] = new RegExp('^\\((.*?)\\)$', 'g').exec(slotText) ?? [];
+            const [listMatch, listString] = new RegExp('^\\((.*?)\\)$', 'g').exec(slotText ?? '') ?? [];
             const textBeforeSlot = text.substring(lastIndex, +match.index);
 
             if (textBeforeSlot) {
@@ -116,7 +116,7 @@ export class KbqDynamicTranslation {
 
             parsedSlots.push({
                 type: 'slot',
-                template: slotTemplatesByName[slotName] || null,
+                template: slotTemplatesByName[slotName!] || null,
                 context: { $implicit: listMatch && listString ? listString.split(',') : slotText }
             });
 

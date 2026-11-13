@@ -8,7 +8,7 @@ if (require.main === module) {
 
     mkdirSync(dirname(outDir), { recursive: true });
 
-    // eslint-disable-next-line @angular-eslint/no-experimental
+    // eslint-disable-next-line @angular-eslint/no-experimental -- `fs.cpSync` is stable since Node 22.3, @types/node still marks it experimental
     cpSync(execPath, outDir, {
         recursive: true,
         // Copy the example sources (.ts/.html/.css) for the live example viewer; skip json (e.g.

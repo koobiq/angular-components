@@ -9,7 +9,9 @@ import {
 import { KbqMultipleFileUploadComponent, KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
 
-const localeData: Record<string, KbqDeepPartial<KbqFileUploadLocaleConfiguration>> = {
+type ExampleLocaleData = KbqDeepPartial<KbqFileUploadLocaleConfiguration>;
+
+const localeData: Record<string, ExampleLocaleData> & { 'en-US': ExampleLocaleData } = {
     'en-US': {
         single: {
             captionText: 'Drop file here or {{ browseLink }}',

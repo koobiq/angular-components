@@ -244,7 +244,7 @@ describe('KbqSidepanelService', () => {
 
         const sidepanelRef = sidepanelService.open(SimpleSidepanelExample, config);
 
-        expect(sidepanelRef.instance.data.value).toBe(config.data.value);
+        expect(sidepanelRef.instance!.data.value).toBe(config.data.value);
     });
 
     it('should allow for the id to be overwritten', () => {
@@ -407,7 +407,7 @@ describe('KbqSidepanelService', () => {
 
         const sidepanelRef = sidepanelService.open(SidepanelWithCustomToken, { injector: customInjector });
 
-        expect(sidepanelRef.instance.tokenValue).toBe('custom-value');
+        expect(sidepanelRef.instance!.tokenValue).toBe('custom-value');
     });
 
     it('should fall back to the root injector when no custom injector is provided', () => {
@@ -420,7 +420,7 @@ describe('KbqSidepanelService', () => {
         vi.useFakeTimers();
 
         const sidepanelRef = sidepanelService.open(SidepanelWithFormComponent);
-        const submitSpy = vi.spyOn(sidepanelRef.instance, 'onSubmit');
+        const submitSpy = vi.spyOn(sidepanelRef.instance!, 'onSubmit');
 
         rootComponentFixture.detectChanges();
         await vi.runOnlyPendingTimersAsync();
@@ -511,7 +511,7 @@ describe('KbqSidepanelService', () => {
             await render();
 
             const innerRef = sidepanelService.open(SidepanelWithTemplateOutlet, {
-                data: { template: outerRef.instance.template() }
+                data: { template: outerRef.instance!.template() }
             });
             const innerClosed = closedSpy(innerRef);
 
@@ -531,7 +531,7 @@ describe('KbqSidepanelService', () => {
 
             await render();
 
-            const view = sidepanelRef.instance.template().createEmbeddedView({});
+            const view = sidepanelRef.instance!.template().createEmbeddedView({});
 
             document.body.append(...view.rootNodes);
             view.detectChanges();
@@ -738,7 +738,7 @@ describe('KbqSidepanelService', () => {
 
             expect(container.hasAttribute('aria-labelledby')).toBe(false);
 
-            sidepanelRef.instance.showHeader.set(true);
+            sidepanelRef.instance!.showHeader.set(true);
             rootComponentFixture.detectChanges();
             await vi.runOnlyPendingTimersAsync();
 
@@ -1069,7 +1069,7 @@ describe('KbqSidepanelService', () => {
             rootComponentFixture.detectChanges();
             await vi.runOnlyPendingTimersAsync();
 
-            const tooltip = sidepanelRef.instance.tooltip();
+            const tooltip = sidepanelRef.instance!.tooltip();
 
             tooltip.show(0);
             await vi.runOnlyPendingTimersAsync();
@@ -1152,7 +1152,7 @@ describe('KbqSidepanelService', () => {
             await rootComponentFixture.whenStable();
             expect(closeButton()).toBeNull();
 
-            sidepanelRef.instance.closeable.set(true);
+            sidepanelRef.instance!.closeable.set(true);
             await rootComponentFixture.whenStable();
             expect(closeButton()).not.toBeNull();
         });
@@ -1519,8 +1519,8 @@ class SidepanelWithFormComponent {
         <kbq-sidepanel-body>Body</kbq-sidepanel-body>
         <kbq-sidepanel-footer>
             <button id="hyphenated" kbq-button kbq-sidepanel-close="hyphenated">Hyphenated</button>
-            <button id="camel" kbq-button [kbqSidepanelClose]="'camel-case'">Camel case</button>
-            <button id="both" kbq-button kbq-sidepanel-close="loser" [kbqSidepanelClose]="'winner'">Both</button>
+            <button id="camel" kbq-button kbqSidepanelClose="camel-case">Camel case</button>
+            <button id="both" kbq-button kbq-sidepanel-close="loser" kbqSidepanelClose="winner">Both</button>
         </kbq-sidepanel-footer>
     `
 })

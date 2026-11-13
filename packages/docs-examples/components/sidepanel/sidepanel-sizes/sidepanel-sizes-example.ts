@@ -16,7 +16,7 @@ import {
         KbqButtonModule,
         KbqSidepanelModule
     ],
-    templateUrl: 'sidepanel-sizes-example.html',
+    templateUrl: './sidepanel-sizes-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelSizesExample {

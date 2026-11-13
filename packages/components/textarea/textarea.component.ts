@@ -298,7 +298,7 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
     ngOnInit() {
         if (!this.isBrowser) return;
 
-        Promise.resolve().then(() => {
+        void Promise.resolve().then(() => {
             const styles = this.window.getComputedStyle(this.elementRef.nativeElement);
             const lineHeight = parseInt(styles.lineHeight!, 10);
 

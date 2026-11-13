@@ -7,16 +7,18 @@ import {
     catchError,
     exhaustMap,
     fromEvent,
+    map,
     merge,
     type Observable,
     of,
     race,
+    startWith,
     Subject,
     type Subscription,
     switchMap,
+    tap,
     timer
 } from 'rxjs';
-import { map, startWith, tap } from 'rxjs/operators';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqHighlightBackgroundPipe, KbqVirtualOption } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -120,7 +122,7 @@ export class SelectFacade {
 
                     return { status: 'success', data: this.accumulated, hasMore: result.hasMore, loadingMore: false };
                 }),
-                catchError((error: any) => of({ status: 'error', error } as SelectState))
+                catchError((error: unknown) => of({ status: 'error', error } as SelectState))
             );
 
             const initialLoad$ = race(
@@ -230,8 +232,9 @@ export class SelectFacade {
                                     <span kbq-select-error-text>Не удалось показать записи</span>
                                     <button
                                         kbq-button
-                                        [kbqStyle]="'transparent'"
-                                        [color]="'theme'"
+                                        type="button"
+                                        kbqStyle="transparent"
+                                        color="theme"
                                         (click)="reloadOptions()"
                                     >
                                         <i kbq-icon="kbq-arrow-rotate-left_16"></i>
@@ -251,7 +254,7 @@ export class SelectFacade {
                                 @if (state.loadingMore) {
                                     <kbq-option [disabled]="true">
                                         <div class="layout-row layout-align-start-center">
-                                            <kbq-progress-spinner [mode]="'indeterminate'" />
+                                            <kbq-progress-spinner mode="indeterminate" />
                                             <span class="layout-padding-left-s">Загрузка</span>
                                         </div>
                                     </kbq-option>

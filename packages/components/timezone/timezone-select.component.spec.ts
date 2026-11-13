@@ -13,8 +13,7 @@ import {
 import { type ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { merge, type Observable, of, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, merge, type Observable, of, Subject } from 'rxjs';
 import {
     createKeyboardEvent,
     dispatchEvent,

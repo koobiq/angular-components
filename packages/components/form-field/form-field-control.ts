@@ -9,31 +9,31 @@ import type { NgControl } from '@angular/forms';
  */
 export abstract class KbqFormFieldControl<T> {
     /** The value of the control. */
-    readonly value: Signal<T | null>;
+    abstract readonly value: Signal<T | null>;
 
     /** The element ID for this control. */
-    readonly id: Signal<string>;
+    abstract readonly id: Signal<string>;
 
     /** The placeholder for this control. */
-    readonly placeholder: Signal<string | null | undefined>;
+    abstract readonly placeholder: Signal<string | null | undefined>;
 
     /** Gets the NgControl for this control. */
-    readonly ngControl: NgControl | null;
+    abstract readonly ngControl: NgControl | null;
 
     /** Whether the control is focused. */
-    readonly focused: Signal<boolean>;
+    abstract readonly focused: Signal<boolean>;
 
     /** Whether the control is empty. */
-    readonly empty: Signal<boolean>;
+    abstract readonly empty: Signal<boolean>;
 
     /** Whether the control is required. */
-    readonly required: Signal<boolean>;
+    abstract readonly required: Signal<boolean>;
 
     /** Whether the control is disabled. */
-    readonly disabled: Signal<boolean>;
+    abstract readonly disabled: Signal<boolean>;
 
     /** Whether the control is in an error state. */
-    readonly errorState: Signal<boolean>;
+    abstract readonly errorState: Signal<boolean>;
 
     /**
      * Whether the control is read-only: it can be focused and its value selected and copied, but not changed.

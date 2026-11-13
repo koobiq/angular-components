@@ -37,7 +37,7 @@ import { KbqAppSwitcherIconSanitizer } from './app-switcher-icon-sanitizer';
             }
         </div>
     `,
-    styleUrls: ['app-switcher-dropdown-app.scss'],
+    styleUrl: 'app-switcher-dropdown-app.scss',
     providers: [
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqAppSwitcherDropdownApp },
         { provide: KbqDropdownItem, useExisting: KbqAppSwitcherDropdownApp }

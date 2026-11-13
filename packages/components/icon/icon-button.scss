@@ -1,6 +1,4 @@
-@use '../core/styles/common/tokens' as *;
-
-@use './icon-button-theme' as *;
+@use './icon-button-theme';
 
 .kbq-icon-button {
     &:not(.kbq-disabled) {
@@ -18,7 +16,7 @@
     }
 
     > svg {
-        fill: currentColor;
+        fill: currentcolor;
         vertical-align: middle;
     }
 }
@@ -28,4 +26,4 @@ button.kbq-icon-button {
     background-color: unset;
 }
 
-@include kbq-icon-button-theme();
+@include icon-button-theme.kbq-icon-button-theme();

@@ -23,8 +23,8 @@ import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
         KbqIconItem,
         KbqIconButton
     ],
-    templateUrl: 'alert-content-example.html',
-    styleUrls: ['alert-content-example.css'],
+    templateUrl: './alert-content-example.html',
+    styleUrl: './alert-content-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AlertContentExample {

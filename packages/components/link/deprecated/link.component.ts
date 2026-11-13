@@ -163,7 +163,7 @@ export class KbqLink implements AfterViewInit, AfterViewChecked, OnDestroy {
     private printedUrl: string | undefined;
 
     ngAfterViewInit(): void {
-        this.focusMonitor.monitor(this.nativeElement, true);
+        void this.focusMonitor.monitor(this.nativeElement, true);
     }
 
     /**

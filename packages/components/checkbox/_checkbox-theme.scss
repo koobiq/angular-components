@@ -1,4 +1,4 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-checkbox-color($style-name) {
     $base: checkbox-#{$style-name};
@@ -99,18 +99,18 @@
 
 @mixin kbq-checkbox-typography() {
     .kbq-checkbox {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
         & .kbq-hint .kbq-hint__text {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
         }
     }
 
     .kbq-checkbox.kbq-checkbox_big {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-big);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
 
         & .kbq-hint .kbq-hint__text {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
         }
     }
 }

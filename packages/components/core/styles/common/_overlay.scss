@@ -8,7 +8,7 @@ $overlay-backdrop-z-index: 1000 !default;
 $overlay-layer-z-index: 980 !default;
 
 // Background color for all of the backdrops
-$overlay-backdrop-color: rgba(0, 0, 0, 0.5) !default;
+$overlay-backdrop-color: rgb(0 0 0 / 50%) !default;
 
 // Default backdrop animation is based on the Material Design swift-ease-out.
 $backdrop-animation-duration: 300ms !default;

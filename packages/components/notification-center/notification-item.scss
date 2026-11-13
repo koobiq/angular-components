@@ -1,5 +1,5 @@
-@use '../core/styles/common/tokens' as *;
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/tokens';
+@use '../core/styles/common/squircle';
 
 .kbq-notification-item {
     display: flex;
@@ -7,7 +7,7 @@
 
     position: relative;
 
-    @include kbq-squircle(var(--kbq-size-s));
+    @include squircle.kbq-squircle(var(--kbq-size-s));
 
     height: auto;
 
@@ -138,7 +138,7 @@
     pointer-events: none;
 }
 
-@mixin _kbq-notification-item-theme() {
+@mixin -kbq-notification-item-theme() {
     .kbq-notification-item {
         background: var(--kbq-background-card);
 
@@ -162,15 +162,15 @@
     }
 }
 
-@mixin _kbq-notification-item-typography() {
+@mixin -kbq-notification-item-typography() {
     .kbq-notification-item {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
         & .kbq-notification-item-time {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
         }
     }
 }
 
-@include _kbq-notification-item-theme();
-@include _kbq-notification-item-typography();
+@include -kbq-notification-item-theme();
+@include -kbq-notification-item-typography();

@@ -25,8 +25,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { fromEvent, merge, type Observable, Subject, type Subscription } from 'rxjs';
-import { debounceTime, startWith } from 'rxjs/operators';
+import { debounceTime, fromEvent, merge, type Observable, startWith, Subject, type Subscription } from 'rxjs';
 import {
     FocusKeyManager,
     isHorizontalMovement,
@@ -70,7 +69,9 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
     }
 
     /** @docs-private */
-    keyManager: FocusKeyManager<KbqNavbarFocusableItem>;
+    keyManager: FocusKeyManager<KbqNavbarFocusableItem> = new FocusKeyManager<KbqNavbarFocusableItem>(
+        this.focusableItemsList()
+    ).withTypeAhead();
 
     /**
      * Tab index of the navbar host. The navbar owns the single tab stop of the whole widget and moves focus
@@ -111,8 +112,6 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
 
     /** @docs-private */
     ngAfterContentInit(): void {
-        this.keyManager = new FocusKeyManager<KbqNavbarFocusableItem>(this.focusableItems).withTypeAhead();
-
         kbqLeaveTabOrderOnTabOut(
             this.keyManager.tabOut,
             this.elementRef.nativeElement,

@@ -52,8 +52,11 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
 
     private readonly templateLabelQuery = contentChild(KBQ_TAB_LABEL);
 
-    /** The label template of the tab: the `kbqTabLabel` in its content, or else the one assigned in code. */
-    get templateLabel(): KbqTabLabel {
+    /**
+     * The label template of the tab: the `kbqTabLabel` in its content, or else the one assigned in code. `undefined`
+     * for a tab labelled with text.
+     */
+    get templateLabel(): KbqTabLabel | undefined {
         return this.templateLabelQuery() ?? this._templateLabel;
     }
 
@@ -61,7 +64,7 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
         this.setTemplateLabelInput(value);
     }
 
-    private _templateLabel: KbqTabLabel;
+    private _templateLabel?: KbqTabLabel;
 
     /**
      * Template provided in the tab content that will be used if present, used to enable lazy-loading

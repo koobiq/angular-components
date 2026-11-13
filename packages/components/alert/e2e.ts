@@ -134,12 +134,7 @@ import {
                                 <div kbq-alert-title>Header</div>
                                 Alert text
                                 <button kbq-alert-control kbq-button [color]="colors.Contrast">Button1</button>
-                                <button
-                                    kbq-alert-control
-                                    kbq-button
-                                    [color]="colors.Contrast"
-                                    [kbqStyle]="'transparent'"
-                                >
+                                <button kbq-alert-control kbq-button kbqStyle="transparent" [color]="colors.Contrast">
                                     Button2
                                 </button>
                             </kbq-alert>
@@ -198,12 +193,7 @@ import {
 
                                 <!-- Action buttons: standard and transparent styles -->
                                 <button kbq-alert-control kbq-button [color]="colors.Contrast">Button1</button>
-                                <button
-                                    kbq-alert-control
-                                    kbq-button
-                                    [color]="colors.Contrast"
-                                    [kbqStyle]="'transparent'"
-                                >
+                                <button kbq-alert-control kbq-button kbqStyle="transparent" [color]="colors.Contrast">
                                     Button2
                                 </button>
                             </kbq-alert>
@@ -228,12 +218,7 @@ import {
 
                                 <!-- Action buttons: standard and transparent styles -->
                                 <button kbq-alert-control kbq-button [color]="colors.Contrast">Button1</button>
-                                <button
-                                    kbq-alert-control
-                                    kbq-button
-                                    [color]="colors.Contrast"
-                                    [kbqStyle]="'transparent'"
-                                >
+                                <button kbq-alert-control kbq-button kbqStyle="transparent" [color]="colors.Contrast">
                                     Button2
                                 </button>
                             </kbq-alert>

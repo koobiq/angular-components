@@ -5,8 +5,8 @@ export class KbqTreeNodeOutletContext<T> {
     /** Data for the node. */
     $implicit: T;
 
-    /** Depth of the node. */
-    level: number;
+    /** Depth of the node. Defaults to `0`. */
+    level = 0;
 
     /** Index location of the node. */
     index?: number;
@@ -26,6 +26,7 @@ export class KbqTreeNodeOutletContext<T> {
  */
 @Directive({
     selector: '[kbqTreeNodeDef]',
+    // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property -- `when` is an input of the CDK base class
     inputs: ['when: kbqTreeNodeDefWhen']
 })
 export class KbqTreeNodeDef<T> {
@@ -40,7 +41,7 @@ export class KbqTreeNodeDef<T> {
      * For every node, there must be at least one when function that passes or an undefined to
      * default.
      */
-    when: (index: number, nodeData: T) => boolean;
+    when: ((index: number, nodeData: T) => boolean) | undefined;
 
     /** @docs-private */
 }

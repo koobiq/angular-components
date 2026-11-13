@@ -50,19 +50,26 @@ import {
 } from '@angular/core';
 import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import { BehaviorSubject, defer, EMPTY, fromEvent, merge, type Observable, Subject, Subscription } from 'rxjs';
 import {
     auditTime,
+    BehaviorSubject,
     debounceTime,
+    defer,
     delay,
     distinctUntilChanged,
+    EMPTY,
     filter,
+    fromEvent,
     map,
+    merge,
+    type Observable,
     startWith,
+    Subject,
+    Subscription,
     switchMap,
     take,
     takeUntil
-} from 'rxjs/operators';
+} from 'rxjs';
 import {
     ActiveDescendantKeyManager,
     BACKSPACE,
@@ -235,7 +242,7 @@ export const minimumTimeToDisplayLoading = 300;
         KbqPseudoCheckbox,
         KbqScrollbarViewport
     ],
-    templateUrl: 'select.html',
+    templateUrl: './select.html',
     styleUrls: ['./select.scss', './select-tokens.scss'],
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqSelect },
@@ -364,14 +371,17 @@ export class KbqSelect
      */
     private readonly visibleTriggerItems = signal<number | null>(null);
 
-    /** The last measured value for the trigger's client bounding rect. */
-    protected triggerRect: DOMRect;
+    /** The last measured value for the trigger's client bounding rect, or `undefined` until the panel first opens. */
+    protected triggerRect: DOMRect | undefined;
 
     /** The cached font-size of the trigger element in pixels. */
     triggerFontSize = 0;
 
-    /** Deals with the selection logic. Manages selected options and their states. */
-    selectionModel: SelectionModel<KbqOptionBase>;
+    /**
+     * Deals with the selection logic. Manages selected options and their states. Created in `ngOnInit`, with the
+     * multiplicity of the first `multiple` binding.
+     */
+    selectionModel: SelectionModel<KbqOptionBase> | undefined;
 
     /** Previously selected options before the current selection was made. */
     previousSelectionModelSelected: KbqOptionBase[] = [];
@@ -386,7 +396,7 @@ export class KbqSelect
      */
     private readonly selectedOptionCopies = new WeakMap<KbqOptionBase, KbqVirtualOption>();
 
-    /** Manages keyboard events for options in the panel. */
+    /** Manages keyboard events for options in the panel. Configured once the content is initialized. */
     keyManager: ActiveDescendantKeyManager<KbqOption>;
 
     /** The value of the select panel's transform-origin property. */
@@ -628,7 +638,9 @@ export class KbqSelect
 
     /** Combined stream of all of the child options' change events. */
     readonly optionSelectionChanges: Observable<KbqOptionSelectionChange> = defer(() => {
-        if (this.contentReady) {
+        const selectionModel = this.selectionModel;
+
+        if (this.contentReady && selectionModel) {
             return merge(
                 ...this.options.map((option) => option.onSelectionChange),
                 this.options.changes.pipe(
@@ -636,11 +648,11 @@ export class KbqSelect
                         list.length ? merge(...list.map((option) => option.onSelectionChange)) : EMPTY
                     )
                 ),
-                this.selectionModel.changed.pipe(
+                selectionModel.changed.pipe(
                     startWith(null as any),
                     switchMap(() => {
                         const optionsSet = new Set(this.options.toArray());
-                        const virtualSelected = this.selectionModel.selected.filter(
+                        const virtualSelected = selectionModel.selected.filter(
                             (option) => !optionsSet.has(option as KbqOption)
                         );
 
@@ -964,8 +976,8 @@ export class KbqSelect
         return this.panelOpen;
     }
 
-    /** Whether virtual scrolling is enabled for the options panel. */
-    withVirtualScroll: boolean;
+    /** Whether virtual scrolling is enabled for the options panel. Defaults to `false`. */
+    withVirtualScroll = false;
 
     protected get scrollbarMode(): KbqScrollbarMode {
         return this.withVirtualScroll ? 'native' : this.scrollbarOptions.mode;
@@ -1062,20 +1074,26 @@ export class KbqSelect
         return runClearPredicate(this.clearPredicate(), this.resolveSelectedOption(option));
     }
 
-    /** Returns the currently selected option(s). Single value or array for multiple selection. */
-    get selected(): KbqOptionBase | KbqOptionBase[] {
-        const selected = this.selectionModel.selected;
+    /**
+     * Returns the currently selected option(s). Single value or array for multiple selection. A single select with
+     * nothing selected returns `undefined`.
+     */
+    get selected(): KbqOptionBase | KbqOptionBase[] | undefined {
+        const selected = this.selectionModel?.selected ?? [];
+        const [first] = selected;
 
         return this.multiSelection
             ? selected.map((option) => this.resolveSelectedOption(option))
-            : selected[0] && this.resolveSelectedOption(selected[0]);
+            : first && this.resolveSelectedOption(first);
     }
 
     /** Returns the display value for the trigger element. */
     get triggerValue(): string {
-        if (this.empty()) return '';
+        const first = this.selectionModel?.selected[0];
 
-        return this.resolveSelectedOption(this.selectionModel.selected[0]).viewValue;
+        if (this.empty() || !first) return '';
+
+        return this.resolveSelectedOption(first).viewValue;
     }
 
     /** Returns all selected options in display order. */
@@ -1086,7 +1104,9 @@ export class KbqSelect
 
         // `map` also makes the copy that the in-place `reverse()` below needs: `SelectionModel.selected`
         // is memoised by CDK, and reversing it would reorder the selection itself.
-        const selectedOptions = this.selectionModel.selected.map((option) => this.resolveSelectedOption(option));
+        const selectedOptions = (this.selectionModel?.selected ?? []).map((option) =>
+            this.resolveSelectedOption(option)
+        );
 
         if (this.isRtl()) {
             selectedOptions.reverse();
@@ -1124,7 +1144,7 @@ export class KbqSelect
     /** Returns the first selected option that is not disabled. */
     get firstSelected(): KbqOptionBase | null {
         return (
-            this.selectionModel.selected
+            (this.selectionModel?.selected ?? [])
                 .map((option) => this.resolveSelectedOption(option))
                 .find((option) => !option.disabled) || null
         );
@@ -1241,6 +1261,10 @@ export class KbqSelect
     constructor() {
         super();
 
+        // Over the list that the content fills later, so that the manager exists from the start. Its options depend on
+        // the projected search field, and `initKeyManager()` sets them once the content is initialized.
+        this.keyManager = new ActiveDescendantKeyManager<KbqOption>(this.navigableOptions);
+
         let widthInputsInitialized = false;
 
         // The overlay width bindings are plain fields, so refresh them after render rather than in this effect.
@@ -1313,7 +1337,7 @@ export class KbqSelect
             const formField = this.parentFormField;
 
             if (formField) {
-                Promise.resolve().then(() =>
+                void Promise.resolve().then(() =>
                     this.disabled() ? formField.stopFocusMonitor() : formField.runFocusMonitor()
                 );
             }
@@ -1349,11 +1373,14 @@ export class KbqSelect
     /** Lifecycle hook called after component initialization. Initializes selection model and subscriptions. */
     ngOnInit() {
         this.multipleValue = this.multipleInput();
-        this.selectionModel = new SelectionModel(this.multiSelection);
-        this.emptyValue.set(this.selectionModel.isEmpty());
-        this.selectionModel.changed
+
+        const selectionModel = new SelectionModel<KbqOptionBase>(this.multiSelection);
+
+        this.selectionModel = selectionModel;
+        this.emptyValue.set(selectionModel.isEmpty());
+        selectionModel.changed
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.emptyValue.set(this.selectionModel.isEmpty()));
+            .subscribe(() => this.emptyValue.set(selectionModel.isEmpty()));
 
         // Only the latest report of a frame is delivered, so a close and a reopen within one frame repeat the
         // state delivered before; `distinctUntilChanged` keeps `openedChange` from emitting it twice.
@@ -1412,7 +1439,8 @@ export class KbqSelect
         this.withVirtualScroll = !!this.cdkVirtualForOf();
         this.initKeyManager();
 
-        this.selectionModel.changed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
+        // Created in `ngOnInit`, which runs first.
+        this.selectionModel?.changed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
             event.added.forEach((option) => option.select());
             event.removed.forEach((option) => option.deselect());
         });
@@ -1503,7 +1531,7 @@ export class KbqSelect
      */
     clear(): void {
         untracked(() => {
-            this.selectionModel.deselect(...this.clearTargets);
+            this.selectionModel?.deselect(...this.clearTargets);
             this.keyManager.setActiveItem(-1);
 
             this.propagateChanges();
@@ -1603,7 +1631,7 @@ export class KbqSelect
     private attachPanel(): void {
         const trigger = this.trigger();
 
-        if (!trigger || !this.keyManager) return;
+        if (!trigger || !this.contentReady) return;
 
         // add check for form-field bounding rectangles, since it adds extra padding around the trigger
         this.triggerRect = (
@@ -2110,7 +2138,9 @@ export class KbqSelect
 
         if (!this.isBrowser || typeof view.IntersectionObserver !== 'function') return;
 
-        const observer = new view.IntersectionObserver(([entry]) => this.visibleChanges.next(entry.isIntersecting));
+        const observer = new view.IntersectionObserver(
+            ([entry]) => entry && this.visibleChanges.next(entry.isIntersecting)
+        );
 
         observer.observe(this.elementRef.nativeElement);
         this.destroyRef.onDestroy(() => observer.disconnect());
@@ -2337,7 +2367,7 @@ export class KbqSelect
     private initializeSelection(): void {
         // Defer setting the value in order to avoid the "Expression
         // has changed after it was checked" errors from Angular.
-        Promise.resolve().then(() => {
+        void Promise.resolve().then(() => {
             this.setSelectionByValue(this.ngControl ? this.ngControl.value : this.value());
         });
     }
@@ -2389,25 +2419,30 @@ export class KbqSelect
      * @param value The value to select. Can be a single value or array for multiple selection.
      */
     private setSelectionByValue(value: any | any[]): void {
+        const selectionModel = this.selectionModel;
+
+        // Created in `ngOnInit`, before the options a value is selected among.
+        if (!selectionModel) return;
+
         // Restored rather than cleared: a value written while this one is applied must not end the outer write.
         const wasWritingValue = this.writingValue;
 
         this.writingValue = true;
 
         try {
-            this.previousSelectionModelSelected = this.selectionModel.selected;
+            this.previousSelectionModelSelected = selectionModel.selected;
 
             if (this.multiSelection && value) {
                 if (!Array.isArray(value)) {
                     throw getKbqSelectNonArrayValueError();
                 }
 
-                this.selectionModel.clear();
-                value.forEach((currentValue: any) => this.selectValue(currentValue));
+                selectionModel.clear();
+                value.forEach((currentValue: any) => this.selectValue(currentValue, selectionModel));
                 this.sortValues();
             } else {
-                this.selectionModel.clear();
-                const correspondingOption = this.selectValue(value);
+                selectionModel.clear();
+                const correspondingOption = this.selectValue(value, selectionModel);
 
                 // Shift focus to the active item. Note that we shouldn't do this in multiple
                 // mode, because we don't know what option the user interacted with last.
@@ -2447,11 +2482,11 @@ export class KbqSelect
      *
      * @returns Option that has the corresponding value, when it is currently rendered.
      */
-    private selectValue(value: any): KbqOption | undefined {
+    private selectValue(value: any, selectionModel: SelectionModel<KbqOptionBase>): KbqOption | undefined {
         const correspondingOption = this.getCorrespondOption(value);
 
         if (correspondingOption) {
-            this.selectionModel.select(correspondingOption);
+            selectionModel.select(correspondingOption);
             this.captureSelectedOptionCopy(correspondingOption);
 
             // Only a currently rendered option can be activated in the key manager.
@@ -2461,7 +2496,7 @@ export class KbqSelect
         const virtualOption = this.createVirtualOptionForValue(value);
 
         if (virtualOption) {
-            this.selectionModel.select(virtualOption);
+            selectionModel.select(virtualOption);
         }
 
         return undefined;
@@ -2530,7 +2565,7 @@ export class KbqSelect
     private initKeyManager() {
         const typeAheadDebounce = 200;
 
-        this.keyManager = new ActiveDescendantKeyManager<KbqOption>(this.navigableOptions)
+        this.keyManager
             .withTypeAhead(typeAheadDebounce, this.search() ? -1 : 0)
             .withVerticalOrientation()
             .withHorizontalOrientation(this.isRtl() ? 'rtl' : 'ltr');
@@ -2574,18 +2609,23 @@ export class KbqSelect
 
     /** Invoked when an option is clicked. */
     private onSelect(option: KbqOption, isUserInput: boolean): void {
-        const wasSelected = this.selectionModel.isSelected(option);
+        const selectionModel = this.selectionModel;
+
+        // Options report selections once the content is initialized, after `ngOnInit` created the model.
+        if (!selectionModel) return;
+
+        const wasSelected = selectionModel.isSelected(option);
 
         if (option.value == null && !this.multiSelection) {
             option.deselect();
-            this.selectionModel.clear();
+            selectionModel.clear();
             this.propagateChanges(option.value);
         } else {
             if (option.selected) {
-                this.selectionModel.select(option);
+                selectionModel.select(option);
                 this.captureSelectedOptionCopy(option);
             } else {
-                this.selectionModel.deselect(option);
+                selectionModel.deselect(option);
             }
 
             if (isUserInput) {
@@ -2598,7 +2638,7 @@ export class KbqSelect
         }
 
         // `toggleSelectAll` propagates once for the whole batch instead.
-        if (!this.selectAllInProgress && wasSelected !== this.selectionModel.isSelected(option)) {
+        if (!this.selectAllInProgress && wasSelected !== selectionModel.isSelected(option)) {
             this.propagateChanges();
         }
 
@@ -2607,18 +2647,20 @@ export class KbqSelect
 
     /** Sorts the selected values based on their order in the panel. */
     private sortValues() {
-        if (this.multiSelection) {
+        const selectionModel = this.selectionModel;
+
+        if (this.multiSelection && selectionModel) {
             const options = this.options.toArray();
             const sortComparator = this.sortComparator();
 
             if (sortComparator) {
-                this.selectionModel.sort((a, b) => sortComparator(a, b, options));
+                selectionModel.sort((a, b) => sortComparator(a, b, options));
             } else {
                 // Panel order is fixed for the whole sort, so it is indexed once rather than rescanned
                 // by an `indexOf` on each of the comparator's O(n log n) calls.
                 const panelOrder = new Map<KbqOptionBase, number>(options.map((option, index) => [option, index]));
 
-                this.selectionModel.sort((a, b) => {
+                selectionModel.sort((a, b) => {
                     // See `sortComparator`. A selected value with no rendered option — a
                     // `KbqVirtualOption` under virtual scroll or `showPreselectedValues` — is not in
                     // `options` at all, and sorts after everything that is.
@@ -2658,7 +2700,7 @@ export class KbqSelect
      * the first item instead.
      */
     private highlightCorrectOption(): void {
-        if (this.keyManager) {
+        if (this.contentReady) {
             if (this.empty() || !this.firstSelected || this.firstFiltered) {
                 this.keyManager.setFirstItemActive();
             } else {

@@ -35,8 +35,8 @@ export class KbqCalendarCell {
 @Component({
     selector: '[kbq-calendar-body]',
     imports: [],
-    templateUrl: 'calendar-body.html',
-    styleUrls: ['calendar-body.scss'],
+    templateUrl: './calendar-body.html',
+    styleUrl: './calendar-body.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -49,10 +49,11 @@ export class KbqCalendarBody implements OnChanges {
     readonly rows = input<KbqCalendarCell[][]>(undefined!);
 
     /** The value in the table that corresponds to today. */
-    readonly todayValue = input<number>(undefined!);
+    readonly todayValue = input<number | null>(null);
 
     /** The value in the table that is currently selected. */
-    readonly selectedValue = input<number>(undefined!);
+    // eslint-disable-next-line @angular-eslint/prefer-signal-model -- the view that owns the value sets it on a click
+    readonly selectedValue = input<number | null>(null);
 
     /** The minimum number of free cells needed to fit the label in the first row. */
     readonly labelMinRequiredCells = input<number>(undefined!);
@@ -72,14 +73,14 @@ export class KbqCalendarBody implements OnChanges {
     /** Emits when a new value is selected. */
     readonly selectedValueChange = output<number>();
 
-    /** The number of blank cells to put at the beginning for the first row. */
-    firstRowOffset: number;
+    /** The number of blank cells to put at the beginning for the first row. Defaults to `0`. */
+    firstRowOffset = 0;
 
-    /** Padding for the individual date cells. */
-    cellPadding: string;
+    /** Padding for the individual date cells. Defaults to `''`. */
+    cellPadding = '';
 
-    /** Width of an individual cell. */
-    cellWidth: string;
+    /** Width of an individual cell. Defaults to `''`. */
+    cellWidth = '';
 
     cellClicked(cell: KbqCalendarCell): void {
         if (cell.enabled) {
@@ -94,7 +95,9 @@ export class KbqCalendarBody implements OnChanges {
         const numCols = numColsInput();
 
         if (changes['rows'] || columnChanges) {
-            this.firstRowOffset = rows && rows.length && rows[0].length ? numCols - rows[0].length : 0;
+            const firstRowLength = rows?.[0]?.length;
+
+            this.firstRowOffset = firstRowLength ? numCols - firstRowLength : 0;
         }
 
         if (changes['cellAspectRatio'] || columnChanges || !this.cellPadding) {

@@ -24,7 +24,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
                 <kbq-button-toggle [value]="2000">2 s</kbq-button-toggle>
             </kbq-button-toggle-group>
 
-            <button kbq-button [disabled]="loading()" (click)="load()">Refresh</button>
+            <button kbq-button type="button" [disabled]="loading()" (click)="load()">Refresh</button>
         </div>
 
         <div class="example__card">

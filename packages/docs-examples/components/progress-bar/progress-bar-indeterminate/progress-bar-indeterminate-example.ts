@@ -10,7 +10,7 @@ import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
         KbqProgressBarModule
     ],
     template: `
-        <kbq-progress-bar class="example-progress-bar" [mode]="'indeterminate'" />
+        <kbq-progress-bar class="example-progress-bar" mode="indeterminate" />
     `,
     styles: `
         .example-progress-bar {

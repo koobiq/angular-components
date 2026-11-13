@@ -1,4 +1,4 @@
-@use './filter-bar-theme' as *;
+@use './filter-bar-theme';
 
 .kbq-filter-bar {
     display: flex;
@@ -63,5 +63,5 @@
     }
 }
 
-@include kbq-button-changed-filter();
-@include kbq-filter-bar-typography();
+@include filter-bar-theme.kbq-button-changed-filter();
+@include filter-bar-theme.kbq-filter-bar-typography();

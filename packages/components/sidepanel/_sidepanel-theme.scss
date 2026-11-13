@@ -1,4 +1,4 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-sidepanel-theme() {
     .kbq-sidepanel-title {
@@ -23,11 +23,11 @@
 
 @mixin kbq-sidepanel-typography() {
     .kbq-sidepanel-title {
-        @include kbq-typography-level-to-styles-css-variables(typography, title);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, title);
     }
 
     .kbq-sidepanel-container,
     .kbq-sidepanel-footer {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }

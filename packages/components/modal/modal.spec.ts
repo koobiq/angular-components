@@ -1752,7 +1752,7 @@ class ModalWithoutModuleComponent {
     selector: 'modal-driven-by-effects',
     imports: [KbqModalModule],
     template: `
-        <kbq-modal [kbqTitle]="'Declarative title'" [(kbqVisible)]="visible">Declarative content</kbq-modal>
+        <kbq-modal kbqTitle="Declarative title" [(kbqVisible)]="visible">Declarative content</kbq-modal>
     `
 })
 class ModalDrivenByEffectsComponent {
@@ -1805,12 +1805,12 @@ class ModalDrivenByEffectsComponent {
     template: `
         <button #trigger kbq-button (click)="visible = true">Open</button>
         <kbq-modal
-            [kbqCancelText]="'Cancel'"
+            kbqCancelText="Cancel"
+            kbqOkText="Ok"
+            kbqTitle="Declarative title"
             [kbqCloseByESC]="closeByESC"
             [kbqMask]="true"
             [kbqMaskClosable]="true"
-            [kbqOkText]="'Ok'"
-            [kbqTitle]="'Declarative title'"
             [(kbqVisible)]="visible"
             (kbqOnCancel)="cancelCount = cancelCount + 1"
             (kbqOnOk)="okCount = okCount + 1"
@@ -1869,7 +1869,7 @@ class ModalOpenerHostComponent {
     selector: 'never-opened-modal',
     imports: [KbqModalModule],
     template: `
-        <kbq-modal [kbqTitle]="'Never shown'" />
+        <kbq-modal kbqTitle="Never shown" />
     `
 })
 class NeverOpenedModalComponent {}

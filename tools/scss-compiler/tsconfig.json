@@ -1,8 +1,6 @@
 {
     "extends": "../../tsconfig.strict.json",
     "compilerOptions": {
-        // tsconfig.strict.json leaves it off until DS-5813, and this project already passes it.
-        "strictPropertyInitialization": true,
         "target": "es2020",
         "module": "NodeNext",
         "esModuleInterop": true,

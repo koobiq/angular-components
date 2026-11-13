@@ -11,7 +11,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     imports: [KbqToolTipModule, KbqButtonModule, KbqIconModule],
     template: `
         <div kbqTooltip="This item is locked and cannot be deleted" [forDisabledComponent]="button">
-            <button #button kbq-button [disabled]="true">
+            <button #button kbq-button type="button" [disabled]="true">
                 <i kbq-icon="kbq-trash_16"></i>
                 Delete
             </button>

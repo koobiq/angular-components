@@ -9,7 +9,7 @@ import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@
 @Component({
     selector: 'sidepanel-overview-example',
     imports: [KbqSelectModule, KbqButtonModule, KbqSidepanelModule],
-    templateUrl: 'sidepanel-overview-example.html',
+    templateUrl: './sidepanel-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelOverviewExample {

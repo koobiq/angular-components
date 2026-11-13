@@ -13,8 +13,8 @@ import { KbqIcon } from '@koobiq/components/icon';
         KbqAlertTitle,
         KbqIcon
     ],
-    templateUrl: 'alert-status-example.html',
-    styleUrls: ['alert-status-example.css'],
+    templateUrl: './alert-status-example.html',
+    styleUrl: './alert-status-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AlertStatusExample {

@@ -36,8 +36,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { outputFromObservable } from '@angular/core/rxjs-interop';
-import type { Observable, Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { type Observable, type Subscription, take } from 'rxjs';
 import { type KbqButtonColor, KbqButtonModule } from '@koobiq/components/button';
 import {
     ENTER,
@@ -89,6 +88,12 @@ function slotKind(value: unknown): KbqModalSlotKind {
     return 'none';
 }
 
+/** The template a slot value took, for the `template` case of its kind. */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type -- the context type the slot inputs declare
+function slotTemplate(value: unknown): TemplateRef<{}> | null {
+    return value instanceof TemplateRef ? value : null;
+}
+
 let uniqueIdCounter = 0;
 
 @Component({
@@ -106,7 +111,7 @@ let uniqueIdCounter = 0;
         KbqTitleModule
     ],
     templateUrl: './modal.component.html',
-    styleUrls: ['./modal.scss', 'modal-tokens.scss'],
+    styleUrls: ['./modal.scss', './modal-tokens.scss'],
     providers: [{ provide: KBQ_MODAL, useExisting: KbqModalComponent }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -349,6 +354,21 @@ export class KbqModalComponent<T = any, R = any>
     /** @docs-private */
     protected readonly footerKind = computed(() => slotKind(this.footer()));
 
+    /** @docs-private */
+    protected readonly titleTemplate = computed(() => slotTemplate(this.kbqTitle()));
+    /** @docs-private */
+    protected readonly captionTemplate = computed(() => slotTemplate(this.kbqCaption()));
+    /** @docs-private */
+    protected readonly contentTemplate = computed(() => slotTemplate(this.kbqContent()));
+    /** @docs-private */
+    protected readonly footerTemplate = computed(() => slotTemplate(this.footer()));
+    /** @docs-private */
+    protected readonly footerButtons = computed(() => {
+        const footer = this.footer();
+
+        return Array.isArray(footer) ? footer : [];
+    });
+
     /** Whether the dialog renders a footer — a predefined button is enough, `kbqFooter` is not required. */
     protected get hasFooter(): boolean {
         return this.composedFooter || !!(this.kbqFooter() || this.kbqOkText() || this.kbqCancelText());
@@ -430,7 +450,7 @@ export class KbqModalComponent<T = any, R = any>
 
     private focusedElementBeforeOpen?: HTMLElement | null;
 
-    private previouslyFocusedElementOrigin: FocusOrigin;
+    private previouslyFocusedElementOrigin: FocusOrigin = null;
 
     private monitoredContainer: ElementRef | null = null;
     private focusMonitorSubscription: Subscription | null = null;
@@ -753,6 +773,16 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     /**
+     * The color of a footer button: the published options type `type` as any string, which the button reads as its
+     * color.
+     *
+     * @docs-private
+     */
+    protected buttonColor(button: IModalButtonOptions<T>): KbqButtonColor {
+        return button.type as KbqButtonColor;
+    }
+
+    /**
      * Lookup a button's property, if the prop is a function, call & then return the result, otherwise, return itself.
      *
      * @docs-private
@@ -812,6 +842,7 @@ export class KbqModalComponent<T = any, R = any>
             Promise.resolve(animation && this.animateTo(visible))
                 // Emit open/close event after animations over
                 .then(() => {
+                    // eslint-disable-next-line promise/always-return -- the outputs are emitted, nothing is returned
                     if (visible) {
                         this.scrollbarViewports().forEach((viewport) => viewport.flashScrollIndicators());
                         this.kbqAfterOpen.emit();
@@ -919,7 +950,7 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     // Change kbqVisible from inside
-    private changeVisibleFromInside(visible: boolean, closeResult?: R): Promise<void> {
+    private changeVisibleFromInside(visible: boolean, closeResult?: R): Promise<any> {
         if (this.kbqVisible() === visible) return Promise.resolve();
 
         // Claimed before the write, because `model.set()` reports it through `ngOnChanges` too and
@@ -1068,7 +1099,7 @@ export class KbqModalComponent<T = any, R = any>
     }
 }
 
-function isPromise(obj: unknown | void): boolean {
+function isPromise(obj: unknown): boolean {
     return (
         !!obj &&
         (typeof obj === 'object' || typeof obj === 'function') &&

@@ -110,8 +110,8 @@ export class KbqMultipleFileUploadComponent
      */
     readonly inputId = input<string>(`kbq-multiple-file-upload-${nextMultipleFileUploadUniqueId++}`);
 
-    /** An object used to control the error state of the component. */
-    errorStateMatcher: ErrorStateMatcher;
+    /** An object used to control the error state of the component. Defaults to the injected `ErrorStateMatcher`. */
+    errorStateMatcher: ErrorStateMatcher = this.defaultErrorStateMatcher;
 
     /**
      * The selected files.
@@ -207,7 +207,7 @@ export class KbqMultipleFileUploadComponent
 
         switch (this.allowed()) {
             case KbqFileUploadAllowedType.Mixed: {
-                const [before, after] = config.captionTextWithFolder.split('{{ browseLink }}');
+                const [before = '', after = ''] = config.captionTextWithFolder.split('{{ browseLink }}');
 
                 const [captionTextSeparator] = after.split('{{ browseLinkFolderMixed }}');
 
@@ -219,14 +219,14 @@ export class KbqMultipleFileUploadComponent
                 };
             }
             case KbqFileUploadAllowedType.Folder: {
-                const [before] = config.captionTextOnlyFolder.split('{{ browseLinkFolder }}');
+                const [before = ''] = config.captionTextOnlyFolder.split('{{ browseLinkFolder }}');
 
                 return { captionText: before, browseLinkFolder: config.browseLinkFolder };
             }
             case KbqFileUploadAllowedType.File:
             default: {
                 const caption = this.size() === 'compact' ? config.captionTextForCompactSize : config.captionText;
-                const [before] = caption.split('{{ browseLink }}');
+                const [before = ''] = caption.split('{{ browseLink }}');
 
                 return { captionText: before, browseLink: config.browseLink };
             }
@@ -274,7 +274,7 @@ export class KbqMultipleFileUploadComponent
 
     /** @docs-private */
     protected get captionTextWhenSelected(): string {
-        return this.localeConfiguration().multiple.captionTextWhenSelected.split('{{ browseLink }}')[0];
+        return this.localeConfiguration().multiple.captionTextWhenSelected.split('{{ browseLink }}')[0] ?? '';
     }
 
     private readonly focusMonitor = inject(FocusMonitor);

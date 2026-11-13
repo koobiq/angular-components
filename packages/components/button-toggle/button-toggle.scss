@@ -1,9 +1,7 @@
 @use '../core/styles/common/list';
-
-@use '../core/styles/common/tokens' as *;
-
-@use './button-toggle-theme' as *;
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/tokens';
+@use './button-toggle-theme';
+@use '../core/styles/common/squircle';
 
 .kbq-button-toggle-group {
     box-sizing: border-box;
@@ -13,7 +11,7 @@
 
     gap: var(--kbq-button-toggle-size-container-content-gap-horizontal);
 
-    @include kbq-squircle(var(--kbq-button-toggle-size-container-border-radius));
+    @include squircle.kbq-squircle(var(--kbq-button-toggle-size-container-border-radius));
 
     padding: var(--kbq-button-toggle-size-container-padding-vertical)
         var(--kbq-button-toggle-size-container-padding-horizontal);
@@ -50,7 +48,7 @@
         height: var(--kbq-button-toggle-size-item-height);
         min-height: var(--kbq-button-toggle-size-item-height);
 
-        @include kbq-squircle(var(--kbq-button-toggle-size-item-border-radius));
+        @include squircle.kbq-squircle(var(--kbq-button-toggle-size-item-border-radius));
         border: var(--kbq-size-border-width) solid transparent;
 
         // `border-color` is the theme's to set, from the same token — declaring it here as well
@@ -63,14 +61,14 @@
         > .kbq-button-icon {
             height: inherit;
             min-height: inherit;
-            @include kbq-squircle(var(--kbq-button-toggle-size-item-border-radius));
+            @include squircle.kbq-squircle(var(--kbq-button-toggle-size-item-border-radius));
             border-width: 0;
 
-            padding: kbq-difference-series-css-variables(
+            padding: tokens.kbq-difference-series-css-variables(
                     [button-toggle-size-item-padding-vertical,
                     button-toggle-size-item-focus-outline-width]
                 )
-                kbq-difference-series-css-variables(
+                tokens.kbq-difference-series-css-variables(
                     [button-toggle-size-item-padding-horizontal,
                     button-toggle-size-item-focus-outline-width]
                 );
@@ -85,7 +83,7 @@
             // reusable here: the mixin claims a fixed strip on one side of a plain vertical list, with
             // no gap to tile between two neighbours, no group padding at the ends, and no orientation
             // to swap the axes for.
-            &:before {
+            &::before {
                 content: '';
                 position: absolute;
             }
@@ -165,17 +163,17 @@
 
                 height: var(--kbq-button-toggle-size-item-height);
 
-                &:before {
+                &::before {
                     inset-block: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-vertical));
                     inset-inline: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-gap));
                 }
             }
 
-            &:first-of-type > :is(.kbq-button, .kbq-button-icon):before {
+            &:first-of-type > :is(.kbq-button, .kbq-button-icon)::before {
                 inset-inline-start: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-horizontal));
             }
 
-            &:last-of-type > :is(.kbq-button, .kbq-button-icon):before {
+            &:last-of-type > :is(.kbq-button, .kbq-button-icon)::before {
                 inset-inline-end: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-horizontal));
             }
         }
@@ -185,17 +183,17 @@
         .kbq-button-toggle {
             > .kbq-button,
             > .kbq-button-icon {
-                &:before {
+                &::before {
                     inset-inline: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-horizontal));
                     inset-block: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-gap));
                 }
             }
 
-            &:first-of-type > :is(.kbq-button, .kbq-button-icon):before {
+            &:first-of-type > :is(.kbq-button, .kbq-button-icon)::before {
                 inset-block-start: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-vertical));
             }
 
-            &:last-of-type > :is(.kbq-button, .kbq-button-icon):before {
+            &:last-of-type > :is(.kbq-button, .kbq-button-icon)::before {
                 inset-block-end: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-vertical));
             }
         }
@@ -252,5 +250,5 @@
     }
 }
 
-@include kbq-button-toggle-theme();
-@include kbq-button-toggle-typography();
+@include button-toggle-theme.kbq-button-toggle-theme();
+@include button-toggle-theme.kbq-button-toggle-typography();

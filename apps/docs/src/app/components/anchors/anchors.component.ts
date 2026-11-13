@@ -12,8 +12,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
-import { filter, fromEvent, type Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, filter, fromEvent, type Subscription } from 'rxjs';
 import { kbqAnimationsDisabled, PopUpPlacements } from '@koobiq/components/core';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { DOCS_API_WITHOUT_MEMBER } from '../../constants/api-page';
@@ -23,7 +22,7 @@ import { DOCS_MARKDOWN_HEADING_CLASSES } from '../live-example/markdown-content'
  * The path of a URL, without its query and fragment: the links take it as a path, where a `?` would be encoded
  * into the last segment and lead nowhere.
  */
-const getPath = (url: string): string => url.split(/[?#]/)[0];
+const getPath = (url: string): string => url.replace(/[?#].*/, '');
 
 interface KbqDocsAnchor {
     href: string;
@@ -41,7 +40,7 @@ interface KbqDocsAnchor {
         KbqTitleModule
     ],
     templateUrl: './anchors.component.html',
-    styleUrls: ['./anchors.component.scss'],
+    styleUrl: './anchors.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -84,12 +83,12 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
         return this.document.querySelector('docs-component-viewer');
     }
 
-    private get firstAnchor(): KbqDocsAnchor {
+    private get firstAnchor(): KbqDocsAnchor | undefined {
         return this.anchors[0];
     }
 
-    private get lastAnchor(): KbqDocsAnchor {
-        return this.anchors[this.anchors.length - 1];
+    private get lastAnchor(): KbqDocsAnchor | undefined {
+        return this.anchors.at(-1);
     }
 
     private get scrollOffset(): number {
@@ -131,7 +130,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
     }
 
     protected getAnchorByHref(href: string): KbqDocsAnchor | null {
-        return this.anchors.find((anchor) => anchor.href === href) || this.firstAnchor;
+        return this.anchors.find((anchor) => anchor.href === href) || this.firstAnchor || null;
     }
 
     setScrollPosition(): void {
@@ -190,7 +189,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
         }
 
         if (this.isScrolledToEnd()) {
-            anchor = this.lastAnchor;
+            anchor = this.lastAnchor ?? anchor;
         }
 
         this.setActiveAnchor(anchor);

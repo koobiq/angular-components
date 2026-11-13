@@ -17,7 +17,7 @@ import { KbqContentPanelContainer, KbqContentPanelModule } from '@koobiq/compone
             width="350"
         >
             <div class="example-content-panel-container__content">
-                <button kbq-button (click)="panel.toggle()">Toggle</button>
+                <button kbq-button type="button" (click)="panel.toggle()">Toggle</button>
                 <button kbq-button type="button" (click)="container().clearSavedState()">Reset saved state</button>
             </div>
 

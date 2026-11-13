@@ -30,8 +30,7 @@ import {
 } from '@angular/core';
 import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { merge } from 'rxjs';
-import { auditTime, distinctUntilChanged, filter, startWith } from 'rxjs/operators';
+import { auditTime, distinctUntilChanged, filter, merge, startWith } from 'rxjs';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import {
     applyPopupMargins,
@@ -306,7 +305,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
     override prefix = 'kbq-app-switcher';
 
     /** @docs-private */
-    override trigger: KbqAppSwitcherTrigger;
+    override trigger: KbqAppSwitcherTrigger | undefined;
 
     /** @docs-private */
     readonly input = viewChild(KbqInput);
@@ -330,7 +329,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
     }
 
     /** Roving-focus manager over the inline menu items (flat app rows and other-site rows). */
-    protected keyManager: FocusKeyManager<KbqDropdownItem>;
+    protected keyManager: FocusKeyManager<KbqDropdownItem> | undefined;
 
     private readonly menuItems = new QueryList<KbqDropdownItem>();
 
@@ -355,17 +354,15 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
         }
     }
 
-    constructor() {
-        super();
-    }
-
     ngAfterViewInit() {
         const input = this.input();
 
-        this.keyManager = new FocusKeyManager<KbqDropdownItem>(this.menuItems)
+        const keyManager = new FocusKeyManager<KbqDropdownItem>(this.menuItems)
             .withVerticalOrientation()
             .withHomeAndEnd()
             .withTypeAhead();
+
+        this.keyManager = keyManager;
 
         // Focus the first item only once, and only after it is actually rendered (see below).
         let initialItemFocused = false;
@@ -388,7 +385,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
             // the items to appear in the query instead.
             if (!input && !initialItemFocused && this.menuItems.length) {
                 initialItemFocused = true;
-                this.keyManager.setFirstItemActive();
+                keyManager.setFirstItemActive();
             }
         });
 
@@ -479,7 +476,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
         if (keyCode === TAB) {
             event.preventDefault();
             this.hide(0);
-            this.trigger.focus();
+            this.trigger?.focus();
 
             return;
         }
@@ -525,7 +522,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
      * honouring the current text direction. Returns whether the key was consumed.
      */
     private handleGroupHorizontal(keyCode: number, activeItem: KbqDropdownItem | null): boolean {
-        if (!(activeItem instanceof KbqAppSwitcherListItem)) {
+        if (!(activeItem instanceof KbqAppSwitcherListItem) || !this.keyManager) {
             return false;
         }
 
@@ -602,7 +599,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
             this.hide(0);
             // Return focus to the trigger (the same landing spot as Shift+Tab), instead of
             // leaving it wherever it was heading.
-            this.trigger.focus();
+            this.trigger?.focus();
         }
     }
 
@@ -612,14 +609,14 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
      * @docs-private
      */
     selectAppInSite(site: KbqAppSwitcherSite | undefined, app: KbqAppSwitcherApp) {
-        if (!site) return;
+        if (!site || !this.trigger) return;
 
         this.trigger.selectedSite.set(site);
         this.trigger.selectedApp.set(app);
     }
 
     private filterSites(query: string | null): KbqAppSwitcherSite[] {
-        const sites = this.trigger.originalSites;
+        const sites = this.trigger?.originalSites ?? [];
 
         if (!query) return sites;
 
@@ -665,11 +662,11 @@ export class KbqAppSwitcherTrigger
     /** @docs-private */
     arrow: boolean = false;
     /** @docs-private */
-    customClass: string;
+    customClass: string = '';
     private hasBackdrop: boolean = false;
     private size: KbqPopUpSizeValues = PopUpSizes.Medium;
     /** @docs-private */
-    content: string | TemplateRef<any>;
+    content: string | TemplateRef<any> = '';
 
     /** Whether search is used or not */
     get withSearch(): boolean {

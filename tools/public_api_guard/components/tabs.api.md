@@ -168,7 +168,7 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     readonly stateChanges: Subject<void>;
     // (undocumented)
     readonly tabId: _angular_core.InputSignal<string>;
-    get templateLabel(): KbqTabLabel;
+    get templateLabel(): KbqTabLabel | undefined;
     set templateLabel(value: KbqTabLabel);
     readonly textLabel: _angular_core.InputSignal<string>;
     readonly tooltipPlacement: _angular_core.InputSignal<"left" | "top" | "topLeft" | "topRight" | "right" | "rightTop" | "rightBottom" | "leftTop" | "leftBottom" | "bottom" | "bottomLeft" | "bottomRight">;
@@ -191,8 +191,8 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
     protected readonly animationsDisabled: boolean;
     readonly beforeCentering: EventEmitter<boolean>;
     readonly beforeCenteringOutput: _angular_core.OutputRef<boolean>;
-    bodyPosition: KbqTabBodyPositionState;
-    readonly content: _angular_core.InputSignal<TemplatePortal<any>>;
+    bodyPosition: KbqTabBodyPositionState | undefined;
+    readonly content: _angular_core.InputSignal<TemplatePortal<any> | null>;
     protected readonly cssAnimationDuration: _angular_core.Signal<string>;
     getLayoutDirection(): Direction;
     isCenterPosition(position: KbqTabBodyPositionState | string): boolean;
@@ -203,7 +203,7 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
     ngOnInit(): void;
     readonly onCentered: _angular_core.OutputEmitterRef<void>;
     readonly onCentering: _angular_core.OutputEmitterRef<number>;
-    origin: number;
+    origin: number | undefined;
     readonly originInput: _angular_core.InputSignal<number | undefined>;
     readonly portalHost: _angular_core.Signal<CdkPortalOutlet>;
     set position(position: number);
@@ -229,8 +229,11 @@ export type KbqTabBodyPositionState = 'left' | 'center' | 'right' | 'left-origin
 
 // @public
 export class KbqTabChangeEvent {
+    constructor(
+    index: number,
+    tab: KbqTab | undefined);
     index: number;
-    tab: KbqTab;
+    tab: KbqTab | undefined;
 }
 
 // @public
@@ -363,7 +366,7 @@ export class KbqTabLabelWrapper implements OnChanges, AfterViewInit {
     // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
-    tab: KbqTab;
+    tab: KbqTab | undefined;
     readonly tabInput: _angular_core.InputSignal<KbqTab | undefined>;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTabLabelWrapper, "[kbqTabLabelWrapper]", never, { "tabInput": { "alias": "tab"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, ["labelContentQuery"], never, true, never>;

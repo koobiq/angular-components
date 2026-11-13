@@ -8,7 +8,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
             <ng-content />
         </div>
     `,
-    styleUrls: ['./action-container.scss'],
+    styleUrl: './action-container.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

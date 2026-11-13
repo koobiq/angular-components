@@ -10,7 +10,7 @@ import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/pop
 @Component({
     selector: 'popover-height-example',
     imports: [KbqInputModule, KbqButtonModule, KbqPopoverModule, KbqFormsModule],
-    templateUrl: 'popover-height-example.html',
+    templateUrl: './popover-height-example.html',
     styles: `
         ::ng-deep .kbq-popover.popover-height-custom-example .kbq-popover__container {
             max-height: 240px;
@@ -23,5 +23,5 @@ import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/pop
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverHeightExample {
-    activePopover: KbqPopoverTrigger;
+    activePopover?: KbqPopoverTrigger;
 }

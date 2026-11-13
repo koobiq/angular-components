@@ -1,4 +1,4 @@
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
 .kbq-calendar__body-cell {
     position: relative;
@@ -26,7 +26,7 @@
     // Prevents text being off-center on Android.
     line-height: 1;
 
-    @include kbq-squircle(var(--kbq-datepicker-size-grid-cell-border-radius));
+    @include squircle.kbq-squircle(var(--kbq-datepicker-size-grid-cell-border-radius));
 
     margin-bottom: var(--kbq-datepicker-size-grid-content-gap-vertical);
 }

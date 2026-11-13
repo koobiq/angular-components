@@ -1,4 +1,4 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-alert-style($type, $style-name) {
     background: var(--kbq-alert-#{$type}-#{$style-name}-container-background);
@@ -66,14 +66,14 @@
 
 @mixin kbq-alert-typography() {
     .kbq-alert {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
         .kbq-alert__title {
-            @include kbq-typography-level-to-styles-css-variables(typography, subheading);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, subheading);
         }
 
         &.kbq-alert_compact .kbq-alert__title {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-big-strong);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big-strong);
         }
     }
 }

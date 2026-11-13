@@ -7,7 +7,7 @@ import { DevThemeToggle } from '../theme-toggle';
     selector: 'dev-app',
     imports: [KbqBadgeModule, KbqIconModule, DevThemeToggle],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

@@ -23,7 +23,7 @@ const latinAndSpecialSymbols = ({ value }: AbstractControl): ValidationErrors | 
         <kbq-form-field style="width: 250px">
             <input kbqInputPassword [formControl]="control" />
 
-            <kbq-password-toggle [kbqTooltipHidden]="'Показать пароль'" [kbqTooltipNotHidden]="'Скрыть пароль'" />
+            <kbq-password-toggle kbqTooltipHidden="Показать пароль" kbqTooltipNotHidden="Скрыть пароль" />
 
             <kbq-reactive-password-hint [hasError]="control.hasError('minLength') || control.hasError('maxLength')">
                 От 8 до 15 символов

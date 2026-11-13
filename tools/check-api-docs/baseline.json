@@ -12,7 +12,7 @@
     "components-code-block": 2,
     "components-content-panel": 10,
     "components-core": 521,
-    "components-datepicker": 49,
+    "components-datepicker": 48,
     "components-dropdown": 11,
     "components-ellipsis-center": 1,
     "components-file-upload": 20,
@@ -25,7 +25,7 @@
     "components-modal": 55,
     "components-navbar": 17,
     "components-notification-center": 3,
-    "components-popover": 46,
+    "components-popover": 44,
     "components-radio": 6,
     "components-resizer": 2,
     "components-scrollbar": 2,
@@ -44,7 +44,7 @@
     "components-toast": 50,
     "components-toggle": 16,
     "components-tooltip": 22,
-    "components-tree": 154,
-    "components-tree-select": 28,
+    "components-tree": 149,
+    "components-tree-select": 27,
     "components-username": 1
 }

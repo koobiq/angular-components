@@ -8,8 +8,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { Subject, timer } from 'rxjs';
-import { distinctUntilChanged, filter, map, switchMap, takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, Subject, switchMap, takeUntil, timer } from 'rxjs';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { KbqBasePipe } from './base-pipe';
 
@@ -35,7 +34,7 @@ import { KbqBasePipe } from './base-pipe';
             }
         </kbq-form-field>
     `,
-    styleUrls: ['base-pipe.scss', 'pipe-input.scss'],
+    styleUrls: ['./base-pipe.scss', './pipe-input.scss'],
     providers: [
         {
             provide: KbqBasePipe,

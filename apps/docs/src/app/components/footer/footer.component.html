@@ -10,7 +10,7 @@
             [kbqDropdownTriggerFor]="languageDropdown"
         >
             <span>{{ selectedLanguages }}</span>
-            <i kbq-icon="kbq-chevron-down-s_16" [color]="'contrast'"></i>
+            <i kbq-icon="kbq-chevron-down-s_16" color="contrast"></i>
         </div>
 
         <kbq-dropdown #languageDropdown="kbqDropdown" [class]="'docs-dropdown'">
@@ -18,12 +18,12 @@
                 <span class="kbq-caps-compact-strong">{{ t('footerLanguageGroupHeader') }}</span>
             </div>
 
-            <button kbq-dropdown-item [kbqDropdownTriggerFor]="docsLanguageDropdown">
+            <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="docsLanguageDropdown">
                 {{ t('footerInterface') }}
                 <div kbqDropdownItemCaption>{{ docsLanguageSwitch.currentValue.value }}</div>
             </button>
 
-            <button kbq-dropdown-item [kbqDropdownTriggerFor]="examplesLanguageDropdown">
+            <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="examplesLanguageDropdown">
                 {{ t('footerExamples') }}
                 <div kbqDropdownItemCaption>{{ examplesLanguageSwitch.currentValue.value }}</div>
             </button>
@@ -34,6 +34,7 @@
         @for (item of docsLanguageSwitch.data; track item) {
             <button
                 kbq-dropdown-item
+                type="button"
                 [class.kbq-selected]="item.selected"
                 [disabled]="item.disabled"
                 (click)="docsLanguageSwitch.setValue($index)"
@@ -47,6 +48,7 @@
         @for (item of examplesLanguageSwitch.data; track item) {
             <button
                 kbq-dropdown-item
+                type="button"
                 [class.kbq-selected]="item.selected"
                 (click)="examplesLanguageSwitch.setValue($index)"
             >
@@ -74,7 +76,7 @@
             @if (versionPicker.isNext) {
                 <span>.next</span>
             }
-            <i kbq-icon="kbq-chevron-down-s_16" [color]="'contrast'"></i>
+            <i kbq-icon="kbq-chevron-down-s_16" color="contrast"></i>
 
             <kbq-dropdown #versionDropdown="kbqDropdown" [class]="'docs-dropdown'">
                 <div kbqDropdownGroupHeader>
@@ -86,6 +88,7 @@
                 @for (version of versionPicker.versions; track version) {
                     <button
                         kbq-dropdown-item
+                        type="button"
                         [class.kbq-selected]="version.selected"
                         (click)="versionPicker.goToVersion(version)"
                     >

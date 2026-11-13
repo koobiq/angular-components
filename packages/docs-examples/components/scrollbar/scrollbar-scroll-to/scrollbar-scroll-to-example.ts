@@ -10,17 +10,18 @@ import { KbqScrollbar } from '@koobiq/components/scrollbar';
     imports: [KbqScrollbar, KbqButtonModule],
     template: `
         <div class="example-buttons">
-            <button kbq-button (click)="scrollbar.scrollToTop('smooth')">Scroll top</button>
-            <button kbq-button (click)="scrollbar.scrollToBottom('smooth')">Scroll bottom</button>
-            <button kbq-button (click)="scrollbar.scrollStart('smooth')">Scroll start</button>
-            <button kbq-button (click)="scrollbar.scrollEnd('smooth')">Scroll end</button>
+            <button kbq-button type="button" (click)="scrollbar.scrollToTop('smooth')">Scroll top</button>
+            <button kbq-button type="button" (click)="scrollbar.scrollToBottom('smooth')">Scroll bottom</button>
+            <button kbq-button type="button" (click)="scrollbar.scrollStart('smooth')">Scroll start</button>
+            <button kbq-button type="button" (click)="scrollbar.scrollEnd('smooth')">Scroll end</button>
             <button
                 kbq-button
+                type="button"
                 (click)="scrollbar.scrollToElement(scrollToElementTarget, { behavior: 'smooth', top: 16, left: 16 })"
             >
                 Scroll to element
             </button>
-            <button kbq-button (click)="scrollbar.scrollIntoView(scrollIntoViewTarget, 'smooth')">
+            <button kbq-button type="button" (click)="scrollbar.scrollIntoView(scrollIntoViewTarget, 'smooth')">
                 Scroll into view
             </button>
         </div>

@@ -19,6 +19,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                         @if (activeTab === tab) {
                             <div class="example-tab-close">
                                 <button
+                                    type="button"
                                     color="contrast-fade"
                                     kbq-icon-button="kbq-xmark-s_16"
                                     kbqTooltip="Remove tab"
@@ -32,6 +33,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 }
             </nav>
             <button
+                type="button"
                 color="contrast"
                 kbqStyle="transparent"
                 kbq-button
@@ -47,7 +49,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             {{ activeTab }} content
         </div>
     `,
-    styleUrls: ['./tabs-add-tab-example.css'],
+    styleUrl: './tabs-add-tab-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabsAddTabExample {

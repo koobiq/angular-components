@@ -15,7 +15,9 @@
                     </kbq-form-field>
                 </div>
                 <div class="kbq-form__row">
-                    <button kbq-button [color]="'contrast'" (click)="kbqSharePopover.hide(0)">Send invite</button>
+                    <button kbq-button type="button" color="contrast" (click)="kbqSharePopover.hide(0)">
+                        Send invite
+                    </button>
                 </div>
             </div>
         </div>
@@ -26,14 +28,17 @@
             <div class="example-popover-content-share__list-item">
                 <div class="example-popover-content-share__list-item-left">
                     <img
-                        alt="{{ member.name }}"
-                        src="https://koobiq.io/assets/images/popover/list-member-{{ $index + 1 }}.png"
                         class="example-popover-content-share__list-item-image"
+                        width="32"
+                        height="32"
+                        [ngSrc]="`https://koobiq.io/assets/images/popover/list-member-${$index + 1}.png`"
+                        [alt]="member.name"
                     />
                     <div class="example-popover-content-share__list-item-name">{{ member.name }}</div>
                 </div>
                 <button
                     kbq-button
+                    type="button"
                     class="kbq-button_transparent"
                     [color]="componentColors.Contrast"
                     [kbqDropdownTriggerFor]="appDropdown"
@@ -44,8 +49,8 @@
             </div>
         }
         <kbq-dropdown #appDropdown="kbqDropdown" [class]="'max-width'" [navigationWithWrap]="true">
-            <button kbq-dropdown-item>Editor</button>
-            <button kbq-dropdown-item>Viewer</button>
+            <button kbq-dropdown-item type="button">Editor</button>
+            <button kbq-dropdown-item type="button">Viewer</button>
         </kbq-dropdown>
     </div>
 </ng-template>
@@ -58,7 +63,7 @@
     <div class="example-popover-content-custom__container">
         <h4 class="kbq-title">Абракадабра!</h4>
         <p>Таинственное слово, которому приписывалась чудодейственная сила</p>
-        <button kbq-button [color]="'contrast'" (click)="kbqCustomPopover.hide(0)">Сделать магию</button>
+        <button kbq-button type="button" color="contrast" (click)="kbqCustomPopover.hide(0)">Сделать магию</button>
     </div>
 </ng-template>
 
@@ -67,8 +72,9 @@
         #kbqSharePopover="kbqPopover"
         kbq-button
         kbqPopover
+        type="button"
+        kbqPopoverClass="example-popover-content-share"
         [kbqPopoverHasCloseButton]="true"
-        [kbqPopoverClass]="'example-popover-content-share'"
         [kbqPopoverContent]="shareContent"
     >
         Без панели хедера
@@ -77,8 +83,9 @@
         #kbqCustomPopover="kbqPopover"
         kbq-button
         kbqPopover
+        type="button"
+        kbqPopoverClass="example-popover-content-custom"
         [kbqPopoverHasCloseButton]="true"
-        [kbqPopoverClass]="'example-popover-content-custom'"
         [kbqPopoverContent]="customContent"
     >
         Нестандартные стили и отступы

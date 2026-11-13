@@ -14,12 +14,12 @@ interface INodeResponse {
 }
 
 class FlatNode {
-    id: string;
-    name: string;
-    expandable: boolean;
-    level: number;
-    parent: FlatNode;
-    loading: boolean;
+    id = '';
+    name = '';
+    expandable = false;
+    level = 0;
+    parent: FlatNode | null = null;
+    loading = false;
 }
 
 class LazyLoadNode {

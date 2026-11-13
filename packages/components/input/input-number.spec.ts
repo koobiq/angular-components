@@ -356,7 +356,7 @@ class NumberInputWithNativeNumberTypeAndFormControl {
 @Component({
     imports: [KbqInputModule],
     template: `
-        <input kbqNumberInput [value]="$any(value)" />
+        <input kbqNumberInput [value]="value" />
     `
 })
 class NumberInputWithBoundValue {

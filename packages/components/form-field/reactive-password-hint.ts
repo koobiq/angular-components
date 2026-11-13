@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PristineChangeEvent, TouchedChangeEvent } from '@angular/forms';
-import { filter } from 'rxjs/operators';
+import { filter } from 'rxjs';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 // eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893

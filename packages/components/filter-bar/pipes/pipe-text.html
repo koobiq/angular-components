@@ -1,12 +1,13 @@
 <button
     kbq-button
     kbqPopover
+    type="button"
+    kbqPopoverSize="custom"
+    kbqPopoverClass="kbq-pipe__popover"
     [disabled]="data.disabled"
     [kbqPipeState]="data"
     [kbq-title]="pipeTooltip"
     [kbqPopoverArrow]="false"
-    [kbqPopoverSize]="'custom'"
-    [kbqPopoverClass]="'kbq-pipe__popover'"
     [kbqPopoverContent]="content"
     [kbqPopoverFooter]="footer"
     [kbqPopoverOffset]="4"
@@ -31,7 +32,7 @@
 </ng-template>
 
 <ng-template #footer>
-    <button kbq-button [color]="'theme'" [disabled]="disabled" [kbqStyle]="'transparent'" (click)="onApply()">
+    <button kbq-button type="button" color="theme" kbqStyle="transparent" [disabled]="disabled" (click)="onApply()">
         <span>{{ localeConfiguration().pipe.applyButton }}</span>
         &nbsp;
         <span class="kbq-button_hot-key">{{ isMac ? '⌘ ' : 'Ctrl + ' }}Enter</span>

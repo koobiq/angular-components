@@ -42,8 +42,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { merge, type Observable, Subject } from 'rxjs';
-import { auditTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { auditTime, distinctUntilChanged, filter, map, merge, type Observable, Subject } from 'rxjs';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { type KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import {
@@ -216,10 +215,10 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
      *
      * @docs-private
      */
-    protected panelId: string;
+    protected panelId: string | undefined;
 
     /** @docs-private */
-    protected popoverMode: boolean;
+    protected popoverMode: boolean = false;
 
     /**
      * Distance in pixels from the bottom of the list at which the next page is requested.
@@ -262,7 +261,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     /** @docs-private */
     override prefix = 'kbq-notification-center';
     /** @docs-private */
-    override trigger: KbqNotificationCenterTrigger;
+    override trigger: KbqNotificationCenterTrigger | undefined;
     /** @docs-private */
     isTrapFocus: boolean = false;
 
@@ -294,11 +293,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
         }
     }
 
-    private _popoverHeight: string;
-
-    constructor() {
-        super();
-    }
+    private _popoverHeight = '';
 
     ngAfterViewInit() {
         this.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state) => {
@@ -613,9 +608,9 @@ export class KbqNotificationCenterTrigger
     arrow: boolean = false;
 
     /** @docs-private */
-    customClass: string;
+    customClass: string = '';
     /** @docs-private */
-    content: string | TemplateRef<unknown>;
+    content: string | TemplateRef<unknown> = '';
 
     /** Number of unread notifications, formatted for the trigger badge. */
     get unreadItemsCounter(): Signal<string> {
@@ -688,7 +683,7 @@ export class KbqNotificationCenterTrigger
         }
     }
 
-    private _popoverHeight: string;
+    private _popoverHeight = '';
 
     /** Whether the trigger is disabled. */
     get disabled(): boolean {

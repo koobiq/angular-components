@@ -32,7 +32,7 @@ import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
             </div>
         </div>
     `,
-    styleUrls: ['alert-variants-example.css'],
+    styleUrl: 'alert-variants-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AlertVariantsExample {

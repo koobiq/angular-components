@@ -356,10 +356,10 @@ export interface KbqSaveFilterEvent {
 
 /** Flattened node */
 export class KbqTreeSelectFlatNode {
-    name: string;
+    name = '';
     value: unknown;
-    level: number;
-    expandable: boolean;
+    level = 0;
+    expandable = false;
     parent?: KbqTreeSelectFlatNode;
     /** Second line under `name` in the dropdown of the tree-select pipes. */
     caption?: string;

@@ -14,7 +14,7 @@ import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/pop
         KbqButtonModule,
         KbqInputModule
     ],
-    templateUrl: 'popover-placement-edges-example.html',
+    templateUrl: './popover-placement-edges-example.html',
     styles: `
         .popover-placement-edges-example {
             display: flex;
@@ -44,5 +44,5 @@ import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/pop
 })
 export class PopoverPlacementEdgesExample {
     placements = PopUpPlacements;
-    activePopover: KbqPopoverTrigger;
+    activePopover?: KbqPopoverTrigger;
 }

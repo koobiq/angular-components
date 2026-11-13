@@ -6,13 +6,6 @@
         "css",
         "scss"
     ],
-    "eslint.options": {
-        "extensions": [
-            ".js",
-            ".ts",
-            ".html"
-        ]
-    },
     "eslint.validate": [
         "javascript",
         "typescript",

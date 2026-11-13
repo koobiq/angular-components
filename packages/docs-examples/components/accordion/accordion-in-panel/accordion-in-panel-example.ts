@@ -14,7 +14,7 @@ import {
 @Component({
     selector: 'accordion-in-panel-example',
     imports: [KbqAccordionModule, KbqSidepanelModule, KbqButtonModule],
-    templateUrl: 'accordion-in-panel-example.html',
+    templateUrl: './accordion-in-panel-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionInPanelExample {

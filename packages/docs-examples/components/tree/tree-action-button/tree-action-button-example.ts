@@ -15,17 +15,17 @@ import {
 } from '@koobiq/components/tree';
 
 export class FileNode {
-    children: FileNode[];
-    name: string;
+    children?: FileNode[];
+    name = '';
     type: any;
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-    name: string;
+    name = '';
     type: any;
-    level: number;
-    expandable: boolean;
+    level = 0;
+    expandable = false;
     parent: any;
 }
 
@@ -138,9 +138,9 @@ export const DATA_OBJECT = {
                 </div>
 
                 <kbq-option-action
+                    kbqTooltip="Tooltip text"
                     [kbqDropdownTriggerFor]="dropdown"
                     [kbqPlacement]="popUpPlacements.Right"
-                    [kbqTooltip]="'Tooltip text'"
                 />
             </kbq-tree-option>
 
@@ -155,17 +155,17 @@ export const DATA_OBJECT = {
                 </div>
 
                 <kbq-option-action
+                    kbqTooltip="Tooltip text"
                     [kbqDropdownTriggerFor]="dropdown"
                     [kbqPlacement]="popUpPlacements.Right"
-                    [kbqTooltip]="'Tooltip text'"
                 />
             </kbq-tree-option>
         </kbq-tree-selection>
 
         <kbq-dropdown #dropdown>
-            <button kbq-dropdown-item>action 1</button>
-            <button kbq-dropdown-item>action 2</button>
-            <button kbq-dropdown-item>action 3</button>
+            <button kbq-dropdown-item type="button">action 1</button>
+            <button kbq-dropdown-item type="button">action 2</button>
+            <button kbq-dropdown-item type="button">action 3</button>
         </kbq-dropdown>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -222,7 +222,7 @@ export class TreeActionButtonExample {
         return node.expandable;
     };
 
-    private getChildren = (node: FileNode): FileNode[] => {
+    private getChildren = (node: FileNode): FileNode[] | undefined => {
         return node.children;
     };
 

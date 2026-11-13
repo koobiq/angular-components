@@ -166,7 +166,7 @@ export class KbqDd {}
             </div>
         }
     `,
-    styleUrls: ['dl.scss', 'dl-tokens.scss'],
+    styleUrls: ['./dl.scss', './dl-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

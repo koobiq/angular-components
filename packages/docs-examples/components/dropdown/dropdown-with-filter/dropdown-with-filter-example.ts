@@ -34,7 +34,7 @@ import { KbqInput } from '@koobiq/components/input';
         KbqHighlightBackgroundPipe
     ],
     template: `
-        <button kbq-button [kbqDropdownTriggerFor]="dropdown" (dropdownClosed)="handleClosed()">
+        <button kbq-button type="button" [kbqDropdownTriggerFor]="dropdown" (dropdownClosed)="handleClosed()">
             Trigger
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
@@ -50,28 +50,28 @@ import { KbqInput } from '@koobiq/components/input';
 
             @let filtered = filteredGroups();
 
-            @for (item of filtered[0]; track item) {
-                <button kbq-dropdown-item>
+            @for (item of filtered.items; track item) {
+                <button kbq-dropdown-item type="button">
                     <span [innerHTML]="item | kbqHighlightBackground: searchTokens"></span>
                 </button>
             }
 
-            @if (filtered[0].length > 0 && filtered[1].length > 0) {
+            @if (filtered.items.length > 0 && filtered.actions.length > 0) {
                 <kbq-divider />
             }
 
-            @if (filtered[1].length > 0) {
+            @if (filtered.actions.length > 0) {
                 <kbq-optgroup label="Subheader for actions" />
             }
 
-            @for (item of filtered[1]; track item) {
-                <button kbq-dropdown-item>
+            @for (item of filtered.actions; track item) {
+                <button kbq-dropdown-item type="button">
                     <span [innerHTML]="item | kbqHighlightBackground: searchTokens"></span>
                 </button>
             }
 
-            @if (filtered[0].length === 0 && filtered[1].length === 0) {
-                <button kbq-dropdown-item disabled>Nothing found</button>
+            @if (filtered.items.length === 0 && filtered.actions.length === 0) {
+                <button kbq-dropdown-item disabled type="button">Nothing found</button>
             }
         </kbq-dropdown>
     `,
@@ -87,10 +87,10 @@ import { KbqInput } from '@koobiq/components/input';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownWithFilterExample {
-    private readonly groups = [
-        ['New tab', 'New window'],
-        ['Action one', 'Action two', 'Action three']
-    ];
+    private readonly groups = {
+        items: ['New tab', 'New window'],
+        actions: ['Action one', 'Action two', 'Action three']
+    };
     protected readonly control = new FormControl('');
     protected readonly filteredGroups = toSignal(
         this.control.valueChanges.pipe(
@@ -99,7 +99,7 @@ export class DropdownWithFilterExample {
             map((value) => {
                 const predicate = createSearchPredicate(value ?? '');
 
-                return this.groups.map((group) => group.filter(predicate));
+                return { items: this.groups.items.filter(predicate), actions: this.groups.actions.filter(predicate) };
             })
         ),
         { initialValue: this.groups }

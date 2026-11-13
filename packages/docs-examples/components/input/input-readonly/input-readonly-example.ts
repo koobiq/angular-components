@@ -36,7 +36,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         <kbq-form-field>
             <kbq-label>Password</kbq-label>
             <input kbqInputPassword [readonly]="readonly()" [(ngModel)]="password" />
-            <kbq-password-toggle [kbqTooltipHidden]="'Show password'" [kbqTooltipNotHidden]="'Hide password'" />
+            <kbq-password-toggle kbqTooltipHidden="Show password" kbqTooltipNotHidden="Hide password" />
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

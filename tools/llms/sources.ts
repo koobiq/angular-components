@@ -107,8 +107,9 @@ export const resolveSiteUrl = (url: string): string => {
     if (isAbsoluteUrl(local) || local.startsWith('#')) return local;
 
     // The base href of the site is `/`, so a link without the leading slash leads from its root as well.
-    const [path, hash] = (local.startsWith('/') ? local : `/${local}`).split('#');
-    const [locale, categoryId, id, tab] = path.split('?')[0].split('/').filter(Boolean);
+    const [path = '', hash] = (local.startsWith('/') ? local : `/${local}`).split('#');
+    const [pathname = ''] = path.split('?');
+    const [locale = '', categoryId, id, tab] = pathname.split('/').filter(Boolean);
     const item =
         Object.values<string>(DocsLocale).includes(locale) &&
         docsGetItemById(id as DocsStructureItemId, categoryId as DocsStructureCategoryId);

@@ -5,6 +5,7 @@ import { visitAll, type Visitor } from './ast';
 import { logMessage } from './messages';
 import { setupOptions } from './package-config';
 import { visitProjectFiles } from './project-files';
+import { capturedGroups } from './regexp';
 import { collectInlineTemplateRanges, parseTemplate } from './typescript';
 
 /**
@@ -689,10 +690,11 @@ export class TemplateScanner<T = string> implements Visitor {
             this.expressions.push({ start: span.start.offset, end: span.end.offset, kind: 'expression' });
 
             // `@for (item of rows; track item)` and `@if (x; as y)` introduce names of their own.
-            for (const match of String(parameter.expression ?? '').matchAll(
+            for (const name of capturedGroups(
+                String(parameter.expression ?? ''),
                 /(?:^\s*|\b(?:as|let)\s+)([A-Za-z_$][\w$]*)\s*(?:\bof\b|\bin\b|=|$)/g
             )) {
-                this.otherNames.add(match[1]);
+                this.otherNames.add(name);
             }
         }
 
@@ -731,7 +733,8 @@ export class TemplateScanner<T = string> implements Visitor {
             }
 
             if (attr.name.startsWith('*')) {
-                for (const [, name] of String(attr.value ?? '').matchAll(MICROSYNTAX_NAME)) this.otherNames.add(name);
+                for (const name of capturedGroups(String(attr.value ?? ''), MICROSYNTAX_NAME))
+                    this.otherNames.add(name);
             }
 
             this.collectAttributeExpression(attr);
@@ -789,7 +792,7 @@ export class TemplateScanner<T = string> implements Visitor {
         for (const match of this.template.slice(start, end).matchAll(/\{\{([\s\S]*?)\}\}/g)) {
             const from = start + match.index + 2;
 
-            this.expressions.push({ start: from, end: from + match[1].length, kind: 'expression' });
+            this.expressions.push({ start: from, end: from + match[0].length - 4, kind: 'expression' });
         }
     }
 
@@ -881,8 +884,8 @@ function collectRefManualMembers(
                 'g'
             );
 
-            for (const match of source.matchAll(pattern)) {
-                found.add(match[1]);
+            for (const member of capturedGroups(source, pattern)) {
+                found.add(member);
             }
         }
     }

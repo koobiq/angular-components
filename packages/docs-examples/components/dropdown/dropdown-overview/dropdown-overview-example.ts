@@ -19,7 +19,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
         KbqTitleModule,
         KbqOptionModule
     ],
-    templateUrl: 'dropdown-overview-example.html',
+    templateUrl: './dropdown-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownOverviewExample {}

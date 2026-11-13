@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import type { DateTime } from 'luxon';
-import { delay } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { delay, distinctUntilChanged } from 'rxjs';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KBQ_LOCALE_SERVICE, KbqFormattersModule } from '@koobiq/components/core';
 
@@ -11,8 +10,8 @@ import { DateAdapter, DateFormatter, KBQ_LOCALE_SERVICE, KbqFormattersModule } f
 @Component({
     selector: 'range-date-formatter-example',
     imports: [LuxonDateModule, KbqFormattersModule],
-    templateUrl: 'range-date-formatter-example.html',
-    styleUrls: ['range-date-formatter-example.css'],
+    templateUrl: './range-date-formatter-example.html',
+    styleUrl: './range-date-formatter-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RangeDateFormatterExample {

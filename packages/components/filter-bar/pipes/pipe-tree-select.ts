@@ -35,8 +35,8 @@ import { KbqTreeSelectPipeBase } from './tree-select-pipe-base';
         FormsModule,
         NgTemplateOutlet
     ],
-    templateUrl: 'pipe-tree-select.html',
-    styleUrls: ['base-pipe.scss', 'pipe-tree-select.scss'],
+    templateUrl: './pipe-tree-select.html',
+    styleUrls: ['./base-pipe.scss', './pipe-tree-select.scss'],
     providers: [
         {
             provide: KbqBasePipe,

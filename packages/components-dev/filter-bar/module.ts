@@ -191,7 +191,7 @@ export class DevDatePipesWithoutValues {
         ReactiveFormsModule
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -883,8 +883,8 @@ export class DevApp implements AfterViewInit {
             ]
         }
     ];
-    pipeTemplates: KbqPipeTemplate[];
-    defaultFilter: KbqFilter | null = this.filters[2];
+    pipeTemplates: KbqPipeTemplate[] = [];
+    defaultFilter: KbqFilter | null = this.filters[2] ?? null;
     activeFilter: KbqFilter | null = this.defaultFilter;
 
     ngAfterViewInit(): void {
@@ -1138,7 +1138,7 @@ export class DevApp implements AfterViewInit {
             }
 
             // Renaming writes the name only, leaving the stored pipes as they were saved.
-            this.filters.splice(index, 1, { ...this.filters[index], name: filter.name });
+            this.filters.splice(index, 1, { ...this.filters[index]!, name: filter.name });
 
             this.activeFilter = filter;
         } else {

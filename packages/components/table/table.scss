@@ -1,7 +1,5 @@
-@use '../core/styles/common/squircle' as *;
-@use '../core/styles/common/tokens' as *;
-
-@use './table-theme' as *;
+@use '../core/styles/common/squircle';
+@use './table-theme';
 
 .kbq-table {
     border-spacing: 0;
@@ -66,14 +64,14 @@
 .kbq-table:not(.kbq-table_bordered) {
     & > tbody > tr {
         & > :is(td, th):first-child {
-            @include kbq-squircle(
+            @include squircle.kbq-squircle(
                 var(--kbq-table-size-row-border-radius),
                 border-start-start-radius border-end-start-radius
             );
         }
 
         & > :is(td, th):last-child {
-            @include kbq-squircle(
+            @include squircle.kbq-squircle(
                 var(--kbq-table-size-row-border-radius),
                 border-start-end-radius border-end-end-radius
             );
@@ -104,5 +102,5 @@
     }
 }
 
-@include kbq-table-theme();
-@include kbq-table-typography();
+@include table-theme.kbq-table-theme();
+@include table-theme.kbq-table-typography();

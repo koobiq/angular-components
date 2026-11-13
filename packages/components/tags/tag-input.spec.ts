@@ -751,7 +751,7 @@ describe(KbqTagInput.name, () => {
                     .query(By.directive(KbqAutocompleteTrigger))
                     .injector.get(KbqAutocompleteTrigger);
 
-                expect(trigger['positionStrategy']._origin).toEqual(
+                expect(trigger['positionStrategy']!._origin).toEqual(
                     expect.objectContaining({ x: expect.any(Number), width: 0, height: expect.any(Number) })
                 );
                 expect((overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement).style.width).toBe(

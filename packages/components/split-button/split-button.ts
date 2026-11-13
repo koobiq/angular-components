@@ -22,7 +22,7 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
     template: `
         <ng-content select="[kbq-button]" />
     `,
-    styleUrls: ['./split-button.scss'],
+    styleUrl: './split-button.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

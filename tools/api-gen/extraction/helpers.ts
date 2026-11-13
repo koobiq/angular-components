@@ -64,12 +64,12 @@ const ESCAPED_AT = '_NG_AT_';
  */
 function readJsDoc(node: ts.Node, sourceFile: ts.SourceFile): Pick<MemberEntry, 'description' | 'jsdocTags'> {
     const comment = ts.getJSDocCommentsAndTags(node).find(ts.isJSDoc)?.getFullText(sourceFile) ?? '';
-    const [escaped] = ts.createSourceFile(
+    const escaped = ts.createSourceFile(
         'jsdoc.ts',
         `${comment.replace(ANGULAR_DECORATOR, ESCAPED_AT)}class X {}`,
         ts.ScriptTarget.Latest,
         true
-    ).statements;
+    ).statements[0]!;
     const unescape = (text: string | undefined): string => (text ?? '').split(ESCAPED_AT).join('@');
     const description = ts.getJSDocCommentsAndTags(escaped).find(ts.isJSDoc)?.comment;
 
@@ -97,7 +97,7 @@ function readForwardedBindings(node: ts.Expression | undefined): Record<string, 
     return node.elements.reduce<Record<string, string>>((bindings, element) => {
         if (!ts.isStringLiteral(element)) return bindings;
 
-        const [own, exposedAs] = element.text.split(':').map((part) => part.trim());
+        const [own = '', exposedAs] = element.text.split(':').map((part) => part.trim());
 
         return { ...bindings, [own]: exposedAs || own };
     }, {});
@@ -346,7 +346,10 @@ function readAliasFields(
         const wrapper = type.typeName.getText(sourceFile);
         const [argument] = type.typeArguments ?? [];
         const members =
-            FIELD_WRAPPERS.has(wrapper) && type.typeArguments?.length === 1 && ts.isTypeLiteralNode(argument)
+            FIELD_WRAPPERS.has(wrapper) &&
+            type.typeArguments?.length === 1 &&
+            argument &&
+            ts.isTypeLiteralNode(argument)
                 ? readLiteralMembers(argument, sourceFile)
                 : undefined;
         const optional = FIELD_WRAPPERS.get(wrapper);
@@ -361,11 +364,10 @@ function readAliasFields(
 
     if (!ts.isIntersectionTypeNode(type)) return undefined;
 
-    const literals = type.types.filter(ts.isTypeLiteralNode);
+    const [literal, ...otherLiterals] = type.types.filter(ts.isTypeLiteralNode);
 
-    if (literals.length !== 1) return undefined;
+    if (!literal || otherLiterals.length > 0) return undefined;
 
-    const [literal] = literals;
     const members = readLiteralMembers(literal, sourceFile);
     const index = type.types.indexOf(literal);
     const text = (types: readonly ts.TypeNode[]): string[] => types.map((part) => typeText(part, sourceFile)!);
@@ -569,7 +571,7 @@ function withSourceMetadata(
     const declaringClass = isInherited ? findDeclaringClass(className, member.name, metadataByName) : className;
     const members = declaringClass && metadataByName[declaringClass]?.members;
     const { binding, callable, ...source }: MemberSourceMetadata =
-        members && Object.prototype.hasOwnProperty.call(members, member.name) ? members[member.name] : {};
+        members && Object.prototype.hasOwnProperty.call(members, member.name) ? (members[member.name] ?? {}) : {};
     const isBound = member.memberTags.includes(MemberTags.Input) || member.memberTags.includes(MemberTags.Output);
 
     return withDeclaredSignatures(

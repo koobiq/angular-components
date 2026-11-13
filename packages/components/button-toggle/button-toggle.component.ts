@@ -179,7 +179,7 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
     readonly change = output<KbqButtonToggleChange>();
 
     private readonly _disabled = signal(false);
-    private selectionModel: SelectionModel<KbqButtonToggle>;
+    private selectionModel?: SelectionModel<KbqButtonToggle>;
 
     /**
      * Selection of `selectionModel`, mirrored into a signal. It is what makes a toggle's `checked`
@@ -369,7 +369,7 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
     private applyToggleSelection(toggle: KbqButtonToggle, select: boolean, isUserInput: boolean): void {
         // A destroyed toggle drops itself from the selection on a microtask, which still runs when
         // the whole group is torn down: there is nothing left to sync and nobody left to notify.
-        if (this.destroyed) {
+        if (this.destroyed || !this.selectionModel) {
             return;
         }
 
@@ -414,7 +414,7 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
 
         // On a microtask, as the removal of a destroyed toggle: a `[value]` binding changes during change detection,
         // which has already checked the binding `[(value)]` writes the report to.
-        Promise.resolve().then(() => {
+        void Promise.resolve().then(() => {
             const value = this.value;
 
             if (this.destroyed || sameValue(this.reportedValue, value)) return;
@@ -442,7 +442,7 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
 
     /** Mirrors the selection model into the signal the toggles derive their state from. */
     private publishSelection(): void {
-        this.selectedToggles.set([...this.selectionModel.selected]);
+        this.selectedToggles.set([...(this.selectionModel?.selected ?? [])]);
     }
 
     /**
@@ -533,7 +533,7 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
             kbq-button
             kbq-title
             type="button"
-            [kbqStyle]="'transparent'"
+            kbqStyle="transparent"
             [class.kbq-selected]="checked"
             [disabled]="disabled"
             [tabIndex]="tabIndexValue()"
@@ -553,7 +553,7 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
             </div>
         </button>
     `,
-    styleUrls: ['button-toggle.scss', 'button-toggle-tokens.scss'],
+    styleUrls: ['./button-toggle.scss', './button-toggle-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -678,7 +678,7 @@ export class KbqButtonToggle implements OnChanges, OnInit, AfterContentInit, Aft
      * multiple-selection group is a set of independent toggle buttons, so every one of them stays in
      * the tab order.
      */
-    protected readonly tabIndexValue = computed(() => {
+    protected readonly tabIndexValue = computed((): number => {
         const own = this.tabIndex() ?? 0;
 
         if (!this.isSingleSelector()) {
@@ -787,7 +787,7 @@ export class KbqButtonToggle implements OnChanges, OnInit, AfterContentInit, Aft
     }
 
     ngAfterViewInit(): void {
-        this.focusMonitor.monitor(this.element.nativeElement, true);
+        void this.focusMonitor.monitor(this.element.nativeElement, true);
     }
 
     ngOnDestroy() {
@@ -798,7 +798,7 @@ export class KbqButtonToggle implements OnChanges, OnInit, AfterContentInit, Aft
         // Remove the toggle from the selection once it's destroyed. Needs to happen
         // on the next tick in order to avoid "changed after checked" errors.
         if (group && group.isSelected(this)) {
-            Promise.resolve().then(() => group.syncButtonToggle(this, false));
+            void Promise.resolve().then(() => group.syncButtonToggle(this, false));
         }
     }
 
@@ -882,7 +882,7 @@ export class KbqButtonToggle implements OnChanges, OnInit, AfterContentInit, Aft
 
         event.preventDefault();
 
-        const target = toggles[next];
+        const target = toggles[next]!;
 
         target.focusViaKeyboard();
         target.onToggleClick();

@@ -21,7 +21,7 @@ import {
         KbqIconModule,
         KbqFormFieldModule
     ],
-    templateUrl: 'tag-input-onpaste-off-example.html',
+    templateUrl: './tag-input-onpaste-off-example.html',
     // turn off tag add on paste with InjectionToken
     providers: [kbqTagsDefaultOptionsProvider({ separatorKeyCodes: [ENTER], addOnPaste: false })],
     changeDetection: ChangeDetectionStrategy.OnPush

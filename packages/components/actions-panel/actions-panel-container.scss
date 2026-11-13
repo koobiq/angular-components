@@ -1,5 +1,5 @@
 @use '../core/styles/common/animation';
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
 $easing: cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -18,7 +18,7 @@ $easing: cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: var(--kbq-actions-panel-box-shadow);
     height: var(--kbq-actions-panel-height);
     padding: var(--kbq-actions-panel-padding);
-    @include kbq-squircle(var(--kbq-actions-panel-border-radius));
+    @include squircle.kbq-squircle(var(--kbq-actions-panel-border-radius));
     display: flex;
     flex-grow: 1;
     align-items: center;

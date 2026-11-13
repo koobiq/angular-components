@@ -7,7 +7,7 @@ import { KbqMarkdown } from '@koobiq/components/markdown';
 @Component({
     selector: 'markdown-selection-example',
     imports: [KbqMarkdown],
-    templateUrl: 'markdown-selection-example.html',
+    templateUrl: './markdown-selection-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarkdownSelectionExample {}

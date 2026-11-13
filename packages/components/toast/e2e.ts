@@ -54,7 +54,7 @@ import type { KbqToastContainerComponent } from './toast-container.component';
             <kbq-toast-container #toastContainer2 style="flex-direction: row; align-self: flex-start" />
         </div>
     `,
-    styleUrls: ['../toast/toast-tokens.scss'],
+    styleUrl: '../toast/toast-tokens.scss',
     providers: [
         {
             provide: KBQ_TOAST_FACTORY,

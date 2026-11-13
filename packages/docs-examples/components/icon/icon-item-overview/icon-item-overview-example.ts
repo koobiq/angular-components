@@ -15,7 +15,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
             <i kbq-icon-item="kbq-bell_16" [color]="colors.Theme"></i>
         </div>
     `,
-    styleUrls: ['icon-item-overview-example.css'],
+    styleUrl: 'icon-item-overview-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IconItemOverviewExample {

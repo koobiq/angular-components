@@ -15,9 +15,9 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
         <nav class="example-breadcrumbs_truncate-by-length" kbq-breadcrumbs>
             @for (breadcrumb of breadcrumbs; track breadcrumb) {
                 <kbq-breadcrumb-item
+                    fragment="fragment"
                     [routerLink]="breadcrumb.url"
                     [queryParams]="{ queryParams: 'queryParam' }"
-                    [fragment]="'fragment'"
                     [text]="breadcrumb.label"
                 />
             }

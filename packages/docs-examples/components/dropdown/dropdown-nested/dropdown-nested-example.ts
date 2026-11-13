@@ -15,7 +15,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
         KbqIconModule,
         KbqDividerModule
     ],
-    templateUrl: 'dropdown-nested-example.html',
+    templateUrl: './dropdown-nested-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownNestedExample {}

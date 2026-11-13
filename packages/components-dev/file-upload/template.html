@@ -87,10 +87,10 @@
             <div class="kbq-text-big-strong">Loading state on file added</div>
             <br />
             <kbq-file-upload
+                progressMode="indeterminate"
                 [accept]="accept"
                 [disabled]="disabled"
                 [formControl]="singleFileControl"
-                [progressMode]="'indeterminate'"
             >
                 <i kbq-icon="kbq-circle-info_24"></i>
 
@@ -102,7 +102,7 @@
             <kbq-file-upload
                 multiple
                 class="layout-margin-bottom-s"
-                [progressMode]="'indeterminate'"
+                progressMode="indeterminate"
                 (fileRemoved)="onFileRemoved($event)"
                 (filesAdded)="onFilesAddedForListWithLoadOnAdd($event)"
             >
@@ -125,7 +125,7 @@
         <div class="dev-container">
             <div class="kbq-subheading">Multiple file upload, no validation</div>
             <br />
-            <kbq-multiple-file-upload [disabled]="disabled" [progressMode]="'indeterminate'" [(files)]="files">
+            <kbq-multiple-file-upload progressMode="indeterminate" [disabled]="disabled" [(files)]="files">
                 <ng-template #kbqFileIcon>
                     <i kbq-icon="kbq-file-o_16"></i>
                 </ng-template>
@@ -138,9 +138,9 @@
             <br />
             <kbq-file-upload
                 multiple
+                progressMode="indeterminate"
                 [accept]="accept"
                 [disabled]="disabled"
-                [progressMode]="'indeterminate'"
                 [(files)]="files"
             >
                 <ng-template #kbqFileIcon>
@@ -178,7 +178,7 @@
         <div devCustomText class="dev-container">
             <div class="kbq-subheading">Multiple file with ControlValueAccessor, overall hint error</div>
             <br />
-            <kbq-file-upload multiple [formControl]="multipleFileUploadControl" [progressMode]="'indeterminate'">
+            <kbq-file-upload multiple progressMode="indeterminate" [formControl]="multipleFileUploadControl">
                 <ng-template #kbqFileIcon>
                     <i kbq-icon="kbq-file-o_16"></i>
                 </ng-template>
@@ -197,7 +197,7 @@
                     formControlName="file-upload"
                     multiple
                     class="layout-margin-bottom-s"
-                    [progressMode]="'indeterminate'"
+                    progressMode="indeterminate"
                     (fileRemoved)="onFileRemoved($event)"
                     (filesAdded)="onFilesAdded($event)"
                 >

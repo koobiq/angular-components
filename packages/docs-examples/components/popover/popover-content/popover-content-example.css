@@ -1,9 +1,9 @@
 ::ng-deep .kbq-popover.example-popover-content-custom .kbq-title {
-    margin: 0 0;
+    margin: 0;
 }
 
 ::ng-deep .kbq-popover.example-popover-content-custom .kbq-popover__content {
-    padding: 0 0;
+    padding: 0;
 }
 
 ::ng-deep .kbq-popover.example-popover-content-custom .kbq-popover__content p {
@@ -28,7 +28,7 @@
 }
 
 .example-popover-content-custom__container {
-    padding: 24px 32px 40px 32px;
+    padding: 24px 32px 40px;
     display: flex;
     flex-direction: column;
     align-items: center;

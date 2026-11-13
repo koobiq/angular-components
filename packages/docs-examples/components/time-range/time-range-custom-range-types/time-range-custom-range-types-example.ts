@@ -72,7 +72,7 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', strin
                         {{ optionLabel(context.type) }}
                     }
                 </kbq-time-range-title-as-control>
-                <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix [color]="'contrast-fade'"></i>
+                <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix color="contrast-fade"></i>
             </kbq-form-field>
         </ng-template>
 
@@ -111,10 +111,10 @@ export class TimeRangeCustomRangeTypesExample {
 
     protected optionLabel(type: string): string {
         const localeConfig = this.localeConfig();
-
-        if (!localeConfig) return type;
-
         const units = customTypeUnits[type];
+
+        if (!localeConfig || !units) return type;
+
         const translationType = customTypeTranslation[type];
         const startDate = this.dateAdapter.addCalendarUnits(this.dateAdapter.today(), units);
 

@@ -62,6 +62,7 @@ import {
     KbqTooltipTrigger
 } from '@koobiq/components/tooltip';
 import {
+    type DropdownCloseReason,
     KBQ_DROPDOWN_DEFAULT_OPTIONS,
     KBQ_DROPDOWN_SCROLL_STRATEGY,
     KbqDropdown,
@@ -323,7 +324,7 @@ describe('KbqDropdown', () => {
 
         patchElementFocus(triggerEl);
 
-        focusMonitor.monitor(triggerEl, false);
+        void focusMonitor.monitor(triggerEl, false);
         triggerEl.click(); // A click without a mousedown before it is considered a keyboard open.
         fixture.detectChanges();
         fixture.componentInstance.trigger().close();
@@ -348,7 +349,7 @@ describe('KbqDropdown', () => {
         fixture.detectChanges();
         patchElementFocus(triggerEl);
 
-        focusMonitor.monitor(triggerEl, false);
+        void focusMonitor.monitor(triggerEl, false);
         fixture.componentInstance.trigger().close();
         fixture.detectChanges();
         await vi.advanceTimersByTimeAsync(500);
@@ -368,7 +369,7 @@ describe('KbqDropdown', () => {
 
         patchElementFocus(triggerEl);
 
-        focusMonitor.monitor(triggerEl, false);
+        void focusMonitor.monitor(triggerEl, false);
 
         // Trigger a fake right click.
         dispatchEvent(triggerEl, createMouseEvent('mousedown', 50, 100, 2));
@@ -399,7 +400,7 @@ describe('KbqDropdown', () => {
         fixture.detectChanges();
         patchElementFocus(triggerEl);
 
-        focusMonitor.monitor(triggerEl, false);
+        void focusMonitor.monitor(triggerEl, false);
         fixture.componentInstance.trigger().close();
         fixture.detectChanges();
         await vi.advanceTimersByTimeAsync(500);
@@ -4834,7 +4835,7 @@ class CustomDropdownPanel implements KbqDropdownPanel {
     readonly items = signal<readonly KbqDropdownItem[]>([]);
 
     readonly templateRef = viewChild.required(TemplateRef);
-    readonly closed = output<void | 'click' | 'keydown' | 'tab'>();
+    readonly closed = output<DropdownCloseReason>();
     readonly backdropClass = signal('');
     readonly hasBackdrop = signal(false);
     readonly lazyContent = signal<KbqDropdownContent | undefined>(undefined);
@@ -5224,7 +5225,7 @@ class DropdownWithTooltip implements TestableDropdown {
         KbqToolTipModule
     ],
     template: `
-        <button #triggerEl [kbqDropdownTriggerFor]="dropdown" [kbqTooltip]="'TOOLTIP'">Toggle dropdown</button>
+        <button #triggerEl kbqTooltip="TOOLTIP" [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown">
             <button kbq-dropdown-item>Item</button>
         </kbq-dropdown>

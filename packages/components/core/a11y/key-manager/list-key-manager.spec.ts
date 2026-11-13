@@ -1,7 +1,7 @@
 import type { FocusOrigin, ListKeyManagerModifierKey } from '@angular/cdk/a11y';
 import { DOWN_ARROW, END, HOME, LEFT_ARROW, RIGHT_ARROW, TAB, UP_ARROW } from '@angular/cdk/keycodes';
 import { QueryList } from '@angular/core';
-import { take } from 'rxjs/operators';
+import { take } from 'rxjs';
 import type { MockInstance } from 'vitest';
 import { createKeyboardEvent } from '../../testing';
 import { FocusKeyManager } from './focus-key-manager';

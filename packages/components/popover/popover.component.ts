@@ -134,16 +134,17 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
 
     override prefix = 'kbq-popover';
 
-    override header: string | TemplateRef<any>;
-    footer: string | TemplateRef<any>;
+    override header: string | TemplateRef<any> = '';
+    footer: string | TemplateRef<any> = '';
 
-    override trigger: KbqPopoverTrigger;
+    /** The trigger that opened the panel; a panel rendered on its own has none. */
+    override trigger: KbqPopoverTrigger | undefined;
 
     isTrapFocus: boolean = false;
     hasCloseButton: boolean = false;
 
     /** Id of the panel element, referenced by the trigger's `aria-controls`. Written by the trigger. */
-    panelId: string;
+    panelId: string | undefined;
 
     /** Accessible name of the panel, used when there is no header to label it. Written by the trigger. */
     ariaLabel: string | undefined;
@@ -227,7 +228,7 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
 
         const point = this.trigger?.getPointerPoint();
 
-        if (!point || !this.arrow || this.trigger.stickToWindow) {
+        if (!point || !this.arrow || this.trigger?.stickToWindow) {
             if (!this.appliedArrowShift) return;
 
             this.renderer.removeStyle(element, '--kbq-popover-arrow-shift-x', RendererStyleFlags2.DashCase);
@@ -440,7 +441,7 @@ export class KbqPopoverTrigger
         this.updateData();
     }
 
-    private _header: string | TemplateRef<any>;
+    private _header: string | TemplateRef<any> = '';
 
     /** Input (`kbqPopoverContent`) — content of the panel, as a string or a template. */
     get content(): string | TemplateRef<any> {
@@ -464,7 +465,7 @@ export class KbqPopoverTrigger
         this.updateData();
     }
 
-    private _footer: string | TemplateRef<any>;
+    private _footer: string | TemplateRef<any> = '';
 
     /** Input (`kbqPopoverDisabled`) — disables the trigger and closes an open popover. */
     get disabled(): boolean {
@@ -1080,9 +1081,9 @@ export class KbqPopoverTrigger
         if (pointerEvent && wasAttached) {
             this.ngZone.run(() => this.instance.show(delay));
             this.updatePosition();
-            this.strategy.withLockedPosition(false);
+            this.strategy?.withLockedPosition(false);
             this.overlayRef?.updatePosition();
-            this.strategy.withLockedPosition(true);
+            this.strategy?.withLockedPosition(true);
             this.instance?.updateArrowPosition();
         }
     }

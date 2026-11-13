@@ -101,7 +101,7 @@ export const injectLocalizedPeriods = (): LocalizedPeriods => {
         datetime: computed(() => toValues(DATETIME_PERIODS)),
         // The period list highlights the selected option by comparing names, and a period always renders
         // the same name, so building the value here matches the entry of the list it stands for.
-        pick: (period) => toValues([period])[0]
+        pick: (period) => toValues([period])[0]!
     };
 };
 

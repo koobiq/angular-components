@@ -41,7 +41,7 @@
                 <kbq-toggle [disabled]="disabled" [(ngModel)]="valueSmallOff">Quack like a duck</kbq-toggle>
             </div>
             <div class="dev-toggle-container">
-                <kbq-toggle [disabled]="disabled" [labelPosition]="'left'" [(ngModel)]="valueSmallOff">
+                <kbq-toggle labelPosition="left" [disabled]="disabled" [(ngModel)]="valueSmallOff">
                     Quack like a duck
                 </kbq-toggle>
             </div>
@@ -50,20 +50,20 @@
 
             <div class="dev-toggle-bordered-demo-container">
                 <div class="dev-toggle-container">
-                    <kbq-toggle [disabled]="disabled" [labelPosition]="'left'" [(ngModel)]="valueSmallOff">
+                    <kbq-toggle labelPosition="left" [disabled]="disabled" [(ngModel)]="valueSmallOff">
                         Quack like a duck
                     </kbq-toggle>
                 </div>
                 <div class="dev-toggle-fixed">
-                    <kbq-toggle [disabled]="disabled" [labelPosition]="'left'" [(ngModel)]="valueSmallOff">
+                    <kbq-toggle labelPosition="left" [disabled]="disabled" [(ngModel)]="valueSmallOff">
                         fixed width: 200px; fixed width: 200px;
                     </kbq-toggle>
                 </div>
                 <div class="toggle-demo-fill">
                     <kbq-toggle
                         class="layout-fill"
+                        labelPosition="left"
                         [disabled]="disabled"
-                        [labelPosition]="'left'"
                         [(ngModel)]="valueSmallOff"
                     >
                         fill
@@ -94,7 +94,7 @@
                 <kbq-toggle [big]="true" [disabled]="disabled" [(ngModel)]="valueBigOff">Quack like a duck</kbq-toggle>
             </div>
             <div class="dev-toggle-container">
-                <kbq-toggle [big]="true" [disabled]="disabled" [labelPosition]="'left'" [(ngModel)]="valueBigOff">
+                <kbq-toggle labelPosition="left" [big]="true" [disabled]="disabled" [(ngModel)]="valueBigOff">
                     Quack like a duck
                 </kbq-toggle>
             </div>
@@ -103,21 +103,21 @@
 
             <div class="dev-toggle-bordered-demo-container">
                 <div class="dev-toggle-container">
-                    <kbq-toggle [big]="true" [disabled]="disabled" [labelPosition]="'left'" [(ngModel)]="valueBigOff">
+                    <kbq-toggle labelPosition="left" [big]="true" [disabled]="disabled" [(ngModel)]="valueBigOff">
                         default
                     </kbq-toggle>
                 </div>
                 <div class="dev-toggle-fixed">
-                    <kbq-toggle [big]="true" [disabled]="disabled" [labelPosition]="'left'" [(ngModel)]="valueBigOff">
+                    <kbq-toggle labelPosition="left" [big]="true" [disabled]="disabled" [(ngModel)]="valueBigOff">
                         fixed width: 200px; fixed width: 200px;
                     </kbq-toggle>
                 </div>
                 <div class="toggle-demo-fill">
                     <kbq-toggle
                         class="layout-fill"
+                        labelPosition="left"
                         [big]="true"
                         [disabled]="disabled"
-                        [labelPosition]="'left'"
                         [(ngModel)]="valueBigOff"
                     >
                         fill

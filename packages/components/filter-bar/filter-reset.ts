@@ -6,7 +6,7 @@ import { KBQ_FILTER_BAR_HOST, type KbqFilter } from './filter-bar.types';
     selector: 'kbq-filter-reset',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'" (click)="resetFilter()">
+        <button kbq-button type="button" color="theme" kbqStyle="transparent" (click)="resetFilter()">
             <ng-content>{{ buttonName() }}</ng-content>
         </button>
     `,

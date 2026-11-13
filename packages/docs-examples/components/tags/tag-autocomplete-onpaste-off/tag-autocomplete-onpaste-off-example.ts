@@ -1,9 +1,8 @@
 ﻿import { ENTER } from '@angular/cdk/keycodes';
 import { AsyncPipe } from '@angular/common';
-import { type AfterViewInit, ChangeDetectionStrategy, Component, type ElementRef, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, type ElementRef, viewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import type { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, type Observable } from 'rxjs';
 import { KbqAutocompleteModule, type KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -34,7 +33,7 @@ const autocompleteValueCoercion = (value: AutocompleteValue): string =>
         AsyncPipe,
         KbqHighlightBackgroundPipe
     ],
-    templateUrl: 'tag-autocomplete-onpaste-off-example.html',
+    templateUrl: './tag-autocomplete-onpaste-off-example.html',
     styles: `
         :host {
             display: flex;
@@ -48,7 +47,7 @@ const autocompleteValueCoercion = (value: AutocompleteValue): string =>
     providers: [kbqTagsDefaultOptionsProvider({ separatorKeyCodes: [ENTER], addOnPaste: false })],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TagAutocompleteOnpasteOffExample implements AfterViewInit {
+export class TagAutocompleteOnpasteOffExample {
     readonly tagInput = viewChild.required<ElementRef<HTMLInputElement>>('tagInput');
     readonly tagInputDirective = viewChild.required('tagInput', { read: KbqTagInput });
 
@@ -57,8 +56,10 @@ export class TagAutocompleteOnpasteOffExample implements AfterViewInit {
     suggestions: string[] = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6', 'tag7', 'tag8', 'tag9', 'tag10'];
     selectedTags: string[] = ['tag1'];
 
-    filteredTags: Observable<string[]>;
-    hasDuplicates: boolean;
+    filteredTags: Observable<string[]> = this.control.valueChanges.pipe(
+        map((e: string | null) => this.onControlValueChanges(e))
+    );
+    hasDuplicates = false;
 
     get canCreate(): boolean {
         const cleanedValue: string = (this.control.value || '').trim();
@@ -67,10 +68,6 @@ export class TagAutocompleteOnpasteOffExample implements AfterViewInit {
             !!cleanedValue &&
             [...new Set(this.suggestions.concat(this.selectedTags))].every((tag) => tag !== cleanedValue)
         );
-    }
-
-    ngAfterViewInit(): void {
-        this.filteredTags = this.control.valueChanges.pipe(map((e: string | null) => this.onControlValueChanges(e)));
     }
 
     addOnBlurFunc(event: FocusEvent) {

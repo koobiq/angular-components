@@ -47,7 +47,7 @@ import { docsData } from './data/typography';
             </table>
         </docs-component-viewer-wrapper>
     `,
-    styleUrls: ['design-tokens.scss'],
+    styleUrl: 'design-tokens.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-markdown'

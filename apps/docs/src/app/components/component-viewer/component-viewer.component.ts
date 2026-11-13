@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet, type UrlSegment } from '@angular/router';
-import { map } from 'rxjs/operators';
+import { map } from 'rxjs';
 import { KbqOverlayLayer } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkPrefix } from '@koobiq/components/link';
@@ -59,7 +59,7 @@ const GITHUB_REPO_TREE_URL = `https://github.com/koobiq/angular-components/tree/
         KbqIcon
     ],
     templateUrl: './component-viewer.template.html',
-    styleUrls: ['./component-viewer.scss'],
+    styleUrl: './component-viewer.scss',
     providers: [KbqSidepanelService],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -93,8 +93,8 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
         // parent route for the section (e.g. components, other).
         this.activatedRoute.url
             .pipe(
-                map(([{ path: categoryId }, { path: id }]: UrlSegment[]) =>
-                    docsGetItemById(<DocsStructureItemId>id, <DocsStructureCategoryId>categoryId)
+                map(([category, item]: UrlSegment[]) =>
+                    docsGetItemById(<DocsStructureItemId>item?.path, <DocsStructureCategoryId>category?.path)
                 ),
                 takeUntilDestroyed()
             )

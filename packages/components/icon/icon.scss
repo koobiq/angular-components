@@ -1,8 +1,8 @@
-@use './icon-theme' as *;
+@use './icon-theme';
 
 .kbq-icon {
     > svg {
-        fill: currentColor;
+        fill: currentcolor;
         vertical-align: middle;
     }
 }
@@ -31,4 +31,4 @@
     transform: scale(-1);
 }
 
-@include kbq-icon-theme();
+@include icon-theme.kbq-icon-theme();

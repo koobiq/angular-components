@@ -20,11 +20,12 @@ import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/pop
     selector: 'actions-panel-with-dropdown-and-popover-example',
     imports: [KbqButtonModule, KbqIconModule, KbqDropdownModule, KbqPopoverModule],
     template: `
-        <button kbq-button (click)="open()">open</button>
+        <button kbq-button type="button" (click)="open()">open</button>
 
         <ng-template let-data>
             <button
                 #popover="kbqPopover"
+                type="button"
                 color="contrast"
                 kbq-button
                 kbqPopover
@@ -38,11 +39,11 @@ import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/pop
             </button>
 
             <kbq-dropdown #dropdown="kbqDropdown">
-                <button kbq-dropdown-item (click)="enable(popover)">
+                <button kbq-dropdown-item type="button" (click)="enable(popover)">
                     <i kbq-icon="kbq-shield_16"></i>
                     Enable
                 </button>
-                <button kbq-dropdown-item (click)="disable(popover)">
+                <button kbq-dropdown-item type="button" (click)="disable(popover)">
                     <i kbq-icon="kbq-shield-slash_16"></i>
                     Disable
                 </button>
@@ -51,8 +52,8 @@ import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/pop
 
         <ng-template #popoverFooter>
             <div class="example-popover-footer">
-                <button kbq-button color="contrast" (click)="save()">Save</button>
-                <button kbq-button (click)="cancel()">Cancel</button>
+                <button kbq-button type="button" color="contrast" (click)="save()">Save</button>
+                <button kbq-button type="button" (click)="cancel()">Cancel</button>
             </div>
         </ng-template>
     `,

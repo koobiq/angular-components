@@ -22,8 +22,7 @@ import {
 import { type ComponentFixture, inject as testingInject, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { EMPTY, type Observable, Subject, type Subscription } from 'rxjs';
-import { map, startWith, take } from 'rxjs/operators';
+import { EMPTY, map, type Observable, startWith, Subject, type Subscription, take } from 'rxjs';
 import type { Mock } from 'vitest';
 import {
     createKeyboardEvent,
@@ -190,12 +189,11 @@ describe('KbqAutocomplete', () => {
             // Note that we're running outside the Angular zone, in order to be able
             // to test properly without the subscription from `_subscribeToClosingActions`
             // giving us a false positive.
-            await fixture.ngZone!.runOutsideAngular(() => {
+            await fixture.ngZone!.runOutsideAngular(async () => {
                 fixture.componentInstance.trigger().open();
 
-                return Promise.resolve().then(() => {
-                    expect(fixture.componentInstance.panel().showPanel()).toBeTruthy();
-                });
+                await Promise.resolve();
+                expect(fixture.componentInstance.panel().showPanel()).toBeTruthy();
             });
         });
 
@@ -2793,7 +2791,7 @@ describe('KbqAutocomplete', () => {
             typeInElement('al', input);
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.trigger()['positionStrategy']._origin).toEqual(
+            expect(fixture.componentInstance.trigger()['positionStrategy']!._origin).toEqual(
                 expect.objectContaining({
                     x: expect.any(Number),
                     y: expect.any(Number),
@@ -2853,7 +2851,7 @@ describe('KbqAutocomplete', () => {
             typeInElement('al', input);
             fixture.detectChanges();
 
-            const origin = fixture.componentInstance.trigger()['positionStrategy']._origin as { x: number };
+            const origin = fixture.componentInstance.trigger()['positionStrategy']!._origin as { x: number };
 
             input.getBoundingClientRect = () => ({ left: 10, top: 20, width: 200, height: 32 }) as DOMRect;
             await vi.advanceTimersByTimeAsync(0);
@@ -2871,7 +2869,7 @@ describe('KbqAutocomplete', () => {
             typeInElement('al', input);
             fixture.detectChanges();
 
-            const positions = fixture.componentInstance.trigger()['positionStrategy']._preferredPositions;
+            const positions = fixture.componentInstance.trigger()['positionStrategy']!._preferredPositions;
 
             expect(positions.map(({ overlayX, overlayY }) => `${overlayY}-${overlayX}`)).toEqual([
                 'top-start',
@@ -3959,6 +3957,7 @@ class AutocompleteInTagList {
 @Component({
     imports: [KbqAutocompleteModule],
     template: `
+        <!-- eslint-disable-next-line @angular-eslint/template/no-non-null-assertion -- the panel renders later, which is what the test is about -->
         <input placeholder="Choose" [kbqAutocomplete]="autocomplete()!" />
 
         @if (panelShown()) {

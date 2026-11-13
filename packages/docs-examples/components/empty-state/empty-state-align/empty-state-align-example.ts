@@ -20,8 +20,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 <h2 kbq-empty-state-title>Нет групп</h2>
                 <div kbq-empty-state-text>{{ emptyStateText }}</div>
                 <div kbq-empty-state-actions>
-                    <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">
-                        <i kbq-icon="kbq-plus_16" [color]="'theme'"></i>
+                    <button kbq-button type="button" [color]="colors.Theme" [kbqStyle]="styles.Transparent">
+                        <i kbq-icon="kbq-plus_16" color="theme"></i>
                         {{ buttonText }}
                     </button>
                 </div>
@@ -31,8 +31,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 <h2 kbq-empty-state-title>Нет групп</h2>
                 <div kbq-empty-state-text>{{ emptyStateText }}</div>
                 <div kbq-empty-state-actions>
-                    <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">
-                        <i kbq-icon="kbq-plus_16" [color]="'theme'"></i>
+                    <button kbq-button type="button" [color]="colors.Theme" [kbqStyle]="styles.Transparent">
+                        <i kbq-icon="kbq-plus_16" color="theme"></i>
                         {{ buttonText }}
                     </button>
                 </div>

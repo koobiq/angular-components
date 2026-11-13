@@ -17,11 +17,11 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
         KbqProgressBarModule,
         NgTemplateOutlet
     ],
-    templateUrl: 'toast-hide-overview-example.html',
+    templateUrl: './toast-hide-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastHideOverviewExample {
-    progress: boolean;
+    progress = false;
 
     readonly toastService = inject(KbqToastService);
 

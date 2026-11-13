@@ -14,9 +14,9 @@ import {
 const http404Redirect = '404';
 
 const canMatchLocaleRoutes: CanMatchFn = (_route: Route, segments: UrlSegment[]): boolean => {
-    const { path } = segments[0];
+    const path = segments[0]?.path;
 
-    if (path === http404Redirect) return false;
+    if (!path || path === http404Redirect) return false;
     const docsLocaleService = inject(DocsLocaleService);
 
     return docsLocaleService.isSupportedLocale(path);

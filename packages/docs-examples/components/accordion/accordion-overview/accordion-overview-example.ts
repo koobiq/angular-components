@@ -7,7 +7,7 @@ import { KbqAccordionModule } from '@koobiq/components/accordion';
 @Component({
     selector: 'accordion-overview-example',
     imports: [KbqAccordionModule],
-    templateUrl: 'accordion-overview-example.html',
+    templateUrl: './accordion-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionOverviewExample {}

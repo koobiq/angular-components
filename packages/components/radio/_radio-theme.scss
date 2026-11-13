@@ -1,4 +1,4 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-radio-state($type, $state-name) {
     $base-path: radio-#{$type}-#{$state-name};
@@ -91,27 +91,27 @@
 
 @mixin kbq-radio-typography() {
     .kbq-radio-button {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
         & .kbq-hint .kbq-hint__text {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
         }
     }
 
     .kbq-radio-button.kbq-radio-button_big {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-big);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
 
         & .kbq-hint .kbq-hint__text {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
         }
     }
 
     // The error and the hints under the group read at the size of the hints of its options.
     .kbq-radio-group_normal .kbq-radio-group__subscript .kbq-hint__text {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
     }
 
     .kbq-radio-group_big .kbq-radio-group__subscript .kbq-hint__text {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }

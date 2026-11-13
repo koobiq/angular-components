@@ -1,7 +1,10 @@
 {
     "extends": "./tsconfig.json",
     "compilerOptions": {
-        "types": ["node", "vitest/globals"]
+        "types": ["node", "vitest/globals"],
+        // A spec fails right away and loudly on a missing item or field: both checks would only add `!` all over it.
+        "noUncheckedIndexedAccess": false,
+        "strictPropertyInitialization": false
     },
     "include": ["**/*.spec.ts", "**/*.d.ts", "tools/vitest/*.ts"],
     "exclude": ["node_modules", "**/dist", ".claude", "tools/check-angular"]

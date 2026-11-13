@@ -1,7 +1,6 @@
 import type { OverlayRef, ScrollDispatcher, ScrollStrategy } from '@angular/cdk/overlay';
 import { isDevMode } from '@angular/core';
-import type { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, type Subscription } from 'rxjs';
 import { isScrollFromInsideOverlay } from './scroll-strategy-utils';
 
 function getKbqRepositionScrollStrategyAlreadyAttachedError(): Error {

@@ -21,7 +21,7 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
     template: `
         <kbq-file-upload
             multiple
-            [progressMode]="'indeterminate'"
+            progressMode="indeterminate"
             (fileRemoved)="onFileRemoved($event)"
             (filesAdded)="onFilesAdded($event)"
         >

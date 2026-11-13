@@ -363,7 +363,7 @@ export class E2eLinkMultiline {
                 <a kbqLink print href="https://www.cvedetails.com/cve/CVE-2019-1020010/">CVE-2019-1020010</a>
             </div>
             <div>
-                <a kbqLink href="https://koobiq.io/en/components/link" [print]="'koobiq.io/link'">Link</a>
+                <a kbqLink href="https://koobiq.io/en/components/link" print="koobiq.io/link">Link</a>
             </div>
             <div>
                 <a kbqLink href="https://koobiq.io/en/components/link">Link</a>

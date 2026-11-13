@@ -8,7 +8,7 @@ import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 @Component({
     selector: 'accordion-sections-example',
     imports: [KbqAccordionModule, KbqButtonToggleModule],
-    templateUrl: 'accordion-sections-example.html',
+    templateUrl: './accordion-sections-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionSectionsExample {}

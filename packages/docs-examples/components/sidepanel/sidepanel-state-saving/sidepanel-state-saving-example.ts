@@ -20,7 +20,7 @@ const stateSavingKey = 'sidepanel-state-saving-example';
     imports: [KbqButtonModule, KbqSidepanelModule],
     template: `
         <div class="example-sidepanel-state-saving__actions">
-            <button kbq-button type="button" [color]="'contrast'" (click)="toggle()">
+            <button kbq-button type="button" color="contrast" (click)="toggle()">
                 {{ sidepanelRef() ? 'Close sidepanel' : 'Open sidepanel' }}
             </button>
 

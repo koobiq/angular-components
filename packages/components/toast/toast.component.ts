@@ -15,7 +15,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { filter, take } from 'rxjs/operators';
+import { filter, take } from 'rxjs';
 import {
     kbqAfterAnimations,
     kbqAnimationsDisabled,
@@ -178,7 +178,7 @@ export class KbqToastComponent implements OnDestroy {
 
             if (!running.length) return done();
 
-            Promise.allSettled(running.map(({ finished }) => finished)).then(() => {
+            void Promise.allSettled(running.map(({ finished }) => finished)).then(() => {
                 if (!destroyRef.destroyed) afterExit(running);
             });
         };

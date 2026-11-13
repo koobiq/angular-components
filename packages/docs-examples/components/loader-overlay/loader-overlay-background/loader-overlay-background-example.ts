@@ -10,7 +10,7 @@ import { KbqLoaderOverlayModule, type KbqLoaderOverlaySurface } from '@koobiq/co
     template: `
         <div class="example__grid">
             @for (surface of surfaces; track surface.value) {
-                <div class="example__item {{ surface.surfaceClass }}">
+                <div class="example__item" [class]="surface.surfaceClass">
                     <div class="example__content">
                         <p class="example__paragraph kbq-text-normal">{{ content }}</p>
                         <p class="example__paragraph example__paragraph_fade kbq-text-normal">

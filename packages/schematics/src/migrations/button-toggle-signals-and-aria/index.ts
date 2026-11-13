@@ -5,6 +5,7 @@ import { visitAll, type Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
+import { capturedGroups } from '../../utils/regexp';
 import { collectInlineTemplateRanges, parseTemplate } from '../../utils/typescript';
 import {
     BEHAVIOUR_NOTE,
@@ -481,8 +482,8 @@ function collectRefManualMembers(template: string, refs: string[]): Set<string> 
     for (const ref of refs) {
         const pattern = new RegExp(`\\b${escapeRegExp(ref)}\\s*\\.\\s*(${members.join('|')})\\b`, 'g');
 
-        for (const match of template.matchAll(pattern)) {
-            found.add(match[1]);
+        for (const member of capturedGroups(template, pattern)) {
+            found.add(member);
         }
     }
 

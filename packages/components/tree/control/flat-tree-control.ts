@@ -13,9 +13,9 @@ export function defaultCompareViewValues(firstViewValue: string, secondViewValue
 
 /** Flat tree control. Able to expand/collapse a subtree recursively for flattened tree. */
 export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
-    expandedItemsBeforeFiltration: K[];
+    expandedItemsBeforeFiltration: K[] = [];
 
-    private filters: FlatTreeControlFilter<T>[];
+    private filters: FlatTreeControlFilter<T>[] = [];
 
     // Positions in each `dataNodes` array: a tree looks up every rendered row, and `indexOf` would make that
     // rows × nodes. Keyed weakly by the array, so replacing `dataNodes` releases the old nodes.
@@ -71,10 +71,10 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
         // sibling of an ancestor.
         for (
             let i = startIndex + 1;
-            i < this.dataNodes.length && this.getLevel(dataNode) < this.getLevel(this.dataNodes[i]);
+            i < this.dataNodes.length && this.getLevel(dataNode) < this.getLevel(this.dataNodes[i]!);
             i++
         ) {
-            results.push(this.dataNodes[i]);
+            results.push(this.dataNodes[i]!);
         }
 
         return results;
@@ -111,7 +111,7 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
         let level = this.getLevel(node);
 
         for (let i = startIndex - 1; i >= 0 && level > 0; i--) {
-            const candidate = this.dataNodes[i];
+            const candidate = this.dataNodes[i]!;
             const candidateLevel = this.getLevel(candidate);
 
             if (candidateLevel < level) {
@@ -149,11 +149,11 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
 
         this.updateFilterValue(value || result);
 
-        Promise.resolve().then(() => this.restoreExpansionState());
+        void Promise.resolve().then(() => this.restoreExpansionState());
     }
 
     private updateFilterValue(value: T[] | string | null) {
-        Promise.resolve().then(() => this.filterValue.next(value));
+        void Promise.resolve().then(() => this.filterValue.next(value));
     }
 
     private saveExpansionState() {

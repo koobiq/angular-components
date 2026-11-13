@@ -19,6 +19,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, type Observable, of } from 'rxjs';
+// eslint-disable-next-line rxjs-x/no-internal -- the published tree module provides the scheduler under this token
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 import {
@@ -1110,6 +1111,31 @@ describe('KbqTreeSelection', () => {
 
                 expect(getActiveValue()).toBe('src');
                 expect(getNodes(treeElement).length).toBe(6);
+            });
+
+            // A collapse from code removes the active option, and the key manager keeps an index past the rendered ones
+            it('should not throw when the active option was removed under the focus', async () => {
+                vi.useFakeTimers();
+
+                await expandNode(1);
+                await expandNode(3);
+
+                for (let i = 0; i < 6; i++) await pressKey(DOWN_ARROW);
+
+                expect(getActiveValue()).toBe('keycodes');
+
+                const src = component.treeControl.dataNodes.find((node) => node.name === 'src')!;
+
+                component.treeControl.collapse(src);
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                // docs, src, tests
+                expect(getNodes(treeElement).length).toBe(3);
+
+                await pressKey(LEFT_ARROW);
+
+                expect(component.tree().renderedOptions.toArray()).toContain(component.tree().keyManager.activeItem);
             });
 
             it('should collapse the whole tree with repeated presses', async () => {
@@ -5194,7 +5220,7 @@ describe('KbqTreeSelection inputs', () => {
         >();
         expectTypeOf<KbqTreeSelection['selectionModel']>().toEqualTypeOf<SelectionModel<any>>();
         expectTypeOf(tree().selectionModel).toEqualTypeOf<SelectionModel<FileFlatNode>>();
-        expectTypeOf(tree().unorderedOptions.first.data).toEqualTypeOf<FileFlatNode>();
+        expectTypeOf(tree().unorderedOptions.first.data).toEqualTypeOf<FileFlatNode | undefined>();
         expectTypeOf(tree().selectionChange).toEqualTypeOf<
             EventEmitter<KbqTreeSelectionChange<KbqTreeOption<FileFlatNode>, FileFlatNode>>
         >();

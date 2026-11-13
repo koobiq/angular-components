@@ -50,11 +50,11 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             </span>
         </div>
         <div class="example-actions">
-            <button kbq-button color="contrast" [kbqSkeleton]="loading()">Read more</button>
+            <button kbq-button type="button" color="contrast" [kbqSkeleton]="loading()">Read more</button>
             <div kbq-button-group>
-                <button kbq-button [kbqSkeleton]="loading()">Block</button>
-                <button kbq-button [kbqSkeleton]="loading()">Ignore</button>
-                <button kbq-button [kbqSkeleton]="loading()">Report</button>
+                <button kbq-button type="button" [kbqSkeleton]="loading()">Block</button>
+                <button kbq-button type="button" [kbqSkeleton]="loading()">Ignore</button>
+                <button kbq-button type="button" [kbqSkeleton]="loading()">Report</button>
             </div>
         </div>
     `,

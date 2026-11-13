@@ -129,8 +129,11 @@ export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel' | 't
      */
     viewChange = new BehaviorSubject<{ start: number; end: number }>({ start: 0, end: Number.MAX_VALUE });
 
-    /** Differ used to find the changes in the data provided by the data source. */
-    protected dataDiffer: IterableDiffer<T>;
+    /**
+     * Differ used to find the changes in the data provided by the data source. Replaced in `ngOnInit`, once the
+     * `trackBy` it identifies nodes by is bound, and whenever the data source changes.
+     */
+    protected dataDiffer: IterableDiffer<T> = this.differs.find([]).create();
 
     /** Stores the node definition that does not have a when predicate. */
     private defaultNodeDef?: KbqTreeNodeDef<T> | null;
@@ -332,7 +335,7 @@ export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel' | 't
         changes.forEachOperation(
             (item: IterableChangeRecord<T>, adjustedPreviousIndex: number | null, currentIndex: number | null) => {
                 if (item.previousIndex == null) {
-                    this.insertNode(data[currentIndex!], currentIndex!, viewContainer, parentData);
+                    this.insertNode(data[currentIndex!]!, currentIndex!, viewContainer, parentData);
                 } else if (currentIndex == null) {
                     viewContainer.remove(adjustedPreviousIndex!);
                     this.levels.delete(item.item);
@@ -388,7 +391,7 @@ export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel' | 't
         const nodeDefs = this.nodeDefs();
 
         if (nodeDefs.length === 1) {
-            return nodeDefs[0];
+            return nodeDefs[0]!;
         }
 
         const nodeDef = nodeDefs.find((def) => def.when && def.when(i, data)) || this.defaultNodeDef;
@@ -577,7 +580,7 @@ export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel' | 't
                 // very subscription — the flat data source merges `expansionModel.changed` — and
                 // `renderNodeChanges` has just run `detectChanges()`.
                 if (this.pendingValues.size) {
-                    Promise.resolve().then(() => this.restorePending());
+                    void Promise.resolve().then(() => this.restorePending());
                 }
             });
         } else {
@@ -667,7 +670,11 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
      */
     readonly refreshed = new Subject<void>();
 
-    get data(): T {
+    /**
+     * Data node the row renders, which the tree assigns once it has created the row. `undefined` before that, and
+     * for a row the tree does not create from a node, such as the "select all" row of `kbq-tree-selection`.
+     */
+    get data(): T | undefined {
         return this._data;
     }
 
@@ -675,16 +682,19 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
         this._data = value;
     }
 
-    private _data: T;
+    private _data?: T;
 
     get isExpanded(): boolean {
-        return this.tree.treeControl.isExpanded(this.data);
+        const data = this._data;
+
+        return data !== undefined && this.tree.treeControl.isExpanded(data);
     }
 
     get level(): number {
         const treeControl = this.tree.treeControl;
+        const data = this._data;
 
-        return treeControl.getLevel ? treeControl.getLevel(this._data) : 0;
+        return treeControl.getLevel && data !== undefined ? treeControl.getLevel(data) : 0;
     }
 
     constructor() {

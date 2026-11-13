@@ -53,14 +53,13 @@ export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY: InjectionToken<() => Scrol
 
 // @public
 export class KbqNotificationCenterComponent extends KbqPopUp implements AfterViewInit, KbqNotificationCenterPanel {
-    constructor();
     protected readonly a11yLocaleConfiguration: Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     escapeHandler(event?: KeyboardEvent): void;
     isTrapFocus: boolean;
     readonly localeConfiguration: Signal<_koobiq_components_core.KbqNotificationCenterLocaleConfiguration>;
     // (undocumented)
     ngAfterViewInit(): void;
-    protected panelId: string;
+    protected panelId: string | undefined;
     // (undocumented)
     get popoverHeight(): string;
     set popoverHeight(value: string);
@@ -76,7 +75,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     // (undocumented)
     readonly switcher: Signal<KbqButton>;
     protected readonly titleId: string;
-    trigger: KbqNotificationCenterTrigger;
+    trigger: KbqNotificationCenterTrigger | undefined;
     updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues): void;
     updateTrapFocus(isTrapFocus: boolean): void;
     // (undocumented)

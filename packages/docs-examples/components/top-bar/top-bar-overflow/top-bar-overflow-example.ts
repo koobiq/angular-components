@@ -10,7 +10,7 @@ import {
     type WritableSignal
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { auditTime, map } from 'rxjs/operators';
+import { auditTime, map } from 'rxjs';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import {
     type KbqButtonColor,
@@ -72,6 +72,7 @@ type ExampleAction = {
                     @for (action of actions; track action.id) {
                         <button
                             kbq-button
+                            type="button"
                             [kbqOverflowItem]="action.id"
                             [kbqStyle]="action.style"
                             [color]="action.color"
@@ -93,6 +94,7 @@ type ExampleAction = {
                     <div kbqOverflowItemsResult>
                         <button
                             kbq-button
+                            type="button"
                             aria-label="More"
                             [kbqStyle]="KbqButtonStyles.Transparent"
                             [color]="KbqComponentColors.Contrast"
@@ -104,7 +106,7 @@ type ExampleAction = {
                         <kbq-dropdown #appDropdown="kbqDropdown">
                             @for (action of actions; track action.id) {
                                 @if (kbqOverflowItems.hiddenItemIDs().has(action.id)) {
-                                    <button kbq-dropdown-item>
+                                    <button kbq-dropdown-item type="button">
                                         {{ action.text || action.id }}
                                     </button>
                                 }

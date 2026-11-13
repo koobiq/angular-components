@@ -23,8 +23,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         LuxonDateModule,
         LowerCasePipe
     ],
-    templateUrl: 'timepicker-variations-example.html',
-    styleUrls: ['timepicker-variations-example.css'],
+    templateUrl: './timepicker-variations-example.html',
+    styleUrl: './timepicker-variations-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimepickerVariationsExample {

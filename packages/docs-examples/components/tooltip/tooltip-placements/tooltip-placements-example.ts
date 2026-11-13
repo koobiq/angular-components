@@ -10,13 +10,19 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     imports: [KbqToolTipModule, KbqButtonModule],
     template: `
         <div class="layout-row layout-gap-l layout-align-center-center">
-            <button kbqTooltip="{{ tooltipText }}" kbq-button [kbqPlacement]="'topLeft'" [kbqTooltipArrow]="true">
+            <button kbq-button type="button" kbqPlacement="topLeft" [kbqTooltip]="tooltipText" [kbqTooltipArrow]="true">
                 topLeft
             </button>
-            <button kbqTooltip="{{ tooltipText }}" kbq-button [kbqPlacement]="'top'" [kbqTooltipArrow]="true">
+            <button kbq-button type="button" kbqPlacement="top" [kbqTooltip]="tooltipText" [kbqTooltipArrow]="true">
                 top
             </button>
-            <button kbqTooltip="{{ tooltipText }}" kbq-button [kbqPlacement]="'topRight'" [kbqTooltipArrow]="true">
+            <button
+                kbq-button
+                type="button"
+                kbqPlacement="topRight"
+                [kbqTooltip]="tooltipText"
+                [kbqTooltipArrow]="true"
+            >
                 topRight
             </button>
         </div>
@@ -24,10 +30,16 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         <br />
 
         <div class="layout-row layout-gap-l layout-align-space-between">
-            <button kbqTooltip="{{ tooltipText }}" kbq-button [kbqPlacement]="'leftTop'" [kbqTooltipArrow]="true">
+            <button kbq-button type="button" kbqPlacement="leftTop" [kbqTooltip]="tooltipText" [kbqTooltipArrow]="true">
                 leftTop
             </button>
-            <button kbqTooltip="{{ tooltipText }}" kbq-button [kbqPlacement]="'rightTop'" [kbqTooltipArrow]="true">
+            <button
+                kbq-button
+                type="button"
+                kbqPlacement="rightTop"
+                [kbqTooltip]="tooltipText"
+                [kbqTooltipArrow]="true"
+            >
                 rightTop
             </button>
         </div>
@@ -35,10 +47,10 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         <br />
 
         <div class="layout-row layout-gap-l layout-align-space-between">
-            <button kbqTooltip="{{ tooltipText }}" kbq-button [kbqPlacement]="'left'" [kbqTooltipArrow]="true">
+            <button kbq-button type="button" kbqPlacement="left" [kbqTooltip]="tooltipText" [kbqTooltipArrow]="true">
                 left
             </button>
-            <button kbqTooltip="{{ tooltipText }}" kbq-button [kbqPlacement]="'right'" [kbqTooltipArrow]="true">
+            <button kbq-button type="button" kbqPlacement="right" [kbqTooltip]="tooltipText" [kbqTooltipArrow]="true">
                 right
             </button>
         </div>
@@ -46,10 +58,22 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         <br />
 
         <div class="layout-row layout-gap-l layout-align-space-between">
-            <button kbqTooltip="{{ tooltipText }}" kbq-button [kbqPlacement]="'leftBottom'" [kbqTooltipArrow]="true">
+            <button
+                kbq-button
+                type="button"
+                kbqPlacement="leftBottom"
+                [kbqTooltip]="tooltipText"
+                [kbqTooltipArrow]="true"
+            >
                 leftBottom
             </button>
-            <button kbqTooltip="{{ tooltipText }}" kbq-button [kbqPlacement]="'rightBottom'" [kbqTooltipArrow]="true">
+            <button
+                kbq-button
+                type="button"
+                kbqPlacement="rightBottom"
+                [kbqTooltip]="tooltipText"
+                [kbqTooltipArrow]="true"
+            >
                 rightBottom
             </button>
         </div>
@@ -57,13 +81,25 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         <br />
 
         <div class="layout-row layout-gap-l layout-align-center-center">
-            <button kbqTooltip="{{ tooltipText }}" kbq-button [kbqPlacement]="'bottomLeft'" [kbqTooltipArrow]="true">
+            <button
+                kbq-button
+                type="button"
+                kbqPlacement="bottomLeft"
+                [kbqTooltip]="tooltipText"
+                [kbqTooltipArrow]="true"
+            >
                 bottomLeft
             </button>
-            <button kbqTooltip="{{ tooltipText }}" kbq-button [kbqPlacement]="'bottom'" [kbqTooltipArrow]="true">
+            <button kbq-button type="button" kbqPlacement="bottom" [kbqTooltip]="tooltipText" [kbqTooltipArrow]="true">
                 bottom
             </button>
-            <button kbqTooltip="{{ tooltipText }}" kbq-button [kbqPlacement]="'bottomRight'" [kbqTooltipArrow]="true">
+            <button
+                kbq-button
+                type="button"
+                kbqPlacement="bottomRight"
+                [kbqTooltip]="tooltipText"
+                [kbqTooltipArrow]="true"
+            >
                 bottomRight
             </button>
         </div>

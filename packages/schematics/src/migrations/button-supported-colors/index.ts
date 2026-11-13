@@ -70,15 +70,15 @@ function literalColor(attr: any): string | null {
 
     const quoted = /^'([^']*)'$|^"([^"]*)"$/.exec(raw);
 
-    return quoted ? (quoted[1] ?? quoted[2]) : null;
+    return quoted?.[1] ?? quoted?.[2] ?? null;
 }
 
 /** The trailing enum member of a property access, e.g. `colors.Error` → `Error`. */
 function memberName(attr: any): string | null {
     const raw = typeof attr.value === 'string' ? attr.value.trim() : '';
-    const match = /^[\w$.]*\.(\w+)$/.exec(raw);
+    const member = /^[\w$.]*\.(\w+)$/.exec(raw)?.[1];
 
-    return match && UNSUPPORTED_MEMBERS.includes(match[1]) ? raw : null;
+    return member && UNSUPPORTED_MEMBERS.includes(member) ? raw : null;
 }
 
 interface RemovedColor extends Span {

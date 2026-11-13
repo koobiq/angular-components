@@ -96,10 +96,10 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
 @Component({
     selector: 'kbq-form-field',
     imports: [NgTemplateOutlet],
-    templateUrl: 'form-field.html',
+    templateUrl: './form-field.html',
     styleUrls: [
-        'form-field.scss',
-        'form-field-tokens.scss',
+        './form-field.scss',
+        './form-field-tokens.scss',
         // The controls below are directives, and directives can't declare styles. The form field is the only
         // component they are always rendered inside of, so it carries their styles on their behalf.
         // Keep every entry paired with the control that owns it; removing one silently unstyles that control.
@@ -370,7 +370,7 @@ export class KbqFormField
         return this._focusOrigin;
     }
 
-    private _focusOrigin: FocusOrigin;
+    private _focusOrigin: FocusOrigin = null;
 
     /**
      * @docs-private

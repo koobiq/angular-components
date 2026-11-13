@@ -1,5 +1,4 @@
-@use '../core/styles/theming/theming' as *;
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-tree-option($state-name) {
     --kbq-option-background: var(--kbq-tree-#{$state-name}-container-background);
@@ -102,10 +101,10 @@
 
 @mixin kbq-tree-typography() {
     .kbq-tree-option {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
     .kbq-option-caption {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
     }
 }

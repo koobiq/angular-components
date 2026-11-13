@@ -1,4 +1,4 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-empty-state-theme() {
     .kbq-empty-state_normal-color {
@@ -36,31 +36,31 @@
 
     .kbq-empty-state_compact {
         .kbq-empty-state-title {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
         }
 
         .kbq-empty-state-text {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
         }
     }
 
     .kbq-empty-state_normal {
         .kbq-empty-state-title {
-            @include kbq-typography-level-to-styles-css-variables(typography, subheading);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, subheading);
         }
 
         .kbq-empty-state-text {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
         }
     }
 
     .kbq-empty-state_big {
         .kbq-empty-state-title {
-            @include kbq-typography-level-to-styles-css-variables(typography, headline);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, headline);
         }
 
         .kbq-empty-state-text {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-big);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
         }
     }
 }

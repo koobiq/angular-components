@@ -6,7 +6,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     selector: 'dev-app',
     imports: [KbqIconModule],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

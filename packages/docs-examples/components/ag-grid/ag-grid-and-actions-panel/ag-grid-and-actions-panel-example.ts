@@ -212,6 +212,7 @@ export class ExampleGrid {
                         <kbq-divider class="example-divider-vertical" [vertical]="true" />
                     }
                     <button
+                        type="button"
                         color="contrast"
                         kbq-button
                         [class.layout-margin-left-xxs]="!$first"
@@ -228,6 +229,7 @@ export class ExampleGrid {
             @if (hiddenItemIDs.size > 1) {
                 <button
                     kbqOverflowItemsResult
+                    type="button"
                     color="contrast"
                     kbq-button
                     aria-label="More"
@@ -243,10 +245,10 @@ export class ExampleGrid {
 
                 @for (action of actions; track action.id) {
                     @if (hiddenItemIDs.has(action.id)) {
-                        @if (action.divider && hiddenItemIDs.has(actions[$index - 1].id)) {
+                        @if (action.divider && hiddenItemIDs.has(actions[$index - 1]?.id)) {
                             <kbq-divider />
                         }
-                        <button kbq-dropdown-item (click)="onAction(action)">
+                        <button kbq-dropdown-item type="button" (click)="onAction(action)">
                             <i kbq-icon [class]="action.icon"></i>
                             {{ action.id }}
                         </button>

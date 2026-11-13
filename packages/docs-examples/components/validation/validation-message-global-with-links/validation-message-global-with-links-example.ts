@@ -26,7 +26,7 @@ const restSymbolsRegex = /[^0-9]+/g;
         KbqToolTipModule,
         FormsModule
     ],
-    templateUrl: 'validation-message-global-with-links-example.html',
+    templateUrl: './validation-message-global-with-links-example.html',
     styles: `
         form {
             width: 320px;

@@ -1,12 +1,12 @@
 <kbq-dropdown #verticalNavbarDropdown_1="kbqDropdown" [overlapTriggerX]="false" [overlapTriggerY]="true">
     @for (app of text().apps; track $index) {
-        <button kbq-dropdown-item (click)="selectedApp.set($index)">{{ app }}</button>
+        <button kbq-dropdown-item type="button" (click)="selectedApp.set($index)">{{ app }}</button>
     }
 </kbq-dropdown>
 
 <kbq-dropdown #verticalNavbarDropdown_3="kbqDropdown" [overlapTriggerX]="false" [overlapTriggerY]="true">
-    <button kbq-dropdown-item>{{ text().point(1) }}</button>
-    <button kbq-dropdown-item>{{ text().point(2) }}</button>
+    <button kbq-dropdown-item type="button">{{ text().point(1) }}</button>
+    <button kbq-dropdown-item type="button">{{ text().point(2) }}</button>
 </kbq-dropdown>
 
 <div style="height: 480px" class="layout-row">
@@ -34,7 +34,7 @@
             </ng-template>
             <ng-container *ngTemplateOutlet="bentoTrigger" />
 
-            <a href="#" kbq-navbar-brand [collapsedText]="text().apps[selectedApp()]">
+            <a href="#" kbq-navbar-brand [collapsedText]="text().apps[selectedApp()] ?? ''">
                 <div kbq-navbar-logo>
                     <!-- prettier-ignore -->
                     <svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M0 25.6C0 28.4045 0 29.9635 1.01826 30.9817C2.03651 32 3.59554 32 6.4 32H25.6C28.4045 32 29.9635 32 30.9817 30.9817C32 29.9635 32 28.4045 32 25.6V6.4C32 3.59554 32 2.03651 30.9817 1.01826C29.9635 0 28.4045 0 25.6 0H6.4C3.59554 0 2.03651 0 1.01826 1.01826C0 2.03651 0 3.59554 0 6.4V25.6Z" fill="#FF0000" fill-rule="evenodd"/><path d="M14.9774 16L11.1933 19.7841L7.40918 16L11.1933 12.267L14.9774 16ZM19.7842 20.858L16.0512 24.5909L12.2671 20.858L16.0512 17.0739L19.7842 20.858ZM19.7842 11.1932L16.0512 14.9261L12.2671 11.1932L16.0512 7.40909L19.7842 11.1932ZM24.591 16L20.858 19.7841L17.1251 16L20.858 12.267L24.591 16Z" fill="white"/></svg>
@@ -57,15 +57,16 @@
                 <kbq-navbar-item>
                     <button
                         kbq-button
+                        type="button"
+                        kbqStyle="filled"
                         [class.kbq-button-icon]="!verticalNavbar.expanded()"
                         [color]="colors.Contrast"
                         [kbqPlacement]="popUpPlacements.Right"
-                        [kbqStyle]="'filled'"
                         [attr.aria-label]="text().newTask"
                         [kbqTooltip]="text().newTask"
                         [kbqTooltipDisabled]="verticalNavbar.expanded()"
                     >
-                        <i kbq-icon="kbq-plus_16" [color]="'empty'"></i>
+                        <i kbq-icon="kbq-plus_16" color="empty"></i>
                         @if (verticalNavbar.expanded()) {
                             <span>{{ text().newTask }}</span>
                         }
@@ -99,7 +100,7 @@
             </kbq-navbar-item>
         </kbq-navbar-container>
 
-        <button kbq-navbar-toggle></button>
+        <button kbq-navbar-toggle type="button"></button>
     </kbq-vertical-navbar>
 
     <div style="overflow: auto; padding-left: 20px; padding-right: 20px" class="flex kbq-text-normal">

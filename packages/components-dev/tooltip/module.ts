@@ -87,7 +87,7 @@ export class DevDocsExamples {}
         DevDocsExamples
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -97,7 +97,7 @@ export class DevApp {
     popUpPlacements = PopUpPlacements;
 
     tooltipActiveStage: number;
-    selectedOrder: boolean;
+    selectedOrder = false;
 
     isPopoverVisibleLeft: boolean = false;
 

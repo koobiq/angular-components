@@ -11,11 +11,11 @@ import { KbqComponentColors } from '@koobiq/components/core';
         KbqButtonModule
     ],
     template: `
-        <button class="example-fill-content__button" kbq-button [color]="colors.Contrast">
+        <button type="button" class="example-fill-content__button" kbq-button [color]="colors.Contrast">
             Очень длинный текст кнопки, который обрезается по ширине
         </button>
     `,
-    styleUrls: ['button-fill-content-example.css'],
+    styleUrl: 'button-fill-content-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonFillContentExample {

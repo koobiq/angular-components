@@ -44,5 +44,5 @@ import { KbqTimepickerModule } from '@koobiq/components/timepicker';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatepickerAndTimepickerExample {
-    selectedDateTime: DateTime;
+    selectedDateTime?: DateTime;
 }

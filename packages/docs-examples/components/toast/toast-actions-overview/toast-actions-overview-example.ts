@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, type TemplateRef, viewChild } from '@angular/core';
 import { outputToObservable } from '@angular/core/rxjs-interop';
-import { take } from 'rxjs/operators';
+import { take } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { type KbqDropdown, KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
@@ -17,7 +17,7 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
         KbqDropdownModule,
         KbqButtonModule
     ],
-    templateUrl: 'toast-actions-overview-example.html',
+    templateUrl: './toast-actions-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastActionsOverviewExample {

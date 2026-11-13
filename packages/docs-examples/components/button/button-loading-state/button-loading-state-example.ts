@@ -11,7 +11,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
         KbqButtonModule
     ],
     template: `
-        <button class="kbq-progress" kbq-button [color]="colors.Contrast">Кнопка</button>
+        <button type="button" class="kbq-progress" kbq-button [color]="colors.Contrast">Кнопка</button>
         &nbsp;
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

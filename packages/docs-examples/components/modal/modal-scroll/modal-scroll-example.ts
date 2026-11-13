@@ -22,7 +22,7 @@ export class CustomModalComponent {
     selector: 'modal-scroll-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="createLongModal()">Open Modal</button>
+        <button kbq-button type="button" (click)="createLongModal()">Open Modal</button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

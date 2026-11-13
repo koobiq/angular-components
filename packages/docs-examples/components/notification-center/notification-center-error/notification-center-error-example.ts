@@ -1,4 +1,5 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { NgOptimizedImage } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -10,7 +11,7 @@ import {
     viewChild
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs/operators';
+import { map } from 'rxjs';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import {
@@ -62,9 +63,10 @@ enum NavbarIcItems {
         KbqLink,
         LuxonDateModule,
         KbqFormattersModule,
-        KbqNavbarModule
+        KbqNavbarModule,
+        NgOptimizedImage
     ],
-    templateUrl: 'notification-center-error-example.html',
+    templateUrl: './notification-center-error-example.html',
     styles: `
         ::ng-deep .example-notification-center-panel {
             margin-top: -139px;
@@ -87,12 +89,6 @@ export class NotificationCenterErrorExample {
 
     private readonly themeService = inject(KbqThemeService, { optional: true });
     protected readonly currentTheme = computed(() => this.themeService?.colorScheme() ?? 'light');
-
-    protected readonly srcSet = computed(() => {
-        const currentTheme = this.currentTheme();
-
-        return `https://koobiq.io/assets/images/${currentTheme}/empty_192.webp 1x, https://koobiq.io/assets/images/${currentTheme}/empty_192@2x.webp 2x`;
-    });
 
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)

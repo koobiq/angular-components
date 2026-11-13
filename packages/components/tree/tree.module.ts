@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { asyncScheduler } from 'rxjs';
+// eslint-disable-next-line rxjs-x/no-internal -- the published tree module provides the scheduler under this token
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { KbqActionContainer, KbqPseudoCheckboxModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';

@@ -222,7 +222,7 @@ export class E2eFilterBarFilters {
     imports: [KbqFilterBarModule, KbqIcon, KbqLuxonDateModule],
     template: `
         <div data-testid="e2eScreenshotTarget">
-            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filters[0]">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filters[0] ?? null">
                 @for (pipe of filters[0]?.pipes; track pipe) {
                     <ng-container *kbqPipe="pipe" />
                 }
@@ -242,7 +242,7 @@ export class E2eFilterBarFilters {
                 <kbq-filter-reset />
             </kbq-filter-bar>
             <br />
-            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filters[2]">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filters[2] ?? null">
                 @for (pipe of filters[2]?.pipes; track pipe) {
                     <ng-container *kbqPipe="pipe" />
                 }
@@ -252,7 +252,7 @@ export class E2eFilterBarFilters {
                 <kbq-filter-reset />
             </kbq-filter-bar>
             <br />
-            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filters[3]">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filters[3] ?? null">
                 @for (pipe of filters[3]?.pipes; track pipe) {
                     <ng-container *kbqPipe="pipe" />
                 }
@@ -262,7 +262,7 @@ export class E2eFilterBarFilters {
                 <kbq-filter-reset />
             </kbq-filter-bar>
             <br />
-            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filters[4]">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filters[4] ?? null">
                 @for (pipe of filters[4]?.pipes; track pipe) {
                     <ng-container *kbqPipe="pipe" />
                 }
@@ -274,7 +274,7 @@ export class E2eFilterBarFilters {
             <br />
             <kbq-filter-bar
                 [pipeTemplates]="pipeTemplates"
-                [filter]="filters[5]"
+                [filter]="filters[5] ?? null"
                 [selectedAllEqualsSelectedNothing]="false"
             >
                 @for (pipe of filters[5]?.pipes; track pipe) {
@@ -286,7 +286,7 @@ export class E2eFilterBarFilters {
                 <kbq-filter-reset />
             </kbq-filter-bar>
             <br />
-            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filters[6]">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filters[6] ?? null">
                 @for (pipe of filters[6]?.pipes; track pipe) {
                     <ng-container *kbqPipe="pipe" />
                 }
@@ -296,7 +296,7 @@ export class E2eFilterBarFilters {
                 <kbq-filter-reset />
             </kbq-filter-bar>
             <br />
-            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filters[7]">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filters[7] ?? null">
                 @for (pipe of filters[7]?.pipes; track pipe) {
                     <ng-container *kbqPipe="pipe" />
                 }
@@ -322,7 +322,7 @@ export class E2eFilterBarStates implements AfterViewInit {
 
     readonly optionTemplate = viewChild.required<TemplateRef<any>>('optionTemplate');
 
-    pipeTemplates: KbqPipeTemplate[];
+    pipeTemplates: KbqPipeTemplate[] = [];
 
     dateTime = this.adapter.createDateTime(2025, 11, 12, 10, 10, 10, 10);
 
@@ -1266,9 +1266,9 @@ export class E2eFilterBarOptionCaption {
             caption: 'event',
             children: [
                 {
-                    name: this.values[0].name,
+                    name: this.values[0]?.name,
                     value: 'warning',
-                    caption: this.values[0].caption,
+                    caption: this.values[0]?.caption,
                     children: null
                 },
                 { name: 'Event: Action', value: 'action', caption: 'action', children: null }
@@ -1901,11 +1901,9 @@ export class E2eFilterBarMultiTreeSelectValueTemplate implements AfterViewInit {
     }
 
     toggleMultilineOptions(): void {
-        this.pipeTemplates = [
-            {
-                ...this.pipeTemplates[0],
-                multilineOptions: !this.pipeTemplates[0].multilineOptions
-            }
-        ];
+        this.pipeTemplates = this.pipeTemplates.map((template) => ({
+            ...template,
+            multilineOptions: !template.multilineOptions
+        }));
     }
 }

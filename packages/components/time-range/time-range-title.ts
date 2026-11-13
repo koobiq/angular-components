@@ -26,8 +26,8 @@ import type { KbqTimeRangeCustomizableTitleContext, KbqTimeRangeRange, KbqTimeRa
         KbqIconModule
     ],
     template: `
-        @if (titleTemplate()) {
-            <ng-container *ngTemplateOutlet="titleTemplate()!; context: titleContext() ?? null; injector: injector" />
+        @if (titleTemplate(); as template) {
+            <ng-container *ngTemplateOutlet="template; context: titleContext() ?? null; injector: injector" />
         } @else {
             <a kbqLink pseudo size="normal" [disabled]="disabled()">
                 {{ formattedDate() }}

@@ -57,9 +57,9 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                                     <input
                                         kbqInput
                                         kbqInputMonospace
+                                        placeholder="Inp@t M0n0"
                                         [errorStateMatcher]="errorStateMatcher(cell.state)"
                                         [disabled]="cell.state.includes('disabled')"
-                                        [placeholder]="'Inp@t M0n0'"
                                         [ngModel]="cell.state.join().includes('placeholder') ? '' : inputMonoValue()"
                                         (ngModelChange)="inputMonoValue.set($event)"
                                     />

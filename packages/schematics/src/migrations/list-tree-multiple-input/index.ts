@@ -58,9 +58,9 @@ function resolveValue(attr: any): { value: string; binding: boolean } | null {
 
     if (!binding) return { value: raw, binding };
 
-    const quoted = /^\s*'([^']*)'\s*$/.exec(raw) ?? /^\s*"([^"]*)"\s*$/.exec(raw);
+    const value = (/^\s*'([^']*)'\s*$/.exec(raw) ?? /^\s*"([^"]*)"\s*$/.exec(raw))?.[1];
 
-    return quoted ? { value: quoted[1], binding } : null;
+    return value === undefined ? null : { value, binding };
 }
 
 /** Renders the attribute back, keeping the binding syntax the author used. */

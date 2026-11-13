@@ -497,8 +497,8 @@ export class KbqRadioGroup
 
 @Component({
     selector: 'kbq-radio-button',
-    templateUrl: 'radio.component.html',
-    styleUrls: ['radio.scss', 'radio-tokens.scss'],
+    templateUrl: './radio.component.html',
+    styleUrls: ['./radio.scss', './radio-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

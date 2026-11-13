@@ -56,6 +56,6 @@ export const getHumanizedBytes = (
 
     return {
         result,
-        unit: system.abbreviations[step]
+        unit: system.abbreviations[step]!
     };
 };

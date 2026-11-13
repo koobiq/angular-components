@@ -30,7 +30,7 @@ type ExampleAction = {
         KbqDividerModule
     ],
     template: `
-        <button kbq-button (click)="open()">open</button>
+        <button kbq-button type="button" (click)="open()">open</button>
 
         <ng-template let-data>
             <div
@@ -45,6 +45,7 @@ type ExampleAction = {
 
                 @for (action of actions; track action.id) {
                     <button
+                        type="button"
                         color="contrast"
                         kbq-button
                         [kbqOverflowItem]="action.id"
@@ -61,6 +62,7 @@ type ExampleAction = {
                 @if (hiddenItemIDs.size > 1) {
                     <button
                         kbqOverflowItemsResult
+                        type="button"
                         color="contrast"
                         kbq-button
                         aria-label="More"
@@ -76,7 +78,7 @@ type ExampleAction = {
 
                     @for (action of actions; track action.id) {
                         @if (hiddenItemIDs.has(action.id)) {
-                            <button kbq-dropdown-item (click)="onAction(action)">
+                            <button kbq-dropdown-item type="button" (click)="onAction(action)">
                                 <i [kbq-icon]="action.icon"></i>
                                 {{ action.id }}
                             </button>

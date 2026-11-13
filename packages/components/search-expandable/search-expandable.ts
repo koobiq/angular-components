@@ -33,8 +33,7 @@ import {
     type NgForm,
     ReactiveFormsModule
 } from '@angular/forms';
-import { filter, Subject, type Subscription, timer } from 'rxjs';
-import { map, switchMap, takeUntil } from 'rxjs/operators';
+import { filter, map, Subject, type Subscription, switchMap, takeUntil, timer } from 'rxjs';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import {
     ErrorStateMatcher,

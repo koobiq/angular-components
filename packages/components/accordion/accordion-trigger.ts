@@ -21,14 +21,14 @@ import { KbqAccordionTriggerDirective } from './accordion-trigger.directive';
     imports: [KbqIcon],
     template: `
         <i
-            kbq-icon="{{ isHugSpaceBetween ? 'kbq-chevron-down-s_16' : 'kbq-chevron-right-s_16' }}"
             class="kbq-accordion-trigger__icon"
+            [kbq-icon]="isHugSpaceBetween ? 'kbq-chevron-down-s_16' : 'kbq-chevron-right-s_16'"
             [class.kbq-animations-disabled]="animationsDisabled"
         ></i>
 
         <ng-content />
     `,
-    styleUrls: ['accordion-trigger.scss', 'accordion-tokens.scss'],
+    styleUrls: ['./accordion-trigger.scss', './accordion-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -55,7 +55,7 @@ export class KbqAccordionTrigger implements AfterViewInit, OnDestroy {
      */
     protected readonly animationsDisabled = kbqAnimationsDisabled();
 
-    private savedTransition: string;
+    private savedTransition = '';
     private readonly afterRenderRef?: AfterRenderRef;
     private animationTimerId?: ReturnType<typeof setTimeout>;
 

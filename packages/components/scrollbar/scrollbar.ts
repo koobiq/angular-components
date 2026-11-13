@@ -121,7 +121,7 @@ function zoneOptimized<T>(): MonoTypeOperatorFunction<T> {
         new Observable<T>((subscriber) =>
             source.subscribe({
                 next: (value) => ngZone.run(() => subscriber.next(value)),
-                error: (error) => subscriber.error(error),
+                error: (error: unknown) => subscriber.error(error),
                 complete: () => subscriber.complete()
             })
         );

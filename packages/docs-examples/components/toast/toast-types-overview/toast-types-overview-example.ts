@@ -14,7 +14,7 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
         NgTemplateOutlet,
         KbqButtonModule
     ],
-    templateUrl: 'toast-types-overview-example.html',
+    templateUrl: './toast-types-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastTypesOverviewExample {

@@ -79,8 +79,8 @@ function maxLinesValidator(maxLines: number): AsyncValidatorFn {
                 #kbqFileUpload
                 class="layout-margin-bottom-s"
                 formControlName="fileUpload"
+                progressMode="indeterminate"
                 [errorStateMatcher]="errorStateMatcher"
-                [progressMode]="'indeterminate'"
                 [accept]="['.txt']"
             >
                 @if (form.controls.fileUpload.pending) {

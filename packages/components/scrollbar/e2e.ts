@@ -354,14 +354,17 @@ const E2E_LONG_TEXT =
                         <p class="e2e-line">Item {{ item }}</p>
                     }
                 </div>
+                <!-- eslint-disable-next-line @angular-eslint/template/prefer-ngsrc -- a data URL, which NgOptimizedImage does not take -->
                 <img alt="" [attr.src]="image()" />
                 <p class="e2e-line">{{ text() }}</p>
             </div>
             <!-- More root nodes, so that these land as direct children of the viewport's content. -->
             @if (block()) {
+                <!-- eslint-disable-next-line @angular-eslint/template/prefer-ngsrc -- a data URL, which NgOptimizedImage does not take -->
                 <div class="e2e-block"><img alt="" [attr.src]="blockImage()" /></div>
             }
             <e2e-scrollbar-inline-host>
+                <!-- eslint-disable-next-line @angular-eslint/template/prefer-ngsrc -- a data URL, which NgOptimizedImage does not take -->
                 <div [class.e2e-grown]="inlineGrown()"><img alt="" [attr.src]="inlineImage()" /></div>
             </e2e-scrollbar-inline-host>
         </ng-template>

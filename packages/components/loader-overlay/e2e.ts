@@ -86,7 +86,7 @@ export class E2eLoaderOverlayStates {}
     imports: [KbqLoaderOverlayModule],
     template: `
         @for (surface of surfaces; track surface.value) {
-            <div class="e2e-loader-overlay-background__item {{ surface.surfaceClass }}">
+            <div class="e2e-loader-overlay-background__item" [class]="surface.surfaceClass">
                 <div class="e2e-loader-overlay-background__content">
                     <p class="e2e-loader-overlay-background__paragraph kbq-text-normal">{{ content }}</p>
                     <p

@@ -57,11 +57,9 @@ export class KbqModalControlService {
         : signal<KbqModalRef[]>([]);
 
     // Lazy, so the copy a child-level service never reads costs nothing.
-    private readonly rootTopVisibleModal: Signal<KbqModalRef | null> = computed(() => {
-        const modals = this.visibleModals();
-
-        return modals.length ? modals[modals.length - 1] : null;
-    });
+    private readonly rootTopVisibleModal: Signal<KbqModalRef | null> = computed(
+        () => this.visibleModals().at(-1) ?? null
+    );
 
     /** Elements this service took out of the accessibility tree while a dialog is shown. */
     private inertedElements: Element[] = [];
@@ -127,7 +125,7 @@ export class KbqModalControlService {
         let i = this.openModals.length;
 
         while (i--) {
-            this.openModals[i].close();
+            this.openModals[i]?.close();
         }
     }
 

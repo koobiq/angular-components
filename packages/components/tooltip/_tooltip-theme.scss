@@ -1,4 +1,4 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-tooltip-color($style-name) {
     & .kbq-tooltip__inner {
@@ -55,10 +55,10 @@
 
 @mixin kbq-tooltip-typography() {
     .kbq-tooltip {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
 
         .kbq-tooltip__header {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
         }
     }
 }

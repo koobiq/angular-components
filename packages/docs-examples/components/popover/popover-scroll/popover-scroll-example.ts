@@ -23,8 +23,8 @@ import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/pop
 
         <ng-template #customFooter>
             <div class="layout-row layout-wrap" style="gap: 16px">
-                <button kbq-button [color]="'contrast'" (click)="activePopover.hide(0)">Сохранить</button>
-                <button kbq-button (click)="activePopover.hide(0)">Отмена</button>
+                <button kbq-button type="button" color="contrast" (click)="activePopover?.hide(0)">Сохранить</button>
+                <button kbq-button type="button" (click)="activePopover?.hide(0)">Отмена</button>
             </div>
         </ng-template>
 
@@ -33,7 +33,8 @@ import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/pop
                 #kbqNoClosePopover="kbqPopover"
                 kbq-button
                 kbqPopover
-                [kbqPopoverClass]="'popover-scroll-example'"
+                type="button"
+                kbqPopoverClass="popover-scroll-example"
                 [kbqPopoverContent]="customContent"
                 [kbqPopoverFooter]="customFooter"
                 (click)="activePopover = kbqNoClosePopover"
@@ -44,8 +45,9 @@ import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/pop
                 #kbqClosePopover="kbqPopover"
                 kbq-button
                 kbqPopover
+                type="button"
+                kbqPopoverClass="popover-scroll-example"
                 [kbqPopoverCloseOnScroll]="true"
-                [kbqPopoverClass]="'popover-scroll-example'"
                 [kbqPopoverContent]="customContent"
                 [kbqPopoverFooter]="customFooter"
                 (click)="activePopover = kbqClosePopover"
@@ -62,5 +64,5 @@ import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/pop
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverScrollExample {
-    activePopover: KbqPopoverTrigger;
+    activePopover?: KbqPopoverTrigger;
 }

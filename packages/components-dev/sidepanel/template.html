@@ -8,18 +8,18 @@
             <label class="kbq-form__label">Position</label>
             <kbq-form-field class="kbq-form__control flex-10">
                 <kbq-select [(value)]="position">
-                    <kbq-option [value]="'right'">Right</kbq-option>
-                    <kbq-option [value]="'left'">Left</kbq-option>
-                    <kbq-option [value]="'top'">Top</kbq-option>
-                    <kbq-option [value]="'bottom'">Bottom</kbq-option>
+                    <kbq-option value="right">Right</kbq-option>
+                    <kbq-option value="left">Left</kbq-option>
+                    <kbq-option value="top">Top</kbq-option>
+                    <kbq-option value="bottom">Bottom</kbq-option>
                 </kbq-select>
             </kbq-form-field>
 
             <kbq-form-field class="kbq-form__control flex-10">
                 <kbq-select [(value)]="size">
-                    <kbq-option [value]="'small'">Small</kbq-option>
-                    <kbq-option [value]="'medium'">Medium</kbq-option>
-                    <kbq-option [value]="'large'">Large</kbq-option>
+                    <kbq-option value="small">Small</kbq-option>
+                    <kbq-option value="medium">Medium</kbq-option>
+                    <kbq-option value="large">Large</kbq-option>
                 </kbq-select>
             </kbq-form-field>
 
@@ -73,7 +73,7 @@
 
         <kbq-sidepanel-footer>
             <kbq-sidepanel-actions align="left">
-                <button cdkFocusInitial kbq-button [color]="'contrast'" (click)="openTemplateSidepanel()">
+                <button cdkFocusInitial kbq-button color="contrast" (click)="openTemplateSidepanel()">
                     <span>Open another sidepanel</span>
                 </button>
                 <button kbq-button kbq-sidepanel-close>

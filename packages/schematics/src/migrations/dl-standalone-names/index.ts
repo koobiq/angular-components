@@ -231,12 +231,13 @@ export function migrateSource(content: string, fileName: string): MigratedSource
         // Everything it re-exports is in the array already: the element goes, with one of its commas.
         const elements = parent.elements;
         const index = elements.indexOf(node);
-        const [start, end] =
-            index < elements.length - 1
-                ? [node.getStart(), elements[index + 1].getStart()]
-                : index > 0
-                  ? [elements[index - 1].getEnd(), node.getEnd()]
-                  : [node.getStart(), node.getEnd()];
+        const next = elements[index + 1];
+        const previous = elements[index - 1];
+        const [start, end] = next
+            ? [node.getStart(), next.getStart()]
+            : previous
+              ? [previous.getEnd(), node.getEnd()]
+              : [node.getStart(), node.getEnd()];
 
         edits.push({ start, end, text: '' });
     };

@@ -1,6 +1,6 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
-@mixin _icon($left-icon, $right-icon) {
+@mixin -icon($left-icon, $right-icon) {
     .kbq-icon.kbq-empty {
         color: $left-icon;
 
@@ -21,7 +21,7 @@
     color: var(--kbq-#{$base-path}-foreground);
     background: var(--kbq-#{$base-path}-background);
 
-    @include _icon(var(--kbq-#{$base-path}-left-icon), var(--kbq-#{$base-path}-right-icon));
+    @include -icon(var(--kbq-#{$base-path}-left-icon), var(--kbq-#{$base-path}-right-icon));
 
     &:hover:not(.kbq-disabled),
     &.kbq-hover:not(.kbq-disabled) {
@@ -38,7 +38,7 @@
         background: var(--kbq-#{$base-path}-states-disabled-background);
         border-color: var(--kbq-#{$base-path}-states-disabled-border);
 
-        @include _icon(
+        @include -icon(
             var(--kbq-#{$base-path}-states-disabled-left-icon),
             var(--kbq-#{$base-path}-states-disabled-right-icon)
         );
@@ -113,6 +113,6 @@
 @mixin kbq-button-typography() {
     .kbq-button,
     .kbq-button-icon {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
     }
 }

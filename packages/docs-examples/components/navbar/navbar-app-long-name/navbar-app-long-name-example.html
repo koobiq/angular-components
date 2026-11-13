@@ -10,6 +10,7 @@
 
         <button
             kbq-navbar-item
+            type="button"
             class="kbq-active"
             [kbqPlacement]="popUpPlacements.Bottom"
             [tooltipText]="text().dashboards"
@@ -22,7 +23,7 @@
         </kbq-navbar-item>
 
         <kbq-navbar-item>
-            <button kbq-button [color]="'contrast'">
+            <button kbq-button type="button" color="contrast">
                 <span>{{ text().newTask }}</span>
             </button>
         </kbq-navbar-item>
@@ -31,7 +32,7 @@
     <kbq-navbar-container>
         <kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [tooltipText]="text().notifications">
             <i kbq-icon="kbq-bell_16" color="contrast"></i>
-            <kbq-badge [badgeColor]="'error'" [compact]="true">5</kbq-badge>
+            <kbq-badge badgeColor="error" [compact]="true">5</kbq-badge>
         </kbq-navbar-item>
 
         <kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [tooltipText]="text().administration">

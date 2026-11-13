@@ -14,7 +14,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
         KbqButtonModule,
         KbqListModule
     ],
-    templateUrl: 'popover-paddings-example.html',
+    templateUrl: './popover-paddings-example.html',
     styles: `
         ::ng-deep .popover-custom-paddings-example .kbq-popover__content {
             margin: 4px;

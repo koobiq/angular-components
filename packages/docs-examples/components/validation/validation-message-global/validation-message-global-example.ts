@@ -42,7 +42,7 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
     template: `
         <div class="example-container">
             @if (inProgress()) {
-                <kbq-loader-overlay [size]="'compact'" />
+                <kbq-loader-overlay size="compact" />
             }
 
             <div
@@ -151,7 +151,7 @@ export class ValidationMessageGlobalExample implements AfterViewInit, OnDestroy 
         const alert = this.alertContainer();
 
         if (alert) {
-            this.focusMonitor.monitor(alert.nativeElement);
+            void this.focusMonitor.monitor(alert.nativeElement);
         }
     }
 

@@ -1035,7 +1035,7 @@ describe('KbqAppSwitcher', () => {
         };
 
         const getHost = () => overlayContainerElement.querySelector('.kbq-app-switcher') as HTMLElement;
-        const keyManagerOf = (popup: KbqAppSwitcherComponent) => popup['keyManager'];
+        const keyManagerOf = (popup: KbqAppSwitcherComponent) => popup['keyManager']!;
         const menuItemsOf = (popup: KbqAppSwitcherComponent) => popup['menuItems'];
 
         describe('close on focus-out', () => {
@@ -1059,7 +1059,7 @@ describe('KbqAppSwitcher', () => {
                 const { popup } = await open(AppSwitcherMultiSite);
 
                 vi.spyOn(popup, 'hide').mockImplementation(() => {});
-                const focusSpy = vi.spyOn(popup.trigger, 'focus').mockImplementation(() => {});
+                const focusSpy = vi.spyOn(popup.trigger!, 'focus').mockImplementation(() => {});
                 const outside = document.createElement('button');
 
                 document.body.appendChild(outside);
@@ -1075,7 +1075,7 @@ describe('KbqAppSwitcher', () => {
                 const { popup } = await open(AppSwitcherMultiSite);
 
                 vi.spyOn(popup, 'hide').mockImplementation(() => {});
-                const focusSpy = vi.spyOn(popup.trigger, 'focus').mockImplementation(() => {});
+                const focusSpy = vi.spyOn(popup.trigger!, 'focus').mockImplementation(() => {});
                 const event = createKeyboardEvent('keydown', TAB, getHost());
                 const preventSpy = vi.spyOn(event, 'preventDefault');
 
@@ -2298,7 +2298,7 @@ class AppSwitcherMultiSite {
     template: `
         <button
             kbqAppSwitcher
-            [kbqTooltip]="'TOOLTIP'"
+            kbqTooltip="TOOLTIP"
             [kbqEnterDelay]="enterDelay"
             [sites]="sites"
             [selectedSite]="sites[0]"

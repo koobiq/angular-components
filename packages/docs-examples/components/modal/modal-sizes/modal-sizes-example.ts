@@ -9,10 +9,10 @@ import { KbqModalService, ModalSize } from '@koobiq/components/modal';
     selector: 'modal-sizes-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="showModal(modalSize.Small)">Small</button>
-        <button kbq-button (click)="showModal(modalSize.Medium)">Medium</button>
-        <button kbq-button (click)="showModal(modalSize.Large)">Large</button>
-        <button kbq-button (click)="showCustomModal()">Custom width</button>
+        <button kbq-button type="button" (click)="showModal(modalSize.Small)">Small</button>
+        <button kbq-button type="button" (click)="showModal(modalSize.Medium)">Medium</button>
+        <button kbq-button type="button" (click)="showModal(modalSize.Large)">Large</button>
+        <button kbq-button type="button" (click)="showCustomModal()">Custom width</button>
     `,
     styles: `
         :host {

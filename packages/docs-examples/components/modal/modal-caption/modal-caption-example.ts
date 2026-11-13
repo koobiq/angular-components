@@ -9,8 +9,8 @@ import { KbqModalService, ModalSize } from '@koobiq/components/modal';
     selector: 'modal-caption-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="openWithStringCaption()">String caption</button>
-        <button kbq-button (click)="openWithTemplateCaption(captionTpl)">Template caption</button>
+        <button kbq-button type="button" (click)="openWithStringCaption()">String caption</button>
+        <button kbq-button type="button" (click)="openWithTemplateCaption(captionTpl)">Template caption</button>
 
         <ng-template #captionTpl>
             <span>

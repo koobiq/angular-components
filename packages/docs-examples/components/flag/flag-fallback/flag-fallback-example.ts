@@ -56,6 +56,6 @@ export class FlagFallbackExample {
         ] satisfies FallbackCountry[]
     ).map((country) => ({
         ...country,
-        svg: hasFlag(country.code) ? this.sanitizer.bypassSecurityTrustHtml(flags[country.code]) : null
+        svg: hasFlag(country.code) ? this.sanitizer.bypassSecurityTrustHtml(flags[country.code]!) : null
     }));
 }

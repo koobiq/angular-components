@@ -40,8 +40,8 @@ import { type KbqToggleChange, KbqToggleModule } from '@koobiq/components/toggle
 
                 <ng-template #customFooter>
                     <div class="layout-row layout-wrap layout-gap-l">
-                        <button color="contrast" kbq-button (click)="kbqPopover.hide(0)">Save</button>
-                        <button kbq-button (click)="kbqPopover.hide(0)">Cancel</button>
+                        <button type="button" color="contrast" kbq-button (click)="kbqPopover.hide(0)">Save</button>
+                        <button kbq-button type="button" (click)="kbqPopover.hide(0)">Cancel</button>
                     </div>
                 </ng-template>
 
@@ -49,6 +49,7 @@ import { type KbqToggleChange, KbqToggleModule } from '@koobiq/components/toggle
                     #kbqPopover="kbqPopover"
                     kbq-button
                     kbqPopover
+                    type="button"
                     [kbqPopoverContent]="customContent"
                     [kbqPopoverFooter]="customFooter"
                     [kbqPopoverArrow]="arrow"
@@ -87,7 +88,7 @@ export class PopoverArrowAndOffsetExample implements AfterViewInit {
     protected readonly toggleGroup = viewChild.required(KbqButtonToggleGroup);
 
     ngAfterViewInit() {
-        Promise.resolve().then(() => {
+        void Promise.resolve().then(() => {
             this.toggleGroup().buttonToggles().at(3)!.checked = true;
         });
     }

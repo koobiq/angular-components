@@ -175,7 +175,7 @@ export class KbqFileList<T> {
 
             return copy;
         });
-        this.itemRemoved.emit([removed[0], index]);
+        this.itemRemoved.emit([removed[0]!, index]);
 
         return removed;
     }

@@ -18,8 +18,8 @@ import { DocsDocStates, DocsNavbarState } from './services/doc-states';
         DocsSidenav,
         AsyncPipe
     ],
-    templateUrl: 'app.component.html',
-    styleUrl: 'app.component.scss',
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

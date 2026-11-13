@@ -167,10 +167,16 @@ export class DocsStackblitzWriter {
     }
 
     private async buildInMemoryProject(data: ExampleData, exampleId: string): Promise<ProjectFiles> {
+        const example = EXAMPLE_COMPONENTS[exampleId];
+
+        if (!example) {
+            throw new Error(`Unknown example: ${exampleId}`);
+        }
+
         const files: ProjectFiles = {};
         const tasks: Promise<unknown>[] = [];
         // The example directory is not always named after the id, so the path comes from the metadata.
-        const exampleBaseContentPath = `${DOCS_CONTENT_PATH}/${EXAMPLE_COMPONENTS[exampleId].packagePath}/`;
+        const exampleBaseContentPath = `${DOCS_CONTENT_PATH}/${example.packagePath}/`;
 
         for (const relativeFilePath of DOCS_TEMPLATE_FILES) {
             tasks.push(
@@ -206,7 +212,7 @@ export class DocsStackblitzWriter {
         const matchedPatterns = this.resolveMatchedImportPatterns(files);
 
         // Add to package.json only the optional deps this example needs.
-        files['package.json'] = this.buildPackageJson(files['package.json'], matchedPatterns);
+        files['package.json'] = this.buildPackageJson(files['package.json']!, matchedPatterns);
 
         // Patch angular.json with optional styles for matched patterns.
         this.patchAngularJsonStyles(files, matchedPatterns);
@@ -257,7 +263,7 @@ export class DocsStackblitzWriter {
             return;
         }
 
-        const angularJson = JSON.parse(files['angular.json']);
+        const angularJson = JSON.parse(files['angular.json']!);
         const styles: string[] = angularJson.projects['koobiq-docs'].architect.build.options.styles;
 
         styles.push(...extraStyles);
@@ -278,6 +284,7 @@ export class DocsStackblitzWriter {
     }
 
     private loadFile(fileUrl: string): Promise<string> {
+        // eslint-disable-next-line rxjs-x/no-ignored-default-value -- `HttpClient` emits once or fails
         return firstValueFrom(this.http.get(fileUrl, { responseType: 'text' }));
     }
 }

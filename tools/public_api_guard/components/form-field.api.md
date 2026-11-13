@@ -164,21 +164,21 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
 export abstract class KbqFormFieldControl<T> {
     readonly autofilled?: Signal<boolean>;
     readonly controlType?: string;
-    readonly disabled: Signal<boolean>;
-    readonly empty: Signal<boolean>;
-    readonly errorState: Signal<boolean>;
+    abstract readonly disabled: Signal<boolean>;
+    abstract readonly empty: Signal<boolean>;
+    abstract readonly errorState: Signal<boolean>;
     abstract focus(options?: FocusOptions): void;
-    readonly focused: Signal<boolean>;
-    readonly id: Signal<string>;
+    abstract readonly focused: Signal<boolean>;
+    abstract readonly id: Signal<string>;
     readonly isNativeLabelSupported?: boolean;
-    readonly ngControl: NgControl | null;
+    abstract readonly ngControl: NgControl | null;
     abstract onContainerClick(event: MouseEvent): void;
     open?: () => void;
-    readonly placeholder: Signal<string | null | undefined>;
+    abstract readonly placeholder: Signal<string | null | undefined>;
     readonly readonly?: Signal<boolean>;
-    readonly required: Signal<boolean>;
+    abstract readonly required: Signal<boolean>;
     setDescribedByIds?: (ids: string[]) => void;
-    readonly value: Signal<T | null>;
+    abstract readonly value: Signal<T | null>;
 }
 
 // @public

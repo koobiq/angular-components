@@ -42,7 +42,7 @@ const NATIVELY_ACTIVATED_NODES = ['BUTTON', 'INPUT'];
 @Component({
     selector: `[kbq-icon-button]`,
     template: '<ng-content />',
-    styleUrls: ['icon-button.scss', 'icon-button-tokens.scss'],
+    styleUrls: ['./icon-button.scss', './icon-button-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -205,7 +205,7 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     }
 
     private runFocusMonitor() {
-        this.focusMonitor.monitor(this.getHostElement(), true);
+        void this.focusMonitor.monitor(this.getHostElement(), true);
     }
 
     private stopFocusMonitor() {

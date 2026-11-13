@@ -1,5 +1,9 @@
 {
     "extends": "./tsconfig.json",
-    "compilerOptions": {},
+    "compilerOptions": {
+        // A spec fails right away and loudly on a missing item or field: both checks would only add `!` all over it.
+        "noUncheckedIndexedAccess": false,
+        "strictPropertyInitialization": false
+    },
     "include": ["**/*.playwright-spec.ts", "**/*.d.ts"]
 }

@@ -70,7 +70,7 @@ describe(DocsExamplePage.name, () => {
     });
 
     afterEach(() => {
-        delete EXAMPLE_COMPONENTS[EXAMPLE_ID];
+        Reflect.deleteProperty(EXAMPLE_COMPONENTS, EXAMPLE_ID);
         vi.restoreAllMocks();
     });
 

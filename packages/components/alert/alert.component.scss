@@ -1,7 +1,5 @@
-@use '../core/styles/common/tokens' as *;
-
-@use './alert-theme' as *;
-@use '../core/styles/common/squircle' as *;
+@use './alert-theme';
+@use '../core/styles/common/squircle';
 
 .kbq-alert {
     display: flex;
@@ -27,7 +25,7 @@
 }
 
 .kbq-alert.kbq-alert_normal {
-    @include kbq-squircle(var(--kbq-alert-size-normal-container-border-radius));
+    @include squircle.kbq-squircle(var(--kbq-alert-size-normal-container-border-radius));
 
     padding: var(--kbq-alert-size-normal-container-padding-top) var(--kbq-alert-size-normal-container-padding-right)
         var(--kbq-alert-size-normal-container-padding-bottom) var(--kbq-alert-size-normal-container-padding-left);
@@ -80,7 +78,7 @@
 }
 
 .kbq-alert.kbq-alert_compact {
-    @include kbq-squircle(var(--kbq-alert-size-compact-container-border-radius));
+    @include squircle.kbq-squircle(var(--kbq-alert-size-compact-container-border-radius));
 
     padding: var(--kbq-alert-size-compact-container-padding-top) var(--kbq-alert-size-compact-container-padding-right)
         var(--kbq-alert-size-compact-container-padding-bottom) var(--kbq-alert-size-compact-container-padding-left);
@@ -132,5 +130,5 @@
     }
 }
 
-@include kbq-alert-theme();
-@include kbq-alert-typography();
+@include alert-theme.kbq-alert-theme();
+@include alert-theme.kbq-alert-typography();

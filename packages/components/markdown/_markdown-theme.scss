@@ -1,4 +1,4 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 @use '../core/styles/common/link';
 @use './markdown-tokens';
 
@@ -83,45 +83,45 @@
         // h1, h2, h3, h4, h5, h6
         @for $i from 1 through 6 {
             .kbq-markdown__h#{$i} {
-                @include kbq-typography-level-to-styles-css-variables(md-typography, md-h#{$i});
+                @include tokens.kbq-typography-level-to-styles-css-variables(md-typography, md-h#{$i});
             }
         }
 
         .kbq-markdown__p {
-            @include kbq-typography-level-to-styles-css-variables(md-typography, md-body);
+            @include tokens.kbq-typography-level-to-styles-css-variables(md-typography, md-body);
         }
 
         .kbq-markdown__ul,
         .kbq-markdown__ol {
-            @include kbq-typography-level-to-styles-css-variables(md-typography, md-body);
+            @include tokens.kbq-typography-level-to-styles-css-variables(md-typography, md-body);
         }
 
         .kbq-markdown__blockquote > .kbq-markdown__p {
-            @include kbq-typography-level-to-styles-css-variables(md-typography, md-body);
+            @include tokens.kbq-typography-level-to-styles-css-variables(md-typography, md-body);
         }
 
         .kbq-markdown__code {
-            @include kbq-typography-level-to-styles-css-variables(md-typography, md-inline-code);
+            @include tokens.kbq-typography-level-to-styles-css-variables(md-typography, md-inline-code);
         }
 
         .kbq-markdown__a {
-            @include kbq-typography-level-to-styles-css-variables(md-typography, md-body);
+            @include tokens.kbq-typography-level-to-styles-css-variables(md-typography, md-body);
         }
 
         .kbq-markdown__a > .kbq-markdown__code {
-            @include kbq-typography-level-to-styles-css-variables(md-typography, md-inline-code-as-link);
+            @include tokens.kbq-typography-level-to-styles-css-variables(md-typography, md-inline-code-as-link);
         }
 
         .kbq-markdown__img + em {
-            @include kbq-typography-level-to-styles-css-variables(md-typography, md-caption);
+            @include tokens.kbq-typography-level-to-styles-css-variables(md-typography, md-caption);
         }
 
         .kbq-markdown__table > .kbq-markdown__thead {
-            @include kbq-typography-level-to-styles-css-variables(md-typography, md-table-header);
+            @include tokens.kbq-typography-level-to-styles-css-variables(md-typography, md-table-header);
         }
 
         .kbq-markdown__table > .kbq-markdown__tbody {
-            @include kbq-typography-level-to-styles-css-variables(md-typography, md-table-cell);
+            @include tokens.kbq-typography-level-to-styles-css-variables(md-typography, md-table-cell);
         }
     }
 }

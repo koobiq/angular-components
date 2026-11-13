@@ -60,7 +60,9 @@ export class BaseReleaseTask {
 
         // In case there are multiple allowed publish branches for this version, we just
         // exit and let the user decide which branch they want to release from.
-        if (allowedBranches.length !== 1) {
+        const [defaultPublishBranch, ...otherBranches] = allowedBranches;
+
+        if (!defaultPublishBranch || otherBranches.length > 0) {
             console.warn(yellow('  ✘   You are not on an allowed publish branch.'));
             console.warn(
                 yellow(`      Please switch to one of the following branches: ` + `${allowedBranches.join(', ')}`)
@@ -70,8 +72,6 @@ export class BaseReleaseTask {
 
         // For this version there is only *one* allowed publish branch, so we could
         // automatically switch to that branch in case the user isn't on it yet.
-        const defaultPublishBranch = allowedBranches[0];
-
         if (!this.git.checkoutBranch(defaultPublishBranch)) {
             console.error(red(`  ✘   Could not switch to the "${italic(defaultPublishBranch)}" ` + `branch.`));
             console.error(red(`      Please ensure that the branch exists or manually switch to the ` + `branch.`));

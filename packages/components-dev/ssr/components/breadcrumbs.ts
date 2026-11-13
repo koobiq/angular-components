@@ -1,8 +1,7 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { of, timer } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, of, timer } from 'rxjs';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';

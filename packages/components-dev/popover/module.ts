@@ -70,7 +70,7 @@ export class DevDocsExamples {}
         DevThemeToggle
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -80,7 +80,7 @@ export class DevApp {
     popUpPlacements = PopUpPlacements;
 
     popoverActiveStage: number;
-    selectedOrder: boolean;
+    selectedOrder = false;
     isClosable: boolean = false;
 
     isPopoverVisibleLeft: boolean = false;
@@ -114,7 +114,7 @@ export class DevApp {
     selectedTrigger: string = this.TRIGGERS.CLICK;
     selectedSize: KbqPopUpSizeValues = PopUpSizes.Medium;
     layoutClass: string = 'layout-row layout-align-center-center';
-    stickToWindow: KbqStickToWindowPlacementValues;
+    stickToWindow?: KbqStickToWindowPlacementValues;
     content: string = 'button text';
     userDefinedPlacementPriority: string[] = ['bottom', 'right'];
     multipleSelected: string[] = [];

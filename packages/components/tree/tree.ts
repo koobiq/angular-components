@@ -11,7 +11,7 @@ import { KbqTreeBase } from './tree-base';
     template: `
         <ng-container kbqTreeNodeOutlet />
     `,
-    styleUrls: ['./tree.scss', 'tree-tokens.scss'],
+    styleUrls: ['./tree.scss', './tree-tokens.scss'],
     // `KbqTreeNode` reaches its tree through `KbqTreeBase`, as it does in `KbqTreeSelection`.
     providers: [{ provide: KbqTreeBase, useExisting: KbqTree }],
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -75,12 +75,12 @@ export const kbqTimezoneLocaleConfigurationProvider = (
         KbqIconModule,
         KbqScrollbarViewport
     ],
-    templateUrl: 'timezone-select.component.html',
+    templateUrl: './timezone-select.component.html',
     styleUrls: [
         '../select/select.scss',
         '../select/select-tokens.scss',
-        'timezone-select.component.scss',
-        'timezone-option-tokens.scss'
+        './timezone-select.component.scss',
+        './timezone-option-tokens.scss'
     ],
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqTimezoneSelect },

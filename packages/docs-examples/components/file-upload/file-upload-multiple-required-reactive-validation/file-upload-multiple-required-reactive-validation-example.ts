@@ -25,8 +25,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 class="layout-margin-bottom-s"
                 formControlName="fileUpload"
                 multiple
+                progressMode="indeterminate"
                 [errorStateMatcher]="customErrorStateMatcher"
-                [progressMode]="'indeterminate'"
             >
                 <ng-template #kbqFileIcon>
                     <i kbq-icon="kbq-file-o_16"></i>

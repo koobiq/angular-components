@@ -44,10 +44,13 @@ export type ToggleLabelPositionType = 'left' | 'right';
 
 /** Change event object emitted by `KbqToggleComponent`. */
 export class KbqToggleChange {
-    /** The source toggle of the event. */
-    source: KbqToggleComponent;
-    /** The new `checked` value of the toggle. */
-    checked: boolean;
+    /** Creates the event a toggle emits when its `checked` value changes. */
+    constructor(
+        /** The source toggle of the event. */
+        public source: KbqToggleComponent,
+        /** The new `checked` value of the toggle. */
+        public checked: boolean
+    ) {}
 }
 
 /**
@@ -355,7 +358,7 @@ export class KbqToggleComponent
         if (shouldToggle) {
             // When user manually click on the toggle, `indeterminate` is set to false.
             if (shouldClearIndeterminate) {
-                Promise.resolve().then(() => {
+                void Promise.resolve().then(() => {
                     this.checkable.indeterminate.set(false);
                     this.indeterminateChange.emit(false);
                 });
@@ -429,11 +432,6 @@ export class KbqToggleComponent
 
     private emitChangeEvent() {
         // Note: `toggle()` already notifies the ControlValueAccessor change handler via `KbqCheckable.toggle()`.
-        const event = new KbqToggleChange();
-
-        event.source = this;
-        event.checked = this.checked;
-
-        this.change.emit(event);
+        this.change.emit(new KbqToggleChange(this, this.checked));
     }
 }

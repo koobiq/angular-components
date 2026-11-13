@@ -58,8 +58,8 @@ export class KbqDropdownItemCaption {}
     imports: [
         KbqIcon
     ],
-    templateUrl: 'dropdown-item.html',
-    styleUrls: ['dropdown-item.scss'],
+    templateUrl: './dropdown-item.html',
+    styleUrl: './dropdown-item.scss',
     providers: [
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqDropdownItem },
         { provide: KBQ_DROPDOWN_ITEM_ACTION_HOST, useExisting: KbqDropdownItem }
@@ -165,7 +165,7 @@ export class KbqDropdownItem
             // the host. `monitor()` doesn't update `checkChildren` on an already-monitored element,
             // so this restarts monitoring whenever `itemAction()` changes to keep it in sync.
             this.focusMonitor.stopMonitoring(this.elementRef);
-            this.focusMonitor.monitor(this.elementRef, !!this.itemAction());
+            void this.focusMonitor.monitor(this.elementRef, !!this.itemAction());
         });
     }
 

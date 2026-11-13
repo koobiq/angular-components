@@ -1,5 +1,5 @@
 @use '../../core/styles/common';
-@use '../filter-bar-theme' as *;
+@use '../filter-bar-theme';
 
 .kbq-pipe {
     display: flex;
@@ -125,4 +125,4 @@
     }
 }
 
-@include kbq-filter-bar-pipe-theme();
+@include filter-bar-theme.kbq-filter-bar-pipe-theme();

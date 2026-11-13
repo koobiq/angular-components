@@ -35,8 +35,7 @@ import {
     ViewContainerRef
 } from '@angular/core';
 import { outputToObservable } from '@angular/core/rxjs-interop';
-import { asapScheduler, merge, type Observable, of as observableOf, Subscription } from 'rxjs';
-import { delay, filter, map } from 'rxjs/operators';
+import { asapScheduler, delay, filter, map, merge, type Observable, of as observableOf, Subscription } from 'rxjs';
 import {
     defaultOffsetY,
     DOWN_ARROW,
@@ -173,7 +172,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     private readonly injector = inject(Injector);
 
     protected readonly isBrowser = inject(Platform).isBrowser;
-    lastDestroyReason: DropdownCloseReason;
+    lastDestroyReason: DropdownCloseReason = undefined;
 
     /**
      * Element whose width the panel should match. Defaults to the trigger itself.
@@ -782,7 +781,12 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
             positionMap.xPositions[this.dropdown().xPosition()];
 
         // eslint-disable-next-line prefer-const
-        let [overlayY, overlayFallbackY, originY, originFallbackY]: VerticalConnectionPos[] =
+        let [overlayY, overlayFallbackY, originY, originFallbackY]: [
+            VerticalConnectionPos,
+            VerticalConnectionPos,
+            VerticalConnectionPos,
+            VerticalConnectionPos
+        ] =
             this.dropdown().yPosition() === 'above'
                 ? ['bottom', 'top', 'bottom', 'top']
                 : ['top', 'bottom', 'top', 'bottom'];

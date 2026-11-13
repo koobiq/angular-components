@@ -4,8 +4,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { AsyncPipe, JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal, ViewEncapsulation } from '@angular/core';
 import { FormsModule, UntypedFormControl } from '@angular/forms';
-import { of } from 'rxjs';
-import { debounceTime, startWith, switchMap } from 'rxjs/operators';
+import { debounceTime, of, startWith, switchMap } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { type KbqMultipleInput, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -77,7 +76,7 @@ export class DevDocsExamples {}
         ScrollingModule
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -92,6 +91,11 @@ export class DevApp {
     selectAllSelected: string[] = ['Item 1'];
 
     readonly dragPreview = signal<KbqListDragPreview>('text');
+
+    // The options of the select are the values of `KbqListDragPreview`
+    protected setDragPreview(value: string): void {
+        this.dragPreview.set(value as KbqListDragPreview);
+    }
 
     // One option with a caption and one with a label nobody could fit, so the text preview shows off
     // both of its lines and its truncation.

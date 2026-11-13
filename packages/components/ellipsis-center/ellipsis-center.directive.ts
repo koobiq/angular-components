@@ -16,7 +16,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime } from 'rxjs';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 
 /**
@@ -105,7 +105,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
      */
     readonly debounceInterval = input<number, unknown>(50, { transform: numberAttribute });
 
-    private _kbqEllipsisCenter: string;
+    private _kbqEllipsisCenter = '';
 
     // Host width the last completed `refresh()` measured, so a resize that leaves it untouched (the host is
     // clamped to its container) does not schedule work that would produce the same split.

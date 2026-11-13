@@ -1,6 +1,6 @@
 @use '../core/styles/common';
 @use '../core/styles/common/tokens';
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
 .kbq-app-switcher-list-item {
     position: relative;
@@ -11,7 +11,7 @@
     max-width: 100%;
     min-height: var(--kbq-app-switcher-size-list-item-height-min, 38px);
 
-    @include kbq-squircle(var(--kbq-size-s));
+    @include squircle.kbq-squircle(var(--kbq-size-s));
 
     padding: var(--kbq-size-xxs) var(--kbq-size-m) var(--kbq-size-xs) var(--kbq-size-m);
 
@@ -29,7 +29,7 @@
         border-top-left-radius: unset;
         border-bottom-left-radius: unset;
 
-        &:after {
+        &::after {
             content: '';
 
             position: absolute;
@@ -44,9 +44,9 @@
 
         &:has(+ :not(.kbq-app-switcher-site_nested)),
         &:last-child {
-            @include kbq-squircle(var(--kbq-size-s), border-bottom-left-radius);
+            @include squircle.kbq-squircle(var(--kbq-size-s), border-bottom-left-radius);
 
-            &:after {
+            &::after {
                 top: 0;
 
                 width: var(--kbq-size-m);
@@ -73,7 +73,7 @@
     width: var(--kbq-size-xxl);
     height: var(--kbq-size-xxl);
 
-    @include kbq-squircle(var(--kbq-size-xxs));
+    @include squircle.kbq-squircle(var(--kbq-size-xxs));
 
     & .kbq-icon {
         transform: rotate(0deg);
@@ -119,8 +119,8 @@
     }
 }
 
-@mixin _kbq-app-switcher-list-item-theme() {
-    .kbq-app-switcher-site_nested:after {
+@mixin -kbq-app-switcher-list-item-theme() {
+    .kbq-app-switcher-site_nested::after {
         border-left-color: var(--kbq-line-contrast-less);
         border-bottom-color: var(--kbq-line-contrast-less);
     }
@@ -178,7 +178,7 @@
     }
 }
 
-@mixin _kbq-app-switcher-list-item-typography() {
+@mixin -kbq-app-switcher-list-item-typography() {
     .kbq-app-switcher-list-item__name {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
     }
@@ -188,5 +188,5 @@
     }
 }
 
-@include _kbq-app-switcher-list-item-theme();
-@include _kbq-app-switcher-list-item-typography();
+@include -kbq-app-switcher-list-item-theme();
+@include -kbq-app-switcher-list-item-typography();

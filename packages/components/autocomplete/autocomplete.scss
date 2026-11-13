@@ -1,8 +1,6 @@
-@use '../core/styles/common/tokens' as *;
 @use '../core/styles/common/select';
-
-@use './autocomplete-theme' as *;
-@use '../core/styles/common/squircle' as *;
+@use './autocomplete-theme';
+@use '../core/styles/common/squircle';
 
 .kbq-autocomplete-panel {
     visibility: hidden;
@@ -18,7 +16,7 @@
     // See `%kbq-select-panel` — same soft cap, same token.
     max-width: var(--kbq-panel-size-width-max, 640px);
 
-    @include kbq-squircle(var(--kbq-autocomplete-size-panel-border-radius, var(--kbq-size-border-radius)));
+    @include squircle.kbq-squircle(var(--kbq-autocomplete-size-panel-border-radius, var(--kbq-size-border-radius)));
     max-height: var(--kbq-autocomplete-size-panel-max-height);
 
     .kbq-autocomplete-panel__content {
@@ -53,4 +51,4 @@
     color: var(--kbq-form-field-default-placeholder);
 }
 
-@include kbq-autocomplete-theme();
+@include autocomplete-theme.kbq-autocomplete-theme();

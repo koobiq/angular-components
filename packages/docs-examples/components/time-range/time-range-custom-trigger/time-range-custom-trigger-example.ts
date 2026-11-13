@@ -26,7 +26,12 @@ import { KbqTimeRange, type KbqTimeRangeRange, KbqTimeRangeTitleAsControl } from
     ],
     template: `
         <ng-template #titleTemplate let-context>
-            <button kbq-button aria-label="time range trigger" [class.kbq-active]="context.popover.isOpen">
+            <button
+                kbq-button
+                type="button"
+                aria-label="time range trigger"
+                [class.kbq-active]="context.popover.isOpen"
+            >
                 <i kbq-icon="kbq-calendar-o_16"></i>
             </button>
         </ng-template>
@@ -38,7 +43,7 @@ import { KbqTimeRange, type KbqTimeRangeRange, KbqTimeRangeTitleAsControl } from
                 <kbq-time-range-title-as-control>
                     {{ context.formattedDate[0] | titlecase }}{{ context.formattedDate.slice(1) }}
                 </kbq-time-range-title-as-control>
-                <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix [color]="'contrast-fade'"></i>
+                <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix color="contrast-fade"></i>
             </kbq-form-field>
         </ng-template>
 

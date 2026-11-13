@@ -335,15 +335,17 @@ export class KbqOverflowItems {
             let excess = overflow;
 
             while (hiddenCount < hideable.length && excess >= threshold) {
-                excess -= sizes.get(hideable[hiddenCount].element) ?? 0;
-                hideable[hiddenCount++].hide();
+                const item = hideable[hiddenCount++]!;
+
+                excess -= sizes.get(item.element) ?? 0;
+                item.hide();
             }
 
             if (hiddenCount) result?.show();
         }
 
         while (hiddenCount < hideable.length && this.hasOverflown(container, orientation, threshold)) {
-            hideable[hiddenCount++].hide();
+            hideable[hiddenCount++]!.hide();
             result?.show();
         }
 

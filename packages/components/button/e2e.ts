@@ -52,8 +52,8 @@ type DevButton = DevButtonState & DevButtonStyle;
                                 [class.kbq-hover]="button.hover"
                                 [class.kbq-progress]="button.progress"
                                 [disabled]="button.disabled"
-                                [kbqStyle]="button.style!"
-                                [color]="button.color!"
+                                [kbqStyle]="button.style"
+                                [color]="button.color"
                             >
                                 @if (showPrefixIcon()) {
                                     <i kbq-icon="kbq-play_16"></i>
@@ -206,7 +206,7 @@ export class E2eButtonStateAndStyle {
                         @for (style of buttonStyles; track style) {
                             <div
                                 kbq-button-group
-                                [orientation]="'vertical'"
+                                orientation="vertical"
                                 [color]="style.color"
                                 [kbqStyle]="style.appearance"
                             >

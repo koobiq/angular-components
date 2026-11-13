@@ -49,7 +49,7 @@ export function findSearchMatchRanges(value: string, tokens: readonly string[]):
     const originalIndexOf: number[] = [];
 
     for (let index = 0; index < value.length; index++) {
-        const folded = foldDiacritics(value[index]);
+        const folded = foldDiacritics(value.charAt(index));
 
         normalizedValue += folded;
 
@@ -63,7 +63,8 @@ export function findSearchMatchRanges(value: string, tokens: readonly string[]):
         let matchIndex: number;
 
         while ((matchIndex = normalizedValue.indexOf(token, fromIndex)) !== -1) {
-            ranges.push([originalIndexOf[matchIndex], originalIndexOf[matchIndex + token.length - 1] + 1]);
+            // `originalIndexOf` has an entry per code unit of `normalizedValue`, so both ends of a match have one.
+            ranges.push([originalIndexOf[matchIndex]!, originalIndexOf[matchIndex + token.length - 1]! + 1]);
             fromIndex = matchIndex + token.length;
         }
     }
@@ -75,12 +76,12 @@ function mergeRanges(ranges: Array<[number, number]>): Array<[number, number]> {
     if (ranges.length < 2) return ranges;
 
     const sorted = [...ranges].sort(([aStart, aEnd], [bStart, bEnd]) => aStart - bStart || aEnd - bEnd);
-    const merged: Array<[number, number]> = [sorted[0]];
+    const merged: Array<[number, number]> = [];
 
-    for (const [start, end] of sorted.slice(1)) {
-        const last = merged[merged.length - 1];
+    for (const [start, end] of sorted) {
+        const last = merged.at(-1);
 
-        if (start <= last[1]) {
+        if (last && start <= last[1]) {
             last[1] = Math.max(last[1], end);
         } else {
             merged.push([start, end]);

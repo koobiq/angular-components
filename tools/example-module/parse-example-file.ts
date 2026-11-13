@@ -7,7 +7,6 @@ interface ParsedMetadata {
     selector: string;
     templateUrl: string;
     styleUrls: string[];
-    /** Read only to reject it: an example lists its styles in `styleUrls`. */
     styleUrl?: string;
 }
 
@@ -52,7 +51,7 @@ export function parseExampleFile(fileName: string, content: string): ParsedMetad
                         !ts.isCallExpression(call) ||
                         !ts.isIdentifier(call.expression) ||
                         call.expression.text !== 'Component' ||
-                        call.arguments.length === 0 ||
+                        !call.arguments[0] ||
                         !ts.isObjectLiteralExpression(call.arguments[0])
                     ) {
                         continue;

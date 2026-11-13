@@ -346,9 +346,9 @@ export class KbqBreadcrumbs {
             .sort((a, b) => a.order - b.order)
             .map(({ item }) => item);
 
-        for (let i = 0; i < extraToHide && i < hideable.length; i++) {
-            hideable[i].hide();
-            this.maxHiddenItems.add(hideable[i]);
+        for (const item of hideable.slice(0, extraToHide)) {
+            item.hide();
+            this.maxHiddenItems.add(item);
             result?.show();
         }
     }

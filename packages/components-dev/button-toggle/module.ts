@@ -38,11 +38,11 @@ export class DevExamples {}
         DevExamples
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     modelResult: any;
-    disabled: boolean;
+    disabled = false;
 }

@@ -4,6 +4,7 @@ import ts from 'typescript';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
+import { capturedGroups } from '../../utils/regexp';
 import {
     FORM_FIELD_CONTROL_MEMBER_PATTERN,
     INPUT_PACKAGE,
@@ -86,15 +87,7 @@ function collectTypedNames(sourceFile: ts.SourceFile, typeName: string): Set<str
 
 /** The receiver name (capture group 1) of every `FORM_FIELD_CONTROL_MEMBER_PATTERN` match in `content`. */
 function collectFormFieldControlReceivers(content: string): string[] {
-    const regex = new RegExp(FORM_FIELD_CONTROL_MEMBER_PATTERN.pattern, 'g');
-    const receivers: string[] = [];
-    let match: RegExpExecArray | null;
-
-    while ((match = regex.exec(content))) {
-        receivers.push(match[1]);
-    }
-
-    return receivers;
+    return capturedGroups(content, new RegExp(FORM_FIELD_CONTROL_MEMBER_PATTERN.pattern, 'g'));
 }
 
 /**
@@ -197,7 +190,7 @@ function migrateSignalReads(content: string, filePath: string): { content: strin
 function collectTemplateRefs(template: string): string[] {
     const pattern = new RegExp(`#([A-Za-z_$][\\w$]*)\\s*=\\s*["'](?:${NUMBER_INPUT_EXPORT_AS.join('|')})["']`, 'g');
 
-    return [...template.matchAll(pattern)].map((match) => match[1]);
+    return capturedGroups(template, pattern);
 }
 
 /**

@@ -83,7 +83,7 @@ export class FlagAspectRatioExample {
         .map((code) => ({
             code,
             name: getCountryName(code),
-            svg: this.sanitizer.bypassSecurityTrustHtml(flags[code.replace(/-/g, '_')])
+            svg: this.sanitizer.bypassSecurityTrustHtml(flags[code.replace(/-/g, '_')] ?? '')
         }))
         .sort((a, b) => a.name.localeCompare(b.name));
 

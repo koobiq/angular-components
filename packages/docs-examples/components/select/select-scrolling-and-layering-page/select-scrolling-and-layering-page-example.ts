@@ -31,15 +31,15 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
             kbqOverlayLayer
         >
             <kbq-form-field>
-                <kbq-select [value]="'Network Watcher'">
-                    <kbq-option [value]="'Network Watcher'">Network Watcher</kbq-option>
-                    <kbq-option [value]="'Firewall Sentinel'">Firewall Sentinel</kbq-option>
-                    <kbq-option [value]="'Threat Hunter'">Threat Hunter</kbq-option>
-                    <kbq-option [value]="'Malware Sentry'">Malware Sentry</kbq-option>
-                    <kbq-option [value]="'Ransomware Shield'">Ransomware Shield</kbq-option>
-                    <kbq-option [value]="'Network Watcher'">Network Watcher</kbq-option>
-                    <kbq-option [value]="'Data Breach Guard'">Data Breach Guard</kbq-option>
-                    <kbq-option [value]="'Endpoint Defender'">Endpoint Defender</kbq-option>
+                <kbq-select value="Network Watcher">
+                    <kbq-option value="Network Watcher">Network Watcher</kbq-option>
+                    <kbq-option value="Firewall Sentinel">Firewall Sentinel</kbq-option>
+                    <kbq-option value="Threat Hunter">Threat Hunter</kbq-option>
+                    <kbq-option value="Malware Sentry">Malware Sentry</kbq-option>
+                    <kbq-option value="Ransomware Shield">Ransomware Shield</kbq-option>
+                    <kbq-option value="Network Watcher">Network Watcher</kbq-option>
+                    <kbq-option value="Data Breach Guard">Data Breach Guard</kbq-option>
+                    <kbq-option value="Endpoint Defender">Endpoint Defender</kbq-option>
                 </kbq-select>
             </kbq-form-field>
 

@@ -137,7 +137,7 @@ export class UsernameSearchExample {
         { firstName: 'Madonna', login: 'madonna', site: 'corp' }
     ];
 
-    protected readonly selectedUser = signal<KbqUserInfo | null>(this.users[0]);
+    protected readonly selectedUser = signal<KbqUserInfo | null>(this.users[0] ?? null);
 
     // The name, the login and the site are rendered in separate elements, so each word of the query is highlighted on its own.
     protected readonly keywords = computed(() => tokenizeSearchQuery(this.searchText()));

@@ -141,29 +141,23 @@ function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExampl
                 );
             }
 
-            if (primaryComponent['styleUrl']) {
-                throw Error(`Example ${exampleId} uses 'styleUrl', but expected 'styleUrls' `);
-            }
-
             example.files.push(path.basename(relativePath));
 
-            if (primaryComponent.templateUrl) {
-                example.files.push(primaryComponent.templateUrl);
-            }
+            // `./x.html` and `x.html` name the same file: the list keeps the second form
+            const addFiles = (...files: string[]) =>
+                example.files.push(...files.map((file) => path.posix.normalize(file)));
 
-            if (primaryComponent.styleUrls) {
-                example.files.push(...primaryComponent.styleUrls);
-            }
+            for (const meta of [primaryComponent, ...secondaryComponents]) {
+                if (meta.templateUrl) {
+                    addFiles(meta.templateUrl);
+                }
 
-            if (secondaryComponents.length) {
-                for (const meta of secondaryComponents) {
-                    if (meta.templateUrl) {
-                        example.files.push(meta.templateUrl);
-                    }
+                if (meta.styleUrl) {
+                    addFiles(meta.styleUrl);
+                }
 
-                    if (meta.styleUrls) {
-                        example.files.push(...meta.styleUrls);
-                    }
+                if (meta.styleUrls) {
+                    addFiles(...meta.styleUrls);
                 }
             }
 

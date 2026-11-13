@@ -25,7 +25,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
             <div class="kbq-form__row">
                 <label class="kbq-form__label">Disabled empty field</label>
                 <kbq-form-field>
-                    <input [disabled]="true" [kbqDatepicker]="emptyDatepicker" [placeholder]="''" />
+                    <input placeholder="" [disabled]="true" [kbqDatepicker]="emptyDatepicker" />
                     <kbq-datepicker-toggle-icon kbqSuffix [for]="emptyDatepicker" />
                     <kbq-datepicker #emptyDatepicker />
                 </kbq-form-field>

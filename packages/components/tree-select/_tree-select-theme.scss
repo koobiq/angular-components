@@ -1,5 +1,5 @@
-@use '../core/styles/common/select' as *;
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/select';
+@use '../core/styles/common/tokens';
 @use '../tree/tree-theme' as tree-theme;
 
 @mixin kbq-tree-select-theme() {
@@ -26,7 +26,7 @@
 
     // Placeholder, search container and empty-result message: styled identically wherever a
     // select-shaped panel is rendered, so the rules live next to the structure they belong to.
-    @include kbq-select-shared-theme();
+    @include select.kbq-select-shared-theme();
 
     .kbq-tree-select__panel {
         box-shadow: var(--kbq-select-panel-dropdown-shadow);
@@ -101,6 +101,6 @@
 @mixin kbq-tree-select-typography() {
     .kbq-tree-select,
     .kbq-tree-select__panel {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }

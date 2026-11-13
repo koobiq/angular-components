@@ -28,15 +28,18 @@ export class ModalBuilderForService {
         /** Lifetime of the caller. The dialog is destroyed with it. */
         openerDestroyRef: DestroyRef | null = null
     ) {
-        this.createModal();
+        // Second line of defence behind the `DestroyRef` below: a router navigation disposes the
+        // overlay even when the dialog was opened from a longer-lived injector.
+        this.overlayRef = this.overlay.create(new OverlayConfig({ disposeOnNavigation: true }));
+        this.modalRef = this.createModal();
         this.mirrorEmitters(options);
 
         // Nobody owns the builder, so without this the dialog outlives whatever opened it: it stays
         // painted over the next view, `afterClose` never emits, and the body scroll lock is kept.
         this.detachFromOpener = openerDestroyRef?.onDestroy(() => this.destroyModal());
 
-        this.modalRef!.instance.open();
-        this.modalRef!.instance.kbqAfterClose.subscribe(() => this.destroyModal());
+        this.modalRef.instance.open();
+        this.modalRef.instance.kbqAfterClose.subscribe(() => this.destroyModal());
     }
 
     getInstance(): KbqModalComponent | null {
@@ -82,13 +85,10 @@ export class ModalBuilderForService {
     }
 
     // Create component to ApplicationRef
-    private createModal(): void {
-        // Second line of defence behind the `DestroyRef` above: a router navigation disposes the
-        // overlay even when the dialog was opened from a longer-lived injector.
-        this.overlayRef = this.overlay.create(new OverlayConfig({ disposeOnNavigation: true }));
+    private createModal(): ComponentRef<KbqModalComponent> {
         this.overlayRef.hostElement.classList.add('kbq-modal-overlay');
 
-        this.modalRef = this.overlayRef.attach(new ComponentPortal(KbqModalComponent, undefined, this.injector));
+        return this.overlayRef.attach(new ComponentPortal(KbqModalComponent, undefined, this.injector));
     }
 }
 

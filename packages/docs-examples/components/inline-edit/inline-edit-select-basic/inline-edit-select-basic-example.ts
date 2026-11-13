@@ -102,6 +102,6 @@ export class InlineEditSelectBasicExample {
     protected readonly statuses = STATUSES;
     protected readonly priorities = PRIORITIES;
 
-    protected readonly status = new FormControl<string | null>(STATUSES[0]);
-    protected readonly priority = new FormControl<string | null>(PRIORITIES[0]);
+    protected readonly status = new FormControl<string | null>(STATUSES[0] ?? null);
+    protected readonly priority = new FormControl<string | null>(PRIORITIES[0] ?? null);
 }

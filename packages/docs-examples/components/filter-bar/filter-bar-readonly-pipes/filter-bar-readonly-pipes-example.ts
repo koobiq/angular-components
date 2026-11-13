@@ -107,7 +107,7 @@ export class FilterBarReadonlyPipesExample {
         const pipes = this.activeFilter().pipes;
 
         return (
-            pipes.length > defaultPipes.length || pipes.some((pipe, index) => pipe.value !== defaultPipes[index].value)
+            pipes.length > defaultPipes.length || pipes.some((pipe, index) => pipe.value !== defaultPipes[index]?.value)
         );
     });
 

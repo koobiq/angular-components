@@ -1476,7 +1476,7 @@ class TemplateContentTitleComponent {
 @Component({
     imports: [KbqTitleDirective],
     template: `
-        <div [kbq-title]="'Explicit tooltip'">Hello World</div>
+        <div kbq-title="Explicit tooltip">Hello World</div>
     `
 })
 class StringContentTitleComponent {}
@@ -1513,7 +1513,7 @@ class ExplicitPriorityTitleComponent {}
 @Component({
     imports: [KbqTitleDirective],
     template: `
-        <div kbq-title [kbqPlacement]="'left'">Hello World</div>
+        <div kbq-title kbqPlacement="left">Hello World</div>
     `
 })
 class ExplicitPlacementTitleComponent {}

@@ -75,7 +75,7 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
             ></i>
         </ng-content>
     `,
-    styleUrls: ['password-toggle.scss'],
+    styleUrl: 'password-toggle.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -202,7 +202,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     }
 
     override ngAfterViewInit(): void {
-        this.focusMonitor.monitor(this.nativeElement, true);
+        void this.focusMonitor.monitor(this.nativeElement, true);
     }
 
     override ngOnDestroy() {

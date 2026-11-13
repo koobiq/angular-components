@@ -22,7 +22,7 @@
                 </div>
 
                 @if (isRangeVisible()) {
-                    <kbq-radio-button class="kbq-time-range-editor__range-option" [value]="'range'">
+                    <kbq-radio-button class="kbq-time-range-editor__range-option" value="range">
                         {{ localeConfig.editor.rangeLabel }}
                         @if (bounds) {
                             <kbq-hint>{{ bounds }}</kbq-hint>

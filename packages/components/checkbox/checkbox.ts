@@ -36,10 +36,13 @@ import { KBQ_CHECKBOX_CLICK_ACTION, type KbqCheckboxClickAction } from './checkb
 
 /** Change event object emitted by KbqCheckbox. */
 export class KbqCheckboxChange {
-    /** The source KbqCheckbox of the event. */
-    source: KbqCheckbox;
-    /** The new `checked` value of the checkbox. */
-    checked: boolean;
+    /** Creates the event a checkbox emits when its `checked` value changes. */
+    constructor(
+        /** The source KbqCheckbox of the event. */
+        public source: KbqCheckbox,
+        /** The new `checked` value of the checkbox. */
+        public checked: boolean
+    ) {}
 }
 
 /**
@@ -56,8 +59,8 @@ export class KbqCheckboxChange {
     imports: [
         CdkObserveContent
     ],
-    templateUrl: 'checkbox.html',
-    styleUrls: ['checkbox.scss', 'checkbox-tokens.scss'],
+    templateUrl: './checkbox.html',
+    styleUrls: ['./checkbox.scss', './checkbox-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -361,7 +364,7 @@ export class KbqCheckbox
         if (shouldToggle) {
             // When user manually click on the checkbox, `indeterminate` is set to false.
             if (shouldClearIndeterminate) {
-                Promise.resolve().then(() => {
+                void Promise.resolve().then(() => {
                     this.checkable.indeterminate.set(false);
                     this.indeterminateChange.emit(false);
                 });
@@ -398,12 +401,7 @@ export class KbqCheckbox
 
     private emitChangeEvent() {
         // Note: `toggle()` already notifies the ControlValueAccessor change handler via `KbqCheckable.toggle()`.
-        const event = new KbqCheckboxChange();
-
-        event.source = this;
-        event.checked = this.checked;
-
-        this.change.emit(event);
+        this.change.emit(new KbqCheckboxChange(this, this.checked));
     }
 
     /** Function is called whenever the focus changes for the input element. */

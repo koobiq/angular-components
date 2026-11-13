@@ -37,7 +37,7 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
             <router-outlet />
         </div>
     `,
-    styleUrls: ['../component-viewer/component-viewer.scss'],
+    styleUrl: '../component-viewer/component-viewer.scss',
     providers: [KbqSidepanelService],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -47,10 +47,6 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     }
 })
 export class DocsDesignTokensViewer extends DocsComponentViewerComponent {
-    constructor() {
-        super();
-    }
-
     readonly links: Array<{ title: Record<DocsLocale, string>; value: string }> = [
         { title: DOCS_TRANSLATIONS.tokensTabColors, value: DocsStructureTokensTab.Colors },
         { title: DOCS_TRANSLATIONS.tokensTabTypography, value: DocsStructureTokensTab.Typography },

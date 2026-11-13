@@ -184,7 +184,7 @@ function removeImport(content: string, symbol: string, from: string): string {
         if (items.length === 0) return full;
 
         // Handle `<name> as <alias>` — match on the source name, not the alias.
-        const kept = items.filter((spec) => spec.split(/\s+as\s+/)[0].trim() !== symbol);
+        const kept = items.filter((spec) => spec.split(/\s+as\s+/)[0]?.trim() !== symbol);
 
         if (kept.length === items.length) return full;
         if (kept.length === 0) return '';
@@ -222,8 +222,8 @@ function ensureImport(content: string, symbol: string, from: string): string {
     let insertAt = 0;
     let inBlockComment = false;
 
-    for (let i = 0; i < lines.length; i++) {
-        const trimmed = lines[i].trim();
+    for (const [i, line] of lines.entries()) {
+        const trimmed = line.trim();
 
         if (inBlockComment) {
             if (trimmed.endsWith('*/')) inBlockComment = false;

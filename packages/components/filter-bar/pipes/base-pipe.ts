@@ -13,8 +13,7 @@ import {
     TemplateRef
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Subject } from 'rxjs';
-import { filter, skip } from 'rxjs/operators';
+import { filter, skip, Subject } from 'rxjs';
 import { isMac, type KbqFilterBarLocaleConfiguration, type KbqPanelMaxHeight } from '@koobiq/components/core';
 import {
     KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
@@ -223,7 +222,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     }
 
     /** templateRef checker utility */
-    isTemplateRef(value: unknown): boolean {
+    isTemplateRef<C>(value: unknown): value is TemplateRef<C> {
         return value instanceof TemplateRef;
     }
 

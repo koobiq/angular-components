@@ -66,7 +66,7 @@ export class DevDocsExamples {}
         DevDocsExamples
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -91,7 +91,7 @@ export class DevApp {
         this._collapsedNavbarWidth = value;
     }
 
-    componentModal: KbqModalRef;
+    componentModal?: KbqModalRef;
 
     private _collapsedNavbarWidth: number = 1280;
 

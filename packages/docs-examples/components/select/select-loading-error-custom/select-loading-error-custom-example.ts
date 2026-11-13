@@ -37,13 +37,15 @@ const delayBeforeShowError = 3000;
                                 <i
                                     kbq-empty-state-icon
                                     kbq-icon-item="kbq-triangle-exclamation_16"
+                                    color="contrast"
                                     [big]="true"
-                                    [color]="'contrast'"
                                     [fade]="true"
                                 ></i>
                                 <div kbq-empty-state-text>Failed to load the location list</div>
                                 <div kbq-empty-state-actions>
-                                    <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'">Try Again</button>
+                                    <button kbq-button type="button" color="theme" kbqStyle="transparent">
+                                        Try Again
+                                    </button>
                                 </div>
                             </kbq-empty-state>
                         }

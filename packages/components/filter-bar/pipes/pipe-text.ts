@@ -34,8 +34,8 @@ import { KbqPipeState } from './pipe-state';
         KbqTitleModule,
         KbqPipeState
     ],
-    templateUrl: 'pipe-text.html',
-    styleUrls: ['base-pipe.scss'],
+    templateUrl: './pipe-text.html',
+    styleUrl: './base-pipe.scss',
     providers: [
         {
             provide: KbqBasePipe,

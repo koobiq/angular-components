@@ -301,7 +301,7 @@ export class AgGridLongCellContentExample {
 
     // Repeats of the events above, enough rows to scroll and to see the grid recalculate the cells it renders.
     protected readonly rowData: ExampleRowData[] = Array.from({ length: 100 }, (_, index) => {
-        const event = EXAMPLE_EVENTS[index % EXAMPLE_EVENTS.length];
+        const event = EXAMPLE_EVENTS[index % EXAMPLE_EVENTS.length]!;
 
         return { ...event, event: `${event.event} ${index + 1}` };
     });

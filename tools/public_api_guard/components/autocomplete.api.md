@@ -66,7 +66,7 @@ export class KbqAutocomplete implements AfterContentChecked, AfterContentInit, K
     readonly hostClass: _angular_core.InputSignalWithTransform<string, string | ReadonlySet<string> | Record<string, boolean> | readonly string[] | null | undefined>;
     readonly id: string;
     readonly isOpen: _angular_core.Signal<boolean>;
-    keyManager: ActiveDescendantKeyManager<KbqOption>;
+    keyManager: ActiveDescendantKeyManager<KbqOption> | undefined;
     readonly listboxId: string;
     readonly listboxName: _angular_core.WritableSignal<{
         labelledby: string | null;

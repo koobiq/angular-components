@@ -16,20 +16,23 @@ type ExampleText = {
     withoutPresets: string;
 };
 
-const ExampleLocalizedData = new InjectionToken<Record<string | 'default', ExampleText>>('ExampleLocalizedData', {
-    factory: () => ({
-        'ru-RU': {
-            placeholder: 'Период',
-            withPresets: 'С предустановками',
-            withoutPresets: 'Без предустановок'
-        },
-        default: {
-            placeholder: 'Period',
-            withPresets: 'With presets',
-            withoutPresets: 'Without presets'
-        }
-    })
-});
+const ExampleLocalizedData = new InjectionToken<Record<string, ExampleText> & { default: ExampleText }>(
+    'ExampleLocalizedData',
+    {
+        factory: () => ({
+            'ru-RU': {
+                placeholder: 'Период',
+                withPresets: 'С предустановками',
+                withoutPresets: 'Без предустановок'
+            },
+            default: {
+                placeholder: 'Period',
+                withPresets: 'With presets',
+                withoutPresets: 'Without presets'
+            }
+        })
+    }
+);
 
 /**
  * @title Time range min max
@@ -65,7 +68,7 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
                 <kbq-time-range-title-as-control>
                     <ng-container *ngTemplateOutlet="titleValue; context: { $implicit: context }" />
                 </kbq-time-range-title-as-control>
-                <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix [color]="'contrast-fade'"></i>
+                <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix color="contrast-fade"></i>
                 <kbq-hint>{{ text().withPresets }}</kbq-hint>
             </kbq-form-field>
         </ng-template>
@@ -75,7 +78,7 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
                 <kbq-time-range-title-as-control>
                     <ng-container *ngTemplateOutlet="titleValue; context: { $implicit: context }" />
                 </kbq-time-range-title-as-control>
-                <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix [color]="'contrast-fade'"></i>
+                <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix color="contrast-fade"></i>
                 <kbq-hint>{{ text().withoutPresets }}</kbq-hint>
             </kbq-form-field>
         </ng-template>

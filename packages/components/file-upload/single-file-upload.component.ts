@@ -24,8 +24,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { ControlValueAccessor, FormControlStatus } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
 import {
     type ErrorStateMatcher,
     KbqDataSizePipe,
@@ -103,8 +102,8 @@ export class KbqSingleFileUploadComponent
     readonly accept = input<string[]>();
     readonly inputId = input<string>(`kbq-single-file-upload-${nextSingleFileUploadUniqueId++}`);
 
-    /** An object used to control the error state of the component. */
-    errorStateMatcher: ErrorStateMatcher;
+    /** An object used to control the error state of the component. Defaults to the injected `ErrorStateMatcher`. */
+    errorStateMatcher: ErrorStateMatcher = this.defaultErrorStateMatcher;
 
     /**
      * The selected file, or `null`.
@@ -119,7 +118,7 @@ export class KbqSingleFileUploadComponent
     get file(): KbqFileItem | null {
         const files = this.fileList.list();
 
-        return files.length === 0 ? null : files[0];
+        return files[0] ?? null;
     }
 
     set file(currentFile: KbqFileItem | null) {
@@ -210,7 +209,7 @@ export class KbqSingleFileUploadComponent
 
         switch (this.allowed()) {
             case KbqFileUploadAllowedType.Mixed: {
-                const [before, after] = config.captionTextWithFolder.split('{{ browseLink }}');
+                const [before = '', after = ''] = config.captionTextWithFolder.split('{{ browseLink }}');
 
                 const [captionTextSeparator] = after.split('{{ browseLinkFolderMixed }}');
 
@@ -222,13 +221,13 @@ export class KbqSingleFileUploadComponent
                 };
             }
             case KbqFileUploadAllowedType.Folder: {
-                const [before] = config.captionTextOnlyFolder.split('{{ browseLinkFolder }}');
+                const [before = ''] = config.captionTextOnlyFolder.split('{{ browseLinkFolder }}');
 
                 return { captionText: before, browseLinkFolder: config.browseLinkFolder };
             }
             case KbqFileUploadAllowedType.File:
             default: {
-                const [before] = config.captionTextWithFolder.split('{{ browseLink }}');
+                const [before = ''] = config.captionTextWithFolder.split('{{ browseLink }}');
 
                 return { captionText: before, browseLink: config.browseLink };
             }
@@ -441,18 +440,21 @@ export class KbqSingleFileUploadComponent
 
     /** Keeps the first file — the component holds one — and reports the rest as rejected. */
     private addFile(files: File[]): void {
-        this.file = this.mapToFileItem(files[0]);
+        const [file, ...discarded] = files;
+
+        if (!file) return;
+
+        this.file = this.mapToFileItem(file);
         this.cvaOnChange(this.file);
         this.fileChange.emit(this.file);
 
         const config = this.localeConfiguration().a11y;
-        const discarded = files.slice(1);
 
         if (discarded.length) {
             this.rejected.emit(discarded);
         }
 
-        this.announce(this.withFileName(config.fileAdded, files[0].name), discarded.length ? config.filesNotAdded : '');
+        this.announce(this.withFileName(config.fileAdded, file.name), discarded.length ? config.filesNotAdded : '');
     }
 
     private mapToFileItem(file: File): KbqFileItem {
