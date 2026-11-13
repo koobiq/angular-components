@@ -437,4 +437,21 @@ test.describe('KbqModalModule', () => {
             await expect(container).toHaveScreenshot('04-dark.png');
         });
     });
+
+    test.describe('E2eModalLongTitleWithoutSpaces', () => {
+        test('truncates a long title and caption without spaces with an ellipsis', async ({ page }) => {
+            await page.setViewportSize({ width: 450, height: 550 });
+            await page.goto('/E2eModalLongTitleWithoutSpaces');
+            await page.getByTestId('e2eOpenModal').click();
+
+            const container = page.locator('.kbq-modal-container');
+
+            await container.waitFor({ state: 'visible' });
+            // Keep the pointer off the centered modal so hover does not hold the scrollbar track visible.
+            await page.mouse.move(0, 0);
+            await e2eWaitForSettledScrollbars(page.locator('.kbq-modal-body'));
+
+            await expect(container).toHaveScreenshot('05-light.png');
+        });
+    });
 });
