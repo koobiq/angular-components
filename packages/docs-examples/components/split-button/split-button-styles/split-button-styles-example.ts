@@ -4,8 +4,8 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title split-button-styles
@@ -124,11 +124,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SplitButtonStylesExample extends BaseLocalizedExample<ExampleTranslation> {
+export class SplitButtonStylesExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     buttonStyles = KbqButtonStyles;
     componentColors = KbqComponentColors;
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

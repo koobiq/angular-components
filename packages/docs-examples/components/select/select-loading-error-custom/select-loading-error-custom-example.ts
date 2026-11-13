@@ -5,8 +5,8 @@ import { KbqForm, KbqFormElement } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 const delayBeforeShowError = 3000;
 
@@ -66,7 +66,9 @@ const delayBeforeShowError = 3000;
         class: 'layout-margin-5xl layout-column layout-align-center-center'
     }
 })
-export class SelectLoadingErrorCustomExample extends BaseLocalizedExample<ExampleTranslation> {
+export class SelectLoadingErrorCustomExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly error = signal(false);
     readonly loading = signal(true);
 
@@ -80,9 +82,5 @@ export class SelectLoadingErrorCustomExample extends BaseLocalizedExample<Exampl
     protected reset() {
         this.loading.set(true);
         this.error.set(false);
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

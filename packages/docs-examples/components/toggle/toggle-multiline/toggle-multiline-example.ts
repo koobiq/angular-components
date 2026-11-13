@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Toggle multiline example
@@ -35,8 +35,6 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-align-center-center layout-row layout-margin-top-l layout-margin-bottom-l'
     }
 })
-export class ToggleMultilineExample extends BaseLocalizedExample<ExampleTranslation> {
-    constructor() {
-        super(TRANSLATIONS);
-    }
+export class ToggleMultilineExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

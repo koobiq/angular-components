@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqTabGroup, KbqTabsModule } from '@koobiq/components/tabs';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Tabs state saving
@@ -35,10 +35,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TabsStateSavingExample extends BaseLocalizedExample<ExampleTranslation> {
-    protected readonly group = viewChild.required(KbqTabGroup);
+export class TabsStateSavingExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    constructor() {
-        super(TRANSLATIONS);
-    }
+    protected readonly group = viewChild.required(KbqTabGroup);
 }

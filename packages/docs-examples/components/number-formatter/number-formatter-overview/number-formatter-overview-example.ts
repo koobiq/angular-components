@@ -8,10 +8,10 @@ import {
 } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTableModule } from '@koobiq/components/table';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { delay } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Number-formatter
@@ -51,7 +51,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NumberFormatterOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
+export class NumberFormatterOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE);
     protected changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -59,7 +61,6 @@ export class NumberFormatterOverviewExample extends BaseLocalizedExample<Example
     protected readonly digitsInfoList = ['', '5.5-5', '4.5-5', '4.0-2', '4.0-2-false', '4.0-0'];
 
     constructor() {
-        super(TRANSLATIONS);
         this.localeService.changes
             .pipe(distinctUntilChanged(), delay(0))
             .subscribe(() => this.changeDetectorRef.markForCheck());

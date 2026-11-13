@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqContentPanelContainer, KbqContentPanelModule } from '@koobiq/components/content-panel';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Content panel state saving
@@ -44,10 +44,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContentPanelStateSavingExample extends BaseLocalizedExample<ExampleTranslation> {
-    protected readonly container = viewChild.required(KbqContentPanelContainer);
+export class ContentPanelStateSavingExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    constructor() {
-        super(TRANSLATIONS);
-    }
+    protected readonly container = viewChild.required(KbqContentPanelContainer);
 }

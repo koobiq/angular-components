@@ -4,10 +4,10 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqFormsModule, KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Autocomplete
@@ -44,7 +44,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AutocompleteOverviewExample extends BaseLocalizedExample<ExampleTranslation> implements OnInit {
+export class AutocompleteOverviewExample implements OnInit {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly options = computed(() => this.t().countries);
 
     control = new FormControl('');
@@ -61,9 +63,5 @@ export class AutocompleteOverviewExample extends BaseLocalizedExample<ExampleTra
         const filterValue = value ? value.toLowerCase() : '';
 
         return this.options().filter((option) => option.toLowerCase().includes(filterValue));
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqTableModule } from '@koobiq/components/table';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 type CompanyRow = {
     city: string;
@@ -65,7 +65,9 @@ type CompanyRow = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HighlightBackgroundTableExample extends BaseLocalizedExample<ExampleTranslation> {
+export class HighlightBackgroundTableExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly keyword = 'manc';
     protected readonly rows: CompanyRow[] = [
         {
@@ -105,8 +107,4 @@ export class HighlightBackgroundTableExample extends BaseLocalizedExample<Exampl
             notes: 'Archived in mancategory B'
         }
     ];
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

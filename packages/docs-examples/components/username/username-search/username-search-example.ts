@@ -12,9 +12,9 @@ import {
     KbqUserInfo,
     KbqUsernameModule
 } from '@koobiq/components/username';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { startWith } from 'rxjs';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Username search
@@ -123,7 +123,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-align-center-center layout-row layout-margin-5xl'
     }
 })
-export class UsernameSearchExample extends BaseLocalizedExample<ExampleTranslation> {
+export class UsernameSearchExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly formatUsername = kbqInjectUsernameFormatter();
 
     protected readonly isCompact = model(false);
@@ -156,8 +158,4 @@ export class UsernameSearchExample extends BaseLocalizedExample<ExampleTranslati
             )
         );
     });
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

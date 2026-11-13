@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_LOCALE_SERVICE, KbqDataSizePipe, KbqDecimalPipe, KbqTableNumberPipe } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Filesize formatter Table Number
@@ -45,12 +45,13 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilesizeFormatterTableNumberExample extends BaseLocalizedExample<ExampleTranslation> {
+export class FilesizeFormatterTableNumberExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     protected readonly cdr = inject(ChangeDetectorRef);
 
     constructor() {
-        super(TRANSLATIONS);
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(() => this.cdr.markForCheck());
     }
 }

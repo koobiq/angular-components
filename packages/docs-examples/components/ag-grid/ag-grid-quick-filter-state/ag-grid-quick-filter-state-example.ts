@@ -7,10 +7,10 @@ import {
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -52,7 +52,9 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridQuickFilterStateExample extends BaseLocalizedExample<ExampleTranslation> {
+export class AgGridQuickFilterStateExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly filter = model('');
     readonly columnDefs: ColDef[] = Array.from({ length: 6 }, (_, i) => ({
         field: 'column' + i,
@@ -62,8 +64,4 @@ export class AgGridQuickFilterStateExample extends BaseLocalizedExample<ExampleT
     readonly rowData = Array.from({ length: 100 }, (_, index) =>
         Object.fromEntries(Array.from({ length: 6 }, (_, i) => ['column' + i, 'Text ' + index]))
     );
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

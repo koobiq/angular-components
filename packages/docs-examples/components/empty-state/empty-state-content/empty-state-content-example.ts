@@ -3,8 +3,8 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, KbqThemeService } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Empty-state content
@@ -61,7 +61,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EmptyStateContentExample extends BaseLocalizedExample<ExampleTranslation> {
+export class EmptyStateContentExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly colors = KbqComponentColors;
     readonly styles = KbqButtonStyles;
     private readonly themeService = inject(KbqThemeService, { optional: true });
@@ -72,8 +74,4 @@ export class EmptyStateContentExample extends BaseLocalizedExample<ExampleTransl
 
         return `https://koobiq.io/assets/images/${currentTheme}/empty_192.webp 1x, https://koobiq.io/assets/images/${currentTheme}/empty_192@2x.webp 2x`;
     });
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

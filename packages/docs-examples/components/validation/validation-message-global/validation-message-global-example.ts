@@ -24,8 +24,8 @@ import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Validation message global
@@ -133,10 +133,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-margin-5xl layout-align-center-center layout-column'
     }
 })
-export class ValidationMessageGlobalExample
-    extends BaseLocalizedExample<ExampleTranslation>
-    implements AfterViewInit, OnDestroy
-{
+export class ValidationMessageGlobalExample implements AfterViewInit, OnDestroy {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly alertContainer = viewChild<ElementRef<HTMLDivElement>>('alertContainer');
 
     protected readonly showServerErrors = signal(false);
@@ -205,9 +204,5 @@ export class ValidationMessageGlobalExample
 
             invalidControl?.focus();
         });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

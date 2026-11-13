@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Textarea overview
@@ -20,8 +20,6 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-margin-xl layout-row'
     }
 })
-export class TextareaOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
-    constructor() {
-        super(TRANSLATIONS);
-    }
+export class TextareaOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

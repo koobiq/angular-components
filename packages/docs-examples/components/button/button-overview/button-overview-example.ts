@@ -3,8 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Button overview
@@ -33,12 +33,10 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     styleUrls: ['button-overview-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ButtonOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ButtonOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     colors = KbqComponentColors;
     isDisabled = false;
     hasProgress = false;
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

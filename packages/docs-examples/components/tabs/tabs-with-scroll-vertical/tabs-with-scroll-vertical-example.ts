@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, ViewEncapsulation } from '@angular/core';
 import { KbqTabsModule } from '@koobiq/components/tabs';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Tabs with scroll vertical
@@ -22,7 +22,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class TabsWithScrollVerticalExample extends BaseLocalizedExample<ExampleTranslation> {
+export class TabsWithScrollVerticalExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly tabs = computed(() => [
         this.t().bruteforce,
         this.t().complexAttack,
@@ -35,8 +37,4 @@ export class TabsWithScrollVerticalExample extends BaseLocalizedExample<ExampleT
         'Ransomware',
         'Phishing'
     ]);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqTabsModule } from '@koobiq/components/tabs';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Tabs nav bar overview
@@ -25,11 +25,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TabsNavBarOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
+export class TabsNavBarOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly links = computed(() => [this.t().bruteforce, this.t().complexAttack, this.t().ddos]);
     activeLink = this.links[0];
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

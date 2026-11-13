@@ -9,8 +9,8 @@ import {
 } from '@angular/core';
 import { KbqActionsPanel, KbqActionsPanelRef } from '@koobiq/components/actions-panel';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Actions panel overview
@@ -43,14 +43,15 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     providers: [KbqActionsPanel],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActionsPanelOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ActionsPanelOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly templateRef = viewChild.required(TemplateRef);
     private actionsPanelRef?: KbqActionsPanelRef | null;
 
     constructor() {
-        super(TRANSLATIONS);
         afterNextRender(() => this.open());
     }
 

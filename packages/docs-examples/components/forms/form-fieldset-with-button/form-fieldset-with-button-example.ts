@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Form fieldset with button
@@ -46,8 +46,6 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-row'
     }
 })
-export class FormFieldsetWithButtonExample extends BaseLocalizedExample<ExampleTranslation> {
-    constructor() {
-        super(TRANSLATIONS);
-    }
+export class FormFieldsetWithButtonExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

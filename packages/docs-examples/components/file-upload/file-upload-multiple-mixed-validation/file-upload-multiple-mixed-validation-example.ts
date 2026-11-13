@@ -6,8 +6,8 @@ import { FileValidators, KbqFileTypeSpecifier, ShowOnFormSubmitErrorStateMatcher
 import { KbqFileItem, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title File upload multiple mixed validation example
@@ -56,7 +56,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadMultipleMixedValidationExample extends BaseLocalizedExample<ExampleTranslation> {
+export class FileUploadMultipleMixedValidationExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly customErrorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
     protected readonly accept: KbqFileTypeSpecifier = ['.txt'];
     protected get fileExtensionMismatchErrorMessage(): string {
@@ -74,7 +76,6 @@ export class FileUploadMultipleMixedValidationExample extends BaseLocalizedExamp
     }
 
     constructor() {
-        super(TRANSLATIONS);
         this.fileList.statusChanges.pipe(takeUntilDestroyed()).subscribe(() => {
             this.fileList.controls.forEach((control) => {
                 if (control?.value && 'hasError' in control.value) {

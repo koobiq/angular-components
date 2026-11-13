@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { KBQ_AG_GRID_STATUS_BAR_PARAMS, KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -9,7 +9,7 @@ import {
     ModuleRegistry,
     RowSelectionOptions
 } from 'ag-grid-community';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -31,7 +31,9 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleAgGridStatusBarComponent extends BaseLocalizedExample<ExampleTranslation> {
+export class ExampleAgGridStatusBarComponent {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly params = inject(KBQ_AG_GRID_STATUS_BAR_PARAMS);
     private readonly destroyRef = inject(DestroyRef);
 
@@ -39,7 +41,6 @@ export class ExampleAgGridStatusBarComponent extends BaseLocalizedExample<Exampl
     protected readonly selectedRows = signal(0);
 
     constructor() {
-        super(TRANSLATIONS);
         const { api } = this.params;
 
         const updateTotal = (): void => this.totalRows.set(api.getDisplayedRowCount());
@@ -85,7 +86,9 @@ export class ExampleAgGridStatusBarComponent extends BaseLocalizedExample<Exampl
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridStatusBarExample extends BaseLocalizedExample<ExampleTranslation> {
+export class AgGridStatusBarExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly statusBarComponent = ExampleAgGridStatusBarComponent;
 
     protected readonly defaultColDef: ColDef = {
@@ -124,9 +127,5 @@ export class AgGridStatusBarExample extends BaseLocalizedExample<ExampleTranslat
                 node.setSelected(true);
             }
         });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

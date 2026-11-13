@@ -4,8 +4,8 @@ import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Popover placement edges
@@ -46,12 +46,10 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PopoverPlacementEdgesExample extends BaseLocalizedExample<ExampleTranslation> {
+export class PopoverPlacementEdgesExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     placements = PopUpPlacements;
     activePopover: KbqPopoverTrigger;
     protected arrowCentered = false;
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

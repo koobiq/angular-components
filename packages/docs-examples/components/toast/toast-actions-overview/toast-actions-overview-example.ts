@@ -4,9 +4,9 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdown, KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { take } from 'rxjs/operators';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Toast actions
@@ -22,7 +22,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     templateUrl: 'toast-actions-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ToastActionsOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ToastActionsOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly dropdown = viewChild.required<KbqDropdown>('dropdown');
 
     readonly toastService = inject(KbqToastService);
@@ -48,9 +50,5 @@ export class ToastActionsOverviewExample extends BaseLocalizedExample<ExampleTra
         outputToObservable(this.dropdown().closed)
             .pipe(take(1))
             .subscribe(() => ref.instance.close());
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

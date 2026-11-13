@@ -19,8 +19,8 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * Payload every cross-field validator below publishes, so that a single `ErrorStateMatcher` can tell which
@@ -160,7 +160,9 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher(
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ValidationCrossFieldPasswordExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ValidationCrossFieldPasswordExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly form = new FormGroup(
         {
             currentPassword: new FormControl('', Validators.required),
@@ -201,9 +203,5 @@ export class ValidationCrossFieldPasswordExample extends BaseLocalizedExample<Ex
 
             invalidControl?.focus();
         });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

@@ -4,8 +4,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title List with virtual-scroll
@@ -32,15 +32,13 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListVirtualScrollExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ListVirtualScrollExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly options = Array.from({ length: 10000 }).map((_, i) => ({
         id: i,
         label: 'Option #' + i
     }));
 
     selected = [];
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

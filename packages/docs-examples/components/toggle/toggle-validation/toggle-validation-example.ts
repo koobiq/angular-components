@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqError, KbqHint } from '@koobiq/components/form-field';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Toggle validation
@@ -29,10 +29,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-align-center-center layout-row layout-padding-l'
     }
 })
-export class ToggleValidationExample extends BaseLocalizedExample<ExampleTranslation> {
-    protected readonly backup = new FormControl(true, { nonNullable: true, validators: Validators.requiredTrue });
+export class ToggleValidationExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    constructor() {
-        super(TRANSLATIONS);
-    }
+    protected readonly backup = new FormControl(true, { nonNullable: true, validators: Validators.requiredTrue });
 }

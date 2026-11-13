@@ -45,14 +45,13 @@ DS-4922 rolls the mechanism out to all examples: each example reads its user-fac
 `packages/docs-examples/i18n/index.ts` holds the whole localization mechanism of the examples:
 
 - `Translations<T>` — the locale-keyed record type (`default` is the fallback, English);
-- `injectTranslation(translations)` — a signal with the entry for the active locale;
-- `BaseLocalizedExample<T>` — base class: the derived component passes its record to `super()` and reads it as `this.t`.
+- `injectTranslation(translations)` — a signal with the entry for the active locale.
 
 ### Per-example data
 
 Every example has its own `l10n.ts` with exactly two things: the `ExampleTranslation` interface and the `TRANSLATIONS` record. There are no section-level files: an example is self-contained, which keeps its StackBlitz project free of shared files.
 
-The example component extends `BaseLocalizedExample<ExampleTranslation>` and passes `TRANSLATIONS` to `super()`; templates read `{{ t().someKey }}`. The escape hatch for a class that cannot extend the base (a second localized field, a differently named one) is a field initialized with `injectTranslation(TRANSLATIONS)`.
+The example component initializes `protected readonly t = injectTranslation(TRANSLATIONS)`; templates read `{{ t().someKey }}`. Every localized class of an example (a cell renderer, a nested component) initializes its own field the same way — one mechanism, no base class.
 
 Naming follows the Transloco convention (`ExampleTranslation` = strings of one locale, `TRANSLATIONS` = the record, field `t`), agreed in review.
 

@@ -3,8 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Overflow items with always visible item
@@ -51,14 +51,12 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OverflowItemsWithAlwaysVisibleItemExample extends BaseLocalizedExample<ExampleTranslation> {
+export class OverflowItemsWithAlwaysVisibleItemExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly items = Array.from({ length: 20 }, (_, i) => ({
         id: `Item${i}`,
         alwaysVisible: i === 3
     }));
     readonly badgeColor = KbqBadgeColors;
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

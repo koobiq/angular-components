@@ -6,7 +6,7 @@ import {
     KbqAgGridThemeModule
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -16,7 +16,7 @@ import {
     IGetRowsParams,
     ModuleRegistry
 } from 'ag-grid-community';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -64,7 +64,9 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     providers: [kbqAgGridLoadingOverlayConfigProvider({ rows: 6, cols: 3, firstColWidth: '148px' })],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridLoadingOverlayExample extends BaseLocalizedExample<ExampleTranslation> {
+export class AgGridLoadingOverlayExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly loading = model(true);
     protected readonly datasource = signal<IDatasource | undefined>(undefined);
 
@@ -101,9 +103,5 @@ export class AgGridLoadingOverlayExample extends BaseLocalizedExample<ExampleTra
                 );
             }
         });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

@@ -6,8 +6,8 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSkeleton } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Skeleton directive
@@ -87,14 +87,12 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonDirectiveExample extends BaseLocalizedExample<ExampleTranslation> {
+export class SkeletonDirectiveExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly loading = model(true);
 
     protected readonly badgeColors = KbqBadgeColors;
     protected readonly alertColors = KbqAlertColors;
     protected readonly alertStyles = KbqAlertStyles;
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

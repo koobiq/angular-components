@@ -5,10 +5,10 @@ import {
     KbqSingleFileUploadComponent
 } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { timer } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title File-upload indeterminate loading
@@ -40,7 +40,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-column layout-gap-l'
     }
 })
-export class FileUploadIndeterminateLoadingOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
+export class FileUploadIndeterminateLoadingOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     isLoading: boolean;
 
     onFileChange(file: KbqFileItem | null) {
@@ -72,9 +74,5 @@ export class FileUploadIndeterminateLoadingOverviewExample extends BaseLocalized
             files.forEach((file) => file.loading?.next(false));
             this.isLoading = false;
         });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

@@ -25,8 +25,8 @@ import {
 } from '@koobiq/components/core';
 import { KbqDropdown, KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /** `Node.TEXT_NODE`, spelled out so that the example never reads a DOM global. */
 const TEXT_NODE = 3;
@@ -150,7 +150,9 @@ const MENU_KEYS = ['ArrowUp', 'ArrowDown', 'Enter', 'Escape'];
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DropdownSlashMenuExample extends BaseLocalizedExample<ExampleTranslation> {
+export class DropdownSlashMenuExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly document = inject(DOCUMENT);
     private readonly renderer = inject(Renderer2);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -180,7 +182,6 @@ export class DropdownSlashMenuExample extends BaseLocalizedExample<ExampleTransl
     protected readonly isEmpty = computed(() => this.filteredGroups().every(({ items }) => !items.length));
 
     constructor() {
-        super(TRANSLATIONS);
         const destroyRef = inject(DestroyRef);
 
         afterNextRender(() => {

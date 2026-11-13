@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Button toggle disabled all
@@ -18,10 +18,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     templateUrl: 'button-toggle-disabled-all-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ButtonToggleDisabledAllOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
-    model = 1;
+export class ButtonToggleDisabledAllOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    constructor() {
-        super(TRANSLATIONS);
-    }
+    model = 1;
 }

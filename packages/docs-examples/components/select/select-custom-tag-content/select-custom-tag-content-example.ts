@@ -3,8 +3,8 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title select-custom-tag-content
@@ -55,7 +55,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectCustomTagContentExample extends BaseLocalizedExample<ExampleTranslation> {
+export class SelectCustomTagContentExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     /**
      * Per-value tag appearance — the built-in markup paints every tag with the same color.
      * Only these four colors are themed for `kbq-tag`.
@@ -72,8 +74,4 @@ export class SelectCustomTagContentExample extends BaseLocalizedExample<ExampleT
 
     /** Selected values; not readonly, because the field is bound with `[(value)]`. */
     selected = this.severityNames().slice(0, 3);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Textarea with canGrow attribute
@@ -24,11 +24,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-margin-xl layout-column'
     }
 })
-export class TextareaCanGrowExample extends BaseLocalizedExample<ExampleTranslation> {
+export class TextareaCanGrowExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly canGrow = model(true);
     protected readonly value = model(this.t().dosText);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

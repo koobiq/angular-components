@@ -18,10 +18,10 @@ import {
     KbqSaveFilterEvent
 } from '@koobiq/components/filter-bar';
 import { KbqIcon } from '@koobiq/components/icon';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
 import { injectLocalizedPeriods } from '../localized-periods';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 /** Text search is the first pipe in every filter: always present, never removable. */
 const createSearchPipe = (name: string): KbqPipe => ({
@@ -106,7 +106,9 @@ const createNumberedPipes = (): KbqPipe[] => [
     providers: [DateFormatter],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilterBarCompleteFunctionsExample extends BaseLocalizedExample<ExampleTranslation> {
+export class FilterBarCompleteFunctionsExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly adapter = inject(DateAdapter<DateTime>);
 
     /** Period labels follow the active locale, so everything built out of them is rebuilt with it. */
@@ -593,9 +595,5 @@ export class FilterBarCompleteFunctionsExample extends BaseLocalizedExample<Exam
                 pipes: [createSearchPipe(search), ...createNumberedPipes()]
             }
         ];
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

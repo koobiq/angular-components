@@ -3,8 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Overflow items result offset
@@ -60,13 +60,11 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OverflowItemsWithOrderExample extends BaseLocalizedExample<ExampleTranslation> {
+export class OverflowItemsWithOrderExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly items = Array.from({ length: 20 }, (_, i) => `Item${i}`);
     readonly badgeColor = KbqBadgeColors;
     readonly reverseOverflowOrder = model(false);
     readonly lastItemOrder = computed(() => (this.reverseOverflowOrder() ? +Infinity : -Infinity));
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

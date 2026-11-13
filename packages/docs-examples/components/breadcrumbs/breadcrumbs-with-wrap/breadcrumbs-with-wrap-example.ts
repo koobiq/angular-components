@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Breadcrumbs Wrap
@@ -20,7 +20,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BreadcrumbsWithWrapExample extends BaseLocalizedExample<ExampleTranslation> {
+export class BreadcrumbsWithWrapExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly breadcrumbs = computed(() => [
         { label: this.t().main },
         { label: this.t().standards },
@@ -28,8 +30,4 @@ export class BreadcrumbsWithWrapExample extends BaseLocalizedExample<ExampleTran
         { label: this.t().edit },
         { label: this.t().test }
     ]);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

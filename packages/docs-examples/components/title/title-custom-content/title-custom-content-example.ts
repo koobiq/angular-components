@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Custom tooltip content
@@ -36,11 +36,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     styleUrls: ['./title-custom-content-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TitleCustomContentExample extends BaseLocalizedExample<ExampleTranslation> {
+export class TitleCustomContentExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly longValue = computed(() => this.t().longValue);
     readonly stringContent = computed(() => this.t().stringContent);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

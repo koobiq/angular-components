@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Select with panelWidth auto
@@ -30,7 +30,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-margin-l layout-align-center-center layout-row'
     }
 })
-export class SelectWithPanelWidthAutoExample extends BaseLocalizedExample<ExampleTranslation> {
+export class SelectWithPanelWidthAutoExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly options = [
         'Active Scanning',
         'Business Intelligence Gathering',
@@ -42,8 +44,4 @@ export class SelectWithPanelWidthAutoExample extends BaseLocalizedExample<Exampl
     ];
 
     protected readonly value = model(this.options[0]);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

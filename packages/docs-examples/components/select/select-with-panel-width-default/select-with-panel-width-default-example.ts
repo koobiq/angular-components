@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Select with panelWidth default
@@ -44,7 +44,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-margin-l layout-align-center-center layout-row layout-gap-l'
     }
 })
-export class SelectWithPanelWidthDefaultExample extends BaseLocalizedExample<ExampleTranslation> {
+export class SelectWithPanelWidthDefaultExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly options = [
         'Use of Alternate Authentication Data',
         'Use of Command-Line Interpreters and Scripts',
@@ -55,8 +57,4 @@ export class SelectWithPanelWidthDefaultExample extends BaseLocalizedExample<Exa
 
     protected readonly valueFirst = model(this.options[0]);
     protected readonly valueSecond = model(this.options[1]);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

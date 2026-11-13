@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, TemplateRef, inject, viewChild } fr
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { take } from 'rxjs/operators';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Sidepanel normal mode
@@ -15,7 +15,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     templateUrl: 'sidepanel-normal-mode-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidepanelNormalModeExample extends BaseLocalizedExample<ExampleTranslation> {
+export class SidepanelNormalModeExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private sidepanelService = inject(KbqSidepanelService);
 
     position = KbqSidepanelPosition.Right;
@@ -44,9 +46,5 @@ export class SidepanelNormalModeExample extends BaseLocalizedExample<ExampleTran
         } else {
             this.sidepanelService.closeAll();
         }
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

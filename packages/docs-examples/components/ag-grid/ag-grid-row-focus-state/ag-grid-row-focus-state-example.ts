@@ -5,10 +5,10 @@ import {
     KbqAgGridThemeModule
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, GetRowIdParams, ModuleRegistry } from 'ag-grid-community';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -46,7 +46,9 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridRowFocusStateExample extends BaseLocalizedExample<ExampleTranslation> {
+export class AgGridRowFocusStateExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly getRowId = (params: GetRowIdParams): string => params.data.column0;
     protected readonly columnDefs: ColDef[] = Array.from({ length: 5 }, (_, i) => ({
         field: 'column' + i,
@@ -56,8 +58,4 @@ export class AgGridRowFocusStateExample extends BaseLocalizedExample<ExampleTran
     protected readonly rowData = Array.from({ length: 100 }, (_, index) =>
         Object.fromEntries(Array.from({ length: 5 }, (_, i) => ['column' + i, 'Text ' + index]))
     );
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

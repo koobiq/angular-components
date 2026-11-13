@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KbqRelativeShortDatePipe } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Table with sticky header
@@ -39,7 +39,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableStickyHeaderExample extends BaseLocalizedExample<ExampleTranslation> {
+export class TableStickyHeaderExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly adapter = inject<DateAdapter<DateTime>>(DateAdapter);
     readonly value = this.adapter.today();
 
@@ -55,8 +57,4 @@ export class TableStickyHeaderExample extends BaseLocalizedExample<ExampleTransl
         { name: 'summary.doc', owner: 'User 9', modified: this.value },
         { name: 'backup.zip', owner: 'User 10', modified: this.value }
     ]);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

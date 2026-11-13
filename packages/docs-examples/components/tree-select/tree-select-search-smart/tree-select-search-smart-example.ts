@@ -11,8 +11,8 @@ import {
     KbqTreeModule
 } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 export class FileNode {
     children: FileNode[];
@@ -156,7 +156,9 @@ export const DATA_OBJECT = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TreeSelectSearchSmartExample extends BaseLocalizedExample<ExampleTranslation> implements OnInit {
+export class TreeSelectSearchSmartExample implements OnInit {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     selected = '';
 
     treeControl: FlatTreeControl<FileFlatNode>;
@@ -172,7 +174,6 @@ export class TreeSelectSearchSmartExample extends BaseLocalizedExample<ExampleTr
     private lastPredicate: (value: string) => boolean = () => true;
 
     constructor() {
-        super(TRANSLATIONS);
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         this.treeControl = new FlatTreeControl<FileFlatNode>(

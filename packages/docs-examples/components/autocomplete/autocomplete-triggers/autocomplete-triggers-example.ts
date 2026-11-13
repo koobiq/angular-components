@@ -4,8 +4,8 @@ import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqTextQuery } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 interface Suggestion {
     /** What the option shows. */
@@ -56,7 +56,9 @@ interface Suggestion {
         class: 'layout-margin-5xl layout-row layout-align-center-center'
     }
 })
-export class AutocompleteTriggersExample extends BaseLocalizedExample<ExampleTranslation> {
+export class AutocompleteTriggersExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly control = new FormControl('');
     protected readonly triggers = ['/', '@'];
     protected readonly query = signal<KbqTextQuery | null>(null);
@@ -87,8 +89,4 @@ export class AutocompleteTriggersExample extends BaseLocalizedExample<ExampleTra
         { label: this.t().bob, insert: '@bob' },
         { label: this.t().carol, insert: '@carol' }
     ]);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

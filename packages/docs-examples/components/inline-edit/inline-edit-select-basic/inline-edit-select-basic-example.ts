@@ -5,8 +5,8 @@ import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqFormFieldModule, KbqLabel } from '@koobiq/components/form-field';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit select basic
@@ -95,7 +95,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-column layout-align-center-center layout-gap-l'
     }
 })
-export class InlineEditSelectBasicExample extends BaseLocalizedExample<ExampleTranslation> {
+export class InlineEditSelectBasicExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected get notSetLabel(): string {
         return this.t().notSpecified;
     }
@@ -105,8 +107,4 @@ export class InlineEditSelectBasicExample extends BaseLocalizedExample<ExampleTr
 
     protected readonly status = new FormControl<number | null>(0);
     protected readonly priority = new FormControl<number | null>(0);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

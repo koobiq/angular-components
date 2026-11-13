@@ -7,9 +7,9 @@ import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field'
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInlineEdit, KbqInlineEditMode, KbqInlineEditPlaceholder } from '@koobiq/components/inline-edit';
 import { KbqTimepicker } from '@koobiq/components/timepicker';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit date time
@@ -73,7 +73,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InlineEditDateTimeExample extends BaseLocalizedExample<ExampleTranslation> {
+export class InlineEditDateTimeExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly adapter = inject<DateAdapter<DateTime>>(DateAdapter);
     private readonly formatter = inject<DateFormatter<DateTime>>(DateFormatter);
 
@@ -90,7 +92,6 @@ export class InlineEditDateTimeExample extends BaseLocalizedExample<ExampleTrans
     }>;
 
     constructor() {
-        super(TRANSLATIONS);
         const today = this.adapter.today();
 
         this.form = new FormGroup({

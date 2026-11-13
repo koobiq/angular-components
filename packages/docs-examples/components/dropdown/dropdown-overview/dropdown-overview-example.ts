@@ -5,8 +5,8 @@ import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Dropdown
@@ -24,8 +24,6 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     templateUrl: 'dropdown-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DropdownOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
-    constructor() {
-        super(TRANSLATIONS);
-    }
+export class DropdownOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

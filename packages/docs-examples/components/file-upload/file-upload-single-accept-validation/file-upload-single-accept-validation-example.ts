@@ -4,8 +4,8 @@ import { FileValidators, KbqFileTypeSpecifier } from '@koobiq/components/core';
 import { KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title File upload single accept validation
@@ -37,14 +37,12 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadSingleAcceptValidationExample extends BaseLocalizedExample<ExampleTranslation> {
+export class FileUploadSingleAcceptValidationExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected accept: KbqFileTypeSpecifier = ['.txt'];
 
     protected readonly formGroup = new FormGroup({
         fileControl: new FormControl(null, FileValidators.isCorrectExtension(this.accept))
     });
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

@@ -6,8 +6,8 @@ import {
     KbqCodeBlockModule
 } from '@koobiq/components/code-block';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Code-block with [softWrap]="true" attribute
@@ -32,7 +32,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CodeBlockWithSoftWrapExample extends BaseLocalizedExample<ExampleTranslation> {
+export class CodeBlockWithSoftWrapExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly files: KbqCodeBlockFile[] = [
         {
             content: `[\n\t{\n\t\t"name": "Cross-site scripting",\n\t\t"abbreviation": "XSS",\n\t\t"description": "Cross-site scripting (XSS) is a type of security vulnerability that can be found in some web applications. XSS attacks enable attackers to inject client-side scripts into web pages viewed by other users. A cross-site scripting vulnerability may be used by attackers to bypass access controls such as the same-origin policy. During the second half of 2007, XSSed documented 11,253 site-specific cross-site vulnerabilities, compared to 2,134 \"traditional\" vulnerabilities documented by Symantec. XSS effects vary in range from petty nuisance to significant security risk, depending on the sensitivity of the data handled by the vulnerable site and the nature of any security mitigation implemented by the site's owner network."\n\t}\n]`,
@@ -41,8 +43,4 @@ export class CodeBlockWithSoftWrapExample extends BaseLocalizedExample<ExampleTr
     ];
 
     softWrap: boolean = false;
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

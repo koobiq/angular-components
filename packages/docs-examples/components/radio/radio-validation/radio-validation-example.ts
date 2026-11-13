@@ -4,8 +4,8 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
 import { KbqError, KbqHint } from '@koobiq/components/form-field';
 import { KbqRadioModule } from '@koobiq/components/radio';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Radio validation
@@ -46,14 +46,12 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-align-center-center layout-row layout-padding-l'
     }
 })
-export class RadioValidationExample extends BaseLocalizedExample<ExampleTranslation> {
+export class RadioValidationExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly form = new FormGroup({
         secondFactor: new FormControl<string | null>(null, Validators.required)
     });
     // Shows the error only after the form is submitted, not as soon as focus leaves the group.
     protected readonly errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

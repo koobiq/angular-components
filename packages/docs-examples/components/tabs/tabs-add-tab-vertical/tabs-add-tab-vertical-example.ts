@@ -13,8 +13,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTabLink, KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Tabs add tab vertical
@@ -84,7 +84,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     styleUrls: ['./tabs-add-tab-vertical-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TabsAddTabVerticalExample extends BaseLocalizedExample<ExampleTranslation> {
+export class TabsAddTabVerticalExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly injector = inject(Injector);
     private readonly tabLinks = viewChildren(KbqTabLink);
 
@@ -99,7 +101,6 @@ export class TabsAddTabVerticalExample extends BaseLocalizedExample<ExampleTrans
     protected activeTab: string = '';
 
     constructor() {
-        super(TRANSLATIONS);
         effect(() => {
             // Rebuild the localized tabs on a locale switch, keeping the tabs added at runtime.
             const base = this.defaultTabs();

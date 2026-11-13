@@ -3,8 +3,8 @@ import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Breadcrumbs custom-template
@@ -40,7 +40,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BreadcrumbsCustomTemplateExample extends BaseLocalizedExample<ExampleTranslation> {
+export class BreadcrumbsCustomTemplateExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly breadcrumbs = computed(() => [
         { label: this.t().informationSecurity, url: '/information-security' },
         { label: this.t().accessControl, url: '/information-security/access-control' },
@@ -48,8 +50,4 @@ export class BreadcrumbsCustomTemplateExample extends BaseLocalizedExample<Examp
         { label: 'RBAC', url: '/information-security/access-control/authorization/rbac' },
         { label: this.t().roles, url: '/information-security/access-control/authorization/rbac/roles' }
     ]);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

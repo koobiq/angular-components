@@ -5,8 +5,8 @@ import { KbqForm, KbqFormElement } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkPrefix } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Select add new option
@@ -60,15 +60,13 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-margin-5xl layout-column layout-align-center-center'
     }
 })
-export class SelectAddNewOptionExample extends BaseLocalizedExample<ExampleTranslation> {
+export class SelectAddNewOptionExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly options = [
         'admin / @dm1n',
         'root / P@ssw0rd',
         'user / us3R'
     ];
     readonly selected = this.options[1];
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

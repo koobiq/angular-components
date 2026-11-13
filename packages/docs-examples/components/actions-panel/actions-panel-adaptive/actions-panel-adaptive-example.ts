@@ -15,8 +15,8 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToastService } from '@koobiq/components/toast';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 type ExampleAction = {
     id: string;
@@ -128,7 +128,9 @@ type ExampleAction = {
     providers: [KbqActionsPanel],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleActionsPanel extends BaseLocalizedExample<ExampleTranslation> {
+export class ExampleActionsPanel {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly templateRef = viewChild.required(TemplateRef);
@@ -144,7 +146,6 @@ export class ExampleActionsPanel extends BaseLocalizedExample<ExampleTranslation
     protected readonly additionalResizeObserverTargets = this.elementRef.nativeElement;
 
     constructor() {
-        super(TRANSLATIONS);
         afterNextRender(() => this.open());
     }
 
@@ -202,8 +203,6 @@ export class ExampleActionsPanel extends BaseLocalizedExample<ExampleTranslation
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActionsPanelAdaptiveExample extends BaseLocalizedExample<ExampleTranslation> {
-    constructor() {
-        super(TRANSLATIONS);
-    }
+export class ActionsPanelAdaptiveExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

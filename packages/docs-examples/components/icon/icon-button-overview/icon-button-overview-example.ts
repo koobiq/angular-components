@@ -3,8 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { KbqCheckbox } from '@koobiq/components/checkbox';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Icon-button
@@ -26,11 +26,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class IconButtonOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
+export class IconButtonOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly disabled = model(false);
     colors = KbqComponentColors;
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

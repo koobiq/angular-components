@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } fr
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Sidepanel overlayed
@@ -14,7 +14,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     templateUrl: './sidepanel-overlayed-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidepanelOverlayedExample extends BaseLocalizedExample<ExampleTranslation> {
+export class SidepanelOverlayedExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected position = KbqSidepanelPosition.Right;
 
     protected readonly overlaysCount = 2;
@@ -40,9 +42,5 @@ export class SidepanelOverlayedExample extends BaseLocalizedExample<ExampleTrans
             position: this.position,
             hasBackdrop: false
         });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

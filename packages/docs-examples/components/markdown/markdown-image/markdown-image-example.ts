@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqMarkdown } from '@koobiq/components/markdown';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Markdown image
@@ -12,8 +12,6 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     templateUrl: './markdown-image-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarkdownImageExample extends BaseLocalizedExample<ExampleTranslation> {
-    constructor() {
-        super(TRANSLATIONS);
-    }
+export class MarkdownImageExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

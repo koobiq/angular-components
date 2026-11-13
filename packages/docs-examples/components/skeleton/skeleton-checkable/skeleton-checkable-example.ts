@@ -5,8 +5,8 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqSkeletonCheckable } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Skeleton checkable preset
@@ -55,10 +55,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonCheckableExample extends BaseLocalizedExample<ExampleTranslation> {
-    protected readonly loading = model(true);
+export class SkeletonCheckableExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    constructor() {
-        super(TRANSLATIONS);
-    }
+    protected readonly loading = model(true);
 }

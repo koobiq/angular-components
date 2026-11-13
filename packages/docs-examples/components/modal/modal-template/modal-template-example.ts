@@ -4,8 +4,8 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { KbqSplitButton } from '@koobiq/components/split-button';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Modal template
@@ -67,7 +67,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ModalTemplateExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ModalTemplateExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly modalService = inject(KbqModalService);
 
     modalRef: KbqModalRef;
@@ -91,9 +93,5 @@ export class ModalTemplateExample extends BaseLocalizedExample<ExampleTranslatio
 
     destroyModal(): void {
         this.modalRef.triggerOk();
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

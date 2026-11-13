@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Toggle Error
@@ -20,11 +20,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ToggleErrorExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ToggleErrorExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly value = signal(false);
     protected readonly color = KbqComponentColors.Error;
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

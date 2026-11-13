@@ -16,8 +16,8 @@ import {
 } from '@koobiq/components/core';
 import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title select-auto-hide-scroll-strategy
@@ -71,10 +71,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectAutoHideScrollStrategyExample
-    extends BaseLocalizedExample<ExampleTranslation>
-    implements AfterViewInit
-{
+export class SelectAutoHideScrollStrategyExample implements AfterViewInit {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly options = Array.from({ length: 5 }, (_, i) => 'Option #' + i);
     protected readonly selected = this.options[0];
 
@@ -89,9 +88,5 @@ export class SelectAutoHideScrollStrategyExample
         const scrollStrategy = select.scrollStrategy as KbqAutoHideScrollStrategy;
 
         scrollStrategy.hide.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => select.close());
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

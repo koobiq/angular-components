@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqSplitter, KbqSplitterPanel } from '@koobiq/components/splitter';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Splitter collapsible panel
@@ -80,11 +80,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SplitterCollapsibleExample extends BaseLocalizedExample<ExampleTranslation> {
+export class SplitterCollapsibleExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly terminalCollapsed = model(false);
     protected readonly sidebarCollapsed = model(false);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

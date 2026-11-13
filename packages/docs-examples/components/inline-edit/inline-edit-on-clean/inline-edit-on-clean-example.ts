@@ -3,8 +3,8 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit on clean
@@ -52,7 +52,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InlineEditOnCleanExample extends BaseLocalizedExample<ExampleTranslation> {
+export class InlineEditOnCleanExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected get placeholder(): string {
         return this.t().placeholder;
     }
@@ -62,9 +64,5 @@ export class InlineEditOnCleanExample extends BaseLocalizedExample<ExampleTransl
         if (this.control.control.value) return;
 
         this.control.control.setValue(this.control.control.defaultValue);
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

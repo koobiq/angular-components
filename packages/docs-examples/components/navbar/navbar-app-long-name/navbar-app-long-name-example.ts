@@ -5,8 +5,8 @@ import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Navbar app long name
@@ -23,10 +23,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     templateUrl: 'navbar-app-long-name-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavbarAppLongNameExample extends BaseLocalizedExample<ExampleTranslation> {
-    popUpPlacements = PopUpPlacements;
+export class NavbarAppLongNameExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    constructor() {
-        super(TRANSLATIONS);
-    }
+    popUpPlacements = PopUpPlacements;
 }

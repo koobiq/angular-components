@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Select with multiline matcher
@@ -42,11 +42,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectWithMultilineMatcherExample extends BaseLocalizedExample<ExampleTranslation> {
+export class SelectWithMultilineMatcherExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly options = Array.from({ length: 10 }, (_, i) => 'Option #' + i);
     selected: string[] = [this.options[0], this.options[1], this.options[2], this.options[3]];
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

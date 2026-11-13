@@ -12,9 +12,9 @@ import { ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
 import { KbqFileItem, KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { Observable } from 'rxjs';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 const MAX_LINE_COUNT = 100;
 
@@ -114,7 +114,9 @@ function maxLinesValidator(maxLines: number): AsyncValidatorFn {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadSingleAsyncValidationExample extends BaseLocalizedExample<ExampleTranslation> {
+export class FileUploadSingleAsyncValidationExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly maxLines = MAX_LINE_COUNT;
     protected readonly errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
 
@@ -124,9 +126,5 @@ export class FileUploadSingleAsyncValidationExample extends BaseLocalizedExample
 
     onSubmit(): void {
         console.log('perform action on submit');
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

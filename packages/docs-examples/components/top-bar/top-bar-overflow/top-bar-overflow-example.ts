@@ -20,9 +20,9 @@ import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { auditTime, map } from 'rxjs/operators';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 type ExampleAction = {
     id: string;
@@ -184,7 +184,9 @@ type ExampleAction = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopBarOverflowExample extends BaseLocalizedExample<ExampleTranslation> implements AfterViewInit {
+export class TopBarOverflowExample implements AfterViewInit {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 768px)')
@@ -226,9 +228,5 @@ export class TopBarOverflowExample extends BaseLocalizedExample<ExampleTranslati
     // only show tooltip on button icon
     canTooltipBeAppied(action: ExampleAction): boolean {
         return (!!action.text && this.isDesktop()) || (!action.icon && !!action.text);
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

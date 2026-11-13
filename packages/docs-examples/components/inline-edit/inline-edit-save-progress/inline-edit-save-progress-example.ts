@@ -4,9 +4,9 @@ import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqInlineEditModule, KbqInlineEditSaveHandler } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { Observable, timer } from 'rxjs';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit save progress
@@ -79,7 +79,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-flex layout-column'
     }
 })
-export class InlineEditSaveProgressExample extends BaseLocalizedExample<ExampleTranslation> {
+export class InlineEditSaveProgressExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected get placeholder(): string {
         return this.t().placeholder;
     }
@@ -94,9 +96,5 @@ export class InlineEditSaveProgressExample extends BaseLocalizedExample<ExampleT
     // Emulates a request; in a real project return the HttpClient observable.
     private sendToServer(): Observable<unknown> {
         return timer(this.delay());
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

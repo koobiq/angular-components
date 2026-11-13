@@ -3,8 +3,8 @@ import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angula
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Toast types
@@ -19,7 +19,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     templateUrl: 'toast-types-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ToastTypesOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ToastTypesOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly toastService = inject(KbqToastService);
 
     showContrastToast(actions: TemplateRef<any>) {
@@ -44,9 +46,5 @@ export class ToastTypesOverviewExample extends BaseLocalizedExample<ExampleTrans
             caption: this.t().failedToAuthorize,
             actions
         });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

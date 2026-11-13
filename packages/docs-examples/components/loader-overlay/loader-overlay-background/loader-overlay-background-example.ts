@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqLoaderOverlayModule, KbqLoaderOverlaySurface } from '@koobiq/components/loader-overlay';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Loader-overlay background
@@ -135,7 +135,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoaderOverlayBackgroundExample extends BaseLocalizedExample<ExampleTranslation> {
+export class LoaderOverlayBackgroundExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly content = computed(() => this.t().backgroundContent);
     protected readonly contentFade = computed(() => this.t().backgroundContentFade);
 
@@ -149,8 +151,4 @@ export class LoaderOverlayBackgroundExample extends BaseLocalizedExample<Example
         { value: 'card', surfaceClass: 'example__item_card' },
         { value: 'solid', surfaceClass: 'example__item_bg' }
     ];
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

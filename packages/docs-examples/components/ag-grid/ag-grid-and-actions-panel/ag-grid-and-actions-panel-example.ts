@@ -21,7 +21,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToastService } from '@koobiq/components/toast';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -33,7 +33,7 @@ import {
     SelectionChangedEvent,
     SelectionColumnDef
 } from 'ag-grid-community';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -106,7 +106,9 @@ type ExampleTableItem = unknown;
         '[class.example-grid_actions-panel-opened]': 'panelOpened()'
     }
 })
-export class ExampleGrid extends BaseLocalizedExample<ExampleTranslation> {
+export class ExampleGrid {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly panelOpened = input(false);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private api: GridApi<ExampleTableItem> | null = null;
@@ -139,7 +141,6 @@ export class ExampleGrid extends BaseLocalizedExample<ExampleTranslation> {
     readonly selectedItems = output<ExampleTableItem[]>();
 
     constructor() {
-        super(TRANSLATIONS);
         effect(() => {
             if (!this.panelOpened()) return;
             if (this.getScrollBottomOffset() > ACTIONS_PANEL_HEIGHT) return;
@@ -295,7 +296,9 @@ export class ExampleGrid extends BaseLocalizedExample<ExampleTranslation> {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleActionsPanel extends BaseLocalizedExample<ExampleTranslation> {
+export class ExampleActionsPanel {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly actions = computed<ExampleAction[]>(() => [
         { id: 'Responsible', icon: 'kbq-user_16', label: this.t().responsible },
         { id: 'Link to incident', icon: 'kbq-link_16', label: this.t().linkToIncident },
@@ -308,10 +311,6 @@ export class ExampleActionsPanel extends BaseLocalizedExample<ExampleTranslation
 
     protected onAction(action: ExampleAction): void {
         this.toast.show({ title: this.t().actionInitiated(action.label) });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }
 

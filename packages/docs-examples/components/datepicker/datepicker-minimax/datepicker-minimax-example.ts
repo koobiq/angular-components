@@ -6,9 +6,9 @@ import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Datepicker minimax
@@ -51,7 +51,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DatepickerMinimaxExample extends BaseLocalizedExample<ExampleTranslation> {
+export class DatepickerMinimaxExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
     readonly minDate = this.adapter.createDate(2023, 11, 14);
@@ -60,8 +62,4 @@ export class DatepickerMinimaxExample extends BaseLocalizedExample<ExampleTransl
     readonly maxDate = this.adapter.createDate(2024, 7, 25).endOf('day');
 
     date: DateTime | null = null;
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

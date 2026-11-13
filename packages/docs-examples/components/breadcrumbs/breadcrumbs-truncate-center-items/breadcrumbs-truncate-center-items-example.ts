@@ -5,8 +5,8 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqEllipsisCenterModule } from '@koobiq/components/ellipsis-center';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Breadcrumbs Truncate Center Items
@@ -54,10 +54,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class BreadcrumbsTruncateCenterItemsExample extends BaseLocalizedExample<ExampleTranslation> {
-    protected readonly PopUpPlacements = PopUpPlacements;
+export class BreadcrumbsTruncateCenterItemsExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    constructor() {
-        super(TRANSLATIONS);
-    }
+    protected readonly PopUpPlacements = PopUpPlacements;
 }

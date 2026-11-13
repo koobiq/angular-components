@@ -10,8 +10,8 @@ import {
     KbqTreeSelectNode
 } from '@koobiq/components/filter-bar';
 import { KbqIcon } from '@koobiq/components/icon';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 interface AgentStateNode extends Omit<KbqTreeSelectNode, 'children'> {
     children: AgentStateNode[] | null;
@@ -76,7 +76,9 @@ interface AgentStateValue extends KbqSelectValue {
     styleUrls: ['filter-bar-value-template-example.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilterBarValueTemplateExample extends BaseLocalizedExample<ExampleTranslation> {
+export class FilterBarValueTemplateExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly values = computed<AgentStateNode[]>(() => {
         const text = this.t();
 
@@ -240,8 +242,4 @@ export class FilterBarValueTemplateExample extends BaseLocalizedExample<ExampleT
             }
         ]
     };
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

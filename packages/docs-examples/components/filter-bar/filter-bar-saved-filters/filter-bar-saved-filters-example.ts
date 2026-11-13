@@ -21,9 +21,9 @@ import {
 } from '@koobiq/components/filter-bar';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { injectLocalizedPeriods } from '../localized-periods';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 interface ExampleFilter extends KbqFilter {
     id?: number;
@@ -86,7 +86,9 @@ const createSearchPipe = (name: string): KbqPipe => ({
     providers: [DateFormatter],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilterBarSavedFiltersExample extends BaseLocalizedExample<ExampleTranslation> {
+export class FilterBarSavedFiltersExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly toastService = inject(KbqToastService);
 
     readonly errorToastActionsTemplate = viewChild.required<TemplateRef<any>>('errorToastActions');
@@ -501,9 +503,5 @@ export class FilterBarSavedFiltersExample extends BaseLocalizedExample<ExampleTr
                 }
             ]
         };
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

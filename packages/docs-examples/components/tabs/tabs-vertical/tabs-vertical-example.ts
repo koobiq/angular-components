@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, ViewEncapsulation } from 
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Tabs vertical
@@ -55,15 +55,13 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class TabsVerticalExample extends BaseLocalizedExample<ExampleTranslation> {
+export class TabsVerticalExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly tabs = computed(() => [
         this.t().complexAttack,
         this.t().hipsAlert,
         this.t().idsIpsAlert,
         this.t().vulnExploitation
     ]);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

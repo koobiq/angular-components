@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidebarModule, SidebarPositions } from '@koobiq/components/sidebar';
 import { Direction, KbqSplitterModule } from '@koobiq/components/splitter/deprecated';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Sidebar with splitter
@@ -70,7 +70,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidebarWithSplitterExample extends BaseLocalizedExample<ExampleTranslation> {
+export class SidebarWithSplitterExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly direction = Direction;
     readonly position = SidebarPositions;
 
@@ -82,9 +84,5 @@ export class SidebarWithSplitterExample extends BaseLocalizedExample<ExampleTran
 
     onStateChanged(opened: boolean): void {
         console.log('onStateChanged: ', opened);
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

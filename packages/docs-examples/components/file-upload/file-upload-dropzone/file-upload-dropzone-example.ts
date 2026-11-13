@@ -18,8 +18,8 @@ import {
 } from '@koobiq/components/file-upload';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqToggleChange, KbqToggleComponent } from '@koobiq/components/toggle';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title File-upload Dropzone
@@ -65,7 +65,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadDropzoneExample extends BaseLocalizedExample<ExampleTranslation> {
+export class FileUploadDropzoneExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly isActive = signal(false);
     protected readonly files = model<KbqFileItem[]>([]);
 
@@ -75,7 +77,6 @@ export class FileUploadDropzoneExample extends BaseLocalizedExample<ExampleTrans
     protected readonly destroyRef = inject(DestroyRef);
 
     constructor() {
-        super(TRANSLATIONS);
         const sub = this.dropzoneService.filesDropped.subscribe((files) => {
             this.files.set(files.map((file) => ({ file })));
         });

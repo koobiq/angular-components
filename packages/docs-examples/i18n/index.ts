@@ -10,12 +10,3 @@ export const injectTranslation = <T>(translations: Translations<T>): Signal<T> =
 
     return computed(() => translations[localeService?.localeId() ?? 'default'] ?? translations.default);
 };
-
-/** Base class of an example with translated text: `this.t` is a signal following the active locale. */
-export abstract class BaseLocalizedExample<T> {
-    protected readonly t: Signal<T>;
-
-    protected constructor(translations: Translations<T>) {
-        this.t = injectTranslation(translations);
-    }
-}

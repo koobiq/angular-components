@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title button-fill-and-style-only-icon
@@ -18,11 +18,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     styleUrls: ['button-fill-and-style-only-icon-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ButtonFillAndStyleOnlyIconExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ButtonFillAndStyleOnlyIconExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     colors = KbqComponentColors;
     styles = KbqButtonStyles;
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

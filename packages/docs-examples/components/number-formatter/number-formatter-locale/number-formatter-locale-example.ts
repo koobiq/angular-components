@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFormattersModule } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Number-formatter forced locale
@@ -32,11 +32,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NumberFormatterLocaleExample extends BaseLocalizedExample<ExampleTranslation> {
+export class NumberFormatterLocaleExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly value = 1234567.89;
     protected readonly locales = ['ru-RU', 'en-US', 'es-LA', 'pt-BR'];
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

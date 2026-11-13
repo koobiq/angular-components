@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIcon } from '@koobiq/components/icon';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Button group content
@@ -63,10 +63,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-column layout-align-center-center layout-gap-l'
     }
 })
-export class ButtonGroupContentExample extends BaseLocalizedExample<ExampleTranslation> {
-    protected readonly data = computed(() => [this.t().archive, this.t().report, this.t().snooze]);
+export class ButtonGroupContentExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    constructor() {
-        super(TRANSLATIONS);
-    }
+    protected readonly data = computed(() => [this.t().archive, this.t().report, this.t().snooze]);
 }

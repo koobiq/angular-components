@@ -7,8 +7,8 @@ import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/
 import { KbqFormField, KbqSuffix } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeTitleAsControl } from '@koobiq/components/time-range';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Time range custom trigger
@@ -54,15 +54,13 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-flex layout-row layout-align-center-center layout-gap-xl'
     }
 })
-export class TimeRangeCustomTriggerExample extends BaseLocalizedExample<ExampleTranslation> {
+export class TimeRangeCustomTriggerExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly control = new FormControl<KbqTimeRangeRange | null>(
         {
             type: 'last5Minutes'
         },
         { nonNullable: true }
     );
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

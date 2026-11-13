@@ -5,9 +5,9 @@ import { createSearchPredicate, KbqHighlightModule, tokenizeSearchQuery } from '
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule, kbqSelectOptionsProvider } from '@koobiq/components/select';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { map, startWith } from 'rxjs/operators';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Select search
@@ -57,7 +57,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectSearchExample extends BaseLocalizedExample<ExampleTranslation> {
+export class SelectSearchExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly options = [
         '10.125.123.0/24 - all',
         '10.125.10.0/24 - admin',
@@ -80,9 +82,5 @@ export class SelectSearchExample extends BaseLocalizedExample<ExampleTranslation
         this.searchTokens = tokenizeSearchQuery(query ?? '');
 
         return this.options.filter(createSearchPredicate(query ?? ''));
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

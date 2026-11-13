@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Tabs underlined
@@ -40,15 +40,13 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TabsUnderlinedExample extends BaseLocalizedExample<ExampleTranslation> {
+export class TabsUnderlinedExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly tabs = computed(() => [
         this.t().bruteforce,
         this.t().complexAttack,
         this.t().ddos,
         this.t().hipsAlert
     ]);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

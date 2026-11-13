@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqTableModule } from '@koobiq/components/table';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Badge table
@@ -18,10 +18,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     templateUrl: 'badge-table-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BadgeTableExample extends BaseLocalizedExample<ExampleTranslation> {
-    colors = KbqBadgeColors;
+export class BadgeTableExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    constructor() {
-        super(TRANSLATIONS);
-    }
+    colors = KbqBadgeColors;
 }

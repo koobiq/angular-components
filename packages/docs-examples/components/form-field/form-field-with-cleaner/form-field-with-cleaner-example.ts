@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /** @title Form field with kbq-cleaner */
 @Component({
@@ -25,11 +25,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormFieldWithCleanerExample extends BaseLocalizedExample<ExampleTranslation> {
+export class FormFieldWithCleanerExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly inputFormControl = new FormControl(this.t().thisFieldCanBeCleaned);
     readonly selectFormControl = new FormControl('1');
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }

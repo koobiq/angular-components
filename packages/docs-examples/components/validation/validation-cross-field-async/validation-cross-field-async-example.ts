@@ -15,9 +15,9 @@ import {
     ShowOnCrossFieldErrorStateMatcher
 } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { map, Observable, of, timer } from 'rxjs';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * Payload the cross-field validator publishes, so that the `ErrorStateMatcher` can tell which controls a
@@ -114,7 +114,9 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher((_key, va
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ValidationCrossFieldAsyncExample extends BaseLocalizedExample<ExampleTranslation> {
+export class ValidationCrossFieldAsyncExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly form = new FormGroup(
         {
             currentPassword: new FormControl('', Validators.required),
@@ -133,8 +135,4 @@ export class ValidationCrossFieldAsyncExample extends BaseLocalizedExample<Examp
     private readonly status = toSignal(this.form.statusChanges, { initialValue: this.form.status });
 
     protected readonly pending = computed(() => this.status() === 'PENDING');
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }
