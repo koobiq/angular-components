@@ -116,4 +116,20 @@ test.describe('KbqModalModule', () => {
             await expect(container).toHaveScreenshot('04-dark.png');
         });
     });
+
+    test.describe('E2eModalLongTitleWithoutSpaces', () => {
+        test('truncates a long title and caption without spaces with an ellipsis', async ({ page }) => {
+            await page.setViewportSize({ width: 450, height: 550 });
+            await page.goto('/E2eModalLongTitleWithoutSpaces');
+            await page.getByTestId('e2eOpenModal').click();
+
+            const container = page.locator('.kbq-modal-container');
+
+            await container.waitFor({ state: 'visible' });
+            // Keep the pointer off the centered modal so no hover state lands in the shot.
+            await page.mouse.move(0, 0);
+
+            await expect(container).toHaveScreenshot('05-light.png');
+        });
+    });
 });
