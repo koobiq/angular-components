@@ -8,9 +8,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { map } from 'rxjs/operators';
-import { ADAPTIVE_TRANSLATIONS, AdaptiveTranslation, ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 type ExampleAction = {
     id: string;
@@ -127,10 +127,8 @@ type ExampleAction = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleTopBar extends BaseLocalizedExample<ExampleTranslation> {
-    constructor() {
-        super(TRANSLATIONS);
-    }
+export class ExampleTopBar {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
@@ -182,8 +180,6 @@ export class ExampleTopBar extends BaseLocalizedExample<ExampleTranslation> {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopBarTitleCounterAdaptiveExample extends BaseLocalizedExample<AdaptiveTranslation> {
-    constructor() {
-        super(ADAPTIVE_TRANSLATIONS);
-    }
+export class TopBarTitleCounterAdaptiveExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

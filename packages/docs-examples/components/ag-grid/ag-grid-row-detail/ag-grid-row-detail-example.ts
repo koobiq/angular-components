@@ -10,7 +10,7 @@ import {
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { BaseLocalizedExample, injectTranslation } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -23,7 +23,7 @@ import {
     RowSelectionOptions,
     SELECTION_COLUMN_ID
 } from 'ag-grid-community';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -86,13 +86,10 @@ type ExampleRowData = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleRowDetailComponent extends BaseLocalizedExample<ExampleTranslation> {
+export class ExampleRowDetailComponent {
     protected readonly params = inject(KBQ_AG_GRID_ROW_DETAIL_PARAMS);
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly data = this.params.data as ExampleRowData;
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
 }
 
 /**

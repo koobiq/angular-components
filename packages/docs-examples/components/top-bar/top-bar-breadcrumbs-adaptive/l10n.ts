@@ -5,31 +5,17 @@ export interface ExampleTranslation {
     details: string;
     filter: string;
     share: string;
-}
-
-export const TRANSLATIONS: Translations<ExampleTranslation> = {
-    'ru-RU': {
-        details: 'Детали',
-        filter: 'Фильтр',
-        share: 'Поделиться'
-    },
-    default: {
-        details: 'Details',
-        filter: 'Filter',
-        share: 'Share'
-    }
-};
-
-/** Descriptions of the adaptive breadcrumb behavior shown by the example. */
-export interface AdaptiveTranslation {
     breadcrumbShortening: string;
     leftmostHidden: string;
     currentItemTruncation: string;
     rightSideCompression: string;
 }
 
-export const ADAPTIVE_TRANSLATIONS: Translations<AdaptiveTranslation> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
+        details: 'Детали',
+        filter: 'Фильтр',
+        share: 'Поделиться',
         breadcrumbShortening:
             'За основу берется автоматическое сокращение хлебных крошек, когда средние пункты скрываются при отсутствии свободного пространства.',
         leftmostHidden:
@@ -40,6 +26,9 @@ export const ADAPTIVE_TRANSLATIONS: Translations<AdaptiveTranslation> = {
             'После достижения минимальной ширины у левой стороны можно приступить к сжатию правой стороны с действиями. '
     },
     default: {
+        details: 'Details',
+        filter: 'Filter',
+        share: 'Share',
         breadcrumbShortening:
             'The automatic breadcrumb shortening is used as the basis, where middle items are hidden when there is not enough free space.',
         leftmostHidden:

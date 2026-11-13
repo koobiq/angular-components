@@ -28,7 +28,5 @@ import { TRANSLATIONS } from './l10n';
 export class ListGroupsExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
 
-    private readonly groupsText = injectTranslation(TRANSLATIONS);
-
-    readonly securityCategories = computed(() => this.groupsText().categories);
+    readonly securityCategories = computed(() => this.t().categories);
 }

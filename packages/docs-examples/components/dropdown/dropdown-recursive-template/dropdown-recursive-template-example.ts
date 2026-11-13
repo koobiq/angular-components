@@ -1,7 +1,6 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    computed,
     Directive,
     inject,
     Injector,
@@ -13,8 +12,8 @@ import {
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KBQ_DROPDOWN_PANEL, KbqDropdown, KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 @Directive({
     selector: '[exampleDropdownOutlet]'
@@ -58,7 +57,7 @@ export class ExampleDropdownPortal implements OnInit {
         </button>
 
         <kbq-dropdown #egDropdown="kbqDropdown">
-            @for (item of items(); track item) {
+            @for (item of t().items; track item) {
                 <ng-container
                     [exampleDropdownOutlet]="dropdownItemTpl"
                     [exampleDropdownOutletContext]="{ item: item }"
@@ -87,10 +86,6 @@ export class ExampleDropdownPortal implements OnInit {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DropdownRecursiveTemplateExample extends BaseLocalizedExample<ExampleTranslation> {
-    readonly items = computed(() => this.t().items);
-
-    constructor() {
-        super(TRANSLATIONS);
-    }
+export class DropdownRecursiveTemplateExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }
