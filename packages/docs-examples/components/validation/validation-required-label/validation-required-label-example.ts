@@ -11,8 +11,8 @@ import { KbqFormField, kbqFormFieldDefaultOptionsProvider } from '@koobiq/compon
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-import { BaseLocalizedExample, injectTranslation } from '@koobiq/docs-examples/i18n';
-import { ExampleTranslation, TRANSLATIONS } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Validation required label
@@ -65,7 +65,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
                     <kbq-form-field horizontal labelClass="flex-25" contentClass="flex-75">
                         <kbq-label>{{ t().requestReason }}</kbq-label>
                         <kbq-select formControlName="reason">
-                            @for (option of options().reasons; track option.value) {
+                            @for (option of t().reasons; track option.value) {
                                 <kbq-option [value]="option.value">
                                     {{ option.label }}
                                 </kbq-option>
@@ -78,7 +78,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
                     <kbq-form-field horizontal labelClass="flex-25" contentClass="flex-75">
                         <kbq-label>{{ t().estimation }}</kbq-label>
                         <kbq-select formControlName="estimation">
-                            @for (option of options().estimations; track option.value) {
+                            @for (option of t().estimations; track option.value) {
                                 <kbq-option [value]="option.value">
                                     {{ option.label }}
                                 </kbq-option>
@@ -124,15 +124,15 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ValidationRequiredLabelExample extends BaseLocalizedExample<ExampleTranslation> {
-    protected readonly options = injectTranslation(TRANSLATIONS);
+export class ValidationRequiredLabelExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     protected readonly form = new FormGroup({
         firstName: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
         lastName: new FormControl<string>('', { nonNullable: true }),
         thirdName: new FormControl<string>('', { nonNullable: true }),
         email: new FormControl<string>('', { nonNullable: true, validators: [Validators.email] }),
-        reason: new FormControl<number>(this.options().reasons[2].value, { nonNullable: true }),
+        reason: new FormControl<number>(this.t().reasons[2].value, { nonNullable: true }),
         estimation: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
         comment: new FormControl<string>('', { nonNullable: true })
     });
@@ -149,9 +149,5 @@ export class ValidationRequiredLabelExample extends BaseLocalizedExample<Example
 
             invalidControl?.focus();
         });
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }

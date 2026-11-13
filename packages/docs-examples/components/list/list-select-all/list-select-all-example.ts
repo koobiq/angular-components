@@ -50,9 +50,7 @@ import { TRANSLATIONS } from './l10n';
 export class ListSelectAllExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
 
-    private readonly optionsText = injectTranslation(TRANSLATIONS);
-
-    protected readonly options = computed(() => this.optionsText().options);
+    protected readonly options = computed(() => this.t().options);
 
     protected selected: string[] = [];
 }

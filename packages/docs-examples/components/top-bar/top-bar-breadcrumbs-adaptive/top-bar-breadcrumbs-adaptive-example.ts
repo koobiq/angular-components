@@ -10,9 +10,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
-import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { map } from 'rxjs/operators';
-import { ADAPTIVE_TRANSLATIONS, AdaptiveTranslation, ExampleTranslation, TRANSLATIONS } from './l10n';
+import { TRANSLATIONS } from './l10n';
 
 @Component({
     selector: 'example-top-bar-breadcrumbs',
@@ -138,11 +138,7 @@ import { ADAPTIVE_TRANSLATIONS, AdaptiveTranslation, ExampleTranslation, TRANSLA
     providers: [kbqBreadcrumbsConfigurationProvider({ firstItemNegativeMargin: false })],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleTopBarBreadcrumbs extends BaseLocalizedExample<ExampleTranslation> {
-    constructor() {
-        super(TRANSLATIONS);
-    }
-
+export class ExampleTopBarBreadcrumbs {
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
@@ -153,6 +149,7 @@ export class ExampleTopBarBreadcrumbs extends BaseLocalizedExample<ExampleTransl
         { initialValue: true }
     );
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
@@ -193,8 +190,6 @@ export class ExampleTopBarBreadcrumbs extends BaseLocalizedExample<ExampleTransl
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopBarBreadcrumbsAdaptiveExample extends BaseLocalizedExample<AdaptiveTranslation> {
-    constructor() {
-        super(ADAPTIVE_TRANSLATIONS);
-    }
+export class TopBarBreadcrumbsAdaptiveExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }
