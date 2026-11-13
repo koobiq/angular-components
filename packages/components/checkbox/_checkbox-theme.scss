@@ -17,11 +17,6 @@
         color: var(--kbq-#{$base}-default-text);
     }
 
-    // A projected `kbq-error` is a hint too, and keeps its own color. `:where` leaves the specificity as it was.
-    & .kbq-hint:where(:not(.kbq-error)) .kbq-hint__text {
-        color: var(--kbq-#{$base}-default-caption);
-    }
-
     &:hover,
     &.kbq-hover {
         .kbq-checkbox__frame {
@@ -76,10 +71,6 @@
             }
         }
 
-        & .kbq-hint .kbq-hint__text {
-            color: var(--kbq-#{$base}-states-disabled-caption);
-        }
-
         .kbq-checkbox-label {
             color: var(--kbq-#{$base}-states-disabled-text);
         }
@@ -100,17 +91,9 @@
 @mixin kbq-checkbox-typography() {
     .kbq-checkbox {
         @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
-
-        & .kbq-hint .kbq-hint__text {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
-        }
     }
 
     .kbq-checkbox.kbq-checkbox_big {
         @include kbq-typography-level-to-styles-css-variables(typography, text-big);
-
-        & .kbq-hint .kbq-hint__text {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
-        }
     }
 }

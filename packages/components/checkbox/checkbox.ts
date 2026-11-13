@@ -31,7 +31,7 @@ import {
     kbqOptionalNumberAttribute,
     TransitionCheckState
 } from '@koobiq/components/core';
-import { KbqError, KbqHint } from '@koobiq/components/form-field';
+import { KbqError, KbqHint, kbqHintParentFactoryProvider } from '@koobiq/components/form-field';
 import { KBQ_CHECKBOX_CLICK_ACTION, KbqCheckboxClickAction } from './checkbox-config';
 
 /** Change event object emitted by KbqCheckbox. */
@@ -58,6 +58,13 @@ export class KbqCheckboxChange {
     ],
     templateUrl: 'checkbox.html',
     styleUrls: ['checkbox.scss', 'checkbox-tokens.scss'],
+    providers: [
+        kbqHintParentFactoryProvider(() => {
+            const checkbox = inject(KbqCheckbox);
+
+            return { compact: computed(() => !checkbox.big()), disabled: computed(() => checkbox.disabled) };
+        })
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

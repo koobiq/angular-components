@@ -1,5 +1,4 @@
 @use './form-field';
-@use './fieldset-theme';
 
 .kbq-fieldset {
     display: flex;
@@ -67,8 +66,6 @@
             margin-left: calc(var(--kbq-size-border-width) * -1);
         }
     }
-
-    @include fieldset-theme.kbq-fieldset-theme();
 }
 
 .kbq-fieldset__container {

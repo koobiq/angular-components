@@ -1,11 +1,3 @@
-@use '../core/styles/common/tokens' as *;
-
-@mixin kbq-filter-bar-typography() {
-    .kbq-hint.kbq-date-period__hint .kbq-hint__text {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
-    }
-}
-
 // Themable colour surfaces of a pipe. Kept out of the layout SCSS so every colour
 // lives behind a theme hook (they still resolve through the global semantic tokens).
 @mixin kbq-filter-bar-pipe-theme() {

@@ -37,7 +37,7 @@ import {
     kbqOptionalNumberAttribute,
     TransitionCheckState
 } from '@koobiq/components/core';
-import { KbqError } from '@koobiq/components/form-field';
+import { KbqError, kbqHintParentFactoryProvider } from '@koobiq/components/form-field';
 
 /** Position of the label relative to the switch. */
 export type ToggleLabelPositionType = 'left' | 'right';
@@ -64,6 +64,16 @@ export type KbqToggleClickAction = KbqCheckableClickAction;
     selector: 'kbq-toggle',
     templateUrl: './toggle.component.html',
     styleUrls: ['./toggle.scss', './toggle-tokens.scss'],
+    providers: [
+        kbqHintParentFactoryProvider(() => {
+            const toggle = inject(KbqToggleComponent);
+
+            return {
+                compact: computed(() => !toggle.big()),
+                disabled: computed(() => toggle.disabled || toggle.loading())
+            };
+        })
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
