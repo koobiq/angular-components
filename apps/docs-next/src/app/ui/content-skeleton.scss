@@ -1,0 +1,59 @@
+// Shows after 100 ms of waiting; for reduced motion it appears at once after the same wait and does not pulse.
+:host {
+    display: block;
+    max-width: var(--docs-next-text-width);
+    opacity: 0;
+    animation: docs-next-skeleton-show 150ms var(--docs-next-ease-out) 100ms forwards;
+}
+
+.docs-next-skeleton__status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.docs-next-skeleton__paragraph {
+    margin-bottom: var(--kbq-size-xl);
+}
+
+// A line of the text is 24px high, the bar is a little lower than the letters.
+.docs-next-skeleton__line {
+    height: var(--kbq-size-m);
+    margin-block: var(--kbq-size-xs);
+    border-radius: var(--kbq-size-xxs);
+    background: var(--kbq-background-contrast-fade);
+    animation: docs-next-skeleton-pulse 1.6s ease-in-out infinite;
+}
+
+.docs-next-skeleton__code {
+    height: 120px;
+    border-radius: var(--kbq-size-s);
+    background: var(--kbq-background-contrast-fade);
+    animation: docs-next-skeleton-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes docs-next-skeleton-show {
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes docs-next-skeleton-pulse {
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :host {
+        animation-duration: 0s;
+    }
+
+    .docs-next-skeleton__line,
+    .docs-next-skeleton__code {
+        animation: none;
+    }
+}

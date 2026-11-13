@@ -104,6 +104,8 @@ yarn run dev:all                # Every component in one app
 yarn run dev:e2e                # The e2e app on http://localhost:4200 with navigation and source maps
 yarn run serve:e2e              # Build dev-e2e in its production configuration and serve dist/e2e — what Playwright starts (builds once; restart it after a change)
 yarn run ssr:dev                # SSR dev app; `ssr:build` is what CI runs to prove the library renders on the server
+yarn run docs-next:dev          # The unified docs site on http://localhost:4310
+tools/worktree-dev.sh [port]    # The same from a git worktree, which has no dependencies or dist of its own: links them from the main checkout
 ```
 
 A dev app lives in `packages/components-dev/<name>/` (`main.ts`, `module.ts`, `template.html`, `styles.scss`) and usually embeds the component's docs examples module and its `e2e.ts` scenarios.

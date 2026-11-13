@@ -1,0 +1,71 @@
+@use './breakpoints';
+
+// The library styles an underlined link through a long selector; this one is as long so that the rules below win.
+$link: '.kbq-tab-link.kbq-tab-label_underlined:not(.kbq-tab-label_vertical):not(.kbq-tab-label_icon-only)';
+
+// Figma: Tabs Underlined 8 (126:24336, 122:34857). Each tab is the 48px of the row; the bar is 3px under the text only,
+// with 12px of room after every tab and before every tab but the first, which starts at the edge of the text column.
+// The library draws its underline 11px below a 32px link and pulls the first tab 12px out of the column, so both are
+// redrawn here.
+.docs-next-page-tabs.kbq-tab-nav-bar {
+    flex: 1;
+    min-width: 0;
+
+    // The line under the row is the header's; the library's own, 8px lower, would be a second one.
+    &::after {
+        display: none;
+    }
+
+    #{$link} {
+        height: 48px;
+        margin: 0;
+        padding: 0 var(--kbq-size-m);
+        border: none;
+        border-radius: 0;
+        background: none;
+        outline: none;
+
+        &:first-child {
+            padding-left: 0;
+        }
+
+        // The hit area is the whole tab.
+        &::before {
+            inset: 0;
+        }
+
+        &::after {
+            inset: auto var(--kbq-size-m) 0;
+            background: transparent;
+            transition: none;
+        }
+
+        &:first-child::after {
+            left: 0;
+        }
+
+        &.kbq-selected::after {
+            background: var(--kbq-line-contrast);
+        }
+
+        &.cdk-keyboard-focused {
+            outline: 2px solid var(--kbq-states-line-focus-theme);
+            outline-offset: -2px;
+            border-radius: var(--kbq-size-s);
+        }
+    }
+
+    // On a phone the tabs share the width of the row.
+    @include breakpoints.docs-next-mobile {
+        .kbq-tab-link__container,
+        .kbq-tab-list,
+        .kbq-tab-list__content {
+            width: 100%;
+        }
+
+        #{$link} {
+            flex: 1 1 0;
+            min-width: 44px;
+        }
+    }
+}

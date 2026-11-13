@@ -1,0 +1,183 @@
+@use '../../../../../packages/components/core/styles/common/tokens';
+@use '../../styles/breakpoints';
+
+// Only the button takes the height of the header; the dialog is laid out on its own.
+:host {
+    display: block;
+    height: 100%;
+    margin-right: var(--kbq-size-xs);
+}
+
+// Figma: Search Button 2 - Desktop (126:24741). The button is the hit area, the whole height of the header; its inner box
+// is the 148 × 32 field. On hover the field draws in by 8px on each side and its content gathers in the middle, while
+// the hit area keeps its size. A press changes only the colour, and focus from the keyboard only draws the ring. With
+// reduced motion the shape stays and only the colours fade.
+.docs-next-search__button {
+    --docs-next-search-transition: 200ms cubic-bezier(0.22, 1, 0.36, 1);
+    // The frame answers at once; the content gathers in the middle a beat later.
+    --docs-next-search-delay: 50ms;
+
+    display: flex;
+    align-items: center;
+    width: 148px;
+    height: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    outline: none;
+    user-select: none;
+    transition: padding var(--docs-next-search-transition);
+
+    // Hover on a touch screen stays after the tap, so it counts only for a pointer that can hover.
+    // The held state keeps the field drawn in while the search dialog is open, with the hover gone under its backdrop.
+    @media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+        &:hover,
+        &.docs-next-search__button_held {
+            padding: 0 var(--kbq-size-s);
+        }
+    }
+}
+
+.docs-next-search__inner {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    gap: var(--kbq-size-xs);
+    height: 32px;
+    box-sizing: border-box;
+    padding: 0 var(--kbq-size-m);
+    border: 1px solid var(--kbq-line-contrast-fade);
+    border-radius: var(--kbq-size-s);
+    background: var(--kbq-background-transparent);
+    color: var(--kbq-foreground-contrast-secondary);
+    transition:
+        background-color var(--docs-next-search-transition),
+        border-color var(--docs-next-search-transition),
+        box-shadow var(--docs-next-search-transition),
+        color var(--docs-next-search-transition);
+
+    // The icon takes its colour from a variable, which does not animate by itself.
+    .kbq-icon {
+        transition: color var(--docs-next-search-transition);
+    }
+
+    // The icon and the label turn contrast, the hotkey stays tertiary.
+    @media (hover: hover) and (pointer: fine) {
+        .docs-next-search__button:hover &,
+        .docs-next-search__button_held & {
+            --kbq-icon-fade-contrast-color: var(--kbq-icon-contrast);
+
+            background: var(--kbq-states-background-transparent-hover);
+            color: var(--kbq-foreground-contrast);
+        }
+    }
+
+    // A press answers fast and changes the colour only.
+    .docs-next-search__button:active & {
+        --kbq-icon-fade-contrast-color: var(--kbq-icon-contrast);
+
+        background: var(--kbq-states-background-transparent-active);
+        color: var(--kbq-foreground-contrast);
+        transition-duration: 100ms;
+
+        .kbq-icon {
+            transition-duration: 100ms;
+        }
+    }
+
+    // A 2px ring in the place of the border, inset so that the content keeps its place. It appears at once.
+    .docs-next-search__button:focus-visible & {
+        border-color: var(--kbq-states-line-focus-theme);
+        box-shadow: inset 0 0 0 1px var(--kbq-states-line-focus-theme);
+        transition-property: background-color, color;
+    }
+}
+
+// At rest the label takes the room left and the hotkey sits at the end; once the field draws in, the label shrinks to
+// its text and the content gathers in the middle.
+.docs-next-search__label {
+    flex: 1 1 auto;
+    min-width: 0;
+    text-align: left;
+    transition: flex-grow var(--docs-next-search-transition);
+
+    @media (prefers-reduced-motion: no-preference) {
+        @media (hover: hover) and (pointer: fine) {
+            .docs-next-search__button:hover &,
+            .docs-next-search__button_held & {
+                flex-grow: 0;
+                transition-delay: var(--docs-next-search-delay);
+            }
+        }
+    }
+}
+
+// Figma: Search Wrapper on a tablet (159:27127): the field is 240 wide, as there is room.
+@include breakpoints.docs-next-tablet {
+    .docs-next-search__button {
+        width: 240px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .docs-next-search__button {
+        --docs-next-search-transition: 100ms ease-out;
+    }
+}
+
+.docs-next-search__hotkey {
+    font: inherit;
+    color: var(--kbq-foreground-contrast-tertiary);
+}
+
+.docs-next-search__dialog {
+    width: min(640px, calc(100vw - 32px));
+    margin-top: 12vh;
+    padding: 0;
+    border: 1px solid var(--kbq-line-contrast-less);
+    border-radius: var(--kbq-size-m);
+    background: var(--kbq-background-card);
+    color: var(--kbq-foreground-contrast);
+    box-shadow: var(--kbq-shadow-popup);
+
+    &::backdrop {
+        background: var(--kbq-background-overlay-inverse);
+        opacity: 0.4;
+    }
+}
+
+.docs-next-search__field {
+    display: flex;
+    align-items: center;
+    gap: var(--kbq-size-s);
+    padding: var(--kbq-size-m) var(--kbq-size-l);
+    border-bottom: 1px solid var(--kbq-line-contrast-less);
+    color: var(--kbq-foreground-contrast-secondary);
+}
+
+.docs-next-search__input {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
+
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: var(--kbq-foreground-contrast);
+    outline: none;
+
+    &::placeholder {
+        color: var(--kbq-foreground-contrast-tertiary);
+    }
+}
+
+.docs-next-search__empty {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+
+    margin: 0;
+    padding: var(--kbq-size-xxl) var(--kbq-size-l);
+    color: var(--kbq-foreground-contrast-secondary);
+    text-align: center;
+}

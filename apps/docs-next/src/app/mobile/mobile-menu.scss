@@ -1,0 +1,333 @@
+@use '../../../../../packages/components/core/styles/common/tokens';
+
+// The dialog lives in the top layer, so the host takes no room in the row it is placed in.
+:host {
+    display: contents;
+}
+
+// Figma: Drawer Top bar (66:33908): 48px of buttons and a 1px line, 4px from the sides. Icon Button - Mobile (69:35144)
+// is 40 × 48: a 16px icon with 12px around it.
+.docs-next-menu__top {
+    display: flex;
+    flex: none;
+    align-items: center;
+    height: 48px;
+    padding: 0 var(--kbq-size-xxs);
+    border-bottom: 1px solid var(--kbq-line-contrast-less);
+}
+
+.docs-next-menu__icon-button.kbq-icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 48px;
+    padding: 0;
+
+    // Figma: Icon Button - Mobile, State=Focus (126:24728): the Focus Ring - Inner replaces the library's frame around
+    // the whole button. It is 2px, 4px in from the top and bottom, and sits inside the 40px width.
+    &.cdk-keyboard-focused {
+        position: relative;
+        box-shadow: none;
+
+        &::after {
+            position: absolute;
+            inset: var(--kbq-size-xxs) 0;
+            border-radius: var(--kbq-size-s);
+            box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
+            content: '';
+            pointer-events: none;
+        }
+    }
+}
+
+.docs-next-menu__close.kbq-icon-button {
+    margin-left: auto;
+}
+
+// Figma: List starts 8px down and ends with a 48px List End Space.
+.docs-next-menu__scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--kbq-size-s) 0 var(--kbq-size-5xl);
+}
+
+.docs-next-menu__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+// The two levels of the menu are stacked, and a move between them cross-fades with a short slide (transitions.dev,
+// "Page side-by-side"): the level that leaves drifts away from the direction the other one arrives from.
+.docs-next-menu__scroll_levels {
+    overflow: hidden;
+    padding: 0;
+}
+
+.docs-next-menu__track {
+    --docs-next-menu-slide: 350ms cubic-bezier(0.22, 1, 0.36, 1);
+    // The fade is shorter than the slide, so the leaving level is still visible while the new one arrives.
+    --docs-next-menu-fade: 200ms ease-out;
+    --docs-next-menu-distance: 16px;
+
+    position: relative;
+    height: 100%;
+}
+
+// Each level scrolls on its own, so going back finds the list where it was left.
+.docs-next-menu__pane {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--kbq-size-s) 0 var(--kbq-size-5xl);
+
+    .docs-next-menu__track_animated & {
+        transition:
+            opacity var(--docs-next-menu-fade),
+            transform var(--docs-next-menu-slide);
+    }
+}
+
+// The list of sections leaves to the left while the level of the section is open.
+.docs-next-menu__track_deep .docs-next-menu__pane:not(.docs-next-menu__pane_section) {
+    opacity: 0;
+    transform: translateX(calc(var(--docs-next-menu-distance) * -1));
+    pointer-events: none;
+}
+
+// The back row stands above the scrolling pages instead of sticking over them, so an overscroll bounce cannot move it.
+.docs-next-menu__pane_section {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 0;
+}
+
+.docs-next-menu__track:not(.docs-next-menu__track_deep) .docs-next-menu__pane_section {
+    opacity: 0;
+    transform: translateX(var(--docs-next-menu-distance));
+    pointer-events: none;
+}
+
+// Reduced motion: no travel, the two levels only cross-fade.
+@media (prefers-reduced-motion: reduce) {
+    .docs-next-menu__track {
+        --docs-next-menu-fade: 150ms ease-out;
+        --docs-next-menu-distance: 0px;
+    }
+}
+
+// Figma: Tree List Item - Mobile, 48 high. The selected page sits on a fill 4px inside the island.
+.docs-next-menu__item {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
+
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--kbq-size-s);
+    width: 100%;
+    min-height: 48px;
+    box-sizing: border-box;
+    padding: var(--kbq-size-m) var(--kbq-size-l);
+    border: none;
+    background: none;
+    color: var(--kbq-foreground-contrast);
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+    outline: none;
+    isolation: isolate;
+
+    &::before {
+        position: absolute;
+        inset: 0 var(--kbq-size-xxs);
+        z-index: -1;
+        border-radius: var(--kbq-size-s);
+        content: '';
+    }
+
+    &:focus-visible::before {
+        box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
+    }
+
+    &:active::before,
+    &[aria-current='page']::before {
+        background: var(--kbq-states-background-transparent-hover);
+    }
+
+    &.docs-next-menu__item_unavailable {
+        color: var(--kbq-foreground-contrast-secondary);
+    }
+
+    &.docs-next-menu__item_nested {
+        padding-left: calc(var(--kbq-size-l) + var(--kbq-size-l));
+    }
+}
+
+.docs-next-menu__item_section {
+    padding-right: var(--kbq-size-xxs);
+}
+
+.docs-next-menu__item_current-section,
+.docs-next-menu__accordion-header {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big-strong);
+}
+
+// The mark stands right after the text, as in the side menu on a desktop, in colour only and in the size of the item.
+.docs-next-menu__mark {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+
+    flex: none;
+    // The mark and its title share a baseline, not a middle: the mark is the smaller text.
+    align-self: baseline;
+
+    &.docs-next-menu__mark_new {
+        color: var(--kbq-foreground-theme);
+    }
+
+    &.docs-next-menu__mark_updated {
+        color: var(--kbq-foreground-success);
+    }
+}
+
+.docs-next-menu__title:has(+ .docs-next-menu__mark) {
+    align-self: baseline;
+}
+
+// The title stands right after its text, as in the side menu on a desktop.
+.docs-next-menu__title {
+    flex: 0 1 auto;
+    min-width: 0;
+}
+
+.docs-next-menu__chevron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    // The title now takes the width of its text, so the arrow keeps the right edge itself.
+    margin-left: auto;
+    color: var(--kbq-foreground-contrast-secondary);
+}
+
+// Figma: Back List Item (65:18949), above the list of the section.
+.docs-next-menu__back {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big-strong);
+
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--kbq-size-s);
+    width: 100%;
+    height: 48px;
+    padding: 0 var(--kbq-size-l);
+    border: none;
+    border-bottom: 1px solid var(--kbq-line-contrast-less);
+    background: var(--kbq-background-bg);
+    color: var(--kbq-foreground-contrast);
+    cursor: pointer;
+    outline: none;
+
+    &:focus-visible {
+        box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
+    }
+}
+
+.docs-next-menu__pane-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--kbq-size-s) 0 var(--kbq-size-5xl);
+}
+
+// The header of an expanded section stays on top while its pages scroll by (Figma: Nav Drawer #2 - onScroll). The
+// list starts 8px down, which a sticky offset counts from, so the header lifts by as much to touch the top bar.
+.docs-next-menu__accordion-header[aria-expanded='true'] {
+    position: sticky;
+    top: calc(-1 * var(--kbq-size-s));
+    z-index: 1;
+    background: var(--kbq-background-bg);
+
+    // The line shows only while the header is stuck over the list; a shadow, so the list does not move under it.
+    &.docs-next-menu__accordion-header_stuck {
+        box-shadow: 0 1px 0 var(--kbq-line-contrast-less);
+    }
+}
+
+// Pages of an accordion hang on a line, as in the tree of the mockup (Figma: Indent, 1px line and 16px after it).
+.docs-next-menu__list_tree .docs-next-menu__item {
+    padding-left: calc(var(--kbq-size-l) + 1px + var(--kbq-size-l));
+
+    &::after {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: var(--kbq-size-l);
+        width: 1px;
+        background: var(--kbq-line-contrast-less);
+        content: '';
+    }
+
+    &.docs-next-menu__item_nested {
+        padding-left: calc(var(--kbq-size-l) + 1px + var(--kbq-size-l) * 2);
+    }
+}
+
+.docs-next-menu__group {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, caps-compact-strong);
+
+    padding: var(--kbq-size-l) var(--kbq-size-l) var(--kbq-size-xs);
+    color: var(--kbq-foreground-contrast-secondary);
+
+    &.docs-next-menu__group_tree {
+        padding-left: calc(var(--kbq-size-l) + 1px + var(--kbq-size-l));
+    }
+}
+
+.docs-next-menu__divider {
+    height: 1px;
+    margin: var(--kbq-size-s) var(--kbq-size-l);
+    border: none;
+    background: var(--kbq-line-contrast-less);
+}
+
+// A service switch to compare the two layouts of the mockup; not part of the design.
+.docs-next-menu__variant {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kbq-size-xs);
+    margin: var(--kbq-size-xl) var(--kbq-size-l) 0;
+    padding-top: var(--kbq-size-l);
+    border-top: 1px dashed var(--kbq-line-contrast-fade);
+    color: var(--kbq-foreground-contrast-secondary);
+}
+
+.docs-next-menu__variant-label {
+    margin-right: var(--kbq-size-xxs);
+}
+
+.docs-next-menu__variant-option {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
+
+    padding: var(--kbq-size-xxs) var(--kbq-size-s);
+    border: 1px solid var(--kbq-line-contrast-fade);
+    border-radius: var(--kbq-size-xs);
+    background: none;
+    color: var(--kbq-foreground-contrast);
+    cursor: pointer;
+
+    &[aria-pressed='true'] {
+        border-color: transparent;
+        // theme-fade leaves the theme text short of AA, as in the version sheet.
+        background: var(--kbq-background-theme-less);
+        color: var(--kbq-foreground-theme);
+    }
+}

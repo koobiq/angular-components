@@ -1,0 +1,52 @@
+@use '../../styles/breakpoints';
+
+:host {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.docs-next-logo__link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    height: 27px;
+    border-radius: var(--kbq-size-xxs);
+    outline: none;
+    text-decoration: none;
+
+    &:focus-visible {
+        box-shadow: 0 0 0 2px var(--kbq-states-line-focus-theme);
+    }
+}
+
+.docs-next-logo__mark {
+    display: block;
+}
+
+.docs-next-logo__letters {
+    display: block;
+    width: 108px;
+    height: 27px;
+    background: var(--kbq-foreground-contrast);
+    mask: url('/assets/images/logo-letters.svg') no-repeat center / contain;
+}
+
+// Figma: Navbar - Mobile (65:16609), a 128 × 24 logo.
+@include breakpoints.docs-next-mobile {
+    .docs-next-logo__link {
+        gap: var(--kbq-size-s);
+        height: 24px;
+    }
+
+    .docs-next-logo__mark {
+        width: 24px;
+        height: 24px;
+    }
+
+    .docs-next-logo__letters {
+        width: 96px;
+        height: 24px;
+    }
+}
