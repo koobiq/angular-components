@@ -1660,7 +1660,7 @@ describe('KbqPipeDateComponent', () => {
             expect(resolver).not.toHaveBeenCalledWith(expect.objectContaining({ kind: 'date-preset' }));
         });
 
-        it('should respect an empty resolver result in isEmpty', () => {
+        it('should keep the pipe non-empty when the resolver returns an empty name', () => {
             fixture.componentInstance.pipeTemplates = [
                 {
                     name: 'Date',
@@ -1677,7 +1677,7 @@ describe('KbqPipeDateComponent', () => {
 
             resolver.mockReturnValueOnce('');
 
-            expect(pipe().isEmpty).toBe(true);
+            expect(pipe().isEmpty).toBe(false);
         });
 
         it('should render the resolved name in the trigger', () => {

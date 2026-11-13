@@ -378,7 +378,9 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     override get isEmpty(): boolean {
         if (this.data.value === null) return true;
 
-        if (this.presetName(this.data.value)) return false;
+        // Emptiness is structural: a selected preset counts by its stored name or key, never by what the
+        // resolver returns for them — an empty translation must not empty a pipe that holds a value.
+        if (this.data.value?.name || this.data.value?.nameKey) return false;
 
         return !this.adapter.isDateInstance(this.start) || !this.adapter.isDateInstance(this.end);
     }
