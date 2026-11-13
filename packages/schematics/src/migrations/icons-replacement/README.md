@@ -11,7 +11,7 @@ This schematic provides migration for new icons naming attribute. It includes:
 
 The built-in mapping applies unless `--custom-data-path` points at a JSON file of your own, resolved from the
 workspace root (then as an absolute path); a missing file stops the run. The shape is the one `new-icons-pack`
-reads; a name matches anywhere it occurs, so it can be written with or without the `kbq-` prefix:
+reads; a name matches only as a whole icon name, with or without the `kbq-` prefix:
 
 ```json
 [{ "replace": "bolt-circle_16", "replaceWith": "circle-bolt_16" }]
