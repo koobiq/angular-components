@@ -5,6 +5,8 @@ import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Empty-state size
@@ -28,12 +30,12 @@ import { KbqIconModule } from '@koobiq/components/icon';
         </div>
 
         <kbq-empty-state style="min-height: 216px" [size]="size()">
-            <h2 kbq-empty-state-title>No Groups</h2>
-            <div kbq-empty-state-text>{{ emptyStateText }}</div>
+            <h2 kbq-empty-state-title>{{ t().noGroups }}</h2>
+            <div kbq-empty-state-text>{{ t().agentsGroupText }}</div>
             <div kbq-empty-state-actions>
                 <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'">
                     <i kbq-icon="kbq-plus_16" [color]="'theme'"></i>
-                    {{ buttonText }}
+                    {{ t().createGroup }}
                 </button>
             </div>
         </kbq-empty-state>
@@ -41,7 +43,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmptyStateSizeExample {
-    buttonText = 'Create group';
-    emptyStateText = 'Agents can be grouped together and assigned the same policies.';
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly size = model<KbqDefaultSizes>('compact');
 }

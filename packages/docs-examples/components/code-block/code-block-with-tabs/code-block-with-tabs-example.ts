@@ -6,6 +6,8 @@ import {
     KbqCodeBlockModule
 } from '@koobiq/components/code-block';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Code-block with tabs
@@ -18,9 +20,11 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         FormsModule
     ],
     template: `
-        <kbq-toggle class="layout-margin-right-m layout-margin-bottom-m" [(ngModel)]="hideTabs">Hide tabs</kbq-toggle>
-        <kbq-toggle class="layout-margin-right-m" [(ngModel)]="filled">Filled</kbq-toggle>
-        <kbq-toggle [(ngModel)]="lineNumbers">Line numbers</kbq-toggle>
+        <kbq-toggle class="layout-margin-right-m layout-margin-bottom-m" [(ngModel)]="hideTabs">
+            {{ t().hideTabs }}
+        </kbq-toggle>
+        <kbq-toggle class="layout-margin-right-m" [(ngModel)]="filled">{{ t().filled }}</kbq-toggle>
+        <kbq-toggle [(ngModel)]="lineNumbers">{{ t().lineNumbers }}</kbq-toggle>
 
         <kbq-code-block
             canToggleSoftWrap
@@ -44,6 +48,8 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CodeBlockWithTabsExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly files: KbqCodeBlockFile[] = [
         {
             language: 'html',

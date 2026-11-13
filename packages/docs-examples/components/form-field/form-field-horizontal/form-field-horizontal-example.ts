@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /** @title Form field horizontal */
 @Component({
@@ -7,27 +9,27 @@ import { KbqInputModule } from '@koobiq/components/input';
     imports: [KbqInputModule],
     template: `
         <kbq-form-field horizontal labelClass="flex-15" contentClass="flex-85">
-            <kbq-label>Field name</kbq-label>
+            <kbq-label>{{ t().fieldName }}</kbq-label>
             <input kbqInput />
-            <kbq-hint>Hint below the field</kbq-hint>
+            <kbq-hint>{{ t().hintBelowField }}</kbq-hint>
         </kbq-form-field>
 
         <kbq-form-field horizontal>
-            <kbq-label>Field name</kbq-label>
+            <kbq-label>{{ t().fieldName }}</kbq-label>
             <input kbqInput />
-            <kbq-hint>Hint below the field</kbq-hint>
+            <kbq-hint>{{ t().hintBelowField }}</kbq-hint>
         </kbq-form-field>
 
         <kbq-form-field horizontal labelClass="flex-35" contentClass="flex-65">
-            <kbq-label>Field name</kbq-label>
+            <kbq-label>{{ t().fieldName }}</kbq-label>
             <input kbqInput />
-            <kbq-hint>Hint below the field</kbq-hint>
+            <kbq-hint>{{ t().hintBelowField }}</kbq-hint>
         </kbq-form-field>
 
         <kbq-form-field horizontal labelClass="flex-60" contentClass="flex-40">
-            <kbq-label>Field name</kbq-label>
+            <kbq-label>{{ t().fieldName }}</kbq-label>
             <input kbqInput />
-            <kbq-hint>Hint below the field</kbq-hint>
+            <kbq-hint>{{ t().hintBelowField }}</kbq-hint>
         </kbq-form-field>
     `,
     styles: `
@@ -45,4 +47,6 @@ import { KbqInputModule } from '@koobiq/components/input';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormFieldHorizontalExample {}
+export class FormFieldHorizontalExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+}

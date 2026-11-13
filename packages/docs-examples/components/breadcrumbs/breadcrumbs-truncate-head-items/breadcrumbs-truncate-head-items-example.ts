@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ViewEncapsulation } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Breadcrumbs Truncate Head Items
@@ -13,7 +15,7 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
     ],
     template: `
         <nav class="example-breadcrumbs_truncate-by-length" kbq-breadcrumbs>
-            @for (breadcrumb of breadcrumbs; track breadcrumb) {
+            @for (breadcrumb of breadcrumbs(); track breadcrumb) {
                 <kbq-breadcrumb-item
                     [routerLink]="breadcrumb.url"
                     [queryParams]="{ queryParams: 'queryParam' }"
@@ -37,12 +39,14 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
     encapsulation: ViewEncapsulation.None
 })
 export class BreadcrumbsTruncateHeadItemsExample {
-    breadcrumbs = [
-        { label: 'Components', url: '/components' },
-        { label: 'Commit', url: '/components/commit' },
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    readonly breadcrumbs = computed(() => [
+        { label: this.t().components, url: '/components' },
+        { label: this.t().commit, url: '/components/commit' },
         {
             label: 'cacb86c728451b57740706d19429e6629140b7c5',
             url: '/components/commit/cacb86c728451b57740706d19429e6629140b7c5'
         }
-    ];
+    ]);
 }

@@ -1,38 +1,38 @@
-<button kbq-button (click)="openPanel()">Open panel with accordion</button>
+<button kbq-button (click)="openPanel()">{{ t().openPanel }}</button>
 
 <ng-template #template>
-    <kbq-sidepanel-header [closeable]="true">Панель</kbq-sidepanel-header>
+    <kbq-sidepanel-header [closeable]="true">{{ t().panel }}</kbq-sidepanel-header>
 
     <kbq-sidepanel-body class="layout-padding-left-l">
         <kbq-accordion>
             <kbq-accordion-item>
-                <button kbq-accordion-trigger type="button">Профиль</button>
+                <button kbq-accordion-trigger type="button">{{ t().profile }}</button>
                 <kbq-accordion-content>
-                    Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
+                    {{ t().content }}
                 </kbq-accordion-content>
             </kbq-accordion-item>
             <kbq-accordion-item>
-                <button kbq-accordion-trigger type="button">Характеристики</button>
+                <button kbq-accordion-trigger type="button">{{ t().specifications }}</button>
                 <kbq-accordion-content>
-                    Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
+                    {{ t().content }}
                 </kbq-accordion-content>
             </kbq-accordion-item>
             <kbq-accordion-item>
-                <button kbq-accordion-trigger type="button">Сервера</button>
+                <button kbq-accordion-trigger type="button">{{ t().servers }}</button>
                 <kbq-accordion-content>
-                    Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
+                    {{ t().content }}
                 </kbq-accordion-content>
             </kbq-accordion-item>
             <kbq-accordion-item>
-                <button kbq-accordion-trigger type="button">Данные</button>
+                <button kbq-accordion-trigger type="button">{{ t().data }}</button>
                 <kbq-accordion-content>
-                    Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
+                    {{ t().content }}
                 </kbq-accordion-content>
             </kbq-accordion-item>
             <kbq-accordion-item>
-                <button kbq-accordion-trigger type="button">Заметка</button>
+                <button kbq-accordion-trigger type="button">{{ t().note }}</button>
                 <kbq-accordion-content>
-                    Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
+                    {{ t().content }}
                 </kbq-accordion-content>
             </kbq-accordion-item>
         </kbq-accordion>

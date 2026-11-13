@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Breadcrumbs Wrap
@@ -10,7 +12,7 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
     template: `
         <div [style.max-width.px]="320">
             <nav wrapMode="wrap" kbq-breadcrumbs [firstItemNegativeMargin]="false">
-                @for (breadcrumb of breadcrumbs; track breadcrumb) {
+                @for (breadcrumb of breadcrumbs(); track breadcrumb) {
                     <kbq-breadcrumb-item [text]="breadcrumb.label" />
                 }
             </nav>
@@ -19,11 +21,13 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsWithWrapExample {
-    breadcrumbs = [
-        { label: 'Main' },
-        { label: 'Standards' },
-        { label: 'Advanced Encryption Standard' },
-        { label: 'Edit' },
-        { label: 'Test' }
-    ];
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    readonly breadcrumbs = computed(() => [
+        { label: this.t().main },
+        { label: this.t().standards },
+        { label: this.t().aes },
+        { label: this.t().edit },
+        { label: this.t().test }
+    ]);
 }

@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Tab list with selection by tab id
@@ -13,13 +15,13 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     ],
     template: `
         <kbq-tab-group [(activeTab)]="selectedTabId">
-            @for (tab of tabs; track tab) {
+            @for (tab of tabs(); track tab) {
                 <kbq-tab [tabId]="tab.tabId">
                     <ng-template kbq-tab-label>
                         <i [kbq-icon]="tab.icon"></i>
-                        {{ tab.tabId }}
+                        {{ tab.label }}
                     </ng-template>
-                    Content for selected tab with id: {{ selectedTabId }}
+                    {{ t().contentForId(selectedTabId) }}
                 </kbq-tab>
             }
         </kbq-tab-group>
@@ -27,11 +29,13 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabsActiveTabIdExample {
-    readonly tabs = [
-        { tabId: 'files', icon: 'kbq-folder-open_16' },
-        { tabId: 'settings', icon: 'kbq-gear_16' },
-        { tabId: 'tasks', icon: 'kbq-bars-horizontal_16' }
-    ];
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    readonly tabs = computed(() => [
+        { tabId: 'files', icon: 'kbq-folder-open_16', label: this.t().files },
+        { tabId: 'settings', icon: 'kbq-gear_16', label: this.t().settings },
+        { tabId: 'tasks', icon: 'kbq-bars-horizontal_16', label: this.t().tasks }
+    ]);
 
     selectedTabId: string = 'settings';
 }

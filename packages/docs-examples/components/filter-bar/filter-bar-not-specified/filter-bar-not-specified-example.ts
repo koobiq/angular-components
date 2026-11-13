@@ -6,7 +6,8 @@ import {
     KbqPipeTypes,
     KbqSelectValue
 } from '@koobiq/components/filter-bar';
-import { injectLocalizedText } from '../localized-data';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 const ATTACK_TYPES: KbqSelectValue[] = [
     'Adversary-in-the-Middle',
@@ -49,22 +50,20 @@ const ATTACK_TYPES: KbqSelectValue[] = [
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarNotSpecifiedExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     /** Text the example owns; the option is worded to agree with the name of the filter. */
-    protected readonly text = injectLocalizedText({
-        'ru-RU': { name: 'Тип атаки', notSpecified: 'Не указан' },
-        default: { name: 'Attack Type', notSpecified: 'Not specified' }
-    });
 
     /** Objects whose attack type is not set: the first option of the list. */
     private readonly notSpecified = computed<KbqSelectValue>(() => ({
-        name: this.text().notSpecified,
+        name: this.t().notSpecified,
         id: 'NotSpecified',
         value: null
     }));
 
     readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
         {
-            name: this.text().name,
+            name: this.t().name,
             id: 'AttackType',
             type: KbqPipeTypes.MultiSelect,
             values: [this.notSpecified(), ...ATTACK_TYPES],
@@ -85,7 +84,7 @@ export class FilterBarNotSpecifiedExample {
         saved: false,
         pipes: [
             {
-                name: this.text().name,
+                name: this.t().name,
                 id: 'AttackType',
                 type: KbqPipeTypes.MultiSelect,
                 value: [this.notSpecified()],

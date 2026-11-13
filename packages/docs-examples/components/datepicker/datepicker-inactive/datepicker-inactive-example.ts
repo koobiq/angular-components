@@ -5,7 +5,9 @@ import { DateAdapter, KbqFormsModule } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Datepicker inactive
@@ -23,7 +25,7 @@ import { DateTime } from 'luxon';
     template: `
         <div class="docs-example__datepicker-inactive kbq-form-vertical">
             <div class="kbq-form__row">
-                <label class="kbq-form__label">Disabled empty field</label>
+                <label class="kbq-form__label">{{ t().disabledEmptyField }}</label>
                 <kbq-form-field>
                     <input [disabled]="true" [kbqDatepicker]="emptyDatepicker" [placeholder]="''" />
                     <kbq-datepicker-toggle-icon kbqSuffix [for]="emptyDatepicker" />
@@ -34,7 +36,7 @@ import { DateTime } from 'luxon';
             <br />
 
             <div class="kbq-form__row">
-                <label class="kbq-form__label">Read-only field with data</label>
+                <label class="kbq-form__label">{{ t().readOnlyField }}</label>
                 <kbq-form-field>
                     <input [disabled]="true" [kbqDatepicker]="datepicker" [ngModel]="selectedDate" />
                     <kbq-datepicker-toggle-icon kbqSuffix [for]="datepicker" />
@@ -46,6 +48,8 @@ import { DateTime } from 'luxon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatepickerInactiveExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
     selectedDate: DateTime;

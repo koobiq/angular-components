@@ -4,8 +4,8 @@ import {
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
-    NgZone,
     inject,
+    NgZone,
     viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -16,6 +16,8 @@ import {
 } from '@koobiq/components/core';
 import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title select-auto-hide-scroll-strategy
@@ -25,7 +27,7 @@ import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
     imports: [CdkScrollableModule, KbqSelectModule, KbqNativeScrollbar],
     template: `
         <div class="example-select-auto-hide-scroll-strategy__container" kbqNativeScrollbar cdkScrollable>
-            <div class="example-select-auto-hide-scroll-strategy__spacer">Scroll down</div>
+            <div class="example-select-auto-hide-scroll-strategy__spacer">{{ t().scrollDown }}</div>
 
             <kbq-form-field>
                 <kbq-select [value]="selected">
@@ -35,7 +37,7 @@ import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
                 </kbq-select>
             </kbq-form-field>
 
-            <div class="example-select-auto-hide-scroll-strategy__spacer">Scroll up</div>
+            <div class="example-select-auto-hide-scroll-strategy__spacer">{{ t().scrollUp }}</div>
         </div>
     `,
     styles: `
@@ -70,7 +72,9 @@ import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectAutoHideScrollStrategyExample implements AfterViewInit {
-    protected readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    protected readonly options = Array.from({ length: 5 }, (_, i) => 'Option #' + i);
     protected readonly selected = this.options[0];
 
     private readonly select = viewChild.required(KbqSelect);

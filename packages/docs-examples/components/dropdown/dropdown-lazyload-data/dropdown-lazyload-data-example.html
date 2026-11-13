@@ -9,11 +9,11 @@
 
 <kbq-dropdown #appDropdownLazy="kbqDropdown">
     <ng-template let-someValue="someValue" kbqDropdownContent>
-        <button kbq-dropdown-item>dropdown</button>
+        <button kbq-dropdown-item>{{ t().dropdownTrigger }}</button>
         <button kbq-dropdown-item>
             Point 1
-            <span kbqDropdownItemCaption>Some info</span>
+            <span kbqDropdownItemCaption>{{ t().someInfo }}</span>
         </button>
-        <button kbq-dropdown-item>Value: {{ someValue }}</button>
+        <button kbq-dropdown-item>{{ t().value }} {{ someValue }}</button>
     </ng-template>
 </kbq-dropdown>

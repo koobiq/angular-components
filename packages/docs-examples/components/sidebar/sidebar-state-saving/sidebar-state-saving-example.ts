@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidebarModule, SidebarPositions } from '@koobiq/components/sidebar';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Sidebar state saving
@@ -11,14 +13,20 @@ import { KbqSidebarModule, SidebarPositions } from '@koobiq/components/sidebar';
     template: `
         <!-- No opened binding: the sidebar owns its state, which is what lets it persist. -->
         <kbq-sidebar #sidebar="kbqSidebar" stateSavingKey="sidebar-state-saving-example" [position]="position.Left">
-            <div kbq-sidebar-opened width="170px">Opened content</div>
-            <div kbq-sidebar-closed width="44px">Closed content</div>
+            <div kbq-sidebar-opened width="170px">{{ t().openedContent }}</div>
+            <div kbq-sidebar-closed width="44px">{{ t().closedContent }}</div>
         </kbq-sidebar>
 
         <main>
-            <div>Toggle the sidebar and reload the page — it comes back the way it was left.</div>
-            <div><button kbq-button type="button" (click)="sidebar.toggle()">Toggle</button></div>
-            <div><button kbq-button type="button" (click)="sidebar.clearSavedState()">Reset saved state</button></div>
+            <div>{{ t().stateSavingHint }}</div>
+            <div>
+                <button kbq-button type="button" (click)="sidebar.toggle()">{{ t().toggle }}</button>
+            </div>
+            <div>
+                <button kbq-button type="button" (click)="sidebar.clearSavedState()">
+                    {{ t().resetSavedState }}
+                </button>
+            </div>
         </main>
     `,
     styles: `
@@ -53,5 +61,7 @@ import { KbqSidebarModule, SidebarPositions } from '@koobiq/components/sidebar';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidebarStateSavingExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly position = SidebarPositions;
 }

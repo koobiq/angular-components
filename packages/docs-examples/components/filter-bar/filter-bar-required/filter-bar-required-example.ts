@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, linkedSignal } from '@ang
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateFormatter } from '@koobiq/components/core';
 import { KbqFilter, KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
-import { injectLocalizedPeriods } from '../localized-data';
+import { injectLocalizedPeriods } from '../localized-periods';
 
 /**
  * @title filter-bar-required

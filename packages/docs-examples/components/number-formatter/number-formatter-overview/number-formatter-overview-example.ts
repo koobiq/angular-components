@@ -8,8 +8,10 @@ import {
 } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTableModule } from '@koobiq/components/table';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { delay } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Number-formatter
@@ -25,7 +27,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
     ],
     template: `
         <kbq-form-field style="margin-bottom: 16px; max-width: 200px">
-            <input kbqNormalizeWhitespace kbqNumberInput placeholder="Number" [(ngModel)]="value" />
+            <input kbqNormalizeWhitespace kbqNumberInput [placeholder]="t().number" [(ngModel)]="value" />
         </kbq-form-field>
 
         <table kbq-table disableHover>
@@ -50,6 +52,8 @@ import { distinctUntilChanged } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NumberFormatterOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE);
     protected changeDetectorRef = inject(ChangeDetectorRef);
 

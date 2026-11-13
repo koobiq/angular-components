@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqLink, KbqLinkUnderline } from '@koobiq/components/link';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Link underline
@@ -18,7 +20,7 @@ import { KbqLink, KbqLinkUnderline } from '@koobiq/components/link';
 
         <div class="example-stage">
             <a kbqLink href="https://koobiq.io/en/components/link" target="_blank" [underline]="underline()">
-                Scan report
+                {{ t().scanReport }}
             </a>
         </div>
     `,
@@ -38,5 +40,7 @@ import { KbqLink, KbqLinkUnderline } from '@koobiq/components/link';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LinkUnderlineExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly underline = model<KbqLinkUnderline>('always');
 }

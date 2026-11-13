@@ -3,6 +3,8 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, KbqThemeService } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Empty-state content
@@ -20,18 +22,18 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 <div kbq-empty-state-icon>
                     <img
                         src="https://koobiq.io/assets/images/{{ currentTheme() }}/empty_192.webp"
-                        alt="Empty state"
                         height="192"
                         width="192"
+                        [attr.alt]="t().altEmptyState"
                         [srcset]="srcSet()"
                     />
                 </div>
-                <h2 kbq-empty-state-title>Нет групп</h2>
-                <div kbq-empty-state-text>{{ emptyStateText }}</div>
+                <h2 kbq-empty-state-title>{{ t().noGroups }}</h2>
+                <div kbq-empty-state-text>{{ t().agentsGroupText }}</div>
                 <div kbq-empty-state-actions>
                     <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">
                         <i kbq-icon="kbq-plus_16" [color]="'theme'"></i>
-                        {{ buttonText }}
+                        {{ t().createGroup }}
                     </button>
                 </div>
             </kbq-empty-state>
@@ -40,18 +42,18 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 <div kbq-empty-state-icon>
                     <img
                         src="https://koobiq.io/assets/images/{{ currentTheme() }}/empty_192.webp"
-                        alt="Empty state"
                         width="80"
                         height="80"
+                        [attr.alt]="t().altEmptyState"
                         [srcset]="srcSet()"
                     />
                 </div>
-                <h2 kbq-empty-state-title>Нет групп</h2>
-                <div kbq-empty-state-text>{{ emptyStateText }}</div>
+                <h2 kbq-empty-state-title>{{ t().noGroups }}</h2>
+                <div kbq-empty-state-text>{{ t().agentsGroupText }}</div>
                 <div kbq-empty-state-actions>
                     <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">
                         <i kbq-icon="kbq-plus_16" [color]="'theme'"></i>
-                        {{ buttonText }}
+                        {{ t().createGroup }}
                     </button>
                 </div>
             </kbq-empty-state>
@@ -60,6 +62,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmptyStateContentExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly colors = KbqComponentColors;
     readonly styles = KbqButtonStyles;
     private readonly themeService = inject(KbqThemeService, { optional: true });
@@ -70,7 +74,4 @@ export class EmptyStateContentExample {
 
         return `https://koobiq.io/assets/images/${currentTheme}/empty_192.webp 1x, https://koobiq.io/assets/images/${currentTheme}/empty_192@2x.webp 2x`;
     });
-
-    buttonText = 'Создать группу';
-    emptyStateText = 'Агенты можно объединить в группу и назначить им одни и те же политики';
 }

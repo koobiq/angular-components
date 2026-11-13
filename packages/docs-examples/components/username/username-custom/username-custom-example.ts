@@ -12,6 +12,8 @@ import {
     KbqUsernameModule,
     KbqUsernameStyle
 } from '@koobiq/components/username';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 const mapping: KbqFormatKeyToProfileMappingExtended = {
     [KbqUsernameFormatKey.FirstNameShort]: 'firstName',
@@ -53,7 +55,7 @@ const mapping: KbqFormatKeyToProfileMappingExtended = {
         </div>
         <div class="layout-row layout-gap-l">
             <kbq-form-field style="width: 100px">
-                <kbq-label>Name format</kbq-label>
+                <kbq-label>{{ t().nameFormat }}</kbq-label>
                 <textarea kbqTextarea rows="1" [maxRows]="1" [(ngModel)]="fullNameFormat"></textarea>
             </kbq-form-field>
 
@@ -87,6 +89,8 @@ const mapping: KbqFormatKeyToProfileMappingExtended = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsernameCustomExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     userInfo: KbqUserInfo = {
         firstName: 'Maxwell',
         middleName: 'Alan',

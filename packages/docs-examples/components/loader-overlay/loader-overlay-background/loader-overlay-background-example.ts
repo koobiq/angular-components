@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqLoaderOverlayModule, KbqLoaderOverlaySurface } from '@koobiq/components/loader-overlay';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Loader-overlay background
@@ -12,9 +14,9 @@ import { KbqLoaderOverlayModule, KbqLoaderOverlaySurface } from '@koobiq/compone
             @for (surface of surfaces; track surface.value) {
                 <div class="example__item {{ surface.surfaceClass }}">
                     <div class="example__content">
-                        <p class="example__paragraph kbq-text-normal">{{ content }}</p>
+                        <p class="example__paragraph kbq-text-normal">{{ content() }}</p>
                         <p class="example__paragraph example__paragraph_fade kbq-text-normal">
-                            {{ contentFade }}
+                            {{ contentFade() }}
                         </p>
                     </div>
                     <kbq-loader-overlay
@@ -134,10 +136,10 @@ import { KbqLoaderOverlayModule, KbqLoaderOverlaySurface } from '@koobiq/compone
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoaderOverlayBackgroundExample {
-    protected readonly content =
-        'Content behind the overlay becomes barely visible, as if hidden in fog. The interface remains recognizable while loading continues, but the main actions are temporarily unavailable.';
-    protected readonly contentFade =
-        'The overlay blends seamlessly with the background, leaving no visible boundary around its edges. Matching the overlay color to the surface keeps the container connected to the surrounding interface.';
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    protected readonly content = computed(() => this.t().backgroundContent);
+    protected readonly contentFade = computed(() => this.t().backgroundContentFade);
 
     protected readonly surfaces: ReadonlyArray<{
         value: KbqLoaderOverlaySurface;

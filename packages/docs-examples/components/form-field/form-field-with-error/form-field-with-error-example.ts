@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /** @title Form field with kbq-error */
 @Component({
@@ -8,14 +10,14 @@ import { KbqInputModule } from '@koobiq/components/input';
     imports: [KbqInputModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
-            <kbq-label>Email</kbq-label>
+            <kbq-label>{{ t().email }}</kbq-label>
             <input kbqInput placeholder="mail@koobiq.io" [formControl]="formControl" />
-            <kbq-hint>Enter email</kbq-hint>
+            <kbq-hint>{{ t().enterEmail }}</kbq-hint>
             <kbq-error>
                 @if (formControl.hasError('required')) {
-                    Should enter a value
+                    {{ t().shouldEnterValue }}
                 } @else {
-                    Invalid email
+                    {{ t().invalidEmail }}
                 }
             </kbq-error>
         </kbq-form-field>
@@ -23,5 +25,7 @@ import { KbqInputModule } from '@koobiq/components/input';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormFieldWithErrorExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly formControl = new FormControl('', [Validators.required, Validators.email]);
 }

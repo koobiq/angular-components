@@ -5,6 +5,8 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSkeletonFormField } from '@koobiq/components/skeleton';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Skeleton form field preset
@@ -20,7 +22,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         KbqTextareaModule
     ],
     template: `
-        <kbq-toggle [(ngModel)]="loading">Loading</kbq-toggle>
+        <kbq-toggle [(ngModel)]="loading">{{ t().loading }}</kbq-toggle>
 
         @if (loading()) {
             <kbq-skeleton-form-field horizontal hint labelClass="flex-30" contentClass="flex-70" />
@@ -28,18 +30,18 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             <kbq-skeleton-form-field control="textarea" hint />
         } @else {
             <kbq-form-field horizontal labelClass="flex-30" contentClass="flex-70">
-                <kbq-label>Server address</kbq-label>
+                <kbq-label>{{ t().serverAddress }}</kbq-label>
                 <input kbqInput value="productname1.security.com" />
-                <kbq-hint>Domain name or IP address</kbq-hint>
+                <kbq-hint>{{ t().domainHint }}</kbq-hint>
             </kbq-form-field>
             <kbq-form-field>
-                <kbq-label>Port</kbq-label>
+                <kbq-label>{{ t().port }}</kbq-label>
                 <input kbqInput value="636" />
-                <kbq-hint>LDAPS listens on port 636</kbq-hint>
+                <kbq-hint>{{ t().ldapsPortHint }}</kbq-hint>
             </kbq-form-field>
             <kbq-form-field>
-                <kbq-label>Description</kbq-label>
-                <textarea kbqTextarea>Primary directory server of the security.com domain</textarea>
+                <kbq-label>{{ t().description }}</kbq-label>
+                <textarea kbqTextarea>{{ t().directoryDescription }}</textarea>
                 <kbq-hint>Shown in the list of servers</kbq-hint>
             </kbq-form-field>
         }
@@ -55,5 +57,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SkeletonFormFieldExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly loading = model(true);
 }

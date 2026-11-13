@@ -1,15 +1,15 @@
 <div class="popover-placement-center-example">
     <ng-template #customContent>
-        <div class="layout-margin-bottom-s">Интересно, что это такое?</div>
+        <div class="layout-margin-bottom-s">{{ t().wonder }}</div>
         <kbq-form-field>
-            <input kbqInput placeholder="Интересная мысль" />
+            <input kbqInput [placeholder]="t().placeholder" />
         </kbq-form-field>
     </ng-template>
 
     <ng-template #customFooter>
         <div style="gap: 16px" class="layout-row layout-wrap">
-            <button kbq-button [color]="'contrast'" (click)="activePopover.hide(0)">Сохранить</button>
-            <button kbq-button (click)="activePopover.hide(0)">Отмена</button>
+            <button kbq-button [color]="'contrast'" (click)="activePopover.hide(0)">{{ t().save }}</button>
+            <button kbq-button (click)="activePopover.hide(0)">{{ t().cancel }}</button>
         </div>
     </ng-template>
 

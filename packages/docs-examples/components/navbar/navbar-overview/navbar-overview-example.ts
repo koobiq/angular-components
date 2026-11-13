@@ -6,7 +6,8 @@ import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
-import { injectExampleText } from '../localized-data';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Navbar
@@ -25,7 +26,7 @@ import { injectExampleText } from '../localized-data';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarOverviewExample {
-    protected readonly text = injectExampleText();
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     popUpPlacements = PopUpPlacements;
 }

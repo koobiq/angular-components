@@ -5,8 +5,10 @@ import {
     KbqAgGridThemeModule
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community';
+import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -17,7 +19,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     selector: 'ag-grid-column-state-example',
     imports: [AgGridModule, KbqAgGridThemeModule, KbqButtonModule],
     template: `
-        <button type="button" kbq-button (click)="columnState.reset()">Reset column state</button>
+        <button type="button" kbq-button (click)="columnState.reset()">{{ t().resetColumnState }}</button>
         <ag-grid-angular
             #columnState="kbqAgGridColumnState"
             kbqAgGridTheme
@@ -45,24 +47,18 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridColumnStateExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true
     };
-    readonly columnDefs: ColDef[] = [
-        { field: 'column0', headerName: 'Column 0', width: 100 },
-        { field: 'column1', headerName: 'Column 1', width: 100 },
-        { field: 'column2', headerName: 'Column 2', width: 100 },
-        { field: 'column3', headerName: 'Column 3', width: 100 },
-        { field: 'column4', headerName: 'Column 4', width: 100 },
-        { field: 'column5', headerName: 'Column 5', width: 100 }
-    ];
-    readonly rowData = Array.from({ length: 100 }, (_, index) => ({
-        column0: 'Text ' + index,
-        column1: 'Text ' + index,
-        column2: 'Text ' + index,
-        column3: 'Text ' + index,
-        column4: 'Text ' + index,
-        column5: 'Text ' + index
+    readonly columnDefs: ColDef[] = Array.from({ length: 6 }, (_, i) => ({
+        field: 'column' + i,
+        headerName: 'Column ' + i,
+        width: 100
     }));
+    readonly rowData = Array.from({ length: 100 }, (_, index) =>
+        Object.fromEntries(Array.from({ length: 6 }, (_, i) => ['column' + i, 'Text ' + index]))
+    );
 }

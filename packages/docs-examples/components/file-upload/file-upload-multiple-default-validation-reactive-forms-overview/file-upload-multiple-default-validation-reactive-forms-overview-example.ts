@@ -4,6 +4,8 @@ import { FileValidators } from '@koobiq/components/core';
 import { KbqFileItem, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 const MAX_FILE_SIZE = 5 * 2 ** 20;
 
@@ -33,7 +35,7 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
                 }
             </ng-template>
 
-            <kbq-hint>The file size should not exceed 5 MB</kbq-hint>
+            <kbq-hint>{{ t().sizeNotExceed5mb }}</kbq-hint>
 
             @for (control of fileList.controls; track $index) {
                 <kbq-hint color="error">
@@ -47,6 +49,8 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadMultipleDefaultValidationReactiveFormsOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     maxFileSizeErrorMessage = 'The file size has exceeded the limit';
 
     fileList = new FormArray<FormControl<KbqFileItem | null>>([]);

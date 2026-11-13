@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Textarea readonly
@@ -10,11 +12,16 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     selector: 'textarea-readonly-example',
     imports: [KbqTextareaModule, KbqToggleModule, FormsModule],
     template: `
-        <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="readonly">Readonly</kbq-toggle>
+        <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="readonly">{{ t().readonly }}</kbq-toggle>
 
         <kbq-form-field>
-            <kbq-label>Label</kbq-label>
-            <textarea kbqTextarea placeholder="Placeholder" [readonly]="readonly()" [(ngModel)]="value"></textarea>
+            <kbq-label>{{ t().label }}</kbq-label>
+            <textarea
+                kbqTextarea
+                [placeholder]="t().placeholder"
+                [readonly]="readonly()"
+                [(ngModel)]="value"
+            ></textarea>
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,6 +30,8 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     }
 })
 export class TextareaReadonlyExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly readonly = model(true);
     protected readonly value = model('Text');
 }

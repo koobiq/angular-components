@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Input
@@ -17,7 +19,7 @@ import { KbqInputModule } from '@koobiq/components/input';
         <kbq-form-field>
             <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix [autoColor]="true"></i>
 
-            <input kbqInput placeholder="Placeholder" [(ngModel)]="value" />
+            <input kbqInput [placeholder]="t().placeholder" [(ngModel)]="value" />
 
             <kbq-cleaner />
         </kbq-form-field>
@@ -29,7 +31,7 @@ import { KbqInputModule } from '@koobiq/components/input';
         <kbq-form-field noBorders>
             <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix [autoColor]="true"></i>
 
-            <input kbqInput placeholder="Placeholder" [(ngModel)]="value" />
+            <input kbqInput [placeholder]="t().placeholder" [(ngModel)]="value" />
 
             <kbq-cleaner />
         </kbq-form-field>
@@ -37,5 +39,7 @@ import { KbqInputModule } from '@koobiq/components/input';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     value = '';
 }

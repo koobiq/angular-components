@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { KbqFlag, KbqFlagShadow } from '@koobiq/components/flag';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { hasFlag } from 'country-flag-icons';
 import * as flags3x2 from 'country-flag-icons/string/3x2';
-
-type FallbackCountry = { code: string; name: string; custom?: string; shadow?: KbqFlagShadow };
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Fallback for a missing flag
@@ -13,7 +13,7 @@ type FallbackCountry = { code: string; name: string; custom?: string; shadow?: K
     selector: 'flag-fallback-example',
     imports: [KbqFlag],
     template: `
-        @for (country of countries; track country.name) {
+        @for (country of countries(); track country.name) {
             <span>
                 <kbq-flag decorative [empty]="!country.svg && !country.custom" [shadow]="country.shadow ?? 'inset'">
                     @if (country.svg) {
@@ -39,20 +39,25 @@ type FallbackCountry = { code: string; name: string; custom?: string; shadow?: K
     }
 })
 export class FlagFallbackExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly sanitizer = inject(DomSanitizer);
 
     // "GND", "KRK" and "WA" are not real ISO codes. `hasFlag` guards the lookup — Gondor projects a
     // custom glyph, the rest render a neutral placeholder.
-    protected readonly countries = (
-        [
-            { code: 'AL', name: 'Albania' },
-            { code: 'GND', name: 'Gondor', custom: '🏇', shadow: 'none' },
-            { code: 'KRK', name: 'Krakozhia' },
-            { code: 'PE', name: 'Peru' },
-            { code: 'WA', name: 'Wakanda' }
-        ] satisfies FallbackCountry[]
-    ).map((country) => ({
-        ...country,
-        svg: hasFlag(country.code) ? this.sanitizer.bypassSecurityTrustHtml(flags3x2[country.code]) : null
-    }));
+    private readonly countriesMeta = [
+        { code: 'AL' },
+        { code: 'GND', custom: '🏇', shadow: 'none' as KbqFlagShadow },
+        { code: 'KRK' },
+        { code: 'PE' },
+        { code: 'WA' }
+    ];
+
+    protected readonly countries = computed(() =>
+        this.countriesMeta.map((meta, index) => ({
+            ...meta,
+            name: this.t().fallbackCountries[index],
+            svg: hasFlag(meta.code) ? this.sanitizer.bypassSecurityTrustHtml(flags3x2[meta.code]) : null
+        }))
+    );
 }

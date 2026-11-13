@@ -4,7 +4,9 @@ import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqInlineEditModule, KbqInlineEditSaveHandler } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { Observable, timer } from 'rxjs';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit save progress
@@ -30,7 +32,7 @@ import { Observable, timer } from 'rxjs';
         </div>
 
         <kbq-inline-edit showActions [saveHandler]="save">
-            <kbq-label>Name</kbq-label>
+            <kbq-label>{{ t().name }}</kbq-label>
 
             <!-- View mode renders the control itself: editing closes before the server answers. -->
             <div class="example-inline-text" kbqInlineEditViewMode>
@@ -46,7 +48,7 @@ import { Observable, timer } from 'rxjs';
         </kbq-inline-edit>
 
         <kbq-inline-edit [saveHandler]="save">
-            <kbq-label>Description</kbq-label>
+            <kbq-label>{{ t().description }}</kbq-label>
 
             <div class="example-inline-text" kbqInlineEditViewMode>
                 @if (descriptionControl.value) {
@@ -78,7 +80,11 @@ import { Observable, timer } from 'rxjs';
     }
 })
 export class InlineEditSaveProgressExample {
-    protected readonly placeholder = 'Placeholder';
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    protected get placeholder(): string {
+        return this.t().placeholder;
+    }
     protected readonly delayOptions = [100, 250, 500, 3000];
     protected readonly delay = signal(500);
 

@@ -1,11 +1,13 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, GridApi, GridReadyEvent, ModuleRegistry } from 'ag-grid-community';
 import { jsPDF } from 'jspdf';
 import { autoTable } from 'jspdf-autotable';
 import writeExcelFile from 'write-excel-file/browser';
+import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -22,9 +24,9 @@ type ExportTable = {
     imports: [AgGridModule, KbqAgGridThemeModule, KbqButtonModule],
     template: `
         <div class="ag-grid-export-example-actions">
-            <button type="button" kbq-button (click)="downloadCsv()">Download CSV</button>
-            <button type="button" kbq-button (click)="downloadXlsx()">Download XLSX</button>
-            <button type="button" kbq-button (click)="downloadPdf()">Download PDF</button>
+            <button type="button" kbq-button (click)="downloadCsv()">{{ t().download('CSV') }}</button>
+            <button type="button" kbq-button (click)="downloadXlsx()">{{ t().download('XLSX') }}</button>
+            <button type="button" kbq-button (click)="downloadPdf()">{{ t().download('PDF') }}</button>
         </div>
 
         <ag-grid-angular
@@ -32,7 +34,7 @@ type ExportTable = {
             kbqAgGridThemeDisableCellFocusStyles
             [alwaysMultiSort]="true"
             [rowData]="rowData"
-            [columnDefs]="columnDefs"
+            [columnDefs]="columnDefs()"
             [defaultColDef]="defaultColDef"
             [style.height.px]="300"
             [style.width.%]="100"
@@ -55,27 +57,28 @@ type ExportTable = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridExportExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly api = signal<GridApi | null>(null);
     private readonly filename = 'example-export';
+
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,
         filter: true,
         floatingFilter: true
     };
-    protected readonly columnDefs: ColDef[] = [
-        { field: 'column0', headerName: 'Project name', width: 130 },
-        { field: 'column1', headerName: 'Column 1', width: 130 },
-        { field: 'column2', headerName: 'Column 2', width: 130 },
-        { field: 'column3', headerName: 'Column 3', width: 130 },
-        { field: 'column4', headerName: 'Column 4', width: 130 }
-    ];
+    protected readonly columnDefs = computed<ColDef[]>(() => [
+        { field: 'column0', headerName: this.t().projectName, width: 130 },
+        ...Array.from({ length: 4 }, (_, i) => ({
+            field: 'column' + (i + 1),
+            headerName: 'Column ' + (i + 1),
+            width: 130
+        }))
+    ]);
     protected readonly rowData = Array.from({ length: 20 }, (_, index) => ({
         column0: 'Project name ' + index,
-        column1: 'Text ' + index,
-        column2: 'Text ' + index,
-        column3: 'Text ' + index,
-        column4: 'Text ' + index
+        ...Object.fromEntries(Array.from({ length: 4 }, (_, i) => ['column' + (i + 1), 'Text ' + index]))
     }));
 
     /** Stores the grid API once the grid finishes initializing. */

@@ -7,7 +7,9 @@ import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field'
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInlineEdit, KbqInlineEditMode, KbqInlineEditPlaceholder } from '@koobiq/components/inline-edit';
 import { KbqTimepicker } from '@koobiq/components/timepicker';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit date time
@@ -26,7 +28,7 @@ import { DateTime } from 'luxon';
     ],
     template: `
         <kbq-inline-edit showActions (saved)="update()" (modeChange)="onModeChange($event)">
-            <kbq-label>Label</kbq-label>
+            <kbq-label>{{ t().label }}</kbq-label>
 
             <div class="layout-row layout-gap-xxs" style="flex-wrap: wrap;" kbqInlineEditViewMode>
                 @if (displayValue()) {
@@ -72,10 +74,14 @@ import { DateTime } from 'luxon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditDateTimeExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly adapter = inject<DateAdapter<DateTime>>(DateAdapter);
     private readonly formatter = inject<DateFormatter<DateTime>>(DateFormatter);
 
-    protected readonly placeholder = 'Placeholder';
+    protected get placeholder(): string {
+        return this.t().placeholder;
+    }
     protected readonly displayValue: WritableSignal<string>;
     protected readonly datepickerFormField = viewChild<KbqFormField>('datepickerFormField');
     protected readonly datepicker = viewChild<KbqDatepicker<DateTime>>('datepicker');

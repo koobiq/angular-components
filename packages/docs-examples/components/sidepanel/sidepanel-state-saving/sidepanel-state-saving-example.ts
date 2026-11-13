@@ -9,6 +9,8 @@ import {
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidepanelModule, KbqSidepanelRef, KbqSidepanelService } from '@koobiq/components/sidepanel';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 const stateSavingKey = 'sidepanel-state-saving-example';
 
@@ -21,20 +23,19 @@ const stateSavingKey = 'sidepanel-state-saving-example';
     template: `
         <div class="example-sidepanel-state-saving__actions">
             <button kbq-button type="button" [color]="'contrast'" (click)="toggle()">
-                {{ sidepanelRef() ? 'Close sidepanel' : 'Open sidepanel' }}
+                {{ sidepanelRef() ? t().closeSidepanel : t().openSidepanel }}
             </button>
 
             <button kbq-button type="button" (click)="sidepanelService.clearSavedState(stateSavingKey)">
-                Reset saved state
+                {{ t().resetSavedState }}
             </button>
         </div>
 
         <ng-template>
-            <kbq-sidepanel-header [closeable]="true">Sidepanel state saving</kbq-sidepanel-header>
+            <kbq-sidepanel-header [closeable]="true">{{ t().stateSaving }}</kbq-sidepanel-header>
             <kbq-sidepanel-body>
                 <div class="example-sidepanel-state-saving__body">
-                    Leave this panel open and reload the page — it opens again. The panel is non-modal, so nothing on
-                    the page is blocked while it comes back.
+                    {{ t().body }}
                 </div>
             </kbq-sidepanel-body>
         </ng-template>
@@ -52,6 +53,8 @@ const stateSavingKey = 'sidepanel-state-saving-example';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelStateSavingExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly sidepanelService = inject(KbqSidepanelService);
     protected readonly stateSavingKey = stateSavingKey;
     protected readonly sidepanelRef = signal<KbqSidepanelRef | null>(null);

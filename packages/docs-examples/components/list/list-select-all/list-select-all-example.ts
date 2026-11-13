@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title List select all
@@ -14,12 +16,12 @@ import { KbqScrollbar } from '@koobiq/components/scrollbar';
             <kbq-scrollbar class="example-list-select-all__scrollbar">
                 <kbq-list-selection
                     class="layout-padding-horizontal-xxs"
-                    aria-label="Incident types"
                     multiple="checkbox"
                     selectAll
+                    [attr.aria-label]="t().incidentTypes"
                     [(ngModel)]="selected"
                 >
-                    @for (option of options; track option) {
+                    @for (option of options(); track option) {
                         <kbq-list-option [value]="option">{{ option }}</kbq-list-option>
                     }
                 </kbq-list-selection>
@@ -46,22 +48,9 @@ import { KbqScrollbar } from '@koobiq/components/scrollbar';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListSelectAllExample {
-    protected readonly options = [
-        'Account Compromise',
-        'Data Breach',
-        'Denial of Service (DoS)',
-        'Insider Threat',
-        'Malware Infection',
-        'Man-in-the-Middle Attack',
-        'Phishing',
-        'Privilege Escalation',
-        'Ransomware',
-        'Social Engineering',
-        'SQL Injection',
-        'Supply Chain Attack',
-        'Unauthorized Access',
-        'Zero-Day Exploit'
-    ];
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    protected readonly options = computed(() => this.t().options);
 
     protected selected: string[] = [];
 }

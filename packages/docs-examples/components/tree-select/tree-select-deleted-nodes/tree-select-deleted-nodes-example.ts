@@ -13,6 +13,8 @@ import {
     KbqTreeModule
 } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 export class FileNode {
     id: string;
@@ -135,13 +137,15 @@ export const DATA_OBJECT = {
 
             <!-- Visible textual reason for the error state: shown even if a red tag was collapsed into the overflow counter -->
             @if (deletedCount > 0) {
-                <kbq-hint>Удалено элементов: {{ deletedCount }} — удалите их из выбора</kbq-hint>
+                <kbq-hint>{{ t().deletedItems(deletedCount) }}</kbq-hint>
             }
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectDeletedNodesExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly defaultErrorStateMatcher = inject(ErrorStateMatcher);
 

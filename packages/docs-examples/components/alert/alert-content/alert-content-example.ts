@@ -4,6 +4,8 @@ import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import { kbqAnimationsDisabled, KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon, KbqIconButton, KbqIconItem } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Alert content
@@ -28,6 +30,8 @@ import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AlertContentExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly animationsDisabled = kbqAnimationsDisabled();
     colors = KbqComponentColors;
     firstState = true;

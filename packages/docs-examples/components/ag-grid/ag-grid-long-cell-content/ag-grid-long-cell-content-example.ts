@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { KbqBadgeModule } from '@koobiq/components/badge';
@@ -6,9 +6,11 @@ import { PopUpPlacements, PopUpSizes } from '@koobiq/components/core';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
 import { KbqPopoverModule } from '@koobiq/components/popover';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule, ICellRendererAngularComp } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, ICellRendererParams, ModuleRegistry } from 'ag-grid-community';
 import { filter, fromEvent } from 'rxjs';
+import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -45,7 +47,7 @@ const onCellEnter = (cell: HTMLElement, destroyRef: DestroyRef, callback: (event
                     <kbq-badge class="layout-margin-right-xxs" [kbqOverflowItem]="host">{{ host }}</kbq-badge>
                 }
                 <a kbqLink pseudo kbqOverflowItemsResult (click)="collapsed.set(false)">
-                    {{ overflow.hiddenItemIDs().size }} еще
+                    {{ t().moreCount(overflow.hiddenItemIDs().size) }}
                 </a>
             </div>
         } @else {
@@ -54,7 +56,7 @@ const onCellEnter = (cell: HTMLElement, destroyRef: DestroyRef, callback: (event
                     <kbq-badge class="layout-margin-right-xxs">{{ host }}</kbq-badge>
                 }
             </div>
-            <a kbqLink pseudo (click)="collapsed.set(true)">Свернуть</a>
+            <a kbqLink pseudo (click)="collapsed.set(true)">{{ t().collapseLink }}</a>
         }
     `,
     styles: `
@@ -88,6 +90,7 @@ export class ExampleOverflowBadgesCellRenderer implements ICellRendererAngularCo
 
     protected readonly hosts = signal<string[]>([]);
     protected readonly collapsed = signal(true);
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     agInit(params: ICellRendererParams<ExampleRowData, string[]>): void {
         this.hosts.set(params.value ?? []);
@@ -136,7 +139,7 @@ export class ExampleOverflowBadgesCellRenderer implements ICellRendererAngularCo
                 [kbqPopoverArrow]="false"
                 [(kbqPopoverVisible)]="popoverVisible"
             >
-                Все {{ techniques().length }}
+                {{ t().allCount(techniques().length) }}
             </a>
         </div>
 
@@ -168,6 +171,7 @@ export class ExampleOverflowLinksCellRenderer implements ICellRendererAngularCom
     private readonly overflowItems = viewChild.required(KbqOverflowItems);
     private readonly destroyRef = inject(DestroyRef);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly popUpSizes = PopUpSizes;
     protected readonly popUpPlacements = PopUpPlacements;
     // Right edge of the panel follows the trigger: under it, and above when there is no room below.
@@ -196,57 +200,6 @@ export class ExampleOverflowLinksCellRenderer implements ICellRendererAngularCom
     }
 }
 
-const EXAMPLE_EVENTS: ExampleRowData[] = [
-    {
-        event: 'Подбор пароля',
-        hosts: ['srv-01', 'srv-02', 'srv-03', 'srv-04', 'srv-05', 'srv-06', 'srv-07'],
-        techniques: ['T1110', 'T1110.001', 'T1110.003', 'T1110.004', 'T1078', 'T1021.004'],
-        status: 'В работе'
-    },
-    {
-        event: 'Сканирование портов',
-        hosts: ['gw-01'],
-        techniques: ['T1046'],
-        status: 'Закрыто'
-    },
-    {
-        event: 'Обнаружено вредоносное ПО',
-        hosts: ['ws-12', 'ws-15', 'ws-21'],
-        techniques: ['T1566.001', 'T1204.002', 'T1027'],
-        status: 'Закрыто'
-    },
-    {
-        event: 'Обфусцированный скрипт',
-        hosts: ['ws-03', 'ws-04'],
-        techniques: ['T1059.001', 'T1027.010', 'T1140'],
-        status: 'В работе'
-    },
-    {
-        event: 'Утечка данных',
-        hosts: ['db-01', 'db-02', 'db-03', 'db-04', 'db-05', 'db-06', 'db-07', 'db-08', 'db-09'],
-        techniques: ['T1567.002', 'T1048', 'T1030', 'T1041', 'T1020'],
-        status: 'Новое'
-    },
-    {
-        event: 'DNS-туннелирование',
-        hosts: ['dns-01', 'dns-02'],
-        techniques: ['T1071.004', 'T1572'],
-        status: 'Новое'
-    },
-    {
-        event: 'Повышение привилегий',
-        hosts: ['ws-01', 'ws-02', 'ws-05', 'ws-06', 'ws-08', 'ws-09'],
-        techniques: ['T1098', 'T1078.002', 'T1078.003', 'T1021.002'],
-        status: 'В работе'
-    },
-    {
-        event: 'Фишинговое письмо',
-        hosts: ['mail-01', 'mail-02', 'mail-03', 'mail-04'],
-        techniques: ['T1566.002', 'T1598.003', 'T1056.003', 'T1583.001'],
-        status: 'Закрыто'
-    }
-];
-
 /**
  * @title AG Grid with overflow items
  */
@@ -258,23 +211,25 @@ const EXAMPLE_EVENTS: ExampleRowData[] = [
             kbqAgGridTheme
             kbqAgGridThemeDisableCellFocusStyles
             [style.height.px]="400"
-            [columnDefs]="columnDefs"
-            [rowData]="rowData"
+            [columnDefs]="columnDefs()"
+            [rowData]="rowData()"
         />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridLongCellContentExample {
-    protected readonly columnDefs: ColDef<ExampleRowData>[] = [
+    private readonly t = injectTranslation(TRANSLATIONS);
+
+    protected readonly columnDefs = computed<ColDef<ExampleRowData>[]>(() => [
         {
             field: 'event',
-            headerName: 'Событие',
+            headerName: this.t().eventHeader,
             flex: 1,
             minWidth: 150
         },
         {
             field: 'hosts',
-            headerName: 'Узлы',
+            headerName: this.t().hostsHeader,
             width: 220,
             minWidth: 140,
             sortable: false,
@@ -284,7 +239,7 @@ export class AgGridLongCellContentExample {
         },
         {
             field: 'techniques',
-            headerName: 'Техники',
+            headerName: this.t().techniquesHeader,
             width: 240,
             minWidth: 140,
             sortable: false,
@@ -293,16 +248,18 @@ export class AgGridLongCellContentExample {
         },
         {
             field: 'status',
-            headerName: 'Статус',
+            headerName: this.t().statusHeader,
             flex: 1,
             minWidth: 120
         }
-    ];
+    ]);
 
     // Repeats of the events above, enough rows to scroll and to see the grid recalculate the cells it renders.
-    protected readonly rowData: ExampleRowData[] = Array.from({ length: 100 }, (_, index) => {
-        const event = EXAMPLE_EVENTS[index % EXAMPLE_EVENTS.length];
+    protected readonly rowData = computed<ExampleRowData[]>(() =>
+        Array.from({ length: 100 }, (_, index) => {
+            const event = this.t().events[index % this.t().events.length];
 
-        return { ...event, event: `${event.event} ${index + 1}` };
-    });
+            return { ...event, event: `${event.event} ${index + 1}` };
+        })
+    );
 }

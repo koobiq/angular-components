@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqLink } from '@koobiq/components/link';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Description list with long text
@@ -12,9 +14,7 @@ import { KbqLink } from '@koobiq/components/link';
         <kbq-dl resizable [dtMinWidth]="100" [ddMinWidth]="200">
             <kbq-dt>security.incident.description</kbq-dt>
             <kbq-dd>
-                An employee opened the
-                <span class="kbq-text-normal-strong">security_update.exe</span>
-                attachment in a phishing email. The file executed malicious code on the workstation.
+                {{ t().longDescription }}
             </kbq-dd>
 
             <kbq-dt>process.parent.executable.file_name</kbq-dt>
@@ -47,4 +47,6 @@ import { KbqLink } from '@koobiq/components/link';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DlLongTextExample {}
+export class DlLongTextExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+}

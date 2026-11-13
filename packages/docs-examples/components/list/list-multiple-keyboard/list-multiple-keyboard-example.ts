@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqListModule } from '@koobiq/components/list';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title List multiple keyboard
@@ -9,7 +11,7 @@ import { KbqListModule } from '@koobiq/components/list';
     selector: 'list-multiple-keyboard-example',
     imports: [KbqListModule, FormsModule],
     template: `
-        <kbq-list-selection multiple="keyboard" aria-label="Items" [(ngModel)]="selected">
+        <kbq-list-selection multiple="keyboard" [attr.aria-label]="t().items" [(ngModel)]="selected">
             <kbq-list-option disabled [value]="'Item 1'">Item 1</kbq-list-option>
             <kbq-list-option [value]="'Item 2'">Item 2</kbq-list-option>
             <kbq-list-option [value]="'Item 3'">Item 3</kbq-list-option>
@@ -22,10 +24,12 @@ import { KbqListModule } from '@koobiq/components/list';
             <kbq-list-option [value]="'Item 10'">Item 10</kbq-list-option>
         </kbq-list-selection>
         <br />
-        <div>Selected: {{ selected }}</div>
+        <div>{{ t().selected }} {{ selected }}</div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListMultipleKeyboardExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     selected = [];
 }

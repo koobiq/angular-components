@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Link disabled
@@ -10,11 +12,11 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     selector: 'link-disabled-example',
     imports: [KbqLink, KbqToggleModule, FormsModule],
     template: `
-        <kbq-toggle [(ngModel)]="disabled">Disabled</kbq-toggle>
+        <kbq-toggle [(ngModel)]="disabled">{{ t().disabled }}</kbq-toggle>
 
         <div class="example-stage">
             <a kbqLink href="https://koobiq.io/en/components/link" target="_blank" [disabled]="disabled()">
-                Scan report
+                {{ t().scanReport }}
             </a>
         </div>
     `,
@@ -34,5 +36,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LinkDisabledExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly disabled = model(true);
 }

@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqLink } from '@koobiq/components/link';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Link visited
@@ -8,7 +10,7 @@ import { KbqLink } from '@koobiq/components/link';
     selector: 'link-visited-example',
     imports: [KbqLink],
     template: `
-        <a kbqLink href="https://koobiq.io/en/components/link" target="_blank" useVisited>Scan report</a>
+        <a kbqLink href="https://koobiq.io/en/components/link" target="_blank" useVisited>{{ t().scanReport }}</a>
     `,
     styles: `
         :host {
@@ -20,4 +22,6 @@ import { KbqLink } from '@koobiq/components/link';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LinkVisitedExample {}
+export class LinkVisitedExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+}

@@ -1,8 +1,8 @@
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, signal, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal, WritableSignal } from '@angular/core';
 import { KbqListModule, KbqListSelectionDroppedEvent } from '@koobiq/components/list';
-
-type Metric = { id: number; name: string };
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Draggable list with transfer between lists
@@ -21,7 +21,7 @@ type Metric = { id: number; name: string };
                 (dropped)="dropped($event)"
             >
                 @for (metric of availableMetrics(); track metric.id) {
-                    <kbq-list-option [value]="metric">{{ metric.name }}</kbq-list-option>
+                    <kbq-list-option [value]="metric">{{ metric.label }}</kbq-list-option>
                 }
             </kbq-list-selection>
 
@@ -34,7 +34,7 @@ type Metric = { id: number; name: string };
                 (dropped)="dropped($event)"
             >
                 @for (metric of selectedMetrics(); track metric.id) {
-                    <kbq-list-option [value]="metric">{{ metric.name }}</kbq-list-option>
+                    <kbq-list-option [value]="metric">{{ metric.label }}</kbq-list-option>
                 }
             </kbq-list-selection>
         </div>
@@ -42,13 +42,15 @@ type Metric = { id: number; name: string };
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListDraggableConnectedExample {
-    protected readonly availableMetrics = signal<Metric[]>([
-        { id: 1, name: 'CPU load' },
-        { id: 2, name: 'Memory usage' },
-        { id: 3, name: 'Disk I/O' }
-    ]);
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    protected readonly selectedMetrics = signal<Metric[]>([{ id: 4, name: 'Network traffic' }]);
+    private readonly metricIds = Array.from({ length: this.t().metrics.length }, (_, index) => index + 1);
+
+    protected readonly available = signal(this.metricIds.slice(0, -1));
+    protected readonly selected = signal(this.metricIds.slice(-1));
+
+    protected readonly availableMetrics = computed(() => this.available().map((id) => this.t().metrics[id - 1]));
+    protected readonly selectedMetrics = computed(() => this.selected().map((id) => this.t().metrics[id - 1]));
 
     protected dropped({
         previousIndex,
@@ -59,8 +61,8 @@ export class ListDraggableConnectedExample {
     }: KbqListSelectionDroppedEvent): void {
         // `previousContainer` and `container` identify the lists, but only the consumer knows which
         // array backs which list — here the dragged value itself is the lookup key.
-        const fromAvailable = this.availableMetrics().includes(option.value);
-        const source = fromAvailable ? this.availableMetrics : this.selectedMetrics;
+        const fromAvailable = this.available().includes(option.value.id);
+        const source = fromAvailable ? this.available : this.selected;
 
         if (previousContainer === container) {
             this.reorder(source, previousIndex, currentIndex);
@@ -68,12 +70,12 @@ export class ListDraggableConnectedExample {
             return;
         }
 
-        const target = fromAvailable ? this.selectedMetrics : this.availableMetrics;
+        const target = fromAvailable ? this.selected : this.available;
 
         this.transfer(source, target, previousIndex, currentIndex);
     }
 
-    private reorder(list: WritableSignal<Metric[]>, previousIndex: number, currentIndex: number): void {
+    private reorder(list: WritableSignal<number[]>, previousIndex: number, currentIndex: number): void {
         const items = [...list()];
 
         moveItemInArray(items, previousIndex, currentIndex);
@@ -82,8 +84,8 @@ export class ListDraggableConnectedExample {
     }
 
     private transfer(
-        source: WritableSignal<Metric[]>,
-        target: WritableSignal<Metric[]>,
+        source: WritableSignal<number[]>,
+        target: WritableSignal<number[]>,
         previousIndex: number,
         currentIndex: number
     ): void {

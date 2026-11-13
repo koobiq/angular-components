@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ViewEncapsulation } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqTitleModule } from '@koobiq/components/title';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Tabs vertical
@@ -16,7 +18,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
     template: `
         <div class="example-tabs-vertical">
             <kbq-tab-group vertical>
-                @for (tab of tabs; track tab) {
+                @for (tab of tabs(); track tab) {
                     <kbq-tab>
                         <ng-template kbq-tab-label>
                             <i kbq-icon="kbq-bug_16"></i>
@@ -54,10 +56,12 @@ import { KbqTitleModule } from '@koobiq/components/title';
     encapsulation: ViewEncapsulation.None
 })
 export class TabsVerticalExample {
-    readonly tabs = [
-        'Complex Attack',
-        'HIPS alert',
-        'IDS/IPS Alert',
-        'Vulnerability Exploitation'
-    ];
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    readonly tabs = computed(() => [
+        this.t().complexAttack,
+        this.t().hipsAlert,
+        this.t().idsIpsAlert,
+        this.t().vulnExploitation
+    ]);
 }

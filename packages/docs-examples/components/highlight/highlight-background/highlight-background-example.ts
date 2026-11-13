@@ -9,7 +9,7 @@ import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
     imports: [KbqHighlightBackgroundPipe],
     template: `
         <div class="kbq-headline layout-margin-bottom-s" [innerHTML]="title | kbqHighlightBackground: keyword"></div>
-        <div class="kbq-text-normal" [innerHTML]="text | kbqHighlightBackground: keyword"></div>
+        <div class="kbq-text-normal" [innerHTML]="content | kbqHighlightBackground: keyword"></div>
     `,
     styles: `
         :host {
@@ -25,7 +25,7 @@ import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 export class HighlightBackgroundExample {
     readonly keyword = 'cub';
     readonly title = 'Cube';
-    readonly text =
+    readonly content =
         'The cube can be represented in many ways. One example is by drawing a graph, a structure in graph' +
         ' theory consisting of a set of vertices that are connected with an edge. This graph also represents the' +
         ' family of a cuboid, a polyhedron with six quadrilateral faces, which includes the cube as its special' +

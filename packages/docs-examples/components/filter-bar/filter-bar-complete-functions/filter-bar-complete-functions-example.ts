@@ -18,8 +18,10 @@ import {
     KbqSaveFilterEvent
 } from '@koobiq/components/filter-bar';
 import { KbqIcon } from '@koobiq/components/icon';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
-import { injectLocalizedPeriods, injectLocalizedText } from '../localized-data';
+import { injectLocalizedPeriods } from '../localized-periods';
+import { TRANSLATIONS } from './l10n';
 
 /** Text search is the first pipe in every filter: always present, never removable. */
 const createSearchPipe = (name: string): KbqPipe => ({
@@ -105,30 +107,14 @@ const createNumberedPipes = (): KbqPipe[] => [
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarCompleteFunctionsExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly adapter = inject(DateAdapter<DateTime>);
 
     /** Period labels follow the active locale, so everything built out of them is rebuilt with it. */
     protected readonly periods = injectLocalizedPeriods();
 
     /** Text the example owns: it has no counterpart in the library's locale data. */
-    protected readonly text = injectLocalizedText({
-        'ru-RU': {
-            search: 'Поиск',
-            undefinedOption: 'Не определен',
-            legitimateAction: 'Легитимное действие',
-            changeAlert: 'Нужно что то изменить в фильтре',
-            resetAlert: 'Нужно сбросить изменения в фильтре',
-            deleteAlert: 'Нужно удалить фильтр'
-        },
-        default: {
-            search: 'Search',
-            undefinedOption: 'Undefined',
-            legitimateAction: 'Legitimate action',
-            changeAlert: 'Something has to change in the filter',
-            resetAlert: 'The filter changes have to be reset',
-            deleteAlert: 'The filter has to be deleted'
-        }
-    });
 
     // Read as a signal, not resolved in `ngAfterViewInit`: the templates below are rebuilt whenever the
     // locale changes, so they have to be able to pick the query up on any pass, not only the first.
@@ -244,7 +230,7 @@ export class FilterBarCompleteFunctionsExample {
     onChangeFilter(filter: KbqFilter | null) {
         console.log('filter to change: ', filter);
 
-        alert(this.text().changeAlert);
+        alert(this.t().changeAlert);
 
         filter!.changed = true;
         this.activeFilter.set(filter);
@@ -253,7 +239,7 @@ export class FilterBarCompleteFunctionsExample {
     onResetFilter(filter: KbqFilter | null) {
         console.log('filter to reset: ', filter);
 
-        alert(this.text().resetAlert);
+        alert(this.t().resetAlert);
 
         filter!.changed = false;
         this.activeFilter.set(filter);
@@ -262,7 +248,7 @@ export class FilterBarCompleteFunctionsExample {
     onDeleteFilter(filter: KbqFilter | null) {
         console.log('filter to delete: ', filter);
 
-        alert(this.text().deleteAlert);
+        alert(this.t().deleteAlert);
 
         this.filters.update((filters) => filters.filter(({ name }) => name !== filter?.name));
 
@@ -270,7 +256,7 @@ export class FilterBarCompleteFunctionsExample {
     }
 
     createFilters(): KbqFilter[] {
-        const { search, undefinedOption, legitimateAction } = this.text();
+        const { search, undefinedOption, legitimateAction } = this.t();
         // A factory, not a shared object: the pipes below would otherwise alias one value across two
         // filters, which a save/restore round-trip silently un-shares.
         const undefinedValue = () => ({ name: undefinedOption, id: '1' });

@@ -237,6 +237,33 @@ describe(DocsStackblitzWriter.name, () => {
         await expect(project).resolves.toBeInstanceOf(Function);
     });
 
+    it('inlines the shared i18n entry point and rewrites its import to a relative path', async () => {
+        const data = { ...exampleData, localImportFiles: ['../../../i18n/index.ts'] } as ExampleData;
+        const openProject = vi.spyOn(StackBlitzSDK, 'openProject').mockImplementation(() => undefined);
+        const project = writer.createStackBlitzForExample(EXAMPLE_ID, data);
+
+        httpMock
+            .match(() => true)
+            .forEach((request) => {
+                const { url } = request.request;
+
+                if (url.startsWith('assets/stackblitz/')) {
+                    request.flush(readTemplateFile(url.slice('assets/stackblitz/'.length)));
+                } else if (url === `docs-content/examples-source/${EXAMPLE_PACKAGE_PATH}/basic-button-example.ts`) {
+                    request.flush(`import { Translations } from '@koobiq/docs-examples/i18n';`);
+                } else {
+                    request.flush('file content');
+                }
+            });
+        (await project)();
+
+        const { files } = openProject.mock.calls[0][0];
+
+        expect(files['src/example/i18n/index.ts']).toBeDefined();
+        expect(files['src/example/basic-button-example.ts']).toContain(`from './i18n'`);
+        expect(Object.values(files).join()).not.toContain('@koobiq/docs-examples/i18n');
+    });
+
     it('builds the project once and serves repeated calls from the cache', async () => {
         const first = writer.createStackBlitzForExample(EXAMPLE_ID, exampleData);
 

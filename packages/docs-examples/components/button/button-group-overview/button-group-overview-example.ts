@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Button group overview
@@ -10,7 +12,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
     imports: [KbqButtonModule],
     template: `
         <div kbq-button-group>
-            @for (item of data; track item) {
+            @for (item of data(); track item) {
                 <button kbq-button>
                     {{ item }}
                 </button>
@@ -23,11 +25,9 @@ import { KbqComponentColors } from '@koobiq/components/core';
     }
 })
 export class ButtonGroupOverviewExample {
-    protected readonly data = [
-        'Archive',
-        'Report',
-        'Snooze'
-    ] as const;
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    protected readonly data = computed(() => [this.t().archive, this.t().report, this.t().snooze]);
 
     protected readonly color = KbqComponentColors.ContrastFade;
     protected readonly style = KbqButtonStyles.Filled;

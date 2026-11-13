@@ -4,6 +4,8 @@ import { KbqAlert, KbqAlertCloseButton } from '@koobiq/components/alert';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Alert dynamic
@@ -19,7 +21,7 @@ import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
         KbqIconButton
     ],
     template: `
-        <button #trigger kbq-button (click)="visible.set(true)">Show alert</button>
+        <button #trigger kbq-button (click)="visible.set(true)">{{ t().showAlert }}</button>
 
         @if (visible()) {
             <!-- role="alert" makes assistive technology announce the alert when it is inserted. -->
@@ -32,11 +34,11 @@ import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
                 (closed)="dismiss()"
             >
                 <i aria-hidden="true" kbq-icon="kbq-triangle-exclamation_16" [color]="colors.Error"></i>
-                Failed to save changes. Please try again.
+                {{ t().saveFailed }}
                 <button
                     kbq-alert-close-button
                     kbq-icon-button="kbq-xmark-s_16"
-                    aria-label="Close"
+                    [attr.aria-label]="t().close"
                     [color]="colors.ContrastFade"
                 ></button>
             </kbq-alert>
@@ -48,6 +50,8 @@ import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
     }
 })
 export class AlertDynamicExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly focusMonitor = inject(FocusMonitor);
 
     protected readonly colors = KbqComponentColors;

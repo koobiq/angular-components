@@ -6,6 +6,7 @@ import {
     KbqAgGridSkeletonCellRenderer,
     KbqAgGridThemeModule
 } from '@koobiq/ag-grid-angular-theme';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -19,18 +20,9 @@ import {
     SelectionChangedEvent,
     SelectionColumnDef
 } from 'ag-grid-community';
+import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
-
-const ROW_DATA = Array.from({ length: 1000 }, (_, index) => ({
-    id: 'ProjectName' + index,
-    column0: 'ProjectName ' + index,
-    column1: 'Text ' + index,
-    column2: 'Text ' + index,
-    column3: 'Text ' + index,
-    column4: 'Text ' + index,
-    column5: 'Text ' + index
-}));
 
 /**
  * Shape actually worth sending to a backend. `KbqAgGridInfiniteSelectionState.excludedIds` is only
@@ -60,7 +52,7 @@ type SelectionDto = {
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectRowsByCtrlClick
             [alwaysMultiSort]="true"
-            [columnDefs]="columnDefs"
+            [columnDefs]="columnDefs()"
             [defaultColDef]="defaultColDef"
             [rowSelection]="rowSelection"
             [selectionColumnDef]="selectionColumnDef"
@@ -71,7 +63,7 @@ type SelectionDto = {
             (selectionChanged)="onSelectionChanged($event)"
         />
         <div class="ag-grid-infinite-selection-example-dto">
-            <span>DTO sent to the backend:</span>
+            <span>{{ t().dtoSentToBackend }}</span>
             <pre><code>{{ selectionDto() | json }}</code></pre>
         </div>
     `,
@@ -104,18 +96,37 @@ type SelectionDto = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridInfiniteSelectionExample {
-    protected readonly columnDefs: ColDef[] = [
-        { field: 'column0', headerName: 'Project name', pinned: 'left', width: 130 },
-        { field: 'column1', headerName: 'Text', width: 130 },
-        { field: 'column2', headerName: 'Text', width: 130 },
-        { field: 'column3', headerName: 'Text', width: 130 },
-        { field: 'column4', headerName: 'Text', width: 130 },
-        { field: 'column5', headerName: 'Text', width: 130 }
-    ];
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    protected readonly columnDefs = computed<ColDef[]>(() => [
+        { field: 'column0', headerName: this.t().projectName, pinned: 'left', width: 130 },
+        ...Array.from({ length: 5 }, (_, i) => ({
+            field: 'column' + (i + 1),
+            headerName: this.t().headerText,
+            width: 130
+        }))
+    ]);
+    // The row id is the selection identity: it stays the same in every locale.
     protected readonly datasource: IDatasource = {
-        rowCount: ROW_DATA.length,
+        rowCount: 1000,
         getRows: ({ startRow, endRow, successCallback }: IGetRowsParams) => {
-            setTimeout(() => successCallback(ROW_DATA.slice(startRow, endRow), ROW_DATA.length), 500);
+            setTimeout(
+                () =>
+                    successCallback(
+                        Array.from({ length: endRow - startRow }, (_, i) => ({
+                            id: 'ProjectName' + (startRow + i),
+                            column0: 'Project name ' + (startRow + i),
+                            ...Object.fromEntries(
+                                Array.from({ length: 5 }, (_, c) => [
+                                    'column' + (c + 1),
+                                    'Text ' + (startRow + i)
+                                ])
+                            )
+                        })),
+                        1000
+                    ),
+                500
+            );
         }
     };
     protected readonly getRowId: GetRowIdFunc = ({ data }) => data.id;

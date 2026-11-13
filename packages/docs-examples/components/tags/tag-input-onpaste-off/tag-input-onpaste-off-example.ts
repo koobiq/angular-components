@@ -4,6 +4,8 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagInput, KbqTagInputEvent, KbqTagsModule, kbqTagsDefaultOptionsProvider } from '@koobiq/components/tags';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Tag input onpaste off
@@ -22,6 +24,8 @@ import { KbqTagInput, KbqTagInputEvent, KbqTagsModule, kbqTagsDefaultOptionsProv
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagInputOnpasteOffExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
 
     control = new FormControl();

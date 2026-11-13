@@ -1,5 +1,5 @@
 <kbq-button-toggle-group #group1="kbqButtonToggleGroup" class="layout-margin-bottom-l" stretched [(ngModel)]="model">
-    @for (toggle of group; track toggle) {
+    @for (toggle of group(); track toggle) {
         <kbq-button-toggle [value]="$index">
             <i kbq-icon="kbq-briefcase_16"></i>
             <span>{{ toggle }}</span>
@@ -8,7 +8,7 @@
 </kbq-button-toggle-group>
 
 <kbq-button-toggle-group #group2="kbqButtonToggleGroup" class="layout-margin-bottom-l" stretched>
-    @for (toggle of group; track toggle) {
+    @for (toggle of group(); track toggle) {
         <kbq-button-toggle [checked]="$index === 1" [value]="$index">
             {{ toggle }}
         </kbq-button-toggle>
@@ -16,8 +16,8 @@
 </kbq-button-toggle-group>
 
 <!-- an icon carries no accessible name, so an icon-only toggle needs one of its own -->
-<kbq-button-toggle-group #group3="kbqButtonToggleGroup" aria-label="Способ доставки" [stretched]="true">
-    @for (toggle of group; track toggle) {
+<kbq-button-toggle-group #group3="kbqButtonToggleGroup" [aria-label]="t().deliveryMethod" [stretched]="true">
+    @for (toggle of group(); track toggle) {
         <kbq-button-toggle [aria-label]="toggle" [checked]="$index === 2" [value]="$index">
             <i kbq-icon="kbq-briefcase_16"></i>
         </kbq-button-toggle>

@@ -4,6 +4,8 @@ import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqHighlightBackgroundPipe, KbqTextQuery } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Autocomplete in text
@@ -19,10 +21,10 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     ],
     template: `
         <kbq-form-field>
-            <kbq-label>Incident description</kbq-label>
+            <kbq-label>{{ t().incidentDescription }}</kbq-label>
             <textarea
                 kbqTextarea
-                placeholder="Type fire, thr or vul"
+                [placeholder]="t().typePrefixes"
                 [formControl]="control"
                 [kbqAutocomplete]="auto"
                 [kbqAutocompleteRelativeToCaret]="true"
@@ -50,10 +52,13 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     }
 })
 export class AutocompleteTextareaExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly control = new FormControl('');
     protected readonly query = signal<KbqTextQuery | null>(null);
 
     // Prefix matches keep the active option continuing the word, which is what the inline hint needs.
+    // The placeholder's prefixes are English, so the options they match stay English in every locale.
     protected readonly filteredOptions = computed(() => {
         const text = this.query()?.text.toLowerCase();
 

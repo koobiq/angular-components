@@ -3,6 +3,8 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqContentPanelModule } from '@koobiq/components/content-panel';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Content panel overview
@@ -13,18 +15,18 @@ import { KbqIconModule } from '@koobiq/components/icon';
     template: `
         <kbq-content-panel-container #panel="kbqContentPanelContainer" width="350" maxWidth="450" minWidth="250">
             <div class="example-content-panel-container__content">
-                <button kbq-button (click)="panel.toggle()">Toggle</button>
-                <button kbq-button [disabled]="panel.isOpened()" (click)="panel.open()">Open</button>
-                <button kbq-button [disabled]="!panel.isOpened()" (click)="panel.close()">Close</button>
+                <button kbq-button (click)="panel.toggle()">{{ t().toggle }}</button>
+                <button kbq-button [disabled]="panel.isOpened()" (click)="panel.open()">{{ t().open }}</button>
+                <button kbq-button [disabled]="!panel.isOpened()" (click)="panel.close()">{{ t().close }}</button>
             </div>
 
             <kbq-content-panel>
                 <kbq-content-panel-header>
-                    <div kbqContentPanelHeaderTitle>Title</div>
+                    <div kbqContentPanelHeaderTitle>{{ t().title }}</div>
                     <div kbqContentPanelHeaderActions>
                         <button
                             kbq-button
-                            aria-label="Copy link"
+                            [attr.aria-label]="t().copyLink"
                             [color]="componentColors.Contrast"
                             [kbqStyle]="buttonStyles.Transparent"
                         >
@@ -32,7 +34,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
                         </button>
                         <button
                             kbq-button
-                            aria-label="Expand"
+                            [attr.aria-label]="t().expand"
                             [color]="componentColors.Contrast"
                             [kbqStyle]="buttonStyles.Transparent"
                         >
@@ -42,17 +44,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 </kbq-content-panel-header>
                 <kbq-content-panel-body>
                     @for (_i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; track $index) {
-                        <p>
-                            In computing [{{ $index }}], a denial-of-service attack (DoS attack) is a cyber-attack in
-                            which the perpetrator seeks to make a machine or network resource unavailable to its
-                            intended users by temporarily or indefinitely disrupting services of a host connected to a
-                            network. Denial of service is typically accomplished by flooding the targeted machine or
-                            resource with superfluous requests in an attempt to overload systems and prevent some or all
-                            legitimate requests from being fulfilled. The range of attacks varies widely, spanning from
-                            inundating a server with millions of requests to slow its performance, overwhelming a server
-                            with a substantial amount of invalid data, to submitting requests with an illegitimate IP
-                            address.
-                        </p>
+                        <p>{{ t().dosText($index) }}</p>
                     }
                 </kbq-content-panel-body>
                 <kbq-content-panel-footer>
@@ -80,6 +72,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContentPanelOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly componentColors = KbqComponentColors;
     protected readonly buttonStyles = KbqButtonStyles;
 }

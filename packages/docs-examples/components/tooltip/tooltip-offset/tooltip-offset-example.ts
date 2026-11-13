@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Tooltip offset
@@ -12,15 +14,17 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule
     ],
     template: `
-        <button kbq-button kbqTooltip="Tooltip">Default</button>
-        <button kbq-button kbqTooltip="Tooltip" [kbqTooltipArrow]="true">Default with arrow</button>
-        <button kbq-button kbqTooltip="Tooltip" [kbqTooltipOffset]="0">0px</button>
-        <button kbq-button kbqTooltip="Tooltip" [kbqTooltipOffset]="32">32px</button>
-        <button kbq-button kbqTooltip="Tooltip" [kbqTooltipOffset]="-8">-8px</button>
+        <button kbq-button [kbqTooltip]="t().tooltip">{{ t().default }}</button>
+        <button kbq-button [kbqTooltip]="t().tooltip" [kbqTooltipArrow]="true">{{ t().defaultWithArrow }}</button>
+        <button kbq-button [kbqTooltip]="t().tooltip" [kbqTooltipOffset]="0">0px</button>
+        <button kbq-button [kbqTooltip]="t().tooltip" [kbqTooltipOffset]="32">32px</button>
+        <button kbq-button [kbqTooltip]="t().tooltip" [kbqTooltipOffset]="-8">-8px</button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-5xl layout-row layout-align-center-center layout-gap-l'
     }
 })
-export class TooltipOffsetExample {}
+export class TooltipOffsetExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+}

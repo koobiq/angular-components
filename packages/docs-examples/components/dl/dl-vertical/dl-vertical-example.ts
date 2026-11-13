@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Description list vertical
@@ -15,22 +17,21 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         </div>
 
         <kbq-dl [vertical]="vertical()">
-            <kbq-dt>Incident type</kbq-dt>
-            <kbq-dd>Malware infection</kbq-dd>
+            <kbq-dt>{{ t().incidentType }}</kbq-dt>
+            <kbq-dd>{{ t().malwareInfection }}</kbq-dd>
 
-            <kbq-dt>Identifier</kbq-dt>
+            <kbq-dt>{{ t().identifier }}</kbq-dt>
             <kbq-dd>INC-2026-125-78253</kbq-dd>
 
-            <kbq-dt>Status</kbq-dt>
-            <kbq-dd>New</kbq-dd>
+            <kbq-dt>{{ t().status }}</kbq-dt>
+            <kbq-dd>{{ t().new }}</kbq-dd>
 
-            <kbq-dt>Assignee</kbq-dt>
+            <kbq-dt>{{ t().assignee }}</kbq-dt>
             <kbq-dd>John Smith</kbq-dd>
 
-            <kbq-dt>Description</kbq-dt>
+            <kbq-dt>{{ t().description }}</kbq-dt>
             <kbq-dd>
-                An employee opened an attachment in a phishing email, and the file ran malicious code on the
-                workstation.
+                {{ t().phishingDescription }}
             </kbq-dd>
         </kbq-dl>
     `,
@@ -45,5 +46,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DlVerticalExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly vertical = model(true);
 }

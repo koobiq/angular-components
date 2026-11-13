@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Custom tooltip content
@@ -13,21 +15,21 @@ import { KbqTitleModule } from '@koobiq/components/title';
     ],
     template: `
         <div class="example-title-custom-content">
-            <div class="kbq-subheading">Plain string content</div>
-            <div class="example-title-custom-content__row kbq-text-normal" [kbq-title]="stringContent">
-                {{ longValue }}
+            <div class="kbq-subheading">{{ t().plainStringContent }}</div>
+            <div class="example-title-custom-content__row kbq-text-normal" [kbq-title]="stringContent()">
+                {{ longValue() }}
             </div>
 
-            <div class="kbq-subheading">Rich template content</div>
+            <div class="kbq-subheading">{{ t().richTemplateContent }}</div>
             <div class="example-title-custom-content__row kbq-text-normal" [kbq-title]="templateContent">
-                {{ longValue }}
+                {{ longValue() }}
             </div>
         </div>
 
         <ng-template #templateContent>
             <div class="example-title-custom-content__tooltip">
                 <i kbq-icon="kbq-circle-info_16" style="color: var(--kbq-icon-white)"></i>
-                <span>Rich tooltip with custom markup</span>
+                <span>{{ t().richTooltip }}</span>
             </div>
         </ng-template>
     `,
@@ -35,6 +37,8 @@ import { KbqTitleModule } from '@koobiq/components/title';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleCustomContentExample {
-    longValue = 'A long text that does not fit into the container and is truncated with an ellipsis';
-    stringContent = 'Tooltip content provided as a plain string';
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    readonly longValue = computed(() => this.t().longValue);
+    readonly stringContent = computed(() => this.t().stringContent);
 }

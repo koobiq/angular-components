@@ -6,6 +6,8 @@ import {
     KbqSidepanelService,
     KbqSidepanelSize
 } from '@koobiq/components/sidepanel';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Sidepanel sizes
@@ -20,6 +22,8 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelSizesExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private sidepanelService = inject(KbqSidepanelService);
 
     readonly template = viewChild.required(TemplateRef);

@@ -8,6 +8,8 @@ import { KbqLink } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit customized design
@@ -27,7 +29,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     ],
     template: `
         <kbq-inline-edit>
-            <kbq-label>Link</kbq-label>
+            <kbq-label>{{ t().link }}</kbq-label>
 
             <div class="example-inline-text example-inline-text_link" kbqInlineEditViewMode>
                 @if (!linkControl.value) {
@@ -121,8 +123,12 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     }
 })
 export class InlineEditCustomizedDesignExample {
-    protected readonly placeholder = 'Placeholder';
-    protected readonly options = signal(['Critical', 'High', 'Medium', 'Low']);
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    protected get placeholder(): string {
+        return this.t().placeholder;
+    }
+    protected readonly options = signal<string[]>(this.t().severities);
 
     protected readonly linkControl = new FormControl('https://github.com/koobiq/icons');
     protected readonly badgeControl = new FormControl([this.options()[0]], { nonNullable: true });

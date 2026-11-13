@@ -1,4 +1,4 @@
-﻿import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import {
     AbstractControl,
@@ -15,6 +15,8 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 const LATIN_PATTERN = /^[a-zA-Z]+$/;
 
@@ -57,7 +59,7 @@ const latinValidator = (): ValidatorFn => {
                     }
                     <input
                         autocomplete="off"
-                        placeholder="New tag..."
+                        [placeholder]="t().newTag"
                         [kbqTagInputFor]="inputTagList"
                         [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
                         (kbqTagInputTokenEnd)="reactiveInputOnCreate($event)"
@@ -66,18 +68,18 @@ const latinValidator = (): ValidatorFn => {
 
                 @if (inputTagList.errorState()) {
                     @if (tags.hasError('required')) {
-                        <kbq-error>Required</kbq-error>
+                        <kbq-error>{{ t().required }}</kbq-error>
                     }
 
                     @if (tags.getError('latin'); as error) {
-                        <kbq-error>Invalid tags: {{ error.invalidTags.join(', ') }}</kbq-error>
+                        <kbq-error>{{ t().invalidTags }} {{ error.invalidTags.join(', ') }}</kbq-error>
                     }
                 }
 
-                <kbq-hint>Provide only latin letters</kbq-hint>
+                <kbq-hint>{{ t().onlyLatinLetters }}</kbq-hint>
             </kbq-form-field>
 
-            <button type="submit" kbq-button>Submit</button>
+            <button type="submit" kbq-button>{{ t().submit }}</button>
         </form>
     `,
     providers: [
@@ -89,6 +91,8 @@ const latinValidator = (): ValidatorFn => {
     }
 })
 export class ValidationTagListExample implements OnInit {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly reactiveForm: FormGroup;
     protected readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 

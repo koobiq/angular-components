@@ -13,6 +13,8 @@ import {
 } from '@koobiq/components/skeleton';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Skeleton element presets
@@ -34,7 +36,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         KbqTagsModule
     ],
     template: `
-        <kbq-toggle [(ngModel)]="loading">Loading</kbq-toggle>
+        <kbq-toggle [(ngModel)]="loading">{{ t().loading }}</kbq-toggle>
 
         <div class="example-row">
             @if (loading()) {
@@ -44,14 +46,14 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
                 <kbq-skeleton-icon />
                 <kbq-skeleton-link />
             } @else {
-                <button kbq-button color="contrast">Start</button>
-                <kbq-badge [badgeColor]="badgeColors.FadeSuccess">Active</kbq-badge>
+                <button kbq-button color="contrast">{{ t().start }}</button>
+                <kbq-badge [badgeColor]="badgeColors.FadeSuccess">{{ t().active }}</kbq-badge>
                 <kbq-tag>
                     LDAP
                     <i kbqTagRemove kbq-icon-button="kbq-xmark-s_16"></i>
                 </kbq-tag>
                 <i aria-label="Edit" kbq-icon-button="kbq-pencil_16"></i>
-                <a kbqLink pseudo>History</a>
+                <a kbqLink pseudo>{{ t().history }}</a>
             }
         </div>
     `,
@@ -72,6 +74,9 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SkeletonElementsExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly loading = model(true);
+
     protected readonly badgeColors = KbqBadgeColors;
 }

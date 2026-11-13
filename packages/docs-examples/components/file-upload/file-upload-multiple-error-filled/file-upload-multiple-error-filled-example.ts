@@ -5,6 +5,8 @@ import { FileValidators, KbqFileTypeSpecifier } from '@koobiq/components/core';
 import { KbqFileItem, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqHint } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 const SIZE_IN_MB = 1;
 
@@ -65,22 +67,26 @@ const createMockFile = (fileName: string = 'Filename.txt', options?: FilePropert
                     </ng-container>
                 }
 
-                <kbq-hint>{{ acceptedOutput }}. No more than 1 MB</kbq-hint>
+                <kbq-hint>{{ acceptedOutput }}. {{ t().noMoreThan1mb }}</kbq-hint>
             </kbq-file-upload>
         </form>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadMultipleErrorFilledExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected accept: KbqFileTypeSpecifier = ['.doc', '.docx', '.pdf', '.txt'];
     protected acceptedOutput: string = this.accept
         .map((typeSpecifier) => typeSpecifier.replace('.', '').toUpperCase())
         .join(', ');
 
-    errorMessages = {
-        fileExtensionMismatch: 'Provide valid extension',
-        maxFileSize: 'The file size limit has been exceeded'
-    };
+    protected get errorMessages() {
+        return {
+            fileExtensionMismatch: this.t().provideValidExtension,
+            maxFileSize: this.t().sizeLimitExceeded
+        };
+    }
     protected readonly cdr = inject(ChangeDetectorRef);
 
     protected readonly formMultiple = new FormGroup({

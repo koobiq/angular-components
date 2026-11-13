@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Checkbox indeterminate
@@ -9,14 +11,14 @@ import { KbqCheckboxModule } from '@koobiq/components/checkbox';
     imports: [KbqCheckboxModule],
     template: `
         <kbq-checkbox [checked]="allSelected()" [indeterminate]="someSelected()" (change)="toggleAll()">
-            All event types
+            {{ t().allEventTypes }}
         </kbq-checkbox>
 
-        @for (eventType of eventTypes; track eventType) {
+        @for (eventType of eventTypes(); track eventType) {
             <kbq-checkbox
                 class="example-checkbox-indeterminate__child"
-                [checked]="selected().has(eventType)"
-                (change)="toggle(eventType)"
+                [checked]="selected().has($index)"
+                (change)="toggle($index)"
             >
                 {{ eventType }}
             </kbq-checkbox>
@@ -34,22 +36,24 @@ import { KbqCheckboxModule } from '@koobiq/components/checkbox';
     }
 })
 export class CheckboxIndeterminateExample {
-    protected readonly eventTypes = ['Malware', 'Phishing', 'Ransomware'];
-    protected readonly selected = signal(new Set([this.eventTypes[0]]));
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    protected readonly allSelected = computed(() => this.selected().size === this.eventTypes.length);
+    protected readonly eventTypes = computed(() => this.t().eventTypes);
+    protected readonly selected = signal(new Set([0]));
+
+    protected readonly allSelected = computed(() => this.selected().size === this.eventTypes().length);
     protected readonly someSelected = computed(() => this.selected().size > 0 && !this.allSelected());
 
     protected toggleAll(): void {
-        this.selected.set(this.allSelected() ? new Set() : new Set(this.eventTypes));
+        this.selected.set(this.allSelected() ? new Set() : new Set(this.eventTypes().map((_, index) => index)));
     }
 
-    protected toggle(eventType: string): void {
+    protected toggle(index: number): void {
         this.selected.update((selected) => {
             const next = new Set(selected);
 
-            if (!next.delete(eventType)) {
-                next.add(eventType);
+            if (!next.delete(index)) {
+                next.add(index);
             }
 
             return next;

@@ -10,6 +10,7 @@ import {
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -23,20 +24,13 @@ import {
     RowStyle,
     SelectionColumnDef
 } from 'ag-grid-community';
+import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 const PAGE_SIZE = 20;
 const PINNED_LEFT = ['ag-Grid-SelectionColumn', 'column0'];
 const PINNED_RIGHT = ['column4'];
-
-const ROW_DATA = Array.from({ length: 1000 }, (_, index) => ({
-    column0: 'Text ' + index,
-    column1: 'Text ' + index,
-    column2: 'Text ' + index,
-    column3: 'Text ' + index,
-    column4: 'Text ' + index
-}));
 
 /**
  * @title AG Grid with a load error row
@@ -51,7 +45,7 @@ const ROW_DATA = Array.from({ length: 1000 }, (_, index) => ({
             kbqAgGridLoadError
             rowModelType="infinite"
             [kbqAgGridLoadErrorLabels]="labels()"
-            [columnDefs]="columnDefs"
+            [columnDefs]="columnDefs()"
             [defaultColDef]="defaultColDef"
             [datasource]="datasource"
             [rowSelection]="rowSelection"
@@ -64,8 +58,10 @@ const ROW_DATA = Array.from({ length: 1000 }, (_, index) => ({
         />
 
         <div class="layout-row layout-gap-xl">
-            <kbq-toggle [(ngModel)]="pinnedColumns" (ngModelChange)="applyPinned()">Pinned columns</kbq-toggle>
-            <kbq-toggle [(ngModel)]="rowDividers">Row dividers</kbq-toggle>
+            <kbq-toggle [(ngModel)]="pinnedColumns" (ngModelChange)="applyPinned()">
+                {{ t().pinnedColumns }}
+            </kbq-toggle>
+            <kbq-toggle [(ngModel)]="rowDividers">{{ t().rowDividers }}</kbq-toggle>
         </div>
     `,
     styles: `
@@ -83,12 +79,14 @@ const ROW_DATA = Array.from({ length: 1000 }, (_, index) => ({
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridLoadErrorExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly pinnedColumns = model(true);
     protected readonly rowDividers = model(false);
 
     private readonly loadError = viewChild.required(KbqAgGridLoadError);
     private readonly localeService = inject(KbqLocaleService);
-    private readonly pageCache = new Map<number, (typeof ROW_DATA)[number][]>();
+    private readonly pageCache = new Map<number, Record<string, string>[]>();
 
     private requestCount = 0;
 
@@ -108,13 +106,14 @@ export class AgGridLoadErrorExample {
             : { borderBottom: '', borderRadius: '' }
     );
 
-    protected readonly columnDefs: ColDef[] = [
-        { field: 'column0', headerName: 'Text', width: 130, pinned: 'left' },
-        { field: 'column1', headerName: 'Text', width: 130 },
-        { field: 'column2', headerName: 'Text', width: 130 },
-        { field: 'column3', headerName: 'Text', width: 130 },
-        { field: 'column4', headerName: 'Text', width: 130, pinned: 'right' }
-    ];
+    protected readonly columnDefs = computed<ColDef[]>(() =>
+        Array.from({ length: 5 }, (_, i) => ({
+            field: 'column' + i,
+            headerName: this.t().headerText,
+            width: 130,
+            pinned: i === 0 ? ('left' as const) : i === 4 ? ('right' as const) : undefined
+        }))
+    );
 
     protected readonly defaultColDef: ColDef = {
         cellRendererSelector: ({ data }: ICellRendererParams) =>
@@ -146,7 +145,7 @@ export class AgGridLoadErrorExample {
     }
 
     private getRows({ startRow, endRow, successCallback, failCallback }: IGetRowsParams): void {
-        const lastRow = endRow >= ROW_DATA.length ? ROW_DATA.length : -1;
+        const lastRow = endRow >= 1000 ? 1000 : -1;
         const cached = this.pageCache.get(startRow);
 
         if (cached) {
@@ -165,7 +164,9 @@ export class AgGridLoadErrorExample {
                 return;
             }
 
-            const rows = ROW_DATA.slice(startRow, endRow);
+            const rows = Array.from({ length: endRow - startRow }, (_, i) =>
+                Object.fromEntries(Array.from({ length: 5 }, (_, c) => ['column' + c, 'Text ' + (startRow + i)]))
+            );
 
             this.pageCache.set(startRow, rows);
             successCallback(rows, lastRow);

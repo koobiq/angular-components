@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 @Component({
     selector: 'example-breadcrumbs',
@@ -10,7 +12,7 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
     ],
     template: `
         <nav wrapMode="auto" kbq-breadcrumbs [max]="null">
-            @for (breadcrumb of breadcrumbs; track breadcrumb) {
+            @for (breadcrumb of breadcrumbs(); track breadcrumb) {
                 <kbq-breadcrumb-item [routerLink]="breadcrumb.url" [text]="breadcrumb.label" />
             }
         </nav>
@@ -34,13 +36,15 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleBreadcrumbs {
-    breadcrumbs = [
-        { label: 'Main', url: '/main' },
-        { label: 'Standards', url: '/main/standards' },
-        { label: 'Advanced Encryption Standard', url: '/main/standards/advanced-encryption-standard' },
-        { label: 'Edit', url: '/main/standards/advanced-encryption-standard/edit' },
-        { label: 'Test', url: '/main/standards/advanced-encryption-standard/edit/test' }
-    ];
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    readonly breadcrumbs = computed(() => [
+        { label: this.t().main, url: '/main' },
+        { label: this.t().standards, url: '/main/standards' },
+        { label: this.t().aes, url: '/main/standards/advanced-encryption-standard' },
+        { label: this.t().edit, url: '/main/standards/advanced-encryption-standard/edit' },
+        { label: this.t().test, url: '/main/standards/advanced-encryption-standard/edit/test' }
+    ]);
 }
 
 /**

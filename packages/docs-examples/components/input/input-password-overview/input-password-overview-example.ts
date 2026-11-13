@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AbstractControl, FormControl, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 import { PasswordValidators } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * Allows printable ASCII only: latin letters, digits, spaces and special characters. An empty password fails too,
@@ -23,30 +25,34 @@ const latinAndSpecialSymbols = ({ value }: AbstractControl): ValidationErrors | 
         <kbq-form-field style="width: 250px">
             <input kbqInputPassword [formControl]="control" />
 
-            <kbq-password-toggle [kbqTooltipHidden]="'Показать пароль'" [kbqTooltipNotHidden]="'Скрыть пароль'" />
+            <kbq-password-toggle [kbqTooltipHidden]="t().showPassword" [kbqTooltipNotHidden]="t().hidePassword" />
 
             <kbq-reactive-password-hint [hasError]="control.hasError('minLength') || control.hasError('maxLength')">
-                От 8 до 15 символов
+                {{ t().from8to15 }}
             </kbq-reactive-password-hint>
 
             <kbq-reactive-password-hint [hasError]="control.hasError('minUppercase')">
-                Заглавная латинская буква
+                {{ t().uppercaseLatin }}
             </kbq-reactive-password-hint>
 
             <kbq-reactive-password-hint [hasError]="control.hasError('minLowercase')">
-                Строчная латинская буква
+                {{ t().lowercaseLatin }}
             </kbq-reactive-password-hint>
 
-            <kbq-reactive-password-hint [hasError]="control.hasError('minNumber')">Цифра</kbq-reactive-password-hint>
+            <kbq-reactive-password-hint [hasError]="control.hasError('minNumber')">
+                {{ t().digit }}
+            </kbq-reactive-password-hint>
 
             <kbq-reactive-password-hint [hasError]="control.hasError('latinAndSpecialSymbols')">
-                Только латинские буквы, цифры, пробелы и спецсимволы
+                {{ t().latinOnly }}
             </kbq-reactive-password-hint>
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputPasswordOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly control = new FormControl('', [
         PasswordValidators.minLength(8),
         PasswordValidators.maxLength(15),

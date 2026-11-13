@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqMarkdown } from '@koobiq/components/markdown';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Markdown list
@@ -10,4 +12,6 @@ import { KbqMarkdown } from '@koobiq/components/markdown';
     templateUrl: './markdown-list-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarkdownListExample {}
+export class MarkdownListExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+}

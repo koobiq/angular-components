@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqOptionBase } from '@koobiq/components/core';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Select cleaner with disabled options
@@ -10,7 +12,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [KbqSelectModule],
     template: `
         <kbq-form-field>
-            <kbq-select multiple placeholder="Kept" [value]="selected">
+            <kbq-select multiple [placeholder]="t().kept" [value]="selected">
                 <kbq-cleaner />
                 @for (option of options; track option.value) {
                     <kbq-option [value]="option.value" [disabled]="option.disabled">{{ option.value }}</kbq-option>
@@ -19,7 +21,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-select multiple placeholder="Cleared" [value]="selected" [clearPredicate]="clearEverything">
+            <kbq-select multiple [placeholder]="t().cleared" [value]="selected" [clearPredicate]="clearEverything">
                 <kbq-cleaner />
                 @for (option of options; track option.value) {
                     <kbq-option [value]="option.value" [disabled]="option.disabled">{{ option.value }}</kbq-option>
@@ -42,8 +44,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectCleanerWithDisabledExample {
-    readonly options = Array.from({ length: 4 }).map((_, i) => ({
-        value: `Option #${i}`,
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    readonly options = Array.from({ length: 4 }, (_, i) => ({
+        value: 'Option #' + i,
         disabled: i === 1
     }));
 

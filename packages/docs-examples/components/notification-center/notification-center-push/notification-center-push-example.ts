@@ -9,7 +9,9 @@ import { KbqLink } from '@koobiq/components/link';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koobiq/components/notification-center';
 import { KbqToastStyle } from '@koobiq/components/toast';
-import { createNotifications, injectExampleText } from '../localized-data';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { createNotifications } from '../create-notifications';
+import { TRANSLATIONS } from './l10n';
 
 /** Id prefix of the notifications pushed with the button, so a locale switch can find them. */
 const PUSHED_ID = 'pushed-';
@@ -49,9 +51,9 @@ enum NavbarIcItems {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationCenterPushExample {
-    notificationService = inject(KbqNotificationCenterService);
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    protected readonly text = injectExampleText();
+    notificationService = inject(KbqNotificationCenterService);
 
     private readonly actionsTemplate = viewChild<TemplateRef<unknown>>('actionsTemplate');
     private readonly captionTemplate = viewChild<TemplateRef<unknown>>('captionTemplate');
@@ -66,7 +68,7 @@ export class NotificationCenterPushExample {
         // Rebuilt on a locale switch to follow the language: the stable ids keep the read state, and the
         // notifications pushed with the button stay in the list.
         effect(() => {
-            const text = this.text();
+            const text = this.t();
             const actions = this.actionsTemplate();
 
             if (!actions) return;
@@ -77,14 +79,14 @@ export class NotificationCenterPushExample {
                 .map((item) => ({ ...item, title: text.pushedTitle, caption: text.pushedCaption }));
 
             this.notificationService.items = [
-                ...createNotifications(text, { actions, caption: this.captionTemplate() }, current),
+                ...createNotifications(text.list, { actions, caption: this.captionTemplate() }, current),
                 ...pushed
             ];
         });
     }
 
     pushNotification() {
-        const text = this.text();
+        const text = this.t();
 
         this.notificationService.push({
             id: `${PUSHED_ID}${++pushedCount}`,

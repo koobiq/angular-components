@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 @Component({
     selector: 'custom-modal',
@@ -10,8 +12,8 @@ import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components
     ],
     template: `
         <kbq-modal-title>
-            Fully custom modal
-            <kbq-modal-caption>Additional context or description for the dialog</kbq-modal-caption>
+            {{ t().fullyCustomModal }}
+            <kbq-modal-caption>{{ t().additionalContext }}</kbq-modal-caption>
         </kbq-modal-title>
 
         <kbq-modal-body>
@@ -21,16 +23,18 @@ import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components
         </kbq-modal-body>
 
         <div kbq-modal-footer>
-            <button kbq-button [color]="'contrast'" (click)="modalRef.close()">Save</button>
-            <button kbq-button autofocus (click)="modalRef.close()">Close</button>
+            <button kbq-button [color]="'contrast'" (click)="modalRef.close()">{{ t().save }}</button>
+            <button kbq-button autofocus (click)="modalRef.close()">{{ t().close }}</button>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomModalComponent {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly modalRef = inject(KbqModalRef);
 
-    items = Array.from({ length: 30 }).map((_, i) => `Item #${i}`);
+    readonly items = Array.from({ length: 30 }, (_, i) => 'Item #' + i);
 }
 
 /**
@@ -40,11 +44,13 @@ export class CustomModalComponent {
     selector: 'modal-full-custom-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="openModal()">Open Modal</button>
+        <button kbq-button (click)="openModal()">{{ t().openModal }}</button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalFullCustomExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly modalService = inject(KbqModalService);
 
     openModal(): void {

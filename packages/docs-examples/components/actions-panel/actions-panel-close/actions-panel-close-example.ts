@@ -11,6 +11,8 @@ import { KbqActionsPanel, KbqActionsPanelRef } from '@koobiq/components/actions-
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToastService } from '@koobiq/components/toast';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Actions panel close
@@ -19,12 +21,12 @@ import { KbqToastService } from '@koobiq/components/toast';
     selector: 'actions-panel-close-example',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
-        <button kbq-button (click)="open()">open</button>
+        <button kbq-button (click)="open()">{{ t().open }}</button>
 
         <ng-template let-data>
-            <button color="contrast" kbq-button (click)="onAction('Execute and close')">
+            <button color="contrast" kbq-button (click)="onAction(t().executeAndClose)">
                 <i kbq-icon="kbq-user_16"></i>
-                Execute and close
+                {{ t().executeAndClose }}
             </button>
         </ng-template>
     `,
@@ -41,6 +43,8 @@ import { KbqToastService } from '@koobiq/components/toast';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActionsPanelCloseExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly templateRef = viewChild.required(TemplateRef);
@@ -70,7 +74,7 @@ export class ActionsPanelCloseExample {
     }
 
     protected onAction(action: string): void {
-        this.toast.show({ title: `Action initiated ${action}` });
+        this.toast.show({ title: this.t().actionInitiated(action) });
         this.actionsPanelRef?.close();
     }
 }

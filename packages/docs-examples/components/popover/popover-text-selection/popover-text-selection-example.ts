@@ -104,7 +104,7 @@ type Format = (typeof FORMATS)[number];
 })
 export class PopoverTextSelectionExample {
     private readonly document = inject(DOCUMENT);
-    private readonly text = viewChild<ElementRef<HTMLElement>>('text');
+    private readonly textRef = viewChild<ElementRef<HTMLElement>>('text');
     private readonly popover = viewChild(KbqPopoverTrigger);
 
     /** Stays on the selection: the rectangle is measured again every time the panel is positioned. */
@@ -223,7 +223,7 @@ export class PopoverTextSelectionExample {
     }
 
     private measureSelection(): KbqCaretRect {
-        const element = this.text()?.nativeElement;
+        const element = this.textRef()?.nativeElement;
 
         return (element && kbqGetSelectionRect(element)) ?? EMPTY_RECT;
     }
@@ -231,7 +231,7 @@ export class PopoverTextSelectionExample {
     /** The current selection, when it is a range of text inside the paragraph. */
     private getRange(): Range | null {
         const selection = this.document.getSelection();
-        const element = this.text()?.nativeElement;
+        const element = this.textRef()?.nativeElement;
 
         if (!element || !selection || selection.isCollapsed || !selection.rangeCount) return null;
 
@@ -241,7 +241,7 @@ export class PopoverTextSelectionExample {
     }
 
     private findWrapper(range: Range, tag: string): HTMLElement | null {
-        const article = this.text()?.nativeElement;
+        const article = this.textRef()?.nativeElement;
         const node = range.commonAncestorContainer;
         const element = node.nodeType === TEXT_NODE ? node.parentElement : (node as HTMLElement);
         const wrapper = element?.closest<HTMLElement>(tag);

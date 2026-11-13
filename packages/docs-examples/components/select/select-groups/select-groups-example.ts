@@ -34,7 +34,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectGroupsExample {
-    readonly groups = Array.from({ length: 3 }).map((_, i) => `Group #${i}`);
-    readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);
+    readonly groups = Array.from({ length: 3 }, (_, i) => 'Group #' + i);
+    readonly options = Array.from({ length: 5 }, (_, i) => 'Option #' + i);
     readonly selected = this.options[0];
 }

@@ -4,7 +4,9 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { switchMap, timer } from 'rxjs';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Toast hide
@@ -21,14 +23,16 @@ import { switchMap, timer } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastHideOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     progress: boolean;
 
     readonly toastService = inject(KbqToastService);
 
     showDefaultToast(actions: TemplateRef<any>) {
         this.toastService.show({
-            title: 'Доступно обновление агента',
-            caption: 'Версия 2.03.15 от 15 мая 2022',
+            title: this.t().agentUpdateAvailable,
+            caption: this.t().version20315,
             actions
         });
     }
@@ -37,8 +41,8 @@ export class ToastHideOverviewExample {
         this.progress = true;
         const { ref } = this.toastService.show(
             {
-                title: 'Импорт файлов',
-                caption: '12,1 МБ из 85 МБ — осталось 15 мин  ',
+                title: this.t().importFiles,
+                caption: this.t().importProgress,
                 closeButton: false,
                 content,
                 actions
@@ -58,6 +62,6 @@ export class ToastHideOverviewExample {
     }
 
     showWarningToast(actions: TemplateRef<any>) {
-        this.toastService.show({ style: KbqToastStyle.Warning, caption: 'Ваш пароль истекает через 5 дней', actions });
+        this.toastService.show({ style: KbqToastStyle.Warning, caption: this.t().passwordExpires, actions });
     }
 }

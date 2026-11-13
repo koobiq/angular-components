@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, inject, model, output } from '@angu
 import { FormsModule } from '@angular/forms';
 import { KbqCheckable } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * EXAMPLE ONLY - not a published Koobiq component.
@@ -86,8 +88,8 @@ export class BlockCheckboxComponent {
     imports: [KbqIconModule, BlockCheckboxComponent, FormsModule],
     template: `
         <block-checkbox-component [(ngModel)]="checked">
-            <span block-checkbox-title>Title</span>
-            <div>Lorem ipsum</div>
+            <span block-checkbox-title>{{ t().title }}</span>
+            <div>{{ t().loremIpsum }}</div>
         </block-checkbox-component>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -96,5 +98,7 @@ export class BlockCheckboxComponent {
     }
 })
 export class BlockCheckboxExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly checked = model(true);
 }

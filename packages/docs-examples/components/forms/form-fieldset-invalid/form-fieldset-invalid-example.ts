@@ -1,6 +1,8 @@
 import { afterNextRender, ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Form fieldset
@@ -15,25 +17,25 @@ import { KbqInputModule } from '@koobiq/components/input';
         <form [formGroup]="form">
             <kbq-fieldset>
                 <kbq-form-field kbqFieldsetItem>
-                    <input kbqInput placeholder="Surname" [formControl]="form.controls.surname" />
+                    <input kbqInput [placeholder]="t().surname" [formControl]="form.controls.surname" />
                 </kbq-form-field>
 
                 <kbq-form-field kbqFieldsetItem>
-                    <input kbqInput placeholder="Name" [formControl]="form.controls.name" />
+                    <input kbqInput [placeholder]="t().name" [formControl]="form.controls.name" />
                 </kbq-form-field>
 
                 <kbq-form-field kbqFieldsetItem>
-                    <input kbqInput placeholder="Patronymic" [formControl]="form.controls.patronymic" />
+                    <input kbqInput [placeholder]="t().patronymic" [formControl]="form.controls.patronymic" />
                 </kbq-form-field>
 
                 @if (form.controls.surname.hasError('required')) {
-                    <kbq-error>Surname: error message for the first field</kbq-error>
+                    <kbq-error>{{ t().errorMessage(t().surname, t().first) }}</kbq-error>
                 }
                 @if (form.controls.name.hasError('required')) {
-                    <kbq-error>Name: error message for the second field</kbq-error>
+                    <kbq-error>{{ t().errorMessage(t().name, t().second) }}</kbq-error>
                 }
                 @if (form.controls.patronymic.hasError('required')) {
-                    <kbq-error>Patronymic: error message for the third field</kbq-error>
+                    <kbq-error>{{ t().errorMessage(t().patronymic, t().third) }}</kbq-error>
                 }
             </kbq-fieldset>
         </form>
@@ -50,6 +52,8 @@ import { KbqInputModule } from '@koobiq/components/input';
     }
 })
 export class FormFieldsetInvalidExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     form = new FormGroup({
         surname: new FormControl('', Validators.required),
         name: new FormControl('', Validators.required),

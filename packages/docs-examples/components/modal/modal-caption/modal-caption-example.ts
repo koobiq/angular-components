@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalService, ModalSize } from '@koobiq/components/modal';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Modal with caption
@@ -9,13 +11,13 @@ import { KbqModalService, ModalSize } from '@koobiq/components/modal';
     selector: 'modal-caption-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="openWithStringCaption()">String caption</button>
-        <button kbq-button (click)="openWithTemplateCaption(captionTpl)">Template caption</button>
+        <button kbq-button (click)="openWithStringCaption()">{{ t().stringCaption }}</button>
+        <button kbq-button (click)="openWithTemplateCaption(captionTpl)">{{ t().templateCaption }}</button>
 
         <ng-template #captionTpl>
             <span>
                 Custom
-                <strong>template</strong>
+                <strong>{{ t().templateWord }}</strong>
                 caption caption caption caption caption caption caption caption caption caption
             </span>
         </ng-template>
@@ -26,25 +28,27 @@ import { KbqModalService, ModalSize } from '@koobiq/components/modal';
     }
 })
 export class ModalCaptionExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly modalService = inject(KbqModalService);
 
     openWithStringCaption(): void {
         this.modalService.create({
-            kbqTitle: 'Dialog title',
+            kbqTitle: this.t().dialogTitle,
             kbqCaption: 'Additional context or description for the dialog',
             kbqContent: 'Modal body content',
             kbqOkText: 'Ok',
-            kbqCancelText: 'Cancel'
+            kbqCancelText: this.t().cancel
         });
     }
 
     openWithTemplateCaption(kbqCaption: TemplateRef<object>): void {
         this.modalService.create({
-            kbqTitle: 'Dialog title Dialog title Dialog title Dialog title g title Dialog titl g title Dialog titl',
+            kbqTitle: this.t().longDialogTitle,
             kbqCaption,
             kbqContent: 'Modal body content',
             kbqOkText: 'Ok',
-            kbqCancelText: 'Cancel',
+            kbqCancelText: this.t().cancel,
             kbqSize: ModalSize.Small
         });
     }

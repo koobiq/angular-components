@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /** @title Form field with kbq-cleaner */
 @Component({
@@ -9,12 +11,12 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [KbqInputModule, KbqSelectModule, ReactiveFormsModule],
     template: `
         <kbq-form-field class="layout-margin-bottom-m">
-            <input kbqInput placeholder="Enter some input" [formControl]="inputFormControl" />
+            <input kbqInput [placeholder]="t().enterSomeInput" [formControl]="inputFormControl" />
             <kbq-cleaner />
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-select placeholder="Select an option" [formControl]="selectFormControl">
+            <kbq-select [placeholder]="t().selectOption" [formControl]="selectFormControl">
                 <kbq-cleaner />
                 <kbq-option value="1">Option #1</kbq-option>
                 <kbq-option value="2">Option #2</kbq-option>
@@ -24,6 +26,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormFieldWithCleanerExample {
-    readonly inputFormControl = new FormControl('This field can be cleaned');
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    readonly inputFormControl = new FormControl(this.t().thisFieldCanBeCleaned);
     readonly selectFormControl = new FormControl('1');
 }

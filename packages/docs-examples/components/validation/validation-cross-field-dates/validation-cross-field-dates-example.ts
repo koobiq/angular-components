@@ -16,7 +16,9 @@ import {
 } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * Payload the cross-field validator publishes, so that the `ErrorStateMatcher` can tell which controls a
@@ -69,7 +71,7 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher((_key, va
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
                     <kbq-form-field>
-                        <kbq-label>Valid from</kbq-label>
+                        <kbq-label>{{ t().validFrom }}</kbq-label>
                         <input formControlName="validFrom" [kbqDatepicker]="validFromPicker" />
                         <kbq-datepicker-toggle-icon kbqSuffix [for]="validFromPicker" />
                         <kbq-datepicker #validFromPicker />
@@ -78,13 +80,13 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher((_key, va
 
                 <div class="kbq-form__row">
                     <kbq-form-field>
-                        <kbq-label>Valid until</kbq-label>
+                        <kbq-label>{{ t().validUntil }}</kbq-label>
                         <input formControlName="validUntil" [kbqDatepicker]="validUntilPicker" />
                         <kbq-datepicker-toggle-icon kbqSuffix [for]="validUntilPicker" />
                         <kbq-datepicker #validUntilPicker />
 
                         @if (form.hasError('order')) {
-                            <kbq-error>The end of the period must not precede its start</kbq-error>
+                            <kbq-error>{{ t().periodEndBeforeStart }}</kbq-error>
                         }
                     </kbq-form-field>
                 </div>
@@ -111,6 +113,8 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher((_key, va
     }
 })
 export class ValidationCrossFieldDatesExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
     protected readonly form = new FormGroup(

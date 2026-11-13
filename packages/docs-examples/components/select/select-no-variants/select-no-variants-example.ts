@@ -4,6 +4,8 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqForm, KbqFormElement } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Select no variants
@@ -21,7 +23,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     template: `
         <form novalidate class="kbq-form-vertical">
             <div class="kbq-form__row">
-                <label class="kbq-form__label">Empty select</label>
+                <label class="kbq-form__label">{{ t().emptySelect }}</label>
                 <kbq-form-field>
                     <kbq-select>
                         @for (option of options; track option) {
@@ -29,7 +31,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
                         }
 
                         @if (noOptions) {
-                            <kbq-select-no-options>Нет вариантов выбора</kbq-select-no-options>
+                            <kbq-select-no-options>{{ t().noOptions }}</kbq-select-no-options>
                         }
                     </kbq-select>
                 </kbq-form-field>
@@ -47,6 +49,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     }
 })
 export class SelectNoVariantsExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     options: string[];
     noOptions: boolean;
 

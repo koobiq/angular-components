@@ -7,8 +7,10 @@ import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagInput, KbqTagInputEvent, KbqTagsModule, kbqTagsDefaultOptionsProvider } from '@koobiq/components/tags';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { TRANSLATIONS } from './l10n';
 
 const autocompleteValueCoercion = (value): string => (value?.new ? value.value : value) || '';
 
@@ -41,6 +43,8 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagAutocompleteOnpasteOffExample implements AfterViewInit {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly tagInput = viewChild.required<ElementRef<HTMLInputElement>>('tagInput');
     readonly tagInputDirective = viewChild.required('tagInput', { read: KbqTagInput });
 

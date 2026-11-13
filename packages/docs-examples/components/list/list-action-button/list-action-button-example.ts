@@ -5,6 +5,8 @@ import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title List action button
@@ -13,9 +15,14 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     selector: 'list-action-button-example',
     imports: [KbqListModule, FormsModule, KbqDropdownModule, KbqToolTipModule, KbqBadgeModule],
     template: `
-        <kbq-list-selection style="width: 400px" aria-label="Elements" [autoSelect]="false" [(ngModel)]="selected">
+        <kbq-list-selection
+            style="width: 400px"
+            [attr.aria-label]="t().elements"
+            [autoSelect]="false"
+            [(ngModel)]="selected"
+        >
             <kbq-list-option [value]="'An element with a very very very long name'">
-                <div>Element with a very very very very very very long name</div>
+                <div>{{ t().longElementName }}</div>
 
                 <kbq-option-action
                     [kbqDropdownTriggerFor]="dropdown"
@@ -27,7 +34,9 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 <kbq-list-option [value]="getText(item)">
                     <div class="layout-row layout-align-space-between">
                         Item {{ item }}
-                        <kbq-badge style="align-self: center" badgeColor="theme" [compact]="true">badge</kbq-badge>
+                        <kbq-badge style="align-self: center" badgeColor="theme" [compact]="true">
+                            {{ t().badge }}
+                        </kbq-badge>
                     </div>
                     <kbq-option-action
                         [kbqDropdownTriggerFor]="dropdown"
@@ -38,7 +47,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             }
         </kbq-list-selection>
         <br />
-        <div>Selected: {{ selected }}</div>
+        <div>{{ t().selected }} {{ selected }}</div>
 
         <kbq-dropdown #dropdown>
             <button kbq-dropdown-item>item 1</button>
@@ -49,6 +58,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListActionButtonExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     selected = [];
     protected readonly PopUpPlacements = PopUpPlacements;
 

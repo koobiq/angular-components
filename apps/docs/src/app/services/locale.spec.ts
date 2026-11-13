@@ -82,6 +82,19 @@ describe(DocsLocaleService.name, () => {
         });
     });
 
+    // The mirrored examples language travels with the locale navigation: one entry in history,
+    // the fragment survives, and the stale param value cannot win a race against this navigation.
+    it('merges the mirrored examples language into the locale navigation', () => {
+        const service = createService('/ru/components/alert/overview?examples-lang=ru-RU#section');
+
+        service.setLocale(DocsLocale.En, 'en-US');
+
+        expect(router.navigate).toHaveBeenCalledWith(['/', 'en', 'components', 'alert', 'overview'], {
+            queryParams: { 'examples-lang': 'en-US' },
+            fragment: 'section'
+        });
+    });
+
     it('does not navigate when the current URL has no locale segment', () => {
         const service = createService('/404');
 

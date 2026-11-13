@@ -3,6 +3,8 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Empty-state align
@@ -17,23 +19,23 @@ import { KbqIconModule } from '@koobiq/components/icon';
     template: `
         <div class="layout-row layout-wrap">
             <kbq-empty-state class="flex" style="min-height: 216px">
-                <h2 kbq-empty-state-title>Нет групп</h2>
-                <div kbq-empty-state-text>{{ emptyStateText }}</div>
+                <h2 kbq-empty-state-title>{{ t().noGroups }}</h2>
+                <div kbq-empty-state-text>{{ t().agentsGroupText }}</div>
                 <div kbq-empty-state-actions>
                     <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">
                         <i kbq-icon="kbq-plus_16" [color]="'theme'"></i>
-                        {{ buttonText }}
+                        {{ t().createGroup }}
                     </button>
                 </div>
             </kbq-empty-state>
 
             <kbq-empty-state class="flex" style="min-height: 216px" [alignTop]="true">
-                <h2 kbq-empty-state-title>Нет групп</h2>
-                <div kbq-empty-state-text>{{ emptyStateText }}</div>
+                <h2 kbq-empty-state-title>{{ t().noGroups }}</h2>
+                <div kbq-empty-state-text>{{ t().agentsGroupText }}</div>
                 <div kbq-empty-state-actions>
                     <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">
                         <i kbq-icon="kbq-plus_16" [color]="'theme'"></i>
-                        {{ buttonText }}
+                        {{ t().createGroup }}
                     </button>
                 </div>
             </kbq-empty-state>
@@ -42,9 +44,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmptyStateAlignExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly colors = KbqComponentColors;
     readonly styles = KbqButtonStyles;
-
-    buttonText = 'Создать группу';
-    emptyStateText = 'Агенты можно объединить в группу и назначить им одни и те же политики';
 }

@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalService, ModalSize } from '@koobiq/components/modal';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 @Component({
     selector: 'custom-modal',
@@ -12,7 +14,9 @@ import { KbqModalService, ModalSize } from '@koobiq/components/modal';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomModalComponent {
-    items = Array.from({ length: 1000 }).map((_, i) => `Item #${i}`);
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    readonly items = Array.from({ length: 1000 }, (_, i) => 'Item #' + i);
 }
 
 /**
@@ -22,11 +26,13 @@ export class CustomModalComponent {
     selector: 'modal-scroll-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="createLongModal()">Open Modal</button>
+        <button kbq-button (click)="createLongModal()">{{ t().openModal }}</button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalScrollExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly modalService = inject(KbqModalService);
 
     createLongModal(): void {

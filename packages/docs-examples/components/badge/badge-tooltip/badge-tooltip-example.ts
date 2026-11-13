@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Badge tooltip
@@ -18,7 +20,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 [badgeColor]="colors.FadeContrast"
                 [kbqPlacement]="PopUpPlacements.Top"
                 [kbqTooltipArrow]="false"
-                [kbqTooltip]="tooltipText"
+                [kbqTooltip]="t().dosTooltip"
             >
                 DoS
             </kbq-badge>
@@ -28,9 +30,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BadgeTooltipExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     colors = KbqBadgeColors;
     protected readonly PopUpPlacements = PopUpPlacements;
-
-    tooltipText =
-        'DoS (аббр. англ. denial-of-service attack «отказ в обслуживании») — хакерская атака на вычислительную систему с целью довести ее до отказа, то есть создание таких условий, при которых добросовестные пользователи системы не смогут получить доступ к предоставляемым системным ресурсам (серверам), либо этот доступ будет затруднен';
 }

@@ -47,7 +47,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectHeightExample {
-    readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i + 1}`);
+    readonly options = Array.from({ length: 10 }, (_, i) => 'Option #' + (i + 1));
     protected readonly value = model(this.options[0]);
     protected readonly themedValue = model(this.options[0]);
 }

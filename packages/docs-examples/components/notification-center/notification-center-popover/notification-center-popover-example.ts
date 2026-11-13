@@ -6,7 +6,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koobiq/components/notification-center';
-import { createNotifications, injectExampleText } from '../localized-data';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { createNotifications } from '../create-notifications';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title notification-center-popover
@@ -35,9 +37,9 @@ import { createNotifications, injectExampleText } from '../localized-data';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationCenterPopoverExample {
-    notificationService = inject(KbqNotificationCenterService);
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    protected readonly text = injectExampleText();
+    notificationService = inject(KbqNotificationCenterService);
 
     private readonly actionsTemplate = viewChild<TemplateRef<unknown>>('actionsTemplate');
 
@@ -49,7 +51,7 @@ export class NotificationCenterPopoverExample {
             if (!actions) return;
 
             this.notificationService.items = createNotifications(
-                this.text(),
+                this.t().list,
                 { actions },
                 this.notificationService.items
             );

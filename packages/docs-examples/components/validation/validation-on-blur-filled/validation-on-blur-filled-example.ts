@@ -26,8 +26,10 @@ import {
 } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { fromEvent, switchMap } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { TRANSLATIONS } from './l10n';
 
 const IP_PATTERN =
     /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
@@ -78,7 +80,7 @@ class ExampleResetTouchedOnFirstInput {
     ],
     template: `
         <kbq-form-field style="width: 320px;">
-            <kbq-label>IPv4-address</kbq-label>
+            <kbq-label>{{ t().ipv4Address }}</kbq-label>
             <input
                 kbqInput
                 exampleResetTouchedOnFirstInput
@@ -86,13 +88,13 @@ class ExampleResetTouchedOnFirstInput {
                 [kbqEnterDelay]="10"
                 [kbqPlacement]="popUpPlacements.Top"
                 [kbqTrigger]="'manual'"
-                [kbqTooltip]="'Numbers and dot only'"
+                [kbqTooltip]="t().numbersAndDot"
                 [kbqTooltipColor]="colors.Error"
                 (blur)="onBlur()"
                 (input)="onInput($event)"
             />
 
-            <kbq-error>The IP address does not comply with RFC standards</kbq-error>
+            <kbq-error>{{ t().invalidIp }}</kbq-error>
 
             <kbq-cleaner />
         </kbq-form-field>
@@ -106,6 +108,8 @@ class ExampleResetTouchedOnFirstInput {
     }
 })
 export class ValidationOnBlurFilledExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly tooltip = viewChild(KbqTooltipTrigger);
     protected readonly ipAddressControl = new FormControl('123...12123123', [
         Validators.pattern(IP_PATTERN)

@@ -4,6 +4,8 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
 import { KbqTitleModule } from '@koobiq/components/title';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title split-button-text-overflow
@@ -22,12 +24,10 @@ import { KbqTitleModule } from '@koobiq/components/title';
             <button kbq-button>
                 <i kbq-icon="kbq-plus_16"></i>
                 <span kbq-title class="kbq-truncate-line">
-                    Save engineering time with unified payments functionality. We obsess over the maze of gateways,
-                    payments rails, and financial institutions that make up the global economic landscape so that your
-                    teams can build what you need on one platform.
+                    {{ t().saveEngineering }}
                 </span>
             </button>
-            <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
+            <button kbq-button [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </kbq-split-button>
@@ -48,4 +48,6 @@ import { KbqTitleModule } from '@koobiq/components/title';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SplitButtonTextOverflowExample {}
+export class SplitButtonTextOverflowExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+}

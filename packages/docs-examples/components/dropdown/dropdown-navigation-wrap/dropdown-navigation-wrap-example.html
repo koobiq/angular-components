@@ -4,7 +4,7 @@
 </button>
 
 <kbq-dropdown #appDropdown="kbqDropdown" [panelMaxWidth]="200" [navigationWithWrap]="true">
-    <button kbq-dropdown-item>Text Normal</button>
+    <button kbq-dropdown-item>{{ t().textNormal }}</button>
 
     <button kbq-dropdown-item>
         <i kbq-icon="kbq-circle-info_16" [color]="'contrast'"></i>
@@ -13,13 +13,13 @@
 
     <button kbq-dropdown-item>
         Text Normal
-        <div kbqDropdownItemCaption>Caption</div>
+        <div kbqDropdownItemCaption>{{ t().caption }}</div>
     </button>
 
     <button kbq-dropdown-item>
         <i kbq-icon="kbq-circle-info_16" [color]="'contrast'"></i>
         Text Normal
-        <div kbqDropdownItemCaption>Caption</div>
+        <div kbqDropdownItemCaption>{{ t().caption }}</div>
     </button>
 
     <button kbq-dropdown-item>
@@ -34,21 +34,21 @@
 
     <kbq-divider />
 
-    <div kbqDropdownGroupHeader>Header</div>
+    <div kbqDropdownGroupHeader>{{ t().header }}</div>
 
-    <button disabled kbq-dropdown-item>Disabled</button>
+    <button disabled kbq-dropdown-item>{{ t().disabled }}</button>
 
     <kbq-divider />
 
     <kbq-optgroup label="Subheading" />
 
-    <button disabled kbq-dropdown-item>Disabled</button>
+    <button disabled kbq-dropdown-item>{{ t().disabled }}</button>
 
     <kbq-divider />
 
-    <button kbq-dropdown-item>Point 2</button>
+    <button kbq-dropdown-item>{{ t().point2 }}</button>
 
-    <button kbq-dropdown-item>Point 3</button>
+    <button kbq-dropdown-item>{{ t().point3 }}</button>
 
-    <button kbq-dropdown-item>Link</button>
+    <button kbq-dropdown-item>{{ t().link }}</button>
 </kbq-dropdown>

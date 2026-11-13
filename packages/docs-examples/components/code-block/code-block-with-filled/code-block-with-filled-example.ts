@@ -6,6 +6,8 @@ import {
     KbqCodeBlockModule
 } from '@koobiq/components/code-block';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Code-block with filled attribute
@@ -18,8 +20,12 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         FormsModule
     ],
     template: `
-        <kbq-toggle class="layout-margin-bottom-m layout-margin-right-m" [(ngModel)]="filled">Filled</kbq-toggle>
-        <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="alwaysShowActionbar">Always show actionbar</kbq-toggle>
+        <kbq-toggle class="layout-margin-bottom-m layout-margin-right-m" [(ngModel)]="filled">
+            {{ t().filled }}
+        </kbq-toggle>
+        <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="alwaysShowActionbar">
+            {{ t().alwaysShowActionbar }}
+        </kbq-toggle>
 
         <kbq-code-block [files]="files" [filled]="filled()" [alwaysShowActionbar]="alwaysShowActionbar()" />
     `,
@@ -33,6 +39,8 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CodeBlockWithFilledExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly files: KbqCodeBlockFile[] = [
         {
             language: 'bash',

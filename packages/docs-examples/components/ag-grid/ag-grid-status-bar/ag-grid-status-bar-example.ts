@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { KBQ_AG_GRID_STATUS_BAR_PARAMS, KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -8,14 +9,15 @@ import {
     ModuleRegistry,
     RowSelectionOptions
 } from 'ag-grid-community';
+import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
     selector: 'example-ag-grid-status-bar',
     template: `
-        <div>Total rows: {{ totalRows() }}</div>
-        <div>Selected: {{ selectedRows() }}</div>
+        <div>{{ t().totalRows }} {{ totalRows() }}</div>
+        <div>{{ t().selected }} {{ selectedRows() }}</div>
     `,
     styles: `
         :host {
@@ -30,6 +32,8 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleAgGridStatusBarComponent {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly params = inject(KBQ_AG_GRID_STATUS_BAR_PARAMS);
     private readonly destroyRef = inject(DestroyRef);
 
@@ -74,7 +78,7 @@ export class ExampleAgGridStatusBarComponent {
             [kbqAgGridStatusBar]="statusBarComponent"
             [rowSelection]="rowSelection"
             [style.height.px]="300"
-            [columnDefs]="columnDefs"
+            [columnDefs]="columnDefs()"
             [defaultColDef]="defaultColDef"
             [rowData]="rowData"
             (firstDataRendered)="onFirstDataRendered($event)"
@@ -83,6 +87,8 @@ export class ExampleAgGridStatusBarComponent {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridStatusBarExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly statusBarComponent = ExampleAgGridStatusBarComponent;
 
     protected readonly defaultColDef: ColDef = {
@@ -98,61 +104,21 @@ export class AgGridStatusBarExample {
         hideDisabledCheckboxes: false
     };
 
-    protected readonly columnDefs: ColDef[] = [
+    protected readonly columnDefs = computed<ColDef[]>(() => [
         {
             field: 'column0',
-            headerName: 'Project name',
+            headerName: this.t().projectName,
             width: 180
         },
-        {
-            field: 'column1',
-            headerName: 'Text'
-        },
-        {
-            field: 'column2',
-            headerName: 'Text'
-        },
-        {
-            field: 'column3',
-            headerName: 'Text'
-        },
-        {
-            field: 'column4',
-            headerName: 'Text'
-        },
-        {
-            field: 'column5',
-            headerName: 'Text'
-        },
-        {
-            field: 'column6',
-            headerName: 'Text'
-        },
-        {
-            field: 'column7',
-            headerName: 'Text'
-        },
-        {
-            field: 'column8',
-            headerName: 'Text'
-        },
-        {
-            field: 'column9',
-            headerName: 'Text'
-        }
-    ];
+        ...Array.from({ length: 9 }, (_, i) => ({
+            field: 'column' + (i + 1),
+            headerName: this.t().headerText
+        }))
+    ]);
 
     protected readonly rowData = Array.from({ length: 100 }, (_, index) => ({
         column0: 'Project name ' + index,
-        column1: 'Text ' + index,
-        column2: 'Text ' + index,
-        column3: 'Text ' + index,
-        column4: 'Text ' + index,
-        column5: 'Text ' + index,
-        column6: 'Text ' + index,
-        column7: 'Text ' + index,
-        column8: 'Text ' + index,
-        column9: 'Text ' + index
+        ...Object.fromEntries(Array.from({ length: 9 }, (_, i) => ['column' + (i + 1), 'Text ' + index]))
     }));
 
     protected onFirstDataRendered({ api }: FirstDataRenderedEvent): void {

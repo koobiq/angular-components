@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Toggle Label Left
@@ -9,9 +11,9 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     imports: [KbqToggleModule],
     template: `
         <div class="example-toggle-label-left__container layout-align-center-start layout-column layout-gap-s">
-            <kbq-toggle labelPosition="left" [checked]="true">Tap to wake</kbq-toggle>
-            <kbq-toggle labelPosition="left">Shake to undo</kbq-toggle>
-            <kbq-toggle labelPosition="left">Vibration</kbq-toggle>
+            <kbq-toggle labelPosition="left" [checked]="true">{{ t().tapToWake }}</kbq-toggle>
+            <kbq-toggle labelPosition="left">{{ t().shakeToUndo }}</kbq-toggle>
+            <kbq-toggle labelPosition="left">{{ t().vibration }}</kbq-toggle>
         </div>
     `,
     styles: `
@@ -24,4 +26,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         class: 'layout-align-center-center layout-row layout-gap-s layout-margin-top-xxl'
     }
 })
-export class ToggleLabelLeftExample {}
+export class ToggleLabelLeftExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+}

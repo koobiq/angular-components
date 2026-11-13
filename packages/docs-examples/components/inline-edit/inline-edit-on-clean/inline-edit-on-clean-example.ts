@@ -3,6 +3,8 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit on clean
@@ -51,7 +53,11 @@ import { KbqInputModule } from '@koobiq/components/input';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditOnCleanExample {
-    protected readonly placeholder = 'Placeholder';
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    protected get placeholder(): string {
+        return this.t().placeholder;
+    }
     protected readonly control = { label: 'Label', control: new FormControl('Default value', { nonNullable: true }) };
 
     protected onSave(): void {

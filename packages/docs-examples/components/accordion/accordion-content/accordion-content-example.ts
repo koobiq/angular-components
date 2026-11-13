@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAccordionModule } from '@koobiq/components/accordion';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Accordion content
@@ -13,5 +15,7 @@ import { KbqCheckboxModule } from '@koobiq/components/checkbox';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionContentExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     image: boolean = false;
 }

@@ -11,8 +11,10 @@ import { KbqListModule, KbqListSelectionChange } from '@koobiq/components/list';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { KbqUsernameModule } from '@koobiq/components/username';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { merge, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { TRANSLATIONS } from './l10n';
 
 interface ExampleUser {
     lastName: string;
@@ -58,6 +60,8 @@ interface ExampleUser {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListIntermediateStateExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     PopUpSizes = PopUpSizes;
     PopUpPlacements = PopUpPlacements;
 

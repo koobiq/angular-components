@@ -21,7 +21,9 @@ import {
 } from '@koobiq/components/filter-bar';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
-import { injectLocalizedPeriods, injectLocalizedText } from '../localized-data';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { injectLocalizedPeriods } from '../localized-periods';
+import { TRANSLATIONS } from './l10n';
 
 interface ExampleFilter extends KbqFilter {
     id?: number;
@@ -78,13 +80,15 @@ const createSearchPipe = (name: string): KbqPipe => ({
         </ng-template>
 
         <ng-template #errorToastActions let-toast>
-            <a kbqLink [pseudo]="true" (click)="toast.close()">{{ text().retry }}</a>
+            <a kbqLink [pseudo]="true" (click)="toast.close()">{{ t().retry }}</a>
         </ng-template>
     `,
     providers: [DateFormatter],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarSavedFiltersExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly toastService = inject(KbqToastService);
 
     readonly errorToastActionsTemplate = viewChild.required<TemplateRef<any>>('errorToastActions');
@@ -94,20 +98,6 @@ export class FilterBarSavedFiltersExample {
     protected readonly periods = injectLocalizedPeriods();
 
     /** Text the example owns: it has no counterpart in the library's locale data. */
-    protected readonly text = injectLocalizedText({
-        'ru-RU': {
-            search: 'Поиск',
-            retry: 'Повторить',
-            deleteError: 'Не удалось удалить фильтр: ',
-            saveError: (name: string) => `Не удалось сохранить фильтр: ${name}`
-        },
-        default: {
-            search: 'Search',
-            retry: 'Retry',
-            deleteError: 'Could not delete the filter: ',
-            saveError: (name: string) => `Could not save the filter: ${name}`
-        }
-    });
 
     // Everything below is derived from the period labels, so it is rebuilt whenever the locale changes:
     // `*kbqPipe` builds a pipe component once from the object it is given and ignores later changes to
@@ -216,7 +206,7 @@ export class FilterBarSavedFiltersExample {
                 title: this.toastErrorTitleTemplate(),
                 closeButton: true,
                 actions: this.errorToastActionsTemplate(),
-                text: this.text().deleteError,
+                text: this.t().deleteError,
                 filter
             } as KbqToastData);
         } else {
@@ -231,7 +221,7 @@ export class FilterBarSavedFiltersExample {
 
         setTimeout(() => {
             if (filter.id === 2) {
-                filterBar.filters()?.filterSavedUnsuccessfully({ text: this.text().saveError(filter.name) });
+                filterBar.filters()?.filterSavedUnsuccessfully({ text: this.t().saveError(filter.name) });
             } else if (status === KbqSaveFilterStatuses.NewFilter) {
                 this.saveNewFilter(filter, filterBar);
             } else if (status === KbqSaveFilterStatuses.NewName) {
@@ -321,7 +311,7 @@ export class FilterBarSavedFiltersExample {
                 changed: true,
                 saved: true,
                 pipes: [
-                    createSearchPipe(this.text().search),
+                    createSearchPipe(this.t().search),
                     {
                         name: 'Datetime',
                         value: this.periods.pick({ unit: 'days', amount: -7 }),
@@ -359,7 +349,7 @@ export class FilterBarSavedFiltersExample {
                 changed: false,
                 saved: true,
                 pipes: [
-                    createSearchPipe(this.text().search),
+                    createSearchPipe(this.t().search),
                     {
                         name: 'Datetime',
                         value: this.periods.pick({ unit: 'years', amount: -1 }),
@@ -401,7 +391,7 @@ export class FilterBarSavedFiltersExample {
                 changed: false,
                 saved: true,
                 pipes: [
-                    createSearchPipe(this.text().search),
+                    createSearchPipe(this.t().search),
                     {
                         name: 'Datetime',
                         value: this.periods.pick({ unit: 'days', amount: -3 }),
@@ -452,7 +442,7 @@ export class FilterBarSavedFiltersExample {
                 changed: false,
                 saved: true,
                 pipes: [
-                    createSearchPipe(this.text().search),
+                    createSearchPipe(this.t().search),
                     {
                         name: 'Datetime',
                         value: this.periods.pick({ unit: 'days', amount: -7 }),
@@ -500,7 +490,7 @@ export class FilterBarSavedFiltersExample {
             changed: false,
             saved: false,
             pipes: [
-                createSearchPipe(this.text().search),
+                createSearchPipe(this.t().search),
                 {
                     name: 'Date',
                     value: this.periods.pick({ unit: 'days', amount: -1 }),

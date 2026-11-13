@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Toggle Disabled
@@ -8,7 +10,9 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     selector: 'toggle-disabled-example',
     imports: [KbqToggleModule],
     template: `
-        <kbq-toggle [checked]="value()" [disabled]="true" (change)="value.set($event.checked)">Vibration</kbq-toggle>
+        <kbq-toggle [checked]="value()" [disabled]="true" (change)="value.set($event.checked)">
+            {{ t().vibration }}
+        </kbq-toggle>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -16,5 +20,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     }
 })
 export class ToggleDisabledExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly value = signal(false);
 }

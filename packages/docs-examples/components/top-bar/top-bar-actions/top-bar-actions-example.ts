@@ -8,7 +8,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { map } from 'rxjs/operators';
+import { TRANSLATIONS } from './l10n';
 
 type ExampleAction = {
     id: string;
@@ -36,7 +38,7 @@ type ExampleAction = {
     template: `
         <kbq-top-bar>
             <div class="layout-row layout-align-center-center" kbqTopBarContainer placement="start">
-                <span class="kbq-truncate-line" kbqTopBarTitle>Actions</span>
+                <span class="kbq-truncate-line" kbqTopBarTitle>{{ t().actions }}</span>
             </div>
 
             <div kbqTopBarSpacer></div>
@@ -103,6 +105,8 @@ type ExampleAction = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopBarActionsExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')

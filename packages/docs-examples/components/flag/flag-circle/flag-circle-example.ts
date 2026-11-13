@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { KbqFlag } from '@koobiq/components/flag';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import * as flags1x1 from 'country-flag-icons/string/1x1';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Circular flags
@@ -10,7 +12,7 @@ import * as flags1x1 from 'country-flag-icons/string/1x1';
     selector: 'flag-circle-example',
     imports: [KbqFlag],
     template: `
-        @for (country of countries; track country.code) {
+        @for (country of countries(); track country.code) {
             <kbq-flag shape="circle" [label]="country.name" [svg]="country.svg" />
         }
     `,
@@ -25,10 +27,17 @@ import * as flags1x1 from 'country-flag-icons/string/1x1';
     }
 })
 export class FlagCircleExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly sanitizer = inject(DomSanitizer);
-    protected readonly countries = [
-        { code: 'AO', name: 'Angola' },
-        { code: 'MY', name: 'Malaysia' },
-        { code: 'UY', name: 'Uruguay' }
-    ].map((country) => ({ ...country, svg: this.sanitizer.bypassSecurityTrustHtml(flags1x1[country.code]) }));
+
+    private readonly countryCodes = ['AO', 'MY', 'UY'];
+
+    protected readonly countries = computed(() =>
+        this.countryCodes.map((code, index) => ({
+            code,
+            name: this.t().circleCountries[index],
+            svg: this.sanitizer.bypassSecurityTrustHtml(flags1x1[code])
+        }))
+    );
 }

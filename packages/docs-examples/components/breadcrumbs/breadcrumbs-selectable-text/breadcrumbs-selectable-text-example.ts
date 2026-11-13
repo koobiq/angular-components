@@ -1,9 +1,11 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Breadcrumbs selectable text
@@ -18,7 +20,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     ],
     template: `
         <nav kbq-breadcrumbs [firstItemNegativeMargin]="false">
-            @for (breadcrumb of breadcrumbs; track breadcrumb) {
+            @for (breadcrumb of breadcrumbs(); track breadcrumb) {
                 <kbq-breadcrumb-item [routerLink]="breadcrumb.url" [text]="breadcrumb.label">
                     <a
                         *kbqBreadcrumbView
@@ -75,15 +77,17 @@ import { KbqIconModule } from '@koobiq/components/icon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsSelectableTextExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly clipboard = inject(Clipboard, { optional: true });
 
-    protected readonly breadcrumbs = [
-        { label: 'Information Security', url: '/information-security' },
-        { label: 'Access Control', url: '/information-security/access-control' },
-        { label: 'Authorization', url: '/information-security/access-control/authorization' },
+    readonly breadcrumbs = computed(() => [
+        { label: this.t().informationSecurity, url: '/information-security' },
+        { label: this.t().accessControl, url: '/information-security/access-control' },
+        { label: this.t().authorization, url: '/information-security/access-control/authorization' },
         { label: 'RBAC', url: '/information-security/access-control/authorization/rbac' },
-        { label: 'Roles', url: '/information-security/access-control/authorization/rbac/roles' }
-    ];
+        { label: this.t().roles, url: '/information-security/access-control/authorization/rbac/roles' }
+    ]);
 
     protected copyToClipboard(event: MouseEvent, text: string): void {
         event.preventDefault();

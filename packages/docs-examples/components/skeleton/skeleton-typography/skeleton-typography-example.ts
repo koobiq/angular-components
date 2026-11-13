@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqSkeletonTypography } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Skeleton typography preset
@@ -10,7 +12,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     selector: 'skeleton-typography-example',
     imports: [KbqSkeletonTypography, KbqToggleModule, FormsModule],
     template: `
-        <kbq-toggle [(ngModel)]="loading">Loading</kbq-toggle>
+        <kbq-toggle [(ngModel)]="loading">{{ t().loading }}</kbq-toggle>
 
         @if (loading()) {
             <div class="example-content">
@@ -21,8 +23,8 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             </div>
         } @else {
             <div class="example-content">
-                <div class="kbq-caps-compact example-secondary example-overline">Threat intelligence</div>
-                <div class="kbq-title example-title">Denial-of-service attack</div>
+                <div class="kbq-caps-compact example-secondary example-overline">{{ t().threatIntel }}</div>
+                <div class="kbq-title example-title">{{ t().dosTitle }}</div>
                 <div class="kbq-text-normal example-body">
                     In computing, a denial-of-service attack (DoS attack) is a cyber-attack in which the perpetrator
                     seeks to make a machine or network resource unavailable to its intended users by temporarily or
@@ -66,5 +68,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SkeletonTypographyExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly loading = model(true);
 }

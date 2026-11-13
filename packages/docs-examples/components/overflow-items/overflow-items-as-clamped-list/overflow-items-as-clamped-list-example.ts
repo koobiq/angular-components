@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Overflow items as clamped list
@@ -20,7 +22,7 @@ import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
             style="max-height: 48px; min-width: 60px"
             [wrap]="'wrap'"
         >
-            @for (item of countries; track item) {
+            @for (item of countries(); track item) {
                 <span [kbqOverflowItem]="item" [class.layout-margin-right-xs]="!$last">
                     <span>
                         {{ item }}
@@ -29,7 +31,7 @@ import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
                 </span>
             }
             <span kbqOverflowItemsResult [kbqTooltip]="template" [kbqTooltipArrow]="false">
-                and {{ kbqOverflowItems.hiddenItemIDs().size }}
+                {{ t().andMore(kbqOverflowItems.hiddenItemIDs().size) }}
             </span>
 
             <ng-template #template>
@@ -74,31 +76,7 @@ import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OverflowItemsAsClampedListExample {
-    protected countries = [
-        'Australia',
-        'Austria',
-        'Argentina',
-        'Belgium',
-        'Brazil',
-        'United Kingdom',
-        'Germany',
-        'Greece',
-        'Denmark',
-        'Egypt',
-        'India',
-        'Spain',
-        'Italy',
-        'Canada',
-        'Mexico',
-        'Netherlands',
-        'Norway',
-        'Poland',
-        'Portugal',
-        'Russia',
-        'United States',
-        'Thailand',
-        'Turkey',
-        'France',
-        'Japan'
-    ];
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    protected readonly countries = computed(() => this.t().countries);
 }

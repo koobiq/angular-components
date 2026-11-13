@@ -4,6 +4,8 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { KbqSplitButton } from '@koobiq/components/split-button';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Modal template
@@ -17,31 +19,29 @@ import { KbqSplitButton } from '@koobiq/components/split-button';
         KbqDropdownModule
     ],
     template: `
-        <button kbq-button (click)="createModal(title, content, footer, sizes.Small)">Open Modal</button>
+        <button kbq-button (click)="createModal(title, content, footer, sizes.Small)">{{ t().openModal }}</button>
 
         <ng-template #title>DoS attack</ng-template>
 
         <ng-template #content>
-            In computing, a denial-of-service attack (DoS attack) is a cyber-attack in which the perpetrator seeks to
-            make a machine or network resource unavailable to its intended users by temporarily or indefinitely
-            disrupting services of a host connected to a network.
+            {{ t().dosText }}
 
             <kbq-split-button class="layout-margin-top-m">
                 <button kbq-button (click)="createModal(title, content, footer)">Open next modal</button>
-                <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
+                <button kbq-button [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
             </kbq-split-button>
 
             <kbq-dropdown #dropdown="kbqDropdown">
                 <button kbq-dropdown-item (click)="createModal(title, content, footer, sizes.Small)">
-                    Open small modal
+                    {{ t().openSmallModal }}
                 </button>
                 <button kbq-dropdown-item (click)="createModal(title, content, footer, sizes.Medium)">
-                    Open medium modal
+                    {{ t().openMediumModal }}
                 </button>
                 <button kbq-dropdown-item (click)="createModal(title, content, footer, sizes.Large)">
-                    Open large modal
+                    {{ t().openLargeModal }}
                 </button>
             </kbq-dropdown>
         </ng-template>
@@ -68,6 +68,8 @@ import { KbqSplitButton } from '@koobiq/components/split-button';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalTemplateExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly modalService = inject(KbqModalService);
 
     modalRef: KbqModalRef;

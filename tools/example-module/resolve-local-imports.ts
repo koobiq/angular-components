@@ -3,11 +3,17 @@ import * as path from 'path';
 import ts from 'typescript';
 
 /**
- * Recursively resolves relative (`./`, `../`) TypeScript imports reachable from the given
+ * Import of the shared i18n entry point (`packages/docs-examples/i18n`), which the examples
+ * reference by alias rather than by a relative path.
+ */
+const I18N_ENTRY_POINT_IMPORT = '@koobiq/docs-examples/i18n';
+
+/**
+ * Recursively resolves the TypeScript imports reachable from the given
  * seed files of an example, so that source shared between examples (e.g. a data file kept
- * as a single source of truth) is picked up as part of the example and included in the
- * generated StackBlitz project so it compiles. These files are kept out of the docs source
- * viewer's tabs — see `localImportFiles` in `generate-example-module.ts`.
+ * as a single source of truth, or the shared i18n entry point) is picked up as part of the
+ * example and included in the generated StackBlitz project so it compiles. These files are
+ * kept out of the docs source viewer's tabs — see `localImportFiles` in `generate-example-module.ts`.
  *
  * Returned paths are relative to the example's own package directory, matching the format
  * already used for `templateUrl`/`styleUrls` entries, and may contain `../` segments when
@@ -29,8 +35,8 @@ export function resolveLocalImportFiles(baseDir: string, packagePath: string, se
         const content = fs.readFileSync(absoluteFile, 'utf-8');
         const sourceFile = ts.createSourceFile(absoluteFile, content, ts.ScriptTarget.Latest, false);
 
-        for (const specifier of collectRelativeImportSpecifiers(sourceFile)) {
-            const resolved = resolveImportSpecifier(path.dirname(absoluteFile), specifier);
+        for (const specifier of collectImportSpecifiers(sourceFile)) {
+            const resolved = resolveImportSpecifier(path.dirname(absoluteFile), specifier, baseDir);
 
             if (!resolved || visited.has(resolved)) {
                 continue;
@@ -45,8 +51,8 @@ export function resolveLocalImportFiles(baseDir: string, packagePath: string, se
     return found;
 }
 
-/** Collects the text of every relative `import`/`export ... from` module specifier in the file. */
-function collectRelativeImportSpecifiers(sourceFile: ts.SourceFile): string[] {
+/** Collects the text of every tracked `import`/`export ... from` module specifier in the file. */
+function collectImportSpecifiers(sourceFile: ts.SourceFile): string[] {
     const specifiers: string[] = [];
 
     const visit = (node: ts.Node): void => {
@@ -54,7 +60,7 @@ function collectRelativeImportSpecifiers(sourceFile: ts.SourceFile): string[] {
             (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) &&
             node.moduleSpecifier &&
             ts.isStringLiteral(node.moduleSpecifier) &&
-            node.moduleSpecifier.text.startsWith('.')
+            (node.moduleSpecifier.text.startsWith('.') || node.moduleSpecifier.text === I18N_ENTRY_POINT_IMPORT)
         ) {
             specifiers.push(node.moduleSpecifier.text);
         }
@@ -67,8 +73,12 @@ function collectRelativeImportSpecifiers(sourceFile: ts.SourceFile): string[] {
     return specifiers;
 }
 
-/** Resolves a relative import specifier to an absolute `.ts` file on disk, if one exists. */
-function resolveImportSpecifier(fromDir: string, specifier: string): string | undefined {
+/** Resolves an import specifier to an absolute `.ts` file on disk, if one exists. */
+function resolveImportSpecifier(fromDir: string, specifier: string, baseDir: string): string | undefined {
+    if (specifier === I18N_ENTRY_POINT_IMPORT) {
+        return path.join(baseDir, 'i18n', 'index.ts');
+    }
+
     const resolved = path.resolve(fromDir, specifier);
     const candidates = [resolved, `${resolved}.ts`, path.join(resolved, 'index.ts')];
 

@@ -1,43 +1,16 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { ChangeDetectionStrategy, Component, computed, inject, InjectionToken } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { KbqButtonColor, KbqButtonModule, KbqButtonStyleInput, KbqButtonStyles } from '@koobiq/components/button';
-import { KBQ_LOCALE_SERVICE, KbqComponentColors, KbqFormattersModule, PopUpPlacements } from '@koobiq/components/core';
+import { KbqComponentColors, KbqFormattersModule, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
-import { of } from 'rxjs';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { map } from 'rxjs/operators';
-
-interface ExampleLocalizedText {
-    fullDisplay: string;
-    truncatedTitle: string;
-    compressRight: string;
-}
-
-const ExampleLocalizedData = new InjectionToken<Record<string | 'default', ExampleLocalizedText>>(
-    'ExampleLocalizedData',
-    {
-        factory: () => ({
-            'ru-RU': {
-                fullDisplay: 'Когда есть свободное пространство заголовок и действия отображаются полностью',
-                truncatedTitle:
-                    'Минимальная ширина левой стороны зависит от заголовка страницы, который может быть обрезан до 3 символов с добавлением трех точек (…).',
-                compressRight:
-                    'После достижения минимальной ширины у левой стороны можно приступить к сжатию правой стороны с действиями. '
-            } satisfies ExampleLocalizedText,
-            default: {
-                fullDisplay: 'When there is free space, the title and actions are fully displayed.',
-                truncatedTitle:
-                    'The minimum width of the left side depends on the page title, which can be truncated to 3 characters with the addition of three dots (…).',
-                compressRight:
-                    'After reaching the minimum width of the left side, you can start compressing the right side with the actions.'
-            } satisfies ExampleLocalizedText
-        })
-    }
-);
+import { TRANSLATIONS } from './l10n';
 
 type ExampleAction = {
     id: string;
@@ -66,7 +39,7 @@ type ExampleAction = {
                     <img alt="example icon" src="https://koobiq.io/assets/example-icon.svg" width="24" height="24" />
                 </div>
                 <div class="kbq-truncate-line example-kbq-top-bar__title" kbqTopBarTitle>
-                    <span class="kbq-truncate-line layout-margin-right-xs">Page Header</span>
+                    <span class="kbq-truncate-line layout-margin-right-xs">{{ t().pageHeader }}</span>
 
                     <span class="example-kbq-top-bar__counter">{{ 10 | kbqNumber: '' : 'en-US' }}</span>
                 </div>
@@ -155,6 +128,8 @@ type ExampleAction = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleTopBar {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
@@ -184,17 +159,17 @@ export class ExampleTopBar {
     imports: [ExampleTopBar],
     template: `
         <div class="example-text layout-margin-bottom-l">
-            {{ text().fullDisplay }}
+            {{ t().fullDisplay }}
         </div>
         <example-top-bar [style.width.px]="680" />
 
         <div class="example-text layout-margin-bottom-l layout-margin-top-3xl">
-            {{ text().truncatedTitle }}
+            {{ t().truncatedTitle }}
         </div>
         <example-top-bar [style.width.px]="437" />
 
         <div class="example-text layout-margin-bottom-l layout-margin-top-3xl">
-            {{ text().compressRight }}
+            {{ t().compressRight }}
         </div>
         <example-top-bar [style.width.px]="314" />
     `,
@@ -206,12 +181,5 @@ export class ExampleTopBar {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopBarTitleCounterAdaptiveExample {
-    protected readonly data = inject(ExampleLocalizedData);
-    protected readonly localeId = toSignal(inject(KBQ_LOCALE_SERVICE, { optional: true })?.changes || of(''));
-
-    protected readonly text = computed(() => {
-        const localeId = this.localeId();
-
-        return (localeId && this.data[localeId]) || this.data.default;
-    });
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }
