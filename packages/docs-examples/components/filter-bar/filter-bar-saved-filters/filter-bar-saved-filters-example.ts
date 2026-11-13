@@ -5,6 +5,7 @@ import {
     KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
+    KbqFilterBarNameResolver,
     KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes,
@@ -19,9 +20,10 @@ interface ExampleFilter extends KbqFilter {
     id?: number;
 }
 
-/** A stable period preset: `start` is an offset from today. */
+/** A stable period preset: `nameKey` is translated, `start` is an offset from today. */
 interface ExamplePeriod {
     name: string;
+    nameKey: string;
     start: Record<string, number>;
     end: null;
 }
@@ -44,7 +46,12 @@ const createSearchPipe = (name: string): KbqPipe => ({
     selector: 'filter-bar-saved-filters-example',
     imports: [KbqFilterBarModule, LuxonDateModule, KbqLink],
     template: `
-        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="activeFilter" (filterChange)="onFilterChange($event)">
+        <kbq-filter-bar
+            [pipeTemplates]="pipeTemplates"
+            [filter]="activeFilter"
+            [nameResolver]="nameResolver"
+            (filterChange)="onFilterChange($event)"
+        >
             <kbq-filters
                 [filters]="filters"
                 (onSave)="onSaveFilter($event)"
@@ -97,17 +104,38 @@ export class FilterBarSavedFiltersExample {
         }
     });
 
+    /** Translations of the period labels. The period objects below are created once and stay stable. */
+    private readonly periodText = injectLocalizedText({
+        'ru-RU': {
+            'filters.last24h': 'Последние 24 часа',
+            'filters.last7days': 'Последние 7 дней',
+            'filters.last30days': 'Последние 30 дней',
+            'filters.lastYear': 'Последний год'
+        },
+        default: {
+            'filters.last24h': 'Last 24 hours',
+            'filters.last7days': 'Last 7 days',
+            'filters.last30days': 'Last 30 days',
+            'filters.lastYear': 'Last year'
+        }
+    });
+
+    /** Resolves a period `nameKey`; the `name` stays the stable English fallback. */
+    protected readonly nameResolver: KbqFilterBarNameResolver = ({ key, fallback }) =>
+        this.periodText()[key] ?? fallback;
+
     /** Stable periods; the saved-filter data below is never rebuilt for a locale change. */
-    private readonly period = (name: string, start: Record<string, number>): ExamplePeriod => ({
+    private readonly period = (nameKey: string, name: string, start: Record<string, number>): ExamplePeriod => ({
         name,
+        nameKey,
         start,
         end: null
     });
 
-    private readonly last24h = this.period('Last 24 hours', { hours: -24 });
-    private readonly last7days = this.period('Last 7 days', { days: -7 });
-    private readonly last30days = this.period('Last 30 days', { days: -30 });
-    private readonly lastYear = this.period('Last year', { years: -1 });
+    private readonly last24h = this.period('filters.last24h', 'Last 24 hours', { hours: -24 });
+    private readonly last7days = this.period('filters.last7days', 'Last 7 days', { days: -7 });
+    private readonly last30days = this.period('filters.last30days', 'Last 30 days', { days: -30 });
+    private readonly lastYear = this.period('filters.lastYear', 'Last year', { years: -1 });
 
     /** Built once; nothing is derived from the locale. */
     readonly pipeTemplates: KbqPipeTemplate[] = [
