@@ -4,9 +4,11 @@ import {
     Component,
     computed,
     contentChild,
+    DestroyRef,
     Directive,
     effect,
     ElementRef,
+    ErrorHandler,
     inject,
     Injector,
     input,
@@ -34,7 +36,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqResizable, KbqResizer, KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { SizeL } from '@koobiq/design-tokens';
-import { Subject } from 'rxjs';
+import { firstValueFrom, isObservable, Observable, Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 @Component({
@@ -234,6 +236,13 @@ const normalizeContentPanelState = (parsed: unknown): KbqContentPanelState | nul
     return { opened, width };
 };
 
+/**
+ * Decides whether a content panel closes: only `true`, or a promise or an observable of it, closes the panel. Any
+ * other answer keeps it open, an observable that completes with no value and an error included. An error the function
+ * throws reaches the caller of `close()`, and an asynchronous one goes to the `ErrorHandler`.
+ */
+export type KbqContentPanelBeforeClose = () => boolean | Promise<boolean> | Observable<boolean>;
+
 @Component({
     selector: 'kbq-content-panel-container',
     imports: [KbqResizable, KbqResizer, KbqScrollbar],
@@ -276,6 +285,9 @@ const normalizeContentPanelState = (parsed: unknown): KbqContentPanelState | nul
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-content-panel-container',
+        // A press on text inside would move the focus to `body`, out of reach of the ESCAPE listener, and so would a
+        // press on a button in WebKit, which does not focus buttons.
+        tabindex: '-1',
         '[class.kbq-content-panel-container__opened]': 'openedState()',
         '(keydown.escape)': 'handleEscapeKeydown($any($event))'
     },
@@ -319,6 +331,12 @@ export class KbqContentPanelContainer implements OnInit {
      * Whether the content panel can not be closed by pressing the ESCAPE key.
      */
     readonly disableCloseByEscape = input(this.disableClose(), { transform: booleanAttribute });
+
+    /**
+     * Decides whether the content panel closes: by the close button, the ESCAPE key, {@link close} or {@link toggle}.
+     * A bound `opened` does not consult it. Defaults to `undefined`.
+     */
+    readonly beforeClose = input<KbqContentPanelBeforeClose>();
 
     /**
      * Whether the content panel resizer is disabled.
@@ -382,6 +400,15 @@ export class KbqContentPanelContainer implements OnInit {
     private readonly injector = inject(Injector);
     private contentAnimation?: { destroy(): void };
 
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly errorHandler = inject(ErrorHandler);
+
+    /** The answer of an asynchronous `beforeClose`, which a repeated request waits for instead of asking again. */
+    private closeRequest?: Promise<void>;
+
+    /** Whether `beforeClose` is being asked: one that closes the panel itself is not asked again. */
+    private askingBeforeClose = false;
+
     /**
      * Resizing reports on every pointer move, so the width is written once the drag settles rather than
      * on each frame. The store's unchanged-payload skip does not help here — every frame is a new number.
@@ -404,6 +431,8 @@ export class KbqContentPanelContainer implements OnInit {
             opened = this.openedState();
 
             if (previous !== undefined && previous !== opened) {
+                // A panel closed, or closed and opened again, by other means no longer waits for the answer.
+                this.closeRequest = undefined;
                 this.animateContent();
             }
         });
@@ -474,13 +503,19 @@ export class KbqContentPanelContainer implements OnInit {
     }
 
     /**
-     * Toggles the content panel opened state.
+     * Toggles the content panel opened state. Closing asks `beforeClose`, as {@link close} does.
      */
     toggle(): void {
         // Untracked, as `open()`, `close()`, `saveState()` and `clearSavedState()`: called from a consumer's
         // `effect()`, the state read on the way — `opened`, the width, the state saving inputs — would make the
         // effect run again on every open and close.
-        untracked(() => this.setOpened(!this.openedState()));
+        untracked(() => {
+            if (this.openedState()) {
+                this.close();
+            } else {
+                this.setOpened(true);
+            }
+        });
     }
 
     /**
@@ -493,12 +528,70 @@ export class KbqContentPanelContainer implements OnInit {
     }
 
     /**
-     * Closes the content panel.
+     * Closes the content panel, unless `beforeClose` keeps it open. Without `beforeClose` the panel closes at once,
+     * and with an asynchronous one once it answers: `openedChange` reports the close.
      */
     close(): void {
-        untracked(() => {
-            if (this.openedState()) this.setOpened(false);
-        });
+        untracked(() => this.requestClose());
+    }
+
+    /** Closes the panel or starts asking `beforeClose`, and tells whether it did either. */
+    private requestClose(): boolean {
+        if (this.closeRequest) return true;
+
+        if (this.askingBeforeClose || !this.openedState()) return false;
+
+        const answer = this.askBeforeClose();
+
+        if (typeof answer !== 'object' || answer === null) return this.closeIfAllowed(answer);
+
+        // A request the panel dropped by closing meanwhile is not answered.
+        const request: Promise<void> = Promise.resolve(answer)
+            .then((allowed) => {
+                if (request !== this.closeRequest) return;
+
+                // Over before the panel closes, so that a listener of the close can request the next one.
+                this.closeRequest = undefined;
+                this.closeIfAllowed(allowed);
+            })
+            .catch((error: unknown) => this.errorHandler.handleError(error))
+            .finally(() => {
+                if (request === this.closeRequest) this.closeRequest = undefined;
+            });
+
+        this.closeRequest = request;
+
+        return true;
+    }
+
+    /** Asks `beforeClose`, with an observable answer reduced to its first value. Without it the panel closes. */
+    private askBeforeClose(): boolean | Promise<boolean> {
+        const beforeClose = this.beforeClose();
+
+        if (!beforeClose) return true;
+
+        this.askingBeforeClose = true;
+
+        try {
+            const answer = beforeClose();
+
+            return isObservable(answer)
+                ? firstValueFrom(answer.pipe(takeUntilDestroyed(this.destroyRef)), { defaultValue: false })
+                : answer;
+        } finally {
+            this.askingBeforeClose = false;
+        }
+    }
+
+    private closeIfAllowed(allowed: boolean): boolean {
+        // Only an explicit `true` closes, so an answer lost on the way, such as a dismissed confirmation, keeps the
+        // changes. It can also come after the panel left the page, and an output of a destroyed component throws on
+        // emit.
+        if (allowed !== true || this.destroyRef.destroyed) return false;
+
+        if (this.openedState()) this.setOpened(false);
+
+        return true;
     }
 
     private setOpened(opened: boolean): void {
@@ -553,9 +646,10 @@ export class KbqContentPanelContainer implements OnInit {
 
         if (!this.openedState() || this.disableClose() || this.disableCloseByEscape()) return;
 
+        // A synchronous veto leaves the key to the listeners further up, such as a dialog the panel sits in.
+        if (!this.requestClose()) return;
+
         event.preventDefault();
         event.stopPropagation();
-
-        this.close();
     }
 }

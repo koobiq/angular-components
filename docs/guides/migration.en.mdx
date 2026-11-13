@@ -39,6 +39,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 - **21.0.0**: the tag list cleaner removes the tags itself and leaves the disabled ones in place.
 - **21.0.0**: the move to `@koobiq/design-tokens` 4 — a new palette scale, DTCG sources and opt-in component tokens.
 - **21.1.0**: the code block loads the highlight.js core instead of the full bundle by default.
+- **21.1.0**: the content panel container becomes focusable.
 
 ### Upgrade to 18.5.3
 
@@ -3522,6 +3523,12 @@ The migration keeps the full bundle where the code block loaded it. An applicati
 - **A configuration the root providers get through a function.** The added root provider overrides it: remove the added one. The migration reports a project that provides a configuration outside its root providers.
 - **A library that renders code blocks.** The applications that use it provide the configuration.
 - **Specs** get none of the application's providers: add the configuration to the `TestBed` of a spec that checks highlighted markup.
+
+### Focusable content panel (21.1.0)
+
+{/* migration-step-components(content-panel) */}
+
+`kbq-content-panel-container` gets `tabindex="-1"`, so that the `ESCAPE` key closes the panel after a click on text inside the container. After such a click `document.activeElement` is therefore the container rather than `body`: code that compares it with `body` and `:focus-within` styles on the ancestors of the container see the difference.
 
 ### After the migration
 

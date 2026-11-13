@@ -30,10 +30,20 @@
 
 ### Взаимодействие с клавиатурой
 
-По умолчанию клавиша `ESCAPE` закрывает панель, но вы можете отключить это поведение с помощью атрибута `disableCloseByEscape`:
+По умолчанию клавиша `ESCAPE` закрывает панель, если фокус находится внутри `kbq-content-panel-container`: в самой панели или в контенте рядом с ней. Вы можете отключить это поведение с помощью атрибута `disableCloseByEscape`:
 
 ```html
 <kbq-content-panel-container disableCloseByEscape>
     <kbq-content-panel>...</kbq-content-panel>
 </kbq-content-panel-container>
 ```
+
+Чтобы панель закрывалась клавишей `ESCAPE` при фокусе в любом месте страницы, слушайте нажатие на `document` и вызывайте `close()`:
+
+<Example id="content-panel-close-on-escape" />
+
+### Подтверждение закрытия
+
+Чтобы обработать закрытие панели, например спросить подтверждение, если есть несохранённые изменения, используйте атрибут `beforeClose`:
+
+<Example id="content-panel-before-close" />

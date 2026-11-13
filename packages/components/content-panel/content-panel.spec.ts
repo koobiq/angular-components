@@ -1,5 +1,5 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, DebugElement, effect, model, Provider, signal, Type, viewChild } from '@angular/core';
+import { Component, DebugElement, effect, ErrorHandler, model, Provider, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import {
@@ -11,7 +11,8 @@ import {
     KbqStateStore
 } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqContentPanelContainer } from './content-panel';
+import { EMPTY, of, Subject } from 'rxjs';
+import { KbqContentPanelBeforeClose, KbqContentPanelContainer } from './content-panel';
 import { KbqContentPanelModule } from './module';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
@@ -45,6 +46,7 @@ const ESCAPE_KEY_EVENT = new KeyboardEvent('keydown', { key: 'Escape' });
             [width]="width()"
             [maxWidth]="maxWidth()"
             [minWidth]="minWidth()"
+            [beforeClose]="beforeClose()"
             [disableClose]="disableClose()"
             [disableCloseByEscape]="disableCloseByEscape()"
             [(opened)]="opened"
@@ -81,6 +83,7 @@ export class TestContentPanel {
     readonly maxWidth = signal(500);
     readonly disableClose = signal(false);
     readonly disableCloseByEscape = signal(false);
+    readonly beforeClose = signal<KbqContentPanelBeforeClose | undefined>(undefined);
 
     readonly paragraphs = Array.from({ length: 100 });
 }
@@ -216,6 +219,20 @@ describe(KbqContentPanelModule.name, () => {
 
         getContentPanelContainerElement(debugElement).dispatchEvent(ESCAPE_KEY_EVENT);
         expect(componentInstance.opened()).toBe(true);
+    });
+
+    // A press on text inside the container focuses it instead of `body`, so the key reaches its ESCAPE listener.
+    it('should be focusable outside the tab order', async () => {
+        const fixture = createComponent(TestContentPanel);
+        const container = getContentPanelContainerElement(fixture.debugElement);
+
+        await fixture.whenStable();
+
+        expect(container.getAttribute('tabindex')).toBe('-1');
+
+        container.focus();
+
+        expect(document.activeElement).toBe(container);
     });
 
     it('should close an autocomplete panel in the content on ESCAPE, and the panel once it is closed', async () => {
@@ -521,5 +538,320 @@ describe('KbqContentPanelContainer state saving', () => {
         fixture.destroy();
 
         expect(service.components()).toEqual([]);
+    });
+});
+
+describe(`${KbqContentPanelModule.name} beforeClose`, () => {
+    const setup = async (beforeClose?: KbqContentPanelBeforeClose, providers: Provider[] = []) => {
+        const fixture = createComponent(TestContentPanel, providers);
+        const { componentInstance } = fixture;
+
+        componentInstance.beforeClose.set(beforeClose);
+        componentInstance.opened.set(true);
+        await fixture.whenStable();
+
+        return fixture;
+    };
+
+    /** Lets an asynchronous answer arrive and the view follow it. */
+    const settle = async (fixture: ComponentFixture<unknown>): Promise<void> => {
+        await new Promise((resolve) => setTimeout(resolve));
+        await fixture.whenStable();
+    };
+
+    const pressEscape = (target: Element) =>
+        target.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+
+    const requests: [string, (fixture: ComponentFixture<TestContentPanel>) => void][] = [
+        ['the close button', ({ debugElement }) => getCloseButtonElement(debugElement).click()],
+        ['ESCAPE', ({ debugElement }) => pressEscape(getContentPanelContainerElement(debugElement))],
+        ['close()', ({ componentInstance }) => componentInstance.container().close()],
+        ['toggle()', ({ componentInstance }) => componentInstance.container().toggle()]
+    ];
+
+    it.each(requests)('should keep the panel open when it vetoes %s', async (_name, request) => {
+        const beforeClose = vi.fn(() => false);
+        const fixture = await setup(beforeClose);
+
+        request(fixture);
+        await fixture.whenStable();
+
+        expect(beforeClose).toHaveBeenCalledTimes(1);
+        expect(fixture.componentInstance.opened()).toBe(true);
+    });
+
+    it.each(requests)('should close the panel when it allows %s', async (_name, request) => {
+        const fixture = await setup(() => true);
+
+        request(fixture);
+        await fixture.whenStable();
+
+        expect(fixture.componentInstance.opened()).toBe(false);
+    });
+
+    it('should close at once without it', async () => {
+        const { componentInstance, debugElement } = await setup();
+
+        getCloseButtonElement(debugElement).click();
+
+        expect(componentInstance.opened()).toBe(false);
+    });
+
+    it.each<[string, KbqContentPanelBeforeClose, boolean]>([
+        ['true', () => true, true],
+        ['false', () => false, false],
+        ['undefined', () => undefined as unknown as boolean, false],
+        ['null', () => null as unknown as boolean, false],
+        ['a promise of true', () => Promise.resolve(true), true],
+        ['a promise of false', () => Promise.resolve(false), false],
+        ['a promise of undefined', () => Promise.resolve(undefined as unknown as boolean), false],
+        ['an observable of true', () => of(true), true],
+        ['an observable of false', () => of(false), false],
+        ['an observable of undefined', () => of(undefined as unknown as boolean), false],
+        ['an empty observable', () => EMPTY, false]
+    ])('should close only on an answer of true, given %s', async (_name, beforeClose, closed) => {
+        const fixture = await setup(beforeClose);
+
+        fixture.componentInstance.container().close();
+        await settle(fixture);
+
+        expect(fixture.componentInstance.opened()).toBe(!closed);
+    });
+
+    it('should report through openedChange a close that an asynchronous answer allows', async () => {
+        const answer = new Subject<boolean>();
+        const fixture = await setup(() => answer);
+        const container = fixture.componentInstance.container();
+        const openedChange = vi.fn();
+
+        container.openedChange.subscribe(openedChange);
+        container.close();
+
+        expect(openedChange).not.toHaveBeenCalled();
+
+        answer.next(true);
+        await settle(fixture);
+
+        expect(openedChange).toHaveBeenCalledTimes(1);
+        expect(openedChange).toHaveBeenCalledWith(false);
+    });
+
+    it('should take a close that a listener of a close allowed asynchronously requests', async () => {
+        const beforeClose = vi
+            .fn<KbqContentPanelBeforeClose>()
+            .mockReturnValueOnce(Promise.resolve(true))
+            .mockReturnValue(true);
+        const fixture = await setup(beforeClose);
+        const container = fixture.componentInstance.container();
+        let reopened = false;
+
+        container.openedChange.subscribe((opened) => {
+            if (opened || reopened) return;
+
+            reopened = true;
+            container.open();
+            container.close();
+        });
+        container.close();
+        await settle(fixture);
+
+        expect(beforeClose).toHaveBeenCalledTimes(2);
+        expect(fixture.componentInstance.opened()).toBe(false);
+    });
+
+    it('should open the panel by toggle() without asking', async () => {
+        const beforeClose = vi.fn(() => false);
+        const fixture = await setup(beforeClose);
+        const { componentInstance } = fixture;
+
+        componentInstance.opened.set(false);
+        await fixture.whenStable();
+        componentInstance.container().toggle();
+        await fixture.whenStable();
+
+        expect(beforeClose).not.toHaveBeenCalled();
+        expect(componentInstance.opened()).toBe(true);
+    });
+
+    it.each<[string, KbqContentPanelBeforeClose, boolean]>([
+        ['allows', () => true, true],
+        ['vetoes', () => false, false],
+        ['answers asynchronously', () => new Subject<boolean>(), true]
+    ])('should spend ESCAPE only on a close or a question, when it %s', async (_name, beforeClose, spent) => {
+        const fixture = await setup(beforeClose);
+        const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+        const page = vi.fn();
+
+        document.addEventListener('keydown', page);
+        getContentPanelContainerElement(fixture.debugElement).dispatchEvent(escape);
+        document.removeEventListener('keydown', page);
+
+        expect(escape.defaultPrevented).toBe(spent);
+        expect(page).toHaveBeenCalledTimes(spent ? 0 : 1);
+    });
+
+    it('should not ask about a closed panel', async () => {
+        const beforeClose = vi.fn(() => false);
+        const fixture = await setup(beforeClose);
+        const { componentInstance } = fixture;
+
+        componentInstance.opened.set(false);
+        await fixture.whenStable();
+        componentInstance.container().close();
+
+        expect(beforeClose).not.toHaveBeenCalled();
+    });
+
+    it('should not be consulted by the opened input', async () => {
+        const beforeClose = vi.fn(() => false);
+        const fixture = await setup(beforeClose);
+        const { componentInstance } = fixture;
+
+        componentInstance.opened.set(false);
+        await fixture.whenStable();
+
+        expect(beforeClose).not.toHaveBeenCalled();
+        expect(componentInstance.container().isOpened()).toBe(false);
+    });
+
+    it('should ask once while the answer is awaited', async () => {
+        const answer = new Subject<boolean>();
+        const beforeClose = vi.fn(() => answer);
+        const fixture = await setup(beforeClose);
+        const { componentInstance, debugElement } = fixture;
+
+        componentInstance.container().close();
+        pressEscape(getContentPanelContainerElement(debugElement));
+        getCloseButtonElement(debugElement).click();
+        componentInstance.container().toggle();
+
+        expect(beforeClose).toHaveBeenCalledTimes(1);
+        expect(componentInstance.opened()).toBe(true);
+
+        answer.next(true);
+        await settle(fixture);
+
+        expect(componentInstance.opened()).toBe(false);
+    });
+
+    it.each([true, false])('should not ask again when it calls close() itself and answers %s', async (allowed) => {
+        const fixture = await setup();
+        const { componentInstance } = fixture;
+        const container = componentInstance.container();
+        const beforeClose = vi.fn(() => {
+            container.close();
+
+            return allowed;
+        });
+
+        componentInstance.beforeClose.set(beforeClose);
+        await fixture.whenStable();
+        container.close();
+
+        expect(beforeClose).toHaveBeenCalledTimes(1);
+        expect(componentInstance.opened()).toBe(!allowed);
+    });
+
+    it('should not close again a panel closed while the answer is awaited', async () => {
+        const answer = new Subject<boolean>();
+        const fixture = await setup(() => answer);
+        const { componentInstance } = fixture;
+        const openedChange = vi.fn();
+
+        componentInstance.container().openedChange.subscribe(openedChange);
+        componentInstance.container().close();
+        componentInstance.opened.set(false);
+        await fixture.whenStable();
+        answer.next(true);
+        await settle(fixture);
+
+        expect(openedChange).not.toHaveBeenCalled();
+    });
+
+    it('should not close a panel closed and opened again while the answer is awaited', async () => {
+        const answer = new Subject<boolean>();
+        const fixture = await setup(() => answer);
+        const { componentInstance } = fixture;
+
+        componentInstance.container().close();
+        componentInstance.opened.set(false);
+        await fixture.whenStable();
+        componentInstance.opened.set(true);
+        await fixture.whenStable();
+        answer.next(true);
+        await settle(fixture);
+
+        expect(componentInstance.opened()).toBe(true);
+    });
+
+    it('should let an error it throws reach the caller, leaving the panel open', async () => {
+        const beforeClose = vi.fn((): boolean => {
+            throw new Error('failed');
+        });
+        const { componentInstance } = await setup(beforeClose);
+
+        expect(() => componentInstance.container().close()).toThrow('failed');
+        expect(() => componentInstance.container().close()).toThrow('failed');
+
+        expect(beforeClose).toHaveBeenCalledTimes(2);
+        expect(componentInstance.opened()).toBe(true);
+    });
+
+    it('should ask again after a veto', async () => {
+        const beforeClose = vi.fn(() => Promise.resolve(false));
+        const fixture = await setup(beforeClose);
+
+        fixture.componentInstance.container().close();
+        await settle(fixture);
+        fixture.componentInstance.container().close();
+        await settle(fixture);
+
+        expect(beforeClose).toHaveBeenCalledTimes(2);
+    });
+
+    it('should hand a rejected answer to the ErrorHandler, leaving the panel open and asking again', async () => {
+        const error = new Error('failed');
+        const handleError = vi.fn();
+        const beforeClose = vi.fn(() => Promise.reject(error));
+        const fixture = await setup(beforeClose, [{ provide: ErrorHandler, useValue: { handleError } }]);
+        const { componentInstance } = fixture;
+
+        componentInstance.container().close();
+        await settle(fixture);
+        componentInstance.container().close();
+        await settle(fixture);
+
+        expect(handleError).toHaveBeenCalledTimes(2);
+        expect(handleError).toHaveBeenCalledWith(error);
+        expect(beforeClose).toHaveBeenCalledTimes(2);
+        expect(componentInstance.opened()).toBe(true);
+    });
+
+    it('should drop an answer that comes after the panel is destroyed', async () => {
+        const answer = new Subject<boolean>();
+        const fixture = await setup(() => answer);
+
+        fixture.componentInstance.container().close();
+        fixture.destroy();
+
+        expect(answer.observed).toBe(false);
+
+        answer.next(true);
+        await new Promise((resolve) => setTimeout(resolve));
+    });
+
+    it('should not track what it reads in an effect of the caller', async () => {
+        const opened = signal(true);
+        const fixture = await setup(() => opened());
+        const { componentInstance } = fixture;
+        const run = vi.fn(() => componentInstance.container().close());
+
+        TestBed.runInInjectionContext(() => effect(run));
+        await fixture.whenStable();
+
+        opened.set(false);
+        await fixture.whenStable();
+
+        expect(run).toHaveBeenCalledTimes(1);
     });
 });

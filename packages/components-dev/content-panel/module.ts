@@ -149,6 +149,8 @@ export class DevContentPanelOverview {
     imports: [ContentPanelExamplesModule],
     template: `
         <content-panel-overview-example />
+        <content-panel-before-close-example />
+        <content-panel-close-on-escape-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
