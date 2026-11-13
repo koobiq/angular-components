@@ -44,8 +44,10 @@ import { TRANSLATIONS } from './l10n';
 export class ListDraggableConnectedExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
 
-    protected readonly available = signal([1, 2, 3]);
-    protected readonly selected = signal([4]);
+    private readonly metricIds = Array.from({ length: this.t().metrics.length }, (_, index) => index + 1);
+
+    protected readonly available = signal(this.metricIds.slice(0, -1));
+    protected readonly selected = signal(this.metricIds.slice(-1));
 
     protected readonly availableMetrics = computed(() => this.available().map((id) => this.t().metrics[id - 1]));
     protected readonly selectedMetrics = computed(() => this.selected().map((id) => this.t().metrics[id - 1]));
