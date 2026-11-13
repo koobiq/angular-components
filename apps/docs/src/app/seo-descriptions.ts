@@ -83,6 +83,10 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "en": "A date field (datepicker) is a special input field with a widget for selecting a date.",
         "ru": "Поле с датой (дейтпикер) — специальное поле с виджетом для выбора даты."
     },
+    "datetime": {
+        "en": "KbqDatetime is a component for entering a date and a time in one field, with the data stored as one value.",
+        "ru": "KbqDatetime — это компонент для ввода даты и времени в одном поле, данные которого хранятся в одном значении."
+    },
     "divider": {
         "en": "<kbq-divider> is a component that allows for koobiq styling of a line separator with various orientation options.",
         "ru": "<kbq-divider> — это компонент, который используется для разделительной линии с различными вариантами ориентации."

@@ -444,6 +444,24 @@ export class KbqFormField
     }
 
     /**
+     * Hands a click on the caption of a control that is not a native labelable element over to the control,
+     * as a `<label for>` does for a native one. What a native label leaves alone is left alone here too:
+     * a prevented click, interactive content inside the caption and a drag that selected its text.
+     *
+     * @docs-private
+     */
+    protected onLabelClick(event: MouseEvent): void {
+        const caption = event.currentTarget as HTMLElement;
+        const interactive = (event.target as Element).closest('a[href], button, input, select, textarea, [tabindex]');
+        const selectsText = caption.ownerDocument.getSelection()?.isCollapsed === false;
+        const control = this.control();
+
+        if (event.defaultPrevented || selectsText || control.disabled()) return;
+
+        if (!interactive || !caption.contains(interactive)) control.focus();
+    }
+
+    /**
      * Handles a click on the control's container.
      *
      * @docs-private

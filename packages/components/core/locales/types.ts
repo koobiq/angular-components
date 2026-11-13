@@ -57,6 +57,10 @@ export type KbqA11yLocaleConfiguration = {
     optionActions: string;
     /** Progress bar that carries neither an `aria-label` nor a projected `[kbq-progress-bar-text]`. */
     progressBar: string;
+    /** Date part of a date and time field. */
+    date: string;
+    /** Time part of a date and time field. */
+    time: string;
 };
 
 /** Locale configuration for `KbqCodeBlockModule`. */

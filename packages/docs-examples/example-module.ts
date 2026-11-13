@@ -1587,6 +1587,42 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "datepicker-required-example.ts",
     "importPath": "components/datepicker"
   },
+  "datetime-overview": {
+    "packagePath": "components/datetime/datetime-overview",
+    "title": "Datetime",
+    "componentName": "DatetimeOverviewExample",
+    "files": [
+      "datetime-overview-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "datetime-overview-example",
+    "primaryFile": "datetime-overview-example.ts",
+    "importPath": "components/datetime"
+  },
+  "datetime-validation": {
+    "packagePath": "components/datetime/datetime-validation",
+    "title": "Datetime validation",
+    "componentName": "DatetimeValidationExample",
+    "files": [
+      "datetime-validation-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "datetime-validation-example",
+    "primaryFile": "datetime-validation-example.ts",
+    "importPath": "components/datetime"
+  },
+  "datetime-with-seconds": {
+    "packagePath": "components/datetime/datetime-with-seconds",
+    "title": "Datetime with seconds",
+    "componentName": "DatetimeWithSecondsExample",
+    "files": [
+      "datetime-with-seconds-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "datetime-with-seconds-example",
+    "primaryFile": "datetime-with-seconds-example.ts",
+    "importPath": "components/datetime"
+  },
   "divider-overview": {
     "packagePath": "components/divider/divider-overview",
     "title": "Divider",
@@ -8239,6 +8275,9 @@ export type LiveExampleId =
   | 'datepicker-overview'
   | 'datepicker-range'
   | 'datepicker-required'
+  | 'datetime-overview'
+  | 'datetime-validation'
+  | 'datetime-with-seconds'
   | 'divider-overview'
   | 'divider-vertical'
   | 'dl-alignment'

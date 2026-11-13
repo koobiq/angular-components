@@ -255,7 +255,7 @@ export class TestNonLabelableControl extends KbqFormFieldControl<unknown> {
     readonly focused = signal(false).asReadonly();
     readonly empty = signal(true).asReadonly();
     readonly required = signal(false);
-    readonly disabled = signal(false).asReadonly();
+    readonly disabled = signal(false);
     readonly errorState = signal(false).asReadonly();
     readonly isNativeLabelSupported = false;
     onContainerClick(): void {}
@@ -839,6 +839,33 @@ describe(KbqFormField.name, () => {
         expect(caption.textContent?.trim()).toBe('Label');
         expect(caption.getAttribute('for')).toBeNull();
         expect(caption.id).toBe('TEST_NON_LABELABLE_CONTROL_ID-label');
+    });
+
+    it('should focus a non-labelable control by click on its caption, unless it is disabled', () => {
+        const { debugElement, componentInstance } = createComponent(NonLabelableFormField);
+        const caption: HTMLElement = debugElement.query(By.css('.kbq-form-field__label')).nativeElement;
+        const focus = vi.spyOn(componentInstance.control(), 'focus');
+
+        caption.click();
+
+        expect(focus).toHaveBeenCalledTimes(1);
+
+        componentInstance.control().disabled.set(true);
+        caption.click();
+
+        expect(focus).toHaveBeenCalledTimes(1);
+    });
+
+    it('should leave a click on interactive content of the caption of a non-labelable control alone', () => {
+        const { debugElement, componentInstance } = createComponent(NonLabelableFormField);
+        const caption: HTMLElement = debugElement.query(By.css('.kbq-form-field__label')).nativeElement;
+        const focus = vi.spyOn(componentInstance.control(), 'focus');
+        const button = document.createElement('button');
+
+        caption.querySelector('kbq-label')!.append(button);
+        button.click();
+
+        expect(focus).not.toHaveBeenCalled();
     });
 
     it('should focus input by click on label', () => {

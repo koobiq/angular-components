@@ -864,6 +864,35 @@
                 }
             }
         },
+        "dev-datetime": {
+            "projectType": "application",
+            "root": "packages/components-dev/datetime",
+            "sourceRoot": "packages/components-dev/datetime",
+            "architect": {
+                "build": {
+                    "builder": "@angular/build:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/components-dev/datetime"
+                        },
+                        "tsConfig": "packages/components-dev/datetime/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "styles": ["packages/components-dev/main.scss"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/datetime/main.ts"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular/build:dev-server",
+                    "options": {
+                        "buildTarget": "dev-datetime:build"
+                    }
+                }
+            }
+        },
         "dev-divider": {
             "projectType": "application",
             "root": "packages/components-dev/divider",

@@ -33,6 +33,7 @@ export enum DocsStructureItemId {
     ContentPanel = 'content-panel',
     Core = 'core',
     Datepicker = 'datepicker',
+    Datetime = 'datetime',
     Divider = 'divider',
     Dl = 'dl',
     Dropdown = 'dropdown',
@@ -536,6 +537,19 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'datepicker',
                     hasExamples: false
+                },
+                {
+                    id: DocsStructureItemId.Datetime,
+                    name: {
+                        ru: 'Datetime',
+                        en: 'Datetime'
+                    },
+                    path: 'packages/components/datetime',
+                    svgPreview: 'datepicker',
+                    hasApi: true,
+                    apiId: 'datetime',
+                    hasExamples: false,
+                    isNew: expiresAt('2027-02-12')
                 },
                 {
                     id: DocsStructureItemId.Divider,
