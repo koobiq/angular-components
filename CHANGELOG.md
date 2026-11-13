@@ -1,3 +1,19 @@
+## 20.4.5 (2026-11-13)
+
+### Koobiq
+
+ * bug fix  **actions-panel,overflow-items:** bring hidden actions back when the panel gets room to grow ([#DS-5859](https://github.com/koobiq/angular-components/issues/issue/DS-5859)) ([#2359](https://github.com/koobiq/angular-components/issues/2359)) ([b9b6b52](https://github.com/koobiq/angular-components/commit/b9b6b52090d760f4220507c90639a09a7ff4b3db))
+ * bug fix  **content-panel:** fit the card to the panel and keep the close button at the end of the header ([#DS-5503](https://github.com/koobiq/angular-components/issues/issue/DS-5503)) ([#2350](https://github.com/koobiq/angular-components/issues/2350)) ([0b65ced](https://github.com/koobiq/angular-components/commit/0b65cedb54e9b3e6f11cdd433f14112c86c60092))
+ * bug fix  **inline-edit:** keep panel anchored to origin when viewport is tight ([#DS-5857](https://github.com/koobiq/angular-components/issues/issue/DS-5857)) ([#2357](https://github.com/koobiq/angular-components/issues/2357)) ([8eb2730](https://github.com/koobiq/angular-components/commit/8eb2730b110282a1cbf0a1b97594af05f34dbd03))
+ * bug fix  **modal:** truncate long title and caption without spaces with ellipsis ([#DS-5869](https://github.com/koobiq/angular-components/issues/issue/DS-5869)) ([#2374](https://github.com/koobiq/angular-components/issues/2374)) ([a243587](https://github.com/koobiq/angular-components/commit/a2435879ef6fd61de072135474140c42c44d09b1))
+ * bug fix  **textarea:** fit three rows in a resizable textarea and whole rows at `maxRows` ([#DS-5648](https://github.com/koobiq/angular-components/issues/issue/DS-5648)) ([#2363](https://github.com/koobiq/angular-components/issues/2363)) ([d7a11ed](https://github.com/koobiq/angular-components/commit/d7a11edc2df3a6d77030b037701a03beebe5c273))
+ * bug fix  **toast:** wrap long action labels onto a new row ([#DS-5871](https://github.com/koobiq/angular-components/issues/issue/DS-5871)) ([#2368](https://github.com/koobiq/angular-components/issues/2368)) ([6bd8eff](https://github.com/koobiq/angular-components/commit/6bd8eff710096e2b61acc62954a8427cd1f4763d))
+ * feature  **filter-bar,tree-select:** "no options" message in the dropdown of pipes without values ([#DS-5858](https://github.com/koobiq/angular-components/issues/issue/DS-5858)) ([#2352](https://github.com/koobiq/angular-components/issues/2352)) ([3f46eb5](https://github.com/koobiq/angular-components/commit/3f46eb570e3a4bda4d4d5c9d186ec2bbc05ed5b8))
+
+### Documentation
+
+ * docs  **link:** make the pseudo link example work from the keyboard ([#DS-3293](https://github.com/koobiq/angular-components/issues/issue/DS-3293)) (#2344) ([undefined](https://github.com/koobiq/angular-components/commit/006637920f6aad7bb39073393b6209029aa09d83))
+
 ## 20.4.4 (2026-11-06)
 
 ### Koobiq
