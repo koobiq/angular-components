@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqHint } from './hint';
 
-/** Error text to be shown below the form field control. */
+/** Error text to be shown below the form field control. It keeps the error color under a disabled control too. */
 @Component({
     selector: 'kbq-error',
     templateUrl: './hint.html',

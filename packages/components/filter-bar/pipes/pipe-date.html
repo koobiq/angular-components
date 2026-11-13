@@ -118,15 +118,15 @@
                 </kbq-form-field>
 
                 @if (isPeriodInverted) {
-                    <kbq-hint class="kbq-date-period__hint" [color]="'error'">
+                    <kbq-hint compact class="kbq-date-period__hint" [color]="'error'">
                         {{ localeConfiguration().datePipe.customPeriodErrorHint }}
                     </kbq-hint>
                 } @else if (formGroup.errors?.kbqDateIntervalMin) {
-                    <kbq-hint class="kbq-date-period__hint" [color]="'error'">
+                    <kbq-hint compact class="kbq-date-period__hint" [color]="'error'">
                         {{ minIntervalErrorHint }}
                     </kbq-hint>
                 } @else if (formGroup.errors?.kbqDateIntervalMax) {
-                    <kbq-hint class="kbq-date-period__hint" [color]="'error'">
+                    <kbq-hint compact class="kbq-date-period__hint" [color]="'error'">
                         {{ maxIntervalErrorHint }}
                     </kbq-hint>
                 }

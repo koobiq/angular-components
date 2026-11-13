@@ -1,17 +1,5 @@
 @use '../core/styles/common/tokens';
 
-@mixin kbq-form-field-hint-theme {
-    > .kbq-hint:not(.kbq-contrast-fade, .kbq-success, .kbq-warning, .kbq-error) {
-        color: var(--kbq-form-field-hint-text);
-    }
-}
-
-@mixin kbq-form-field-hint-typography {
-    > .kbq-hint:not(.kbq-reactive-password-hint, .kbq-contrast-fade, .kbq-success, .kbq-warning) .kbq-hint__text {
-        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
-    }
-}
-
 @mixin _kbq-form-field-state($state-name) {
     .kbq-form-field__container {
         border-color: var(--kbq-form-field-#{$state-name}-border-color);
@@ -128,7 +116,9 @@
                             var(--kbq-form-field-states-error-focused-focus-outline);
                     }
 
-                    & .kbq-icon.kbq-empty {
+                    // The container holds the prefix and the suffix, while the hints sit below it and keep the color
+                    // they set themselves: `-webkit-text-fill-color` would win over it.
+                    & .kbq-form-field__container .kbq-icon.kbq-empty {
                         color: var(--kbq-form-field-states-error-text);
                         -webkit-text-fill-color: var(--kbq-form-field-states-error-text);
                     }
@@ -172,7 +162,8 @@
         &.kbq-disabled {
             @include _kbq-form-field-state(states-disabled);
 
-            .kbq-icon.kbq-empty {
+            // Leaves the hints out, as in the invalid state: they follow the disabled state through `KBQ_HINT_PARENT`.
+            .kbq-form-field__container .kbq-icon.kbq-empty {
                 color: var(--kbq-form-field-states-disabled-text);
                 -webkit-text-fill-color: var(--kbq-form-field-states-disabled-text);
             }
@@ -184,19 +175,11 @@
                 color: var(--kbq-icon-contrast-fade);
             }
         }
-
-        .kbq-form-field__hint {
-            @include kbq-form-field-hint-theme();
-        }
     }
 }
 
 @mixin kbq-form-field-typography() {
     .kbq-form-field {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
-
-        .kbq-form-field__hint {
-            @include kbq-form-field-hint-typography();
-        }
     }
 }

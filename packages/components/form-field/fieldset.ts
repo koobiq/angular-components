@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, contentChild, Directive, input, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    contentChild,
+    Directive,
+    input,
+    signal,
+    ViewEncapsulation
+} from '@angular/core';
+import { kbqHintParentFactoryProvider } from './hint';
 
 let nextLegendUniqueId = 0;
 
@@ -50,6 +59,7 @@ export class KbqFieldsetItem {}
         </div>
     `,
     styleUrls: ['./fieldset.scss', './fieldset-tokens.scss'],
+    providers: [kbqHintParentFactoryProvider(() => ({ compact: signal(true) }))],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
