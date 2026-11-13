@@ -318,9 +318,13 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
         if (Array.isArray(committed) && committed.some((value) => value.nameKey)) {
             const triggerValues = select.triggerValues.map((option) => option.value as KbqSelectValue);
-            const triggerIds = new Set(triggerValues.map((value) => value.id));
+            // The select matches its options with this comparator, not with an id: an option without an id
+            // still counts as present when a custom `compareWith` equates it by business value.
+            const compareWith = this.optionCompareWith ?? this.compareByValue;
 
-            return committed.filter((value) => value.nameKey || (value.id != null && triggerIds.has(value.id)));
+            return committed.filter(
+                (value) => value.nameKey || triggerValues.some((triggerValue) => compareWith(triggerValue, value))
+            );
         }
 
         return select.triggerValues.map((option) => option.value as KbqSelectValue);

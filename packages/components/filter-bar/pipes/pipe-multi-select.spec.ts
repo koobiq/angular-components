@@ -1901,6 +1901,39 @@ describe('KbqPipeMultiSelectComponent', () => {
             expect(scans).toBe(0);
         });
 
+        it('should keep an unkeyed selected value that a custom compareWith matches without an id', async () => {
+            vi.useFakeTimers();
+
+            const keyed = { name: 'Active', nameKey: 'filters.active', value: 'active' };
+            const unkeyed = { name: 'Status', value: 'status' };
+            const compareByBusinessValue = (
+                o1: KbqSelectValue | null | undefined,
+                o2: KbqSelectValue | null | undefined
+            ): boolean => o1?.value === o2?.value;
+
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiSelect,
+                    values: [keyed, unkeyed],
+                    compareWith: compareByBusinessValue,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: [keyed, unkeyed] })]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            // The select's comparator decides whether an unkeyed value is still present, not an id set.
+            expect((pipe() as any).displayValues(pipe().select())).toEqual([keyed, unkeyed]);
+        });
+
         it('should resolve option and trigger names through the resolver', () => {
             fixture.componentInstance.pipeTemplates = [
                 {
