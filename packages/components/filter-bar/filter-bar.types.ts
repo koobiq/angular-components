@@ -9,6 +9,7 @@ import {
 } from '@koobiq/components/core';
 import { BehaviorSubject } from 'rxjs';
 import type { KbqFilterBar } from './filter-bar';
+import type { KbqFilterBarNameContext } from './filter-bar-name';
 
 // Re-exported so that the name this package's own token is typed with resolves from this package too:
 // `KbqFilterBarConfiguration` used to be declared here, and the migration renames it in place.
@@ -103,6 +104,12 @@ export interface KbqFilterBarHost {
     /** Removes a pipe from the current filter and emits the change. */
     removePipe(pipe: KbqPipe): void;
 
+    /**
+     * Resolves a display name for the given context.
+     * Pipes call this host seam so that a filter-bar-level resolver can localize names.
+     */
+    resolveName?(context: KbqFilterBarNameContext): string;
+
     /** Clears the current filter's "changed" flag. */
     resetFilterChangedState(): void;
 }
@@ -145,6 +152,8 @@ export type KbqPipeType = `${KbqPipeTypes}` | (string & {});
 
 export interface KbqDateTimeValue {
     name?: string;
+    /** Optional key a name resolver can use to localize the preset name. */
+    nameKey?: string;
     start?: string;
     end?: string;
 }
@@ -154,6 +163,8 @@ export interface KbqSelectValue {
     value: unknown;
     /** Optional stable identifier used by the select/multi-select pipe comparators. */
     id?: string | number;
+    /** Optional key a name resolver can use to localize the option name. */
+    nameKey?: string;
 
     /**
      * Second line under `name` in the dropdown of the `select` / `multiselect` pipes. Ignored where a
@@ -176,6 +187,8 @@ export interface KbqFilter {
 
 export interface KbqPipe {
     name: string;
+    /** Optional key a name resolver can use to localize the pipe name. */
+    nameKey?: string;
     id?: string | number;
     type: KbqPipeType;
     value: unknown | null;
@@ -357,6 +370,8 @@ export interface KbqSaveFilterEvent {
 /** Flattened node */
 export class KbqTreeSelectFlatNode {
     name: string;
+    /** Optional key a name resolver can use to localize the node name. */
+    nameKey?: string;
     value: unknown;
     level: number;
     expandable: boolean;
@@ -368,6 +383,8 @@ export class KbqTreeSelectFlatNode {
 export interface KbqTreeSelectNode {
     children: KbqTreeSelectNode[] | null;
     name: string;
+    /** Optional key a name resolver can use to localize the node name. */
+    nameKey?: string;
     value: unknown;
     /** Second line under `name` in the dropdown of the tree-select pipes. Ignored when `valueTemplate` is used. */
     caption?: string;

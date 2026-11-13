@@ -45,11 +45,11 @@
         [kbqPipeState]="data"
         [class]="{ 'kbq-active': select.panelOpen }"
     >
-        <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>
+        <span #kbqTitleText class="kbq-pipe__name">{{ pipeName }}</span>
 
         @if (select.selected?.length === 1) {
-            <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!select.triggerValue">
-                {{ select.selected[0].name }}
+            <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!displayValue">
+                {{ displayValue }}
             </span>
         } @else if (
             select.selected?.length > 1 &&
@@ -123,6 +123,6 @@
 }
 
 <ng-template #pipeTooltip>
-    <div class="kbq-pipe-tooltip__name kbq-text-compact">{{ data.name }}</div>
-    <div class="kbq-pipe-tooltip__value kbq-text-compact">{{ select.triggerValue }}</div>
+    <div class="kbq-pipe-tooltip__name kbq-text-compact">{{ pipeName }}</div>
+    <div class="kbq-pipe-tooltip__value kbq-text-compact">{{ displayValue }}</div>
 </ng-template>

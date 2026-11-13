@@ -308,6 +308,24 @@ describe('KbqFilters', () => {
             expect(filter.pipes[0].name).toBe('original');
             expect(filter.pipes[0].value).toBe(valueFn);
         });
+
+        it('should preserve keyed select values by reference through selectFilter', () => {
+            const keyedValue = { name: 'Status', nameKey: 'filters.status', id: '1', value: 'status' };
+            const filter = createFilter([createPipe({ type: KbqPipeTypes.Select, value: keyedValue })], {
+                name: 'Selected'
+            });
+
+            initFixture(createFilter([]), [filter]);
+
+            const spy = vi.spyOn(getFilterBar().internalFilterChanges, 'next');
+
+            getFiltersComponent().selectFilter(filter);
+
+            const activeFilter = spy.mock.calls[0][0];
+
+            expect(activeFilter!.pipes[0].value).toEqual(keyedValue);
+            expect(JSON.stringify(activeFilter!.pipes[0].value)).not.toContain('function');
+        });
     });
 
     describe('saveChanges', () => {

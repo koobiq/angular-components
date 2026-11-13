@@ -15,9 +15,9 @@ import { KbqBasePipe } from './base-pipe';
             <input
                 autocomplete="off"
                 kbqInput
-                [attr.aria-label]="data.name"
+                [attr.aria-label]="pipeName"
                 [formControl]="control"
-                [placeholder]="data.name"
+                [placeholder]="pipeName"
             />
 
             <!-- Must stay a single root element: the compiler copies its tag name onto the block's template

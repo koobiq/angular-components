@@ -1,11 +1,13 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ChangeDetectorRef, Component, DebugElement, inject, TemplateRef, viewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, DebugElement, inject, signal, TemplateRef, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
     KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
+    KbqFilterBarNameResolver,
+    kbqFilterBarNameResolverProvider,
     KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes,
@@ -1826,6 +1828,338 @@ describe('KbqPipeMultiSelectComponent', () => {
             component.onClear();
 
             expect(component.data.value).toEqual([]);
+        });
+    });
+
+    describe('name resolution', () => {
+        const translations = signal<Record<string, string>>({
+            'filters.status': 'Status',
+            'filters.active': 'Active'
+        });
+
+        const resolver: KbqFilterBarNameResolver = ({ key, fallback }) => translations()[key] ?? fallback;
+
+        const keyedValues: KbqSelectValue[] = [
+            { name: 'Status', nameKey: 'filters.status', id: '1', value: 'status' },
+            { name: 'Active', nameKey: 'filters.active', id: '2', value: 'active' }
+        ];
+
+        beforeEach(() => {
+            translations.set({ 'filters.status': 'Status', 'filters.active': 'Active' });
+
+            TestBed.configureTestingModule({
+                imports: [KbqFilterBarModule, TestComponent],
+                providers: [kbqFilterBarNameResolverProvider(resolver)]
+            })
+                .overrideComponent(KbqPipeMultiSelectComponent, {
+                    set: {
+                        providers: [{ provide: KbqBasePipe, useExisting: KbqPipeMultiSelectComponent }]
+                    }
+                })
+                .compileComponents();
+
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+        });
+
+        const pipe = (): KbqPipeMultiSelectComponent => getPipeComponent();
+
+        it('should resolve a panel option name without scanning the option list by id', () => {
+            const values: KbqSelectValue[] = [
+                { name: 'Status', id: '1', value: 'status' },
+                { name: 'Active', nameKey: 'filters.active', id: '2', value: 'active' },
+                { name: 'Blocked', id: '3', value: 'blocked' }
+            ];
+            const originalFilter = values.filter;
+            let scans = 0;
+
+            values.filter = function (this: KbqSelectValue[], ...args: Parameters<typeof originalFilter>) {
+                scans++;
+
+                return originalFilter.apply(this, args);
+            } as typeof originalFilter;
+
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiSelect,
+                    values,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: [] })]);
+            fixture.detectChanges();
+
+            for (const value of values) {
+                (pipe() as any).optionName(value);
+            }
+
+            // A panel option has only its own key: borrowing by id is reserved for the trigger.
+            expect(scans).toBe(0);
+        });
+
+        it('should keep an unkeyed selected value that a custom compareWith matches without an id', async () => {
+            vi.useFakeTimers();
+
+            const keyed = { name: 'Active', nameKey: 'filters.active', value: 'active' };
+            const unkeyed = { name: 'Status', value: 'status' };
+            const compareByBusinessValue = (
+                o1: KbqSelectValue | null | undefined,
+                o2: KbqSelectValue | null | undefined
+            ): boolean => o1?.value === o2?.value;
+
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiSelect,
+                    values: [keyed, unkeyed],
+                    compareWith: compareByBusinessValue,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: [keyed, unkeyed] })]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            // The select's comparator decides whether an unkeyed value is still present, not an id set.
+            expect((pipe() as any).displayValues(pipe().select())).toEqual([keyed, unkeyed]);
+        });
+
+        it('should resolve option and trigger names through the resolver', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiSelect,
+                    values: keyedValues,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: [keyedValues[0]] })]);
+            fixture.detectChanges();
+
+            expect((pipe() as any).optionName(keyedValues[0])).toBe('Status');
+            expect((pipe() as any).displayValue(pipe().select())).toBe('Status');
+        });
+
+        it('should update the trigger without replacing the value or emitting change events', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiSelect,
+                    values: keyedValues,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: [keyedValues[0]] })]);
+            fixture.detectChanges();
+
+            const original = pipe().data.value;
+            const filterChange = vi.fn();
+            const onChangePipe = vi.fn();
+
+            getFilterBar().filter.subscribe(filterChange);
+            getFilterBar().onChangePipe.subscribe(onChangePipe);
+
+            translations.set({ 'filters.status': 'Stato', 'filters.active': 'Active' });
+            fixture.detectChanges();
+
+            expect((pipe() as any).displayValue(pipe().select())).toBe('Stato');
+            expect(pipe().data.value).toBe(original);
+            expect(filterChange).not.toHaveBeenCalled();
+            expect(onChangePipe).not.toHaveBeenCalled();
+        });
+
+        it('should borrow a key from a unique same-id template option', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiSelect,
+                    values: keyedValues,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            const legacyValue: KbqSelectValue = { name: 'Status', id: '1', value: 'status' };
+
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: [legacyValue] })]);
+            fixture.detectChanges();
+
+            expect((pipe() as any).optionName(legacyValue)).toBe('Status');
+        });
+
+        it('should keep the stored fallback for duplicate id matches', () => {
+            const duplicates: KbqSelectValue[] = [
+                { name: 'Status', nameKey: 'filters.status', id: '1', value: 'a' },
+                { name: 'Status', nameKey: 'filters.status', id: '1', value: 'b' }
+            ];
+
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiSelect,
+                    values: duplicates,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            const legacyValue: KbqSelectValue = { name: 'Status', id: '1', value: 'a' };
+
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: [legacyValue] })]);
+            fixture.detectChanges();
+
+            expect((pipe() as any).optionName(legacyValue)).toBe('Status');
+        });
+
+        it('should count and show a restored keyed value missing from current options', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiSelect,
+                    values: [keyedValues[1]],
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            const restored: KbqSelectValue = { name: 'Status', nameKey: 'filters.status', id: '9', value: 'status' };
+
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: [restored] })]);
+            fixture.detectChanges();
+
+            expect((pipe() as any).displayValues(pipe().select())).toEqual([restored]);
+            expect((pipe() as any).displayValue(pipe().select())).toBe('Status');
+        });
+
+        it('should hide an unkeyed legacy value when a keyed value is restored alongside it', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiSelect,
+                    values: [keyedValues[1]],
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            const unkeyedLegacy: KbqSelectValue = { name: 'Old', id: 'stale', value: 'old' };
+            const keyedRestored: KbqSelectValue = {
+                name: 'Status',
+                nameKey: 'filters.status',
+                id: '9',
+                value: 'status'
+            };
+
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ value: [unkeyedLegacy, keyedRestored] })
+            ]);
+            fixture.detectChanges();
+
+            expect((pipe() as any).displayValues(pipe().select())).toEqual([keyedRestored]);
+        });
+
+        it('should keep the stored fallback for a zero-id match', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiSelect,
+                    values: keyedValues,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            const legacyValue: KbqSelectValue = { name: 'Status', id: 'missing', value: 'status' };
+
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: [legacyValue] })]);
+            fixture.detectChanges();
+
+            expect((pipe() as any).optionName(legacyValue)).toBe('Status');
+        });
+
+        it('should re-filter open search results when translations change without clearing the query', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiSelect,
+                    values: keyedValues,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: [] })]);
+            fixture.detectChanges();
+
+            pipe().searchControl.setValue('Status');
+            fixture.detectChanges();
+
+            expect(pipe().filteredOptions()).toEqual([keyedValues[0]]);
+
+            const query = pipe().searchControl.value;
+
+            translations.set({ 'filters.status': 'Stato', 'filters.active': 'Active' });
+            fixture.detectChanges();
+
+            expect(pipe().filteredOptions()).toEqual([]);
+            expect(pipe().searchControl.value).toBe(query);
+        });
+
+        it('should keep the custom-template trigger for unkeyed values and resolve keyed values', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiSelect,
+                    values: keyedValues,
+                    valueTemplate: fixture.componentInstance.optionTemplate(),
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+
+            const unkeyed: KbqSelectValue = { name: 'Status', id: '1', value: 'status' };
+
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: [unkeyed] })]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            // Without a key the trigger keeps the custom template's own text.
+            expect(pipe().select().triggerValue).toBe('custom Status');
+
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: [keyedValues[0]] })]);
+            fixture.detectChanges();
+
+            // A keyed value resolves through the resolver instead of the custom template's own text.
+            expect((pipe() as any).displayValue(pipe().select())).toBe('Status');
         });
     });
 });

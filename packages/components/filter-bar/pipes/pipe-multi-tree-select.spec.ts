@@ -1,6 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { ChangeDetectorRef, Component, DebugElement, inject, TemplateRef, viewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, DebugElement, inject, signal, TemplateRef, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KBQ_LOCALE_SERVICE, KbqFilterBarLocaleConfiguration, KbqHighlightModule } from '@koobiq/components/core';
@@ -10,6 +10,8 @@ import {
     KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
+    KbqFilterBarNameResolver,
+    kbqFilterBarNameResolverProvider,
     KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes,
@@ -1834,6 +1836,95 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
 
             expect(component.data.value).toContain('value 4');
             expect(component.data.value).not.toContain('value 5');
+        });
+    });
+
+    describe('name resolution', () => {
+        const translations = signal<Record<string, string>>({
+            'filters.status': 'Status',
+            'filters.active': 'Active'
+        });
+
+        const resolver = vi.fn<KbqFilterBarNameResolver>(({ key, fallback }) => translations()[key] ?? fallback);
+
+        const keyedTree: KbqTreeSelectNode[] = [
+            {
+                name: 'Status',
+                nameKey: 'filters.status',
+                value: 'status',
+                children: [{ name: 'Active', nameKey: 'filters.active', value: 'active', children: null }]
+            }
+        ];
+
+        beforeEach(() => {
+            translations.set({ 'filters.status': 'Status', 'filters.active': 'Active' });
+
+            TestBed.configureTestingModule({
+                imports: [KbqFilterBarModule, TestComponent],
+                providers: [kbqFilterBarNameResolverProvider(resolver)]
+            })
+                .overrideComponent(KbqPipeMultiTreeSelectComponent, {
+                    set: {
+                        providers: [{ provide: KbqBasePipe, useExisting: KbqPipeMultiTreeSelectComponent }]
+                    }
+                })
+                .compileComponents();
+
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+        });
+
+        const pipe = (): KbqPipeMultiTreeSelectComponent => getPipeComponent();
+
+        it('should resolve node and trigger names and update without changing selection', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiTreeSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiTreeSelect,
+                    values: keyedTree,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: ['status'] })]);
+            fixture.detectChanges();
+
+            const component = pipe();
+            const statusNode = component.treeControl.dataNodes.find((node) => node.value === 'status')!;
+
+            expect(component.treeControl.getViewValue(statusNode)).toBe('Status');
+
+            const original = component.data.value;
+
+            translations.set({ 'filters.status': 'Stato', 'filters.active': 'Attivo' });
+            fixture.detectChanges();
+
+            expect(component.treeControl.getViewValue(statusNode)).toBe('Stato');
+            expect(component.data.value).toBe(original);
+        });
+
+        it('should keep the stored fallback for unkeyed nodes without invoking the resolver', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiTreeSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiTreeSelect,
+                    values: [{ name: 'Plain', value: 'plain', children: null }],
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: ['plain'] })]);
+            fixture.detectChanges();
+
+            const component = pipe();
+            const node = component.treeControl.dataNodes.find((item) => item.value === 'plain')!;
+
+            expect(component.treeControl.getViewValue(node)).toBe('Plain');
+            expect(resolver).not.toHaveBeenCalled();
         });
     });
 });

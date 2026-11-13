@@ -71,6 +71,9 @@ export const KBQ_FILTER_BAR_HOST: InjectionToken<KbqFilterBarHost>;
 export const KBQ_FILTER_BAR_LOCALE_CONFIGURATION: InjectionToken<KbqFilterBarLocaleConfiguration>;
 
 // @public
+export const KBQ_FILTER_BAR_NAME_RESOLVER: InjectionToken<KbqFilterBarNameResolver>;
+
+// @public
 export const KBQ_FILTER_BAR_PIPES: InjectionToken<Map<KbqPipeType, Type<KbqBasePipe<unknown>>>>;
 
 // @public
@@ -109,6 +112,9 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     abstract open(): void;
     protected optionCompareWith?: (o1: KbqSelectValue | null | undefined, o2: KbqSelectValue | null | undefined) => boolean;
     protected panelMaxHeight?: KbqPanelMaxHeight;
+    protected get pipeName(): string;
+    protected pipeNameKey(): string | undefined;
+    protected resolveName(source: Exclude<KbqFilterBarNameContext['source'], KbqPipeTemplate>, kind: Exclude<KbqFilterBarNameKind, 'pipe-template'>, nameKey?: string | undefined): string;
     protected restoreTriggerFocus(): void;
     get showRemoveButton(): boolean;
     readonly stateChanges: Subject<void>;
@@ -130,6 +136,7 @@ export interface KbqDateTimeValue {
     end?: string;
     // (undocumented)
     name?: string;
+    nameKey?: string;
     // (undocumented)
     start?: string;
 }
@@ -166,6 +173,7 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
     readonly isSaved: _angular_core.Signal<boolean>;
     readonly isSavedAndChanged: _angular_core.Signal<boolean>;
     readonly localeConfiguration: _angular_core.Signal<_koobiq_components_core.KbqFilterBarLocaleConfiguration>;
+    readonly nameResolver: _angular_core.InputSignal<KbqFilterBarNameResolver | null>;
     // (undocumented)
     ngAfterContentInit(): void;
     readonly onChangePipe: _angular_core.OutputEmitterRef<KbqPipe>;
@@ -177,11 +185,12 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
     readonly pipeTemplates: _angular_core.InputSignal<KbqPipeTemplate[]>;
     removePipe(pipe: KbqPipe): void;
     resetFilterChangedState(): void;
+    resolveName(context: KbqFilterBarNameContext): string;
     restoreFilterState(filter?: KbqFilter): void;
     saveFilterState(filter?: KbqFilter): void;
     readonly selectedAllEqualsSelectedNothing: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "selectedAllEqualsSelectedNothing": { "alias": "selectedAllEqualsSelectedNothing"; "required": false; "isSignal": true; }; "filter": { "alias": "filter"; "required": false; "isSignal": true; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; "isSignal": true; }; }, { "filter": "filterChange"; "onChangePipe": "onChangePipe"; "onRemovePipe": "onRemovePipe"; "onClearPipe": "onClearPipe"; "onClosePipe": "onClosePipe"; }, ["filters", "filterReset"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-search-expandable", "kbq-filter-refresher, [kbq-filter-refresher]"], true, [{ directive: typeof _koobiq_components_core.KbqStateSaving; inputs: { "useStateSaving": "useStateSaving"; "stateSavingKey": "stateSavingKey"; }; outputs: {}; }, { directive: typeof _koobiq_components_core.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "selectedAllEqualsSelectedNothing": { "alias": "selectedAllEqualsSelectedNothing"; "required": false; "isSignal": true; }; "filter": { "alias": "filter"; "required": false; "isSignal": true; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; "isSignal": true; }; "nameResolver": { "alias": "nameResolver"; "required": false; "isSignal": true; }; }, { "filter": "filterChange"; "onChangePipe": "onChangePipe"; "onRemovePipe": "onRemovePipe"; "onClearPipe": "onClearPipe"; "onClosePipe": "onClosePipe"; }, ["filters", "filterReset"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-search-expandable", "kbq-filter-refresher, [kbq-filter-refresher]"], true, [{ directive: typeof _koobiq_components_core.KbqStateSaving; inputs: { "useStateSaving": "useStateSaving"; "stateSavingKey": "stateSavingKey"; }; outputs: {}; }, { directive: typeof _koobiq_components_core.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFilterBar, never>;
 }
@@ -214,6 +223,7 @@ export interface KbqFilterBarHost {
     readonly pipeTemplates: Signal<KbqPipeTemplate[]>;
     removePipe(pipe: KbqPipe): void;
     resetFilterChangedState(): void;
+    resolveName?(context: KbqFilterBarNameContext): string;
     readonly selectedAllEqualsSelectedNothing: Signal<boolean>;
 }
 
@@ -231,6 +241,24 @@ export class KbqFilterBarModule {
     // (undocumented)
     static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqFilterBarModule, never, [typeof KbqFilterBar, typeof KbqFilters, typeof KbqFilterRefresher, typeof KbqFilterBarButton, typeof KbqFilterReset, typeof KbqPipeAdd, typeof KbqPipeDirective, typeof KbqPipeButton, typeof KbqPipeState], [typeof KbqFilterBar, typeof KbqFilters, typeof KbqFilterRefresher, typeof KbqFilterBarButton, typeof KbqFilterReset, typeof KbqPipeAdd, typeof KbqPipeDirective, typeof KbqPipeButton, typeof KbqPipeState]>;
 }
+
+// @public
+export interface KbqFilterBarNameContext {
+    fallback: string;
+    key: string;
+    kind: KbqFilterBarNameKind;
+    pipe: KbqPipe | KbqPipeTemplate;
+    source: KbqPipe | KbqPipeTemplate | KbqSelectValue | KbqDateTimeValue | KbqTreeSelectNode | KbqTreeSelectFlatNode;
+}
+
+// @public
+export type KbqFilterBarNameKind = 'pipe' | 'pipe-template' | 'select-option' | 'date-preset' | 'tree-node';
+
+// @public
+export type KbqFilterBarNameResolver = (context: KbqFilterBarNameContext) => string | null | undefined;
+
+// @public
+export const kbqFilterBarNameResolverProvider: (resolver: KbqFilterBarNameResolver) => Provider;
 
 // @public
 export const kbqFilterBarPipesProvider: () => Provider;
@@ -399,6 +427,7 @@ export interface KbqPipe {
     id?: string | number;
     // (undocumented)
     name: string;
+    nameKey?: string;
     // (undocumented)
     openOnAdd?: boolean;
     // (undocumented)
@@ -427,6 +456,7 @@ export class KbqPipeAdd {
     protected readonly filterBar: _koobiq_components_filter_bar.KbqFilterBarHost;
     readonly filterTemplate: _angular_core.InputSignal<KbqFilter>;
     readonly onAddPipe: _angular_core.OutputEmitterRef<KbqPipeTemplate>;
+    protected resolveTemplateName(template: KbqPipeTemplate): string;
     readonly select: _angular_core.Signal<KbqSelect>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqPipeAdd, "kbq-pipe-add", never, { "filterTemplate": { "alias": "filterTemplate"; "required": false; "isSignal": true; }; }, { "onAddPipe": "onAddPipe"; }, never, never, true, never>;
@@ -500,6 +530,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     open(): void;
     protected readonly placements: typeof PopUpPlacements;
     readonly popover: _angular_core.Signal<KbqPopoverTrigger>;
+    protected presetName(preset: KbqDateTimeValue | null | undefined): string;
     readonly returnButton: _angular_core.Signal<KbqButton | undefined>;
     protected readonly showEndCalendar: _angular_core.WritableSignal<boolean>;
     // (undocumented)
@@ -586,6 +617,8 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     get allVisibleOptionsSelected(): boolean;
     get checkboxState(): KbqPseudoCheckboxState;
     compareByValue: (o1: Pick<KbqSelectValue, "id"> | null, o2: Pick<KbqSelectValue, "id"> | null) => boolean;
+    protected displayValue(select: KbqSelect): string;
+    protected displayValues(select: KbqSelect): KbqSelectValue[];
     readonly filteredOptions: Signal<KbqSelectValue[]>;
     get isEmpty(): boolean;
     protected isLocked(item: KbqSelectValue): boolean;
@@ -596,6 +629,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     onClose(): void;
     onSelect(item: KbqSelectValue[]): void;
     open(): void;
+    protected optionName(item: KbqSelectValue): string;
     readonly options: Signal<readonly KbqOption[]>;
     readonly searchControl: FormControl<string | null>;
     readonly searchTokens: Signal<string[]>;
@@ -619,6 +653,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     get allOptionsSelected(): boolean;
     get allVisibleOptionsSelected(): boolean;
     protected clearedValue(): KbqSelectValue[] | null;
+    protected get displayValue(): string;
     protected getSelectedValues(): KbqSelectValue[];
     protected getValueTemplateContext(node: KbqTreeSelectFlatNode): KbqMultiTreeSelectValueTemplateContext;
     get isEmpty(): boolean;
@@ -668,7 +703,10 @@ export class KbqPipeReadonlyComponent extends KbqBasePipe<string | null> {
 
 // @public (undocumented)
 export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implements AfterViewInit {
+    constructor();
     compareByValue: (o1: Pick<KbqSelectValue, "id"> | null, o2: Pick<KbqSelectValue, "id"> | null) => boolean;
+    protected displayValue(select: KbqSelect): string;
+    protected displayValues(select: KbqSelect): KbqSelectValue[];
     readonly filteredOptions: Signal<KbqSelectValue[]>;
     get isEmpty(): boolean;
     // (undocumented)
@@ -676,6 +714,7 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
     // (undocumented)
     onSelect(item: KbqSelectValue): void;
     open(): void;
+    protected optionName(item: KbqSelectValue): string;
     readonly searchControl: FormControl<string | null>;
     readonly searchTokens: Signal<string[]>;
     readonly select: Signal<KbqSelect>;
@@ -807,6 +846,7 @@ export interface KbqSelectValue {
     id?: string | number;
     // (undocumented)
     name: string;
+    nameKey?: string;
     // (undocumented)
     value: unknown;
 }
@@ -820,6 +860,7 @@ export class KbqTreeSelectFlatNode {
     level: number;
     // (undocumented)
     name: string;
+    nameKey?: string;
     // (undocumented)
     parent?: KbqTreeSelectFlatNode;
     // (undocumented)
@@ -833,6 +874,7 @@ export interface KbqTreeSelectNode {
     children: KbqTreeSelectNode[] | null;
     // (undocumented)
     name: string;
+    nameKey?: string;
     // (undocumented)
     value: unknown;
 }
@@ -862,7 +904,7 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
     onOpen(): void;
     open(): void;
     readonly searchControl: FormControl<string | null>;
-    readonly select: _angular_core.Signal<KbqTreeSelect<KbqTreeSelectFlatNode, KbqTreeSelectFlatNode>>;
+    readonly select: Signal<KbqTreeSelect<KbqTreeSelectFlatNode, KbqTreeSelectFlatNode>>;
     // (undocumented)
     protected transformer: (node: KbqTreeSelectNode, level: number, parent: KbqTreeSelectFlatNode | null) => KbqTreeSelectFlatNode;
     // (undocumented)
