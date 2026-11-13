@@ -2,13 +2,14 @@
 
 Thank you for helping improve Koobiq. This guide explains how to report a problem, set up the repository and get a pull request merged.
 
-By taking part you agree to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
+By taking part you agree to follow the [Code of Conduct](CODE_OF_CONDUCT.md). Contributions are accepted under the [MIT License](LICENSE).
 
 ## Questions, bugs and ideas
 
 - Ask questions in [GitHub Discussions](https://github.com/koobiq/angular-components/discussions) or the [Telegram chat](https://t.me/koobiq_io), not in issues.
 - Report a bug with the [issue form](https://github.com/koobiq/angular-components/issues/new/choose) and add the package version to the description. Search the existing issues first.
-- Discuss a new feature or a large change in an issue before writing code.
+- Send a small change straight as a pull request: a fix for a bug, a visual or accessibility defect, performance or browser support, or a correction in the docs.
+- Discuss a large change in an issue before writing code: a new component, a change to the design tokens or the visual language, a breaking change, or documentation on a new topic.
 - Report vulnerabilities privately as described in the [security policy](.github/security.md), never in a public issue.
 
 ## Setup
