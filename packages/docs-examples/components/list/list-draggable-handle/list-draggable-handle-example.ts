@@ -26,7 +26,7 @@ import { TRANSLATIONS } from './l10n';
 export class ListDraggableHandleExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
 
-    protected readonly items = signal([1, 2, 3, 4]);
+    protected readonly items = signal(Array.from({ length: this.t().fruits.length }, (_, index) => index + 1));
 
     protected readonly fruits = computed(() => this.items().map((id) => this.t().fruits[id - 1]));
 
