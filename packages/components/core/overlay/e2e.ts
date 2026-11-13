@@ -31,7 +31,7 @@ const OPTIONS = ['Network Watcher', 'Firewall Sentinel', 'Threat Hunter', 'Malwa
         <div class="e2e-overlay-layer-sticky-bar__scroller" data-testid="e2eOverlayLayerScroller" cdkScrollable>
             <kbq-top-bar [withShadow]="true">
                 <div kbqTopBarContainer placement="start">
-                    <div class="kbq-title kbq-truncate-line">Dashboards</div>
+                    <div class="kbq-truncate-line" kbqTopBarTitle>Dashboards</div>
                 </div>
 
                 <div kbqTopBarSpacer></div>

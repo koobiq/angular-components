@@ -2,6 +2,7 @@ import { _IdGenerator, CdkMonitorFocus, FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 import {
     afterNextRender,
     booleanAttribute,
@@ -54,26 +55,36 @@ export type KbqSplitterOrientation = 'horizontal' | 'vertical';
 export type KbqSplitterAppearance = 'divider' | 'transparent' | 'handle';
 
 /**
- * Size of a splitter panel: a number of pixels, a `<number>px` string, or a `<number>%` share of the
- * splitter's own size along the resize axis. A size in any other unit is ignored.
+ * Size of a splitter panel: a number of pixels, a `<number>px` string, a `<number>%` share of the splitter's own
+ * size along the resize axis, or a `<number>vw` / `<number>vh` share of the viewport's width / height. A size in
+ * any other unit is ignored.
  */
 export type KbqSplitterSize = number | string;
 
 const clamp = (value: number, min: number, max: number): number => Math.min(Math.max(value, min), max);
 
-/** A number, bare or followed by `px` or `%` — the only size strings a panel understands. */
-const SPLITTER_SIZE_PATTERN = /^([+-]?(?:\d+(?:\.\d+)?|\.\d+))(px|%)?$/i;
+/** A number, bare or followed by `px`, `%`, `vw` or `vh` — the only size strings a panel understands. */
+const SPLITTER_SIZE_PATTERN = /^([+-]?(?:\d+(?:\.\d+)?|\.\d+))(px|%|vw|vh)?$/i;
 
 /**
- * Resolves a declared size against the splitter's own size along the resize axis.
+ * Resolves a declared size into pixels.
  *
- * Numbers and `<number>px` strings are pixels, `<number>%` is a share of `total`. Returns `null` for a size that
- * is not set or is anything else, another unit included: reading `10rem` as ten pixels would quietly hand the
- * panel a limit nobody asked for. `null` is how a panel says "take whatever is left".
+ * Numbers and `<number>px` strings are pixels already, `<number>%` is a share of `total`, the splitter's own size
+ * along the resize axis, and `<number>vw` / `<number>vh` are shares of `viewport`. As in CSS, `vw` stays the
+ * viewport's width in a vertical splitter too. Returns `null` for a size that is not set or is anything else,
+ * another unit included: reading `10rem` as ten pixels would quietly hand the panel a limit nobody asked for.
+ * `null` is how a panel says "take whatever is left".
+ *
+ * `viewport` is a getter read only for those two units, so a computed that resolves no such size does not depend on
+ * the viewport, and resizing the window leaves its splitter alone.
  *
  * @internal
  */
-export function resolveSplitterSize(size: KbqSplitterSize | null | undefined, total: number): number | null {
+export function resolveSplitterSize(
+    size: KbqSplitterSize | null | undefined,
+    total: number,
+    viewport: () => { width: number; height: number } = () => ({ width: 0, height: 0 })
+): number | null {
     if (size === null || size === undefined) return null;
 
     if (typeof size === 'number') return Number.isFinite(size) ? size : null;
@@ -82,7 +93,18 @@ export function resolveSplitterSize(size: KbqSplitterSize | null | undefined, to
 
     if (value === undefined) return null;
 
-    return unit === '%' ? (parseFloat(value) / 100) * total : parseFloat(value);
+    const amount = parseFloat(value);
+
+    switch (unit?.toLowerCase()) {
+        case '%':
+            return (amount / 100) * total;
+        case 'vw':
+            return (amount / 100) * viewport().width;
+        case 'vh':
+            return (amount / 100) * viewport().height;
+        default:
+            return amount;
+    }
 }
 
 /**
@@ -401,8 +423,8 @@ export class KbqSplitterPanel implements KbqSplitterPanelRef {
     readonly id = input<string>(inject(_IdGenerator).getId('kbq-splitter-panel-'));
 
     /**
-     * Size the panel starts at, in pixels (`240`, `'240px'`) or as a share of the splitter (`'30%'`).
-     * Panels that leave it unset share whatever the sized ones did not claim.
+     * Size the panel starts at, in pixels (`240`, `'240px'`), as a share of the splitter (`'30%'`) or as a share
+     * of the viewport (`'30vw'`, `'30vh'`). Panels that leave it unset share whatever the sized ones did not claim.
      */
     readonly size = input<KbqSplitterSize | undefined>(undefined);
 
@@ -552,7 +574,8 @@ export class KbqSplitterPanel implements KbqSplitterPanelRef {
             // eslint-disable-next-line no-console
             console.warn(
                 `kbq-splitter-panel: \`${name}\` "${size}" is ignored. A size is a number of pixels, ` +
-                    'a "<number>px" string or a "<number>%" share of the splitter.'
+                    'a "<number>px" string, a "<number>%" share of the splitter ' +
+                    'or a "<number>vw" / "<number>vh" share of the viewport.'
             );
         }
     }
@@ -608,6 +631,7 @@ export class KbqSplitter implements KbqSplitterGroup {
     private readonly platform = inject(Platform);
     private readonly window = inject(KBQ_WINDOW);
     private readonly resizeObserver = inject(SharedResizeObserver);
+    private readonly viewportRuler = inject(ViewportRuler);
     private readonly directionality = inject(Directionality, { optional: true });
     private readonly options = inject(KBQ_SPLITTER_OPTIONS);
 
@@ -644,6 +668,12 @@ export class KbqSplitter implements KbqSplitterGroup {
     /** Splitter size along the resize axis, in pixels; `0` until the first measurement. */
     private readonly containerSize = signal(0);
 
+    /**
+     * Viewport size `vw` and `vh` resolve against, in pixels. Known from the start rather than after the first render:
+     * tracks resolved against a zero viewport would be what a nested splitter measures itself in.
+     */
+    private readonly viewportSize = signal(this.viewportRuler.getViewportSize());
+
     /** Sizes and layout captured when the drag began; every move is measured against these, so clamping cannot drift. */
     private dragSnapshot: KbqSplitterDragSnapshot | null = null;
 
@@ -661,19 +691,16 @@ export class KbqSplitter implements KbqSplitterGroup {
     });
 
     /** Smallest size of each panel while it is not collapsed, in pixels. */
-    private readonly expandedMinSizes = computed<number[]>(() => {
-        const total = this.containerSize();
-
-        return this.panels().map((panel) => Math.max(0, resolveSplitterSize(panel.minSize(), total) ?? 0));
-    });
+    private readonly expandedMinSizes = computed<number[]>(() =>
+        this.panels().map((panel) => Math.max(0, this.resolveSize(panel.minSize()) ?? 0))
+    );
 
     /** Largest size of each panel while it is not collapsed, in pixels. */
     private readonly expandedMaxSizes = computed<number[]>(() => {
-        const total = this.containerSize();
         const min = this.expandedMinSizes();
 
         return this.panels().map((panel, index) => {
-            const max = resolveSplitterSize(panel.maxSize(), total) ?? Number.POSITIVE_INFINITY;
+            const max = this.resolveSize(panel.maxSize()) ?? Number.POSITIVE_INFINITY;
 
             // A maximum below the minimum would make every clamp order-dependent; the minimum wins.
             return Math.max(min[index]!, max);
@@ -681,11 +708,9 @@ export class KbqSplitter implements KbqSplitterGroup {
     });
 
     /** Size a collapsed panel is pinned to, in pixels. */
-    private readonly collapsedSizes = computed<number[]>(() => {
-        const total = this.containerSize();
-
-        return this.panels().map((panel) => Math.max(0, resolveSplitterSize(panel.collapsedSize(), total) ?? 0));
-    });
+    private readonly collapsedSizes = computed<number[]>(() =>
+        this.panels().map((panel) => Math.max(0, this.resolveSize(panel.collapsedSize()) ?? 0))
+    );
 
     /**
      * Panels the drag in progress may take through the gap between their collapsed size and their minimum.
@@ -731,9 +756,7 @@ export class KbqSplitter implements KbqSplitterGroup {
         if (!panels.length || total <= 0) return panels.map(() => 0);
 
         const declared = panels.map((panel) =>
-            panel.collapsed()
-                ? (resolveSplitterSize(panel.collapsedSize(), total) ?? 0)
-                : resolveSplitterSize(panel.size(), total)
+            panel.collapsed() ? (this.resolveSize(panel.collapsedSize()) ?? 0) : this.resolveSize(panel.size())
         );
         const flexible = declared.map((_, index) => index).filter((index) => declared[index] === null);
         const claimed = declared.reduce<number>((sum, size) => sum + (size ?? 0), 0);
@@ -805,6 +828,13 @@ export class KbqSplitter implements KbqSplitterGroup {
                 .pipe(startWith(null), takeUntilDestroyed(this.destroyRef))
                 .subscribe(() => this.measure());
         });
+
+        // The viewport can change while the splitter's own box does not, a splitter of a fixed width for one,
+        // and then no resize observation fires for the `vw` and `vh` sizes that depend on it.
+        this.viewportRuler
+            .change()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.viewportSize.set(this.viewportRuler.getViewportSize()));
 
         // Swapping the axis changes which dimension every size resolves against, and no resize observation
         // fires for it: the splitter's own box may not have changed at all.
@@ -1009,6 +1039,11 @@ export class KbqSplitter implements KbqSplitterGroup {
         this.resizeBy(index, this.minSizes()[index]! - this.sizes()[index]!);
     }
 
+    /** Resolves a size in the units a panel understands into pixels, with `total` as the splitter's own size. */
+    private resolveSize(size: KbqSplitterSize | null | undefined, total = this.containerSize()): number | null {
+        return resolveSplitterSize(size, total, this.viewportSize);
+    }
+
     /**
      * Whether the panels are still the ones the drag was measured against.
      *
@@ -1136,7 +1171,7 @@ export class KbqSplitter implements KbqSplitterGroup {
         const pairSize = current + (snapshot.sizes[index + 1] ?? 0);
         const snapPointsOf = (panel: KbqSplitterPanelRef, toLeadingSize: (size: number) => number) =>
             [...panel.snapSizes(), panel.minSize(), panel.maxSize()]
-                .map((size) => resolveSplitterSize(size, snapshot.total))
+                .map((size) => this.resolveSize(size, snapshot.total))
                 .filter((size): size is number => size !== null)
                 .map((size) => ({ size: toLeadingSize(size), tolerance: panel.snapTolerance() }));
 

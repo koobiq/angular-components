@@ -53,6 +53,14 @@ const expectInitialValueGrown = (textarea: Locator) =>
         )
         .toBe(true);
 
+/** How many rows fit between the top and the bottom padding. */
+const visibleRows = (textarea: Locator): Promise<number> =>
+    textarea.evaluate((el: HTMLTextAreaElement) => {
+        const { lineHeight, paddingTop, paddingBottom } = getComputedStyle(el);
+
+        return (el.clientHeight - parseFloat(paddingTop) - parseFloat(paddingBottom)) / parseFloat(lineHeight);
+    });
+
 const MAX_ROW_LIMIT_REACHED = 'kbq-textarea_max-row-limit-reached';
 
 test.describe('KbqTextareaModule', () => {
@@ -77,6 +85,19 @@ test.describe('KbqTextareaModule', () => {
                 await expect(component).toHaveScreenshot(`${name}-dark.png`);
             });
         }
+    });
+
+    test.describe('E2eTextareaDefault', () => {
+        test('should fit three rows in a resizable textarea', async ({ page }) => {
+            await page.goto('/E2eTextareaDefault');
+            const textarea = page.getByTestId('resizable_textarea');
+
+            await expect(textarea).toBeVisible();
+            // Read once: the height comes from the stylesheet and does not change after the first render.
+            const rows = await visibleRows(textarea);
+
+            expect(rows).toBe(3);
+        });
     });
 
     test.describe('E2eTextareaGrowBehavior', () => {
@@ -156,6 +177,19 @@ test.describe('KbqTextareaModule', () => {
             );
             await expect(textarea).toContainClass(MAX_ROW_LIMIT_REACHED);
             await expect.poll(() => getHeight(textarea)).toBe(atMaxRowsHeight);
+        });
+
+        test('should show whole rows once maxRows is reached', async ({ page }) => {
+            await page.goto('/E2eTextareaGrowMaxRows');
+            const textarea = getTextarea(page);
+
+            await pasteFromClipboard(
+                page,
+                textarea,
+                'line1\nline2\nline3\nline4\nline5\nline6\nline7\nline8\nline9\nline10'
+            );
+            await expect(textarea).toContainClass(MAX_ROW_LIMIT_REACHED);
+            await expect.poll(() => visibleRows(textarea)).toBe(5);
         });
     });
 

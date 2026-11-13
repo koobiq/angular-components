@@ -127,7 +127,7 @@ export const DATA_OBJECT = {
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         <span
                             [innerHTML]="
-                                treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value
+                                treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery
                             "
                         ></span>
                     </kbq-tree-option>
@@ -140,7 +140,7 @@ export const DATA_OBJECT = {
                         ></i>
                         <span
                             [innerHTML]="
-                                treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value
+                                treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery
                             "
                         ></span>
                     </kbq-tree-option>
@@ -177,7 +177,7 @@ export class TreeSelectSearchOverviewExample implements OnInit {
     }
 
     ngOnInit(): void {
-        this.searchControl.valueChanges.subscribe((value) => this.treeControl.filterNodes(value));
+        this.searchControl.valueChanges.subscribe((value) => this.treeControl.applyFilter(value));
     }
 
     hasChild(_: number, nodeData: FileFlatNode) {

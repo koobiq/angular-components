@@ -61,11 +61,13 @@ export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
     expansionModel: SelectionModel<K>;
     // (undocumented)
     filterModel: SelectionModel<T>;
-    // (undocumented)
+    filterQuery: string | null;
+    // @deprecated
     filterValue: BehaviorSubject<string | T[] | null>;
     getChildren: ((dataNode: T) => Observable<T[]>) | undefined;
     abstract getDescendants(dataNode: T): T[];
     getLevel: ((dataNode: T) => number) | undefined;
+    get hasActiveFilter(): boolean;
     isExpandable: ((dataNode: T) => boolean) | undefined;
     isExpanded(dataNode: T): boolean;
     toggle(dataNode: T): void;
@@ -119,12 +121,13 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
     compareViewValues?: (firstViewValue: any, secondViewValue: any) => boolean,
     isDisabled?: (dataNode: T) => boolean,
     options?: KbqTreeControlOptions<T, K>);
+    applyFilter(value?: string | null): void;
     compareValues: (firstValue: any, secondValue: any) => boolean;
     compareViewValues: (firstViewValue: any, secondViewValue: any) => boolean;
     expandAll(): void;
     // (undocumented)
     expandedItemsBeforeFiltration: K[];
-    // (undocumented)
+    // @deprecated
     filterNodes(value?: string | null): void;
     getDescendants(dataNode: T): T[];
     // (undocumented)
@@ -139,6 +142,7 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
     isDisabled: (dataNode: T) => boolean;
     // (undocumented)
     isExpandable: (dataNode: T) => boolean;
+    resetFilter(): void;
     // (undocumented)
     setFilters(...filters: FlatTreeControlFilter<T>[]): void;
 }
@@ -729,11 +733,13 @@ export interface TreeControl<T, K = T> {
     expansionModel: SelectionModel<K>;
     // (undocumented)
     filterModel: SelectionModel<T>;
-    // (undocumented)
+    readonly filterQuery: string | null;
+    // @deprecated
     filterValue: BehaviorSubject<T[] | string | null>;
     getChildren: ((dataNode: T) => Observable<T[]>) | undefined;
     getDescendants(dataNode: T): any[];
     getLevel: ((dataNode: T) => number) | undefined;
+    readonly hasActiveFilter: boolean;
     isExpandable: ((dataNode: T) => boolean) | undefined;
     isExpanded(dataNode: T): boolean;
     toggle(dataNode: T): void;

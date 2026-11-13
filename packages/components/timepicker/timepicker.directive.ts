@@ -128,6 +128,12 @@ const fullFormatSize: number = 8;
 /** Maximum number of digits in a single time part */
 const timePartLength: number = 2;
 
+/** Hours in each half of the day of a 12-hour time */
+const hoursPerHalfDay: number = 12;
+
+/** Key of the error reported for text that is not a time */
+const parseErrorKey = 'kbqTimepickerParse';
+
 /** Coerces a time format, falling back to the default for anything the enum does not name. */
 const timeFormatAttribute = (value: TimeFormats | null | undefined): TimeFormats =>
     Object.values(TimeFormats).includes(value as TimeFormats) ? (value as TimeFormats) : DEFAULT_TIME_FORMAT;
@@ -152,6 +158,9 @@ const timeFormatAttribute = (value: TimeFormats | null | undefined): TimeFormats
         '(blur)': 'onBlur()',
         '(focus)': 'focusChanged(true)',
         '(paste)': 'onPaste($event)',
+        '(drop)': 'onDrop($event)',
+        '(dragstart)': 'draggingOwnText = true',
+        '(dragend)': 'draggingOwnText = false',
         '(keydown)': 'onKeyDown($event)'
     },
     hostDirectives: [
@@ -325,6 +334,13 @@ export class KbqTimepicker<D>
 
     private lastValueValid = false;
 
+    /**
+     * Whether a drag started in this field, so that its drop here is the field's own text.
+     *
+     * @docs-private
+     */
+    protected draggingOwnText = false;
+
     private control?: AbstractControl;
 
     private separator = ':';
@@ -425,8 +441,11 @@ export class KbqTimepicker<D>
 
         this.timezoneService.changes.pipe(takeUntilDestroyed()).subscribe(() => {
             // The rendered text names a wall clock in the zone it was formatted in. Left as it is, the
-            // next keystroke re-parses it against the new zone and emits a different instant.
-            this.setValue(this.valueState() ?? null);
+            // next keystroke re-parses it against the new zone and emits a different instant. Only a complete
+            // value: with none, there is no such text, and `updateView()` would render `''` over the user's.
+            const value = this.valueState();
+
+            if (value) this.setValue(value);
         });
     }
 
@@ -470,30 +489,59 @@ export class KbqTimepicker<D>
     }
 
     onBlur() {
-        this.focusChanged(false);
+        const wasFocused = this.focused();
 
-        if (this.viewValue !== this.getTimeStringFromDate(this.value(), this.format())) {
+        // `focused` goes first, as the validators read it, and `onTouched` last: it is what commits the
+        // value of a control with `updateOn: 'blur'`, and whatever is emitted after it waits for the next blur.
+        this.focusedValue.set(false);
+
+        const edited = this.viewValue !== this.getTimeStringFromDate(this.value(), this.format());
+
+        if (edited) {
             this.setViewValue(this.formatUserPaste(this.viewValue));
 
             this.onInput();
         }
+
+        // Text that is not a time reaches the element without a keydown: an undo, an IME, autofill. The form
+        // hears of it once, and once more when it is erased - each emission restarts its async validators.
+        // A time entered over it has already been emitted, though a control that commits on blur has yet to
+        // see it, so it is not to be taken for an erased text.
+        const unparsedText = edited && !this.lastValueValid ? this.viewValue : '';
+        const reportedText = this.control?.getError(parseErrorKey)?.text ?? '';
+
+        if (unparsedText !== reportedText && (unparsedText || !this.viewValue)) {
+            this.valueState.set(null);
+            this.onChange(null);
+        }
+
+        if (wasFocused) this.onTouched();
     }
 
     onPaste(event: ClipboardEvent) {
         event.preventDefault();
 
-        const value = this.formatUserPaste(event.clipboardData!.getData('text'));
+        this.replaceText(event.clipboardData?.getData('text') ?? '');
+    }
 
-        const newTimeObj = this.getDateFromTimeString(value);
+    /**
+     * Takes dropped text the way a paste is taken. The browser would insert it at the pointer, with no event
+     * the parsing listens to.
+     *
+     * @docs-private
+     */
+    protected onDrop(event: DragEvent): void {
+        event.preventDefault();
 
-        if (!newTimeObj) {
-            return;
-        }
+        // A part dragged within the field would be read as the whole time. A disabled field is only reached
+        // when an ancestor accepts the drop.
+        if (this.draggingOwnText || this.disabled()) return;
 
-        this.setViewValue(this.getTimeStringFromDate(newTimeObj, this.format()));
+        this.focus();
+        // Not left to the focus: a window that is not active, where a drag from another one ends, fires none.
+        this.onTouched();
 
-        this.setValue(newTimeObj);
-        this.onChange(newTimeObj);
+        this.replaceText(event.dataTransfer?.getData('text') ?? '');
     }
 
     onInput = () => {
@@ -525,6 +573,7 @@ export class KbqTimepicker<D>
 
         if (!newTimeObj) {
             if (!this.viewValue) {
+                this.valueState.set(null);
                 this.onChange(null);
             }
 
@@ -616,6 +665,20 @@ export class KbqTimepicker<D>
         this.disabled.set(isDisabled);
     }
 
+    /** Takes a pasted or dropped text as the whole value; one that is not a time is rejected as a letter key is. */
+    private replaceText(text: string): void {
+        const newTimeObj = this.getDateFromTimeString(this.formatUserPaste(text));
+
+        if (!newTimeObj) {
+            if (text) this.incorrectInput.emit();
+
+            return;
+        }
+
+        this.setValue(newTimeObj);
+        this.onChange(newTimeObj);
+    }
+
     private formatUserPaste(value: string) {
         if (value.match(AM_PM_FORMAT_REGEXP)) {
             return value;
@@ -626,8 +689,6 @@ export class KbqTimepicker<D>
                 ?.groups ?? {};
 
         if (!hours) {
-            this.setViewValue(value);
-
             return value;
         }
 
@@ -951,11 +1012,12 @@ export class KbqTimepicker<D>
             hours = Number(amPm[1]);
             minutes = Number(amPm[2]);
 
-            const meridiem = amPm[3]!;
-
-            if (/[p]/i.test(meridiem) || (/[a]/i.test(meridiem) && hours === 12)) {
-                hours += 12;
+            if (hours > hoursPerHalfDay) {
+                return null;
             }
+
+            // 12 opens its half of the day: 12 am is midnight and 12 pm is noon.
+            hours = (hours % hoursPerHalfDay) + (/p/i.test(amPm[3] ?? '') ? hoursPerHalfDay : 0);
         } else if (HMS && this.isShortFormat) {
             hours = Number(HMS[1]);
             minutes = Number(HMS[2]);
@@ -989,7 +1051,7 @@ export class KbqTimepicker<D>
     private parseValidator: ValidatorFn = (): ValidationErrors | null => {
         return this.focused() || this.isEmpty() || this.lastValueValid
             ? null
-            : { kbqTimepickerParse: { text: this.viewValue } };
+            : { [parseErrorKey]: { text: this.viewValue } };
     };
 
     private minValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {

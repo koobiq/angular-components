@@ -2090,7 +2090,13 @@ Handled by the `dropdown-signals` schematic; the rows in the first two tables ab
 
 #### Empty state
 
-`errorColor` used to reach the illustration imperatively: `ngAfterContentInit()` read the input once and called `KbqEmptyStateIcon.setErrorColor()`, which assigned `color = 'error'` on the injected `kbq-icon-item`. The tint was therefore irreversible — `[errorColor]` going back to `false` left a red icon above black text — it never arrived for a value flipped to `true` after init, and it never happened at all when the icon was wrapped by the slot rather than carrying it, because the directive resolved the icon through `inject(KbqIconItem)`, which only sees an icon on its own host element. Two of the component's own examples use that wrapped shape. The title and the text colors were always reactive, because they ride on the host classes.
+`errorColor` used to reach the illustration imperatively: `ngAfterContentInit()` read the input once and called `KbqEmptyStateIcon.setErrorColor()`, which assigned `color = 'error'` on the injected `kbq-icon-item`. The tint therefore:
+
+- stayed after `[errorColor]` went back to `false`, leaving a red icon above black text;
+- never arrived for a value flipped to `true` after init;
+- never reached an icon wrapped by the slot: `inject(KbqIconItem)` only sees an icon on its own host element.
+
+Two of the component's own examples use that wrapped shape. The title and the text colors were always reactive, because they ride on the host classes.
 
 The illustration follows `[errorColor]` on its own now, in both markup shapes and in both directions, so the method has no caller left.
 
@@ -2261,7 +2267,13 @@ Template bindings are otherwise untouched: `[min]="lower"` and `min="3"` keep wo
 
 The unprefixed `MinValidator` / `MaxValidator` are the exact names `@angular/forms` exports, so importing both in one file shadowed the framework's. They are removed rather than deprecated, and the schematic rewrites them — scoped to the names a file imports from `@koobiq/components/input`, so a file importing the framework's own is left alone. `type="number"` had a functional symptom: a native number field runs the value sanitization algorithm on assignment and rejects everything the directive renders once a group separator or a comma fraction separator is in it, so every fractional value — and every value ≥ 1000 while `withThousandSeparator` is on — silently disappeared from the field while the model still held it.
 
-Fixes with nothing to migrate: the numeric inputs coerce their value, so a static `min="3"` holds the number `3` instead of the string `"3"` (the `ngAcceptInputType_*` declarations that used to carry that are gone — a signal input types what it accepts through its transform's parameter); the validators no longer `parseInt` their bound value, so `[min]="0.5"` validates against `0.5` rather than `0` and a bound `[min]="0"` reaches the DOM instead of being dropped by a falsy check; stepping runs in integer space against a decimal scale, so one arrow press on `1.005` with `step="0.001"` renders `1,006` rather than `1,0059999999999998`; `startFormattingFrom` is read from the input as well as from the locale, instead of being declared and ignored; `KbqNumberInput` carries spinbutton semantics (`role`, `aria-valuenow`, `aria-valuetext`, `aria-valuemin`, `aria-valuemax`, `inputmode`).
+Fixes with nothing to migrate:
+
+- The numeric inputs coerce their value, so a static `min="3"` holds the number `3` instead of the string `"3"`. The `ngAcceptInputType_*` declarations that used to carry that are gone: a signal input types what it accepts through its transform's parameter.
+- The validators no longer `parseInt` their bound value, so `[min]="0.5"` validates against `0.5` rather than `0`, and a bound `[min]="0"` reaches the DOM instead of being dropped by a falsy check.
+- Stepping runs in integer space against a decimal scale, so one arrow press on `1.005` with `step="0.001"` renders `1,006` rather than `1,0059999999999998`.
+- `startFormattingFrom` is read from the input as well as from the locale, instead of being declared and ignored.
+- `KbqNumberInput` carries spinbutton semantics: `role`, `aria-valuenow`, `aria-valuetext`, `aria-valuemin`, `aria-valuemax`, `inputmode`.
 
 Migrated by `input-number-surface`, which rewrites the signal reads and reports the rest. The rewrite is scoped to a receiver the file annotates as `KbqNumberInput` and to a `#ref="kbqNumberInput"` template reference — `min`, `max` and `step` are too common to match on the member name alone, so a receiver whose type is only inferred, an index read and a destructuring are all left for you.
 

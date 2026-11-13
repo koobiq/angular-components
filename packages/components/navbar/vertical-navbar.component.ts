@@ -30,6 +30,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqFocusableComponent } from './navbar.component';
 import { KbqNavbarBento, KbqNavbarItem, KbqNavbarRectangleElement } from './navbar-item.component';
+import { kbqNavbarTooltipOptionsProvider } from './navbar-tooltip-defaults';
 
 // Re-exported so that the name this package's own token is typed with resolves from this package too:
 // `KbqVerticalNavbarConfiguration` used to be declared here, and the migration renames it in place.
@@ -78,6 +79,7 @@ export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = KBQ_NAVBAR_LOCALE_CONFIGURATION
         './navbar-divider.scss',
         './navbar-tokens.scss'
     ],
+    providers: [kbqNavbarTooltipOptionsProvider],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

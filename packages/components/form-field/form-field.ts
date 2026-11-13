@@ -35,7 +35,7 @@ import { kbqIconErrorStateContextFactoryProvider } from '@koobiq/components/icon
 import { KbqCleaner, kbqCleanerFactoryProvider } from './cleaner';
 import { KbqError } from './error';
 import { KbqFormFieldControl, kbqSetDescribedByIds } from './form-field-control';
-import { KbqHint } from './hint';
+import { KbqHint, kbqHintParentFactoryProvider } from './hint';
 import { KbqLabel } from './label';
 // eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqPasswordToggle } from './password-toggle';
@@ -140,6 +140,11 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
                     return formField.control().errorState;
                 }
             };
+        }),
+        kbqHintParentFactoryProvider(() => {
+            const formField = inject(KBQ_FORM_FIELD);
+
+            return { compact: signal(true), disabled: computed(() => formField.disabled) };
         })
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,

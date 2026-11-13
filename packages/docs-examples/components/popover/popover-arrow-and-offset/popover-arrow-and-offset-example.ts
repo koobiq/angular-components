@@ -50,9 +50,11 @@ import { type KbqToggleChange, KbqToggleModule } from '@koobiq/components/toggle
                     kbq-button
                     kbqPopover
                     type="button"
+                    kbqPopoverPlacement="bottomRight"
                     [kbqPopoverContent]="customContent"
                     [kbqPopoverFooter]="customFooter"
                     [kbqPopoverArrow]="arrow"
+                    [kbqPopoverArrowCentered]="arrowCentered"
                     [kbqPopoverOffset]="offset"
                     [kbqPopoverSize]="popoverSize"
                 >
@@ -64,6 +66,11 @@ import { type KbqToggleChange, KbqToggleModule } from '@koobiq/components/toggle
                 <kbq-dt>Arrow</kbq-dt>
                 <kbq-dd>
                     <kbq-toggle [checked]="arrow" (change)="onArrowChange($event)" />
+                </kbq-dd>
+
+                <kbq-dt>Arrow centered</kbq-dt>
+                <kbq-dd>
+                    <kbq-toggle [checked]="arrowCentered" (change)="arrowCentered = $event.checked" />
                 </kbq-dd>
 
                 <kbq-dt>Offset</kbq-dt>
@@ -82,6 +89,7 @@ import { type KbqToggleChange, KbqToggleModule } from '@koobiq/components/toggle
 })
 export class PopoverArrowAndOffsetExample implements AfterViewInit {
     protected arrow = true;
+    protected arrowCentered = false;
     protected offset: number | null = null;
     protected offsetChanged = false;
     protected readonly popoverSize = PopUpSizes.Large;

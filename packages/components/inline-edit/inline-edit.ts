@@ -2,7 +2,13 @@ import { CdkMonitorFocus, CdkTrapFocus, FocusMonitor, type FocusOrigin, Interact
 import { hasModifierKey } from '@angular/cdk/keycodes';
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { CdkConnectedOverlay, Overlay, ScrollDispatcher, type ScrollStrategy } from '@angular/cdk/overlay';
+import {
+    CdkConnectedOverlay,
+    type ConnectedPosition,
+    Overlay,
+    ScrollDispatcher,
+    type ScrollStrategy
+} from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import {
     booleanAttribute,
@@ -71,6 +77,17 @@ import { KbqSelect } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 
 const baseClass = 'kbq-inline-edit';
+
+/**
+ * Positions the edit mode panel so that it covers the view mode element. A single position is used instead of the
+ * default fallback set, because the panel must stay anchored to the origin even when it does not fit in the viewport.
+ */
+const KBQ_INLINE_EDIT_CONNECTED_POSITION: ConnectedPosition = {
+    originX: 'start',
+    originY: 'bottom',
+    overlayX: 'start',
+    overlayY: 'top'
+};
 
 /**
  * Fallback delay before showing the validation tooltip if `scrollend` never fires — e.g. the browser doesn't
@@ -371,6 +388,14 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
     protected readonly overlayWidth = signal<number | string>('');
     /** Distance the panel is pulled up by so that it covers the view it replaces. */
     protected readonly overlayOffsetY = signal(0);
+
+    /**
+     * Single overlay position that keeps the panel anchored to the view mode element. Fallback positions are
+     * intentionally omitted so the panel does not flip or get pushed away from the origin when space is tight.
+     *
+     * @docs-private
+     */
+    protected readonly overlayPositions: ConnectedPosition[] = [KBQ_INLINE_EDIT_CONNECTED_POSITION];
 
     /**
      * Built on first read rather than in the field initializer: a list of inline edits would otherwise

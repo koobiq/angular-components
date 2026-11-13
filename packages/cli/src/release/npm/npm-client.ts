@@ -14,11 +14,16 @@ const npmClientEnvironment = {
 /** Max time `npmViewDistTag` waits for the registry before giving up. */
 const NPM_VIEW_TIMEOUT_MS = 15_000;
 
+// On Windows `npm` is `npm.cmd`, and Node refuses to spawn a .cmd without a shell. On POSIX
+// the shell is off, so the arguments reach npm as-is instead of being concatenated into a
+// shell command line (CodeQL js/shell-command-constructed-from-input).
+const npmNeedsShell = process.platform === 'win32';
+
 /** Checks whether NPM is currently authenticated. */
 export function isNpmAuthenticated(): boolean {
     return (
         spawnSync('npm', ['whoami'], {
-            shell: true,
+            shell: npmNeedsShell,
             env: npmClientEnvironment
         }).stdout.toString() !== ''
     );
@@ -29,7 +34,7 @@ export function npmLoginInteractive(): boolean {
     return (
         spawnSync('npm', ['login'], {
             stdio: 'inherit',
-            shell: true,
+            shell: npmNeedsShell,
             env: npmClientEnvironment
         }).status === 0
     );
@@ -45,7 +50,7 @@ export function npmPublish(packagePath: string, distTag: string): string | undef
 
     const result = spawnSync('npm', command, {
         cwd: packagePath,
-        shell: true
+        shell: npmNeedsShell
     });
 
     if (result.status !== 0) {
@@ -69,7 +74,7 @@ export class NpmViewError extends Error {}
  */
 export function npmViewDistTag(packageName: string, tag: string): string | null {
     const result = spawnSync('npm', ['view', packageName, `dist-tags.${tag}`], {
-        shell: true,
+        shell: npmNeedsShell,
         env: npmClientEnvironment,
         // Without this, an unreachable registry (no network, no proxy configured, ...) hangs
         // `spawnSync` indefinitely instead of failing — and `resolveNpmDistTags` calls this once
@@ -107,7 +112,7 @@ export function npmViewDistTag(packageName: string, tag: string): string | null 
 export function npmLogout(): boolean {
     return (
         spawnSync('npm', ['logout'], {
-            shell: true,
+            shell: npmNeedsShell,
             env: npmClientEnvironment
         }).status === 0
     );

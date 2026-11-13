@@ -19,8 +19,10 @@ export class GitClient {
 
     /** Gets the commit SHA for the specified remote repository branch. */
     getRemoteCommitSha(branchName: string): string {
+        // `--` ends option parsing, so a remoteGitUrl like `--upload-pack=<cmd>` stays a
+        // repository argument instead of making git execute it (CodeQL js/second-order-command-line-injection).
         return (
-            this.spawnGitProcess(['ls-remote', this.remoteGitUrl, '-h', `refs/heads/${branchName}`])
+            this.spawnGitProcess(['ls-remote', '-h', '--', this.remoteGitUrl, `refs/heads/${branchName}`])
                 .stdout.split('\t')[0]
                 ?.trim() ?? ''
         );
@@ -89,8 +91,9 @@ export class GitClient {
 
     /** Gets the Git SHA of the specified remote tag. */
     getShaOfRemoteTag(tagName: string): string {
+        // Same `--` guard as in `getRemoteCommitSha`.
         return (
-            this.spawnGitProcess(['ls-remote', this.remoteGitUrl, '-t', `refs/tags/${tagName}^{}`])
+            this.spawnGitProcess(['ls-remote', '-t', '--', this.remoteGitUrl, `refs/tags/${tagName}^{}`])
                 .stdout.split('\t')[0]
                 ?.trim() ?? ''
         );

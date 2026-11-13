@@ -173,7 +173,7 @@ abstract class TreeParams {
         >
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
                 <span
-                    [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
+                    [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"
                 ></span>
             </kbq-tree-option>
 
@@ -181,7 +181,7 @@ abstract class TreeParams {
                 <kbq-tree-node-toggle [node]="node" />
 
                 <span
-                    [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
+                    [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"
                 ></span>
             </kbq-tree-option>
         </kbq-tree-selection>

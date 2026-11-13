@@ -42,6 +42,9 @@ export const KBQ_FORM_FIELD_DEFAULT_OPTIONS: InjectionToken<Partial<{
 }>>;
 
 // @public
+export const KBQ_HINT_PARENT: InjectionToken<KbqHintParentConfig>;
+
+// @public
 export class KbqCleaner extends KbqIconButton implements AfterContentInit {
     constructor();
     protected readonly accessibleName: i0.Signal<string>;
@@ -209,11 +212,24 @@ export class KbqHint extends KbqColorDirective {
     readonly compact: i0.InputSignalWithTransform<boolean, unknown>;
     readonly fillTextOff: i0.InputSignalWithTransform<boolean, unknown>;
     readonly id: i0.InputSignal<string>;
+    protected readonly isCompact: Signal<boolean>;
+    protected readonly isDisabled: Signal<boolean>;
+    protected readonly isFillTextOff: Signal<boolean>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqHint, "kbq-hint", ["kbqHint"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "fillTextOff": { "alias": "fillTextOff"; "required": false; "isSignal": true; }; "compact": { "alias": "compact"; "required": false; "isSignal": true; }; }, {}, never, ["[kbq-icon]", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqHint, never>;
 }
+
+// @public
+export interface KbqHintParentConfig {
+    compact?: Signal<boolean>;
+    disabled?: Signal<boolean>;
+    fillTextOff?: Signal<boolean>;
+}
+
+// @public
+export const kbqHintParentFactoryProvider: (factory: () => KbqHintParentConfig) => Provider;
 
 // @public
 export class KbqLabel {
@@ -276,7 +292,8 @@ export class KbqReactivePasswordHint extends KbqHint {
     constructor();
     readonly fillTextOff: i0.InputSignalWithTransform<boolean, unknown>;
     readonly hasError: i0.InputSignalWithTransform<boolean, unknown>;
-    protected readonly icon: i0.Signal<"kbq-xmark-s_16" | "kbq-check-s_16">;
+    protected readonly icon: Signal<"kbq-xmark-s_16" | "kbq-check-s_16">;
+    protected readonly isCompact: Signal<boolean>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqReactivePasswordHint, "kbq-reactive-password-hint", ["kbqReactivePasswordHint"], { "hasError": { "alias": "hasError"; "required": false; "isSignal": true; }; "fillTextOff": { "alias": "fillTextOff"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)

@@ -1,5 +1,6 @@
 import {
     ChangeDetectorRef,
+    computed,
     DestroyRef,
     effect,
     ElementRef,
@@ -18,9 +19,21 @@ import {
     kbqInjectA11yLocaleConfiguration,
     KbqLocaleOverridesDirective
 } from '@koobiq/components/core';
+import { kbqHintParentFactoryProvider } from '@koobiq/components/form-field';
 import { KbqFullScreenDropzoneService } from './dropzone';
 import { KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION } from './file-upload.tokens';
 import { KbqFileList, KbqFileUploadContext } from './primitives';
+
+/**
+ * Makes the hints of a file upload compact and has them follow its disabled state.
+ *
+ * @internal
+ */
+export const kbqFileUploadHintParentProvider = kbqHintParentFactoryProvider(() => {
+    const context = inject(KbqFileUploadContext);
+
+    return { compact: signal(true), disabled: computed(() => !!context.disabled()) };
+});
 
 export interface KbqFile extends File {
     /* used when directory dropped */

@@ -11,11 +11,16 @@ import {
 } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { EMPTY, Subject } from 'rxjs';
+import { EMPTY, NEVER, Subject } from 'rxjs';
 import type { Mock } from 'vitest';
 import type { KbqFlexWrap, KbqOrientation } from '@koobiq/components/core';
 import { KbqOverflowItemsModule } from './module';
-import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from './overflow-items';
+import {
+    KBQ_OVERFLOW_ITEMS_RESIZE_OBSERVER_TARGETS,
+    KbqOverflowItem,
+    KbqOverflowItems,
+    KbqOverflowItemsResult
+} from './overflow-items';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
@@ -277,6 +282,37 @@ describe('KbqOverflowItems', () => {
             await vi.advanceTimersByTimeAsync(0);
 
             expect(observeSpy).toHaveBeenCalledWith(document.body);
+        });
+
+        it('should recalculate when a target provided through KBQ_OVERFLOW_ITEMS_RESIZE_OBSERVER_TARGETS resizes', async () => {
+            vi.useFakeTimers();
+
+            const target = document.createElement('div');
+            const targetResize = new Subject<void>();
+            // `NEVER` as a real observer: one that completes would flush the debounced recalculation on destroy.
+            const observeSpy = vi.fn((element: Element) => (element === target ? targetResize : NEVER));
+
+            const fixture = createComponent(TestOverflowItemsAdditionalTargets, [
+                { provide: SharedResizeObserver, useValue: { observe: observeSpy } },
+                { provide: KBQ_OVERFLOW_ITEMS_RESIZE_OBSERVER_TARGETS, useValue: [target] }
+            ]);
+
+            await vi.advanceTimersByTimeAsync(0);
+
+            // The token adds to the input rather than replacing its `document.body` default.
+            expect(observeSpy).toHaveBeenCalledWith(document.body);
+
+            const changesSpy = vi.fn();
+
+            fixture.debugElement
+                .query(By.directive(KbqOverflowItems))
+                .injector.get(KbqOverflowItems)
+                .changes.subscribe(changesSpy);
+
+            targetResize.next();
+            await vi.advanceTimersByTimeAsync(0);
+
+            expect(changesSpy).toHaveBeenCalledTimes(1);
         });
 
         it('should observe new target when input changes dynamically', async () => {

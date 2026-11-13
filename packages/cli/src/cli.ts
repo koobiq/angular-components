@@ -1,4 +1,4 @@
-import { program } from 'commander';
+import { Command } from 'commander';
 import { config as dotenvConfig } from 'dotenv';
 import { join } from 'path';
 import { PublishReleaseCITask } from './release/publish-release-ci';
@@ -8,9 +8,6 @@ import { PublishReleaseCIGitlabTask } from './release/publish-release-gitlab-ci'
 import { ResolveNpmTagTask } from './release/resolve-npm-tag';
 import { StageReleaseTask } from './release/stage-release';
 import { StageReleaseCommitTask } from './release/stage-release-commit';
-
-const ROOT_DIR = process.env['INIT_CWD'] ?? process.cwd();
-const DIST_DIR = join(ROOT_DIR, 'dist');
 
 enum CommandTypes {
     Stage = 'stage',
@@ -22,15 +19,36 @@ enum CommandTypes {
     ResolveNpmTag = 'resolve-npm-tag'
 }
 
-export const runCliCommands = () => {
-    // `quiet`: dotenv >=17 prints an injection banner to stdout otherwise, which corrupts the
-    // `TAG=$(koobiq-cli resolve-npm-tag ...)` capture that other repos rely on.
-    dotenvConfig({ quiet: true });
+// `Record<CommandTypes, ...>` makes a new enum member without a description a compile error,
+// so the help text cannot silently miss a command the `switch` already handles.
+const COMMAND_DESCRIPTIONS: Record<CommandTypes, string> = {
+    [CommandTypes.Stage]: 'Stage a new release (version bump and changelog)',
+    [CommandTypes.StageCommit]: 'Commit a staged release and push its tag',
+    [CommandTypes.PublishCi]: 'Publish the release from CI',
+    [CommandTypes.PublishDist]: 'Publish the release from the built dist directory',
+    [CommandTypes.PublishCIGitlab]: 'Publish the release from GitLab CI',
+    [CommandTypes.PublishCIGithub]: 'Publish the release from GitHub CI',
+    [CommandTypes.ResolveNpmTag]: 'Resolve the npm dist-tag for a package'
+};
+
+const COMMANDS = [
+    'Commands:',
+    ...Object.values(CommandTypes).map((command) => `  ${command.padEnd(20)}${COMMAND_DESCRIPTIONS[command]}`)
+].join('\n');
+
+export function createCliProgram(): Command {
+    // Computed at call time so that tests (and any caller) can set `process.env` first.
+    const rootDir = process.env['INIT_CWD'] ?? process.cwd();
+    const distDir = join(rootDir, 'dist');
+
+    const program = new Command();
 
     program
+        .name('koobiq-cli')
+        .description('Koobiq release management CLI')
         .arguments('<action>')
-        .option('-p, --project-dir <string>', 'project root directory', process.env['RELEASE_PROJECT'] ?? ROOT_DIR)
-        .option('-d, --dist-dir <string>', 'packages dist directory', process.env['RELEASE_DIST'] ?? DIST_DIR)
+        .option('-p, --project-dir <string>', 'project root directory', process.env['RELEASE_PROJECT'] ?? rootDir)
+        .option('-d, --dist-dir <string>', 'packages dist directory', process.env['RELEASE_DIST'] ?? distDir)
         .option('-c, --changelog-scope <string>', 'default changelog scope', process.env['CHANGELOG_SCOPE'] ?? 'koobiq')
         // No default: when omitted, each publish task resolves the tag itself from the
         // registry's current `latest` major (see `resolveNpmDistTag`) instead of blindly
@@ -46,8 +64,9 @@ export const runCliCommands = () => {
         .option('-r, --repo-name <string>', 'github repo name', process.env['REPO_NAME'] ?? 'koobiq')
         // Only used by `resolve-npm-tag`.
         .option('--package-name <string>', 'npm package name to resolve the dist-tag for')
-        .action((subcommand, options) => {
-            switch (subcommand) {
+        .addHelpText('after', COMMANDS)
+        .action((action, options) => {
+            switch (action) {
                 case CommandTypes.Stage:
                     new StageReleaseTask(options).run();
                     break;
@@ -71,10 +90,23 @@ export const runCliCommands = () => {
                         projectDir: options.projectDir,
                         packageName: options.packageName
                     }).run();
+                    break;
+                default:
+                    program.error(`error: unknown action '${action}'.\n\n${COMMANDS}`, { exitCode: 1 });
             }
         });
 
-    program.parse();
-};
+    return program;
+}
 
-runCliCommands();
+export function runCliCommands(argv: string[] = process.argv): void {
+    // `quiet`: dotenv >=17 prints an injection banner to stdout otherwise, which corrupts the
+    // `TAG=$(koobiq-cli resolve-npm-tag ...)` capture that other repos rely on.
+    dotenvConfig({ quiet: true });
+
+    createCliProgram().parse(argv);
+}
+
+if (require.main === module) {
+    runCliCommands();
+}

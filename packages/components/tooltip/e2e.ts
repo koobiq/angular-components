@@ -1,4 +1,5 @@
 import { type AfterViewInit, ChangeDetectionStrategy, Component, type TemplateRef, viewChild } from '@angular/core';
+import { KBQ_ANIMATIONS_CONFIG } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
@@ -20,6 +21,16 @@ import { KbqToolTipModule } from './tooltip.module';
         >
             trigger-without-arrow
         </div>
+        <div
+            data-testid="tooltipCentered"
+            style="width: 160px"
+            kbqTooltip="centered-arrow"
+            kbqPlacement="bottomRight"
+            [kbqTooltipArrow]="true"
+            [kbqTooltipArrowCentered]="true"
+        >
+            trigger-with-centered-arrow
+        </div>
     `,
     styles: `
         :host {
@@ -29,6 +40,7 @@ import { KbqToolTipModule } from './tooltip.module';
             padding: var(--kbq-size-s);
         }
     `,
+    providers: [{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: false } }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTooltipArrowOffset'

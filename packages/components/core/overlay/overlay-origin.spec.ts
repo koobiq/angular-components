@@ -76,8 +76,8 @@ describe('overlay origin', () => {
             expect(kbqGetOverlayOriginSize(origin)).toMatchObject({ width: 200, height: 24 });
         });
 
-        it('should read the size off a rectangle', () => {
-            expect(kbqGetOverlayOriginSize(caret)).toEqual({ width: 0, height: 16 });
+        it('should read the rectangle', () => {
+            expect(kbqGetOverlayOriginSize(caret)).toEqual({ x: 10, y: 20, width: 0, height: 16 });
         });
 
         it('should read a rectangle that measures itself on every access', () => {

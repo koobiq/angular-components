@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { type ErrorStateMatcher, KbqComponentColors } from '@koobiq/components/core';
-import { KbqError, KbqFormFieldModule, KbqHint } from '@koobiq/components/form-field';
+import { KbqError, KbqHint } from '@koobiq/components/form-field';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
 @Component({
@@ -67,56 +67,56 @@ export class E2eToggleStateAndStyle {
 }
 
 @Component({
-    selector: 'e2e-toggle-with-text-and-caption',
-    imports: [KbqToggleModule, KbqFormFieldModule, FormsModule],
+    selector: 'e2e-toggle-with-hint',
+    imports: [KbqToggleModule, KbqHint],
     template: `
-        <input type="checkbox" data-testid="e2eBigToggle" [(ngModel)]="big" />
-
-        <table data-testid="e2eScreenshotTarget">
-            <tbody>
-                @for (state of states; track state) {
-                    <tr>
-                        @for (position of positions; track position) {
-                            <td>
-                                <div>
-                                    <kbq-toggle
-                                        [disabled]="state === 'disabled'"
-                                        [labelPosition]="position"
-                                        [big]="big()"
-                                    >
-                                        Text
-                                        <kbq-hint>Caption</kbq-hint>
-                                    </kbq-toggle>
-                                </div>
-                            </td>
+        <div class="e2e-grids" data-testid="e2eScreenshotTarget">
+            @for (big of sizes; track big) {
+                <div class="e2e-grid">
+                    @for (state of states; track state) {
+                        @for (labelPosition of labelPositions; track labelPosition) {
+                            <kbq-toggle
+                                [big]="big"
+                                [color]="state === 'error' ? colors.Error : colors.Theme"
+                                [disabled]="state === 'disabled'"
+                                [labelPosition]="labelPosition"
+                            >
+                                Text
+                                <kbq-hint>Hint</kbq-hint>
+                            </kbq-toggle>
                         }
-                    </tr>
-                }
-            </tbody>
-        </table>
+                    }
+                </div>
+            }
+        </div>
     `,
     styles: `
-        td {
+        .e2e-grids {
+            display: inline-grid;
+            gap: var(--kbq-size-xl);
+            justify-items: start;
             padding: var(--kbq-size-xs);
-            width: 1px;
         }
 
-        div {
-            display: flex;
-            flex-direction: column;
-            gap: var(--kbq-size-m);
+        .e2e-grid {
+            display: inline-grid;
+            grid-template-columns: repeat(2, auto);
+            gap: var(--kbq-size-s);
+            align-items: start;
+            justify-items: start;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        'data-testid': 'e2eToggleWithTextAndCaption'
+        'data-testid': 'e2eToggleWithHint'
     }
 })
-export class E2eToggleWithTextAndCaption {
-    readonly states = ['normal', 'disabled'] as const;
-    readonly positions = ['left', 'right'] as const;
-
-    readonly big = model(false);
+export class E2eToggleWithHint {
+    // Each size gets a grid of its own: a big toggle is taller than a normal one, so the two in one row never line up.
+    protected readonly sizes = [false, true] as const;
+    protected readonly states = ['normal', 'error', 'disabled'] as const;
+    protected readonly labelPositions = ['left', 'right'] as const;
+    protected readonly colors = KbqComponentColors;
 }
 
 @Component({

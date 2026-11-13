@@ -36,7 +36,7 @@ describe(npmViewDistTag.name, () => {
         expect(spawnSyncMock).toHaveBeenCalledWith(
             'npm',
             ['view', '@koobiq/icons', 'dist-tags.latest'],
-            expect.objectContaining({ shell: true })
+            expect.objectContaining({ shell: process.platform === 'win32' })
         );
     });
 

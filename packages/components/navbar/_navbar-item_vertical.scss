@@ -52,9 +52,20 @@
         gap: var(--kbq-size-m);
 
         // The shared `.kbq-navbar-item .kbq-badge` rule takes the badge out of flow for the icon-corner
-        // overlay used when collapsed; expanded, it stays a normal flex child laid out after the title.
-        & .kbq-badge {
+        // overlay used when collapsed; expanded, a badge that is a direct child stays a normal flex child
+        // laid out after the title. Nested badges (inside a custom trigger) keep their own positioning.
+        & > .kbq-badge {
             position: static;
+        }
+
+        // A titleless item has no trailing slot for the badge: it overlays the top-right corner of the
+        // leading 40px area, matching the custom component (whose badge is `top: 0; right: 0` of its 40×40 box).
+        // Scoped to the badge as a direct child, so a badge nested inside a custom trigger keeps its own position.
+        &:not(.kbq-navbar-item_with-title) > .kbq-badge {
+            position: absolute;
+            top: 0;
+            left: calc(var(--kbq-size-xl) + var(--kbq-navbar-item-size-custom-content-width));
+            transform: translateX(-100%);
         }
 
         &.kbq-navbar-item_has-nested {
@@ -81,6 +92,41 @@
             & .kbq-navbar-item__title {
                 margin-left: 0;
                 opacity: 1;
+            }
+        }
+    }
+
+    &.kbq-navbar-item_has-custom-trigger {
+        & > :first-child {
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            flex-shrink: 0;
+
+            width: var(--kbq-navbar-item-size-custom-content-width);
+            height: var(--kbq-navbar-item-size-custom-content-height);
+        }
+
+        // Collapsed: the 40×40 host is centered in the item, so centering its content aligns the icon with a
+        // plain collapsed item. Expanded: the host starts at the item padding, so left-aligning its content
+        // puts the icon on the plain item's inline icon axis.
+        &.kbq-expanded {
+            padding-right: var(--kbq-size-xl);
+            padding-left: var(--kbq-size-xl);
+
+            & > :first-child {
+                justify-content: flex-start;
+            }
+        }
+
+        // Collapsed: the item is the badge's reference, as it is for a plain item (the collapsed `.kbq-badge`
+        // offsets are item-relative). A relative host would measure them from its own 40×40 box and shift the
+        // badge left by the host's centering offset.
+        &.kbq-collapsed {
+            & > :first-child {
+                position: static;
             }
         }
     }

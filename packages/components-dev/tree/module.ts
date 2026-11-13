@@ -216,7 +216,7 @@ export class DevApp {
 
         this.dataSource.data = this.dataSources.small;
 
-        this.filterValueChanged.pipe(debounceTime(300)).subscribe((value) => this.treeControl.filterNodes(value));
+        this.filterValueChanged.pipe(debounceTime(300)).subscribe((value) => this.treeControl.applyFilter(value));
     }
 
     onModelValueChange(values: string[]) {
@@ -264,7 +264,7 @@ export class DevApp {
             this.filterByValues.setValues(values);
         }
 
-        this.treeControl.filterNodes(this.filterValue);
+        this.treeControl.applyFilter(this.filterValue || null);
     }
 
     private transformer = (node: DevFileNode, level: number, parent: any) => {

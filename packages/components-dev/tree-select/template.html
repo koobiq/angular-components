@@ -28,9 +28,7 @@
             <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                 <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
                     <span
-                        [innerHTML]="
-                            treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value
-                        "
+                        [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"
                     ></span>
                 </kbq-tree-option>
 
@@ -41,9 +39,7 @@
                 >
                     <kbq-tree-node-toggle [node]="node" />
                     <span
-                        [innerHTML]="
-                            treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value
-                        "
+                        [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"
                     ></span>
                 </kbq-tree-option>
             </kbq-tree-selection>
@@ -83,9 +79,7 @@
             <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                 <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
                     <span
-                        [innerHTML]="
-                            treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value
-                        "
+                        [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"
                     ></span>
                 </kbq-tree-option>
 
@@ -100,9 +94,7 @@
                         [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
                     ></i>
                     <span
-                        [innerHTML]="
-                            treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value
-                        "
+                        [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"
                     ></span>
                 </kbq-tree-option>
             </kbq-tree-selection>
@@ -136,9 +128,7 @@
             <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                 <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
                     <span
-                        [innerHTML]="
-                            treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value
-                        "
+                        [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"
                     ></span>
                 </kbq-tree-option>
 
@@ -153,9 +143,7 @@
                         [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
                     ></i>
                     <span
-                        [innerHTML]="
-                            treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value
-                        "
+                        [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"
                     ></span>
                 </kbq-tree-option>
             </kbq-tree-selection>
@@ -189,9 +177,7 @@
             <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                 <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
                     <span
-                        [innerHTML]="
-                            treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value
-                        "
+                        [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"
                     ></span>
                 </kbq-tree-option>
 
@@ -206,9 +192,7 @@
                         [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
                     ></i>
                     <span
-                        [innerHTML]="
-                            treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value
-                        "
+                        [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"
                     ></span>
                 </kbq-tree-option>
             </kbq-tree-selection>
@@ -246,9 +230,7 @@
             <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                 <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
                     <span
-                        [innerHTML]="
-                            treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value
-                        "
+                        [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"
                     ></span>
                 </kbq-tree-option>
 
@@ -263,9 +245,7 @@
                         [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
                     ></i>
                     <span
-                        [innerHTML]="
-                            treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value
-                        "
+                        [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"
                     ></span>
                 </kbq-tree-option>
             </kbq-tree-selection>
@@ -314,8 +294,7 @@
                         <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
                             <span
                                 [innerHTML]="
-                                    treeControl.getViewValue(node)
-                                        | kbqHighlightBackground: treeControl.filterValue.value
+                                    treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery
                                 "
                             ></span>
                         </kbq-tree-option>
@@ -332,8 +311,7 @@
                             ></i>
                             <span
                                 [innerHTML]="
-                                    treeControl.getViewValue(node)
-                                        | kbqHighlightBackground: treeControl.filterValue.value
+                                    treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery
                                 "
                             ></span>
                         </kbq-tree-option>

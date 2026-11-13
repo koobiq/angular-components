@@ -2,7 +2,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, type DebugElement, effect, ElementRef, signal, viewChild } from '@angular/core';
+import { Component, type DebugElement, effect, ElementRef, forwardRef, signal, viewChild } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { type Observable, Subject } from 'rxjs';
@@ -29,6 +29,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import {
     KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION,
+    KBQ_NAVBAR_ITEM_TRIGGER,
     KBQ_NAVBAR_LOCALE_CONFIGURATION,
     KbqNavbar,
     KbqNavbarBrand,
@@ -36,6 +37,7 @@ import {
     KbqNavbarDivider,
     KbqNavbarFocusableItem,
     KbqNavbarItem,
+    type KbqNavbarItemTrigger,
     kbqNavbarLocaleConfigurationProvider,
     KbqNavbarModule,
     KbqNavbarRectangleElement,
@@ -133,6 +135,7 @@ describe('KbqNavbar', () => {
                 TestTwoContainersApp,
                 TestTooltipApp,
                 TestTooltipSelectorApp,
+                TestNestedTooltipDefaultsApp,
                 TestVerticalDrivenByEffectApp
             ]
         }).compileComponents();
@@ -639,6 +642,158 @@ describe('KbqNavbar', () => {
         });
     });
 
+    describe('KbqNavbarItemContent', () => {
+        const createFixture = async (): Promise<ComponentFixture<TestItemCustomContentApp>> => {
+            const fixture = TestBed.createComponent(TestItemCustomContentApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            return fixture;
+        };
+
+        const getItem = (fixture: ComponentFixture<TestItemCustomContentApp>, id: string): DebugElement =>
+            fixture.debugElement.query(By.css(`#${id}`));
+
+        it('should project marked content into the leading slot, before the title', async () => {
+            const item = getItem(await createFixture(), 'marked').nativeElement as HTMLElement;
+            const [content, container] = Array.from(item.children);
+
+            expect(content.classList).toContain('kbq-navbar-item-content');
+            expect(container.classList).toContain('kbq-navbar-item__container');
+        });
+
+        it('should project content without the marker after the title', async () => {
+            const item = getItem(await createFixture(), 'unmarked').nativeElement as HTMLElement;
+            const last = item.children[item.children.length - 1];
+
+            expect(last.classList).toContain('custom-content-logo');
+            expect(Array.from(item.children).some((child) => child.classList.contains('kbq-navbar-item-content'))).toBe(
+                false
+            );
+        });
+
+        it('should keep the content visible when the item collapses', async () => {
+            const fixture = await createFixture();
+
+            (getItem(fixture, 'marked').componentInstance as KbqNavbarItem).collapsed = true;
+            fixture.detectChanges();
+
+            const item = getItem(fixture, 'marked').nativeElement as HTMLElement;
+            const content = item.querySelector('.kbq-navbar-item-content')!;
+
+            // The collapsed presentation hides the title container; the content is not a part of it and stays.
+            expect(item.classList).toContain('kbq-navbar-item_collapsed');
+            expect(content).not.toBeNull();
+            expect(content.closest('.kbq-navbar-item__container')).toBeNull();
+        });
+    });
+
+    describe('KBQ_NAVBAR_ITEM_TRIGGER', () => {
+        const createFixture = async (): Promise<ComponentFixture<TestItemCustomTriggerApp>> => {
+            const fixture = TestBed.createComponent(TestItemCustomTriggerApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            return fixture;
+        };
+
+        const getItem = (fixture: ComponentFixture<TestItemCustomTriggerApp>) =>
+            fixture.debugElement.query(By.css('#custom-trigger'));
+
+        const getTrigger = (fixture: ComponentFixture<TestItemCustomTriggerApp>) =>
+            fixture.debugElement.query(By.directive(TestNavbarCustomTriggerComponent)).componentInstance;
+
+        it('should recognize a custom component as the nested element of the item', async () => {
+            const fixture = await createFixture();
+
+            expect((getItem(fixture).componentInstance as KbqNavbarItem).navbarFocusableItem.nestedElement).toBe(
+                getTrigger(fixture)
+            );
+            expect(getItem(fixture).nativeElement.classList).toContain('kbq-navbar-item_has-nested');
+        });
+
+        it('should not treat the item as a button, so Enter and Space do not synthesize a click', async () => {
+            const element: HTMLElement = getItem(await createFixture()).nativeElement;
+
+            expect(element.getAttribute('role')).toBeNull();
+
+            const clicked = vi.fn();
+
+            element.addEventListener('click', clicked);
+
+            dispatchKeyboardEvent(element, 'keydown', ENTER);
+            dispatchKeyboardEvent(element, 'keydown', SPACE);
+
+            expect(clicked).not.toHaveBeenCalled();
+        });
+
+        it('should forward keyboard focus into the custom component', async () => {
+            const fixture = await createFixture();
+
+            (getItem(fixture).componentInstance as KbqNavbarItem).navbarFocusableItem.focus('keyboard');
+
+            expect(getTrigger(fixture).focusViaKeyboard).toHaveBeenCalled();
+        });
+
+        it('should paint the keyboard focus ring while the custom component holds keyboard focus', async () => {
+            const fixture = await createFixture();
+            const item: HTMLElement = getItem(fixture).nativeElement;
+            const focusableItem = (getItem(fixture).componentInstance as KbqNavbarItem).navbarFocusableItem;
+
+            focusableItem.focus('keyboard');
+
+            expect(item.classList).toContain('kbq-navbar-item_keyboard-focused');
+
+            // The item hands the focus to the component: the focusout that follows stays inside the item.
+            item.dispatchEvent(
+                new FocusEvent('focusout', { bubbles: true, relatedTarget: item.querySelector('button') })
+            );
+
+            expect(item.classList).toContain('kbq-navbar-item_keyboard-focused');
+
+            item.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: document.body }));
+
+            expect(item.classList).not.toContain('kbq-navbar-item_keyboard-focused');
+        });
+
+        it('should not paint the keyboard focus ring for pointer focus', async () => {
+            const fixture = await createFixture();
+            const item: HTMLElement = getItem(fixture).nativeElement;
+
+            (getItem(fixture).componentInstance as KbqNavbarItem).navbarFocusableItem.focus('mouse');
+
+            expect(item.classList).not.toContain('kbq-navbar-item_keyboard-focused');
+        });
+
+        it('should not emit blur while the custom component holds focus', async () => {
+            const fixture = await createFixture();
+            const focusableItem = (getItem(fixture).componentInstance as KbqNavbarItem).navbarFocusableItem;
+            const onBlur = vi.fn();
+
+            focusableItem.onBlur.subscribe(onBlur);
+            getTrigger(fixture).hasFocus = true;
+
+            focusableItem.blur();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(onBlur).not.toHaveBeenCalled();
+        });
+
+        it('should not move pointer focus into the custom component', async () => {
+            const fixture = await createFixture();
+
+            (getItem(fixture).componentInstance as KbqNavbarItem).navbarFocusableItem.focus('mouse');
+
+            expect(getTrigger(fixture).focus).not.toHaveBeenCalled();
+            expect(getTrigger(fixture).focusViaKeyboard).not.toHaveBeenCalled();
+        });
+    });
+
     describe('owned tooltip', () => {
         const getOwnedTooltips = (fixture: ComponentFixture<TestTooltipApp>): KbqTooltipTrigger[] => {
             const owners = [
@@ -699,6 +854,57 @@ describe('KbqNavbar', () => {
         // so on a host that already owns a tooltip it matches the same directive twice.
         it('should reject the tooltip selector written on a navbar host', () => {
             expect(() => TestBed.createComponent(TestTooltipSelectorApp)).toThrow(/NG0309/);
+        });
+    });
+
+    describe('navbar tooltip defaults', () => {
+        const nestedTrigger = (fixture: ComponentFixture<TestNestedTooltipDefaultsApp>, selector: string) =>
+            fixture.debugElement.query(By.css(selector)).injector.get(KbqTooltipTrigger);
+
+        const panelClasses = (trigger: KbqTooltipTrigger) => trigger.createOverlay().getConfig().panelClass;
+
+        it('should inherit the navbar tooltip defaults in both orientations', () => {
+            const fixture = TestBed.createComponent(TestNestedTooltipDefaultsApp);
+
+            fixture.detectChanges();
+
+            const horizontal = nestedTrigger(fixture, '#nested-horizontal');
+            const vertical = nestedTrigger(fixture, '#nested-vertical');
+            const toggle = fixture.debugElement.query(By.directive(KbqNavbarToggle)).injector.get(KbqTooltipTrigger);
+
+            for (const trigger of [horizontal, vertical, toggle]) {
+                expect(trigger.offset).toBe(0);
+                expect(panelClasses(trigger)).toContain('kbq-tooltip-panel_horizontal-navbar');
+            }
+        });
+
+        it('should prefer an explicit nested tooltip offset and restore the inherited default', () => {
+            const fixture = TestBed.createComponent(TestNestedTooltipDefaultsApp);
+
+            fixture.componentInstance.horizontalOffset = 24;
+            fixture.componentInstance.verticalOffset = 24;
+            fixture.detectChanges();
+
+            expect(nestedTrigger(fixture, '#nested-horizontal').offset).toBe(24);
+            expect(nestedTrigger(fixture, '#nested-vertical').offset).toBe(24);
+
+            fixture.componentInstance.horizontalOffset = undefined;
+            fixture.componentInstance.verticalOffset = undefined;
+            fixture.detectChanges();
+
+            expect(nestedTrigger(fixture, '#nested-horizontal').offset).toBe(0);
+            expect(nestedTrigger(fixture, '#nested-vertical').offset).toBe(0);
+        });
+
+        it('should keep the owned tooltip defaults on an item without a navbar root', () => {
+            const fixture = TestBed.createComponent(TestNestedTooltipDefaultsApp);
+
+            fixture.detectChanges();
+
+            const item = fixture.debugElement.query(By.css('#standalone-item')).componentInstance as KbqNavbarItem;
+
+            expect(item.tooltip.offset).toBe(0);
+            expect(panelClasses(item.tooltip)).toContain('kbq-tooltip-panel_horizontal-navbar');
         });
     });
 
@@ -2640,6 +2846,56 @@ class TestBoundTabIndexApp {
 class TestItemSuffixApp {}
 
 @Component({
+    selector: 'test-item-custom-content-app',
+    imports: [KbqNavbarModule, KbqIconModule],
+    template: `
+        <kbq-navbar>
+            <kbq-navbar-container>
+                <a href="#" id="marked" kbq-navbar-item>
+                    <div kbqNavbarItemContent><div class="custom-content-logo"></div></div>
+                    <kbq-navbar-title>Orbit</kbq-navbar-title>
+                </a>
+                <a href="#" id="unmarked" kbq-navbar-item>
+                    <kbq-navbar-title>Plain item</kbq-navbar-title>
+                    <div class="custom-content-logo"></div>
+                </a>
+            </kbq-navbar-container>
+        </kbq-navbar>
+    `
+})
+class TestItemCustomContentApp {}
+
+@Component({
+    selector: 'test-navbar-custom-trigger',
+    template: `
+        <button type="button">Open</button>
+    `,
+    providers: [{ provide: KBQ_NAVBAR_ITEM_TRIGGER, useExisting: forwardRef(() => TestNavbarCustomTriggerComponent) }]
+})
+class TestNavbarCustomTriggerComponent implements KbqNavbarItemTrigger {
+    hasFocus = false;
+
+    readonly focus = vi.fn();
+
+    readonly focusViaKeyboard = vi.fn();
+}
+
+@Component({
+    selector: 'test-item-custom-trigger-app',
+    imports: [KbqNavbarModule, TestNavbarCustomTriggerComponent],
+    template: `
+        <kbq-navbar>
+            <kbq-navbar-container>
+                <kbq-navbar-item id="custom-trigger">
+                    <test-navbar-custom-trigger />
+                </kbq-navbar-item>
+            </kbq-navbar-container>
+        </kbq-navbar>
+    `
+})
+class TestItemCustomTriggerApp {}
+
+@Component({
     selector: 'test-collapse-app',
     imports: [KbqNavbarModule, KbqIconModule],
     template: `
@@ -2960,6 +3216,39 @@ class TestTooltipApp {}
     `
 })
 class TestTooltipSelectorApp {}
+
+@Component({
+    selector: 'test-nested-tooltip-defaults-app',
+    imports: [KbqNavbarModule, KbqIconModule, KbqToolTipModule],
+    template: `
+        <kbq-navbar>
+            <kbq-navbar-container>
+                <kbq-navbar-item>
+                    <button
+                        id="nested-horizontal"
+                        kbqTooltip="Horizontal"
+                        [kbqTooltipOffset]="horizontalOffset"
+                    ></button>
+                </kbq-navbar-item>
+            </kbq-navbar-container>
+        </kbq-navbar>
+
+        <kbq-vertical-navbar>
+            <kbq-navbar-container>
+                <kbq-navbar-item>
+                    <button id="nested-vertical" kbqTooltip="Vertical" [kbqTooltipOffset]="verticalOffset"></button>
+                </kbq-navbar-item>
+            </kbq-navbar-container>
+            <button kbq-navbar-toggle></button>
+        </kbq-vertical-navbar>
+
+        <kbq-navbar-item id="standalone-item" />
+    `
+})
+class TestNestedTooltipDefaultsApp {
+    horizontalOffset: number | null | undefined;
+    verticalOffset: number | null | undefined;
+}
 
 @Component({
     selector: 'test-in-overlay-layer-app',

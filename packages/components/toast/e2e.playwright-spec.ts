@@ -129,6 +129,38 @@ test.describe('KbqToastModule', () => {
             await expect(getToast(page)).toHaveCount(1);
         });
 
+        test('wraps long action labels onto a new row instead of breaking inside each link', async ({ page }) => {
+            await page.getByTestId('e2eShowLongActionsToast').click();
+            await expect(getToast(page)).toBeVisible();
+            await waitForSettledStack(page);
+
+            const layout = await page.evaluate(() => {
+                const open = document.querySelector('[data-testid="e2eToastActionOpen"]');
+                const dismiss = document.querySelector('[data-testid="e2eToastActionDismiss"]');
+
+                if (!(open instanceof HTMLElement) || !(dismiss instanceof HTMLElement)) {
+                    return null;
+                }
+
+                const lineCount = (element: HTMLElement) =>
+                    element.getBoundingClientRect().height / Number.parseFloat(getComputedStyle(element).lineHeight);
+                const first = open.getBoundingClientRect();
+                const second = dismiss.getBoundingClientRect();
+
+                return {
+                    openLines: lineCount(open),
+                    dismissLines: lineCount(dismiss),
+                    stacked: second.top >= first.bottom - 1
+                };
+            });
+
+            expect(layout).not.toBeNull();
+            // One line of text plus a little box padding, not a wrapped second line.
+            expect(layout!.openLines).toBeLessThan(1.6);
+            expect(layout!.dismissLines).toBeLessThan(1.6);
+            expect(layout!.stacked).toBe(true);
+        });
+
         test('closes a sticky toast through the close button', async ({ page }) => {
             await page.getByTestId('e2eShowStickyToast').click();
 

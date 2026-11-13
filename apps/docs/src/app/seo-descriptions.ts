@@ -40,7 +40,7 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "ru": "Хлебные крошки – это элемент навигации, который позволяет пользователю легко ориентироваться на сайте и понимать, где он находится в данный момент относительно главной страницы."
     },
     "button": {
-        "en": "koobiq buttons are available using native <button> or <a> elements.",
+        "en": "Used to trigger actions.",
         "ru": "Используется для запуска действий."
     },
     "button-group": {
@@ -240,7 +240,7 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "ru": "Поле поиска, которое разворачивается из компактной кнопки-иконки."
     },
     "search-smart": {
-        "en": "Search fields in the kit's components leave matching entirely to the consumer, and the default reach-for is substring search.",
+        "en": "Substring search works for simple queries, but it does not find a value whose query parts are separated by other characters. For example, the query 10.125 all does not find 10.125.123.0/24 - all,…",
         "ru": "Поиск подстроки подходит для простых запросов, но не находит значение, в котором части многословного запроса разделены другими символами. Например, по запросу 10.125 all он не находит…"
     },
     "select": {
@@ -344,7 +344,7 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "ru": "Подключение шрифтов, какие источники подходят, текстовые классы и замена шрифтов."
     },
     "username": {
-        "en": "The pattern is used when the interface refers to an internal user.",
+        "en": "The component displays user information in a consistent style and builds the label from the profile data, following the selected display mode and the compact option.",
         "ru": "Компонент отображает информацию о пользователе в едином стиле и строит надпись из данных профиля, учитывая выбранный режим отображения и параметр компактности."
     },
     "validation": {

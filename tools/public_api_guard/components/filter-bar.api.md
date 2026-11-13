@@ -409,6 +409,7 @@ export interface KbqPipe {
     search?: boolean;
     // (undocumented)
     selectAll?: boolean;
+    selectAllCounter?: boolean;
     selectedAllEqualsSelectedNothing?: boolean;
     // (undocumented)
     type: KbqPipeType;
@@ -602,6 +603,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     readonly searchControl: FormControl<string | null>;
     readonly searchTokens: Signal<string[]>;
     readonly select: Signal<KbqSelect>;
+    protected get selectAllCount(): number;
     selectAllHandler: (event: KeyboardEvent) => void;
     get selected(): KbqSelectValue[] | null;
     // (undocumented)
@@ -642,6 +644,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     searchKeydownHandler(): void;
     // (undocumented)
     get selectAllCheckboxState(): KbqPseudoCheckboxState;
+    protected get selectAllCount(): number;
     selectAllHandler: (event: KeyboardEvent) => void;
     get selected(): KbqSelectValue[] | null;
     // (undocumented)

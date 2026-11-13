@@ -20,7 +20,23 @@ export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
 
     filterModel: SelectionModel<T> = new SelectionModel<T>(true);
 
+    /**
+     * Stream with the filter query or result. Published for backward compatibility.
+     *
+     * @deprecated Use `filterQuery` for the query string and `filterModel` for the filter state. Will be removed in 22.0.0.
+     */
     filterValue = new BehaviorSubject<T[] | string | null>('');
+
+    /**
+     * The query of the active filter, or `null` when no filter is active. Defaults to `null`.
+     * Set by `FlatTreeControl.applyFilter`; stays `null` on controls without filtering, such as `NestedTreeControl`.
+     */
+    filterQuery: string | null = null;
+
+    /** Whether a filter is active: the filter model holds at least one node, or a query is set. */
+    get hasActiveFilter(): boolean {
+        return this.filterModel.selected.length > 0 || this.filterQuery != null;
+    }
 
     /**
      * Get depth of a given data node, return the level number. This is for flat tree node: `FlatTreeControl` sets
@@ -48,7 +64,7 @@ export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
 
     /** Toggles one single data node's expanded/collapsed state. */
     toggle(dataNode: T): void {
-        if (this.filterValue.value?.length) {
+        if (this.hasActiveFilter) {
             return;
         }
 
@@ -57,7 +73,7 @@ export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
 
     /** Expands one single data node. */
     expand(dataNode: T): void {
-        if (this.filterValue.value?.length) {
+        if (this.hasActiveFilter) {
             return;
         }
 
@@ -66,7 +82,7 @@ export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
 
     /** Collapses one single data node. */
     collapse(dataNode: T): void {
-        if (this.filterValue.value?.length) {
+        if (this.hasActiveFilter) {
             return;
         }
 

@@ -41,7 +41,7 @@ import {
     kbqOptionalNumberAttribute,
     kbqQueryListFrom
 } from '@koobiq/components/core';
-import { KbqError, KbqHint } from '@koobiq/components/form-field';
+import { KbqError, KbqHint, kbqHintParentFactoryProvider } from '@koobiq/components/form-field';
 
 /** Change event object emitted by KbqRadio. */
 export class KbqRadioChange {
@@ -99,7 +99,14 @@ export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: Provider = {
             </span>
         }
     `,
-    providers: [KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR],
+    providers: [
+        KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR,
+        kbqHintParentFactoryProvider(() => {
+            const group = inject(KbqRadioGroup);
+
+            return { compact: computed(() => !group.big()), disabled: computed(() => group.disabled) };
+        })
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -499,6 +506,13 @@ export class KbqRadioGroup
     selector: 'kbq-radio-button',
     templateUrl: './radio.component.html',
     styleUrls: ['./radio.scss', './radio-tokens.scss'],
+    providers: [
+        kbqHintParentFactoryProvider(() => {
+            const button = inject(KbqRadioButton);
+
+            return { compact: computed(() => !button.radioGroup?.big()), disabled: computed(() => button.disabled) };
+        })
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

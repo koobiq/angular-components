@@ -223,8 +223,11 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
 
     /** Measured once the textarea has been rendered; the growth arithmetic is in terms of these. */
     private readonly lineHeight = signal(0);
-    private readonly minHeight = signal(0);
+    private readonly verticalPadding = signal(0);
     private readonly rowsCount = signal(0);
+
+    /** The `min-height` growth wrote last, so that turning growth off removes it and keeps a consumer's own. */
+    private grownMinHeight = '';
 
     constructor() {
         const inputValueAccessor = inject(KBQ_TEXTAREA_VALUE_ACCESSOR, { optional: true, self: true });
@@ -300,10 +303,9 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
 
         void Promise.resolve().then(() => {
             const styles = this.window.getComputedStyle(this.elementRef.nativeElement);
-            const lineHeight = parseInt(styles.lineHeight!, 10);
 
-            this.lineHeight.set(lineHeight);
-            this.minHeight.set(lineHeight + parseInt(styles.paddingTop!, 10) + parseInt(styles.paddingBottom!, 10));
+            this.lineHeight.set(parseInt(styles.lineHeight!, 10));
+            this.verticalPadding.set(parseInt(styles.paddingTop!, 10) + parseInt(styles.paddingBottom!, 10));
         });
 
         setTimeout(() => this.grow(), 0);
@@ -341,11 +343,21 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
      */
     protected grow(): void {
         // Every call is deferred, so it can land once the textarea is destroyed and has no parent to measure in.
-        if (!this.isBrowser || this.destroyRef.destroyed || !this.canGrow()) return;
+        if (!this.isBrowser || this.destroyRef.destroyed) return;
+
+        const textarea = this.elementRef.nativeElement;
+
+        // A resizable textarea ignores maxRows and takes its floor from the stylesheet, not from the grown height.
+        if (!this.canGrow()) {
+            if (textarea.style.minHeight === this.grownMinHeight) textarea.style.minHeight = '';
+
+            this.grownMinHeight = '';
+            this.rowsCount.set(0);
+
+            return;
+        }
 
         this.ngZone.runOutsideAngular(() => {
-            const textarea = this.elementRef.nativeElement;
-
             const clone = textarea.cloneNode(false) as HTMLTextAreaElement;
 
             this.renderer.appendChild(this.renderer.parentNode(textarea), clone);
@@ -356,7 +368,11 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
             clone.style.minHeight = '0'; // this line is important to height recalculation
 
             const lineHeight = this.lineHeight();
-            const height = Math.max(this.minHeight(), +clone.scrollHeight + diff + this.resolvedFreeRowsHeight());
+            const verticalPadding = this.verticalPadding();
+            const height = Math.max(
+                lineHeight + verticalPadding,
+                +clone.scrollHeight + diff + this.resolvedFreeRowsHeight()
+            );
 
             clone.remove();
 
@@ -365,8 +381,9 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
             const maxRows = this.maxRows();
 
             textarea.style.minHeight = coerceCssPixelValue(
-                maxRows !== undefined && this.maxRowLimitReached() ? maxRows * lineHeight : height
+                maxRows !== undefined && this.maxRowLimitReached() ? maxRows * lineHeight + verticalPadding : height
             );
+            this.grownMinHeight = textarea.style.minHeight;
         });
     }
 

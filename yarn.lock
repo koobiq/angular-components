@@ -3656,13 +3656,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/date-formatter@npm:^3.5.1":
-  version: 3.5.1
-  resolution: "@koobiq/date-formatter@npm:3.5.1"
+"@koobiq/date-formatter@npm:^3.7.0":
+  version: 3.7.0
+  resolution: "@koobiq/date-formatter@npm:3.7.0"
   peerDependencies:
     "@koobiq/date-adapter": ^3.0.0
     "@messageformat/core": ^3.2.0
-  checksum: 10c0/227b702082146f5a3826c44b073be87de13fb3001dde712769e33853fae45a3ce9a14b2797f238a1da411bd04cf2d28cb746a7accb8c2dde9ec93dc893123115
+  checksum: 10c0/2cb7ef8c3c276b2f2a3a9260005851645fc69050fb843f7b93a1811ab0b6d6bb0793da2774e49b01a32bc17b1a3ae47cbc1c9764ed201e396562b85db21d1d17
   languageName: node
   linkType: hard
 
@@ -11060,7 +11060,7 @@ __metadata:
     "@fontsource/jetbrains-mono": "npm:^5.3.0"
     "@koobiq/ag-grid-angular-theme": "npm:^34.7.0"
     "@koobiq/date-adapter": "npm:^3.5.1"
-    "@koobiq/date-formatter": "npm:^3.5.1"
+    "@koobiq/date-formatter": "npm:^3.7.0"
     "@koobiq/design-tokens": "npm:^4.1.0"
     "@koobiq/icons": "npm:^12.5.0"
     "@koobiq/luxon-date-adapter": "npm:^3.5.1"

@@ -1,6 +1,11 @@
-﻿import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceElement } from '@angular/cdk/coercion';
-import { type FlexibleConnectedPositionStrategy, Overlay, OverlayContainer } from '@angular/cdk/overlay';
+import {
+    type ConnectedOverlayPositionChange,
+    type FlexibleConnectedPositionStrategy,
+    Overlay,
+    OverlayContainer
+} from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { Component, Directive, ElementRef, viewChild } from '@angular/core';
 import { type ComponentFixture, inject, TestBed } from '@angular/core/testing';
@@ -16,6 +21,7 @@ import {
     ESCAPE,
     KBQ_PARENT_POPUP,
     type KbqParentPopup,
+    type KbqPopUpPlacementValues,
     type KbqSiblingPopup,
     kbqSiblingPopupProvider,
     TAB
@@ -25,6 +31,7 @@ import { KbqLink } from '@koobiq/components/link';
 import { KbqModalService } from '@koobiq/components/modal';
 import { KBQ_TOOLTIP_INSTANT_SHOW_WINDOW, type KbqCaretVerticalAnchor, KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
+import { KBQ_TOOLTIP_DEFAULT_OPTIONS } from './tooltip-config';
 import { KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, KbqTooltipRegistry } from './tooltip-registry';
 
 // KbqPopUpTrigger default enter delay (400ms) plus a buffer for the deferred show.
@@ -57,6 +64,25 @@ async function showByHover<T>(componentFixture: ComponentFixture<T>, element: HT
     componentFixture.detectChanges();
 }
 
+/**
+ * Fakes the panel's layout box for `KbqPopUp.updateArrowPosition`: the `offset*` reads are the only layout
+ * measurements unaffected by the entrance `scale(...)` transform, which is what the pop-up measures.
+ */
+function mockPanelLayout(element: HTMLElement, rect: { left: number; top: number; width: number; height: number }) {
+    const { left, top, width, height } = rect;
+
+    Object.defineProperties(element, {
+        offsetWidth: { configurable: true, value: width },
+        offsetHeight: { configurable: true, value: height },
+        offsetLeft: { configurable: true, value: left },
+        offsetTop: { configurable: true, value: top },
+        offsetParent: {
+            configurable: true,
+            value: { getBoundingClientRect: () => new DOMRect() } as unknown as HTMLElement
+        }
+    });
+}
+
 /** Opens a tooltip by keyboard focus — a non-keyboard focus origin is ignored by the trigger. */
 async function showByKeyboardFocus<T>(componentFixture: ComponentFixture<T>, element: HTMLElement) {
     dispatchKeyboardEvent(document, 'keydown', TAB);
@@ -77,7 +103,8 @@ describe('KbqTooltip', () => {
                 KbqTooltipTestWrapperComponent,
                 KbqTooltipDisabledComponent,
                 KbqTooltipWithTemplateRefContent,
-                TooltipWithSiblingPopup
+                TooltipWithSiblingPopup,
+                TooltipWithDefaultOptions
             ]
         }).compileComponents();
     });
@@ -1403,6 +1430,435 @@ describe('KbqTooltip', () => {
 
             await vi.runOnlyPendingTimersAsync();
         });
+
+        it('should recalculate arrow centering from visible geometry on initial show', async () => {
+            vi.useFakeTimers();
+
+            const triggerElement = component.trigger().nativeElement;
+
+            triggerElement.getBoundingClientRect = () => {
+                if (!triggerElement.isConnected) return new DOMRect();
+
+                return {
+                    left: 100,
+                    top: 100,
+                    right: 300,
+                    bottom: 140,
+                    width: 200,
+                    height: 40,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            component.arrow = true;
+            component.arrowCentered = true;
+            component.placement = 'bottomRight';
+            fixture.detectChanges();
+
+            dispatchMouseEvent(triggerElement, 'mouseenter');
+            fixture.detectChanges();
+
+            const tooltip = tooltipElement()!;
+
+            tooltip.getBoundingClientRect = () => {
+                if (!tooltip.isConnected || !tooltip.classList.contains('kbq-tooltip_visible')) return new DOMRect();
+
+                return {
+                    left: 100,
+                    top: 100,
+                    right: 400,
+                    bottom: 260,
+                    width: 300,
+                    height: 160,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            mockPanelLayout(tooltip, { left: 100, top: 100, width: 300, height: 160 });
+
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(0);
+            fixture.detectChanges();
+
+            expect(tooltip.classList).toContain('kbq-tooltip_visible');
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('-181px');
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-y')).toBe('0px');
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should keep the centered arrow shift stable through the entrance animation', async () => {
+            vi.useFakeTimers();
+
+            const triggerElement = component.trigger().nativeElement;
+
+            triggerElement.getBoundingClientRect = () => {
+                if (!triggerElement.isConnected) return new DOMRect();
+
+                return {
+                    left: 100,
+                    top: 100,
+                    right: 300,
+                    bottom: 140,
+                    width: 200,
+                    height: 40,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            component.arrow = true;
+            component.arrowCentered = true;
+            component.placement = 'bottomRight';
+            fixture.detectChanges();
+
+            dispatchMouseEvent(triggerElement, 'mouseenter');
+            fixture.detectChanges();
+
+            const tooltip = tooltipElement()!;
+            let animationScale = true;
+            let finishAnimation!: () => void;
+            const animationFinished = new Promise<void>((resolve) => (finishAnimation = resolve));
+
+            tooltip.getAnimations = () =>
+                [
+                    {
+                        finished: animationFinished,
+                        effect: { getComputedTiming: () => ({ endTime: 200 }) }
+                    }
+                ] as unknown as Animation[];
+
+            // The panel reports a degenerate box while the entrance animation scales it; the laid-out box
+            // still comes from the offset* reads.
+            tooltip.getBoundingClientRect = () => {
+                if (!tooltip.isConnected || animationScale) return new DOMRect();
+
+                return {
+                    left: 100,
+                    top: 100,
+                    right: 400,
+                    bottom: 260,
+                    width: 300,
+                    height: 160,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            mockPanelLayout(tooltip, { left: 100, top: 100, width: 300, height: 160 });
+
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
+            fixture.detectChanges();
+
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('-181px');
+
+            animationScale = false;
+            finishAnimation();
+            await animationFinished;
+            await vi.advanceTimersByTimeAsync(0);
+            fixture.detectChanges();
+
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('-181px');
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-y')).toBe('0px');
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should measure the panel box without the entrance scale transform', async () => {
+            vi.useFakeTimers();
+
+            const triggerElement = component.trigger().nativeElement;
+
+            triggerElement.getBoundingClientRect = () => {
+                if (!triggerElement.isConnected) return new DOMRect();
+
+                return {
+                    left: 100,
+                    top: 100,
+                    right: 300,
+                    bottom: 140,
+                    width: 200,
+                    height: 40,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            component.arrow = true;
+            component.arrowCentered = true;
+            component.placement = 'bottomRight';
+            fixture.detectChanges();
+
+            await showByHover(fixture, triggerElement);
+
+            const tooltip = tooltipElement()!;
+
+            // From attach until the entrance animation ends the panel carries `transform: scale(...)` —
+            // `scale(0)` at the start — so `getBoundingClientRect` reports a degenerate box. The shift must
+            // come from the laid-out box instead.
+            tooltip.getBoundingClientRect = () => new DOMRect();
+            mockPanelLayout(tooltip, { left: 100, top: 100, width: 300, height: 160 });
+
+            const bottomRight = (
+                component.tooltipTrigger().createOverlay().getConfig()
+                    .positionStrategy as FlexibleConnectedPositionStrategy
+            ).positions[0];
+
+            component
+                .tooltipTrigger()
+                .onPositionChange({ connectionPair: bottomRight } as ConnectedOverlayPositionChange);
+
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('-181px');
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-y')).toBe('0px');
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should support arrow centering without changing the panel placement', async () => {
+            vi.useFakeTimers();
+
+            const triggerElement = component.trigger().nativeElement;
+
+            triggerElement.getBoundingClientRect = () => {
+                if (!triggerElement.isConnected) return new DOMRect();
+
+                return {
+                    left: 100,
+                    top: 100,
+                    right: 300,
+                    bottom: 140,
+                    width: 200,
+                    height: 40,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            component.arrow = true;
+            component.arrowCentered = true;
+            component.placement = 'bottomRight';
+            fixture.detectChanges();
+
+            await showByHover(fixture, triggerElement);
+
+            const positions = () =>
+                (
+                    component.tooltipTrigger().createOverlay().getConfig()
+                        .positionStrategy as FlexibleConnectedPositionStrategy
+                ).positions;
+
+            expect(positions().some((position) => 'offsetX' in position || 'offsetY' in position)).toBe(false);
+
+            const tooltip = tooltipElement()!;
+
+            tooltip.getBoundingClientRect = () => {
+                if (!tooltip.isConnected) return new DOMRect();
+
+                return {
+                    left: 100,
+                    top: 100,
+                    right: 400,
+                    bottom: 260,
+                    width: 300,
+                    height: 160,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            mockPanelLayout(tooltip, { left: 100, top: 100, width: 300, height: 160 });
+
+            const bottomRight = positions()[0];
+
+            component
+                .tooltipTrigger()
+                .onPositionChange({ connectionPair: bottomRight } as ConnectedOverlayPositionChange);
+
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('-181px');
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-y')).toBe('0px');
+
+            component.arrowCentered = false;
+            fixture.detectChanges();
+            component
+                .tooltipTrigger()
+                .onPositionChange({ connectionPair: bottomRight } as ConnectedOverlayPositionChange);
+
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('');
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-y')).toBe('');
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should keep legacy narrow-trigger positioning while centering the arrow', async () => {
+            vi.useFakeTimers();
+
+            const triggerElement = component.trigger().nativeElement;
+
+            triggerElement.getBoundingClientRect = () => {
+                if (!triggerElement.isConnected) return new DOMRect();
+
+                return {
+                    left: 100,
+                    top: 100,
+                    right: 116,
+                    bottom: 140,
+                    width: 16,
+                    height: 40,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            component.arrow = true;
+            component.arrowCentered = true;
+            component.placement = 'bottomLeft';
+            fixture.detectChanges();
+
+            await showByHover(fixture, triggerElement);
+
+            const positions = () =>
+                (
+                    component.tooltipTrigger().createOverlay().getConfig()
+                        .positionStrategy as FlexibleConnectedPositionStrategy
+                ).positions;
+
+            expect(positions()[0].offsetX).toBe(-9);
+
+            const tooltip = tooltipElement()!;
+
+            tooltip.getBoundingClientRect = () => {
+                if (!tooltip.isConnected) return new DOMRect();
+
+                return {
+                    left: 91,
+                    top: 100,
+                    right: 391,
+                    bottom: 260,
+                    width: 300,
+                    height: 160,
+                    x: 91,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            mockPanelLayout(tooltip, { left: 91, top: 100, width: 300, height: 160 });
+
+            component.tooltipTrigger().onPositionChange({
+                connectionPair: positions()[0]
+            } as ConnectedOverlayPositionChange);
+
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('0px');
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-y')).toBe('0px');
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should center the arrow within a narrow panel when arrow centering is enabled', async () => {
+            vi.useFakeTimers();
+
+            component.arrow = true;
+            component.arrowCentered = true;
+            component.placement = 'bottomRight';
+            fixture.detectChanges();
+
+            await showByHover(fixture, component.trigger().nativeElement);
+
+            const tooltip = tooltipElement()!;
+
+            tooltip.getBoundingClientRect = () => {
+                if (!tooltip.isConnected) return new DOMRect();
+
+                return {
+                    left: 100,
+                    top: 100,
+                    right: 130,
+                    bottom: 260,
+                    width: 30,
+                    height: 160,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            mockPanelLayout(tooltip, { left: 100, top: 100, width: 30, height: 160 });
+
+            const strategy = component.tooltipTrigger().createOverlay().getConfig()
+                .positionStrategy as FlexibleConnectedPositionStrategy;
+
+            component.tooltipTrigger().onPositionChange({
+                connectionPair: strategy.positions[0]
+            } as ConnectedOverlayPositionChange);
+
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('4px');
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-y')).toBe('0px');
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should remove the arrow centering shift when the arrow is hidden', async () => {
+            vi.useFakeTimers();
+
+            component.arrow = true;
+            component.arrowCentered = true;
+            component.placement = 'bottomRight';
+            fixture.detectChanges();
+
+            await showByHover(fixture, component.trigger().nativeElement);
+
+            const tooltip = tooltipElement()!;
+
+            tooltip.getBoundingClientRect = () => {
+                if (!tooltip.isConnected) return new DOMRect();
+
+                return {
+                    left: 100,
+                    top: 100,
+                    right: 400,
+                    bottom: 260,
+                    width: 300,
+                    height: 160,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            mockPanelLayout(tooltip, { left: 100, top: 100, width: 300, height: 160 });
+
+            const strategy = component.tooltipTrigger().createOverlay().getConfig()
+                .positionStrategy as FlexibleConnectedPositionStrategy;
+            const bottomRight = strategy.positions[0];
+
+            component
+                .tooltipTrigger()
+                .onPositionChange({ connectionPair: bottomRight } as ConnectedOverlayPositionChange);
+
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).not.toBe('');
+
+            component.arrow = false;
+            fixture.detectChanges();
+            component
+                .tooltipTrigger()
+                .onPositionChange({ connectionPair: bottomRight } as ConnectedOverlayPositionChange);
+
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('');
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-y')).toBe('');
+
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('kbqTooltipColor', () => {
@@ -1508,6 +1964,39 @@ describe('KbqTooltip', () => {
             await showByHover(fixture, component.trigger().nativeElement);
 
             expect(setOrigin).toHaveBeenCalledWith(expect.objectContaining({ y: expect.any(Number) }));
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should use the pointer origin for arrow centering when relativeToPointer is enabled', async () => {
+            vi.useFakeTimers();
+
+            const trigger = component.tooltipTrigger();
+            const triggerElement = component.trigger().nativeElement;
+
+            triggerElement.getBoundingClientRect = () =>
+                ({
+                    left: 100,
+                    top: 100,
+                    right: 300,
+                    bottom: 140,
+                    width: 200,
+                    height: 40,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                }) as DOMRect;
+            trigger.arrowCentered = true;
+
+            dispatchMouseEvent(triggerElement, 'mouseenter', 260, 130);
+
+            expect(trigger.getArrowPoint()).toEqual({ x: 260, y: 100 });
+
+            trigger.relativeToCaret = true;
+            trigger['applyRelativeToCaret']();
+            trigger.relativeToCaret = false;
+
+            expect(trigger.getArrowPoint()).toEqual({ x: 200, y: 120 });
 
             await vi.runOnlyPendingTimersAsync();
         });
@@ -1714,6 +2203,20 @@ describe('KbqTooltip', () => {
             expect(trigger['getAnchorSize']().width).toBe(300);
         });
 
+        it('should use the caret origin for arrow centering instead of the host center', () => {
+            const trigger = component.fieldTooltip();
+            const field = component.field().nativeElement;
+
+            field.getBoundingClientRect = () =>
+                ({ left: 0, top: 0, width: 300, height: 200, right: 300, bottom: 200, x: 0, y: 0 }) as DOMRect;
+            Object.defineProperty(trigger, 'caretOrigin', {
+                value: { x: 160, y: 90, width: 0, height: 20 }
+            });
+            trigger.arrowCentered = true;
+
+            expect(trigger.getArrowPoint()).toEqual({ x: 160, y: 100 });
+        });
+
         describe('kbqRelativeToCaretVertical', () => {
             /** jsdom lays nothing out; the field box is what tells the two vertical anchors apart. */
             const setFieldBox = (element: HTMLElement, top: number, height: number) => {
@@ -1837,7 +2340,34 @@ describe('KbqTooltip', () => {
 
             const host = component.emptyTrigger().nativeElement;
             const trigger = component.enabledTooltip();
+            const directiveHost = trigger.getNativeElement();
 
+            directiveHost.getBoundingClientRect = () =>
+                ({
+                    left: 0,
+                    top: 0,
+                    right: 100,
+                    bottom: 20,
+                    width: 100,
+                    height: 20,
+                    x: 0,
+                    y: 0,
+                    toJSON: () => ({})
+                }) as DOMRect;
+            host.getBoundingClientRect = () =>
+                ({
+                    left: 200,
+                    top: 100,
+                    right: 300,
+                    bottom: 140,
+                    width: 100,
+                    height: 40,
+                    x: 200,
+                    y: 100,
+                    toJSON: () => ({})
+                }) as DOMRect;
+
+            trigger.arrowCentered = true;
             trigger.createOverlay();
 
             const setOrigin = vi.spyOn(trigger['strategy']!, 'setOrigin');
@@ -1847,6 +2377,8 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
 
             expect(setOrigin).toHaveBeenCalledWith(host);
+            expect(trigger.getNativeElement()).toBe(host);
+            expect(trigger.getArrowPoint()).toEqual({ x: 250, y: 120 });
 
             trigger.hide(0);
             await vi.runOnlyPendingTimersAsync();
@@ -1903,6 +2435,41 @@ describe('KbqTooltip', () => {
             dispatchMouseEvent(cell, 'mouseover');
             cell.removeEventListener('mouseover', listener);
         };
+
+        it('should use the pointer origin for arrow centering in showForMouseEvent', async () => {
+            vi.useFakeTimers();
+
+            const trigger = component.tooltip();
+            const cellA = component.cellA().nativeElement;
+
+            cellA.getBoundingClientRect = () => {
+                if (!cellA.isConnected) return new DOMRect();
+
+                return {
+                    left: 300,
+                    top: 200,
+                    right: 400,
+                    bottom: 240,
+                    width: 100,
+                    height: 40,
+                    x: 300,
+                    y: 200,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            trigger.arrowCentered = true;
+
+            const listener = (event: Event) => trigger.showForMouseEvent(event as MouseEvent);
+
+            cellA.addEventListener('mouseover', listener);
+            dispatchMouseEvent(cellA, 'mouseover', 320, 230);
+            cellA.removeEventListener('mouseover', listener);
+
+            expect(trigger.getArrowPoint()).toEqual({ x: 320, y: 200 });
+
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         it('should move aria-describedby onto the element the tooltip is re-anchored to', async () => {
             vi.useFakeTimers();
@@ -2306,6 +2873,37 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
 
             expect(overlayContainerElement.textContent).not.toContain('Visible');
+        });
+    });
+
+    describe('default options', () => {
+        let fixture: ComponentFixture<TooltipWithDefaultOptions>;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TooltipWithDefaultOptions);
+            fixture.detectChanges();
+        });
+
+        it('should inherit the offset and panel class from the default options', () => {
+            const trigger = fixture.componentInstance.trigger();
+
+            expect(trigger.offset).toBe(0);
+            expect(trigger.createOverlay().getConfig().panelClass).toContain('kbq-tooltip-panel_horizontal-navbar');
+        });
+
+        it('should prefer an explicit offset and restore the inherited offset for undefined', () => {
+            const component = fixture.componentInstance;
+            const trigger = component.trigger();
+
+            component.offset = 24;
+            fixture.detectChanges();
+
+            expect(trigger.offset).toBe(24);
+
+            component.offset = undefined;
+            fixture.detectChanges();
+
+            expect(trigger.offset).toBe(0);
         });
     });
 });
@@ -2717,14 +3315,44 @@ class TooltipLeaveDelay {
     selector: 'tooltip-arrow-and-offset',
     imports: [KbqToolTipModule],
     template: `
-        <span #trigger kbqTooltip="ARROW" [kbqTooltipArrow]="arrow" [kbqTooltipOffset]="offset">Show</span>
+        <span
+            #trigger
+            kbqTooltip="ARROW"
+            [kbqTooltipArrow]="arrow"
+            [kbqTooltipArrowCentered]="arrowCentered"
+            [kbqTooltipOffset]="offset"
+            [kbqPlacement]="placement"
+        >
+            Show
+        </span>
     `
 })
 class TooltipArrowAndOffset {
     readonly trigger = viewChild.required<ElementRef>('trigger');
+    readonly tooltipTrigger = viewChild.required('trigger', { read: KbqTooltipTrigger });
 
     arrow = false;
+    arrowCentered = false;
     offset: number | null = null;
+    placement: KbqPopUpPlacementValues = 'top';
+}
+
+@Component({
+    selector: 'tooltip-with-default-options',
+    imports: [KbqToolTipModule],
+    template: `
+        <button kbqTooltip="configured" [kbqTooltipOffset]="offset">trigger</button>
+    `,
+    providers: [
+        {
+            provide: KBQ_TOOLTIP_DEFAULT_OPTIONS,
+            useValue: { offset: 0, panelClass: 'kbq-tooltip-panel_horizontal-navbar' }
+        }
+    ]
+})
+class TooltipWithDefaultOptions {
+    offset: number | null | undefined = undefined;
+    readonly trigger = viewChild.required(KbqTooltipTrigger);
 }
 
 @Component({

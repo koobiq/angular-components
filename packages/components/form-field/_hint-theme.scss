@@ -9,6 +9,21 @@
 }
 
 @mixin kbq-hint-theme() {
+    // `:where` keeps the default color below a class that a consumer puts on the hint.
+    :where(.kbq-hint) {
+        color: var(--kbq-hint-text);
+    }
+
+    // A disabled control greys out what the hint's `color` leaves uncolored. The colors come after this rule with the
+    // same specificity, so a color set on the hint wins over the state of its control.
+    .kbq-hint.kbq-hint_disabled {
+        color: var(--kbq-hint-states-disabled-text);
+
+        & .kbq-icon.kbq-empty {
+            color: var(--kbq-hint-states-disabled-icon);
+        }
+    }
+
     .kbq-hint {
         &.kbq-contrast-fade {
             @include -kbq-hint-color(fill-text-on, fade-contrast);
@@ -43,6 +58,11 @@
                 @include -kbq-hint-color(fill-text-off, error);
             }
         }
+    }
+
+    // `fillTextOff` leaves the text uncolored, so a disabled control greys it out and the icon keeps the color.
+    .kbq-hint.kbq-hint_disabled.kbq-hint_fill-text-off {
+        color: var(--kbq-hint-states-disabled-text);
     }
 }
 

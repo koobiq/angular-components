@@ -422,12 +422,12 @@ describe('KbqTreeSelection', () => {
 
                 expect(nodes.length).toBe(expandedNodesCountBeforeFilter);
 
-                component.treeControl.filterNodes('app');
+                component.treeControl.applyFilter('app');
                 await vi.advanceTimersByTimeAsync(0);
                 nodes = getNodes(treeElement);
                 expect(nodes.length).toBe(5);
 
-                component.treeControl.filterNodes('');
+                component.treeControl.applyFilter('');
                 await vi.advanceTimersByTimeAsync(0);
                 nodes = getNodes(treeElement);
                 expect(nodes.length).toBe(expandedNodesCountBeforeFilter);
@@ -1372,18 +1372,18 @@ describe('KbqTreeSelection', () => {
 
                 expect(nodes.length).toBe(5);
 
-                component.treeControl.filterNodes('app');
+                component.treeControl.applyFilter('app');
                 await vi.advanceTimersByTimeAsync(0);
                 nodes = getNodes(treeElement);
                 expect(nodes.length).toBe(5);
 
-                component.treeControl.filterNodes('Documents');
+                component.treeControl.applyFilter('Documents');
                 await vi.advanceTimersByTimeAsync(0);
                 fixture.detectChanges();
                 nodes = getNodes(treeElement);
                 expect(nodes.length).toBe(1);
 
-                component.treeControl.filterNodes('condition for filter all nodes');
+                component.treeControl.applyFilter('condition for filter all nodes');
                 await vi.advanceTimersByTimeAsync(0);
                 nodes = getNodes(treeElement);
                 expect(nodes.length).toBe(0);
@@ -1396,7 +1396,7 @@ describe('KbqTreeSelection', () => {
 
                 expect(nodes.length).toBe(5);
 
-                component.treeControl.filterNodes('Sun');
+                component.treeControl.applyFilter('Sun');
                 await vi.advanceTimersByTimeAsync(0);
                 nodes = getNodes(treeElement);
 
@@ -1419,13 +1419,13 @@ describe('KbqTreeSelection', () => {
 
                 expect(nodes.length).toBe(initialNodesCount);
 
-                component.treeControl.filterNodes('app');
+                component.treeControl.applyFilter('app');
                 fixture.detectChanges();
                 await vi.advanceTimersByTimeAsync(0);
                 nodes = getNodes(treeElement);
                 expect(nodes.length).toBe(5);
 
-                component.treeControl.filterNodes('');
+                component.treeControl.applyFilter('');
                 await vi.advanceTimersByTimeAsync(0);
                 nodes = getNodes(treeElement);
                 expect(nodes.length).toBe(initialNodesCount);
@@ -1463,7 +1463,7 @@ describe('KbqTreeSelection', () => {
                 fixture.detectChanges();
                 await vi.runOnlyPendingTimersAsync();
 
-                component.treeControl.filterNodes(null);
+                component.treeControl.applyFilter(null);
                 fixture.detectChanges();
                 await vi.advanceTimersByTimeAsync(0);
                 nodes = getNodes(treeElement);
@@ -1494,7 +1494,7 @@ describe('KbqTreeSelection', () => {
 
                 component.filterByValues.setValues(values);
 
-                component.treeControl.filterNodes(null);
+                component.treeControl.applyFilter(null);
                 await vi.advanceTimersByTimeAsync(0);
                 nodes = getNodes(treeElement);
 
@@ -1509,7 +1509,7 @@ describe('KbqTreeSelection', () => {
                 fixture.detectChanges();
                 await vi.advanceTimersByTimeAsync(0);
 
-                component.treeControl.filterNodes(null);
+                component.treeControl.applyFilter(null);
                 await vi.advanceTimersByTimeAsync(0);
                 const nodes = getNodes(treeElement);
 
@@ -1519,13 +1519,13 @@ describe('KbqTreeSelection', () => {
             it('should apply different filters together', async () => {
                 vi.useFakeTimers();
 
-                component.treeControl.filterNodes('app');
+                component.treeControl.applyFilter('app');
                 await vi.advanceTimersByTimeAsync(0);
                 const filteredNodesLengthOnlyByText = component
                     .tree()
                     .renderedOptions.map((option) => option.value).length;
 
-                component.treeControl.filterNodes(null);
+                component.treeControl.applyFilter(null);
                 fixture.detectChanges();
                 await vi.advanceTimersByTimeAsync(0);
 
@@ -1533,7 +1533,7 @@ describe('KbqTreeSelection', () => {
                 fixture.detectChanges();
                 await vi.advanceTimersByTimeAsync(0);
 
-                component.treeControl.filterNodes(null);
+                component.treeControl.applyFilter(null);
                 await vi.advanceTimersByTimeAsync(0);
 
                 expect(getNodes(treeElement).length).not.toEqual(filteredNodesLengthOnlyByText);
@@ -1830,7 +1830,7 @@ describe('KbqTreeSelection', () => {
             it('should select only the matches while a filter is active', async () => {
                 vi.useFakeTimers();
 
-                component.treeControl.filterNodes('Sun');
+                component.treeControl.applyFilter('Sun');
                 await vi.advanceTimersByTimeAsync(0);
                 fixture.detectChanges();
 
@@ -1839,6 +1839,20 @@ describe('KbqTreeSelection', () => {
 
                 // `FilterParentsForNodes` keeps the match's ancestors visible, so they take part too.
                 expect(component.modelValue).toEqual(['Pictures', 'Sun']);
+            });
+
+            it('should select nothing on CTRL + A while a zero-match filter is active', async () => {
+                vi.useFakeTimers();
+
+                component.treeControl.applyFilter('condition for filter all nodes');
+                await vi.advanceTimersByTimeAsync(0);
+                fixture.detectChanges();
+
+                component.tree().onKeyDown(selectAllKeyEvent);
+                fixture.detectChanges();
+
+                expect(component.savedSelectAllEvent!.options.length).toBe(0);
+                expect(component.modelValue.length).toBe(0);
             });
 
             it('should not emit selectionChange with an undefined option on a no-op CTRL + A (default)', async () => {
@@ -1933,6 +1947,20 @@ describe('KbqTreeSelection', () => {
                 clickSelectAll();
 
                 expect(component.modelValue.length).toBe(ALL_NODES_COUNT);
+            });
+
+            it('should select only the rendered matches while a filter is active', async () => {
+                vi.useFakeTimers();
+
+                component.treeControl.applyFilter('Sun');
+                await vi.advanceTimersByTimeAsync(0);
+                fixture.detectChanges();
+
+                clickSelectAll();
+
+                // `FilterParentsForNodes` keeps the match's ancestors visible, so they take part too.
+                expect(component.modelValue).toEqual(['Pictures', 'Sun']);
+                expect(component.tree().selectAllState).toBe('checked');
             });
 
             it('should deselect every node on a second click', () => {
@@ -3344,7 +3372,7 @@ describe('KbqTreeSelection', () => {
             it('should keep reporting the expanded state while a filter disables the toggles', async () => {
                 vi.useFakeTimers();
 
-                component.treeControl.filterNodes('a11y');
+                component.treeControl.applyFilter('a11y');
                 await settle();
 
                 // Filtering disables every toggle and expands the matched branches: the rows are still
@@ -5499,7 +5527,7 @@ describe('KbqTreeSelection state saving', () => {
         const { treeControl } = fixture.componentInstance;
         const tree = fixture.componentInstance.tree();
 
-        treeControl.filterNodes('Sun');
+        treeControl.applyFilter('Sun');
         await vi.advanceTimersByTimeAsync(0);
         fixture.detectChanges();
 

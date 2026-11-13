@@ -37,7 +37,7 @@ Rules for code that uses Koobiq:
 - [Autocomplete](https://koobiq.io/en/components/autocomplete.md): Autocomplete suggests matching options in a dropdown while the user types and lets them select a value without entering it in full. Entry point: `@koobiq/components/autocomplete`.
 - [Badge](https://koobiq.io/en/components/badge.md): A badge is used to highlight the status, count, or other important characteristics of an object. Entry point: `@koobiq/components/badge`.
 - [Breadcrumbs](https://koobiq.io/en/components/breadcrumbs.md): Breadcrumbs are a navigation element that helps users easily orient themselves on a website and understand their current location relative to the main page. Entry point: `@koobiq/components/breadcrumbs`.
-- [Button](https://koobiq.io/en/components/button.md): koobiq buttons are available using native `<button>` or `<a>` elements. Entry point: `@koobiq/components/button`.
+- [Button](https://koobiq.io/en/components/button.md): Used to trigger actions. Entry point: `@koobiq/components/button`.
 - [Button Group](https://koobiq.io/en/components/button-group.md): Button Group combines multiple buttons to emphasize their close relationship. Entry point: `@koobiq/components/button`.
 - [Button toggle](https://koobiq.io/en/components/button-toggle.md): A button group is suitable for choosing from a list of 3 to 5 items when they fit in a single row without wrapping. Entry point: `@koobiq/components/button-toggle`.
 - [Checkbox](https://koobiq.io/en/components/checkbox.md): Checkbox lets users select independent options and can also represent the selection state of a group. Entry point: `@koobiq/components/checkbox`.
@@ -102,7 +102,7 @@ Rules for code that uses Koobiq:
 - [Topbar](https://koobiq.io/en/components/top-bar.md): Topbar is a toolbar that always remains visible on the page and provides quick access to navigation and controls. Entry point: `@koobiq/components/top-bar`.
 - [Tree](https://koobiq.io/en/components/tree.md): A hierarchical list (tree) is a tree-structured catalog for working with large amounts of data. Entry point: `@koobiq/components/tree`.
 - [Tree select](https://koobiq.io/en/components/tree-select.md): Tree Select lets users search and select one or more values from hierarchical data while preserving the tree structure. Entry point: `@koobiq/components/tree-select`.
-- [Username](https://koobiq.io/en/components/username.md): The pattern is used when the interface refers to an internal user. Entry point: `@koobiq/components/username`.
+- [Username](https://koobiq.io/en/components/username.md): The component displays user information in a consistent style and builds the label from the profile data, following the selected display mode and the compact option. Entry point: `@koobiq/components/username`.
 
 ## Other
 
@@ -111,7 +111,7 @@ Rules for code that uses Koobiq:
 - [Forms](https://koobiq.io/en/other/forms.md): Form layout utilities arrange fields, labels, hints, and validation messages in horizontal, vertical, or grouped layouts.
 - [Number formatter](https://koobiq.io/en/other/number-formatter.md): Every language has its own norms for writing numbers: the decimal separator, digit grouping, the labels for thousands and millions.
 - [Validation](https://koobiq.io/en/other/validation.md): Form-field controls display errors via [`ErrorStateMatcher`](https://koobiq.io/en/other/validation.md) — a small policy object that decides _when_ to surface a control's existing errors.
-- [Smart search](https://koobiq.io/en/other/search-smart.md): Search fields in the kit's components leave matching entirely to the consumer, and the default reach-for is substring search.
+- [Smart search](https://koobiq.io/en/other/search-smart.md): Substring search works for simple queries, but it does not find a value whose query parts are separated by other characters.
 
 ## Icons
 

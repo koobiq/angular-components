@@ -114,7 +114,7 @@ export const DATA_OBJECT = {
         >
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="node.name === 'tests'">
                 <span
-                    [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
+                    [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"
                 ></span>
             </kbq-tree-option>
 
@@ -122,7 +122,7 @@ export const DATA_OBJECT = {
                 <kbq-tree-node-toggle [node]="node" />
 
                 <span
-                    [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
+                    [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"
                 ></span>
             </kbq-tree-option>
         </kbq-tree-selection>
@@ -153,7 +153,7 @@ export class TreeFilteringExample {
     }
 
     onFilterChange(value: string): void {
-        this.treeControl.filterNodes(value);
+        this.treeControl.applyFilter(value);
     }
 
     hasChild(_: number, nodeData: FileFlatNode) {

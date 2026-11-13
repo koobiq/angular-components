@@ -73,10 +73,6 @@
 
         &.kbq-disabled {
             color: var(--kbq-states-foreground-disabled);
-
-            .kbq-hint .kbq-hint__text {
-                color: inherit;
-            }
         }
 
         .kbq-toggle-bar {
@@ -84,28 +80,15 @@
                 background: var(--kbq-icon-white);
             }
         }
-
-        // A projected `kbq-error` is a hint too, and keeps its own color. `:where` leaves the specificity as it was.
-        .kbq-hint:where(:not(.kbq-error)) .kbq-hint__text {
-            color: var(--kbq-foreground-contrast-secondary);
-        }
     }
 }
 
 @mixin kbq-toggle-typography() {
     .kbq-toggle:not(.kbq-toggle_big) {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
-
-        & .kbq-hint .kbq-hint__text {
-            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
-        }
     }
 
     .kbq-toggle.kbq-toggle_big {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
-
-        & .kbq-hint .kbq-hint__text {
-            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
-        }
     }
 }

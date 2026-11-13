@@ -26,6 +26,7 @@ import {
     KbqFullScreenDropzoneService,
     KbqLocalDropzone
 } from '@koobiq/components/file-upload';
+import { KbqHint } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { kbqScrollbarOptionsProvider } from '@koobiq/components/scrollbar';
 
@@ -468,6 +469,42 @@ export class E2eFileUploadStateAndStyle {
 export class E2eFileUploadDropzone {
     protected readonly localDropzone = viewChild.required(KbqLocalDropzone);
     protected readonly fullScreenDropzoneService = inject(KbqFullScreenDropzoneService);
+}
+
+@Component({
+    selector: 'e2e-file-upload-with-hint',
+    imports: [KbqFileUploadModule, KbqHint],
+    template: `
+        <div class="e2e-grid" data-testid="e2eScreenshotTarget">
+            @for (state of states; track state) {
+                <kbq-single-file-upload [disabled]="state === 'disabled'">
+                    <kbq-hint>Hint</kbq-hint>
+                    <kbq-hint color="error">Colored hint</kbq-hint>
+                </kbq-single-file-upload>
+
+                <kbq-multiple-file-upload [disabled]="state === 'disabled'">
+                    <kbq-hint>Hint</kbq-hint>
+                    <kbq-hint color="error">Colored hint</kbq-hint>
+                </kbq-multiple-file-upload>
+            }
+        </div>
+    `,
+    styles: `
+        .e2e-grid {
+            display: inline-grid;
+            grid-template-columns: repeat(2, 320px);
+            gap: var(--kbq-size-l);
+            align-items: start;
+            padding: var(--kbq-size-xs);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eFileUploadWithHint'
+    }
+})
+export class E2eFileUploadWithHint {
+    protected readonly states = ['normal', 'disabled'] as const;
 }
 
 @Component({

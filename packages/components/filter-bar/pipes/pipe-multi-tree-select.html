@@ -71,9 +71,10 @@
             (click)="toggleSelectAllNode()"
         >
             <kbq-pseudo-checkbox [state]="selectAllCheckboxState" />
-            <span
-                [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
-            ></span>
+            <span [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"></span>
+            @if (data.selectAllCounter) {
+                <span class="kbq-pipe-select-all__counter">{{ selectAllCount }}</span>
+            }
         </kbq-tree-option>
 
         <kbq-tree-option
@@ -103,13 +104,13 @@
     } @else {
         <div
             [class.kbq-truncate-line]="!multilineOptions"
-            [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
+            [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"
         ></div>
         @if (node.caption) {
             <div
                 class="kbq-option-caption"
                 [class.kbq-truncate-line]="!multilineOptions"
-                [innerHTML]="node.caption | kbqHighlightBackground: treeControl.filterValue.value"
+                [innerHTML]="node.caption | kbqHighlightBackground: treeControl.filterQuery"
             ></div>
         }
     }

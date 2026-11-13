@@ -626,7 +626,7 @@ class SelectWithSearch implements OnInit {
     }
 
     ngOnInit(): void {
-        this.searchControl.valueChanges.subscribe((value) => this.treeControl.filterNodes(value));
+        this.searchControl.valueChanges.subscribe((value) => this.treeControl.applyFilter(value));
     }
 }
 
@@ -671,7 +671,7 @@ class MultipleTreeSelectWithSearch implements OnInit {
     }
 
     ngOnInit(): void {
-        this.searchControl.valueChanges.subscribe((value) => this.treeControl.filterNodes(value));
+        this.searchControl.valueChanges.subscribe((value) => this.treeControl.applyFilter(value));
     }
 }
 
@@ -748,7 +748,7 @@ class MultiTreeSelectWithSelectAll implements OnInit {
     }
 
     ngOnInit(): void {
-        this.searchControl.valueChanges.subscribe((value) => this.treeControl.filterNodes(value));
+        this.searchControl.valueChanges.subscribe((value) => this.treeControl.applyFilter(value));
     }
 
     hasChild(_: number, nodeData: FileFlatNode) {

@@ -100,6 +100,25 @@ async function openAndAssertPopover<T>(componentFixture: ComponentFixture<T>, tr
     return popover;
 }
 
+/**
+ * Fakes the panel's layout box for `KbqPopUp.updateArrowPosition`: the `offset*` reads are the only layout
+ * measurements unaffected by the entrance `scale(...)` transform, which is what the pop-up measures.
+ */
+function mockPanelLayout(element: HTMLElement, rect: { left: number; top: number; width: number; height: number }) {
+    const { left, top, width, height } = rect;
+
+    Object.defineProperties(element, {
+        offsetWidth: { configurable: true, value: width },
+        offsetHeight: { configurable: true, value: height },
+        offsetLeft: { configurable: true, value: left },
+        offsetTop: { configurable: true, value: top },
+        offsetParent: {
+            configurable: true,
+            value: { getBoundingClientRect: () => new DOMRect() } as unknown as HTMLElement
+        }
+    });
+}
+
 describe('KbqPopover', () => {
     let fixture: ComponentFixture<PopoverTestComponent>;
     let componentInstance: PopoverTestComponent;
@@ -314,13 +333,17 @@ describe('KbqPopover', () => {
             expect(triggerElement.classList).toContain('kbq-active');
         });
 
-        it('should open popover with keyboard when kbqTrigger = default', async () => {
+        it('should keep popover open when a native button click follows keyboard activation', async () => {
             vi.useFakeTimers();
 
             const triggerElement = componentInstance.test7().nativeElement;
 
             for (const keyCode of [ENTER, SPACE]) {
                 dispatchKeyboardEvent(triggerElement, 'keydown', keyCode);
+                await runDueTimers();
+                fixture.detectChanges();
+
+                dispatchMouseEvent(triggerElement, 'click');
                 await runDueTimers();
                 fixture.detectChanges();
 
@@ -1293,7 +1316,7 @@ describe('KbqPopover', () => {
             expect(overlayContainerElement.querySelector('.kbq-popover__close')).toBeFalsy();
         });
 
-        it('should apply the bare close button and backdrop attributes and the paddings binding', async () => {
+        it('should apply bare boolean attributes and the paddings binding', async () => {
             vi.useFakeTimers();
 
             const fixture = createComponent(PopoverBooleanInputs);
@@ -1304,6 +1327,7 @@ describe('KbqPopover', () => {
             await runDueTimers();
             fixture.detectChanges();
 
+            expect(fixture.componentInstance.prefixedPopover().arrowCentered).toBe(true);
             expect(overlayContainerElement.querySelector('.kbq-popover__close')).toBeTruthy();
             expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeTruthy();
             expect(
@@ -1406,6 +1430,161 @@ describe('KbqPopover', () => {
             await open();
 
             expect(positions().some((pos) => 'offsetX' in pos || 'offsetY' in pos)).toBeFalsy();
+        });
+
+        it('should support arrow centering without changing the panel placement', async () => {
+            vi.useFakeTimers();
+
+            const triggerElement = placementInstance.trigger().nativeElement;
+
+            triggerElement.getBoundingClientRect = () => {
+                if (!triggerElement.isConnected) return new DOMRect();
+
+                return {
+                    left: 100,
+                    top: 100,
+                    right: 300,
+                    bottom: 140,
+                    width: 200,
+                    height: 40,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            placementInstance.placement = 'bottomRight';
+            placementInstance.arrowCentered = true;
+            placementFixture.detectChanges();
+
+            await open();
+
+            expect(positions().some((position) => 'offsetX' in position || 'offsetY' in position)).toBe(false);
+
+            const popover = overlayContainerElement.querySelector<HTMLElement>('.kbq-popover')!;
+
+            popover.getBoundingClientRect = () => {
+                if (!popover.isConnected) return new DOMRect();
+
+                return {
+                    left: 100,
+                    top: 100,
+                    right: 500,
+                    bottom: 260,
+                    width: 400,
+                    height: 160,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            mockPanelLayout(popover, { left: 100, top: 100, width: 400, height: 160 });
+
+            const bottomRight = positions()[0];
+
+            placementInstance
+                .popoverTrigger()
+                .onPositionChange({ connectionPair: bottomRight } as ConnectedOverlayPositionChange);
+
+            expect(popover.style.getPropertyValue('--kbq-popover-arrow-shift-x')).toBe('-270px');
+            expect(popover.style.getPropertyValue('--kbq-popover-arrow-shift-y')).toBe('0px');
+
+            const topLeft: ConnectionPositionPair = {
+                originX: 'start',
+                originY: 'top',
+                overlayX: 'start',
+                overlayY: 'bottom'
+            };
+
+            placementInstance
+                .popoverTrigger()
+                .onPositionChange({ connectionPair: topLeft } as ConnectedOverlayPositionChange);
+
+            expect(popover.style.getPropertyValue('--kbq-popover-arrow-shift-x')).toBe('70px');
+
+            placementInstance.origin = { x: 400, y: 160, width: 0, height: 0 };
+            placementFixture.detectChanges();
+            placementInstance
+                .popoverTrigger()
+                .onPositionChange({ connectionPair: topLeft } as ConnectedOverlayPositionChange);
+
+            expect(placementInstance.popoverTrigger().getArrowPoint()).toEqual({ x: 400, y: 160 });
+            expect(popover.style.getPropertyValue('--kbq-popover-arrow-shift-x')).toBe('270px');
+
+            placementInstance.arrowCentered = false;
+            placementFixture.detectChanges();
+            placementInstance
+                .popoverTrigger()
+                .onPositionChange({ connectionPair: topLeft } as ConnectedOverlayPositionChange);
+
+            expect(popover.style.getPropertyValue('--kbq-popover-arrow-shift-x')).toBe('');
+            expect(popover.style.getPropertyValue('--kbq-popover-arrow-shift-y')).toBe('');
+        });
+
+        it('should keep legacy narrow-trigger positioning while centering the arrow', async () => {
+            vi.useFakeTimers();
+
+            const triggerElement = placementInstance.trigger().nativeElement;
+
+            triggerElement.getBoundingClientRect = () => {
+                if (!triggerElement.isConnected) return new DOMRect();
+
+                return {
+                    left: 100,
+                    top: 100,
+                    right: 124,
+                    bottom: 140,
+                    width: 24,
+                    height: 40,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            placementInstance.placement = 'bottomRight';
+            placementInstance.arrowCentered = true;
+            placementFixture.detectChanges();
+
+            await open();
+
+            const positions = () =>
+                (
+                    placementInstance.popoverTrigger().createOverlay().getConfig()
+                        .positionStrategy as FlexibleConnectedPositionStrategy
+                ).positions;
+
+            expect(positions()[0].offsetX).toBe(5);
+
+            const popover = overlayContainerElement.querySelector<HTMLElement>('.kbq-popover')!;
+
+            popover.getBoundingClientRect = () => {
+                if (!popover.isConnected) return new DOMRect();
+
+                return {
+                    left: 105,
+                    top: 100,
+                    right: 505,
+                    bottom: 260,
+                    width: 400,
+                    height: 160,
+                    x: 105,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            mockPanelLayout(popover, { left: 105, top: 100, width: 400, height: 160 });
+
+            placementInstance.popoverTrigger().onPositionChange({
+                connectionPair: positions()[0]
+            } as ConnectedOverlayPositionChange);
+
+            expect(popover.style.getPropertyValue('--kbq-popover-arrow-shift-x')).toBe('-340px');
+            expect(popover.style.getPropertyValue('--kbq-popover-arrow-shift-y')).toBe('0px');
+
+            await close();
         });
 
         it('should keep the arrow dropped while stuck to the window', async () => {
@@ -1916,6 +2095,8 @@ describe('KbqPopover', () => {
                     toJSON: () => ({})
                 }) as DOMRect;
 
+            mockPanelLayout(panel, { left: 79, top: 0, width: 200, height: 72 });
+
             const component = pointerInstance.popoverTrigger()['instance'] as KbqPopoverComponent;
 
             component.visibleChange.emit(true);
@@ -1969,6 +2150,9 @@ describe('KbqPopover', () => {
                     y: 100,
                     toJSON: () => ({})
                 }) as DOMRect;
+
+            mockPanelLayout(panel, { left: 100, top: 100, width: 300, height: 160 });
+
             pointerInstance.popoverTrigger().onPositionChange({ connectionPair } as ConnectedOverlayPositionChange);
 
             return panel;
@@ -2212,6 +2396,13 @@ describe('KbqPopover', () => {
                 reset: undefined
             },
             { binding: 'kbqPopoverOrigin', field: 'origin', value: element, read: (t) => t.popoverOrigin, reset: null },
+            {
+                binding: 'kbqPopoverArrowCentered',
+                field: 'arrowCentered',
+                value: true,
+                read: (t) => t.arrowCentered,
+                reset: false
+            },
             {
                 binding: 'kbqPopoverPlacementPriority',
                 field: 'placementPriority',
@@ -2477,6 +2668,7 @@ describe('KbqPopover', () => {
             [kbqPopoverContext]="context"
             [kbqPopoverAriaLabel]="ariaLabel"
             [kbqPopoverOrigin]="origin"
+            [kbqPopoverArrowCentered]="arrowCentered"
             [kbqPopoverPlacementPriority]="placementPriority"
             [kbqPopoverPlacement]="placement"
             [kbqPopoverVisible]="visible"
@@ -2505,6 +2697,7 @@ class PopoverUndefinedInputs {
     context: object | undefined;
     ariaLabel: string | undefined;
     origin: KbqOverlayOrigin | undefined;
+    arrowCentered: boolean | undefined;
     placementPriority: KbqPopUpPlacementValues[] | undefined;
     placement: KbqPopUpPlacementValues | undefined;
     visible: boolean | undefined;
@@ -2852,6 +3045,7 @@ class PopoverRebuiltContext {
             kbqPopoverHeader="HEADER"
             kbqPopoverHasCloseButton
             kbqPopoverHasBackdrop
+            kbqPopoverArrowCentered
             [kbqPopoverDefaultPaddings]="false"
         >
             Prefixed
@@ -2861,6 +3055,7 @@ class PopoverRebuiltContext {
 class PopoverBooleanInputs {
     readonly stringFalse = viewChild.required<ElementRef>('stringFalse');
     readonly prefixed = viewChild.required<ElementRef>('prefixed');
+    readonly prefixedPopover = viewChild.required('prefixed', { read: KbqPopoverTrigger });
 }
 
 @Component({
@@ -2874,6 +3069,8 @@ class PopoverBooleanInputs {
             [kbqPopoverPlacement]="placement"
             [kbqPopoverPlacementPriority]="placementPriority"
             [kbqPopoverArrow]="arrow"
+            [kbqPopoverArrowCentered]="arrowCentered"
+            [kbqPopoverOrigin]="origin"
             [kbqPopoverStickToWindow]="stickToWindow"
             (kbqPopoverPlacementChange)="onPlacementChange($event)"
         >
@@ -2886,6 +3083,8 @@ class PopoverPlacement {
     placement: KbqPopUpPlacementValues = 'top';
     placementPriority: KbqPopUpPlacementValues[] | null = null;
     arrow = true;
+    arrowCentered = false;
+    origin: KbqOverlayOrigin | null = null;
     stickToWindow: KbqStickToWindowPlacementValues | undefined;
 
     readonly trigger = viewChild.required<ElementRef>('trigger');

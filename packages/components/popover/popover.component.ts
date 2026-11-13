@@ -33,7 +33,6 @@ import {
     type OnChanges,
     type OnInit,
     type Provider,
-    RendererStyleFlags2,
     type SimpleChanges,
     type TemplateRef,
     type Type,
@@ -71,7 +70,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
-import { getPopoverArrowShift } from './popover-positioning';
 
 export const defaultOffsetYWithArrow = 8;
 
@@ -133,6 +131,9 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     protected readonly contentObserverDebounce = contentObserverDebounce;
 
     override prefix = 'kbq-popover';
+
+    // Safe arrow inset from popover.scss: the 24px arrow padding plus half of its 12px square.
+    protected override arrowCenterInset = 30;
 
     override header: string | TemplateRef<any> = '';
     footer: string | TemplateRef<any> = '';
@@ -212,41 +213,8 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
         }
     }
 
-    private resolvedPlacement = 'top';
-    private appliedArrowShift: { x: string; y: string } | null = null;
-
     override updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues) {
-        this.resolvedPlacement = placement;
         super.updateClassMap(placement, customClass, { [`${this.prefix}_${size}`]: !!size });
-    }
-
-    /** Recalculates pointer-relative arrow shifts after CDK positions the panel. @docs-private */
-    override updateArrowPosition(): void {
-        const element = this.popoverElement()?.nativeElement;
-
-        if (!element) return;
-
-        const point = this.trigger?.getPointerPoint();
-
-        if (!point || !this.arrow || this.trigger?.stickToWindow) {
-            if (!this.appliedArrowShift) return;
-
-            this.renderer.removeStyle(element, '--kbq-popover-arrow-shift-x', RendererStyleFlags2.DashCase);
-            this.renderer.removeStyle(element, '--kbq-popover-arrow-shift-y', RendererStyleFlags2.DashCase);
-            this.appliedArrowShift = null;
-
-            return;
-        }
-
-        const panelRect = element.getBoundingClientRect();
-        const shift = getPopoverArrowShift(this.resolvedPlacement, panelRect, point);
-        const nextShift = { x: `${shift.x}px`, y: `${shift.y}px` };
-
-        if (this.appliedArrowShift?.x === nextShift.x && this.appliedArrowShift.y === nextShift.y) return;
-
-        this.renderer.setStyle(element, '--kbq-popover-arrow-shift-x', nextShift.x, RendererStyleFlags2.DashCase);
-        this.renderer.setStyle(element, '--kbq-popover-arrow-shift-y', nextShift.y, RendererStyleFlags2.DashCase);
-        this.appliedArrowShift = nextShift;
     }
 
     updateTrapFocus(isTrapFocus: boolean): void {
@@ -657,6 +625,12 @@ export class KbqPopoverTrigger
     /** Input (`kbqPopoverArrow`) — renders the arrow pointing at the trigger. */
     arrow: boolean = true;
 
+    /**
+     * Input (`kbqPopoverArrowCentered`) — centers the arrow on the trigger while preserving the panel placement.
+     * Defaults to `false`.
+     */
+    override arrowCentered = false;
+
     /** Input (`kbqPopoverOffset`) — distance between the trigger and the panel, in pixels. */
     offset: number | null = defaultOffsetYWithArrow;
 
@@ -856,6 +830,12 @@ export class KbqPopoverTrigger
     });
 
     /** @docs-private */
+    readonly arrowCenteredInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'kbqPopoverArrowCentered',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
     readonly offsetInput = input<number | undefined, number | string | null | undefined>(undefined, {
         alias: 'kbqPopoverOffset',
         transform: kbqOptionalNumberAttribute
@@ -995,6 +975,11 @@ export class KbqPopoverTrigger
             if (arrow !== undefined) this.arrow = arrow;
         }
 
+        if (changes['arrowCenteredInput']) {
+            this.arrowCentered = this.arrowCenteredInput() ?? false;
+            this.updateData();
+        }
+
         if (changes['offsetInput']) {
             this.offset = this.offsetInput() ?? defaultOffsetYWithArrow;
         }
@@ -1095,6 +1080,11 @@ export class KbqPopoverTrigger
         return { x: this.pointerOrigin.x, y: this.pointerOrigin.y };
     }
 
+    /** Click point when pointer-relative positioning is active, otherwise the shared origin point. @docs-private */
+    override getArrowPoint(): { x: number; y: number } | null {
+        return this.getPointerPoint() ?? super.getArrowPoint();
+    }
+
     /** @docs-private */
     protected override getResolvedOrigin() {
         return this.pointerOffset && !this.origin ? this.pointerOrigin : super.getResolvedOrigin();
@@ -1124,6 +1114,7 @@ export class KbqPopoverTrigger
         // `setStickPosition` drops the arrow because a stuck panel no longer points at its trigger; copying
         // the input back would resurrect a detached rotated square on the next update.
         this.instance.arrow = this.stickToWindow ? false : this.arrow;
+        this.instance.arrowCentered = this.arrowCentered;
         this.instance.offset = this.offset;
         this.instance.footer = this.footer;
         this.instance.hasCloseButton = this.hasCloseButton;

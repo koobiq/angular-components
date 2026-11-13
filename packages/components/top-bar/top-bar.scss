@@ -47,6 +47,16 @@
         flex: 0 0 var(--kbq-top-bar-spacer-min-width);
     }
 
+    .kbq-top-bar-title {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, subheading);
+
+        // The line box of a `size="big"` breadcrumb item: the same height, and the same baseline, so a
+        // page that swaps the trail for a title moves nothing. A minimum, not a fixed height: a title
+        // long enough to wrap has to grow the bar rather than paint over its edge.
+        min-block-size: var(--kbq-top-bar-title-height);
+        line-height: var(--kbq-top-bar-title-height);
+    }
+
     .kbq-top-bar-container {
         // Must match the host set of the ruleset immediately below: the negative margin compensates the
         // padding that mixin adds, so a container the mixin skips must not get the compensation either.

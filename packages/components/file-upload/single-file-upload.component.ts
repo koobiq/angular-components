@@ -44,7 +44,8 @@ import {
     KbqFileUploadAllowedType,
     type KbqFileUploadAllowedTypeValues,
     KbqFileUploadBase,
-    type KbqFileUploadCaptionContext
+    type KbqFileUploadCaptionContext,
+    kbqFileUploadHintParentProvider
 } from './file-upload';
 import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext } from './primitives';
 
@@ -69,7 +70,7 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleCo
     ],
     templateUrl: './single-file-upload.component.html',
     styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './single-file-upload.component.scss'],
-    providers: [KbqFullScreenDropzoneService],
+    providers: [KbqFullScreenDropzoneService, kbqFileUploadHintParentProvider],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

@@ -1,4 +1,4 @@
-﻿import { ENTER, SPACE } from '@angular/cdk/keycodes';
+import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import {
     type CdkConnectedOverlay,
@@ -492,6 +492,27 @@ describe('KbqInlineEdit', () => {
         fixture.detectChanges();
 
         expect(updatePositionSpy).toHaveBeenCalled();
+    });
+
+    it('should keep the edit mode overlay anchored to the origin without flipping or pushing', () => {
+        const fixture = setup(TestComponent);
+        const { debugElement } = fixture;
+        const inlineEdit = getInlineEditDebugElement(debugElement).componentInstance as KbqInlineEdit;
+
+        getInlineEditDebugElement(debugElement).nativeElement.click();
+        fixture.detectChanges();
+
+        const overlayDir = (inlineEdit as unknown as { overlayDir: () => CdkConnectedOverlay }).overlayDir();
+
+        expect(overlayDir.positions).toEqual([
+            {
+                originX: 'start',
+                originY: 'bottom',
+                overlayX: 'start',
+                overlayY: 'top'
+            }
+        ]);
+        expect(overlayDir.push).toBe(false);
     });
 
     describe('interactiveSelectors', () => {

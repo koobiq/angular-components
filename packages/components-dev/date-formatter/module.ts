@@ -136,6 +136,20 @@ export class DevApp {
                 afterTomorrowNotCurrentYear: ''
             }
         },
+        sentenceCase: {
+            long: {
+                beforeYesterday: '',
+                yesterday: '',
+                today: '',
+                tomorrow: ''
+            },
+            short: {
+                beforeYesterday: '',
+                yesterday: '',
+                today: '',
+                tomorrow: ''
+            }
+        },
         closedRange: {
             long: {
                 date: {
@@ -359,6 +373,7 @@ export class DevApp {
         this.populateAbsoluteShort(locale);
         this.populateRelativeLong(locale);
         this.populateRelativeShort(locale);
+        this.populateSentenceCase(locale);
         this.populateRangeLong(locale);
         this.populateRangeMiddle(locale);
         this.populateRangeShort(locale);
@@ -945,6 +960,32 @@ export class DevApp {
         });
 
         relativeLong.afterTomorrowNotCurrentYear = this.formatter.relativeLongDate(now.plus({ years: 1, days: 2 }));
+    }
+
+    private populateSentenceCase(locale: string) {
+        this.formatter.setLocale(locale);
+
+        const sentenceCase = this.lang.sentenceCase;
+        // dates that stay inside their branch at any wall-clock time
+        const now = this.adapter.today();
+
+        sentenceCase.long.beforeYesterday = this.formatter.relativeLongDate(now.minus({ days: 2 }), {
+            sentenceStart: false
+        });
+        sentenceCase.long.yesterday = this.formatter.relativeLongDate(now.minus({ days: 1 }), {
+            sentenceStart: false
+        });
+        sentenceCase.long.today = this.formatter.relativeLongDate(now, { sentenceStart: false });
+        sentenceCase.long.tomorrow = this.formatter.relativeLongDate(now.plus({ days: 1 }), { sentenceStart: false });
+
+        sentenceCase.short.beforeYesterday = this.formatter.relativeShortDate(now.minus({ days: 2 }), {
+            sentenceStart: false
+        });
+        sentenceCase.short.yesterday = this.formatter.relativeShortDate(now.minus({ days: 1 }), {
+            sentenceStart: false
+        });
+        sentenceCase.short.today = this.formatter.relativeShortDate(now, { sentenceStart: false });
+        sentenceCase.short.tomorrow = this.formatter.relativeShortDate(now.plus({ days: 1 }), { sentenceStart: false });
     }
 
     private populateAbsoluteShort(locale: string) {

@@ -16,10 +16,6 @@
 @mixin kbq-radio-color($type-name) {
     @include kbq-radio-state($type-name, default);
 
-    & .kbq-hint .kbq-hint__text {
-        color: var(--kbq-radio-#{$type-name}-default-caption);
-    }
-
     &:hover,
     &.kbq-hovered {
         @include kbq-radio-state($type-name, states-hover);
@@ -56,10 +52,6 @@
             cursor: default;
             color: var(--kbq-radio-#{$type-name}-states-disabled-caption);
         }
-
-        & .kbq-hint .kbq-hint__text {
-            color: var(--kbq-radio-#{$type-name}-states-disabled-caption);
-        }
     }
 }
 
@@ -82,36 +74,14 @@
     .kbq-radio-group.kbq-invalid .kbq-radio-button {
         @include kbq-radio-color(error);
     }
-
-    // A hint of the group reads like the hints of its options; the error keeps its own color.
-    .kbq-radio-group__subscript .kbq-hint:where(:not(.kbq-error)) .kbq-hint__text {
-        color: var(--kbq-radio-theme-default-caption);
-    }
 }
 
 @mixin kbq-radio-typography() {
     .kbq-radio-button {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
-
-        & .kbq-hint .kbq-hint__text {
-            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
-        }
     }
 
     .kbq-radio-button.kbq-radio-button_big {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
-
-        & .kbq-hint .kbq-hint__text {
-            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
-        }
-    }
-
-    // The error and the hints under the group read at the size of the hints of its options.
-    .kbq-radio-group_normal .kbq-radio-group__subscript .kbq-hint__text {
-        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
-    }
-
-    .kbq-radio-group_big .kbq-radio-group__subscript .kbq-hint__text {
-        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }

@@ -3,7 +3,7 @@ import { Component, type Type, viewChild } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { KBQ_ANIMATIONS_CONFIG, KbqOverlayLayer } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
-import { KbqTopBar, KbqTopBarContainer, KbqTopBarSpacer } from './top-bar';
+import { KbqTopBar, KbqTopBarContainer, KbqTopBarSpacer, KbqTopBarTitle } from './top-bar';
 
 const createFixture = <T>(component: Type<T>): ComponentFixture<T> => {
     const fixture = TestBed.createComponent(component);
@@ -159,6 +159,14 @@ describe(KbqTopBarSpacer.name, () => {
     });
 });
 
+describe(KbqTopBarTitle.name, () => {
+    it('should apply the title class', () => {
+        const fixture = createFixture(TitledTestApp);
+
+        expect(fixture.nativeElement.querySelector('.kbq-top-bar-title')).toBeTruthy();
+    });
+});
+
 @Component({
     selector: 'test-app',
     imports: [KbqTopBar],
@@ -207,6 +215,19 @@ class DynamicPlacementTestApp {
     `
 })
 class PopulatedTestApp {}
+
+@Component({
+    selector: 'titled-test-app',
+    imports: [KbqTopBar, KbqTopBarContainer, KbqTopBarTitle],
+    template: `
+        <kbq-top-bar>
+            <div kbqTopBarContainer placement="start">
+                <div kbqTopBarTitle>Dashboards</div>
+            </div>
+        </kbq-top-bar>
+    `
+})
+class TitledTestApp {}
 
 @Component({
     imports: [KbqTopBar, KbqOverlayLayer, KbqDropdownModule],

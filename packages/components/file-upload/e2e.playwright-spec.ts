@@ -151,6 +151,19 @@ test.describe('KbqFileUploadModule', () => {
         });
     });
 
+    test.describe('E2eFileUploadWithHint', () => {
+        test('states', async ({ page }) => {
+            await page.goto('/E2eFileUploadWithHint');
+
+            const screenshotTarget = page.getByTestId('e2eFileUploadWithHint').getByTestId('e2eScreenshotTarget');
+
+            await expect(screenshotTarget.locator('kbq-hint')).toHaveCount(8);
+            await expect(screenshotTarget).toHaveScreenshot('07-hint-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('07-hint-dark.png');
+        });
+    });
+
     test.describe('E2eFileUploadScrollbarFlash', () => {
         const getTrack = (page: Page, testId: string) =>
             page.getByTestId(testId).locator('.kbq-file-upload__list-viewport > kbq-scrollbar-track');

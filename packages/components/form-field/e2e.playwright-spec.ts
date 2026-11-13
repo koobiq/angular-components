@@ -135,6 +135,21 @@ test.describe('KbqFormFieldModule', () => {
         });
     });
 
+    test.describe('E2eFormFieldWithHint', () => {
+        test('states', async ({ page }) => {
+            await page.goto('/E2eFormFieldWithHint');
+
+            const target = page.getByTestId('e2eFormFieldWithHint').getByTestId('e2eScreenshotTarget');
+
+            // The form field mounts the error once it has read the state of the control.
+            await expect(target.locator('kbq-error')).toHaveCount(7);
+            await expect(target).toHaveScreenshot('07-hint-light.png');
+
+            await e2eEnableDarkTheme(page);
+            await expect(target).toHaveScreenshot('07-hint-dark.png');
+        });
+    });
+
     /**
      * Browser autofill (#DS-4096).
      *

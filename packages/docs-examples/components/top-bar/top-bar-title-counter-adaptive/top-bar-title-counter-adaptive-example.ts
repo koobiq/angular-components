@@ -66,15 +66,11 @@ type ExampleAction = {
     ],
     template: `
         <kbq-top-bar withShadow>
-            <div
-                class="layout-row layout-align-center-center layout-padding-top-3xs layout-padding-bottom-3xs"
-                kbqTopBarContainer
-                placement="start"
-            >
+            <div class="layout-row layout-align-center-center" kbqTopBarContainer placement="start">
                 <div class="layout-row layout-margin-right-l flex-none">
                     <img alt="example icon" ngSrc="https://koobiq.io/assets/example-icon.svg" width="24" height="24" />
                 </div>
-                <div class="kbq-title kbq-truncate-line example-kbq-top-bar__title">
+                <div class="kbq-truncate-line example-kbq-top-bar__title" kbqTopBarTitle>
                     <span class="kbq-truncate-line layout-margin-right-xs">Page Header</span>
 
                     <span class="example-kbq-top-bar__counter">{{ 10 | kbqNumber: '' : 'en-US' }}</span>

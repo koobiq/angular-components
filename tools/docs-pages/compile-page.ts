@@ -179,6 +179,37 @@ const getHeadingId = (heading: Heading): string =>
 /** Heading levels that get an id and appear in the table of contents. */
 const LINKED_HEADING_DEPTHS = [2, 3, 4, 5];
 
+/**
+ * The id of a heading, unique within the page: the anchors of the table of contents link by id, and
+ * `getElementById` resolves the first of several equal ones. A repeated heading takes a numeric suffix.
+ */
+const takeHeadingId = (heading: Heading, taken: Set<string>): string => {
+    const id = getHeadingId(heading);
+    let unique = id;
+
+    for (let suffix = 2; taken.has(unique); suffix++) {
+        unique = `${id}-${suffix}`;
+    }
+
+    taken.add(unique);
+
+    return unique;
+};
+
+/** The ids of the headings of a page, which is what a link to a part of the page can name. */
+export const getHeadingIds = (root: Root): Set<string> => {
+    const taken = new Set<string>();
+
+    const visit = (node: Nodes): void => {
+        if (node.type === 'heading' && LINKED_HEADING_DEPTHS.includes(node.depth)) takeHeadingId(node, taken);
+        if ('children' in node) node.children.forEach(visit);
+    };
+
+    visit(root);
+
+    return taken;
+};
+
 const isComment = (expression: string): boolean => /^\s*\/\*(?:[^*]|\*(?!\/))*\*\/\s*$/.test(expression);
 
 /** Compiles the MDX source of a documentation page. Throws on anything the site cannot render yet. */
@@ -210,23 +241,6 @@ export function compilePage(
     };
 
     const headingIds = new Set<string>();
-
-    /**
-     * The id of a heading, unique within the page: the anchors of the table of contents link by id, and
-     * `getElementById` resolves the first of several equal ones. A repeated heading takes a numeric suffix.
-     */
-    const takeHeadingId = (heading: Heading): string => {
-        const id = getHeadingId(heading);
-        let unique = id;
-
-        for (let suffix = 2; headingIds.has(unique); suffix++) {
-            unique = `${id}-${suffix}`;
-        }
-
-        headingIds.add(unique);
-
-        return unique;
-    };
 
     const renderAll = (nodes: Nodes[], context: RenderContext): string =>
         nodes.map((node) => render(node, context)).join('');
@@ -430,7 +444,9 @@ export function compilePage(
                 }
 
                 const tag = `h${node.depth}`;
-                const id = LINKED_HEADING_DEPTHS.includes(node.depth) ? ` id="${escapeText(takeHeadingId(node))}"` : '';
+                const id = LINKED_HEADING_DEPTHS.includes(node.depth)
+                    ? ` id="${escapeText(takeHeadingId(node, headingIds))}"`
+                    : '';
 
                 return `<${tag}${id} class="docs-header-link ${CLASS_PREFIX}__${tag}"${renderSearchAttribute(tag)}>${renderChildren(node, { ...context, inParagraph: true })}</${tag}>`;
             }

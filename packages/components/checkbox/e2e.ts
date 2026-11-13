@@ -2,7 +2,7 @@ import { afterNextRender, ChangeDetectionStrategy, Component, model } from '@ang
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { type ErrorStateMatcher, KbqComponentColors, kbqInjectNativeElement } from '@koobiq/components/core';
-import { KbqError, KbqFormFieldModule, KbqHint } from '@koobiq/components/form-field';
+import { KbqError, KbqHint } from '@koobiq/components/form-field';
 
 @Component({
     selector: 'e2e-checkbox-state-and-style',
@@ -43,55 +43,104 @@ export class E2eCheckboxStateAndStyle {
 }
 
 @Component({
-    selector: 'e2e-checkbox-with-text-and-caption',
-    imports: [KbqCheckboxModule, KbqFormFieldModule],
+    selector: 'e2e-checkbox-with-label',
+    imports: [KbqCheckboxModule],
     template: `
-        <!-- base -->
-        <kbq-checkbox>Text</kbq-checkbox>
-        <kbq-checkbox [big]="true">Text</kbq-checkbox>
-
-        <!-- disabled -->
-        <kbq-checkbox disabled>
-            Text
-            <kbq-hint>Caption</kbq-hint>
-        </kbq-checkbox>
-        <kbq-checkbox disabled [big]="true">
-            Text
-            <kbq-hint>Caption</kbq-hint>
-        </kbq-checkbox>
-
-        <!-- with caption -->
-        <kbq-checkbox>
-            Text
-            <kbq-hint>Caption</kbq-hint>
-        </kbq-checkbox>
-        <kbq-checkbox [big]="true">
-            Text
-            <kbq-hint>Caption</kbq-hint>
-        </kbq-checkbox>
-
-        <!-- label position before -->
-        <kbq-checkbox labelPosition="before">
-            Text
-            <kbq-hint>Caption</kbq-hint>
-        </kbq-checkbox>
-        <kbq-checkbox labelPosition="before" [big]="true">
-            Text
-            <kbq-hint>Caption</kbq-hint>
-        </kbq-checkbox>
+        <div class="e2e-grids" data-testid="e2eScreenshotTarget">
+            @for (big of sizes; track big) {
+                <div class="e2e-grid">
+                    @for (state of states; track state) {
+                        @for (labelPosition of labelPositions; track labelPosition) {
+                            <kbq-checkbox [big]="big" [disabled]="state === 'disabled'" [labelPosition]="labelPosition">
+                                Text
+                            </kbq-checkbox>
+                        }
+                    }
+                </div>
+            }
+        </div>
     `,
     styles: `
-        :host {
-            display: inline-flex;
-            flex-direction: column;
+        .e2e-grids {
+            display: inline-grid;
+            gap: var(--kbq-size-xl);
+            justify-items: start;
+            padding: var(--kbq-size-xs);
+        }
+
+        .e2e-grid {
+            display: inline-grid;
+            grid-template-columns: repeat(2, auto);
+            gap: var(--kbq-size-s);
+            align-items: start;
+            justify-items: start;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        'data-testid': 'e2eCheckboxWithTextAndCaption'
+        'data-testid': 'e2eCheckboxWithLabel'
     }
 })
-export class E2eCheckboxWithTextAndCaption {}
+export class E2eCheckboxWithLabel {
+    // Each size gets a grid of its own: a big checkbox is taller than a normal one, so the two in one row never line up.
+    protected readonly sizes = [false, true] as const;
+    protected readonly states = ['normal', 'disabled'] as const;
+    protected readonly labelPositions = ['after', 'before'] as const;
+}
+
+@Component({
+    selector: 'e2e-checkbox-with-hint',
+    imports: [KbqCheckboxModule, KbqHint],
+    template: `
+        <div class="e2e-grids" data-testid="e2eScreenshotTarget">
+            @for (big of sizes; track big) {
+                <div class="e2e-grid">
+                    @for (state of states; track state) {
+                        @for (labelPosition of labelPositions; track labelPosition) {
+                            <kbq-checkbox
+                                [big]="big"
+                                [color]="state === 'error' ? colors.Error : colors.Theme"
+                                [disabled]="state === 'disabled'"
+                                [labelPosition]="labelPosition"
+                            >
+                                Text
+                                <kbq-hint>Hint</kbq-hint>
+                            </kbq-checkbox>
+                        }
+                    }
+                </div>
+            }
+        </div>
+    `,
+    styles: `
+        .e2e-grids {
+            display: inline-grid;
+            gap: var(--kbq-size-xl);
+            justify-items: start;
+            padding: var(--kbq-size-xs);
+        }
+
+        .e2e-grid {
+            display: inline-grid;
+            grid-template-columns: repeat(2, auto);
+            gap: var(--kbq-size-s);
+            align-items: start;
+            justify-items: start;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eCheckboxWithHint'
+    }
+})
+export class E2eCheckboxWithHint {
+    // Each size gets a grid of its own: a big checkbox is taller than a normal one, so the two in one row never line up.
+    protected readonly sizes = [false, true] as const;
+    // The error palette has a hint color of its own, so it gets a row of its own.
+    protected readonly states = ['normal', 'error', 'disabled'] as const;
+    protected readonly labelPositions = ['after', 'before'] as const;
+    protected readonly colors = KbqComponentColors;
+}
 
 @Component({
     selector: 'e2e-checkbox-height',

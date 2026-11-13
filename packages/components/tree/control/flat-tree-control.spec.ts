@@ -1,4 +1,5 @@
 import { FlatTreeControl } from './flat-tree-control';
+import { FilterByValues } from './flat-tree-control.filters';
 
 describe('FlatTreeControl', () => {
     let treeControl: FlatTreeControl<TestData>;
@@ -137,7 +138,8 @@ describe('FlatTreeControl', () => {
             // the filter value and then the expansion state are restored in microtasks
             await Promise.resolve();
 
-            expect(treeControl.filterValue.value).toEqual([]);
+            // an empty query is a reset
+            expect(treeControl.filterValue.value).toBeNull();
             expect(treeControl.expansionModel.selected).toEqual([]);
         });
     });
@@ -307,6 +309,144 @@ describe('FlatTreeControl', () => {
                 await Promise.resolve();
 
                 expect(control.expansionModel.selected.map((node) => node.name)).toEqual(['images']);
+            });
+        });
+
+        describe('applyFilter', () => {
+            it('should keep the matches together with their ancestors', () => {
+                control.applyFilter('draft');
+                expect(control.filterModel.selected.map((node) => node.name)).toEqual([
+                    'root',
+                    'documents',
+                    'specs',
+                    'draft'
+                ]);
+                expect(control.filterQuery).toBe('draft');
+            });
+
+            it('should run preset filters when the query is null', () => {
+                const filterByValues = new FilterByValues(control);
+
+                filterByValues.setValues(['draft', 'images']);
+                control.setFilters(filterByValues);
+
+                control.applyFilter(null);
+
+                expect(control.filterModel.selected.map((node) => node.name)).toEqual(['draft', 'images']);
+                expect(control.filterQuery).toBeNull();
+            });
+
+            it('should not overwrite the remembered expansion state on a second application', async () => {
+                control.expand(byName(nodes, 'images'));
+                control.applyFilter('draft');
+                control.applyFilter('specs');
+                expect(control.expandedItemsBeforeFiltration.map((node) => node.name)).toEqual(['images']);
+
+                control.resetFilter();
+                await Promise.resolve();
+
+                expect(control.expansionModel.selected.map((node) => node.name)).toEqual(['images']);
+            });
+
+            it('should treat an empty query as a reset', async () => {
+                control.expand(byName(nodes, 'images'));
+                control.applyFilter('draft');
+                await Promise.resolve();
+                control.applyFilter('');
+                expect(control.filterModel.selected).toEqual([]);
+                expect(control.filterQuery).toBeNull();
+                await Promise.resolve();
+                expect(control.expansionModel.selected.map((node) => node.name)).toEqual(['images']);
+            });
+
+            it('should publish the query on the deprecated filterValue for compatibility', async () => {
+                control.applyFilter('draft');
+                await Promise.resolve();
+                expect(control.filterValue.value).toBe('draft');
+            });
+
+            it('should ignore expand and collapse while a filter is active', () => {
+                control.applyFilter('draft');
+                control.expand(byName(nodes, 'images'));
+                expect(control.isExpanded(byName(nodes, 'images'))).toBe(false);
+            });
+
+            it('should ignore expand while a zero-match filter is active', () => {
+                control.applyFilter('nothing');
+                control.expand(byName(nodes, 'images'));
+                expect(control.expansionModel.selected).toEqual([]);
+            });
+        });
+
+        describe('resetFilter', () => {
+            it('should clear the filter and restore the expansion state', async () => {
+                control.expand(byName(nodes, 'images'));
+                control.applyFilter('draft');
+                await Promise.resolve();
+                control.resetFilter();
+                expect(control.filterModel.selected).toEqual([]);
+                expect(control.filterQuery).toBeNull();
+                await Promise.resolve();
+                expect(control.expansionModel.selected.map((node) => node.name)).toEqual(['images']);
+            });
+        });
+
+        describe('hasActiveFilter', () => {
+            it('should be false initially', () => {
+                expect(control.hasActiveFilter).toBe(false);
+            });
+
+            it('should be true while a matching filter is active', () => {
+                control.applyFilter('draft');
+
+                expect(control.hasActiveFilter).toBe(true);
+            });
+
+            it('should be true while a zero-match filter is active', () => {
+                control.applyFilter('nothing');
+
+                expect(control.filterModel.selected).toEqual([]);
+                expect(control.hasActiveFilter).toBe(true);
+            });
+
+            it('should be false after the filter is reset', () => {
+                control.applyFilter('draft');
+                control.resetFilter();
+
+                expect(control.hasActiveFilter).toBe(false);
+            });
+
+            it('should be true for a null query that leaves a non-empty selection', () => {
+                const filterByValues = new FilterByValues(control);
+
+                filterByValues.setValues(['draft', 'images']);
+                control.setFilters(filterByValues);
+
+                control.applyFilter(null);
+
+                expect(control.hasActiveFilter).toBe(true);
+            });
+
+            it('should be false for a null query with an empty selection', () => {
+                const filterByValues = new FilterByValues(control);
+
+                filterByValues.setValues(['nothing']);
+                control.setFilters(filterByValues);
+
+                control.applyFilter(null);
+
+                expect(control.filterModel.selected).toEqual([]);
+                expect(control.hasActiveFilter).toBe(false);
+            });
+        });
+
+        describe('filterNodes (deprecated)', () => {
+            it('should delegate to applyFilter', () => {
+                const spy = vi.spyOn(control, 'applyFilter');
+
+                control.filterNodes('draft');
+                expect(spy).toHaveBeenCalledWith('draft');
+                expect(control.filterQuery).toBe('draft');
             });
         });
     });

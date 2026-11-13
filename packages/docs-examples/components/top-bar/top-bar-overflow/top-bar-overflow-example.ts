@@ -60,7 +60,7 @@ type ExampleAction = {
     template: `
         <kbq-top-bar [withShadow]="hasOverflow()">
             <div class="layout-align-center-center" kbqTopBarContainer placement="start">
-                <div class="kbq-title example-kbq-top-bar__title">
+                <div class="example-kbq-top-bar__title" kbqTopBarTitle>
                     <span class="kbq-truncate-line layout-margin-right-xs">Page</span>
 
                     <span class="example-kbq-top-bar__counter">{{ 13294 | kbqNumber: '' : 'en-US' }}</span>

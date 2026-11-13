@@ -307,6 +307,114 @@ describe('KbqPipeMultiSelectComponent', () => {
         });
     });
 
+    describe('selectAllCounter', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+        });
+
+        it('should not render the counter when the flag is absent', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [], selectAll: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(document.querySelector('.kbq-pipe-select-all__counter')).toBeNull();
+        });
+
+        it('should render the counter with the total number of options', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [], selectAll: true, selectAllCounter: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(
+                document
+                    .querySelector('.kbq-pipe-multiselect__panel .kbq-pipe-select-all__counter')!
+                    .textContent!.trim()
+            ).toBe('5');
+        });
+
+        it('should count only the options matching the search', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [], selectAll: true, selectAllCounter: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            getPipeComponent().searchControl.setValue('Option 1');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(
+                document
+                    .querySelector('.kbq-pipe-multiselect__panel .kbq-pipe-select-all__counter')!
+                    .textContent!.trim()
+            ).toBe('1');
+        });
+
+        it('should hide the select-all row when the search matches nothing', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [], selectAll: true, selectAllCounter: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            getPipeComponent().searchControl.setValue('zzz');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(
+                document.querySelector('.kbq-pipe-multiselect__panel kbq-option .kbq-pipe-select-all__counter')
+            ).toBeNull();
+            expect(document.querySelectorAll('.kbq-pipe-multiselect__panel kbq-option').length).toBe(0);
+        });
+
+        it('should not count the locked values', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.pipeTemplates = [
+                { ...fixture.componentInstance.pipeTemplates[0], lockedValues: [SELECT_VALUES[0], SELECT_VALUES[1]] }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [], selectAll: true, selectAllCounter: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(
+                document
+                    .querySelector('.kbq-pipe-multiselect__panel .kbq-pipe-select-all__counter')!
+                    .textContent!.trim()
+            ).toBe('3');
+        });
+    });
+
     describe('onSelect', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(TestComponent);

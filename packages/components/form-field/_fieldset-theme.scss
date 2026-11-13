@@ -1,9 +1,4 @@
-@use './form-field-theme';
-
+// Kept for back-compatibility: the 21.0 migration points the stylesheet imports of consumers to this file.
+/* stylelint-disable-next-line block-no-empty -- an empty mixin that consumers still include */
 @mixin kbq-fieldset-theme {
-    // Geometry of the hint area lives in `fieldset.scss`, next to the rest of the fieldset layout.
-    .kbq-form-field__hint {
-        @include form-field-theme.kbq-form-field-hint-theme();
-        @include form-field-theme.kbq-form-field-hint-typography();
-    }
 }

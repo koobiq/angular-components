@@ -11,6 +11,7 @@ import {
     type OnDestroy,
     type TemplateRef
 } from '@angular/core';
+import { KBQ_OVERFLOW_ITEMS_RESIZE_OBSERVER_TARGETS } from '@koobiq/components/overflow-items';
 import { KBQ_ACTIONS_PANEL_DEFAULT_CONFIG, KbqActionsPanelConfig } from './actions-panel-config';
 // eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqActionsPanelContainer } from './actions-panel-container';
@@ -210,7 +211,14 @@ export class KbqActionsPanel implements OnDestroy {
 
                     return [
                         { provide: KbqActionsPanelRef, useValue: actionsPanelRef },
-                        { provide: KBQ_ACTIONS_PANEL_DATA, useValue: config.data }
+                        { provide: KBQ_ACTIONS_PANEL_DATA, useValue: config.data },
+                        // The panel is as wide as its content, and items hidden by `KbqOverflowItems` drop out of that
+                        // width, so the panel never grows back by itself. The overlay host spans the space the panel
+                        // may take: `overlayContainer`, or else the application-wide overlay container.
+                        {
+                            provide: KBQ_OVERFLOW_ITEMS_RESIZE_OBSERVER_TARGETS,
+                            useValue: [dialogRef.overlayRef.hostElement]
+                        }
                     ];
                 }
             });

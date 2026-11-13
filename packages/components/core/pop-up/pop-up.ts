@@ -9,6 +9,7 @@ import {
     Injector,
     type OnDestroy,
     Renderer2,
+    RendererStyleFlags2,
     type Signal,
     signal,
     TemplateRef
@@ -16,6 +17,7 @@ import {
 import { type Observable, Subject } from 'rxjs';
 import { kbqAfterAnimations, kbqAnimationsDisabled } from '../animation/animations-state';
 import { PopUpPlacements, PopUpVisibility } from './constants';
+import { kbqGetPopUpArrowShift } from './pop-up-positioning';
 import type { KbqPopUpTrigger } from './pop-up-trigger';
 
 @Directive({
@@ -66,9 +68,19 @@ export abstract class KbqPopUp implements OnDestroy {
     }
 
     arrow: boolean = false;
+
+    /** Whether the arrow points at the origin center while the panel keeps its placement. Defaults to `false`. */
+    arrowCentered = false;
+
+    /** Distance from a panel edge to the arrow center, in pixels. Defaults to `0`. */
+    protected arrowCenterInset = 0;
+
     defaultPaddings: boolean = false;
 
     offset: number | null = null;
+
+    private resolvedPlacement = 'top';
+    private appliedArrowShift: { x: string; y: string } | null = null;
 
     private readonly visibilityState = signal(PopUpVisibility.Initial);
 
@@ -178,6 +190,8 @@ export abstract class KbqPopUp implements OnDestroy {
     }
 
     updateClassMap(placement: string, customClass: string, classMap?: any): void {
+        this.resolvedPlacement = placement;
+
         // `customClass` may be a whitespace-separated list of class names; expand it into
         // individual keys so the native `[class]` binding (which doesn't tokenise object keys)
         // applies each class correctly.
@@ -211,7 +225,75 @@ export abstract class KbqPopUp implements OnDestroy {
     }
 
     /** Updates arrow geometry after the connected overlay applies a position. @docs-private */
-    updateArrowPosition(): void {}
+    updateArrowPosition(): void {
+        const element = this.elementRef?.nativeElement;
+
+        if (!element) return;
+
+        const point = this.trigger?.getArrowPoint();
+
+        if (!point || !this.arrow || this.trigger?.stickToWindow) {
+            this.resetArrowShift();
+
+            return;
+        }
+
+        const panelRect = this.getPanelViewportRect(element);
+
+        // Not laid out (detached or `display: none`): a stale shift is as wrong as a made-up one.
+        if (!panelRect) {
+            this.resetArrowShift();
+
+            return;
+        }
+
+        const shift = kbqGetPopUpArrowShift(this.resolvedPlacement, panelRect, point, this.arrowCenterInset);
+        const nextShift = { x: `${shift.x}px`, y: `${shift.y}px` };
+
+        if (this.appliedArrowShift?.x === nextShift.x && this.appliedArrowShift.y === nextShift.y) return;
+
+        this.renderer.setStyle(element, `--${this.prefix}-arrow-shift-x`, nextShift.x, RendererStyleFlags2.DashCase);
+        this.renderer.setStyle(element, `--${this.prefix}-arrow-shift-y`, nextShift.y, RendererStyleFlags2.DashCase);
+        this.appliedArrowShift = nextShift;
+    }
+
+    /**
+     * Border box of the panel in viewport coordinates. `getBoundingClientRect` reflects the entrance
+     * `scale(...)` transform — an empty box at `scale(0)` — while the `offset*` reads describe the laid-out
+     * panel regardless of transforms; measuring the transformed box makes the arrow jump whenever this runs
+     * between attach and the end of the show animation.
+     */
+    private getPanelViewportRect(element: HTMLElement): DOMRect | null {
+        const { offsetWidth, offsetHeight } = element;
+
+        if (!offsetWidth || !offsetHeight) return null;
+
+        const offsetParent = element.offsetParent as HTMLElement | null;
+
+        if (!offsetParent) return null;
+
+        const parentRect = offsetParent.getBoundingClientRect();
+
+        return new DOMRect(
+            parentRect.left + element.offsetLeft,
+            parentRect.top + element.offsetTop,
+            offsetWidth,
+            offsetHeight
+        );
+    }
+
+    /** Removes the arrow shift written earlier, if any. */
+    private resetArrowShift(): void {
+        if (!this.appliedArrowShift) return;
+
+        const element = this.elementRef?.nativeElement;
+
+        if (!element) return;
+
+        this.renderer.removeStyle(element, `--${this.prefix}-arrow-shift-x`, RendererStyleFlags2.DashCase);
+        this.renderer.removeStyle(element, `--${this.prefix}-arrow-shift-y`, RendererStyleFlags2.DashCase);
+        this.appliedArrowShift = null;
+    }
 
     /**
      * Called once the pop-up has animated in. Only the entrance animates: `hide()` emits `onHideSubject`

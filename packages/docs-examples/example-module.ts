@@ -2751,6 +2751,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-search-example.ts",
     "importPath": "components/filter-bar"
   },
+  "filter-bar-select-all-counter": {
+    "packagePath": "components/filter-bar/filter-bar-select-all-counter",
+    "title": "filter-bar-select-all-counter",
+    "componentName": "FilterBarSelectAllCounterExample",
+    "files": [
+      "filter-bar-select-all-counter-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "filter-bar-select-all-counter-example",
+    "primaryFile": "filter-bar-select-all-counter-example.ts",
+    "importPath": "components/filter-bar"
+  },
   "filter-bar-state-saving": {
     "packagePath": "components/filter-bar/filter-bar-state-saving",
     "title": "filter-bar-state-saving",
@@ -3970,18 +3982,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "loader-overlay-delay-example.ts",
     "importPath": "components/loader-overlay"
   },
-  "loader-overlay-fixed-top": {
-    "packagePath": "components/loader-overlay/loader-overlay-fixed-top",
-    "title": "Loader-overlay fixed-top",
-    "componentName": "LoaderOverlayFixedTopExample",
-    "files": [
-      "loader-overlay-fixed-top-example.ts"
-    ],
-    "localImportFiles": [],
-    "selector": "loader-overlay-fixed-top-example",
-    "primaryFile": "loader-overlay-fixed-top-example.ts",
-    "importPath": "components/loader-overlay"
-  },
   "loader-overlay-large": {
     "packagePath": "components/loader-overlay/loader-overlay-large",
     "title": "Loader-overlay large",
@@ -4333,6 +4333,34 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "selector": "navbar-app-long-name-example",
     "primaryFile": "navbar-app-long-name-example.ts",
+    "importPath": "components/navbar"
+  },
+  "navbar-item-custom-component": {
+    "packagePath": "components/navbar/navbar-item-custom-component",
+    "title": "Navbar item with a custom interactive component",
+    "componentName": "NavbarItemCustomComponentExample",
+    "files": [
+      "navbar-item-custom-component-example.ts",
+      "navbar-item-custom-component-example.html"
+    ],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
+    "selector": "navbar-item-custom-component-example",
+    "primaryFile": "navbar-item-custom-component-example.ts",
+    "importPath": "components/navbar"
+  },
+  "navbar-item-custom-content": {
+    "packagePath": "components/navbar/navbar-item-custom-content",
+    "title": "Navbar item with custom content instead of the icon",
+    "componentName": "NavbarItemCustomContentExample",
+    "files": [
+      "navbar-item-custom-content-example.ts",
+      "navbar-item-custom-content-example.html"
+    ],
+    "localImportFiles": [],
+    "selector": "navbar-item-custom-content-example",
+    "primaryFile": "navbar-item-custom-content-example.ts",
     "importPath": "components/navbar"
   },
   "navbar-item-suffix": {
@@ -8306,6 +8334,7 @@ export type LiveExampleId =
   | 'filter-bar-saved-filters'
   | 'filter-bar-search-in-pipes'
   | 'filter-bar-search'
+  | 'filter-bar-select-all-counter'
   | 'filter-bar-state-saving'
   | 'filter-bar-uniq-pipes'
   | 'filter-bar-value-template'
@@ -8406,7 +8435,6 @@ export type LiveExampleId =
   | 'loader-overlay-background'
   | 'loader-overlay-default'
   | 'loader-overlay-delay'
-  | 'loader-overlay-fixed-top'
   | 'loader-overlay-large'
   | 'loader-overlay-overview'
   | 'loader-overlay-size'
@@ -8435,6 +8463,8 @@ export type LiveExampleId =
   | 'modal-sizes'
   | 'modal-template'
   | 'navbar-app-long-name'
+  | 'navbar-item-custom-component'
+  | 'navbar-item-custom-content'
   | 'navbar-item-suffix'
   | 'navbar-overview'
   | 'navbar-template-outlet'

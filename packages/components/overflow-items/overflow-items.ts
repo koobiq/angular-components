@@ -9,6 +9,7 @@ import {
     DestroyRef,
     Directive,
     inject,
+    InjectionToken,
     input,
     numberAttribute,
     output,
@@ -34,6 +35,19 @@ import {
  * such lengths, while a larger overflow can already cost the item a device pixel when it is painted.
  */
 const MIN_OVERFLOW_IN_DEVICE_PIXELS = 0.5;
+
+/**
+ * Elements that `KbqOverflowItems` observes for resize changes on top of its own element and
+ * `additionalResizeObserverTargets`. Provided by a component that is as wide as its content, such as the actions panel:
+ * items hidden by `KbqOverflowItems` drop out of that width, so the component does not grow back by itself once there
+ * is room for them again, and only the element that bounds it reports that room.
+ *
+ * @docs-private
+ */
+export const KBQ_OVERFLOW_ITEMS_RESIZE_OBSERVER_TARGETS = new InjectionToken<readonly Element[]>(
+    'KBQ_OVERFLOW_ITEMS_RESIZE_OBSERVER_TARGETS',
+    { factory: () => [] }
+);
 
 /**
  * Manages the visibility of the element.
@@ -150,6 +164,7 @@ export class KbqOverflowItems {
     private readonly document = inject(DOCUMENT);
     private readonly window = inject(KBQ_WINDOW);
     private readonly platform = inject(Platform);
+    private readonly resizeObserverTargets = inject(KBQ_OVERFLOW_ITEMS_RESIZE_OBSERVER_TARGETS);
 
     /**
      * `KbqOverflowItem` directive references.
@@ -256,6 +271,7 @@ export class KbqOverflowItems {
 
         const resizeObservers = merge(
             this.resizeObserver.observe(this.element),
+            ...this.resizeObserverTargets.map((target) => this.resizeObserver.observe(target)),
             toObservable(this.additionalResizeObserverTargets).pipe(
                 switchMap((targets) => {
                     return Array.isArray(targets)

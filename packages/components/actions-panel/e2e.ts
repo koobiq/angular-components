@@ -14,11 +14,7 @@ import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
         <div #overlayContainer data-testid="e2eActionsPanelOverlayContainer" class="dev-overlay-container"></div>
 
         <ng-template let-data>
-            <div
-                #kbqOverflowItems="kbqOverflowItems"
-                kbqOverflowItems
-                [additionalResizeObserverTargets]="overlayContainer"
-            >
+            <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
                 @for (action of actions; track $index) {
                     <button
                         color="contrast"

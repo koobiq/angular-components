@@ -13,18 +13,21 @@ test.describe('KbqCheckboxModule', () => {
         });
     });
 
-    test.describe('E2eCheckboxWithTextAndCaption', () => {
-        const getComponent = (page: Page): Locator => page.getByTestId('e2eCheckboxWithTextAndCaption');
+    test.describe('E2eCheckboxWithLabel', () => {
+        const getComponent = (page: Page): Locator => page.getByTestId('e2eCheckboxWithLabel');
 
         test('states', async ({ page }) => {
-            await page.goto('/E2eCheckboxWithTextAndCaption');
-            await expect(getComponent(page)).toHaveScreenshot('02-light.png');
+            await page.goto('/E2eCheckboxWithLabel');
+
+            const screenshotTarget = getComponent(page).getByTestId('e2eScreenshotTarget');
+
+            await expect(screenshotTarget).toHaveScreenshot('02-label-light.png');
             await e2eEnableDarkTheme(page);
-            await expect(getComponent(page)).toHaveScreenshot('02-dark.png');
+            await expect(screenshotTarget).toHaveScreenshot('02-label-dark.png');
         });
 
         test('cursor is pointer only on the clickable label, not the host dead zone', async ({ page }) => {
-            await page.goto('/E2eCheckboxWithTextAndCaption');
+            await page.goto('/E2eCheckboxWithLabel');
 
             const checkbox = getComponent(page).locator('kbq-checkbox').first();
             const label = checkbox.locator('.kbq-checkbox__layout');
@@ -37,7 +40,7 @@ test.describe('KbqCheckboxModule', () => {
         });
 
         test('cursor is default on disabled checkbox host and label', async ({ page }) => {
-            await page.goto('/E2eCheckboxWithTextAndCaption');
+            await page.goto('/E2eCheckboxWithLabel');
 
             const disabledCheckbox = getComponent(page).locator('kbq-checkbox.kbq-disabled').first();
             const label = disabledCheckbox.locator('.kbq-checkbox__layout');
@@ -84,6 +87,20 @@ test.describe('KbqCheckboxModule', () => {
                     height: validBox?.height
                 });
             }
+        });
+    });
+
+    test.describe('E2eCheckboxWithHint', () => {
+        const getComponent = (page: Page): Locator => page.getByTestId('e2eCheckboxWithHint');
+
+        test('states', async ({ page }) => {
+            await page.goto('/E2eCheckboxWithHint');
+
+            const screenshotTarget = getComponent(page).getByTestId('e2eScreenshotTarget');
+
+            await expect(screenshotTarget).toHaveScreenshot('04-hint-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('04-hint-dark.png');
         });
     });
 

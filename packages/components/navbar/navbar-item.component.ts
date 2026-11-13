@@ -17,6 +17,7 @@ import {
     effect,
     ElementRef,
     inject,
+    InjectionToken,
     Injector,
     input,
     type OnChanges,
@@ -51,6 +52,41 @@ import { getOuterWidth } from './outer-width';
 export type KbqNavbarOrientation = 'horizontal' | 'vertical';
 
 /**
+ * A custom interactive component projected into a navbar item in place of a button or a form field.
+ *
+ * Provide the component's own class as `KBQ_NAVBAR_ITEM_TRIGGER`, and the item hands keyboard focus and
+ * activation to it: it gets no synthetic click, stays the single tab stop of the navbar, and keeps working
+ * with arrow-key navigation. The component owns its overlay — a dropdown, a popover, or anything else — and
+ * must not be reachable by Tab on its own (`tabindex` stays with the navbar, which moves focus between items
+ * with the arrow keys).
+ *
+ * The item paints its hover, pressed, selected and keyboard-focus states around the component, so the
+ * component styles only its content and must not add a focus outline of its own.
+ */
+export interface KbqNavbarItemTrigger {
+    /** Whether the component currently holds focus. */
+    readonly hasFocus: boolean;
+
+    /** Moves focus into the component. */
+    focus(): void;
+
+    /**
+     * Moves focus into the component as if it was reached with the keyboard — the focused element shows its
+     * keyboard focus state.
+     */
+    focusViaKeyboard?(): void;
+}
+
+/**
+ * Interactive content a navbar item recognizes as owning the interaction: a projected button or form field,
+ * or a custom component provided as `KBQ_NAVBAR_ITEM_TRIGGER`.
+ */
+export type KbqNavbarNestedElement = KbqButton | KbqFormField | KbqNavbarItemTrigger;
+
+/** Makes a custom component projected into a navbar item the owner of the item's interaction. */
+export const KBQ_NAVBAR_ITEM_TRIGGER = new InjectionToken<KbqNavbarItemTrigger>('kbq-navbar-item-trigger');
+
+/**
  * Elements that already turn Enter/Space into a `click` on their own. Items authored on top of them must not
  * get a synthetic activation on the same key, or the handler runs twice.
  */
@@ -58,6 +94,9 @@ const NATIVELY_ACTIONABLE_TAGS = new Set(['A', 'BUTTON', 'INPUT', 'SELECT', 'TEX
 
 /** Switches an item to its collapsed, icon-only presentation. */
 const COLLAPSED_ITEM_CLASS = 'kbq-navbar-item_collapsed';
+
+/** Paints the keyboard focus ring of an item whose custom trigger holds the focus. */
+const CUSTOM_TRIGGER_KEYBOARD_FOCUS_CLASS = 'kbq-navbar-item_keyboard-focused';
 
 /** @docs-private */
 export interface KbqNavbarFocusableItemEvent {
@@ -88,6 +127,22 @@ export class KbqNavbarBento {}
     }
 })
 export class KbqNavbarItemSuffix {}
+
+/**
+ * Marks arbitrary content of a navbar item that takes the spot of the item icon.
+ *
+ * The navbar reserves a 40×40px square for the content and leaves the positioning inside the square to the
+ * content itself: it can fill the whole square or render smaller with its own paddings. The square size is
+ * controlled by the `--kbq-navbar-item-size-custom-content-width` and `--kbq-navbar-item-size-custom-content-height`
+ * tokens.
+ */
+@Directive({
+    selector: '[kbqNavbarItemContent]',
+    host: {
+        class: 'kbq-navbar-item-content'
+    }
+})
+export class KbqNavbarItemContent {}
 
 @Directive({
     selector: 'kbq-navbar-title, [kbq-navbar-title]',
@@ -166,10 +221,13 @@ export class KbqNavbarDivider {
 
         class: 'kbq-navbar-focusable-item',
         '[class.kbq-navbar-item_has-nested]': '!!nestedElement',
+        '[class.kbq-navbar-item_has-custom-trigger]': '!!customTrigger()',
         '[class.kbq-disabled]': 'explicitlyDisabled',
 
         '(focus)': 'onFocusHandler()',
-        '(blur)': 'blur()'
+        '(blur)': 'blur()',
+        // The custom trigger takes the DOM focus from the item, so the item tracks when the focus leaves it.
+        '(focusout)': 'onFocusOut($event)'
     }
 })
 export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, AfterViewInit, OnDestroy, IFocusableOption {
@@ -188,9 +246,12 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
     /** @docs-private */
     readonly formField = contentChild(KbqFormField);
 
+    /** Custom interactive component projected into the item, if any. @docs-private */
+    readonly customTrigger = contentChild(KBQ_NAVBAR_ITEM_TRIGGER, { descendants: true });
+
     /** Interactive element projected into the item, if any. */
-    get nestedElement(): KbqButton | KbqFormField | undefined {
-        return this.button() || this.formField();
+    get nestedElement(): KbqNavbarNestedElement | undefined {
+        return this.button() || this.formField() || this.customTrigger() || undefined;
     }
 
     /** Tooltip of a `kbq-navbar-item`; a brand and a toggle have none. @docs-private */
@@ -314,6 +375,20 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
         this.elementRef.nativeElement.focus();
     }
 
+    /**
+     * Clears the keyboard focus ring once the focus leaves the item. The custom trigger takes the DOM focus
+     * from the item, so the CDK classes that drive the ring end up on the trigger and never come back.
+     *
+     * @docs-private
+     */
+    protected onFocusOut(event: FocusEvent): void {
+        const next = event.relatedTarget as Node | null;
+
+        if (next && this.elementRef.nativeElement.contains(next)) return;
+
+        this.elementRef.nativeElement.classList.remove(CUSTOM_TRIGGER_KEYBOARD_FOCUS_CLASS);
+    }
+
     /** @docs-private */
     focus(origin?: FocusOrigin): void {
         if (this.disabled || this.hasFocus) {
@@ -329,11 +404,19 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
         }
 
         if (this.nestedElement) {
+            const nestedElement = this.nestedElement;
+
             // KbqButton tracks focus via FocusMonitor; KbqFormField just delegates to control.focus.
-            if (origin === 'keyboard' && 'focusViaKeyboard' in this.nestedElement) {
-                this.nestedElement.focusViaKeyboard();
+            if (origin === 'keyboard' && 'focusViaKeyboard' in nestedElement && nestedElement.focusViaKeyboard) {
+                // Only a custom trigger leaves the ring to the item: a button and a form field paint their own.
+                this.elementRef.nativeElement.classList.toggle(
+                    CUSTOM_TRIGGER_KEYBOARD_FOCUS_CLASS,
+                    !!this.customTrigger()
+                );
+
+                nestedElement.focusViaKeyboard();
             } else if (movesFocus) {
-                this.nestedElement.focus();
+                nestedElement.focus();
             }
 
             this.changeDetector.markForCheck();
@@ -365,7 +448,7 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
 
                 this.tooltip?.hide();
 
-                if (this.button()?.hasFocus) {
+                if (this.nestedElement?.hasFocus) {
                     return;
                 }
 

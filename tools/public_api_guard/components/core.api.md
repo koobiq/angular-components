@@ -3235,7 +3235,7 @@ export const kbqGetCaretRect: (element: KbqTextAnchor) => KbqCaretRect | null;
 export const kbqGetElementHeight: (element: Element) => number;
 
 // @public
-export const kbqGetOverlayOriginSize: (origin: KbqOverlayOrigin) => Pick<KbqCaretRect, "width" | "height">;
+export const kbqGetOverlayOriginSize: (origin: KbqOverlayOrigin | FlexibleConnectedPositionStrategyOrigin) => Pick<KbqCaretRect, "x" | "y" | "width" | "height">;
 
 // @public
 export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number;
@@ -3872,6 +3872,8 @@ export abstract class KbqPopUp implements OnDestroy {
     protected readonly animationsDisabled: boolean;
     // (undocumented)
     arrow: boolean;
+    arrowCentered: boolean;
+    protected arrowCenterInset: number;
     // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
     get classMap(): {};
@@ -3935,6 +3937,7 @@ export type KbqPopUpSizeValues = KbqEnumValues<PopUpSizes>;
 // @public
 export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblingPopup {
     abstract arrow: boolean;
+    arrowCentered: boolean;
     protected readonly availablePositions: {
         [key: string]: ConnectionPositionPair;
     };
@@ -3956,13 +3959,22 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     enterDelay: number;
     protected externalNativeElement: HTMLElement | undefined;
     focus(): void;
+    protected getActiveOrigin(): FlexibleConnectedPositionStrategyOrigin;
     protected getAdjustedPositions(): ConnectionPositionPair[];
     protected getAnchorSize(): {
         width: number;
         height: number;
     };
+    getArrowPoint(): {
+        x: number;
+        y: number;
+    } | null;
     getMouseLeaveListener(): () => void;
     getNativeElement(): HTMLElement;
+    protected getOriginCenter(): {
+        x: number;
+        y: number;
+    };
     abstract getOverlayHandleComponentType(): Type<T>;
     protected getPrioritizedPositions(): ConnectionPositionPair[];
     protected getPriorityPlacementStrategy(value: string | string[]): ConnectionPositionPair[];
@@ -4002,6 +4014,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected abstract scrollStrategy: () => ScrollStrategy;
     setExternalNativeElement(value: HTMLElement): void;
     protected setHovered(value: boolean): void;
+    protected setOrigin(origin: FlexibleConnectedPositionStrategyOrigin | null): void;
     show(delay?: number): void;
     stickToWindow: KbqStickToWindowPlacementValues | undefined;
     protected strategy: FlexibleConnectedPositionStrategy | undefined;
@@ -4129,11 +4142,13 @@ export class KbqReadStateDirective {
 }
 
 // @public (undocumented)
-export class KbqRelativeLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, []> implements PipeTransform {
+export class KbqRelativeLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [
+options?: Pick<DateTimeOptions, 'sentenceStart'>
+]> implements PipeTransform {
     // (undocumented)
-    protected format(value: D | string | null | undefined): string;
+    protected format(value: D | string | null | undefined, options?: Pick<DateTimeOptions, 'sentenceStart'>): string;
     // (undocumented)
-    transform(value: D | string | null | undefined): string;
+    transform(value: D | string | null | undefined, options?: Pick<DateTimeOptions, 'sentenceStart'>): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRelativeLongDatePipe<any>, never>;
     // (undocumented)
@@ -4153,11 +4168,13 @@ export class KbqRelativeLongDateTimePipe<D> extends BaseLocaleAwareFormatterPipe
 }
 
 // @public (undocumented)
-export class KbqRelativeShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, []> implements PipeTransform {
+export class KbqRelativeShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [
+options?: Pick<DateTimeOptions, 'sentenceStart'>
+]> implements PipeTransform {
     // (undocumented)
-    protected format(value: D | string | null | undefined): string;
+    protected format(value: D | string | null | undefined, options?: Pick<DateTimeOptions, 'sentenceStart'>): string;
     // (undocumented)
-    transform(value: D | string | null | undefined): string;
+    transform(value: D | string | null | undefined, options?: Pick<DateTimeOptions, 'sentenceStart'>): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRelativeShortDatePipe<any>, never>;
     // (undocumented)
@@ -4208,7 +4225,7 @@ export interface KbqResolvedPanelWidth {
 }
 
 // @public
-export const kbqResolveOverlayOrigin: (origin: KbqOverlayOrigin) => FlexibleConnectedPositionStrategyOrigin;
+export const kbqResolveOverlayOrigin: (origin: KbqOverlayOrigin | FlexibleConnectedPositionStrategyOrigin) => FlexibleConnectedPositionStrategyOrigin;
 
 // @public
 export function kbqResolvePanelMaxHeightToken(panelMaxHeight: KbqPanelMaxHeight | undefined): string | null;

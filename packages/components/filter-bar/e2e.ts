@@ -1734,6 +1734,73 @@ export class E2eFilterBarDateWithoutValues {
     };
 }
 
+/**
+ * A date pipe whose period runs backwards, which shows a hint under the period editor. A template without presets opens
+ * straight on the period editor, and the fixed value keeps the inputs and the calendar the same from day to day.
+ */
+@Component({
+    selector: 'e2e-filter-bar-date-with-hint',
+    imports: [KbqFilterBarModule, KbqLuxonDateModule],
+    template: `
+        <div class="e2e-filter-bar-date-with-hint__target" data-testid="e2eScreenshotTarget">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filter">
+                @for (pipe of filter.pipes; track pipe) {
+                    <ng-container *kbqPipe="pipe" />
+                }
+            </kbq-filter-bar>
+        </div>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 8px;
+        }
+
+        /* The editor is portaled into the overlay, so the target needs room for it to overlap. */
+        .e2e-filter-bar-date-with-hint__target {
+            height: 560px;
+            width: 360px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eFilterBarDateWithHint'
+    }
+})
+export class E2eFilterBarDateWithHint {
+    readonly pipeTemplates: KbqPipeTemplate[] = [
+        {
+            name: 'Date',
+            id: 'E2eDateWithHint',
+            type: KbqPipeTypes.Date,
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        }
+    ];
+
+    readonly filter: KbqFilter = {
+        name: '',
+        readonly: false,
+        disabled: false,
+        changed: false,
+        saved: false,
+        pipes: [
+            {
+                name: 'Date',
+                id: 'E2eDateWithHint',
+                type: KbqPipeTypes.Date,
+                value: { start: '2025-03-14T00:00:00', end: '2025-03-10T00:00:00' },
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            }
+        ]
+    };
+}
+
 interface CustomTreeNode extends Omit<KbqTreeSelectNode, 'children'> {
     children: CustomTreeNode[] | null;
     icon?: string;
@@ -1906,4 +1973,120 @@ export class E2eFilterBarMultiTreeSelectValueTemplate implements AfterViewInit {
             multilineOptions: !template.multilineOptions
         }));
     }
+}
+
+/**
+ * `selectAllCounter` in both multi-select pipes: the flat one counts options, the tree one counts leaves,
+ * and a third pipe keeps `selectAll` without the counter to pin the off state.
+ */
+@Component({
+    selector: 'e2e-filter-bar-select-all-counter',
+    imports: [KbqFilterBarModule],
+    template: `
+        <div class="e2e-filter-bar-select-all-counter__target" data-testid="e2eScreenshotTarget">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filter">
+                @for (pipe of filter.pipes; track pipe) {
+                    <ng-container *kbqPipe="pipe" />
+                }
+            </kbq-filter-bar>
+        </div>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 8px;
+        }
+
+        /* The panel is portaled into the overlay, so the target needs room for it to open inside the viewport. */
+        .e2e-filter-bar-select-all-counter__target {
+            height: 560px;
+            width: 720px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eFilterBarSelectAllCounter'
+    }
+})
+export class E2eFilterBarSelectAllCounter {
+    readonly filter: KbqFilter = {
+        name: '',
+        readonly: false,
+        disabled: false,
+        changed: false,
+        saved: false,
+        pipes: [
+            {
+                name: 'MultiSelect',
+                id: 'E2eSelectAllCounterMultiSelect',
+                type: KbqPipeTypes.MultiSelect,
+                value: null,
+
+                search: true,
+                selectAll: true,
+                selectAllCounter: true,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'MultiTreeSelect',
+                id: 'E2eSelectAllCounterMultiTreeSelect',
+                type: KbqPipeTypes.MultiTreeSelect,
+                value: null,
+
+                search: true,
+                selectAll: true,
+                selectAllCounter: true,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'Without Counter',
+                id: 'E2eSelectAllCounterOff',
+                type: KbqPipeTypes.MultiSelect,
+                value: null,
+
+                search: true,
+                selectAll: true,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            }
+        ]
+    };
+
+    readonly pipeTemplates: KbqPipeTemplate[] = [
+        {
+            name: 'MultiSelect',
+            id: 'E2eSelectAllCounterMultiSelect',
+            type: KbqPipeTypes.MultiSelect,
+            values: Array.from({ length: 8 }, (_, i) => ({ name: `Option #${i}`, id: i.toString() })),
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'MultiTreeSelect',
+            id: 'E2eSelectAllCounterMultiTreeSelect',
+            type: KbqPipeTypes.MultiTreeSelect,
+            values: kbqBuildTree(DEV_DATA_OBJECT, 0),
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'Without Counter',
+            id: 'E2eSelectAllCounterOff',
+            type: KbqPipeTypes.MultiSelect,
+            values: Array.from({ length: 8 }, (_, i) => ({ name: `Item #${i}`, id: i.toString() })),
+            cleanable: false,
+            removable: false,
+            disabled: false
+        }
+    ];
 }

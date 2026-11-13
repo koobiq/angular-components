@@ -20,12 +20,8 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
     ],
     template: `
         <kbq-top-bar [withShadow]="scroller.overflow().top">
-            <div
-                class="layout-row layout-align-center-center layout-padding-top-3xs layout-padding-bottom-3xs kbq-title kbq-truncate-line"
-                kbqTopBarContainer
-                placement="start"
-            >
-                <span class="kbq-truncate-line">Page Title</span>
+            <div class="layout-row layout-align-center-center" kbqTopBarContainer placement="start">
+                <span class="kbq-truncate-line" kbqTopBarTitle>Page Title</span>
             </div>
 
             <div kbqTopBarSpacer></div>

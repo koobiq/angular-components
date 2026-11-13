@@ -156,7 +156,7 @@ export class CustomTreeControlFilter<T> implements FlatTreeControlFilter<T> {
         >
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="node.name === 'tests'">
                 <span
-                    [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
+                    [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"
                 ></span>
             </kbq-tree-option>
 
@@ -164,7 +164,7 @@ export class CustomTreeControlFilter<T> implements FlatTreeControlFilter<T> {
                 <kbq-tree-node-toggle [node]="node" (click)="onChevronClick(node, $event)" />
 
                 <span
-                    [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
+                    [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"
                 ></span>
             </kbq-tree-option>
         </kbq-tree-selection>
@@ -204,47 +204,35 @@ export class TreeCustomFilteringExample {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
         this.dataSource.data = buildFileTree(DATA_OBJECT, 0);
-
-        // Reset expanded + match state whenever the filter goes idle.
-        this.treeControl.filterValue.subscribe((value) => {
-            if (!this.isFilterActive(value)) {
-                this.expandedMatches.set(new Set());
-                this.baseMatches = new Set();
-            }
-        });
     }
 
     onFilterChange(value: string): void {
         // Each new query starts from a clean expanded state.
         this.expandedMatches.set(new Set());
         this.baseMatches = this.computeBaseMatches(value);
-        this.treeControl.filterNodes(value);
+        this.treeControl.applyFilter(value);
 
         if (this.baseMatches.size > 0) {
-            // FlatTreeControl.filterNodes auto-selects every expandable node in the filter result
-            // (matches + ancestors). For not-yet-expanded MATCH folders the chevron should read "collapsed"
-            // because no children are visible yet — deselect them. Ancestors keep their selection so
-            // the chevron correctly shows "expanded" (the path to the match IS visible).
+            // applyFilter auto-selects every expandable node in the filter result (matches + ancestors).
+            // For not-yet-expanded MATCH folders the chevron should read "collapsed" because no children
+            // are visible yet — deselect them. Ancestors keep their selection so the chevron correctly
+            // shows "expanded" (the path to the match IS visible).
             //
-            // The deselect is deferred to a microtask so it runs AFTER `updateFilterValue`'s
-            // Promise.resolve callback has set `filterValue.value`. Otherwise `expansionModel.changed`
-            // here would route through the data source's `expansionHandler` and our work would be
-            // overwritten when filterValue is later set.
-            void Promise.resolve().then(() => {
-                let mutated = false;
+            // A deselect emits `expansionModel.changed`, which the data source answers with the
+            // unfiltered expansion view, so rebuildFilterVisible() re-affirms `filterModel` afterwards
+            // to keep the filter result rendered.
+            let mutated = false;
 
-                this.baseMatches.forEach((match) => {
-                    if (this.treeControl.isExpandable(match) && this.treeControl.expansionModel.isSelected(match)) {
-                        this.treeControl.expansionModel.deselect(match);
-                        mutated = true;
-                    }
-                });
-
-                if (mutated) {
-                    // Refresh the filter rendering after expansionModel mutation.
-                    this.treeControl.filterValue.next(this.treeControl.filterValue.value);
+            this.baseMatches.forEach((match) => {
+                if (this.treeControl.isExpandable(match) && this.treeControl.expansionModel.isSelected(match)) {
+                    this.treeControl.expansionModel.deselect(match);
+                    mutated = true;
                 }
             });
+
+            if (mutated) {
+                this.rebuildFilterVisible(value);
+            }
         }
     }
 
@@ -255,7 +243,7 @@ export class TreeCustomFilteringExample {
      * actually match the search query (ancestors and revealed siblings cannot be expanded).
      */
     onChevronClick(node: FileFlatNode, event: Event): void {
-        if (!this.isFilterActive(this.treeControl.filterValue.value)) return;
+        if (!this.isFilterActive(this.filterValue)) return;
 
         // Only nodes whose own view value matches the query can be expanded.
         if (!this.baseMatches.has(node)) {
@@ -286,7 +274,7 @@ export class TreeCustomFilteringExample {
         }
 
         this.expandedMatches.set(next);
-        this.rebuildFilterVisible();
+        this.rebuildFilterVisible(this.filterValue);
     }
 
     private computeBaseMatches(value: string | null): Set<FileFlatNode> {
@@ -303,17 +291,16 @@ export class TreeCustomFilteringExample {
         return nodeData.expandable;
     }
 
-    private isFilterActive(value: string | FileFlatNode[] | null): boolean {
-        return Array.isArray(value) ? value.length > 0 : !!value;
+    private isFilterActive(value: string | null): boolean {
+        return !!value;
     }
 
     /**
-     * Recomputes `filterModel` as `customFilter.handle(query) ∪ direct children of each expanded folder`,
-     * preserves hierarchical order, and re-emits `filterValue` so the data source rebuilds via
-     * `filterHandler()`.
+     * Recomputes `filterModel` as `customFilter.handle(query) ∪ direct children of each expanded folder`
+     * and preserves hierarchical order. The data source re-renders on `filterModel.changed`, so these
+     * mutations refresh the tree by themselves.
      */
-    private rebuildFilterVisible(): void {
-        const query = this.filterValue;
+    private rebuildFilterVisible(query: string): void {
         const base = this.customFilter.handle(query);
         const combined = new Set<FileFlatNode>(base);
 
@@ -332,8 +319,6 @@ export class TreeCustomFilteringExample {
 
         this.treeControl.filterModel.clear();
         this.treeControl.filterModel.select(...ordered);
-
-        this.treeControl.filterValue.next(this.treeControl.filterValue.value);
     }
 
     /** Walks `node.parent` upward; returns true if `ancestor` is reached. */

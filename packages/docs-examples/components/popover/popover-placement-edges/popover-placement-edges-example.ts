@@ -3,6 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/popover';
+import { KbqToggleModule } from '@koobiq/components/toggle';
 
 /**
  * @title Popover placement edges
@@ -12,7 +13,8 @@ import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/pop
     imports: [
         KbqPopoverModule,
         KbqButtonModule,
-        KbqInputModule
+        KbqInputModule,
+        KbqToggleModule
     ],
     templateUrl: './popover-placement-edges-example.html',
     styles: `
@@ -45,4 +47,5 @@ import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/pop
 export class PopoverPlacementEdgesExample {
     placements = PopUpPlacements;
     activePopover?: KbqPopoverTrigger;
+    protected arrowCentered = false;
 }

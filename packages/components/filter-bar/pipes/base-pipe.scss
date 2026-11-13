@@ -104,6 +104,16 @@
     }
 }
 
+// The gap comes from the stylesheet, not from template whitespace: the compiler strips the whitespace-only
+// text node between the label and the counter (the tree label is an `[innerHTML]` binding, so nothing else
+// keeps a space there), and a margin is immune to that. The tree selector carries `.kbq-tree-option` so
+// the margin survives the option reset `.kbq-tree-option .kbq-option-text > * { margin: 0 }`, which also
+// clears the logical longhands and would otherwise tie on specificity.
+.kbq-pipe-multiselect__panel .kbq-pipe-select-all__counter,
+.kbq-pipe-multi-tree-select__panel .kbq-tree-option .kbq-pipe-select-all__counter {
+    margin-inline-start: var(--kbq-size-xxs);
+}
+
 // A wrapped row is taller than one line: pin the checkbox and the toggle to the FIRST line,
 // as `:has(.kbq-option-caption)` in `tree-option.scss` does for two-line options. On a 32px row
 // this alignment coincides with the centered one, so single-line options do not change.

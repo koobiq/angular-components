@@ -88,8 +88,23 @@ enum DateParts {
 export const MAX_YEAR = 9999;
 const YEAR_LENGTH = 4;
 
+/** Days in the longest month */
+const MAX_DAYS_IN_MONTH = 31;
+
+/** A one- or two-digit year below it falls in the current century, any other in the previous one */
+const SHORT_YEAR_PIVOT = 30;
+
+/** First year of the current century */
+const CURRENT_CENTURY_START = 2000;
+
+/** First year of the previous century */
+const PREVIOUS_CENTURY_START = 1900;
+
+/** Key of the error reported for text that is not a date */
+const parseErrorKey = 'kbqDatepickerParse';
+
 class DateDigit {
-    maxDays = 31;
+    maxDays = MAX_DAYS_IN_MONTH;
     maxMonth = 12;
 
     parse: (value: string) => number;
@@ -114,6 +129,10 @@ class DateDigit {
 
     get isDay(): boolean {
         return this.value === DateParts.day;
+    }
+
+    get isYear(): boolean {
+        return this.value === DateParts.year;
     }
 
     get fullName(): 'date' | 'month' | 'year' {
@@ -311,6 +330,9 @@ interface DateTimeObject {
         '[attr.max]': 'max ? toISO8601(max) : null',
         '[attr.autocomplete]': '"off"',
         '(paste)': 'onPaste($event)',
+        '(drop)': 'onDrop($event)',
+        '(dragstart)': 'draggingOwnText = true',
+        '(dragend)': 'draggingOwnText = false',
         '(change)': 'onChange()',
         '(focus)': 'focusChanged(true)',
         '(blur)': 'onBlur()',
@@ -573,6 +595,13 @@ export class KbqDatepickerInput<D>
     /** Whether the last value set on the input was valid. */
     private lastValueValid = false;
 
+    /**
+     * Whether a drag started in this field, so that its drop here is the field's own text.
+     *
+     * @docs-private
+     */
+    protected draggingOwnText = false;
+
     /** The combined form control validator for this input. */
     private readonly validator: ValidatorFn | null;
 
@@ -649,16 +678,24 @@ export class KbqDatepickerInput<D>
 
             // The date adapter follows the same locale, so its input format may have changed with it: the
             // digit layout has to be re-derived and the rendered value re-formatted.
+            // Only a complete value is re-rendered: with none, the text is the user's, and `''` written over it
+            // would leave the form with an error about text that is gone.
             untracked(() => {
                 this.setFormat(this.dateInputFormat);
-                this.setValue(this.valueState());
+
+                const value = this.valueState();
+
+                if (value) this.setValue(value);
             });
         });
 
         this.timezoneService.changes.pipe(takeUntilDestroyed()).subscribe(() => {
             // The rendered text names a wall clock in the zone it was formatted in. Left as it is, the
-            // next keystroke re-parses it against the new zone and emits a different instant.
-            this.setValue(this.valueState());
+            // next keystroke re-parses it against the new zone and emits a different instant. Only a
+            // complete value, as above.
+            const value = this.valueState();
+
+            if (value) this.setValue(value);
         });
     }
 
@@ -829,29 +866,9 @@ export class KbqDatepickerInput<D>
     }
 
     onInput = () => {
-        const cursorPosition = this.correctedCursorPosition();
-        const formattedValue = this.replaceSymbols(this.viewValue);
-
-        const newTimeObj = this.getDateFromString(formattedValue);
-
-        this.lastValueValid = !!newTimeObj;
-
-        if (!newTimeObj) {
-            if (!this.viewValue) {
-                this.lastValueValid = false;
-                this.updateValue(newTimeObj as D);
-            } else {
-                this.control?.updateValueAndValidity();
-            }
-
-            return;
+        if (!this.readViewValue() && this.viewValue) {
+            this.control?.updateValueAndValidity();
         }
-
-        this.setViewValue(this.getTimeStringFromDate(newTimeObj, this.dateInputFormat), true);
-
-        this.selectNextDigitByCursor(cursorPosition);
-
-        this.updateValue(newTimeObj);
     };
 
     parseOnBlur = (): any => {
@@ -868,11 +885,12 @@ export class KbqDatepickerInput<D>
 
         const [firsViewDigit = '', secondViewDigit = '', thirdViewDigit = ''] = viewDigits;
 
+        // A text that fails here is reported by `onBlur()` unless the next parse takes it.
         if (viewDigits.length !== 3) {
             this.lastValueValid = false;
             this.valueState.set(null);
 
-            return setTimeout(() => this.control?.updateValueAndValidity());
+            return null;
         }
 
         date[this.firstDigit!.fullName] = this.firstDigit!.parse(firsViewDigit);
@@ -885,12 +903,13 @@ export class KbqDatepickerInput<D>
         );
 
         if (viewDigitWithYear.length < 3) {
-            date.year += date.year < 30 ? 2000 : 1900;
+            // From the text rather than `date.year`: the year part reads `00` as 1.
+            date.year = this.expandShortYear(parseInt(viewDigitWithYear));
         } else if (viewDigitWithYear.length < digitWithYear.length) {
             this.lastValueValid = false;
             this.valueState.set(null);
 
-            return setTimeout(() => this.control?.updateValueAndValidity());
+            return null;
         }
 
         const newTimeObj = this.createDateTime(date);
@@ -898,9 +917,8 @@ export class KbqDatepickerInput<D>
         if (!newTimeObj) {
             this.lastValueValid = false;
             this.valueState.set(null);
-            this.cvaOnChange(null);
 
-            return setTimeout(() => this.control?.updateValueAndValidity());
+            return null;
         }
 
         /* Check if the number of days entered does not match the entered month */
@@ -923,50 +941,54 @@ export class KbqDatepickerInput<D>
 
     /** Handles blur events on the input. */
     onBlur() {
-        // Reformat the input only if we have a valid value.
-        this.parseOnBlur();
+        const wasFocused = this.focused();
+        const reportedText = this.control?.getError(parseErrorKey)?.text ?? '';
 
-        this.focusChanged(false);
+        // `focused` goes first, as the validators read it, and `onTouched` last: it is what commits the
+        // value of a control with `updateOn: 'blur'`, and whatever is emitted after it waits for the next blur.
+        this.focusedValue.set(false);
 
-        this.onInput();
+        // A text the form already knows is not a date: parsing it again would only restart its async validators.
+        if (!reportedText || reportedText !== this.viewValue) {
+            this.parseOnBlur();
+            this.readViewValue();
+
+            // Text that is not a date reaches the element without a keydown: an undo, an IME, autofill.
+            if (!this.lastValueValid && this.viewValue) {
+                this.valueState.set(null);
+                this.cvaOnChange(null);
+            }
+        }
+
+        if (wasFocused) this.onTouched();
     }
 
     onPaste(event: ClipboardEvent): void {
         event.preventDefault();
 
-        let rawValue = event.clipboardData!.getData('text');
+        if (this.isReadOnly) return;
 
-        if (rawValue.match(/^\d\D/)) {
-            rawValue = `0${rawValue}`;
-        }
+        this.replaceText(event.clipboardData?.getData('text') ?? '');
+    }
 
-        rawValue.replace(/[^A-Za-z0-9]+/g, this.separator);
+    /**
+     * Takes dropped text the way a paste is taken. The browser would insert it at the pointer, with no event
+     * the parsing listens to.
+     *
+     * @docs-private
+     */
+    protected onDrop(event: DragEvent): void {
+        event.preventDefault();
 
-        if (/[a-z]/gi.test(rawValue)) {
-            this.incorrectInput.emit();
-        }
+        // A part dragged within the field would be read as the whole date. A disabled or read-only field is only
+        // reached when an ancestor accepts the drop.
+        if (this.draggingOwnText || this.disabled() || this.isReadOnly) return;
 
-        const { first, second, third } = rawValue.match(/^(?<first>\d+)\W(?<second>\d+)\W(?<third>\d+)$/)?.groups ?? {};
+        this.focus();
+        // Not left to the focus: a window that is not active, where a drag from another one ends, fires none.
+        this.onTouched();
 
-        if (!first || !second || !third) {
-            this.setViewValue(rawValue);
-
-            return;
-        }
-
-        const value = [first, second, third].join(this.separator);
-
-        const newTimeObj = this.getDateFromString(value);
-
-        if (!newTimeObj) {
-            this.setViewValue(value);
-
-            return;
-        }
-
-        this.setViewValue(this.getTimeStringFromDate(newTimeObj, this.dateInputFormat));
-
-        this.updateValue(newTimeObj);
+        this.replaceText(event.dataTransfer?.getData('text') ?? '');
     }
 
     toISO8601(value: D): string {
@@ -982,6 +1004,82 @@ export class KbqDatepickerInput<D>
     /** Returns the ElementRef of the formField if it exists; otherwise, returns the ElementRef of the input. */
     getOrigin(): ElementRef {
         return this.formField ? this.formField.getConnectedOverlayOrigin() : this.elementRef;
+    }
+
+    /** Parses the rendered text as typing does, taking the date it holds. Returns whether there was one. */
+    private readViewValue(): boolean {
+        const cursorPosition = this.correctedCursorPosition();
+        const newTimeObj = this.getDateFromString(this.replaceSymbols(this.viewValue));
+
+        this.lastValueValid = !!newTimeObj;
+
+        if (!newTimeObj) {
+            if (!this.viewValue) {
+                this.updateValue(null as D);
+            }
+
+            return false;
+        }
+
+        this.setViewValue(this.getTimeStringFromDate(newTimeObj, this.dateInputFormat), true);
+
+        this.selectNextDigitByCursor(cursorPosition);
+
+        this.updateValue(newTimeObj);
+
+        return true;
+    }
+
+    /** Takes a pasted or dropped text as the whole value; one that is not a date is rejected as a letter key is. */
+    private replaceText(text: string): void {
+        // Punctuation around the date comes along when it is copied out of a sentence or brackets.
+        const newTimeObj = this.readPastedDate(text.replace(/^[^\p{L}\d]+|[^\p{L}\d]+$/gu, ''));
+
+        if (!newTimeObj) {
+            if (text.trim()) this.incorrectInput.emit();
+
+            return;
+        }
+
+        this.lastValueValid = true;
+        this.setViewValue(this.getTimeStringFromDate(newTimeObj, this.dateInputFormat));
+
+        this.updateValue(newTimeObj);
+    }
+
+    /**
+     * Reads the parts of the format, in its order, from two or three groups of digits split by anything but a
+     * letter. A short day or month is padded and a short year expanded as blur does; a group longer than its
+     * part, such as the year of an ISO date, makes the text not a date.
+     */
+    private readPastedDate(text: string): D | null {
+        if (!this.readyForParse || !/^\d+(?:[^\p{L}\d]+\d+){1,2}$/u.test(text)) return null;
+
+        const digits = [this.firstDigit!, this.secondDigit!, this.thirdDigit!];
+        const parts: string[] = [];
+
+        for (const [index, part] of text.split(/[^\p{L}\d]+/u).entries()) {
+            const digit = digits[index];
+
+            if (!digit || part.length > digit.length) return null;
+
+            if (!digit.isYear) {
+                parts.push(part.padStart(digit.length, '0'));
+            } else if (part.length === digit.length) {
+                parts.push(part);
+            } else if (part.length <= 2) {
+                parts.push(`${this.expandShortYear(parseInt(part))}`);
+            } else {
+                return null;
+            }
+        }
+
+        return this.getDateFromString(parts.join(this.separator));
+    }
+
+    /** A year of one or two digits as a full one. */
+    private expandShortYear(year: number): number {
+        return year + (year < SHORT_YEAR_PIVOT ? CURRENT_CENTURY_START : PREVIOUS_CENTURY_START);
     }
 
     private saveTimePart(selected: D) {
@@ -1162,15 +1260,14 @@ export class KbqDatepickerInput<D>
                 digitViewValue[dateDigit!.fullName] = parseInt(viewDigits[index]!);
             }
 
-            if (this.value() && digitViewValue.month && digitViewValue.month <= this.firstDigit!.maxMonth) {
-                dateDigits.forEach(
-                    (digit) =>
-                        (digit!.maxDays = this.getLastDayFor(
-                            digitViewValue.year as number,
-                            (digitViewValue.month as number) - 1
-                        ))
-                );
-            }
+            const { month, year } = digitViewValue;
+            // Set on every parse: a limit left by an earlier date would cut the day of this one.
+            const maxDays =
+                month && month <= this.firstDigit!.maxMonth && !isNaN(year as number)
+                    ? this.getLastDayFor(year as number, month - 1)
+                    : MAX_DAYS_IN_MONTH;
+
+            dateDigits.forEach((digit) => (digit!.maxDays = maxDays));
 
             date[this.firstDigit!.fullName] = this.firstDigit!.parse(firsViewDigit);
             date[this.secondDigit!.fullName] = this.secondDigit!.parse(secondViewDigit);
@@ -1348,7 +1445,8 @@ export class KbqDatepickerInput<D>
     }
 
     private getLastDayFor(year: number, month: number): number {
-        return this.adapter.getNumDaysInMonth(this.createDate(year, month, 1));
+        // The adapter's own date: the input's one takes the time of the value, and there may be none.
+        return this.adapter.getNumDaysInMonth(this.adapter.createDate(year, month, 1));
     }
 
     private decrementDate(date: D, whatToDecrement: DateParts): D {
@@ -1547,7 +1645,7 @@ export class KbqDatepickerInput<D>
     private parseValidator: ValidatorFn = (): ValidationErrors | null => {
         return this.focused() || this.isEmpty() || this.lastValueValid
             ? null
-            : { kbqDatepickerParse: { text: this.elementRef.nativeElement.value } };
+            : { [parseErrorKey]: { text: this.elementRef.nativeElement.value } };
     };
 
     /** The form control validator for the min date. */

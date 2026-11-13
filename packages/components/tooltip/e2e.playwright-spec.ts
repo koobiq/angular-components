@@ -36,6 +36,31 @@ test.describe('KbqTooltipModule', () => {
             await expect(tooltipWithoutArrow).toHaveCSS('margin-top', '4px');
         });
 
+        test('should keep a centered arrow aligned after the entrance animation', async ({ page }) => {
+            await page.emulateMedia({ reducedMotion: 'no-preference' });
+            await page.goto('/E2eTooltipArrowOffset');
+
+            await page.getByTestId('tooltipCentered').hover();
+
+            await expect(page.locator('.kbq-tooltip.kbq-tooltip_visible')).toBeVisible();
+            await expect
+                .poll(
+                    () =>
+                        page.evaluate(() => {
+                            const trigger = document.querySelector<HTMLElement>('[data-testid="tooltipCentered"]')!;
+                            const arrow = document.querySelector<HTMLElement>('.kbq-tooltip__arrow')!;
+                            const triggerRect = trigger.getBoundingClientRect();
+                            const arrowRect = arrow.getBoundingClientRect();
+
+                            return Math.abs(
+                                (arrowRect.left + arrowRect.right) / 2 - (triggerRect.left + triggerRect.right) / 2
+                            );
+                        }),
+                    { timeout: 5000 }
+                )
+                .toBeLessThanOrEqual(1);
+        });
+
         test('should dismiss a hover-opened tooltip with Escape', async ({ page }) => {
             await page.goto('/E2eTooltipArrowOffset');
 
