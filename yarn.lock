@@ -3671,10 +3671,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/date-adapter@npm:^3.5.1":
-  version: 3.5.1
-  resolution: "@koobiq/date-adapter@npm:3.5.1"
-  checksum: 10c0/c2cd49b7dc03cd6f02af3997ab4d4f09a02005102630f3d1ba27c3ba1adc6b5988dbc130f8cd1f5302d531dfdd362e1116c76d47cc7bd92d6bcac0e23589898e
+"@koobiq/date-adapter@npm:^3.7.0":
+  version: 3.7.0
+  resolution: "@koobiq/date-adapter@npm:3.7.0"
+  checksum: 10c0/8f31afbd21f70d925372355ea69bf04a5a96de742eae61ca0983763578edad578035c9d8765e7de38ffc3e425d981e3d1ed824afedb3dd7b280b4bb36d74f56a
   languageName: node
   linkType: hard
 
@@ -3704,23 +3704,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/luxon-date-adapter@npm:^3.5.1":
-  version: 3.5.1
-  resolution: "@koobiq/luxon-date-adapter@npm:3.5.1"
+"@koobiq/luxon-date-adapter@npm:^3.7.0":
+  version: 3.7.0
+  resolution: "@koobiq/luxon-date-adapter@npm:3.7.0"
   peerDependencies:
     "@koobiq/date-adapter": ^3.0.0
     luxon: ^3.2.1
-  checksum: 10c0/54171e77ad47c02cb2997afdfe95b7844774298cdea4355b6e4af64b6f1ce7076802e044e970a52a0e51dfe3e3a7fe56704b2dc55d34d047c2edb09e05efa6eb
+  checksum: 10c0/ebeade243d8da2695e08bc14205e01c672bc246b8e9a4c6cb504e25a3bb04af19218eec1a3ca686a042b7e754e57a196a67d74d7465744809bae625be5dedbda
   languageName: node
   linkType: hard
 
-"@koobiq/moment-date-adapter@npm:^3.5.1":
-  version: 3.5.1
-  resolution: "@koobiq/moment-date-adapter@npm:3.5.1"
+"@koobiq/moment-date-adapter@npm:^3.7.0":
+  version: 3.7.0
+  resolution: "@koobiq/moment-date-adapter@npm:3.7.0"
   peerDependencies:
     "@koobiq/date-adapter": ^3.0.0
     moment: ^2.24.0
-  checksum: 10c0/ff9fafb562da8fd85ce23a83af2a76bec7c17e324896e32b0e970b7d782e11516dab9a1283e8779e8daa5cd5dd2b0c548428f84f50a95d2182bd002a2767aaff
+  checksum: 10c0/e3c1799d03814baad4f6bb0cf8851ce36ccc48dd66ee53df37e736caba66f529bca3e2cb0c0a3e71e4b5ff2ac4f7d5381567eb8d3ce9a5738d8a4106580db62f
   languageName: node
   linkType: hard
 
@@ -10771,12 +10771,12 @@ __metadata:
     "@eslint/js": "npm:^10.0.1"
     "@fontsource/jetbrains-mono": "npm:^5.3.0"
     "@koobiq/ag-grid-angular-theme": "npm:^34.7.0"
-    "@koobiq/date-adapter": "npm:^3.5.1"
+    "@koobiq/date-adapter": "npm:^3.7.0"
     "@koobiq/date-formatter": "npm:^3.7.0"
     "@koobiq/design-tokens": "npm:^4.1.0"
     "@koobiq/icons": "npm:^12.5.0"
-    "@koobiq/luxon-date-adapter": "npm:^3.5.1"
-    "@koobiq/moment-date-adapter": "npm:^3.5.1"
+    "@koobiq/luxon-date-adapter": "npm:^3.7.0"
+    "@koobiq/moment-date-adapter": "npm:^3.7.0"
     "@koobiq/visuals": "npm:^12.5.0"
     "@maskito/angular": "npm:^5.1.0"
     "@maskito/core": "npm:^5.1.0"
