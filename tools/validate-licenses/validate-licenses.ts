@@ -31,6 +31,10 @@ const licensesWhitelist: License[] = [
     'LGPL-3.0-only',
     'Python-2.0',
 
+    // BSD-style permissive license of the Python Software Foundation. Reaches the tree through
+    // `stylelint` (a devDependency) -> js-yaml@5 -> argparse@3.
+    'PSF-2.0',
+
     // File-level (weak) copyleft: obligations stay within the MPL-licensed files themselves and
     // do not extend to the larger work. Reaches the tree through `axe-core`, which the specs check
     // accessibility with, and `lightningcss`, which Vite builds on: devDependencies both, so it is
