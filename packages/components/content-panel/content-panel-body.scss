@@ -6,4 +6,9 @@
         padding: 0 var(--kbq-content-panel-vertical-padding);
         height: 100%;
     }
+
+    // Without a footer the body is the last child of the card, and its content would end at the bottom edge.
+    &:last-child .kbq-content-panel-body__content {
+        padding-bottom: var(--kbq-content-panel-body-padding-bottom);
+    }
 }
