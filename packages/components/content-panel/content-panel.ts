@@ -35,6 +35,7 @@ import {
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqResizable, KbqResizer, KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { SizeL } from '@koobiq/design-tokens';
 import { firstValueFrom, isObservable, Observable, Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -74,7 +75,7 @@ export class KbqContentPanelHeaderActions {}
 
 @Component({
     selector: 'kbq-content-panel-header',
-    imports: [KbqButtonModule, KbqIconModule],
+    imports: [KbqButtonModule, KbqIconModule, KbqToolTipModule],
     template: `
         <div class="kbq-content-panel-header__wrapper">
             <ng-content select="[kbqContentPanelHeaderTitle]" />
@@ -88,6 +89,7 @@ export class KbqContentPanelHeaderActions {}
                         [attr.aria-label]="a11yLocaleConfiguration().close"
                         [color]="componentColors.Contrast"
                         [kbqStyle]="buttonStyles.Transparent"
+                        [kbqTooltip]="a11yLocaleConfiguration().close"
                         (click)="contentPanelContainer.close()"
                     >
                         <i kbq-icon="kbq-xmark_16"></i>

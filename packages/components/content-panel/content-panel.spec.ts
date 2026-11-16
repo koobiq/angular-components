@@ -1,6 +1,7 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, DebugElement, effect, ErrorHandler, model, Provider, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import {
     dispatchFakeEvent,
@@ -11,6 +12,7 @@ import {
     KbqStateStore
 } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { EMPTY, of, Subject } from 'rxjs';
 import { KbqContentPanelBeforeClose, KbqContentPanelContainer } from './content-panel';
 import { KbqContentPanelModule } from './module';
@@ -233,6 +235,18 @@ describe(KbqContentPanelModule.name, () => {
         container.focus();
 
         expect(document.activeElement).toBe(container);
+    });
+
+    it('should name the close button with a tooltip', async () => {
+        const fixture = createComponent(TestContentPanel);
+
+        fixture.componentInstance.opened.set(true);
+        await fixture.whenStable();
+
+        const button = fixture.debugElement.query(By.css('.kbq-content-panel-header__close-button'));
+
+        expect(button.injector.get(KbqTooltipTrigger).content).toBe('Закрыть');
+        expect(button.nativeElement.getAttribute('aria-label')).toBe('Закрыть');
     });
 
     it('should close an autocomplete panel in the content on ESCAPE, and the panel once it is closed', async () => {

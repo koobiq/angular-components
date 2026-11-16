@@ -14,20 +14,22 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         <kbq-content-panel-container maxWidth="450" minWidth="250" width="350">
             <div class="example-content-panel-container__content">
                 <button kbq-button kbqTooltip="Opens the panel" (click)="panel().open()">Open</button>
-                <kbq-form-field>
-                    <kbq-select [value]="options[0]">
-                        @for (option of options; track option) {
-                            <kbq-option [value]="option">{{ option }}</kbq-option>
-                        }
-                    </kbq-select>
-                </kbq-form-field>
             </div>
 
             <kbq-content-panel>
                 <kbq-content-panel-header>
                     <div kbqContentPanelHeaderTitle>Title</div>
                 </kbq-content-panel-header>
-                <kbq-content-panel-body>Press Escape anywhere on the page.</kbq-content-panel-body>
+                <kbq-content-panel-body>
+                    <p>Press Escape anywhere on the page.</p>
+                    <kbq-form-field>
+                        <kbq-select [value]="options[0]">
+                            @for (option of options; track option) {
+                                <kbq-option [value]="option">{{ option }}</kbq-option>
+                            }
+                        </kbq-select>
+                    </kbq-form-field>
+                </kbq-content-panel-body>
             </kbq-content-panel>
         </kbq-content-panel-container>
     `,
@@ -38,15 +40,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         }
 
         .example-content-panel-container__content {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: var(--kbq-size-l);
             padding: var(--kbq-size-l);
-        }
-
-        .kbq-form-field {
-            width: 200px;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -56,7 +50,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 })
 export class ContentPanelCloseOnEscapeExample {
     protected readonly panel = viewChild.required(KbqContentPanelContainer);
-    protected readonly options = ['Apple', 'Banana', 'Orange'];
+    protected readonly options = Array.from({ length: 3 }, (_, index) => `Option ${index + 1}`);
 
     protected closeOnEscape(event: Event): void {
         // Spent by a pop-up that closed on it, such as a select or a modal.

@@ -63,15 +63,8 @@ export class ContentPanelBeforeCloseExample {
 
     protected readonly name = new FormControl('John Smith', { nonNullable: true });
 
-    constructor() {
-        // Starts with an edit nobody saved, so closing the panel asks at once.
-        this.name.markAsDirty();
-    }
-
-    protected readonly confirmDiscard = (): boolean | Promise<boolean> => {
-        if (this.name.pristine) return true;
-
-        return new Promise((resolve) => {
+    protected readonly confirmDiscard = (): Promise<boolean> =>
+        new Promise((resolve) => {
             const modal = this.modal.create({
                 kbqAriaLabel: 'Discard changes',
                 kbqSize: ModalSize.Small,
@@ -94,5 +87,4 @@ export class ContentPanelBeforeCloseExample {
             // Keep editing, ESCAPE and the close button: a Discard has already answered.
             modal.afterClose.subscribe(() => resolve(false));
         });
-    };
 }
