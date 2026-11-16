@@ -873,11 +873,9 @@ export class KbqTooltipTrigger
      *
      * Also joins the "only one tooltip is visible at a time" group, mutes the tooltip while a pop-up on the
      * same element is open, tracks the focus origin and keeps the trigger's `aria-describedby` in sync with the
-     * open tooltip. All of this wiring lives here rather than in `ngAfterViewInit`/`ngOnDestroy` because
-     * several subclasses override those hooks: `KbqTitleDirective` and `KbqEllipsisCenterDirective` skip
-     * `super.ngAfterViewInit()`, and `KbqPasswordToggle` skips `super` in both hooks entirely. `destroyRef`
-     * additionally covers a trigger destroyed while its tooltip is still visible — that path disposes the
-     * overlay without emitting `visibleChange(false)`.
+     * open tooltip. All of this wiring lives here rather than in `ngAfterViewInit`/`ngOnDestroy` because a
+     * subclass that overrides those hooks may skip `super`, as `KbqTitleDirective` skips
+     * `super.ngAfterViewInit()`; the `destroyRef` teardown runs even when a subclass skips `super.ngOnDestroy()`.
      */
     constructor() {
         super();
