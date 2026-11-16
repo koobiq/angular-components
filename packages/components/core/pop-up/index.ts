@@ -1,4 +1,5 @@
 export * from './constants';
+export * from './event-prevent-hide';
 export * from './focus-trap-strategy';
 export * from './pop-up';
 export * from './pop-up-styles';

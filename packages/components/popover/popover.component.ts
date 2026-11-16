@@ -63,6 +63,7 @@ import {
     applyPopupMargins,
     kbqCreateCaretOrigin,
     kbqInjectA11yLocaleConfiguration,
+    kbqMarkEventPreventHide,
     kbqOptionalNumberAttribute,
     kbqRepositionScrollStrategyFactory,
     kbqSiblingPopupProvider
@@ -1049,7 +1050,7 @@ export class KbqPopoverTrigger
             const { left, top } = this.getNativeElement().getBoundingClientRect();
 
             this.pointerOffset = { x: pointerEvent.clientX - left, y: pointerEvent.clientY - top };
-            Object.assign(pointerEvent, { kbqPopoverPreventHide: true });
+            kbqMarkEventPreventHide(pointerEvent);
         } else if (!wasAttached) {
             this.pointerOffset = null;
         }

@@ -38,6 +38,7 @@ import {
     ErrorStateMatcher,
     KbqColorDirective,
     KbqErrorStateTracker,
+    kbqMarkEventPreventHide,
     kbqOptionalNumberAttribute,
     kbqQueryListFrom
 } from '@koobiq/components/core';
@@ -836,7 +837,7 @@ export class KbqRadioButton extends KbqColorDirective implements OnChanges, OnIn
         // This will lead to multiple click events.
         // Preventing bubbling & forcing skip event from closing actions for the second event will solve that issue.
         event.stopPropagation();
-        (event as Event & { kbqPopoverPreventHide: boolean }).kbqPopoverPreventHide = true;
+        kbqMarkEventPreventHide(event);
     }
 
     onInputChange(event: Event) {

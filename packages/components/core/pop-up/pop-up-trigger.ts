@@ -49,6 +49,7 @@ import {
     PopUpPlacements,
     PopUpTriggers
 } from './constants';
+import { kbqIsEventPreventHide } from './event-prevent-hide';
 import { KbqPopUp } from './pop-up';
 
 type KbqPopupTriggerOffset = Pick<ConnectionPositionPair, 'offsetX' | 'offsetY'>;
@@ -473,7 +474,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      *
      * @docs-private
      */
-    abstract closingActions(): Observable<any>;
+    abstract closingActions(): Observable<unknown>;
 
     /**
      * Returns the component type to attach as the pop-up overlay; implemented by the subclass.
@@ -1138,7 +1139,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
             .pipe(takeUntilDestroyed(this.destroyRef))
             .pipe(rxDelay(0))
             .subscribe((event) => {
-                if (event?.type === 'click' && event.kbqPopoverPreventHide) {
+                if (event instanceof Event && event.type === 'click' && kbqIsEventPreventHide(event)) {
                     return;
                 }
 
