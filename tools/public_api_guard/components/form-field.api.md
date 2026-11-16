@@ -249,7 +249,7 @@ export class KbqLegend {
 }
 
 // @public
-export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
+export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit {
     constructor();
     protected get accessibleName(): string;
     get content(): string | TemplateRef<any>;
@@ -267,8 +267,6 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     protected readonly nativeElement: HTMLElement;
     // (undocumented)
     ngAfterViewInit(): void;
-    // (undocumented)
-    ngOnDestroy(): void;
     // (undocumented)
     readonly tabindex: i0.InputSignalWithTransform<number, unknown>;
     toggle(event: Event): void;

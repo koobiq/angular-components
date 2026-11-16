@@ -1,3 +1,4 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { Component, DebugElement, Directive, DoCheck, effect, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
@@ -14,15 +15,19 @@ import { By } from '@angular/platform-browser';
 import {
     CrossFieldErrorScope,
     dispatchFakeEvent,
+    dispatchMouseEvent,
     ErrorStateMatcher,
     ESCAPE,
     KBQ_FORM_FIELD_REF,
+    KBQ_PARENT_POPUP,
+    KbqParentPopup,
     PasswordValidators,
     ShowOnCrossFieldErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher,
     ShowRequiredOnSubmitErrorStateMatcher
 } from '@koobiq/components/core';
 import { KbqInput, KbqInputModule, KbqInputPassword } from '@koobiq/components/input';
+import { Subject } from 'rxjs';
 import { KbqCleaner } from './cleaner';
 import { KbqError } from './error';
 import {
@@ -48,6 +53,9 @@ const createComponent = <T>(component: Type<T>, providers: any[] = []): Componen
 
     return fixture;
 };
+
+/** Default enter delay of a tooltip plus a buffer for the deferred show. */
+const TOOLTIP_ENTER_DELAY = 410;
 
 const getErrorDebugElement = (debugElement: DebugElement): DebugElement => {
     return debugElement.query(By.directive(KbqError));
@@ -1498,6 +1506,82 @@ describe(KbqFormField.name, () => {
             expect(componentInstance.runs).toBe(1);
         });
     });
+
+    describe('password toggle tooltip', () => {
+        let fixture: ComponentFixture<PasswordToggleWithTooltip>;
+
+        const showTooltip = async (): Promise<KbqPasswordToggle> => {
+            dispatchMouseEvent(getPasswordToggleDebugElement(fixture.debugElement).nativeElement, 'mouseenter');
+            await vi.advanceTimersByTimeAsync(TOOLTIP_ENTER_DELAY);
+            fixture.detectChanges();
+
+            const toggle = fixture.componentInstance.passwordToggle()!;
+
+            expect(toggle.isOpen).toBe(true);
+
+            return toggle;
+        };
+
+        beforeEach(() => {
+            vi.useFakeTimers();
+            fixture = createComponent(PasswordToggleWithTooltip);
+        });
+
+        it('should close and dispose the open tooltip when the toggle is destroyed', async () => {
+            const toggle = await showTooltip();
+            const dispose = vi.spyOn(toggle.overlayRef!, 'dispose');
+
+            fixture.componentInstance.shown.set(false);
+            fixture.detectChanges();
+
+            expect(dispose).toHaveBeenCalled();
+            expect(toggle.isOpen).toBe(false);
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should dispose the overlay of a hidden tooltip when the toggle is destroyed', async () => {
+            const toggle = await showTooltip();
+            const overlayRef = toggle.overlayRef!;
+
+            dispatchMouseEvent(getPasswordToggleDebugElement(fixture.debugElement).nativeElement, 'mouseleave');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(toggle.isOpen).toBe(false);
+
+            const dispose = vi.spyOn(overlayRef, 'dispose');
+
+            fixture.componentInstance.shown.set(false);
+            fixture.detectChanges();
+
+            expect(dispose).toHaveBeenCalled();
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should stop monitoring focus on the toggle when it is destroyed', () => {
+            const stopMonitoring = vi.spyOn(TestBed.inject(FocusMonitor), 'stopMonitoring');
+            const toggleElement = getPasswordToggleDebugElement(fixture.debugElement).nativeElement;
+
+            fixture.componentInstance.shown.set(false);
+            fixture.detectChanges();
+
+            expect(stopMonitoring).toHaveBeenCalledWith(toggleElement);
+        });
+
+        it('should hide the tooltip when the parent pop-up closes', async () => {
+            const toggle = await showTooltip();
+
+            fixture.componentInstance.parentPopup().closedStream.next(false);
+            await vi.advanceTimersByTimeAsync(0);
+            fixture.detectChanges();
+
+            expect(toggle.isOpen).toBe(false);
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+    });
 });
 
 /** Caps the runs of an effect that would otherwise loop, so that a regression fails instead of hanging. */
@@ -1541,4 +1625,34 @@ class FormFieldDrivenByEffect {
             }
         });
     }
+}
+
+/** Stand-in for the select/tree-select panel that hosts a tooltip and announces its own closing. */
+@Directive({
+    selector: '[parentPopup]',
+    providers: [{ provide: KBQ_PARENT_POPUP, useExisting: ParentPopup }]
+})
+class ParentPopup implements KbqParentPopup {
+    readonly closedStream = new Subject<boolean>();
+}
+
+@Component({
+    selector: 'password-toggle-with-tooltip',
+    imports: [ReactiveFormsModule, KbqInputModule, ParentPopup],
+    template: `
+        <div parentPopup>
+            @if (shown()) {
+                <kbq-form-field>
+                    <input kbqInputPassword [formControl]="control" />
+                    <kbq-password-toggle kbqTooltipHidden="Show password" kbqTooltipNotHidden="Hide password" />
+                </kbq-form-field>
+            }
+        </div>
+    `
+})
+class PasswordToggleWithTooltip {
+    readonly shown = signal(true);
+    readonly control = new FormControl('secret');
+    readonly parentPopup = viewChild.required(ParentPopup);
+    readonly passwordToggle = viewChild(KbqPasswordToggle);
 }
