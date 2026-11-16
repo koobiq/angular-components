@@ -151,6 +151,7 @@ export class DevContentPanelOverview {
         <content-panel-overview-example />
         <content-panel-before-close-example />
         <content-panel-close-on-escape-example />
+        <content-panel-state-saving-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

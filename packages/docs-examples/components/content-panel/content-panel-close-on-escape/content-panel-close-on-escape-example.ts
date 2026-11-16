@@ -28,6 +28,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                                 <kbq-option [value]="option">{{ option }}</kbq-option>
                             }
                         </kbq-select>
+                        <kbq-hint>Escape closes an open select first, and the panel on the next press.</kbq-hint>
                     </kbq-form-field>
                 </kbq-content-panel-body>
             </kbq-content-panel>
