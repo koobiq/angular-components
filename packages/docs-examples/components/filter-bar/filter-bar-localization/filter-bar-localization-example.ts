@@ -18,7 +18,7 @@ import {
     KbqTreeSelectNode
 } from '@koobiq/components/filter-bar';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { injectLocalizedText } from '@koobiq/docs-examples/i18n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 
 /**
  * The date pipe resolves `DateAdapter` and `DateFormatter` through the element injector, so both must be
@@ -68,7 +68,7 @@ interface DemoPeriodValue {
 })
 export class LocalizationDemoBar {
     /** Text the example owns: a pipe or option label has no counterpart in the library's locale data. */
-    private readonly translations = injectLocalizedText({
+    private readonly t = injectTranslation({
         'ru-RU': {
             'filters.period': 'Период',
             'filters.date': 'Дата',
@@ -108,8 +108,7 @@ export class LocalizationDemoBar {
     });
 
     /** One resolver for every pipe, option, preset and node label in this bar. */
-    protected readonly nameResolver: KbqFilterBarNameResolver = ({ key, fallback }) =>
-        this.translations()[key] ?? fallback;
+    protected readonly nameResolver: KbqFilterBarNameResolver = ({ key, fallback }) => this.t()[key] ?? fallback;
 
     /** Periods of the `date` pipe. The `name` is the stable fallback identity; `nameKey` is translated. */
     private readonly datePresets: DemoPeriodValue[] = [
