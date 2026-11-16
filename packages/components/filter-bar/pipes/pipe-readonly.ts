@@ -15,7 +15,7 @@ import { KbqPipeState } from './pipe-state';
     ],
     template: `
         <button kbq-button [disabled]="data.disabled" [kbqPipeState]="data" [kbq-title]="pipeTooltip">
-            <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>
+            <span #kbqTitleText class="kbq-pipe__name">{{ pipeName }}</span>
             <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!data.value">
                 {{ data.value }}
             </span>
@@ -26,7 +26,7 @@ import { KbqPipeState } from './pipe-state';
         }
 
         <ng-template #pipeTooltip>
-            <div class="kbq-pipe-tooltip__name kbq-text-compact">{{ data.name }}</div>
+            <div class="kbq-pipe-tooltip__name kbq-text-compact">{{ pipeName }}</div>
             <div class="kbq-pipe-tooltip__value kbq-text-compact">{{ data.value }}</div>
         </ng-template>
     `,

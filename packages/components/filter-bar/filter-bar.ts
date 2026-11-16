@@ -18,6 +18,7 @@ import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-inter
 import { KbqLocaleOverridesDirective, KbqStateSaving } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { BehaviorSubject } from 'rxjs';
+import { KBQ_FILTER_BAR_NAME_RESOLVER, KbqFilterBarNameContext, KbqFilterBarNameResolver } from './filter-bar-name';
 import {
     KBQ_FILTER_BAR_HOST,
     KBQ_FILTER_BAR_LOCALE_CONFIGURATION,
@@ -126,6 +127,13 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
     /** An array of templates that are used when adding a pipe. Also contains lists of options to select (values). */
     readonly pipeTemplates = input<KbqPipeTemplate[]>([]);
 
+    /**
+     * Optional resolver that localizes or transforms names shown by the filter bar and its pipes.
+     * When omitted, the filter bar falls back to the resolver provided through DI, which defaults to
+     * returning the source name unchanged.
+     */
+    readonly nameResolver = input<KbqFilterBarNameResolver | null>(null);
+
     /** Event that emits whenever the value of the pipe changes. */
     readonly onChangePipe = output<KbqPipe>();
     /** Event that emits whenever the pipe deleted. */
@@ -149,6 +157,8 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
 
     /** Whether the current filter is disabled */
     readonly isDisabled = computed(() => !!this.filter()?.disabled);
+
+    private readonly nameResolverFromDi = inject(KBQ_FILTER_BAR_NAME_RESOLVER);
 
     private savedFilter: KbqFilter | null = null;
 
@@ -289,6 +299,21 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
         this.filter.set({ ...current, changed: true, pipes: current.pipes.filter((item) => item !== pipe) });
 
         this.onRemovePipe.emit(pipe);
+    }
+
+    /**
+     * Resolves a display name for the given context.
+     *
+     * Uses the resolver bound as `[nameResolver]` if one is provided; otherwise falls back to the DI resolver.
+     * If the chosen resolver returns `null` or `undefined`, `context.fallback` is returned. An empty string is
+     * a valid resolver result.
+     *
+     * @docs-private
+     */
+    resolveName(context: KbqFilterBarNameContext): string {
+        const resolver = this.nameResolver() ?? this.nameResolverFromDi;
+
+        return resolver(context) ?? context.fallback;
     }
 
     /**

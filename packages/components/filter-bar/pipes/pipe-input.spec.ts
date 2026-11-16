@@ -1,10 +1,12 @@
-import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, DebugElement, inject, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
+    KBQ_FILTER_BAR_NAME_RESOLVER,
     KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
+    KbqFilterBarNameResolver,
     KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes
@@ -540,6 +542,72 @@ describe('KbqPipeInputComponent', () => {
             fixture.detectChanges();
 
             expect(spy).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('name resolution', () => {
+        let translations: ReturnType<typeof signal<Record<string, string>>>;
+        let resolver: ReturnType<typeof vi.fn<KbqFilterBarNameResolver>>;
+
+        beforeEach(() => {
+            translations = signal({ 'filters.inputLabel': 'Translated Input' });
+            resolver = vi.fn(({ key, fallback }: { key: string; fallback: string }) => translations()[key] ?? fallback);
+        });
+
+        it('should update placeholder and aria-label when translation changes, without filter/value replacement or events', () => {
+            TestBed.overrideProvider(KBQ_FILTER_BAR_NAME_RESOLVER, { useValue: resolver });
+            TestBed.compileComponents();
+
+            createFixture();
+
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'Input', nameKey: 'filters.inputLabel', value: 'typed' })
+            ]);
+            fixture.detectChanges();
+
+            const input = getInputElement();
+            const filterBar = getFilterBar();
+            const filterBefore = filterBar.filter();
+            const pipeComponent = getPipeComponent();
+            const valueBefore = pipeComponent.data.value;
+
+            const onChangeSpy = vi.fn();
+
+            filterBar.onChangePipe.subscribe(onChangeSpy);
+
+            expect(input.placeholder).toBe('Translated Input');
+            expect(input.getAttribute('aria-label')).toBe('Translated Input');
+            expect(resolver).toHaveBeenCalled();
+
+            // Change the translation — label only, no event or value replacement.
+            resolver.mockClear();
+            onChangeSpy.mockClear();
+            translations.set({ 'filters.inputLabel': 'Обновленный Input' });
+            fixture.detectChanges();
+
+            expect(input.placeholder).toBe('Обновленный Input');
+            expect(input.getAttribute('aria-label')).toBe('Обновленный Input');
+            expect(onChangeSpy).not.toHaveBeenCalled();
+            expect(filterBar.filter()).toBe(filterBefore);
+            expect(pipeComponent.data.value).toBe(valueBefore);
+        });
+
+        it('should not invoke resolver and keep original name for unkeyed pipe', () => {
+            TestBed.overrideProvider(KBQ_FILTER_BAR_NAME_RESOLVER, { useValue: resolver });
+            TestBed.compileComponents();
+
+            createFixture();
+
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'PlainName', value: null })
+            ]);
+            fixture.detectChanges();
+
+            const input = getInputElement();
+
+            expect(input.placeholder).toBe('PlainName');
+            expect(input.getAttribute('aria-label')).toBe('PlainName');
+            expect(resolver).not.toHaveBeenCalled();
         });
     });
 

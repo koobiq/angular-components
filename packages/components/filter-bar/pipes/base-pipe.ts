@@ -16,6 +16,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isMac, KbqFilterBarLocaleConfiguration, KbqPanelMaxHeight } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
 import { filter, skip } from 'rxjs/operators';
+import { KBQ_FILTER_BAR_NAME_RESOLVER, KbqFilterBarNameContext, KbqFilterBarNameKind } from '../filter-bar-name';
 import {
     KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
     KBQ_FILTER_BAR_HOST,
@@ -55,6 +56,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
      * @docs-private
      */
     protected readonly filterBar = inject(KBQ_FILTER_BAR_HOST, { optional: true });
+    private readonly nameResolverFromDi = inject(KBQ_FILTER_BAR_NAME_RESOLVER);
     /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     /** @docs-private */
@@ -334,6 +336,61 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         if (trigger) {
             this.focusMonitor.focusVia(trigger, this.currentFocusOrigin);
         }
+    }
+
+    /**
+     * Resolves a display name for a source object.
+     *
+     * If `nameKey` is absent or empty, returns `source.name ?? ''` without calling any resolver. Otherwise
+     * builds a {@link KbqFilterBarNameContext} for the active pipe and asks the host filter bar first, then
+     * the DI resolver, falling back to `source.name` when both return nullish.
+     *
+     * @docs-private
+     */
+    protected resolveName(
+        source: Exclude<KbqFilterBarNameContext['source'], KbqPipeTemplate>,
+        kind: Exclude<KbqFilterBarNameKind, 'pipe-template'>,
+        nameKey: string | undefined = source.nameKey
+    ): string {
+        const fallback = source.name ?? '';
+
+        if (!nameKey) {
+            return fallback;
+        }
+
+        const context: KbqFilterBarNameContext = {
+            key: nameKey,
+            fallback,
+            kind,
+            pipe: this.data,
+            source
+        };
+
+        return this.filterBar?.resolveName?.(context) ?? this.nameResolverFromDi(context) ?? fallback;
+    }
+
+    /**
+     * Resolved display name of the pipe, delegating to `resolveName` with kind `'pipe'` and the key
+     * returned by `pipeNameKey`.
+     */
+    protected get pipeName(): string {
+        return this.resolveName(this.data, 'pipe', this.pipeNameKey());
+    }
+
+    /**
+     * Returns the pipe's own nonempty `nameKey`. Otherwise examines only the filter bar's pipe templates
+     * with the same `getId()` and `type`; exactly one match supplies its key, while zero or duplicate
+     * matches return `undefined`.
+     */
+    protected pipeNameKey(): string | undefined {
+        const ownKey = this.data.nameKey;
+
+        if (ownKey) return ownKey;
+
+        const templates = this.filterBar?.pipeTemplates() ?? [];
+        const matches = templates.filter((t) => getId(t) === getId(this.data) && t.type === this.data.type);
+
+        return matches.length === 1 ? matches[0].nameKey : undefined;
     }
 
     /**

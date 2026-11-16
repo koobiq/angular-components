@@ -689,7 +689,7 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'filter-bar',
                     hasExamples: true,
-                    isUpdated: expiresAt('2026-11-17')
+                    isUpdated: expiresAt('2026-11-26')
                 },
                 {
                     id: DocsStructureItemId.Flag,

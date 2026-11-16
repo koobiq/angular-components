@@ -74,6 +74,19 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
         return this.multiSelect.isEmpty(super.isEmpty);
     }
 
+    /**
+     * Text of the trigger and the tooltip for a single selected node, resolved from its name so both follow a
+     * translation. `KbqTreeSelect.triggerValue` is single-selection only, and a multi-node selection shows a
+     * count badge in the trigger instead.
+     *
+     * @docs-private
+     */
+    protected get displayValue(): string {
+        const selected = this.select()?.selected as KbqTreeSelectFlatNode[] | undefined;
+
+        return selected?.length === 1 ? this.treeControl.getViewValue(selected[0]) : '';
+    }
+
     get selectAllCheckboxState(): KbqPseudoCheckboxState {
         if (!this.select()) return 'unchecked';
 
@@ -182,7 +195,9 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
         // before this subclass's field initializers run — hence patching the instance, not overriding
         // the inherited `getViewValue` field, which the tree would never see.
         this.treeControl.getViewValue = (node: KbqTreeSelectFlatNode): string => {
-            return node.value === kbqTreeSelectAllValue ? this.localeConfiguration().pipe.selectAll : node.name;
+            return node.value === kbqTreeSelectAllValue
+                ? this.localeConfiguration().pipe.selectAll
+                : this.getViewValue(node);
         };
 
         // Patched on the instance for the same reason as `getViewValue` above: `KbqTreeSelectPipeBase`
