@@ -9,18 +9,22 @@ import { Replacement, TransformTemplateAttributesResult } from '../../utils/type
 import { iconReplacementData } from './data';
 import { Schema } from './schema';
 
+const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const iconNameRegExp = (from: string) => new RegExp(`(?<![\\w-])(kbq-)?${escapeRegExp(from)}(?![\\w-])`, 'g');
+
 export const replaceIcons = (contentToBeUpdated: string, replacementData: Replacement[]) => {
     let res = contentToBeUpdated;
 
     for (const { from, to } of replacementData) {
-        res = res!.replace(new RegExp(from, 'g'), to);
+        res = res.replace(iconNameRegExp(from), `$1${to}`);
     }
 
     return res;
 };
 
 export const logReplacement = ({ logger, replacementData, contentToBeUpdated, filePath }): void => {
-    const foundIcons = replacementData.filter(({ from }) => contentToBeUpdated!.indexOf(from) !== -1);
+    const foundIcons = replacementData.filter(({ from }) => iconNameRegExp(from).test(contentToBeUpdated!));
 
     if (foundIcons.length) {
         const parsedFilePath = path.relative(__dirname, `.${filePath}`).replace(/\\/g, '/');
