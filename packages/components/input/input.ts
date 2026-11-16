@@ -224,6 +224,13 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
             this.elementRef.nativeElement.type = 'text';
         }
 
+        // Browser autocomplete is off by default. Written only when the markup has not set the attribute —
+        // which a static value has, by the time any directive runs — so a consumer's `autocomplete` wins;
+        // a bound one lands after this and overwrites it anyway.
+        if (!this.elementRef.nativeElement.hasAttribute('autocomplete')) {
+            this.elementRef.nativeElement.setAttribute('autocomplete', 'off');
+        }
+
         // Read once: a custom accessor may build a new value on every read.
         const initialValue = this.inputValueAccessor.value;
 

@@ -217,7 +217,7 @@ export class SelectFacade {
                 >
                     <kbq-form-field noBorders kbqSelectSearch>
                         <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-                        <input kbqInput type="text" autocomplete="off" [formControl]="searchControl" />
+                        <input kbqInput type="text" [formControl]="searchControl" />
                         <kbq-cleaner />
                     </kbq-form-field>
 
