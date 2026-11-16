@@ -204,7 +204,7 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanU
 // @public
 export class KbqMaxValidator implements Validator, OnChanges {
     protected readonly coercedMax: _angular_core.Signal<number | null>;
-    readonly max: _angular_core.InputSignalWithTransform<number, NumberInput>;
+    readonly max: _angular_core.InputSignalWithTransform<number, object | NumberInput>;
     // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
@@ -220,7 +220,7 @@ export class KbqMaxValidator implements Validator, OnChanges {
 // @public
 export class KbqMinValidator implements Validator, OnChanges {
     protected readonly coercedMin: _angular_core.Signal<number | null>;
-    readonly min: _angular_core.InputSignalWithTransform<number, NumberInput>;
+    readonly min: _angular_core.InputSignalWithTransform<number, object | NumberInput>;
     // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)

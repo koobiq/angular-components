@@ -2,6 +2,7 @@ import { Component, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { DateTime } from 'luxon';
 import { KbqInputModule, KbqMaxValidator, KbqMinValidator } from './index';
 
 function createComponent<T>(component: Type<T>, imports: any[] = [], providers: Provider[] = []): ComponentFixture<T> {
@@ -39,6 +40,21 @@ class NumberInputWithBounds {
     control = new FormControl<number | null>(null);
     min: number | undefined = 0.5;
     max: number | undefined = 9.5;
+}
+
+@Component({
+    imports: [
+        KbqInputModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <input kbqNumberInput min="0.5" max="9.5" [formControl]="control" />
+        </kbq-form-field>
+    `
+})
+class NumberInputWithStaticBounds {
+    control = new FormControl<number | null>(null);
 }
 
 describe('KbqMinValidator/KbqMaxValidator', () => {
@@ -81,6 +97,94 @@ describe('KbqMinValidator/KbqMaxValidator', () => {
             await fixture.whenStable();
 
             expect(fixture.componentInstance.control.errors).toEqual({ max: { max: 9.5, actual: 9.7 } });
+        });
+    });
+
+    describe('numeric string bounds', () => {
+        it('should validate a string bound like a number', async () => {
+            const fixture = createComponent(NumberInputWithBounds);
+
+            // Not assignable under the `number` typing, but the string form is what a static
+            // `min="0.5"` attribute and an untyped template deliver.
+            fixture.componentInstance.min = '0.5' as unknown as number;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            fixture.componentInstance.control.setValue(0.2);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(fixture.componentInstance.control.errors).toEqual({ min: { min: 0.5, actual: 0.2 } });
+        });
+
+        it('should validate the string form of a static attribute', async () => {
+            const fixture = createComponent(NumberInputWithStaticBounds);
+
+            fixture.componentInstance.control.setValue(0.2);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(fixture.componentInstance.control.errors).toEqual({ min: { min: 0.5, actual: 0.2 } });
+
+            fixture.componentInstance.control.setValue(9.7);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(fixture.componentInstance.control.errors).toEqual({ max: { max: 9.5, actual: 9.7 } });
+
+            const inputElement: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+
+            expect(inputElement.getAttribute('min')).toBe('0.5');
+            expect(inputElement.getAttribute('max')).toBe('9.5');
+        });
+    });
+
+    describe('non-numeric object bounds', () => {
+        // A datepicker input shares its `min`/`max` bindings with these validators through the selector,
+        // so a date reaches the transform at runtime despite the `number` typing.
+        const objectWithEpochValueOf = () => ({
+            valueOf: () => 1717189200000,
+            toString: () => '2024-06-01T00:00:00.000Z'
+        });
+
+        it('should validate nothing for a bound DateTime and write no attribute', async () => {
+            const fixture = createComponent(NumberInputWithBounds);
+
+            fixture.componentInstance.min = DateTime.fromISO('2024-06-01') as unknown as number;
+            fixture.componentInstance.max = DateTime.fromISO('2024-08-31') as unknown as number;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            fixture.componentInstance.control.setValue(0.2);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(fixture.componentInstance.control.errors).toBeNull();
+
+            const inputElement: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+
+            expect(inputElement.getAttribute('min')).toBeNull();
+            expect(inputElement.getAttribute('max')).toBeNull();
+        });
+
+        it('should validate nothing for any other object with a `valueOf` and write no attribute', async () => {
+            const fixture = createComponent(NumberInputWithBounds);
+
+            fixture.componentInstance.min = objectWithEpochValueOf() as unknown as number;
+            fixture.componentInstance.max = objectWithEpochValueOf() as unknown as number;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            fixture.componentInstance.control.setValue(0.2);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(fixture.componentInstance.control.errors).toBeNull();
+
+            const inputElement: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+
+            expect(inputElement.getAttribute('min')).toBeNull();
+            expect(inputElement.getAttribute('max')).toBeNull();
         });
     });
 

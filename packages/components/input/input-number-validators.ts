@@ -5,9 +5,13 @@ import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator, ValidatorF
 /**
  * Transform for the validator bounds. `coerceNumberProperty`, not `parseInt`: the bound value may be a
  * fractional number or the string form of a static `min="0.5"` attribute, and `parseInt` would truncate
- * both to `0`. A non-numeric bound becomes `NaN`, which installs no validator and writes no attribute.
+ * both to `0`. Only a `number` or a `string` is a numeric bound: a datepicker input shares its
+ * `min`/`max` bindings with these validators, so a `DateTime` reaches the transform too, and its
+ * `valueOf()` would coerce it to epoch milliseconds. Any other bound reads back as `NaN`, which installs
+ * no validator and writes no attribute.
  */
-const bound = (value: NumberInput): number => coerceNumberProperty(value, NaN);
+const bound = (value: NumberInput | object): number =>
+    typeof value === 'number' || typeof value === 'string' ? coerceNumberProperty(value, NaN) : NaN;
 
 export const KBQ_MIN_VALIDATOR: Provider = {
     provide: NG_VALIDATORS,
@@ -31,8 +35,12 @@ export const KBQ_MIN_VALIDATOR: Provider = {
     }
 })
 export class KbqMinValidator implements Validator, OnChanges {
-    /** Lower bound installed as `Validators.min`. A non-numeric bound reads back as `NaN`. */
-    readonly min = input<number, NumberInput>(undefined!, { transform: bound });
+    /**
+     * Lower bound installed as `Validators.min`. A non-numeric bound reads back as `NaN`, which installs no
+     * validator and writes no attribute: an input bound to `[kbqDatepicker]` shares this `min` with the
+     * datepicker, so a date bound for the datepicker has to be ignored here.
+     */
+    readonly min = input<number, NumberInput | object>(undefined!, { transform: bound });
 
     private validator: ValidatorFn;
     private onChange: () => void;
@@ -84,8 +92,12 @@ export const KBQ_MAX_VALIDATOR: Provider = {
     }
 })
 export class KbqMaxValidator implements Validator, OnChanges {
-    /** Upper bound installed as `Validators.max`. A non-numeric bound reads back as `NaN`. */
-    readonly max = input<number, NumberInput>(undefined!, { transform: bound });
+    /**
+     * Upper bound installed as `Validators.max`. A non-numeric bound reads back as `NaN`, which installs no
+     * validator and writes no attribute: an input bound to `[kbqDatepicker]` shares this `max` with the
+     * datepicker, so a date bound for the datepicker has to be ignored here.
+     */
+    readonly max = input<number, NumberInput | object>(undefined!, { transform: bound });
 
     private validator: ValidatorFn;
     private onChange: () => void;
