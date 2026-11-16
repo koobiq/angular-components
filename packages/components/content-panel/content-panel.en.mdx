@@ -30,10 +30,20 @@ Keys, storage and expiry work the same for every component that persists — see
 
 ### Keyboard interaction
 
-By default, the `ESCAPE` key closes the panel, but you can disable this behavior using the `disableCloseByEscape` attribute:
+By default, the `ESCAPE` key closes the panel while the focus is inside `kbq-content-panel-container`: in the panel itself or in the content next to it. You can disable this behavior using the `disableCloseByEscape` attribute:
 
 ```html
 <kbq-content-panel-container disableCloseByEscape>
     <kbq-content-panel>...</kbq-content-panel>
 </kbq-content-panel-container>
 ```
+
+To close the panel with the `ESCAPE` key wherever the focus is on the page, listen for the key on `document` and call `close()`:
+
+<Example id="content-panel-close-on-escape" />
+
+### Confirming close
+
+To handle closing the panel, for example to confirm discarding unsaved changes, use the `beforeClose` attribute:
+
+<Example id="content-panel-before-close" />

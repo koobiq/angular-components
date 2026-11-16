@@ -11,6 +11,7 @@ import { KbqOverflowShadowContainer } from '@koobiq/components/core';
 import { KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import * as _koobiq_components_core from '@koobiq/components/core';
+import { Observable } from 'rxjs';
 import { OnInit } from '@angular/core';
 
 // @public (undocumented)
@@ -30,6 +31,9 @@ export class KbqContentPanelAside {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqContentPanelAside, never>;
 }
 
+// @public
+export type KbqContentPanelBeforeClose = () => boolean | Promise<boolean> | Observable<boolean>;
+
 // @public (undocumented)
 export class KbqContentPanelBody {
     readonly overflowContainer: i0.Signal<KbqOverflowShadowContainer>;
@@ -44,6 +48,7 @@ export class KbqContentPanelBody {
 export class KbqContentPanelContainer implements OnInit {
     constructor();
     protected readonly animationsDisabled: boolean;
+    readonly beforeClose: i0.InputSignal<KbqContentPanelBeforeClose | undefined>;
     clearSavedState(): void;
     close(): void;
     protected readonly contentAnimating: i0.WritableSignal<boolean>;
@@ -69,7 +74,7 @@ export class KbqContentPanelContainer implements OnInit {
     readonly width: i0.InputSignalWithTransform<number, unknown>;
     protected readonly widthState: i0.WritableSignal<number>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelContainer, "kbq-content-panel-container", ["kbqContentPanelContainer"], { "openedInput": { "alias": "opened"; "required": false; "isSignal": true; }; "disableClose": { "alias": "disableClose"; "required": false; "isSignal": true; }; "disableCloseByEscape": { "alias": "disableCloseByEscape"; "required": false; "isSignal": true; }; "disableResizer": { "alias": "disableResizer"; "required": false; "isSignal": true; }; "minWidth": { "alias": "minWidth"; "required": false; "isSignal": true; }; "width": { "alias": "width"; "required": false; "isSignal": true; }; "maxWidth": { "alias": "maxWidth"; "required": false; "isSignal": true; }; }, { "openedChange": "openedChange"; }, never, ["*", "kbq-content-panel"], true, [{ directive: typeof _koobiq_components_core.KbqStateSaving; inputs: { "useStateSaving": "useStateSaving"; "stateSavingKey": "stateSavingKey"; }; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelContainer, "kbq-content-panel-container", ["kbqContentPanelContainer"], { "openedInput": { "alias": "opened"; "required": false; "isSignal": true; }; "disableClose": { "alias": "disableClose"; "required": false; "isSignal": true; }; "disableCloseByEscape": { "alias": "disableCloseByEscape"; "required": false; "isSignal": true; }; "beforeClose": { "alias": "beforeClose"; "required": false; "isSignal": true; }; "disableResizer": { "alias": "disableResizer"; "required": false; "isSignal": true; }; "minWidth": { "alias": "minWidth"; "required": false; "isSignal": true; }; "width": { "alias": "width"; "required": false; "isSignal": true; }; "maxWidth": { "alias": "maxWidth"; "required": false; "isSignal": true; }; }, { "openedChange": "openedChange"; }, never, ["*", "kbq-content-panel"], true, [{ directive: typeof _koobiq_components_core.KbqStateSaving; inputs: { "useStateSaving": "useStateSaving"; "stateSavingKey": "stateSavingKey"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqContentPanelContainer, never>;
 }

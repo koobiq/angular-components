@@ -17,8 +17,11 @@ import { KbqContentPanelContainer, KbqContentPanelModule } from '@koobiq/compone
             width="350"
         >
             <div class="example-content-panel-container__content">
-                <button kbq-button (click)="panel.toggle()">Toggle</button>
-                <button kbq-button type="button" (click)="container().clearSavedState()">Reset saved state</button>
+                <div class="example-content-panel-container__actions">
+                    <button kbq-button (click)="panel.toggle()">Toggle</button>
+                    <button kbq-button type="button" (click)="container().clearSavedState()">Reset saved state</button>
+                </div>
+                <p>The panel remembers whether it is open and how wide it is.</p>
             </div>
 
             <kbq-content-panel>
@@ -36,10 +39,19 @@ import { KbqContentPanelContainer, KbqContentPanelModule } from '@koobiq/compone
         </kbq-content-panel-container>
     `,
     styles: `
+        :host {
+            display: block;
+            height: 200px;
+        }
+
         .example-content-panel-container__content {
-            display: flex;
-            gap: 8px;
             padding: 16px;
+        }
+
+        .example-content-panel-container__actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
