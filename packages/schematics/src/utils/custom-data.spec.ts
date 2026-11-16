@@ -64,9 +64,19 @@ describe('readCustomIconMapping', () => {
         const tree = new HostTree();
         const { logger, warnings } = loggerWithMessages();
 
+        tree.create('/data.json', JSON.stringify([{ replace: 'a_16', replaceWith: 'b_16' }]));
+
+        expect(readCustomIconMapping(tree, 'data.json', logger)).toEqual([{ from: 'a_16', to: 'b_16' }]);
+        expect(warnings).toEqual([]);
+    });
+
+    it('strips a leading kbq- prefix from both sides of a mapping', () => {
+        const tree = new HostTree();
+        const { logger, warnings } = loggerWithMessages();
+
         tree.create('/data.json', JSON.stringify([{ replace: 'kbq-a_16', replaceWith: 'kbq-b_16' }]));
 
-        expect(readCustomIconMapping(tree, 'data.json', logger)).toEqual([{ from: 'kbq-a_16', to: 'kbq-b_16' }]);
+        expect(readCustomIconMapping(tree, 'data.json', logger)).toEqual([{ from: 'a_16', to: 'b_16' }]);
         expect(warnings).toEqual([]);
     });
 

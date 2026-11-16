@@ -5,7 +5,11 @@ import * as path from 'path';
 
 export type IconPair = { from: string; to: string };
 
-const MAPPING_EXAMPLE = '[{ "replace": "kbq-add-to-list_16", "replaceWith": "kbq-file-plus-o_16" }]';
+const KBQ_PREFIX = 'kbq-';
+
+const MAPPING_EXAMPLE = '[{ "replace": "add-to-list_16", "replaceWith": "file-plus-o_16" }]';
+
+const stripKbqPrefix = (value: string) => (value.startsWith(KBQ_PREFIX) ? value.slice(KBQ_PREFIX.length) : value);
 
 export function readCustomJson(tree: Tree, filePath: string, bases: string[] = ['/']): unknown {
     for (const base of bases) {
@@ -43,13 +47,13 @@ export function readCustomIconMapping(
 
     const pairs = entries.map((entry): IconPair => {
         if (typeof entry?.replace === 'string' && typeof entry?.replaceWith === 'string') {
-            return { from: entry.replace, to: entry.replaceWith };
+            return { from: stripKbqPrefix(entry.replace), to: stripKbqPrefix(entry.replaceWith) };
         }
 
         if (typeof entry?.from === 'string' && typeof entry?.to === 'string') {
             legacyShape = true;
 
-            return { from: entry.from, to: entry.to };
+            return { from: stripKbqPrefix(entry.from), to: stripKbqPrefix(entry.to) };
         }
 
         throw invalid();

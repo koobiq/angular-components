@@ -203,6 +203,22 @@ describe(SCHEMATIC_NAME, () => {
 
             await expect(run({ customDataPath: 'icons.json' })).resolves.toBeTruthy();
         });
+
+        it('normalizes a prefixed value in replaceWith so the prefix is not duplicated', async () => {
+            appTree.create('/icons.json', JSON.stringify([{ replace: 'old_16', replaceWith: 'kbq-new_16' }]));
+
+            const tree = await run({ customDataPath: 'icons.json' });
+
+            expect(tree.readText(templatePath)).toBe('<i kbq-icon="kbq-new_16"></i>');
+        });
+
+        it('normalizes a prefixed value in replace so the prefixed usage in code is still migrated', async () => {
+            appTree.create('/icons.json', JSON.stringify([{ replace: 'kbq-old_16', replaceWith: 'new_16' }]));
+
+            const tree = await run({ customDataPath: 'icons.json' });
+
+            expect(tree.readText(templatePath)).toBe('<i kbq-icon="kbq-new_16"></i>');
+        });
     });
 
     it('is idempotent and does not mutate already-current icon names', async () => {
