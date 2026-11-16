@@ -15,6 +15,8 @@ export const tkTMLocaleData = {
         previousMonth: 'Öňki aý',
         currentDate: 'Şu günki sene',
         nextMonth: 'Indiki aý',
+        month: 'Aý',
+        year: 'Ýyl',
         clear: 'Arassala',
         showPassword: 'Paroly görkez',
         hidePassword: 'Paroly gizle',

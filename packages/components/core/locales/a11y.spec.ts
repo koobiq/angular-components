@@ -5,8 +5,11 @@ import { BehaviorSubject } from 'rxjs';
 import { kbqA11yLocaleConfigurationProvider, kbqInjectA11yLocaleConfiguration } from './a11y';
 import { kbqInjectLocaleConfiguration, kbqLocaleConfigurationOverrideProvider } from './configuration';
 import { enUSLocaleData } from './en-US';
+import { esLALocaleData } from './es-LA';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from './locale-service';
+import { ptBRLocaleData } from './pt-BR';
 import { ruRULocaleData } from './ru-RU';
+import { tkTMLocaleData } from './tk-TM';
 import { KbqSelectLocaleConfiguration } from './types';
 
 describe('kbqInjectA11yLocaleConfiguration', () => {
@@ -138,5 +141,19 @@ describe('kbqInjectA11yLocaleConfiguration', () => {
         TestBed.configureTestingModule({ providers: [{ provide: KBQ_LOCALE_SERVICE, useValue: stub }] });
 
         expect(inject()()).toBe(ruRULocaleData.a11y);
+    });
+});
+
+describe('shipped a11y locale data', () => {
+    // The calendar list names are optional in the type, so `satisfies` does not catch a shipped locale that lacks them.
+    it.each([
+        { id: 'en-US', data: enUSLocaleData },
+        { id: 'es-LA', data: esLALocaleData },
+        { id: 'pt-BR', data: ptBRLocaleData },
+        { id: 'ru-RU', data: ruRULocaleData },
+        { id: 'tk-TM', data: tkTMLocaleData }
+    ])('should name the calendar month and year lists in $id', ({ data }) => {
+        expect(data.a11y.month).toBeTruthy();
+        expect(data.a11y.year).toBeTruthy();
     });
 });

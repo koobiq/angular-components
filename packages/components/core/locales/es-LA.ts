@@ -15,6 +15,8 @@ export const esLALocaleData = {
         previousMonth: 'Mes anterior',
         currentDate: 'Fecha actual',
         nextMonth: 'Mes siguiente',
+        month: 'Mes',
+        year: 'Año',
         clear: 'Borrar',
         showPassword: 'Mostrar la contraseña',
         hidePassword: 'Ocultar la contraseña',

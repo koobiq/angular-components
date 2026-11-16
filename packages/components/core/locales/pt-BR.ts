@@ -15,6 +15,8 @@ export const ptBRLocaleData = {
         previousMonth: 'Mês anterior',
         currentDate: 'Data atual',
         nextMonth: 'Próximo mês',
+        month: 'Mês',
+        year: 'Ano',
         clear: 'Apagar',
         showPassword: 'Mostrar a senha',
         hidePassword: 'Ocultar a senha',

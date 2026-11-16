@@ -428,6 +428,8 @@ export const enUSLocaleData: {
         previousMonth: string;
         currentDate: string;
         nextMonth: string;
+        month: string;
+        year: string;
         clear: string;
         showPassword: string;
         hidePassword: string;
@@ -713,6 +715,8 @@ export const esLALocaleData: {
         previousMonth: string;
         currentDate: string;
         nextMonth: string;
+        month: string;
+        year: string;
         clear: string;
         showPassword: string;
         hidePassword: string;
@@ -1243,6 +1247,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             previousMonth: string;
             currentDate: string;
             nextMonth: string;
+            month: string;
+            year: string;
             clear: string;
             showPassword: string;
             hidePassword: string;
@@ -1503,6 +1509,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             previousMonth: string;
             currentDate: string;
             nextMonth: string;
+            month: string;
+            year: string;
             clear: string;
             showPassword: string;
             hidePassword: string;
@@ -1758,6 +1766,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             previousMonth: string;
             currentDate: string;
             nextMonth: string;
+            month: string;
+            year: string;
             clear: string;
             showPassword: string;
             hidePassword: string;
@@ -2018,6 +2028,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             previousMonth: string;
             currentDate: string;
             nextMonth: string;
+            month: string;
+            year: string;
             clear: string;
             showPassword: string;
             hidePassword: string;
@@ -2275,6 +2287,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             previousMonth: string;
             currentDate: string;
             nextMonth: string;
+            month: string;
+            year: string;
             clear: string;
             showPassword: string;
             hidePassword: string;
@@ -2623,6 +2637,8 @@ export type KbqA11yLocaleConfiguration = {
     previousMonth: string;
     currentDate: string;
     nextMonth: string;
+    month?: string;
+    year?: string;
     clear: string;
     showPassword: string;
     hidePassword: string;
@@ -5068,6 +5084,8 @@ export const ptBRLocaleData: {
         previousMonth: string;
         currentDate: string;
         nextMonth: string;
+        month: string;
+        year: string;
         clear: string;
         showPassword: string;
         hidePassword: string;
@@ -5538,6 +5556,8 @@ export const ruRULocaleData: {
         previousMonth: string;
         currentDate: string;
         nextMonth: string;
+        month: string;
+        year: string;
         clear: string;
         showPassword: string;
         hidePassword: string;
@@ -5884,6 +5904,8 @@ export const tkTMLocaleData: {
         previousMonth: string;
         currentDate: string;
         nextMonth: string;
+        month: string;
+        year: string;
         clear: string;
         showPassword: string;
         hidePassword: string;
