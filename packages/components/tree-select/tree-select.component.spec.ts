@@ -2149,6 +2149,25 @@ describe('KbqTreeSelect', () => {
             ]);
         });
 
+        it('should hide the placeholder text while disabled', async () => {
+            const NBSP = '\u00A0';
+            const fixture = TestBed.createComponent(BasicTreeSelect);
+
+            fixture.detectChanges();
+
+            const placeholder = fixture.debugElement.query(By.css('.kbq-select__placeholder')).nativeElement;
+
+            expect(placeholder.textContent.trim()).toBe('Food');
+
+            fixture.componentInstance.control.disable();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(placeholder.textContent.trim()).toBe('');
+            expect(placeholder.textContent).toContain(NBSP);
+        });
+
         describe('accessibility', () => {
             describe('aria', () => {
                 let fixture: ComponentFixture<BasicTreeSelect>;

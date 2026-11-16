@@ -268,6 +268,31 @@ describe('KbqPasswordInput', () => {
         expect(passwordInput.getAttribute('type')).toBe('text');
     });
 
+    it('should hide the eye while disabled, with or without a value', async () => {
+        vi.useFakeTimers();
+
+        const fixture = createComponent(PasswordInputDefault);
+        const toggle = fixture.debugElement.query(By.css('.kbq-password-toggle'));
+
+        fixture.componentInstance.value = 'secret';
+        fixture.detectChanges();
+        await vi.advanceTimersByTimeAsync(1000);
+
+        expect(toggle.styles.visibility).toEqual('visible');
+
+        fixture.componentInstance.disabled = true;
+        fixture.detectChanges();
+        await vi.advanceTimersByTimeAsync(1000);
+
+        expect(toggle.styles.visibility).toEqual('hidden');
+
+        fixture.componentInstance.disabled = false;
+        fixture.detectChanges();
+        await vi.advanceTimersByTimeAsync(1000);
+
+        expect(toggle.styles.visibility).toEqual('visible');
+    });
+
     it('should have password hints', () => {
         const fixture = createComponent(PasswordInputDefault);
 

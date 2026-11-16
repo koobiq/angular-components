@@ -539,6 +539,35 @@ describe('KbqNumberInput', () => {
         expect(fixture.componentInstance.value).toEqual(initialValue);
     });
 
+    it('should hide the stepper while disabled and keep it while readonly', async () => {
+        vi.useFakeTimers();
+
+        const fixture = createComponent(NumberInputTestComponent);
+
+        fixture.detectChanges();
+        await vi.runOnlyPendingTimersAsync();
+
+        const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+
+        expect(stepper.styles.visibility).toEqual('visible');
+        expect(stepper.attributes['aria-hidden']).toBe('false');
+
+        fixture.componentInstance.disabled = true;
+        fixture.detectChanges();
+        await vi.runOnlyPendingTimersAsync();
+
+        expect(stepper.styles.visibility).toEqual('hidden');
+        expect(stepper.attributes['aria-hidden']).toBe('true');
+
+        fixture.componentInstance.disabled = false;
+        fixture.componentInstance.readonly = true;
+        fixture.detectChanges();
+        await vi.runOnlyPendingTimersAsync();
+
+        expect(stepper.styles.visibility).toEqual('visible');
+        expect(stepper.attributes['aria-hidden']).toBe('false');
+    });
+
     describe('readonly', () => {
         it('should disable the stepper and block its steps', async () => {
             vi.useFakeTimers();
