@@ -5,7 +5,9 @@ import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLink } from '@koobiq/components/link';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Autocomplete with footer
@@ -21,8 +23,8 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
     ],
     template: `
         <kbq-form-field>
-            <kbq-label>Label</kbq-label>
-            <kbq-hint>Autocomplete with footer</kbq-hint>
+            <kbq-label>{{ t().label }}</kbq-label>
+            <kbq-hint>{{ t().withFooterHint }}</kbq-hint>
             <input
                 #trigger="kbqAutocompleteTrigger"
                 kbqInput
@@ -36,7 +38,7 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
                     </kbq-option>
                 }
                 <kbq-autocomplete-footer>
-                    <a kbqLink external (click)="trigger.closePanel()">Link</a>
+                    <a kbqLink external (click)="trigger.closePanel()">{{ t().link }}</a>
                 </kbq-autocomplete-footer>
             </kbq-autocomplete>
             <kbq-cleaner />
@@ -56,7 +58,9 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AutocompleteWithFooterExample {
-    readonly options = Array.from({ length: 100 }, (_, i) => `Option ${i + 1}`);
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    readonly options = Array.from({ length: 100 }, (_, i) => 'Option #' + (i + 1));
     readonly control = new FormControl('');
     readonly filteredOptions = toSignal(
         this.control.valueChanges.pipe(

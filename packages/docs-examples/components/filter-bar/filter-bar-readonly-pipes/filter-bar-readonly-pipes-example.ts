@@ -4,7 +4,9 @@ import { DateFormatter } from '@koobiq/components/core';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqFilter, KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 import { KbqLink } from '@koobiq/components/link';
-import { injectLocalizedPeriods, injectLocalizedText } from '../localized-data';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { injectLocalizedPeriods } from '../localized-periods';
+import { TRANSLATIONS } from './l10n';
 
 /** Text search is the first pipe in every filter: always present, never removable. */
 const createSearchPipe = (name: string): KbqPipe => ({
@@ -46,10 +48,10 @@ const createSearchPipe = (name: string): KbqPipe => ({
         <br />
 
         <kbq-dl [verticalBreakpoint]="590">
-            <kbq-dt>{{ text().user }}</kbq-dt>
-            <kbq-dd><span kbqLink (click)="setUser(text().user, 'rturov')">rturov</span></kbq-dd>
+            <kbq-dt>{{ t().user }}</kbq-dt>
+            <kbq-dd><span kbqLink (click)="setUser(t().user, 'rturov')">rturov</span></kbq-dd>
 
-            @for (item of text().readonlyPipes; track item) {
+            @for (item of t().readonlyPipes; track item) {
                 <kbq-dt>{{ item.name }}</kbq-dt>
                 <kbq-dd>
                     <span kbqLink (click)="addPipe(item.name, item.value)">{{ item.value }}</span>
@@ -61,29 +63,9 @@ const createSearchPipe = (name: string): KbqPipe => ({
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarReadonlyPipesExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     /** Text the example owns: it has no counterpart in the library's locale data. */
-    protected readonly text = injectLocalizedText({
-        'ru-RU': {
-            search: 'Поиск',
-            user: 'Пользователь',
-            readonlyPipes: [
-                { name: 'Домен', value: 'Управление системой' },
-                { name: 'Тип объекта', value: 'PaxMatrol IEMS' },
-                { name: 'Действие', value: 'Изменение' },
-                { name: 'Объект', value: 'Resolver' }
-            ]
-        },
-        default: {
-            search: 'Search',
-            user: 'User',
-            readonlyPipes: [
-                { name: 'Domain', value: 'System management' },
-                { name: 'Object type', value: 'PaxMatrol IEMS' },
-                { name: 'Action', value: 'Modification' },
-                { name: 'Object', value: 'Resolver' }
-            ]
-        }
-    });
 
     /** Period labels follow the active locale, so everything built out of them is rebuilt with it. */
     protected readonly periods = injectLocalizedPeriods();
@@ -178,9 +160,9 @@ export class FilterBarReadonlyPipesExample {
             changed: false,
             saved: false,
             pipes: [
-                createSearchPipe(this.text().search),
+                createSearchPipe(this.t().search),
                 {
-                    name: this.text().user,
+                    name: this.t().user,
                     value: null,
                     type: KbqPipeTypes.ReadOnly,
 

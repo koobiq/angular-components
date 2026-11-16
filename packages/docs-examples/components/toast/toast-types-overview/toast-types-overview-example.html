@@ -5,18 +5,18 @@
 </ng-template>
 
 <ng-template #toastActionInfo let-toast>
-    <ng-container *ngTemplateOutlet="action; context: { $implicit: toast, text: 'Обновить' }" />
+    <ng-container *ngTemplateOutlet="action; context: { $implicit: toast, text: t().refresh }" />
 </ng-template>
 <ng-template #toastActionWarning let-toast>
-    <ng-container *ngTemplateOutlet="action; context: { $implicit: toast, text: 'Сменить пароль' }" />
+    <ng-container *ngTemplateOutlet="action; context: { $implicit: toast, text: t().changePassword }" />
 </ng-template>
 <ng-template #toastActionError let-toast>
-    <ng-container *ngTemplateOutlet="action; context: { $implicit: toast, text: 'Повторить' }" />
+    <ng-container *ngTemplateOutlet="action; context: { $implicit: toast, text: t().retry }" />
 </ng-template>
 
 <div style="gap: 16px" class="layout-row">
-    <button kbq-button (click)="showContrastToast(toastActionInfo)">Информация</button>
-    <button kbq-button (click)="showSuccessToast()">Успех</button>
-    <button kbq-button (click)="showWarningToast(toastActionWarning)">Предупреждение</button>
-    <button kbq-button (click)="showErrorToast(toastActionError)">Ошибка</button>
+    <button kbq-button (click)="showContrastToast(toastActionInfo)">{{ t().info }}</button>
+    <button kbq-button (click)="showSuccessToast()">{{ t().success }}</button>
+    <button kbq-button (click)="showWarningToast(toastActionWarning)">{{ t().warning }}</button>
+    <button kbq-button (click)="showErrorToast(toastActionError)">{{ t().error }}</button>
 </div>

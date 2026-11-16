@@ -42,6 +42,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectIconExample {
-    readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);
+    readonly options = Array.from({ length: 5 }, (_, i) => 'Option #' + i);
     selected = this.options[0];
 }

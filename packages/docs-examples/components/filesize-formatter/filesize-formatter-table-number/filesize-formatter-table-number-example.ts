@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_LOCALE_SERVICE, KbqDataSizePipe, KbqDecimalPipe, KbqTableNumberPipe } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Filesize formatter Table Number
@@ -16,8 +18,8 @@ import { KbqTableModule } from '@koobiq/components/table';
         <table kbq-table>
             <thead>
                 <tr>
-                    <th>File</th>
-                    <th>Size</th>
+                    <th>{{ t().file }}</th>
+                    <th>{{ t().size }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -44,6 +46,8 @@ import { KbqTableModule } from '@koobiq/components/table';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilesizeFormatterTableNumberExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     protected readonly cdr = inject(ChangeDetectorRef);
 

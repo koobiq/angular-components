@@ -4,6 +4,8 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit content alignment
@@ -31,7 +33,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 
         <form [formGroup]="form">
             <kbq-inline-edit>
-                <kbq-label>Country</kbq-label>
+                <kbq-label>{{ t().country }}</kbq-label>
 
                 <div class="example-inline-text" kbqInlineEditViewMode>
                     <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.country.value }" />
@@ -42,7 +44,7 @@ import { KbqInputModule } from '@koobiq/components/input';
             </kbq-inline-edit>
 
             <kbq-inline-edit>
-                <kbq-label>Capital</kbq-label>
+                <kbq-label>{{ t().capital }}</kbq-label>
 
                 <div class="example-inline-text" kbqInlineEditViewMode>
                     <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.capital.value }" />
@@ -53,7 +55,7 @@ import { KbqInputModule } from '@koobiq/components/input';
             </kbq-inline-edit>
 
             <kbq-inline-edit>
-                <kbq-label>Currency</kbq-label>
+                <kbq-label>{{ t().currency }}</kbq-label>
 
                 <div class="example-inline-text" kbqInlineEditViewMode>
                     <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.currency.value }" />
@@ -107,7 +109,11 @@ import { KbqInputModule } from '@koobiq/components/input';
     }
 })
 export class InlineEditContentAlignmentExample {
-    protected readonly placeholder = 'Placeholder';
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    protected get placeholder(): string {
+        return this.t().placeholder;
+    }
 
     protected readonly form = new FormGroup({
         country: new FormControl('Spain'),

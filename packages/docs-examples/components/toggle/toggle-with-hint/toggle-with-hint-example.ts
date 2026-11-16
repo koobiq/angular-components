@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Toggle With Hint
@@ -10,23 +12,21 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     imports: [KbqToggleModule, KbqFormFieldModule],
     template: `
         <div class="example-toggle-with-hint__container layout-align-center-start layout-column layout-gap-s">
-            <div>Touch</div>
+            <div>{{ t().touch }}</div>
             <kbq-toggle>
-                Tap to wake
-                <kbq-hint>Wake the screen when you tap on the display</kbq-hint>
+                {{ t().tapToWake }}
+                <kbq-hint>{{ t().tapToWakeHint }}</kbq-hint>
             </kbq-toggle>
             <kbq-toggle>
-                Shake to undo
+                {{ t().shakeToUndo }}
                 <kbq-hint>
-                    If you tend to share your phone by accident, you can disable Shake to Undo to prevent the Undo alert
-                    from appearing.
+                    {{ t().shakeToUndoHint }}
                 </kbq-hint>
             </kbq-toggle>
             <kbq-toggle>
-                Vibration
+                {{ t().vibration }}
                 <kbq-hint>
-                    When this witch is off, all vibration on your phone will be disabled, including those for
-                    earthquake, tsunami and other emergency alerts.
+                    {{ t().vibrationHint }}
                 </kbq-hint>
             </kbq-toggle>
         </div>
@@ -41,4 +41,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         class: 'layout-align-center-center layout-row layout-padding-top-l layout-padding-bottom-3xl'
     }
 })
-export class ToggleWithHintExample {}
+export class ToggleWithHintExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+}

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     KBQ_AG_GRID_ROW_DETAIL_LABELS_EN,
@@ -10,6 +10,7 @@ import {
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -22,6 +23,7 @@ import {
     RowSelectionOptions,
     SELECTION_COLUMN_ID
 } from 'ag-grid-community';
+import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -46,17 +48,17 @@ type ExampleRowData = {
     template: `
         <div class="example-row-detail-card">
             <kbq-dl>
-                <kbq-dt>Description</kbq-dt>
+                <kbq-dt>{{ t().description }}</kbq-dt>
                 <kbq-dd>{{ data.description }}</kbq-dd>
 
-                <kbq-dt>Affected host</kbq-dt>
+                <kbq-dt>{{ t().affectedHost }}</kbq-dt>
                 <kbq-dd>{{ data.host }}</kbq-dd>
 
-                <kbq-dt>Detected by</kbq-dt>
+                <kbq-dt>{{ t().detectedBy }}</kbq-dt>
                 <kbq-dd>{{ data.detector }}</kbq-dd>
             </kbq-dl>
 
-            <button kbq-button type="button" (click)="params.collapse()">Collapse</button>
+            <button kbq-button type="button" (click)="params.collapse()">{{ t().collapse }}</button>
         </div>
     `,
     styles: `
@@ -86,6 +88,7 @@ type ExampleRowData = {
 })
 export class ExampleRowDetailComponent {
     protected readonly params = inject(KBQ_AG_GRID_ROW_DETAIL_PARAMS);
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly data = this.params.data as ExampleRowData;
 }
 
@@ -97,8 +100,8 @@ export class ExampleRowDetailComponent {
     imports: [AgGridModule, KbqAgGridThemeModule, FormsModule, KbqToggleModule],
     template: `
         <div class="example-row-detail-options">
-            <kbq-toggle [(ngModel)]="multipleExpand">Expand multiple rows</kbq-toggle>
-            <kbq-toggle [(ngModel)]="filled">Fill expanded rows</kbq-toggle>
+            <kbq-toggle [(ngModel)]="multipleExpand">{{ t().expandMultipleRows }}</kbq-toggle>
+            <kbq-toggle [(ngModel)]="filled">{{ t().fillExpandedRows }}</kbq-toggle>
         </div>
 
         <ag-grid-angular
@@ -113,8 +116,8 @@ export class ExampleRowDetailComponent {
             [kbqAgGridRowDetailFilled]="filled()"
             [getRowId]="getRowId"
             [rowSelection]="rowSelection"
-            [columnDefs]="columnDefs"
-            [rowData]="rowData"
+            [columnDefs]="columnDefs()"
+            [rowData]="rowData()"
             (cellClicked)="onCellClicked($event, rowDetail)"
             (cellKeyDown)="onCellKeyDown($event, rowDetail)"
         />
@@ -141,6 +144,8 @@ export class ExampleRowDetailComponent {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridRowDetailExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly multipleExpand = signal(false);
     protected readonly filled = signal(false);
 
@@ -155,131 +160,18 @@ export class AgGridRowDetailExample {
     };
 
     // Wider than the grid, so that scrolling it horizontally shows the expanded part staying in place.
-    protected readonly columnDefs: ColDef<ExampleRowData>[] = [
-        { field: 'event', headerName: 'Event', width: 200 },
-        { field: 'severity', headerName: 'Severity', width: 110 },
-        { field: 'status', headerName: 'Status', width: 120 },
-        { field: 'sourceIp', headerName: 'Source IP', width: 140 },
-        { field: 'destinationIp', headerName: 'Destination IP', width: 140 },
-        { field: 'protocol', headerName: 'Protocol', width: 110 },
-        { field: 'port', headerName: 'Port', width: 90 },
-        { field: 'technique', headerName: 'MITRE technique', width: 150 }
-    ];
+    protected readonly columnDefs = computed<ColDef<ExampleRowData>[]>(() => [
+        { field: 'event', headerName: this.t().event, width: 200 },
+        { field: 'severity', headerName: this.t().severity, width: 110 },
+        { field: 'status', headerName: this.t().status, width: 120 },
+        { field: 'sourceIp', headerName: this.t().sourceIp, width: 140 },
+        { field: 'destinationIp', headerName: this.t().destinationIp, width: 140 },
+        { field: 'protocol', headerName: this.t().protocol, width: 110 },
+        { field: 'port', headerName: this.t().port, width: 90 },
+        { field: 'technique', headerName: this.t().mitreTechnique, width: 150 }
+    ]);
 
-    protected readonly rowData: ExampleRowData[] = [
-        {
-            id: 'INC-1001',
-            event: 'Brute force',
-            severity: 'High',
-            status: 'In progress',
-            sourceIp: '203.0.113.24',
-            destinationIp: '10.0.1.10',
-            protocol: 'SSH',
-            port: '22',
-            technique: 'T1110',
-            host: 'srv-01',
-            detector: 'IDS',
-            description: '15 failed SSH logins within two minutes, followed by a successful one.'
-        },
-        {
-            id: 'INC-1002',
-            event: 'Port scan',
-            severity: 'Low',
-            status: 'Resolved',
-            sourceIp: '198.51.100.7',
-            destinationIp: '10.0.0.1',
-            protocol: 'TCP',
-            port: '1-1024',
-            technique: 'T1046',
-            host: 'gw-01',
-            detector: 'Firewall',
-            description: 'The source probed 1,024 TCP ports in 40 seconds.'
-        },
-        {
-            id: 'INC-1003',
-            event: 'Phishing email',
-            severity: 'Medium',
-            status: 'Resolved',
-            sourceIp: '192.0.2.15',
-            destinationIp: '10.0.2.5',
-            protocol: 'SMTP',
-            port: '25',
-            technique: 'T1566.001',
-            host: 'mail-01',
-            detector: 'Mail gateway',
-            description: 'An email with a spoofed sender and a macro-enabled attachment reached 12 mailboxes.'
-        },
-        {
-            id: 'INC-1004',
-            event: 'Malware detected',
-            severity: 'Critical',
-            status: 'In progress',
-            sourceIp: '203.0.113.91',
-            destinationIp: '10.0.3.12',
-            protocol: 'HTTPS',
-            port: '443',
-            technique: 'T1204.002',
-            host: 'ws-12',
-            detector: 'EDR',
-            description: 'The antivirus quarantined a trojan that a browser had downloaded.'
-        },
-        {
-            id: 'INC-1005',
-            event: 'DNS tunneling',
-            severity: 'High',
-            status: 'New',
-            sourceIp: '198.51.100.33',
-            destinationIp: '10.0.0.53',
-            protocol: 'DNS',
-            port: '53',
-            technique: 'T1071.004',
-            host: 'dns-01',
-            detector: 'DNS monitoring',
-            description: 'Over 3,000 long random subdomains of a single domain were resolved within an hour.'
-        },
-        {
-            id: 'INC-1006',
-            event: 'Privilege escalation',
-            severity: 'Critical',
-            status: 'New',
-            sourceIp: '192.0.2.48',
-            destinationIp: '10.0.0.10',
-            protocol: 'LDAP',
-            port: '389',
-            technique: 'T1098',
-            host: 'dc-01',
-            detector: 'SIEM',
-            description: 'A user was added to the Domain Admins group outside the change window.'
-        },
-        {
-            id: 'INC-1007',
-            event: 'Data exfiltration',
-            severity: 'Critical',
-            status: 'In progress',
-            sourceIp: '10.0.4.20',
-            destinationIp: '203.0.113.150',
-            protocol: 'HTTPS',
-            port: '443',
-            technique: 'T1567',
-            host: 'db-01',
-            detector: 'DLP',
-            description: '4.2 GB were uploaded to an unknown external host outside business hours.'
-        },
-        {
-            id: 'INC-1008',
-            event: 'Obfuscated script',
-            severity: 'Medium',
-            status: 'New',
-            sourceIp: '198.51.100.62',
-            destinationIp: '10.0.3.3',
-            protocol: 'WinRM',
-            port: '5986',
-            technique: 'T1027',
-            host: 'ws-03',
-            detector: 'EDR',
-            description: 'PowerShell ran a Base64-encoded command that disables script logging.'
-        }
-    ];
+    protected readonly rowData = computed<ExampleRowData[]>(() => this.t().incidents);
 
     /**
      * Clicking a cell expands and collapses its row. The expanded part is not a cell, so clicking

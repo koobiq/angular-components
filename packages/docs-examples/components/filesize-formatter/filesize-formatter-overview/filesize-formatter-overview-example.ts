@@ -13,6 +13,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Filesize formatter
@@ -33,7 +35,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         <form class="kbq-form-vertical" novalidate>
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
-                    <label class="kbq-form__label">Size in bits</label>
+                    <label class="kbq-form__label">{{ t().sizeInBits }}</label>
                     <kbq-form-field class="kbq-form__control">
                         <input kbqNumberInput kbqNormalizeWhitespace [min]="0" [formControl]="bytesControl" />
                         <kbq-stepper />
@@ -41,10 +43,10 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 </div>
 
                 <div class="kbq-form__row">
-                    <label class="kbq-form__label">Numbers behind decimal point</label>
+                    <label class="kbq-form__label">{{ t().numbersBehindDecimalPoint }}</label>
                     <kbq-form-field class="kbq-form__control">
                         <kbq-select [formControl]="precisionControl">
-                            <kbq-option [value]="2">Default (2)</kbq-option>
+                            <kbq-option [value]="2">{{ t().default2 }}</kbq-option>
                             <kbq-option [value]="0">0</kbq-option>
                             <kbq-option [value]="1">1</kbq-option>
                             <kbq-option [value]="2">2</kbq-option>
@@ -55,7 +57,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
                 <div class="kbq-form__row">
                     <label class="kbq-form__label">
-                        Base
+                        {{ t().base }}
                         <i
                             kbq-icon="kbq-circle-question_16"
                             [color]="'contrast-fade'"
@@ -66,7 +68,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                     </label>
                     <kbq-form-field class="kbq-form__control">
                         <kbq-select [formControl]="unitSystemNameControl">
-                            <kbq-option [value]="kbqMeasurementSystem.SI">Default (10)</kbq-option>
+                            <kbq-option [value]="kbqMeasurementSystem.SI">{{ t().default10 }}</kbq-option>
                             <kbq-option [value]="kbqMeasurementSystem.IEC">2</kbq-option>
                             <kbq-option [value]="kbqMeasurementSystem.SI">10</kbq-option>
                         </kbq-select>
@@ -82,21 +84,21 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         </div>
 
         <ng-template #tooltipText>
-            <div>Base 10</div>
+            <div>{{ t().base10 }}</div>
             <div>
                 <span>
                     <span>1&nbsp;KB = 10</span>
                     <sup>3</sup>
                 </span>
-                bytes = 1000&nbsp;bytes (SI standard)
+                {{ t().siStandard }}
             </div>
-            <div>Base 2</div>
+            <div>{{ t().base2 }}</div>
             <div>
                 <span>
                     <span>1&nbsp;KiB = 2</span>
                     <sup>10</sup>
                 </span>
-                bytes = 1024&nbsp;bytes (IEC)
+                {{ t().iec }}
             </div>
         </ng-template>
     `,
@@ -136,6 +138,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     }
 })
 export class FilesizeFormatterOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     protected readonly cdr = inject(ChangeDetectorRef);
     protected readonly precisionControl = new FormControl(2, { nonNullable: true });

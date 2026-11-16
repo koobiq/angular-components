@@ -4,7 +4,8 @@ import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { injectExampleText } from '../localized-data';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Navbar vertical app long name
@@ -21,7 +22,7 @@ import { injectExampleText } from '../localized-data';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarVerticalAppLongNameExample {
-    protected readonly text = injectExampleText();
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     readonly popUpPlacements = PopUpPlacements;
     readonly colors = KbqComponentColors;

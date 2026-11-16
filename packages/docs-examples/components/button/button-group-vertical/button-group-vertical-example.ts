@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonColor, KbqButtonModule, KbqButtonStyle, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Button group vertical
@@ -16,10 +18,10 @@ import { KbqIcon } from '@koobiq/components/icon';
         @for (style of buttonStyles; track style) {
             <div class="layout-row layout-gap-xl">
                 <div kbq-button-group [orientation]="'vertical'" [color]="style.color" [kbqStyle]="style.appearance">
-                    <button kbq-button aria-label="Plus">
+                    <button kbq-button [attr.aria-label]="t().plus">
                         <i kbq-icon="kbq-plus_16"></i>
                     </button>
-                    <button kbq-button aria-label="Minus">
+                    <button kbq-button [attr.aria-label]="t().minus">
                         <i kbq-icon="kbq-minus_16"></i>
                     </button>
                 </div>
@@ -32,6 +34,8 @@ import { KbqIcon } from '@koobiq/components/icon';
     }
 })
 export class ButtonGroupVerticalExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly buttonStyles: { color: KbqButtonColor; appearance: KbqButtonStyle; gap?: boolean }[] = [
         { color: KbqComponentColors.Contrast, appearance: KbqButtonStyles.Filled },
         { color: KbqComponentColors.ContrastFade, appearance: KbqButtonStyles.Filled },

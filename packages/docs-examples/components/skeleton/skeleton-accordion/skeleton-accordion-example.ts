@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqAccordionModule } from '@koobiq/components/accordion';
 import { KbqSkeletonAccordion } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Skeleton accordion preset
@@ -11,13 +13,13 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     selector: 'skeleton-accordion-example',
     imports: [KbqSkeletonAccordion, KbqToggleModule, FormsModule, KbqAccordionModule],
     template: `
-        <kbq-toggle [(ngModel)]="loading">Loading</kbq-toggle>
+        <kbq-toggle [(ngModel)]="loading">{{ t().loading }}</kbq-toggle>
 
         @if (loading()) {
             <kbq-skeleton-accordion />
         } @else {
             <kbq-accordion [useStateSaving]="false">
-                @for (section of sections; track section.title) {
+                @for (section of sections(); track section.title) {
                     <kbq-accordion-item>
                         <button kbq-accordion-trigger type="button">{{ section.title }}</button>
                         <kbq-accordion-content>{{ section.content }}</kbq-accordion-content>
@@ -37,10 +39,9 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SkeletonAccordionExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly loading = model(true);
-    protected readonly sections = [
-        { title: 'Connection', content: 'The server address, the port and the type of the connection.' },
-        { title: 'Synchronization', content: 'How often the users and the groups of the directory are updated.' },
-        { title: 'Authentication', content: 'Who is allowed to sign in with an account of the directory.' }
-    ];
+
+    protected readonly sections = computed(() => this.t().accordionSections);
 }

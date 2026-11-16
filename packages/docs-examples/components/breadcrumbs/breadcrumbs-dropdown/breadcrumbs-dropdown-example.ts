@@ -4,6 +4,8 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Breadcrumbs sizes
@@ -21,21 +23,21 @@ import { KbqIconModule } from '@koobiq/components/icon';
         <nav kbq-breadcrumbs>
             <kbq-breadcrumb-item
                 routerLink="./info-sec"
-                text="Information Security"
+                [text]="t().informationSecurity"
                 [queryParams]="{ queryParams: 'queryParams' }"
                 [fragment]="'fragment'"
             />
 
             <kbq-breadcrumb-item
                 routerLink="./access-control"
-                text="Access Control"
+                [text]="t().accessControl"
                 [queryParams]="{ queryParams: 'queryParams' }"
                 [fragment]="'fragment'"
             />
 
             <kbq-breadcrumb-item
                 routerLink="./authorization"
-                text="Authorization"
+                [text]="t().authorization"
                 [queryParams]="{ queryParams: 'queryParams' }"
                 [fragment]="'fragment'"
             />
@@ -43,7 +45,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
             <kbq-breadcrumb-item>
                 <div *kbqBreadcrumbView>
                     <button kbq-button kbqBreadcrumb [kbqDropdownTriggerFor]="siblingsListDropdown">
-                        Access Control
+                        {{ t().accessControl }}
                         <i kbq-icon="kbq-chevron-down-s_16"></i>
                     </button>
                 </div>
@@ -57,4 +59,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BreadcrumbsDropdownExample {}
+export class BreadcrumbsDropdownExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+}

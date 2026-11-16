@@ -15,15 +15,20 @@ import { KbqLink } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToastComponent, KbqToastModule, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { Observable, of, switchMap, throwError, timer } from 'rxjs';
+import { TRANSLATIONS } from './l10n';
 
 const ROLES = ['user:read', 'user:create', 'user:update', 'user:delete', 'audit:read'];
 /** Roles the fake server refuses to grant. */
 const FORBIDDEN_ROLES = ['user:delete', 'user:update'];
 
 class ExampleRolesError extends Error {
-    constructor(readonly rejectedRoles: string[]) {
-        super(`These roles are not available: ${rejectedRoles.join(', ')}`);
+    constructor(
+        readonly rejectedRoles: string[],
+        message: string
+    ) {
+        super(message);
     }
 }
 
@@ -45,9 +50,9 @@ class ExampleRolesError extends Error {
     ],
     template: `
         <p class="example-intro layout-margin-top-none layout-margin-bottom-l">
-            Add
+            {{ t().invalidItemsIntro1 }}
             <span class="kbq-text-normal-strong">{{ forbiddenRoles }}</span>
-            to the roles to have the server reject them.
+            {{ t().invalidItemsIntro2 }}
         </p>
 
         <kbq-inline-edit
@@ -57,7 +62,7 @@ class ExampleRolesError extends Error {
             (saveError)="showToast($event)"
             (modeChange)="onModeChange($event)"
         >
-            <kbq-label>Roles</kbq-label>
+            <kbq-label>{{ t().roles }}</kbq-label>
 
             <div class="layout-row layout-gap-xxs" style="flex-wrap: wrap;" kbqInlineEditViewMode>
                 @for (role of control.value; track role) {
@@ -101,13 +106,15 @@ class ExampleRolesError extends Error {
         </kbq-inline-edit>
 
         <ng-template #title>
-            Couldn’t update the field
+            {{ t().couldntUpdate }}
             <span class="kbq-text-normal-strong">Roles</span>
         </ng-template>
 
         <ng-template #actions let-toast>
-            <a kbqLink pseudo class="layout-margin-right-m" (click)="edit(toast)">Edit</a>
-            <a kbqLink pseudo (click)="discard(toast)">Discard changes</a>
+            <a kbqLink pseudo class="layout-margin-right-m" (click)="edit(toast)">{{ t().edit }}</a>
+            /a>
+            <a kbqLink pseudo (click)="discard(toast)">{{ t().discardChanges }}</a>
+            /a>
         </ng-template>
 
         <!-- Closing the notification without reacting discards the unsaved value as well. -->
@@ -116,7 +123,7 @@ class ExampleRolesError extends Error {
                 type="button"
                 kbq-toast-close-button
                 kbq-icon-button="kbq-xmark-s_16"
-                aria-label="Close"
+                [attr.aria-label]="t().close"
                 (click)="discard(toast)"
             ></button>
         </ng-template>
@@ -133,7 +140,11 @@ class ExampleRolesError extends Error {
     }
 })
 export class InlineEditSaveInvalidItemsExample {
-    protected readonly placeholder = 'Placeholder';
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    protected get placeholder(): string {
+        return this.t().placeholder;
+    }
     protected readonly roles = ROLES;
     protected readonly badgeColors = KbqBadgeColors;
     protected readonly tagColors = KbqComponentColors;
@@ -209,7 +220,13 @@ export class InlineEditSaveInvalidItemsExample {
         const rejected = value.filter((role) => FORBIDDEN_ROLES.includes(role));
 
         return timer(1000).pipe(
-            switchMap(() => (rejected.length ? throwError(() => new ExampleRolesError(rejected)) : of(value)))
+            switchMap(() =>
+                rejected.length
+                    ? throwError(
+                          () => new ExampleRolesError(rejected, this.t().theseRolesNotAvailable(rejected.join(', ')))
+                      )
+                    : of(value)
+            )
         );
     }
 }

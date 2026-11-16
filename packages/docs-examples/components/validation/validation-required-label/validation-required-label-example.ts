@@ -11,6 +11,8 @@ import { KbqFormField, kbqFormFieldDefaultOptionsProvider } from '@koobiq/compon
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Validation required label
@@ -31,39 +33,39 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
                     <kbq-form-field horizontal labelClass="flex-25" contentClass="flex-75">
-                        <kbq-label>Name</kbq-label>
+                        <kbq-label>{{ t().name }}</kbq-label>
                         <input formControlName="firstName" kbqInput />
 
-                        <kbq-error>Required</kbq-error>
+                        <kbq-error>{{ t().required }}</kbq-error>
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
                     <kbq-form-field horizontal labelClass="flex-25" contentClass="flex-75">
-                        <kbq-label>Last name</kbq-label>
+                        <kbq-label>{{ t().lastName }}</kbq-label>
                         <input formControlName="lastName" kbqInput />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
                     <kbq-form-field horizontal labelClass="flex-25" contentClass="flex-75">
-                        <kbq-label>Patronymic</kbq-label>
-                        <input formControlName="thirdName" kbqInput placeholder="Optional" />
+                        <kbq-label>{{ t().patronymic }}</kbq-label>
+                        <input formControlName="thirdName" kbqInput [placeholder]="t().optional" />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
                     <kbq-form-field horizontal labelClass="flex-25" contentClass="flex-75">
-                        <kbq-label>Email</kbq-label>
+                        <kbq-label>{{ t().email }}</kbq-label>
                         <input formControlName="email" kbqInput type="email" />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
                     <kbq-form-field horizontal labelClass="flex-25" contentClass="flex-75">
-                        <kbq-label>Request reason</kbq-label>
+                        <kbq-label>{{ t().requestReason }}</kbq-label>
                         <kbq-select formControlName="reason">
-                            @for (option of docsReasons; track option.value) {
+                            @for (option of t().reasons; track option.value) {
                                 <kbq-option [value]="option.value">
                                     {{ option.label }}
                                 </kbq-option>
@@ -74,22 +76,22 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
 
                 <div class="kbq-form__row">
                     <kbq-form-field horizontal labelClass="flex-25" contentClass="flex-75">
-                        <kbq-label>Estimation</kbq-label>
+                        <kbq-label>{{ t().estimation }}</kbq-label>
                         <kbq-select formControlName="estimation">
-                            @for (option of estimation; track option.value) {
+                            @for (option of t().estimations; track option.value) {
                                 <kbq-option [value]="option.value">
                                     {{ option.label }}
                                 </kbq-option>
                             }
                         </kbq-select>
 
-                        <kbq-error>Required</kbq-error>
+                        <kbq-error>{{ t().required }}</kbq-error>
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row layout-margin-bottom-xxl">
                     <kbq-form-field horizontal labelClass="flex-25" contentClass="flex-75">
-                        <kbq-label>Comment</kbq-label>
+                        <kbq-label>{{ t().comment }}</kbq-label>
                         <textarea formControlName="comment" kbqTextarea></textarea>
                     </kbq-form-field>
                 </div>
@@ -97,7 +99,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                 <div class="kbq-form__row">
                     <div class="flex-25"></div>
                     <div class="flex-75">
-                        <button color="contrast" kbq-button type="submit">Submit</button>
+                        <button color="contrast" kbq-button type="submit">{{ t().submit }}</button>
                     </div>
                 </div>
             </div>
@@ -123,32 +125,14 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     }
 })
 export class ValidationRequiredLabelExample {
-    protected readonly docsReasons = [
-        { value: 1, label: 'Parenting issues' },
-        { value: 2, label: 'Depression, anxiety, fear' },
-        { value: 3, label: 'Life crises' },
-        { value: 4, label: 'Low self-confidence' },
-        { value: 5, label: 'Relationships' },
-        { value: 6, label: 'Psychosomatic illnesses' },
-        { value: 7, label: 'Recurring unpleasant situations' },
-        { value: 8, label: 'Difficult life situation' },
-        { value: 9, label: 'Emotional disorders' },
-        { value: 10, label: 'Other' }
-    ];
-
-    protected readonly estimation = [
-        { value: 1, label: 'Bad' },
-        { value: 2, label: 'Satisfactory' },
-        { value: 3, label: 'Good' },
-        { value: 4, label: 'Best of all' }
-    ];
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     protected readonly form = new FormGroup({
         firstName: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
         lastName: new FormControl<string>('', { nonNullable: true }),
         thirdName: new FormControl<string>('', { nonNullable: true }),
         email: new FormControl<string>('', { nonNullable: true, validators: [Validators.email] }),
-        reason: new FormControl<number>(this.docsReasons[2].value, { nonNullable: true }),
+        reason: new FormControl<number>(this.t().reasons[2].value, { nonNullable: true }),
         estimation: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
         comment: new FormControl<string>('', { nonNullable: true })
     });

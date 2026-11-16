@@ -1,22 +1,24 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import {
-    buildTree,
     FlatNode,
     getChildren,
+    getLabel,
     getLevel,
+    getTreeData,
     getValue,
     isExpandable,
     Node,
-    transformer,
-    TREE_DATA
+    transformer
 } from '../tree-select-cleaner-data';
+import { TRANSLATIONS } from './l10n';
 
-/** Nodes the user is not allowed to deselect. */
-const lockedNodes = ['Load balancer'];
+/** Ids of the nodes the user is not allowed to deselect. */
+const lockedNodes = ['loadBalancer'];
 
 /**
  * @title Tree-select cleaner with disabled nodes
@@ -26,7 +28,7 @@ const lockedNodes = ['Load balancer'];
     imports: [FormsModule, KbqIconModule, KbqTreeModule, KbqTreeSelectModule],
     template: `
         <kbq-form-field>
-            <kbq-tree-select multiple placeholder="Kept" [(ngModel)]="kept">
+            <kbq-tree-select multiple [placeholder]="t().kept" [(ngModel)]="kept">
                 <kbq-tree-selection [dataSource]="keptDataSource" [treeControl]="keptTreeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="isLocked(node)">
                         {{ keptTreeControl.getViewValue(node) }}
@@ -47,7 +49,12 @@ const lockedNodes = ['Load balancer'];
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-tree-select multiple placeholder="Cleared" [clearPredicate]="clearEverything" [(ngModel)]="cleared">
+            <kbq-tree-select
+                multiple
+                [placeholder]="t().cleared"
+                [clearPredicate]="clearEverything"
+                [(ngModel)]="cleared"
+            >
                 <kbq-tree-selection [dataSource]="clearedDataSource" [treeControl]="clearedTreeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="isLocked(node)">
                         {{ clearedTreeControl.getViewValue(node) }}
@@ -82,12 +89,14 @@ const lockedNodes = ['Load balancer'];
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectCleanerWithDisabledExample {
-    protected readonly kept = model(['Database', 'Load balancer', 'Message queue']);
-    protected readonly cleared = model(['Database', 'Load balancer', 'Message queue']);
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    protected readonly kept = model(['database', 'loadBalancer', 'messageQueue']);
+    protected readonly cleared = model(['database', 'loadBalancer', 'messageQueue']);
 
     // Each tree-select needs its own control and data source: they share neither selection nor expansion.
-    protected readonly keptTreeControl = new FlatTreeControl<FlatNode>(getLevel, isExpandable, getValue, getValue);
-    protected readonly clearedTreeControl = new FlatTreeControl<FlatNode>(getLevel, isExpandable, getValue, getValue);
+    protected readonly keptTreeControl = new FlatTreeControl<FlatNode>(getLevel, isExpandable, getValue, getLabel);
+    protected readonly clearedTreeControl = new FlatTreeControl<FlatNode>(getLevel, isExpandable, getValue, getLabel);
 
     protected readonly keptDataSource = this.createDataSource(this.keptTreeControl);
     protected readonly clearedDataSource = this.createDataSource(this.clearedTreeControl);
@@ -96,7 +105,7 @@ export class TreeSelectCleanerWithDisabledExample {
     protected readonly clearEverything = (_node: FlatNode) => true;
 
     protected isLocked(node: FlatNode): boolean {
-        return lockedNodes.includes(node.name);
+        return lockedNodes.includes(node.id);
     }
 
     protected hasChild(_: number, node: FlatNode): boolean {
@@ -109,8 +118,14 @@ export class TreeSelectCleanerWithDisabledExample {
             new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren)
         );
 
-        dataSource.data = buildTree(TREE_DATA);
-
         return dataSource;
+    }
+
+    constructor() {
+        effect(() => {
+            // The nodes are keyed by stable ids, so a rebuild on a locale switch keeps the selection.
+            this.keptDataSource.data = getTreeData(this.t());
+            this.clearedDataSource.data = getTreeData(this.t());
+        });
     }
 }

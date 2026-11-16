@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqRadioModule } from '@koobiq/components/radio';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Radio group
@@ -10,7 +12,7 @@ import { KbqRadioModule } from '@koobiq/components/radio';
         KbqRadioModule
     ],
     template: `
-        <div id="radio-group-label" class="layout-margin-bottom-m kbq-form__label">Field label</div>
+        <div id="radio-group-label" class="layout-margin-bottom-m kbq-form__label">{{ t().fieldLabel }}</div>
         <kbq-radio-group aria-labelledby="radio-group-label">
             <kbq-radio-button [checked]="true" [value]="'option_1'">Item 1</kbq-radio-button>
 
@@ -25,4 +27,6 @@ import { KbqRadioModule } from '@koobiq/components/radio';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RadioGroupExample {}
+export class RadioGroupExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+}

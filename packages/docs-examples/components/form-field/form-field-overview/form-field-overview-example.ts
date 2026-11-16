@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFormField, KbqHint, KbqLabel, KbqSuffix } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInput } from '@koobiq/components/input';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /** @title Form field */
 @Component({
@@ -9,12 +11,14 @@ import { KbqInput } from '@koobiq/components/input';
     imports: [KbqFormField, KbqLabel, KbqInput, KbqSuffix, KbqIcon, KbqHint],
     template: `
         <kbq-form-field>
-            <kbq-label>Email</kbq-label>
+            <kbq-label>{{ t().email }}</kbq-label>
             <input kbqInput placeholder="name@example.com" />
             <i kbqSuffix kbq-icon="kbq-envelope_16"></i>
-            <kbq-hint>Used to sign in and to receive notifications</kbq-hint>
+            <kbq-hint>{{ t().emailHint }}</kbq-hint>
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormFieldOverviewExample {}
+export class FormFieldOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+}

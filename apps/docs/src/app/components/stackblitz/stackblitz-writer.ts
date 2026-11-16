@@ -16,6 +16,9 @@ const COPYRIGHT = `Use of this source code is governed by an MIT-style license.`
 const DOCS_CONTENT_PATH = 'docs-content/examples-source';
 const TEMPLATE_PATH = 'assets/stackblitz/';
 
+/** Import of the shared i18n entry point in the example sources, rewritten for generated projects. */
+const I18N_ENTRY_POINT_IMPORT = '@koobiq/docs-examples/i18n';
+
 /**
  * Mapping from import patterns found in example `.ts` files to optional
  * dependencies that should be added to the generated StackBlitz `package.json`.
@@ -72,6 +75,7 @@ export const DOCS_TEMPLATE_FILES = [
     'tsconfig.json',
     'src/index.html',
     'src/main.ts',
+    'src/language-switcher.ts',
     'src/styles.scss',
     // Should be removed after next release (#DS-4881)
     'src/layout.scss'
@@ -166,6 +170,21 @@ export class DocsStackblitzWriter {
         return content;
     }
 
+    /**
+     * The examples import the shared i18n entry point by alias, which a generated project does not
+     * resolve: rewrite it to the relative path of the inlined copy that `localImportFiles` carries.
+     */
+    private rewriteI18nImport(targetPath: string, content: string): string {
+        if (!content.includes(I18N_ENTRY_POINT_IMPORT)) {
+            return content;
+        }
+
+        const depth = targetPath.split('/').length - 3;
+        const relative = depth > 0 ? `${'../'.repeat(depth)}i18n` : './i18n';
+
+        return content.replaceAll(`'${I18N_ENTRY_POINT_IMPORT}'`, `'${relative}'`);
+    }
+
     private async buildInMemoryProject(data: ExampleData, exampleId: string): Promise<ProjectFiles> {
         const files: ProjectFiles = {};
         const tasks: Promise<unknown>[] = [];
@@ -188,10 +207,16 @@ export class DocsStackblitzWriter {
             // Note: Since we join with paths from the example data, we normalize
             // the final target path. This is necessary because StackBlitz does
             // not and paths like `./bla.ts` would result in a directory called `.`.
-            const targetPath = docsNormalizePath(`src/example/${relativeFilePath}`);
+            const normalizedTarget = docsNormalizePath(`src/example/${relativeFilePath}`);
+            // A shared file from outside `components/` (the i18n entry point) would escape the
+            // project root, so it is placed inside the example directory instead.
+            const targetPath = normalizedTarget.startsWith('..')
+                ? docsNormalizePath(`src/example/${relativeFilePath.replace(/^(\.\.\/)+/, '')}`)
+                : normalizedTarget;
 
             tasks.push(
-                this.loadFile(`${exampleBaseContentPath}${relativeFilePath}`)
+                this.loadFile(docsNormalizePath(`${exampleBaseContentPath}${relativeFilePath}`))
+                    .then((content) => this.rewriteI18nImport(targetPath, content))
                     // Insert a copyright footer for all example files inserted into the project.
                     .then((content) => this.appendCopyright(relativeFilePath, content))
                     .then((content) => (files[targetPath] = content))

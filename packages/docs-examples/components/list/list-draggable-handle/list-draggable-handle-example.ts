@@ -1,7 +1,9 @@
 import { moveItemInArray } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqListModule, KbqListSelectionDroppedEvent } from '@koobiq/components/list';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Draggable list with a handle
@@ -11,10 +13,10 @@ import { KbqListModule, KbqListSelectionDroppedEvent } from '@koobiq/components/
     imports: [KbqListModule, KbqIconModule],
     template: `
         <kbq-list-selection [draggable]="true" (dropped)="dropped($event)">
-            @for (item of items(); track item.id) {
-                <kbq-list-option [value]="item">
+            @for (fruit of fruits(); track fruit.id) {
+                <kbq-list-option [value]="fruit">
                     <i kbq-icon="kbq-grip-vertical-s_16" cdkDragHandle></i>
-                    {{ item.name }}
+                    {{ fruit.label }}
                 </kbq-list-option>
             }
         </kbq-list-selection>
@@ -22,12 +24,11 @@ import { KbqListModule, KbqListSelectionDroppedEvent } from '@koobiq/components/
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListDraggableHandleExample {
-    protected readonly items = signal([
-        { id: 1, name: 'Banana' },
-        { id: 2, name: 'Cherry' },
-        { id: 3, name: 'Grapefruit' },
-        { id: 4, name: 'Mango' }
-    ]);
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    protected readonly items = signal(Array.from({ length: this.t().fruits.length }, (_, index) => index + 1));
+
+    protected readonly fruits = computed(() => this.items().map((id) => this.t().fruits[id - 1]));
 
     protected dropped({ previousIndex, currentIndex }: KbqListSelectionDroppedEvent): void {
         const items = [...this.items()];

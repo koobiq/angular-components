@@ -5,6 +5,8 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqEllipsisCenterModule } from '@koobiq/components/ellipsis-center';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Breadcrumbs Truncate Center Items
@@ -20,15 +22,15 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     ],
     template: `
         <nav class="example-breadcrumbs_truncate-last-by-center" size="compact" kbq-breadcrumbs>
-            <kbq-breadcrumb-item routerLink="./groups" text="Groups" />
-            <kbq-breadcrumb-item routerLink="./users" text="Users" />
+            <kbq-breadcrumb-item routerLink="./groups" [text]="t().groups" />
+            <kbq-breadcrumb-item routerLink="./users" [text]="t().users" />
 
-            <kbq-breadcrumb-item text="Report dated 28.08.2018">
+            <kbq-breadcrumb-item [text]="t().reportDated">
                 <ng-container *kbqBreadcrumbView>
                     <a routerLink="./report" tabindex="-1">
                         <button aria-current="page" disabled kbq-button kbqBreadcrumb>
                             <span
-                                kbqEllipsisCenter="Report dated 28.08.2018"
+                                [kbqEllipsisCenter]="t().reportDated"
                                 [minVisibleLength]="15"
                                 [charWidth]="5"
                                 [kbqPlacementPriority]="PopUpPlacements.Bottom"
@@ -53,5 +55,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     encapsulation: ViewEncapsulation.None
 })
 export class BreadcrumbsTruncateCenterItemsExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly PopUpPlacements = PopUpPlacements;
 }

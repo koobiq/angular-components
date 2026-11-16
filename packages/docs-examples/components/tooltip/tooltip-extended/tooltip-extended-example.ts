@@ -1,11 +1,13 @@
 import { NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDivider } from '@koobiq/components/divider';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqTableModule } from '@koobiq/components/table';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Tooltip extended
@@ -68,20 +70,20 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             <div
                 class="layout-row layout-gap-xs layout-padding-top-m layout-padding-bottom-s layout-padding-left-l layout-padding-right-l"
             >
-                <span class="kbq-text-normal-strong">Confidence</span>
+                <span class="kbq-text-normal-strong">{{ t().confidence }}</span>
                 <span class="kbq-mono-normal" style="color: var(--kbq-foreground-warning)">0,0001</span>
             </div>
             <kbq-divider />
             <table kbq-table class="layout-padding-bottom-l">
                 <thead>
                     <tr>
-                        <th class="layout-padding-left-l">Incident Type</th>
-                        <th>Detected</th>
-                        <th class="layout-padding-right-l">Updated</th>
+                        <th class="layout-padding-left-l">{{ t().incidentType }}</th>
+                        <th>{{ t().detected }}</th>
+                        <th class="layout-padding-right-l">{{ t().updated }}</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for (row of data; track $index) {
+                    @for (row of data(); track $index) {
                         <tr>
                             <td class="layout-padding-left-l">{{ row.type }}</td>
                             <td class="kbq-tabular-normal">{{ row.detected }}</td>
@@ -130,28 +132,30 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     }
 })
 export class TooltipExtendedExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly extendedTooltipPreferredColor = KbqComponentColors.ContrastFade;
 
-    protected readonly data = [
+    protected readonly data = computed(() => [
         {
-            type: 'Malware Infection',
+            type: this.t().extendedTypes[0],
             detected: 'Feb 18, 15:30',
             updated: 'Feb 18, 15:33'
         },
         {
-            type: 'Phishing Attack',
+            type: this.t().extendedTypes[1],
             detected: 'Feb 18, 15:33',
             updated: 'Feb 18, 15:33'
         },
         {
-            type: 'Data Breach',
+            type: this.t().extendedTypes[2],
             detected: 'Feb 18, 15:33',
             updated: 'Feb 18, 15:33'
         },
         {
-            type: 'DoS/DDoS Attack',
+            type: this.t().extendedTypes[3],
             detected: 'Feb 18, 15:33',
             updated: 'Feb 18, 15:33'
         }
-    ];
+    ]);
 }

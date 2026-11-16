@@ -8,6 +8,8 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Validation optional label
@@ -24,28 +26,28 @@ import { KbqInputModule } from '@koobiq/components/input';
         <form class="kbq-form-vertical" novalidate [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
-                    <div class="kbq-form__label">Name</div>
+                    <div class="kbq-form__label">{{ t().name }}</div>
                     <kbq-form-field class="kbq-form__control">
                         <input formControlName="firstName" kbqInput />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
-                    <div class="kbq-form__label">Last name</div>
+                    <div class="kbq-form__label">{{ t().lastName }}</div>
                     <kbq-form-field class="kbq-form__control">
                         <input formControlName="lastName" kbqInput />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row layout-margin-bottom-xxl">
-                    <div class="kbq-form__label">Patronymic</div>
+                    <div class="kbq-form__label">{{ t().patronymic }}</div>
                     <kbq-form-field class="kbq-form__control">
-                        <input formControlName="patronymic" kbqInput placeholder="Optional" />
+                        <input formControlName="patronymic" kbqInput [placeholder]="t().optional" />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row layout-align-start-start">
-                    <button color="contrast" kbq-button type="submit">Submit</button>
+                    <button color="contrast" kbq-button type="submit">{{ t().submit }}</button>
                 </div>
             </div>
         </form>
@@ -65,6 +67,8 @@ import { KbqInputModule } from '@koobiq/components/input';
     }
 })
 export class ValidationOptionalLabelExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly form = new FormGroup({
         firstName: new FormControl('', Validators.required),
         lastName: new FormControl('', Validators.required),

@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Overflow items with vertical orientation
@@ -24,7 +26,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             >
                 @if (reverseOverflowOrder()) {
                     <div kbqOverflowItemsResult class="layout-margin-bottom-xs">
-                        and {{ kbqOverflowItems.hiddenItemIDs().size }} more
+                        {{ t().andMore(kbqOverflowItems.hiddenItemIDs().size) }}
                     </div>
                 }
                 @for (item of items; track item.id) {
@@ -38,7 +40,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
                     </kbq-badge>
                 }
                 @if (!reverseOverflowOrder()) {
-                    <div kbqOverflowItemsResult>and {{ kbqOverflowItems.hiddenItemIDs().size }} more</div>
+                    <div kbqOverflowItemsResult>{{ t().andMore(kbqOverflowItems.hiddenItemIDs().size) }}</div>
                 }
             </div>
         </div>
@@ -74,6 +76,8 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OverflowItemsWithVerticalOrientationExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly items = Array.from({ length: 20 }, (_, i) => ({
         id: `Item${i}`,
         alwaysVisible: i === 8

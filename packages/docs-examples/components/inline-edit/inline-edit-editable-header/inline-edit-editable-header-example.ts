@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, ElementRef, signal, viewChild } fro
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit editable header
@@ -75,8 +77,12 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     }
 })
 export class InlineEditEditableHeaderExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly maxRows = 5;
-    protected readonly placeholder = 'Placeholder';
+    protected get placeholder(): string {
+        return this.t().placeholder;
+    }
     protected readonly control = new FormControl('Spain', { nonNullable: true });
     protected readonly displayValue = signal(this.control.value);
     protected readonly content =

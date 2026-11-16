@@ -11,7 +11,9 @@ import {
     KbqSaveFilterEvent,
     KbqSaveFilterStatuses
 } from '@koobiq/components/filter-bar';
-import { injectLocalizedPeriods, injectLocalizedText } from '../localized-data';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { injectLocalizedPeriods } from '../localized-periods';
+import { TRANSLATIONS } from './l10n';
 
 /** Text search is the first pipe in every filter: always present, never removable. */
 const createSearchPipe = (name: string): KbqPipe => ({
@@ -58,6 +60,8 @@ const createSearchPipe = (name: string): KbqPipe => ({
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     /**
      * The bar translates its own strings, never the data it is handed: period labels are the
      * application's to produce, and these follow the active locale.
@@ -65,10 +69,6 @@ export class FilterBarOverviewExample {
     protected readonly periods = injectLocalizedPeriods();
 
     /** Text the example owns: it has no counterpart in the library's locale data. */
-    protected readonly text = injectLocalizedText({
-        'ru-RU': { search: 'Поиск' },
-        default: { search: 'Search' }
-    });
 
     // Everything below is derived from the period labels, so it is rebuilt whenever the locale changes:
     // `*kbqPipe` builds a pipe component once from the object it is given and ignores later changes to
@@ -263,7 +263,7 @@ export class FilterBarOverviewExample {
                 changed: false,
                 saved: true,
                 pipes: [
-                    createSearchPipe(this.text().search),
+                    createSearchPipe(this.t().search),
                     {
                         name: 'Datetime',
                         value: this.periods.pick({ unit: 'days', amount: -7 }),
@@ -300,7 +300,7 @@ export class FilterBarOverviewExample {
                 changed: false,
                 saved: true,
                 pipes: [
-                    createSearchPipe(this.text().search),
+                    createSearchPipe(this.t().search),
                     {
                         name: 'Datetime',
                         value: this.periods.pick({ unit: 'years', amount: -1 }),
@@ -341,7 +341,7 @@ export class FilterBarOverviewExample {
                 changed: false,
                 saved: true,
                 pipes: [
-                    createSearchPipe(this.text().search),
+                    createSearchPipe(this.t().search),
                     {
                         name: 'Datetime',
                         value: this.periods.pick({ unit: 'days', amount: -3 }),
@@ -390,7 +390,7 @@ export class FilterBarOverviewExample {
             changed: false,
             saved: false,
             pipes: [
-                createSearchPipe(this.text().search),
+                createSearchPipe(this.t().search),
                 {
                     name: 'Datetime',
                     value: this.periods.pick({ unit: 'hours', amount: -24 }),
