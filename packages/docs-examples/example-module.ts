@@ -1690,7 +1690,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "content-panel-before-close-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
     "selector": "content-panel-before-close-example",
     "primaryFile": "content-panel-before-close-example.ts",
     "importPath": "components/content-panel"
@@ -1702,7 +1705,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "content-panel-close-on-escape-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
     "selector": "content-panel-close-on-escape-example",
     "primaryFile": "content-panel-close-on-escape-example.ts",
     "importPath": "components/content-panel"
@@ -3041,7 +3047,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "filter-bar-localization-example.ts"
     ],
     "localImportFiles": [
-      "../localized-periods.ts"
+      "../../../i18n/index.ts"
     ],
     "selector": "filter-bar-localization-example",
     "primaryFile": "filter-bar-localization-example.ts",
@@ -3217,7 +3223,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
-      "../localized-periods.ts",
       "l10n.ts"
     ],
     "selector": "filter-bar-saved-filters-example",
