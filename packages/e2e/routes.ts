@@ -31,6 +31,7 @@ import { E2eCheckboxStateAndStyle, E2eCheckboxWithTextAndCaption } from '../comp
 import { E2eClampedTextStateAndStyle, E2eClampedTextStates } from '../components/clamped-text/e2e';
 import { E2eCodeBlockStates } from '../components/code-block/e2e';
 import {
+    E2eContentPanelBodyPadding,
     E2eContentPanelMinimalContent,
     E2eContentPanelScrollOverflow,
     E2eContentPanelState,
@@ -226,6 +227,7 @@ const components = [
     E2eContentPanelScrollOverflow,
     E2eContentPanelMinimalContent,
     E2eContentPanelWideContent,
+    E2eContentPanelBodyPadding,
     E2eAppSwitcherWithSitesStates,
     E2eTagAutocompleteStates,
     E2eFilterBarStates,

@@ -45,6 +45,43 @@ test.describe('KbqContentPanelModule', () => {
         });
     });
 
+    test.describe('E2eContentPanelBodyPadding', () => {
+        const getComponent = (page: Page): Locator => page.getByTestId('e2eContentPanelBodyPadding');
+
+        const getRoomAfterScrollingToEnd = (page: Page): Promise<number> =>
+            getComponent(page)
+                .getByTestId('e2eContentPanelBody')
+                .evaluate((body) => {
+                    const viewport = body.querySelector('[data-overlayscrollbars-contents]')!;
+
+                    viewport.scrollTop = viewport.scrollHeight;
+
+                    return (
+                        body.getBoundingClientRect().bottom - viewport.lastElementChild!.getBoundingClientRect().bottom
+                    );
+                });
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2eContentPanelBodyPadding');
+            await expect(getComponent(page)).toBeVisible();
+        });
+
+        // The scrollbar moves the padding of its host to the viewport once it initializes, and again after the
+        // padding changes, so the room is polled.
+        test('leaves room under the content when there is no footer', async ({ page }) => {
+            await expect.poll(() => getRoomAfterScrollingToEnd(page)).toBeCloseTo(80, 0);
+        });
+
+        test('ends the content at the footer once it is shown', async ({ page }) => {
+            await expect.poll(() => getRoomAfterScrollingToEnd(page)).toBeCloseTo(80, 0);
+
+            await getComponent(page).getByTestId('e2eContentPanelToggleFooter').click();
+            await expect(getComponent(page).getByTestId('e2eContentPanelFooter')).toBeVisible();
+
+            await expect.poll(() => getRoomAfterScrollingToEnd(page)).toBeCloseTo(0, 0);
+        });
+    });
+
     test.describe('E2eContentPanelWideContent', () => {
         test('stays inside the panel with a wide body', async ({ page }) => {
             await page.goto('/E2eContentPanelWideContent');
