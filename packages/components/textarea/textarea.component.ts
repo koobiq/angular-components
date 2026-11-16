@@ -47,7 +47,7 @@ const isObject = (value: unknown): value is object => typeof value === 'object' 
         '[class.kbq-textarea-resizable]': '!growing()',
         '[class.kbq-textarea_max-row-limit-reached]': 'maxRowLimitReached()',
         '[attr.id]': 'id()',
-        '[attr.placeholder]': 'disabled() || readonly() ? null : placeholder()',
+        '[attr.placeholder]': 'readonly() ? null : placeholder()',
         '[attr.aria-invalid]': 'errorState()',
         '[disabled]': 'disabled()',
         '[readonly]': 'readonly()',

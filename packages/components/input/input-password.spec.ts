@@ -43,13 +43,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
     ],
     template: `
         <kbq-form-field>
-            <input
-                kbqInputPassword
-                [placeholder]="placeholder"
-                [disabled]="disabled"
-                [readonly]="readonly"
-                [(ngModel)]="value"
-            />
+            <input kbqInputPassword [disabled]="disabled" [readonly]="readonly" [(ngModel)]="value" />
             <kbq-password-toggle
                 [kbqTooltipNotHidden]="'Скрыть пароль'"
                 [kbqTooltipDisabled]="disabled"
@@ -73,7 +67,6 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 class PasswordInputDefault {
     disabled = false;
     readonly = false;
-    placeholder: string;
 
     value: any = '1';
 }
@@ -275,31 +268,29 @@ describe('KbqPasswordInput', () => {
         expect(passwordInput.getAttribute('type')).toBe('text');
     });
 
-    it('should hide the placeholder while disabled', async () => {
+    it('should hide the eye while disabled, with or without a value', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(PasswordInputDefault);
-        const passwordInput: HTMLInputElement = fixture.debugElement.query(
-            By.directive(KbqInputPassword)
-        ).nativeElement;
+        const toggle = fixture.debugElement.query(By.css('.kbq-password-toggle'));
 
-        fixture.componentInstance.placeholder = 'placeholder';
+        fixture.componentInstance.value = 'secret';
         fixture.detectChanges();
-        await fixture.whenStable();
+        await vi.advanceTimersByTimeAsync(1000);
 
-        expect(passwordInput.getAttribute('placeholder')).toBe('placeholder');
+        expect(toggle.styles.visibility).toEqual('visible');
 
         fixture.componentInstance.disabled = true;
         fixture.detectChanges();
-        await fixture.whenStable();
-        fixture.detectChanges();
+        await vi.advanceTimersByTimeAsync(1000);
 
-        expect(passwordInput.getAttribute('placeholder')).toBe(null);
+        expect(toggle.styles.visibility).toEqual('hidden');
 
         fixture.componentInstance.disabled = false;
         fixture.detectChanges();
-        await fixture.whenStable();
-        fixture.detectChanges();
+        await vi.advanceTimersByTimeAsync(1000);
 
-        expect(passwordInput.getAttribute('placeholder')).toBe('placeholder');
+        expect(toggle.styles.visibility).toEqual('visible');
     });
 
     it('should have password hints', () => {

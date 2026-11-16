@@ -2271,27 +2271,6 @@ describe('KbqDatepicker', () => {
             expect(renderPlaceholder([{ provide: LOCALE_ID, useValue: 'en-US' }])).toBe('yyyy-mm-dd');
         });
 
-        it('should hide the placeholder while disabled through a form control', () => {
-            TestBed.configureTestingModule({ imports: [KbqLuxonDateModule, DatepickerWithFormControl] });
-
-            const fixture = TestBed.createComponent(DatepickerWithFormControl);
-            const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
-
-            fixture.detectChanges();
-
-            expect(inputEl.getAttribute('placeholder')).toBeTruthy();
-
-            fixture.componentInstance.formControl.disable();
-            fixture.detectChanges();
-
-            expect(inputEl.getAttribute('placeholder')).toBe(null);
-
-            fixture.componentInstance.formControl.enable();
-            fixture.detectChanges();
-
-            expect(inputEl.getAttribute('placeholder')).toBeTruthy();
-        });
-
         it('should follow KBQ_DATE_LOCALE without a locale service', () => {
             expect(renderPlaceholder([{ provide: KBQ_DATE_LOCALE, useValue: 'es-LA' }])).toBe('dd/mm/aaaa');
         });

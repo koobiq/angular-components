@@ -222,19 +222,6 @@ describe(KbqTimepicker.name, () => {
             expect(inputElementDebug.nativeElement.placeholder).toBe('чч:мм');
         });
 
-        it('should hide the placeholder while disabled', () => {
-            fixture.detectChanges();
-            expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe('чч:мм');
-
-            testComponent.isDisabled = true;
-            fixture.detectChanges();
-            expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe(null);
-
-            testComponent.isDisabled = false;
-            fixture.detectChanges();
-            expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe('чч:мм');
-        });
-
         it('Correct placeholder set for non-default time format', () => {
             testComponent.timeFormat = TimeFormats.HHmmss;
             fixture.detectChanges();

@@ -56,9 +56,9 @@
     --kbq-form-field-states-autofill-text: var(--kbq-foreground-contrast);
     --kbq-form-field-states-disabled-border-color: var(--kbq-states-line-disabled);
     --kbq-form-field-states-disabled-background: var(--kbq-states-background-disabled);
-    /* No longer read: a disabled field hides its placeholder entirely (DS-5835). Kept, since
-       @koobiq/design-tokens publishes the name globally and consumers may override it. */
-    --kbq-form-field-states-disabled-placeholder: var(--kbq-states-foreground-disabled);
+    /* Transparent, not removed: for a field with no label the placeholder is its accessible name,
+       so the spec's "hide the placeholder" hides the ink, not the attribute (DS-5835). */
+    --kbq-form-field-states-disabled-placeholder: transparent;
     --kbq-form-field-states-disabled-text: var(--kbq-states-foreground-disabled);
     --kbq-form-field-label-color: var(--kbq-foreground-contrast-secondary);
     --kbq-form-field-label-required-marker-color: var(--kbq-foreground-error);

@@ -111,7 +111,7 @@ export const kbqTagsDefaultOptionsProvider = (options: Partial<KbqTagsDefaultOpt
         class: 'kbq-tag-input',
         '[id]': 'id()',
         '[attr.disabled]': 'disabled || null',
-        '[attr.placeholder]': 'disabled || !placeholder() ? null : placeholder()',
+        '[attr.placeholder]': 'placeholder() || null',
         '(keydown)': 'onKeydown($event)',
         '(blur)': 'blur($event)',
         '(focus)': 'onFocus()',

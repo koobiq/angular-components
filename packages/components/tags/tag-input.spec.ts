@@ -1039,23 +1039,6 @@ describe('KbqTagInput', () => {
 
             expect(inputNativeElement.getAttribute('placeholder')).toBe('bound placeholder');
         });
-
-        it('should hide the placeholder while disabled', () => {
-            testTagInput.placeholder = 'bound placeholder';
-            fixture.detectChanges();
-
-            expect(inputNativeElement.getAttribute('placeholder')).toBe('bound placeholder');
-
-            testTagInput.disabled = true;
-            fixture.detectChanges();
-
-            expect(inputNativeElement.getAttribute('placeholder')).toBe(null);
-
-            testTagInput.disabled = false;
-            fixture.detectChanges();
-
-            expect(inputNativeElement.getAttribute('placeholder')).toBe('bound placeholder');
-        });
     });
 
     describe('[addOnBlur]', () => {
@@ -1326,7 +1309,7 @@ class TestTagInputLateTagList {
     imports: [PlatformModule, KbqTagsModule, KbqFormFieldModule],
     template: `
         <kbq-form-field>
-            <kbq-tag-list #tagList [disabled]="disabled" />
+            <kbq-tag-list #tagList />
             <input
                 [value]="inputValue"
                 [kbqTagInputFor]="tagList"
@@ -1347,7 +1330,6 @@ class TestTagInput {
     separatorKeyCodes: number[] = [ENTER];
     addOnPaste: boolean = false;
     placeholder = '';
-    disabled = false;
 
     add(_: KbqTagInputEvent) {}
 }

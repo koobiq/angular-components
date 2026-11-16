@@ -151,7 +151,7 @@ const timeFormatAttribute = (value: TimeFormats | null | undefined): TimeFormats
         // Native input properties that are overwritten by Angular inputs need to be synced with
         // the native input element. Otherwise property bindings for those don't work.
         '[attr.id]': 'id()',
-        '[attr.placeholder]': 'disabled() ? null : placeholder()',
+        '[attr.placeholder]': 'placeholder()',
         '[attr.disabled]': 'disabled() || null',
         '[attr.required]': 'required() || null',
         '[attr.size]': 'getSize()',
