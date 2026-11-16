@@ -6,4 +6,11 @@
         padding: 0 var(--kbq-content-panel-vertical-padding);
         height: 100%;
     }
+
+    // Without a footer the body is the last child of the card, and its content would end at the bottom edge.
+    // The content is the scrollbar host sized by `height: 100%`, so the padding has to fit inside that height.
+    &:last-child .kbq-content-panel-body__content {
+        box-sizing: border-box;
+        padding-bottom: var(--kbq-content-panel-body-padding-bottom);
+    }
 }

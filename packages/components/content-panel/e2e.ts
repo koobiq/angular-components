@@ -1,4 +1,4 @@
-import { afterNextRender, ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqContentPanelBody, KbqContentPanelModule } from '@koobiq/components/content-panel';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -72,6 +72,47 @@ export class E2eContentPanelScrollOverflow {
     }
 })
 export class E2eContentPanelMinimalContent {}
+
+@Component({
+    selector: 'e2e-content-panel-body-padding',
+    imports: [KbqContentPanelModule],
+    template: `
+        <kbq-content-panel-container width="350" maxWidth="400" minWidth="300" [opened]="true">
+            <button data-testid="e2eContentPanelToggleFooter" type="button" (click)="showFooter.set(!showFooter())">
+                Toggle footer
+            </button>
+            <kbq-content-panel>
+                <kbq-content-panel-header />
+                <kbq-content-panel-body data-testid="e2eContentPanelBody">
+                    @for (_i of items; track $index) {
+                        <div>Item {{ $index }}</div>
+                    }
+                </kbq-content-panel-body>
+                @if (showFooter()) {
+                    <kbq-content-panel-footer data-testid="e2eContentPanelFooter">Footer</kbq-content-panel-footer>
+                }
+            </kbq-content-panel>
+        </kbq-content-panel-container>
+    `,
+    styles: `
+        :host {
+            display: inline-flex;
+        }
+
+        .kbq-content-panel-container {
+            height: 300px;
+            width: 500px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eContentPanelBodyPadding'
+    }
+})
+export class E2eContentPanelBodyPadding {
+    protected readonly items = Array.from({ length: 100 });
+    protected readonly showFooter = signal(false);
+}
 
 @Component({
     selector: 'e2e-content-panel-wide-content',
