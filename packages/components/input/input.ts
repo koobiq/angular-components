@@ -54,7 +54,7 @@ const KBQ_INPUT_INVALID_TYPES = [
         // Native input properties that are overwritten by Angular inputs need to be synced with
         // the native input element. Otherwise property bindings for those don't work.
         '[attr.id]': 'id()',
-        '[attr.placeholder]': 'readonly() ? null : placeholder()',
+        '[attr.placeholder]': 'disabled() || readonly() ? null : placeholder()',
         '[attr.disabled]': 'disabled() || null',
         '[readonly]': 'readonly()',
         '[attr.aria-invalid]': 'errorState()',

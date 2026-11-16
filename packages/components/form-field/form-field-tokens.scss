@@ -56,6 +56,8 @@
     --kbq-form-field-states-autofill-text: var(--kbq-foreground-contrast);
     --kbq-form-field-states-disabled-border-color: var(--kbq-states-line-disabled);
     --kbq-form-field-states-disabled-background: var(--kbq-states-background-disabled);
+    /* No longer read: a disabled field hides its placeholder entirely (DS-5835). Kept, since
+       @koobiq/design-tokens publishes the name globally and consumers may override it. */
     --kbq-form-field-states-disabled-placeholder: var(--kbq-states-foreground-disabled);
     --kbq-form-field-states-disabled-text: var(--kbq-states-foreground-disabled);
     --kbq-form-field-label-color: var(--kbq-foreground-contrast-secondary);

@@ -414,6 +414,31 @@ describe('KbqTextarea', () => {
             expect(textareaElement.getAttribute('placeholder')).toBe('placeholder');
         });
 
+        it('should hide the placeholder while disabled', async () => {
+            const fixture = createComponent(KbqTextareaForBehaviors);
+            const textareaElement = getTextareaElement(fixture);
+
+            fixture.componentInstance.placeholder = 'placeholder';
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(textareaElement.getAttribute('placeholder')).toBe('placeholder');
+
+            fixture.componentInstance.disabled = true;
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            expect(textareaElement.getAttribute('placeholder')).toBe(null);
+
+            fixture.componentInstance.disabled = false;
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            expect(textareaElement.getAttribute('placeholder')).toBe('placeholder');
+        });
+
         it('should hide the cleaner while readonly', async () => {
             const fixture = createComponent(TextareaWithCleaner);
 

@@ -103,6 +103,18 @@ class InputForBehaviors {
 }
 
 @Component({
+    imports: [KbqInputModule, ReactiveFormsModule],
+    template: `
+        <kbq-form-field>
+            <input kbqInput placeholder="placeholder" [formControl]="control" />
+        </kbq-form-field>
+    `
+})
+class InputDisabledByControl {
+    readonly control = new FormControl<string>('');
+}
+
+@Component({
     imports: [
         KbqInputModule,
         KbqIconModule,
@@ -515,6 +527,48 @@ describe('KbqInput', () => {
                 fixture.detectChanges();
 
                 expect(fixture.componentInstance.value).toBe('test');
+            });
+        });
+
+        describe('disabled', () => {
+            it('should hide the placeholder while disabled', async () => {
+                const fixture = createComponent(InputForBehaviors);
+                const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+
+                fixture.componentInstance.placeholder = 'placeholder';
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                expect(inputElement.getAttribute('placeholder')).toBe('placeholder');
+
+                fixture.componentInstance.disabled = true;
+                fixture.detectChanges();
+                await fixture.whenStable();
+                fixture.detectChanges();
+
+                expect(inputElement.getAttribute('placeholder')).toBe(null);
+
+                fixture.componentInstance.disabled = false;
+                fixture.detectChanges();
+                await fixture.whenStable();
+                fixture.detectChanges();
+
+                expect(inputElement.getAttribute('placeholder')).toBe('placeholder');
+            });
+
+            it('should hide the placeholder while disabled through a form control', async () => {
+                const fixture = createComponent(InputDisabledByControl);
+                const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+
+                fixture.componentInstance.control.disable();
+                fixture.detectChanges();
+
+                expect(inputElement.getAttribute('placeholder')).toBe(null);
+
+                fixture.componentInstance.control.enable();
+                fixture.detectChanges();
+
+                expect(inputElement.getAttribute('placeholder')).toBe('placeholder');
             });
         });
 

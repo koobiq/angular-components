@@ -43,7 +43,13 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
     ],
     template: `
         <kbq-form-field>
-            <input kbqInputPassword [disabled]="disabled" [readonly]="readonly" [(ngModel)]="value" />
+            <input
+                kbqInputPassword
+                [placeholder]="placeholder"
+                [disabled]="disabled"
+                [readonly]="readonly"
+                [(ngModel)]="value"
+            />
             <kbq-password-toggle
                 [kbqTooltipNotHidden]="'Скрыть пароль'"
                 [kbqTooltipDisabled]="disabled"
@@ -67,6 +73,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 class PasswordInputDefault {
     disabled = false;
     readonly = false;
+    placeholder: string;
 
     value: any = '1';
 }
@@ -266,6 +273,33 @@ describe('KbqPasswordInput', () => {
         fixture.detectChanges();
 
         expect(passwordInput.getAttribute('type')).toBe('text');
+    });
+
+    it('should hide the placeholder while disabled', async () => {
+        const fixture = createComponent(PasswordInputDefault);
+        const passwordInput: HTMLInputElement = fixture.debugElement.query(
+            By.directive(KbqInputPassword)
+        ).nativeElement;
+
+        fixture.componentInstance.placeholder = 'placeholder';
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(passwordInput.getAttribute('placeholder')).toBe('placeholder');
+
+        fixture.componentInstance.disabled = true;
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(passwordInput.getAttribute('placeholder')).toBe(null);
+
+        fixture.componentInstance.disabled = false;
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(passwordInput.getAttribute('placeholder')).toBe('placeholder');
     });
 
     it('should have password hints', () => {

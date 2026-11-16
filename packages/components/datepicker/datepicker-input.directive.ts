@@ -325,7 +325,7 @@ interface DateTimeObject {
     host: {
         class: 'kbq-input kbq-datepicker',
         '[attr.id]': 'id()',
-        '[attr.placeholder]': 'placeholder()',
+        '[attr.placeholder]': 'disabled() ? null : placeholder()',
         '[attr.required]': 'required() || null',
         '[attr.disabled]': 'disabled() || null',
         '[attr.min]': 'min ? toISO8601(min) : null',
