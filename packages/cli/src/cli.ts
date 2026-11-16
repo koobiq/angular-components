@@ -33,7 +33,7 @@ export const runCliCommands = () => {
         .option('-d, --dist-dir <string>', 'packages dist directory', process.env['RELEASE_DIST'] ?? DIST_DIR)
         .option('-c, --changelog-scope <string>', 'default changelog scope', process.env['CHANGELOG_SCOPE'] ?? 'koobiq')
         // No default: when omitted, each publish task resolves the tag itself from the
-        // registry's current `latest` major (see `resolveNpmDistTag`) instead of blindly
+        // registry's current `latest` and LTS tags (see `resolveNpmDistTag`) instead of blindly
         // overwriting `latest` with whatever version happens to be published.
         .option('-t, --tag-name <string>', 'Name of the NPM dist tag. Auto-resolved when omitted.')
         // `-n` was previously declared for three different options. Commander resolved it to
