@@ -88,10 +88,10 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
 
     files: KbqCodeBlockFile[] = [];
 
-    /** Data for the currently selected example. */
-    readonly exampleData = computed(() => EXAMPLE_COMPONENTS[this.example()]);
+    /** Data for the currently selected example: the example-page routes only accept a known example id. */
+    readonly exampleData = computed(() => EXAMPLE_COMPONENTS[this.example()]!);
 
-    protected readonly exampleId = computed(() => this.exampleData()?.selector.replace('-example', ''));
+    protected readonly exampleId = computed(() => this.exampleData().selector.replace('-example', ''));
 
     /**
      * A plain `href` rather than a `routerLink`: the router does not open a new tab, and before hydration event

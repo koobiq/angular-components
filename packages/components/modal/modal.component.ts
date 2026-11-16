@@ -826,7 +826,7 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     // Do rest things when visible state changed
-    private handleVisibleStateChange(visible: boolean, animation: boolean = true, closeResult?: R): Promise<any> {
+    private handleVisibleStateChange(visible: boolean, animation: boolean = true, closeResult?: R): Promise<void> {
         if (visible) {
             this.captureFocus();
             this.modalControl.setVisible(this, true);
@@ -950,7 +950,7 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     // Change kbqVisible from inside
-    private changeVisibleFromInside(visible: boolean, closeResult?: R): Promise<any> {
+    private changeVisibleFromInside(visible: boolean, closeResult?: R): Promise<void> {
         if (this.kbqVisible() === visible) return Promise.resolve();
 
         // Claimed before the write, because `model.set()` reports it through `ngOnChanges` too and

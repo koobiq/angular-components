@@ -62,6 +62,30 @@ describe(SCHEMATIC_NAME, () => {
         expect(log).toContain('The members of KbqFormFieldControl are abstract now');
     });
 
+    it('reports the other events created without arguments and a subclass of KbqPopUp', async () => {
+        appTree.create(
+            `${root}/toggle.ts`,
+            "import { KbqToggleChange } from '@koobiq/components/toggle';\n" +
+                'export const toggle = new KbqToggleChange();\n'
+        );
+        appTree.create(
+            `${root}/tab.ts`,
+            "import { KbqTabChangeEvent } from '@koobiq/components/tabs';\n" +
+                'export const tab = new KbqTabChangeEvent();\n'
+        );
+        appTree.create(
+            `${root}/panel.ts`,
+            "import { KbqPopUp } from '@koobiq/components/core';\n" +
+                'export abstract class Panel extends KbqPopUp {}\n'
+        );
+
+        const log = await run();
+
+        expect(log).toContain(`[${SCHEMATIC_NAME}] ${root}/toggle.ts`);
+        expect(log).toContain(`[${SCHEMATIC_NAME}] ${root}/tab.ts`);
+        expect(log).toContain('KbqPopUp.prefix is abstract now');
+    });
+
     it('reports a read in an inline template of a component that imports the module', async () => {
         appTree.create(
             `${root}/inline.ts`,

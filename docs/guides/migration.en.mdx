@@ -3528,14 +3528,14 @@ The migration keeps the full bundle where the code block loaded it. An applicati
 
 {/* migration-step-components(accordion, app-switcher, autocomplete, checkbox, core, datepicker, dropdown, filter-bar, form-field, modal, navbar, notification-center, number-formatter, popover, select, sidepanel, tabs, timepicker, toggle, tooltip, tree, tree-select) */}
 
-The library fills some fields only in a lifecycle hook or when it creates an overlay, and some getters return `undefined`, while their types promised a value. The types say so now: `| undefined`. Behavior is unchanged: a read that used to throw `TypeError` no longer compiles.
+The library fills some fields only in a lifecycle hook or when it creates an overlay, and some getters return `undefined`, while their types promised a value. The types say so now: `| undefined`. For these fields behavior is unchanged: a read that used to throw `TypeError` no longer compiles.
 
 #### Fields and getters that became `| undefined`
 
 | Component                                   | Members                                                                                                                                                       | When there is no value                                                                                                                                         |
 | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | select                                      | `KbqSelect.selectionModel`, `triggerRect`, the `selected` getter                                                                                              | the model is created in `ngOnInit`; `selected` is empty in single selection without a value                                                                    |
-| tree-select                                 | `KbqTreeSelect.selectionModel`, `triggerRect`, `options`, the `selected` getter                                                                               | before `ngAfterContentInit` and without a tree inside                                                                                                          |
+| tree-select                                 | `KbqTreeSelect.selectionModel`, `triggerRect`, the `selected` getter                                                                                          | before `ngAfterContentInit` and without a tree inside                                                                                                          |
 | tree                                        | `TreeControl` and `BaseTreeControl`: `getLevel`, `isExpandable`, `getChildren`; the `data` getter of `KbqTreeNode` and `KbqTreeOption`; `KbqTreeNodeDef.when` | a flat control has no `getChildren`, a nested one no `getLevel` or `isExpandable`; the "Select all" row has no data; the default node definition has no `when` |
 | datepicker                                  | `KbqDatepickerInput.datepicker`, `calendar`; `KbqDatepicker.datepickerInput`                                                                                  | until `[kbqDatepicker]`, `[kbqCalendar]` or an input is bound                                                                                                  |
 | accordion, app-switcher, autocomplete       | `keyManager`                                                                                                                                                  | before the content is initialized                                                                                                                              |
@@ -3582,7 +3582,7 @@ Some fields got an initial value of the same type instead of `undefined`. The ty
 - `FlatTreeControl.expandedItemsBeforeFiltration` and `result` of the flat tree filters are `[]`.
 - `KbqTreeSelectFlatNode`: `name` is `''`, `level` is `0`, `expandable` is `false`.
 
-An empty array, unlike `undefined`, is truthy: a check `if (treeControl.expandedItemsBeforeFiltration)` before the first filtering now passes.
+An empty array, an object and a function, unlike `undefined`, are truthy: the checks `if (treeControl.dataNodes)`, `if (select.keyManager)`, `if (fileUpload.errorStateMatcher)` and `if (datepicker.dateFilter)` before initialization, like `if (treeControl.expandedItemsBeforeFiltration)` before the first filtering, now pass.
 
 #### Running the migration
 

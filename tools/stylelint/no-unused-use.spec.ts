@@ -59,6 +59,10 @@ describe(ruleName, () => {
         expect((await lint(mixin)).texts).toEqual([]);
     });
 
+    it('does not take the URL of a `@forward` for a read', async () => {
+        expect((await lint(`@use './members';\n@forward './members';\n.a { width: 1px; }\n`)).texts).toHaveLength(1);
+    });
+
     it('does not take a comment for a read', async () => {
         const code = `@use './members';\n// members.$size\n/* members.$size */\n.a { width: 1px; }\n`;
 

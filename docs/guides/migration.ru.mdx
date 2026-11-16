@@ -3535,14 +3535,14 @@ ng g @koobiq/components:code-block-highlight-js-core --project "<your project>"
 
 {/* migration-step-components(accordion, app-switcher, autocomplete, checkbox, core, datepicker, dropdown, filter-bar, form-field, modal, navbar, notification-center, number-formatter, popover, select, sidepanel, tabs, timepicker, toggle, tooltip, tree, tree-select) */}
 
-Часть полей библиотека заполняет только в хуке жизненного цикла или при создании оверлея, а часть геттеров возвращает `undefined`, хотя их тип обещал значение. Теперь тип говорит об этом: `| undefined`. Поведение не изменилось: чтение, которое раньше падало с `TypeError`, теперь не компилируется.
+Часть полей библиотека заполняет только в хуке жизненного цикла или при создании оверлея, а часть геттеров возвращает `undefined`, хотя их тип обещал значение. Теперь тип говорит об этом: `| undefined`. У этих полей поведение не изменилось: чтение, которое раньше падало с `TypeError`, теперь не компилируется.
 
 #### Поля и геттеры, которые стали `| undefined`
 
 | Компонент                                   | Члены                                                                                                                                                | Когда значения нет                                                                                                                                                 |
 | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | select                                      | `KbqSelect.selectionModel`, `triggerRect`, геттер `selected`                                                                                         | модель создается в `ngOnInit`; `selected` пуст в одиночном выборе без значения                                                                                     |
-| tree-select                                 | `KbqTreeSelect.selectionModel`, `triggerRect`, `options`, геттер `selected`                                                                          | до `ngAfterContentInit` и без дерева внутри                                                                                                                        |
+| tree-select                                 | `KbqTreeSelect.selectionModel`, `triggerRect`, геттер `selected`                                                                                     | до `ngAfterContentInit` и без дерева внутри                                                                                                                        |
 | tree                                        | `TreeControl` и `BaseTreeControl`: `getLevel`, `isExpandable`, `getChildren`; геттер `data` у `KbqTreeNode` и `KbqTreeOption`; `KbqTreeNodeDef.when` | у плоского контрола нет `getChildren`, у вложенного нет `getLevel` и `isExpandable`; у строки «Выбрать все» нет данных; у определения узла по умолчанию нет `when` |
 | datepicker                                  | `KbqDatepickerInput.datepicker`, `calendar`; `KbqDatepicker.datepickerInput`                                                                         | пока не привязаны `[kbqDatepicker]`, `[kbqCalendar]` или поле ввода                                                                                                |
 | accordion, app-switcher, autocomplete       | `keyManager`                                                                                                                                         | до инициализации содержимого                                                                                                                                       |
@@ -3589,7 +3589,7 @@ ng g @koobiq/components:code-block-highlight-js-core --project "<your project>"
 - `FlatTreeControl.expandedItemsBeforeFiltration` и `result` у фильтров плоского дерева - `[]`.
 - `KbqTreeSelectFlatNode`: `name` - `''`, `level` - `0`, `expandable` - `false`.
 
-Пустой массив, в отличие от `undefined`, истинен: проверка `if (treeControl.expandedItemsBeforeFiltration)` до первой фильтрации теперь срабатывает.
+Пустой массив, объект и функция, в отличие от `undefined`, истинны: проверки `if (treeControl.dataNodes)`, `if (select.keyManager)`, `if (fileUpload.errorStateMatcher)` и `if (datepicker.dateFilter)` до инициализации, как и `if (treeControl.expandedItemsBeforeFiltration)` до первой фильтрации, теперь срабатывают.
 
 #### Запуск миграции
 

@@ -58,7 +58,7 @@ export const warnPatterns: WarnPattern[] = [
             `content is initialized and is \`| undefined\` before. ${CHECK}`
     },
     {
-        anchor: '\\bKbq(?:PopUp|PopUpTrigger|PopoverComponent|NotificationCenterComponent|AppSwitcherComponent|AbstractSelect)\\b',
+        anchor: '\\bKbq(?:PopUp|PopUpTrigger|PopoverComponent|Tooltip(?:Component|Trigger)|NotificationCenterComponent|AppSwitcherComponent|AbstractSelect)\\b',
         pattern: '\\.(?:trigger|portal|strategy|externalNativeElement|panelId|triggerRect)\\b',
         message:
             'The pop-up members trigger, portal, strategy, externalNativeElement, panelId and triggerRect are ' +

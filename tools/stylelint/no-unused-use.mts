@@ -13,10 +13,12 @@ const messages = stylelint.utils.ruleMessages(ruleName, {
 const USE_PARAMS = /^['"]([^'"]+)['"](?:\s+as\s+([\w-]+|\*))?(\s+with\b)?/;
 
 /**
- * Comments, where a mention of a namespace does not read it, and the heads of the `@use` statements. A `with (...)`
- * clause stays: a value it passes can read another module.
+ * Comments, where a mention of a namespace does not read it, the heads of the `@use` statements and the URLs of the
+ * `@forward` ones, which the quoted form of a read would match. A `with (...)` clause stays: a value it passes can read
+ * another module.
  */
-const NOT_CODE = /\/\*[\s\S]*?\*\/|\/\/.*$|^\s*@use\s+['"][^'"]*['"](?:\s+as\s+[\w*-]+)?/gm;
+const NOT_CODE =
+    /\/\*[\s\S]*?\*\/|\/\/.*$|^\s*@use\s+['"][^'"]*['"](?:\s+as\s+[\w*-]+)?|^\s*@forward\s+['"][^'"]*['"]/gm;
 
 /** The placeholders a file extends: a module that only defines placeholders emits CSS once one of them is extended. */
 const EXTENDED_PLACEHOLDER = /@extend\s+(%[\w-]+)/g;
