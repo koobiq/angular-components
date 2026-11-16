@@ -68,8 +68,7 @@
                 }
             }
 
-            &.kbq-checked:not(.kbq-selected),
-            &.kbq-tree-option_multiple.kbq-selected {
+            &.kbq-checked:not(.kbq-selected) {
                 &:hover:not(.kbq-focused),
                 &.kbq-hovered:not(.kbq-focused) {
                     background: var(--kbq-tree-multiple-states-selected-container-background);
@@ -84,6 +83,29 @@
                     --kbq-option-background: var(--kbq-tree-multiple-states-selected-active-container-background);
 
                     background: var(--kbq-tree-multiple-states-selected-active-container-background);
+                }
+            }
+
+            // A selected option of a multiple tree-select shares the background of an unselected one in
+            // every state: the checkbox is the selection mark, so the row follows hover, focus and
+            // pressed like any other row (#DS-5466). Every state is spelled out because the shared tree
+            // theme paints the selected row at a specificity this block has to beat.
+            &.kbq-tree-option_multiple.kbq-selected {
+                --kbq-option-background: transparent;
+
+                background: transparent;
+
+                &.kbq-focused {
+                    --kbq-option-background: var(--kbq-tree-states-hover-container-background);
+
+                    background: var(--kbq-tree-states-hover-container-background);
+                }
+
+                &:active:not(.kbq-disabled),
+                &.kbq-active:not(.kbq-disabled) {
+                    --kbq-option-background: var(--kbq-tree-states-active-container-background);
+
+                    background: var(--kbq-tree-states-active-container-background);
                 }
             }
 
