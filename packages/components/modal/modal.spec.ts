@@ -10,6 +10,7 @@ import {
     Injectable,
     Injector,
     NgModule,
+    PLATFORM_ID,
     type Provider,
     signal,
     type Type,
@@ -1579,6 +1580,19 @@ describe('KbqModal', () => {
             expect(fixture.componentInstance.runs.cancel).toBe(1);
         });
     });
+
+    describe('server-side rendering', () => {
+        it('should not throw when opening a visible modal on the server', async () => {
+            await TestBed.configureTestingModule({
+                imports: [SsrModalComponent],
+                providers: [{ provide: PLATFORM_ID, useValue: 'server' }]
+            }).compileComponents();
+
+            const fixture = TestBed.createComponent(SsrModalComponent);
+
+            expect(() => fixture.detectChanges()).not.toThrow();
+        });
+    });
 });
 
 @Injectable()
@@ -1873,6 +1887,15 @@ class ModalOpenerHostComponent {
     `
 })
 class NeverOpenedModalComponent {}
+
+@Component({
+    selector: 'ssr-modal',
+    imports: [KbqModalModule],
+    template: `
+        <kbq-modal [kbqVisible]="true">SSR content</kbq-modal>
+    `
+})
+class SsrModalComponent {}
 
 const TEST_DIRECTIVES = [
     ModalByServiceComponent,
