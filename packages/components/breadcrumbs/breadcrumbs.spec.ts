@@ -728,6 +728,36 @@ describe(KbqBreadcrumbs.name, () => {
 
             await vi.runOnlyPendingTimersAsync();
         });
+
+        it('should add a title tooltip to hidden breadcrumb items in the dropdown', async () => {
+            vi.useFakeTimers();
+
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+            const { componentInstance } = fixture;
+
+            componentInstance.items = [
+                { text: 'Home', disabled: false },
+                { text: 'Library', disabled: false },
+                { text: 'Data', disabled: false },
+                { text: 'Docs', disabled: false },
+                { text: 'Articles', disabled: false },
+                { text: 'Current', disabled: false }
+            ];
+            componentInstance.max = 4;
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(0);
+
+            fixture.debugElement.query(By.css('.kbq-breadcrumb__expand')).nativeElement.click();
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(0);
+
+            const rows = Array.from(document.querySelectorAll<HTMLElement>('[kbq-dropdown-item]'));
+
+            expect(rows.length).toBeGreaterThan(0);
+            rows.forEach((row) => expect(row.hasAttribute('kbq-title')).toBe(true));
+
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('inside a form', () => {
