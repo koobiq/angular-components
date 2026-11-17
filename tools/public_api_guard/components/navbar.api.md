@@ -88,6 +88,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     constructor();
     get focusableItems(): QueryList<KbqNavbarFocusableItem>;
     readonly localeConfiguration: i0.Signal<i1$1.KbqNavbarLocaleConfiguration>;
+    protected readonly moreAriaLabel: i0.Signal<string | null>;
     protected readonly moreTriggerVisible: i0.WritableSignal<boolean>;
     readonly navbarItems: i0.Signal<readonly KbqNavbarItem[]>;
     ngAfterContentChecked(): void;
@@ -143,7 +144,7 @@ export class KbqNavbarBrand implements AfterContentInit {
 // @public (undocumented)
 export class KbqNavbarContainer {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarContainer, "kbq-navbar-container", never, {}, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarContainer, "kbq-navbar-container, [kbq-navbar-container]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarContainer, never>;
 }

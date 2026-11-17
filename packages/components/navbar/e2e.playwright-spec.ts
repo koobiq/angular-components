@@ -352,6 +352,9 @@ test.describe('KbqNavbarModule', () => {
             await waitForNavbarSettled(page);
             const locator = getComponent(page);
 
+            // The shot's whole content is the outcome of the debounced fit: assert it landed before shooting.
+            await expect(getTrigger(page)).not.toHaveAttribute('inert');
+
             await page.mouse.move(1200, 10);
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('navbar-more-01-light.png');
             await e2eEnableDarkTheme(page);

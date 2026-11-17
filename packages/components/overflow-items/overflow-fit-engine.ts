@@ -44,6 +44,10 @@ export interface KbqOverflowFitItem {
  * The slot the engine shows once it has hidden an item, an «Ещё» trigger: its width joins the budget the items are
  * hidden against.
  *
+ * A result is expected to make itself measurable in the very pass the engine shows it in: the engine calls `show()`
+ * and then reads the subject's live overflow again, so an implementation that lands its visibility only at the next
+ * change detection (a plain class binding) budgets the slot as zero width.
+ *
  * @docs-private
  */
 export interface KbqOverflowFitResult {
@@ -269,8 +273,8 @@ export class KbqOverflowFitEngine {
  * @docs-private
  */
 export function kbqOverflowRecalculationTriggers(options: {
-    /** The element whose resize recalculates, the overflow container itself. */
-    element: Element;
+    /** The element whose resize recalculates, the overflow container itself. Left out when the caller feeds its own resize stream in. */
+    element?: Element;
     /** Targets observed once, on top of the element and the additional ones, e.g. provided through a token. */
     targets?: readonly Element[];
     /** Targets observed on top of the element, re-observed when the signal changes. */
@@ -290,7 +294,7 @@ export function kbqOverflowRecalculationTriggers(options: {
     }
 
     const triggers: Array<Observable<void>> = [
-        resizeObserver.observe(options.element).pipe(map(() => undefined)),
+        ...(options.element ? [resizeObserver.observe(options.element).pipe(map(() => undefined))] : []),
         ...(options.targets ?? []).map((target) => resizeObserver.observe(target).pipe(map(() => undefined))),
         toObservable(options.additionalTargets).pipe(
             switchMap((targets) => {

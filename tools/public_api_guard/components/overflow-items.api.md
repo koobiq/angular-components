@@ -143,7 +143,7 @@ export class KbqOverflowItemsResult extends ElementVisibilityManager {
 
 // @public
 export function kbqOverflowRecalculationTriggers(options: {
-    element: Element;
+    element?: Element;
     targets?: readonly Element[];
     additionalTargets: Signal<Element | Element[]>;
     debounceTime: Signal<number>;

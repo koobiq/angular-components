@@ -650,6 +650,7 @@ export class KbqNavbarItem implements AfterContentInit {
     private readonly contentObserver = inject(ContentObserver);
     private readonly injector = inject(Injector);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly renderer = inject(Renderer2);
 
     // Outer widths recorded by `measureWidths()`, 0 while unknown.
     private expandedWidth = 0;
@@ -692,9 +693,19 @@ export class KbqNavbarItem implements AfterContentInit {
      */
     readonly inMorePanel = signal(false);
 
-    /** Collapses the item regardless of what the ambient navbar decided. */
+    /**
+     * Collapses the item regardless of what the ambient navbar decided. The class is written here rather than
+     * only through the host binding: the navbar's fit measures the layout in the same pass it collapses items
+     * in, and a binding reaches the DOM only at the next change detection.
+     */
     set collapsed(value: boolean) {
         this.ownCollapsed.set(value);
+
+        if (value) {
+            this.renderer.addClass(this.nativeElement, COLLAPSED_ITEM_CLASS);
+        } else {
+            this.renderer.removeClass(this.nativeElement, COLLAPSED_ITEM_CLASS);
+        }
     }
 
     /** Whether the item is rendered in its collapsed (icon-only) form. */
