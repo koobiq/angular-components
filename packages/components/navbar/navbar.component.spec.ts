@@ -2645,6 +2645,35 @@ describe('KbqNavbar', () => {
             expect(clock.navbarFocusableItem.disabled).toBe(true);
             expect(third.navbarFocusableItem.disabled).toBe(true);
         });
+
+        it('should close the panel once a recalculation has nothing left to hide', async () => {
+            const fixture = await setup();
+            const navbar = getNavbar(fixture);
+
+            stubNavbarWidths(fixture.debugElement, { navbar: 350, item: 100, collapsible: 10 });
+
+            navbar.updateExpandedStateForItems();
+            fixture.detectChanges();
+
+            const dropdown = getTriggerDropdown(fixture);
+
+            dropdown.open();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(dropdown.opened).toBe(true);
+
+            // The navbar widens past what every item needs: the trigger and its panel are both gone, not an
+            // open panel with an invisible trigger left behind.
+            stubNavbarWidths(fixture.debugElement, { navbar: 1000, item: 100, collapsible: 10 });
+
+            navbar.updateExpandedStateForItems();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(dropdown.opened).toBe(false);
+            expect(getItems(fixture).every((item) => !item.rectangleElement.hidden())).toBe(true);
+            expect(getTrigger(fixture).classList.contains('kbq-navbar__more-trigger_hidden')).toBe(true);
+        });
     });
 
     describe('accessibility', () => {

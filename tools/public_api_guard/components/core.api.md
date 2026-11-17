@@ -3593,7 +3593,7 @@ export type KbqNavbarLocaleConfiguration = {
         expand: string;
         collapse: string;
     };
-    more: string;
+    more?: string;
 };
 
 // @public (undocumented)

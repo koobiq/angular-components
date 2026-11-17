@@ -22,6 +22,7 @@ import {
     NgZone,
     type OnDestroy,
     type QueryList,
+    Renderer2,
     signal,
     untracked,
     viewChild,
@@ -266,10 +267,9 @@ export class KbqNavbarContainer {}
 
         <kbq-navbar-item
             #moreTrigger
-            class="kbq-navbar__more-trigger"
-            [class.kbq-navbar__more-trigger_hidden]="!moreTriggerVisible()"
+            class="kbq-navbar__more-trigger kbq-navbar__more-trigger_hidden"
             [attr.inert]="!moreTriggerVisible() || null"
-            [aria-label]="localeConfiguration().more"
+            [aria-label]="localeConfiguration().more ?? null"
             [kbqDropdownTriggerFor]="moreDropdown"
         >
             <i kbq-icon="kbq-ellipsis_16" color="contrast"></i>
@@ -326,6 +326,8 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     /** The measurement and hiding engine of the third fit stage, shared with `KbqOverflowItems`. */
     private readonly engine = new KbqOverflowFitEngine(this.window);
 
+    private readonly renderer = inject(Renderer2);
+
     /** @docs-private */
     readonly rectangleElements = contentChildren<KbqNavbarRectangleElement>(
         forwardRef(() => KbqNavbarRectangleElement),
@@ -355,9 +357,28 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
 
     /** The «Ещё» trigger as the engine's result slot, its width joining the budget once it is shown. */
     private readonly moreResult: KbqOverflowFitResult = {
-        hide: () => this.moreTriggerVisible.set(false),
-        show: () => this.moreTriggerVisible.set(true)
+        hide: () => this.setMoreTriggerHidden(true),
+        show: () => this.setMoreTriggerHidden(false)
     };
+
+    /**
+     * Writes the «Ещё» trigger's visibility: the class, synchronously, and the signal that follows it. The class
+     * cannot be a binding: the engine measures the trigger's width in the same pass it shows it, and a binding
+     * reaches the DOM only at the next change detection, which would budget a `display: none` box as nothing.
+     */
+    private setMoreTriggerHidden(hidden: boolean): void {
+        const element = this.moreTriggerElement()?.nativeElement;
+
+        this.moreTriggerVisible.set(!hidden);
+
+        if (!element) return;
+
+        if (hidden) {
+            this.renderer.addClass(element, 'kbq-navbar__more-trigger_hidden');
+        } else {
+            this.renderer.removeClass(element, 'kbq-navbar__more-trigger_hidden');
+        }
+    }
 
     /** Items moved into the «Ещё» panel, with the anchors they return to. */
     private readonly movedToMorePanel = new Map<
@@ -549,9 +570,16 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         // Stage 3: dividers, by the state of their neighbours.
         this.fitDividers();
 
-        // The panel, kept open through a resize, takes the new hidden set live.
-        if (this.moreDropdownTrigger()?.opened) {
-            this.moveItemsIntoMorePanel();
+        // The panel, kept open through a resize, takes the new hidden set live — and closes once nothing is left
+        // to hide, the trigger that opens it gone with them.
+        const dropdownTrigger = this.moreDropdownTrigger();
+
+        if (dropdownTrigger?.opened) {
+            if (this.moreTriggerVisible()) {
+                this.moveItemsIntoMorePanel();
+            } else {
+                dropdownTrigger.close();
+            }
         }
     }
 
