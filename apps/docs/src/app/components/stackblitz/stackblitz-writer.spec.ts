@@ -159,6 +159,9 @@ describe(DocsStackblitzWriter.name, () => {
         expect(header).toContain(`[class.kbq-active]="languageSelect.panelOpen"`);
         expect(header).toContain(`[class.kbq-active]="themeSelect.panelOpen"`);
         expect(header).toContain(`(focus)="languageButton.focus()"`);
+        expect(header.split('[kbqTooltip]=').length - 1).toBe(4);
+        expect(header).toContain(`language: 'Язык интерфейса'`);
+        expect(header).toContain('kbqPlacement="bottomRight"');
         expect(header).toContain(`(focus)="themeButton.focus()"`);
         expect(header).not.toContain('kbq-dropdown');
     });

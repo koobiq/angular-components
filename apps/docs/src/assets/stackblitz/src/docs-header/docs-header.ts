@@ -11,6 +11,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 interface HeaderText {
     readonly telegram: string;
@@ -27,7 +28,7 @@ const HEADER_TEXT: Record<string, HeaderText> = {
     'en-US': {
         telegram: 'Koobiq on Telegram',
         github: 'GitHub repository',
-        language: 'Language',
+        language: 'Interface language',
         theme: 'Color theme',
         system: 'System',
         light: 'Light',
@@ -36,7 +37,7 @@ const HEADER_TEXT: Record<string, HeaderText> = {
     'ru-RU': {
         telegram: 'Koobiq в Telegram',
         github: 'Репозиторий на GitHub',
-        language: 'Язык',
+        language: 'Язык интерфейса',
         theme: 'Тема оформления',
         system: 'Системная',
         light: 'Светлая',
@@ -65,7 +66,7 @@ const END_ALIGNED_POSITIONS: KbqSelect['positions'] = [
 /** Header of the docs site, mounted into `<docs-header>` by `docsMountHeader`. */
 @Component({
     selector: 'docs-header',
-    imports: [KbqButtonModule, KbqIconModule, KbqSelectModule],
+    imports: [KbqButtonModule, KbqIconModule, KbqSelectModule, KbqToolTipModule],
     template: `
         <a class="docs-header__logo" href="https://koobiq.io/" target="_blank" rel="noopener">
             <!-- prettier-ignore -->
@@ -83,6 +84,7 @@ const END_ALIGNED_POSITIONS: KbqSelect['positions'] = [
                 target="_blank"
                 rel="noopener"
                 [attr.aria-label]="text().telegram"
+                [kbqTooltip]="text().telegram"
             >
                 <i kbq-icon="kbq-telegram_16"></i>
             </a>
@@ -95,6 +97,7 @@ const END_ALIGNED_POSITIONS: KbqSelect['positions'] = [
                 target="_blank"
                 rel="noopener"
                 [attr.aria-label]="text().github"
+                [kbqTooltip]="text().github"
             >
                 <i kbq-icon="kbq-github_16"></i>
             </a>
@@ -116,6 +119,7 @@ const END_ALIGNED_POSITIONS: KbqSelect['positions'] = [
                     color="contrast"
                     kbqStyle="transparent"
                     [attr.aria-label]="text().language"
+                    [kbqTooltip]="text().language"
                     [class.kbq-active]="languageSelect.panelOpen"
                 >
                     <i kbq-icon="kbq-globe_16"></i>
@@ -139,7 +143,9 @@ const END_ALIGNED_POSITIONS: KbqSelect['positions'] = [
                     class="kbq-button-icon"
                     color="contrast"
                     kbqStyle="transparent"
+                    kbqPlacement="bottomRight"
                     [attr.aria-label]="text().theme"
+                    [kbqTooltip]="text().theme"
                     [class.kbq-active]="themeSelect.panelOpen"
                 >
                     <i kbq-icon="kbq-sun-moon_16"></i>
