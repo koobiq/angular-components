@@ -16,6 +16,15 @@
 }
 
 /*
+ * A disabled or read-only field is display-only: a disabled input takes no focus, so the
+ * caret-scroll that reveals a clipped value never happens. Keep the ellipsis as the truncation cue.
+ */
+input.kbq-input:disabled,
+input.kbq-input[readonly] {
+    text-overflow: ellipsis;
+}
+
+/*
  * Native number fields, i.e. `<input kbqInput type="number">` without `kbqNumberInput` — that directive
  * always renders into a `type="text"` field, so these rules deliberately do not reach it.
  */
