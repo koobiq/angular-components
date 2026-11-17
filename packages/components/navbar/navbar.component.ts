@@ -291,7 +291,7 @@ export class KbqNavbarContainer {}
             [aria-label]="moreAriaLabel()"
             [kbqDropdownTriggerFor]="moreDropdown"
         >
-            <i kbq-icon="kbq-ellipsis_16" color="contrast"></i>
+            <i kbq-icon="kbq-ellipsis-horizontal_16" color="contrast"></i>
         </kbq-navbar-item>
 
         <kbq-dropdown #moreDropdown="kbqDropdown" class="kbq-navbar__more-dropdown">

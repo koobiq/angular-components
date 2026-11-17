@@ -874,7 +874,7 @@ export class E2eNavbarCollapse {}
                         <kbq-navbar-divider />
 
                         <kbq-navbar-item>
-                            <i kbq-icon="kbq-chart-column_16"></i>
+                            <i kbq-icon="kbq-chart-bar-vertical_16"></i>
                             <kbq-navbar-title>Отчёты</kbq-navbar-title>
                         </kbq-navbar-item>
 
@@ -888,7 +888,7 @@ export class E2eNavbarCollapse {}
                         </kbq-navbar-item>
 
                         <kbq-navbar-item>
-                            <i kbq-icon="kbq-puzzle_16"></i>
+                            <i kbq-icon="kbq-puzzle-piece_16"></i>
                             <kbq-navbar-title>Интеграции</kbq-navbar-title>
                         </kbq-navbar-item>
 
