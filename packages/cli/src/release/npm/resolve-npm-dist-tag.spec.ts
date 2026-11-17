@@ -77,10 +77,60 @@ describe(resolveNpmDistTag.name, () => {
         expect(() => resolveNpmDistTag('@koobiq/icons', parseVersionName('12.1.0')!)).toThrow(npmClient.NpmViewError);
     });
 
-    it('refuses to move "v<major>-lts" backward onto an older version', () => {
-        // `latest` is on a newer major, so the comparison falls through to the LTS tag, which
-        // already points at a version newer than the one being published now.
-        npmViewDistTag.mockImplementation((_packageName, tag) => (tag === 'latest' ? '12.0.0' : '11.9.5'));
+    it('falls back to "v<major>.<minor>-lts" when "v<major>-lts" points at a newer version', () => {
+        npmViewDistTag.mockImplementation((_packageName, tag) => {
+            if (tag === 'latest') return '12.0.0';
+            if (tag === 'v11-lts') return '11.9.5';
+
+            return null;
+        });
+
+        expect(resolveNpmDistTag('@koobiq/icons', parseVersionName('11.4.2')!)).toBe('v11.4-lts');
+    });
+
+    it('publishes a 20.3.5 backport under v20.3-lts when v20-lts is already at 20.4.5', () => {
+        npmViewDistTag.mockImplementation((_packageName, tag) => {
+            if (tag === 'latest') return '21.0.0';
+            if (tag === 'v20-lts') return '20.4.5';
+
+            return null;
+        });
+
+        expect(resolveNpmDistTag('@koobiq/components', parseVersionName('20.3.5')!)).toBe('v20.3-lts');
+    });
+
+    it('tags a republish of the version already held by "v<major>.<minor>-lts" as that same tag', () => {
+        npmViewDistTag.mockImplementation((_packageName, tag) => {
+            if (tag === 'latest') return '12.0.0';
+            if (tag === 'v11-lts') return '11.9.5';
+            if (tag === 'v11.4-lts') return '11.4.2';
+
+            return null;
+        });
+
+        expect(resolveNpmDistTag('@koobiq/icons', parseVersionName('11.4.2')!)).toBe('v11.4-lts');
+    });
+
+    it('moves "v<major>.<minor>-lts" forward onto a newer patch of the same minor', () => {
+        npmViewDistTag.mockImplementation((_packageName, tag) => {
+            if (tag === 'latest') return '12.0.0';
+            if (tag === 'v11-lts') return '11.9.5';
+            if (tag === 'v11.4-lts') return '11.4.1';
+
+            return null;
+        });
+
+        expect(resolveNpmDistTag('@koobiq/icons', parseVersionName('11.4.2')!)).toBe('v11.4-lts');
+    });
+
+    it('refuses to move "v<major>.<minor>-lts" backward onto an older version', () => {
+        npmViewDistTag.mockImplementation((_packageName, tag) => {
+            if (tag === 'latest') return '12.0.0';
+            if (tag === 'v11-lts') return '11.9.5';
+            if (tag === 'v11.4-lts') return '11.4.5';
+
+            return null;
+        });
 
         expect(() => resolveNpmDistTag('@koobiq/icons', parseVersionName('11.4.2')!)).toThrow(npmClient.NpmViewError);
     });
