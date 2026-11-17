@@ -203,6 +203,10 @@ export const iconsMapping: ReplaceData[] = [
         replaceWith: 'android_16'
     },
     {
+        replace: 'asset-android_24',
+        replaceWith: 'android_24'
+    },
+    {
         replace: 'asset-apple_16',
         replaceWith: 'apple_16'
     },
