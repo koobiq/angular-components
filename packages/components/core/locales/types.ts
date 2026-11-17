@@ -41,10 +41,10 @@ export type KbqA11yLocaleConfiguration = {
     currentDate: string;
     /** Calendar button switching to the next month. */
     nextMonth: string;
-    /** Calendar drop-down list that picks the displayed month. Without it the list has no accessible name. */
-    month?: string;
-    /** Calendar drop-down list that picks the displayed year. Without it the list has no accessible name. */
-    year?: string;
+    /** Calendar drop-down list that picks the displayed month. */
+    month: string;
+    /** Calendar drop-down list that picks the displayed year. */
+    year: string;
     /** Form field button that clears the control value. */
     clear: string;
     /** Password form field button that reveals the password. */

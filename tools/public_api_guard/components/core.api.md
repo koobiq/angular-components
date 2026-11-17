@@ -2637,8 +2637,8 @@ export type KbqA11yLocaleConfiguration = {
     previousMonth: string;
     currentDate: string;
     nextMonth: string;
-    month?: string;
-    year?: string;
+    month: string;
+    year: string;
     clear: string;
     showPassword: string;
     hidePassword: string;
