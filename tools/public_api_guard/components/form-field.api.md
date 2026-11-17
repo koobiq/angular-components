@@ -309,6 +309,7 @@ export class KbqStepper {
     onStepUp(event: MouseEvent): void;
     readonly stepDown: OutputEmitterRef<void>;
     readonly stepUp: OutputEmitterRef<void>;
+    protected readonly visibility: Signal<"hidden" | "visible">;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqStepper, "kbq-stepper", ["kbqStepper"], {}, { "stepUp": "stepUp"; "stepDown": "stepDown"; }, never, never, true, never>;
     // (undocumented)

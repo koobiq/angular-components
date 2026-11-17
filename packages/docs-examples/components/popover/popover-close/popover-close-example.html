@@ -1,42 +1,42 @@
 <ng-template #customContent>
-    <h1 style="margin-top: 0" class="kbq-headline">Making hybrid‑remote inclusive with unique audio technology</h1>
+    <h1 style="margin-top: 0" class="kbq-headline">{{ t().hybridRemote }}</h1>
     <p style="margin-top: 0">
-        Traditional video conferencing can make remote colleagues feel like second-class citizens
+        {{ t().videoConferencing }}
     </p>
     <p>
-        Around is designed to be inclusive, so remote team members truly feel like part of the group. By being able to
-        use your own device, everyone is seen and heard clearly — and no one ever sounds “far from the mic.” Everyone
-        stays engaged. No one steals the spotlight.
+        {{ t().aroundInclusive }}
+    </p>
+
+    <p></p>
+    <p>
+        {{ t().privacy }}
+    </p>
+
+    <p></p>
+    <p>
+        {{ t().encryptedCalls }}
     </p>
     <p>
-        We take privacy and security very seriously. We leverage industry standard data security policies to keep all
-        customer data safe and treat the protection of user privacy and data with the utmost importance. You can learn
-        more about our privacy policy here.
+        {{ t().privacy }}
     </p>
-    <p>
-        Encrypted Calls & Communication. All calls (including audio/video) are secured with TLS and AES-128 encryption.
-    </p>
-    <p>
-        We take privacy and security very seriously. We leverage industry standard data security policies to keep all
-        customer data safe and treat the protection of user privacy and data with the utmost importance. You can learn
-        more about our privacy policy here.
-    </p>
+
+    <p></p>
     <p style="margin-bottom: 0">
-        Around is designed to be inclusive, so remote team members truly feel like part of the group. By being able to
-        use your own device, everyone is seen and heard clearly — and no one ever sounds “far from the mic.” Everyone
-        stays engaged. No one steals the spotlight.
+        {{ t().aroundInclusive }}
     </p>
+
+    <p></p>
 </ng-template>
 
 <ng-template #shareContent>
-    <div class="kbq-subheading">Share project</div>
+    <div class="kbq-subheading">{{ t().shareProject }}</div>
     <div class="example-popover-close__text">
-        Give your teammates access to the project and start collaborating in real time
+        {{ t().giveAccess }}
     </div>
     <form novalidate class="kbq-form-vertical">
         <div class="kbq-form__fieldset">
             <div class="kbq-form__label-wrapper">
-                <label class="kbq-form__label">Email</label>
+                <label class="kbq-form__label">{{ t().email }}</label>
             </div>
             <div class="kbq-form__fieldset kbq-horizontal">
                 <div class="kbq-form__row">
@@ -45,14 +45,16 @@
                     </kbq-form-field>
                 </div>
                 <div class="kbq-form__row">
-                    <button kbq-button [color]="'contrast'" (click)="kbqSharePopover.hide(0)">Send invite</button>
+                    <button kbq-button [color]="'contrast'" (click)="kbqSharePopover.hide(0)">
+                        {{ t().sendInvite }}
+                    </button>
                 </div>
             </div>
         </div>
     </form>
     <div class="example-popover-close__list">
-        <div class="example-popover-close__list-title">Members</div>
-        @for (member of members; track member) {
+        <div class="example-popover-close__list-title">{{ t().members }}</div>
+        @for (member of members(); track member) {
             <div class="example-popover-close__list-item">
                 <div class="example-popover-close__list-item-left">
                     <img
@@ -74,8 +76,8 @@
             </div>
         }
         <kbq-dropdown #appDropdown="kbqDropdown" [class]="'max-width'" [navigationWithWrap]="true">
-            <button kbq-dropdown-item>Editor</button>
-            <button kbq-dropdown-item>Viewer</button>
+            <button kbq-dropdown-item>{{ t().editor }}</button>
+            <button kbq-dropdown-item>{{ t().viewer }}</button>
         </kbq-dropdown>
     </div>
 </ng-template>
@@ -88,7 +90,7 @@
         [kbqPopoverHasCloseButton]="true"
         [kbqPopoverContent]="customContent"
     >
-        Крестик в углу с большим заголовком
+        {{ t().closeBigTitle }}
     </button>
     <button
         kbq-button
@@ -97,6 +99,6 @@
         [kbqPopoverClass]="'example-popover-close'"
         [kbqPopoverContent]="shareContent"
     >
-        Крестик в углу в окне «Поделиться»
+        {{ t().closeShare }}
     </button>
 </div>

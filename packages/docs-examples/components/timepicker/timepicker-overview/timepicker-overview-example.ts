@@ -5,7 +5,9 @@ import { DateAdapter } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Timepicker validation symbols
@@ -15,7 +17,7 @@ import { DateTime } from 'luxon';
     imports: [KbqToolTipModule, KbqIconModule, FormsModule, KbqTimepickerModule, LuxonDateModule],
     template: `
         <div class="docs-row">
-            <kbq-form-field #tooltip="kbqTooltip" kbqTooltipModifier="warning" [kbqTooltip]="'Только цифры'">
+            <kbq-form-field #tooltip="kbqTooltip" kbqTooltipModifier="warning" [kbqTooltip]="t().onlyNumbers">
                 <i kbq-icon="kbq-clock_16" kbqPrefix></i>
                 <input kbqTimepicker [format]="timeFormats.HHmm" [kbqValidationTooltip]="tooltip" [(ngModel)]="time" />
             </kbq-form-field>
@@ -24,6 +26,8 @@ import { DateTime } from 'luxon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimepickerOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
     timeFormats = TimeFormats;

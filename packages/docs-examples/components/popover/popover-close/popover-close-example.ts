@@ -1,10 +1,12 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule } from '@koobiq/components/popover';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Popover close
@@ -17,17 +19,19 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverCloseExample {
-    members: Record<string, string>[] = [
-        { name: 'Alex Unipraise', role: 'Editor' },
-        { name: 'Serge Vox', role: 'Editor' },
-        { name: 'Rick Brick', role: 'Viewer' },
-        { name: 'Viber Curly', role: 'Viewer' },
-        { name: 'Jackie Ckang', role: 'Viewer' },
-        { name: 'Robert Skinner', role: 'Viewer' },
-        { name: 'Woodie Hoodie', role: 'Viewer' },
-        { name: 'Alex Buckmaster', role: 'Viewer' },
-        { name: 'Chris Glasser', role: 'Viewer' },
-        { name: 'Corina McCoy', role: 'Viewer' }
-    ];
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    readonly members = computed<Record<string, string>[]>(() => [
+        { name: 'Alex Unipraise', role: this.t().editor },
+        { name: 'Serge Vox', role: this.t().editor },
+        { name: 'Rick Brick', role: this.t().viewer },
+        { name: 'Viber Curly', role: this.t().viewer },
+        { name: 'Jackie Ckang', role: this.t().viewer },
+        { name: 'Robert Skinner', role: this.t().viewer },
+        { name: 'Woodie Hoodie', role: this.t().viewer },
+        { name: 'Alex Buckmaster', role: this.t().viewer },
+        { name: 'Chris Glasser', role: this.t().viewer },
+        { name: 'Corina McCoy', role: this.t().viewer }
+    ]);
     protected readonly componentColors = KbqComponentColors;
 }

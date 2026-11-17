@@ -8,6 +8,8 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Validation message for specific field
@@ -25,30 +27,30 @@ import { KbqInputModule } from '@koobiq/components/input';
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
                     <kbq-form-field>
-                        <kbq-label>The error message appears above the hint</kbq-label>
+                        <kbq-label>{{ t().errorAboveHint }}</kbq-label>
                         <input formControlName="first" kbqInput />
 
-                        <kbq-error>Required</kbq-error>
+                        <kbq-error>{{ t().required }}</kbq-error>
 
-                        <kbq-hint>Hint under the field</kbq-hint>
+                        <kbq-hint>{{ t().hintUnderField }}</kbq-hint>
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row layout-margin-bottom-xxl">
                     <kbq-form-field>
-                        <kbq-label>The error message replaces the hint</kbq-label>
+                        <kbq-label>{{ t().errorReplacesHint }}</kbq-label>
                         <input #input="kbqInput" formControlName="last" kbqInput />
 
                         @if (input.errorState()) {
-                            <kbq-error>Required</kbq-error>
+                            <kbq-error>{{ t().required }}</kbq-error>
                         } @else {
-                            <kbq-hint>Hint under the field</kbq-hint>
+                            <kbq-hint>{{ t().hintUnderField }}</kbq-hint>
                         }
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row layout-align-start-start">
-                    <button color="contrast" kbq-button type="submit">Submit</button>
+                    <button color="contrast" kbq-button type="submit">{{ t().submit }}</button>
                 </div>
             </div>
         </form>
@@ -68,6 +70,8 @@ import { KbqInputModule } from '@koobiq/components/input';
     }
 })
 export class ValidationMessageForSpecificFieldExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly form = new FormGroup({
         first: new FormControl('', [Validators.required]),
         last: new FormControl('', [Validators.required])

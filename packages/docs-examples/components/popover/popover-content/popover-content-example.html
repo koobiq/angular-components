@@ -1,12 +1,12 @@
 <ng-template #shareContent>
-    <div class="kbq-subheading">Share project</div>
+    <div class="kbq-subheading">{{ t().shareProject }}</div>
     <div class="popover-content-share-example__text">
         Give your teammates access to the project and start collaborating in real time
     </div>
     <form novalidate class="kbq-form-vertical">
         <div class="kbq-form__fieldset">
             <div class="kbq-form__label-wrapper">
-                <label class="kbq-form__label">Email</label>
+                <label class="kbq-form__label">{{ t().email }}</label>
             </div>
             <div class="kbq-form__fieldset kbq-horizontal">
                 <div class="kbq-form__row">
@@ -15,14 +15,16 @@
                     </kbq-form-field>
                 </div>
                 <div class="kbq-form__row">
-                    <button kbq-button [color]="'contrast'" (click)="kbqSharePopover.hide(0)">Send invite</button>
+                    <button kbq-button [color]="'contrast'" (click)="kbqSharePopover.hide(0)">
+                        {{ t().sendInvite }}
+                    </button>
                 </div>
             </div>
         </div>
     </form>
     <div class="example-popover-content-share__list">
-        <div class="example-popover-content-share__list-title">Members</div>
-        @for (member of members; track member) {
+        <div class="example-popover-content-share__list-title">{{ t().members }}</div>
+        @for (member of members(); track member) {
             <div class="example-popover-content-share__list-item">
                 <div class="example-popover-content-share__list-item-left">
                     <img
@@ -44,8 +46,8 @@
             </div>
         }
         <kbq-dropdown #appDropdown="kbqDropdown" [class]="'max-width'" [navigationWithWrap]="true">
-            <button kbq-dropdown-item>Editor</button>
-            <button kbq-dropdown-item>Viewer</button>
+            <button kbq-dropdown-item>{{ t().editor }}</button>
+            <button kbq-dropdown-item>{{ t().viewer }}</button>
         </kbq-dropdown>
     </div>
 </ng-template>
@@ -56,9 +58,9 @@
         [style]="{ 'background-image': 'url(\'/assets/images/popover/hero-header.jpg\')' }"
     ></div>
     <div class="example-popover-content-custom__container">
-        <h4 class="kbq-title">Абракадабра!</h4>
-        <p>Таинственное слово, которому приписывалась чудодейственная сила</p>
-        <button kbq-button [color]="'contrast'" (click)="kbqCustomPopover.hide(0)">Сделать магию</button>
+        <h4 class="kbq-title">{{ t().magicTitle }}</h4>
+        <p>{{ t().magicText }}</p>
+        <button kbq-button [color]="'contrast'" (click)="kbqCustomPopover.hide(0)">{{ t().doMagic }}</button>
     </div>
 </ng-template>
 
@@ -71,7 +73,7 @@
         [kbqPopoverClass]="'example-popover-content-share'"
         [kbqPopoverContent]="shareContent"
     >
-        Без панели хедера
+        {{ t().withoutHeaderPanel }}
     </button>
     <button
         #kbqCustomPopover="kbqPopover"
@@ -81,6 +83,6 @@
         [kbqPopoverClass]="'example-popover-content-custom'"
         [kbqPopoverContent]="customContent"
     >
-        Нестандартные стили и отступы
+        {{ t().customStyles }}
     </button>
 </div>

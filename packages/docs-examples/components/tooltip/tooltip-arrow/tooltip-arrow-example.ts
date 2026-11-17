@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Tooltip arrow
@@ -12,18 +14,18 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule
     ],
     template: `
-        <button kbq-button kbqTooltip="Tooltip without arrow">No arrow</button>
-        <button kbq-button kbqTooltip="Tooltip with arrow" kbqPlacement="bottomRight" [kbqTooltipArrow]="true">
-            With arrow
+        <button kbq-button [kbqTooltip]="t().tooltipWithoutArrow">{{ t().noArrow }}</button>
+        <button kbq-button kbqPlacement="bottomRight" [kbqTooltip]="t().tooltipWithArrow" [kbqTooltipArrow]="true">
+            {{ t().withArrow }}
         </button>
         <button
             kbq-button
-            kbqTooltip="Tooltip with centered arrow"
             kbqPlacement="bottomRight"
+            [kbqTooltip]="t().tooltipWithCenteredArrow"
             [kbqTooltipArrow]="true"
             [kbqTooltipArrowCentered]="true"
         >
-            Centered arrow
+            {{ t().centeredArrow }}
         </button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,4 +33,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         class: 'layout-margin-5xl layout-row layout-align-center-center layout-gap-l'
     }
 })
-export class TooltipArrowExample {}
+export class TooltipArrowExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+}

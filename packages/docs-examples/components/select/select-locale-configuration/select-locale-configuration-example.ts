@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Select locale configuration
@@ -10,8 +12,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [KbqFormFieldModule, KbqSelectModule],
     template: `
         <kbq-form-field>
-            <kbq-label>Default strings</kbq-label>
-            <kbq-select multiple selectAll placeholder="Placeholder" [value]="selected">
+            <kbq-label>{{ t().defaultStrings }}</kbq-label>
+            <kbq-select multiple selectAll [placeholder]="t().placeholder" [value]="selected">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
@@ -19,13 +21,13 @@ import { KbqSelectModule } from '@koobiq/components/select';
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-label>Overridden for this instance only</kbq-label>
+            <kbq-label>{{ t().overriddenInstance }}</kbq-label>
             <!-- Keyed by locale section, so one binding also reaches the accessible name of the cleaner
                  projected into the select. Every string it does not mention keeps following the locale. -->
             <kbq-select
                 multiple
                 selectAll
-                placeholder="Placeholder"
+                [placeholder]="t().placeholder"
                 [value]="selected"
                 [localeOverrides]="{
                     select: { selectAll: 'Take everything' },
@@ -54,6 +56,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectLocaleConfigurationExample {
-    readonly options = Array.from({ length: 4 }).map((_, i) => `Option ${i + 1}`);
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    readonly options = Array.from({ length: 4 }, (_, i) => 'Option #' + (i + 1));
     readonly selected = [this.options[0]];
 }

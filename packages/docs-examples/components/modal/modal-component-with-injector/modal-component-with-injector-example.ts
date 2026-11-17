@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, Injectable, Injector } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 @Injectable()
 export class ComponentLevelService {
@@ -16,19 +18,21 @@ export class ComponentLevelService {
         KbqButtonModule
     ],
     template: `
-        <kbq-modal-title>title</kbq-modal-title>
-        <kbq-modal-body>subtitle</kbq-modal-body>
+        <kbq-modal-title>{{ t().title }}</kbq-modal-title>
+        <kbq-modal-body>{{ t().subtitle }}</kbq-modal-body>
 
         <div kbq-modal-footer>
             <button kbq-button [color]="'contrast'" (click)="customService.action()">
                 Call method from injected service
             </button>
-            <button kbq-button autofocus (click)="destroyModal('close')">Close</button>
+            <button kbq-button autofocus (click)="destroyModal('close')">{{ t().close }}</button>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomModalComponent {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly modalRef = inject(KbqModalRef);
     protected readonly customService = inject(ComponentLevelService);
 
@@ -44,12 +48,14 @@ export class CustomModalComponent {
     selector: 'modal-component-with-injector-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="openModal()">Open Modal</button>
+        <button kbq-button (click)="openModal()">{{ t().openModal }}</button>
     `,
     providers: [ComponentLevelService],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalComponentWithInjectorExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly modalService = inject(KbqModalService);
     private readonly injector = inject(Injector);
 

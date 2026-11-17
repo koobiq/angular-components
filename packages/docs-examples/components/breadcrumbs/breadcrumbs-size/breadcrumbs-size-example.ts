@@ -1,9 +1,11 @@
 import { TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Breadcrumbs sizes
@@ -24,7 +26,7 @@ import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
                 <kbq-dt class="kbq-text-normal">{{ size | titlecase }}</kbq-dt>
                 <kbq-dd>
                     <nav kbq-breadcrumbs [size]="size">
-                        @for (breadcrumb of breadcrumbs; track breadcrumb; let last = $last) {
+                        @for (breadcrumb of breadcrumbs(); track breadcrumb; let last = $last) {
                             <kbq-breadcrumb-item
                                 [routerLink]="breadcrumb.url"
                                 [queryParams]="{ queryParams: 'queryParams' }"
@@ -47,12 +49,14 @@ import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsSizeExample {
-    breadcrumbs = [
-        { label: 'Information Security', url: '/information-security' },
-        { label: 'Access Control', url: '/information-security/access-control' },
-        { label: 'Authorization', url: '/information-security/access-control/authorization' },
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    readonly breadcrumbs = computed(() => [
+        { label: this.t().informationSecurity, url: '/information-security' },
+        { label: this.t().accessControl, url: '/information-security/access-control' },
+        { label: this.t().authorization, url: '/information-security/access-control/authorization' },
         { label: 'RBAC', url: '/information-security/access-control/authorization/rbac' },
-        { label: 'Roles', url: '/information-security/access-control/authorization/rbac/roles' }
-    ];
+        { label: this.t().roles, url: '/information-security/access-control/authorization/rbac/roles' }
+    ]);
     sizes: KbqDefaultSizes[] = ['compact', 'normal', 'big'];
 }

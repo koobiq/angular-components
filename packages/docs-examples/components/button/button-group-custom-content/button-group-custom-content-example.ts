@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Button group custom content
@@ -16,19 +18,19 @@ import { KbqIcon } from '@koobiq/components/icon';
         <div kbq-button-group>
             <button kbq-button>
                 <i kbqButtonPrefix kbq-icon="kbq-diamond_16"></i>
-                {{ data[0] }}
+                {{ data()[0] }}
             </button>
 
             <button kbq-button class="kbq-dropdown-trigger">
-                {{ data[1] }}
+                {{ data()[1] }}
                 <i kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
 
             <button kbq-button>
-                {{ data[2] }}
+                {{ data()[2] }}
             </button>
 
-            <button kbq-button aria-label="More">
+            <button kbq-button [attr.aria-label]="t().more">
                 <i kbq-icon="kbq-ellipsis-vertical_16"></i>
             </button>
         </div>
@@ -39,11 +41,9 @@ import { KbqIcon } from '@koobiq/components/icon';
     }
 })
 export class ButtonGroupCustomContentExample {
-    protected readonly data = [
-        'Archive',
-        'Report',
-        'Snooze'
-    ] as const;
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    protected readonly data = computed(() => [this.t().archive, this.t().report, this.t().snooze]);
 
     protected readonly color = KbqComponentColors.ContrastFade;
     protected readonly style = KbqButtonStyles.Filled;

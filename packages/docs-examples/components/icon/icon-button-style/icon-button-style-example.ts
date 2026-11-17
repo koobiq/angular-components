@@ -2,6 +2,8 @@ import { TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Icon-button style
@@ -16,7 +18,12 @@ import { KbqIconButton } from '@koobiq/components/icon';
                     {{ color | titlecase }}
                 </div>
 
-                <i kbq-icon-button="kbq-magnifying-glass_16" size="compact" aria-label="Search" [color]="color"></i>
+                <i
+                    kbq-icon-button="kbq-magnifying-glass_16"
+                    size="compact"
+                    [attr.aria-label]="t().search"
+                    [color]="color"
+                ></i>
             </div>
         }
     `,
@@ -44,6 +51,8 @@ import { KbqIconButton } from '@koobiq/components/icon';
     }
 })
 export class IconButtonStyleExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     colors = [
         KbqComponentColors.Theme,
         KbqComponentColors.Contrast,

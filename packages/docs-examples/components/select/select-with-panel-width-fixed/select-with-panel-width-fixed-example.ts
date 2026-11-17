@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Select with panelWidth fixed
@@ -11,7 +13,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     ],
     template: `
         <kbq-form-field>
-            <kbq-select placeholder="Placeholder" [panelWidth]="400" [(value)]="value">
+            <kbq-select [placeholder]="t().placeholder" [panelWidth]="400" [(value)]="value">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
@@ -29,6 +31,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     }
 })
 export class SelectWithPanelWidthFixedExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly options = [
         'Active Scanning',
         'Business Intelligence Gathering',

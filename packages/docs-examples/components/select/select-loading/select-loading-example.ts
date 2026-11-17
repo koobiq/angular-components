@@ -12,8 +12,10 @@ import {
     KbqSelectModule,
     minimumTimeToDisplayLoading
 } from '@koobiq/components/select';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { BehaviorSubject, catchError, Observable, of, race, switchMap, throwError, timer } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { TRANSLATIONS } from './l10n';
 
 type Option = {
     id: number;
@@ -21,9 +23,11 @@ type Option = {
 };
 
 export class OptionsApiService {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private delay: number = 100;
 
-    private data = Array.from({ length: 10 }).map((_, i) => ({ id: i, label: `Option #${i}` }));
+    private readonly data = Array.from({ length: 10 }, (_, i) => ({ id: i, label: 'Option #' + i }));
 
     setDelay(delay: number) {
         this.delay = delay;
@@ -43,6 +47,8 @@ export class OptionsApiService {
 }
 
 export class SelectFacade {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly api = inject(OptionsApiService);
     private readonly search$ = new BehaviorSubject<string | null>(null);
 
@@ -145,12 +151,12 @@ export class SelectFacade {
                                 <kbq-select-loading />
                             }
                             @case ('empty') {
-                                <div kbq-select-search-empty-result>Ничего не найдено</div>
+                                <div kbq-select-search-empty-result>{{ t().nothingFound }}</div>
                             }
                             @case ('error') {
                                 <!--{{ state.error.message }}-->
                                 <kbq-select-error>
-                                    <span kbq-select-error-text>Не удалось показать записи</span>
+                                    <span kbq-select-error-text>{{ t().loadFailedRecords }}</span>
                                     <button
                                         kbq-button
                                         [kbqStyle]="'transparent'"
@@ -158,7 +164,7 @@ export class SelectFacade {
                                         (click)="reloadOptions()"
                                     >
                                         <i kbq-icon="kbq-arrow-rotate-left_16"></i>
-                                        Повторить
+                                        {{ t().tryAgain }}
                                     </button>
                                 </kbq-select-error>
                             }
@@ -189,9 +195,11 @@ export class SelectFacade {
     }
 })
 export class SelectLoadingExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly facade = inject(SelectFacade);
 
-    protected selectedOption: Option = { id: 0, label: `Option #0` };
+    protected selectedOption: Option = { id: 0, label: 'Option #0' };
 
     protected readonly compareWith = (a: Option | null, b: Option | null) => a?.id === b?.id;
     protected readonly virtualOptionFactory = (value: Option) => new KbqVirtualOption(value, false, value.label);

@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqLink } from '@koobiq/components/link';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Link pseudo
@@ -8,7 +10,7 @@ import { KbqLink } from '@koobiq/components/link';
     selector: 'link-pseudo-example',
     imports: [KbqLink],
     template: `
-        <span kbqLink>Scan report</span>
+        <span kbqLink>{{ t().scanReport }}</span>
     `,
     styles: `
         :host {
@@ -20,4 +22,6 @@ import { KbqLink } from '@koobiq/components/link';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LinkPseudoExample {}
+export class LinkPseudoExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+}

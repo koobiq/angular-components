@@ -6,6 +6,8 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSkeleton } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Skeleton directive
@@ -22,11 +24,11 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         KbqIconModule
     ],
     template: `
-        <kbq-toggle [(ngModel)]="loading">Loading</kbq-toggle>
+        <kbq-toggle [(ngModel)]="loading">{{ t().loading }}</kbq-toggle>
 
         <div class="example-heading">
             <div class="kbq-title">
-                <span [kbqSkeleton]="loading()">Denial-of-service attack</span>
+                <span [kbqSkeleton]="loading()">{{ t().dosTitle }}</span>
             </div>
             <kbq-badge [badgeColor]="badgeColors.FadeError" [compact]="true" [kbqSkeleton]="loading()">
                 Critical
@@ -50,11 +52,11 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             </span>
         </div>
         <div class="example-actions">
-            <button kbq-button color="contrast" [kbqSkeleton]="loading()">Read more</button>
+            <button kbq-button color="contrast" [kbqSkeleton]="loading()">{{ t().readMore }}</button>
             <div kbq-button-group>
-                <button kbq-button [kbqSkeleton]="loading()">Block</button>
-                <button kbq-button [kbqSkeleton]="loading()">Ignore</button>
-                <button kbq-button [kbqSkeleton]="loading()">Report</button>
+                <button kbq-button [kbqSkeleton]="loading()">{{ t().block }}</button>
+                <button kbq-button [kbqSkeleton]="loading()">{{ t().ignore }}</button>
+                <button kbq-button [kbqSkeleton]="loading()">{{ t().report }}</button>
             </div>
         </div>
     `,
@@ -86,7 +88,10 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SkeletonDirectiveExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly loading = model(true);
+
     protected readonly badgeColors = KbqBadgeColors;
     protected readonly alertColors = KbqAlertColors;
     protected readonly alertStyles = KbqAlertStyles;

@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit without label
@@ -37,6 +39,10 @@ import { KbqInputModule } from '@koobiq/components/input';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditWithoutLabelExample {
-    protected readonly placeholder = 'Country';
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    protected get placeholder(): string {
+        return this.t().country;
+    }
     protected readonly control = new FormControl('Spain');
 }

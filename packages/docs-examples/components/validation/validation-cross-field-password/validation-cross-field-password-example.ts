@@ -19,6 +19,8 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * Payload every cross-field validator below publishes, so that a single `ErrorStateMatcher` can tell which
@@ -99,48 +101,48 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher(
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
                     <kbq-form-field>
-                        <kbq-label>Current password</kbq-label>
+                        <kbq-label>{{ t().currentPassword }}</kbq-label>
                         <input formControlName="currentPassword" kbqInputPassword />
                         <kbq-password-toggle />
 
                         @if (form.controls.currentPassword.hasError('required')) {
-                            <kbq-error>Required</kbq-error>
+                            <kbq-error>{{ t().required }}</kbq-error>
                         }
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
                     <kbq-form-field>
-                        <kbq-label>New password</kbq-label>
+                        <kbq-label>{{ t().newPassword }}</kbq-label>
                         <input formControlName="newPassword" kbqInputPassword />
                         <kbq-password-toggle />
 
                         @if (form.controls.newPassword.hasError('required')) {
-                            <kbq-error>Required</kbq-error>
+                            <kbq-error>{{ t().required }}</kbq-error>
                         } @else if (form.controls.newPassword.hasError('minLength')) {
-                            <kbq-error>Minimum 8 characters</kbq-error>
+                            <kbq-error>{{ t().min8 }}</kbq-error>
                         } @else if (form.hasError('distinct')) {
-                            <kbq-error>The new password must differ from the current one</kbq-error>
+                            <kbq-error>{{ t().passwordMustDiffer }}</kbq-error>
                         }
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
                     <kbq-form-field>
-                        <kbq-label>Confirm new password</kbq-label>
+                        <kbq-label>{{ t().confirmNewPassword }}</kbq-label>
                         <input formControlName="confirmPassword" kbqInputPassword />
                         <kbq-password-toggle />
 
                         @if (form.controls.confirmPassword.hasError('required')) {
-                            <kbq-error>Required</kbq-error>
+                            <kbq-error>{{ t().required }}</kbq-error>
                         } @else if (form.hasError('matchAll')) {
-                            <kbq-error>Passwords do not match</kbq-error>
+                            <kbq-error>{{ t().passwordsDoNotMatch }}</kbq-error>
                         }
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row layout-align-start-start">
-                    <button color="contrast" kbq-button type="submit">Change password</button>
+                    <button color="contrast" kbq-button type="submit">{{ t().changePassword }}</button>
                 </div>
             </div>
         </form>
@@ -159,6 +161,8 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher(
     }
 })
 export class ValidationCrossFieldPasswordExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly form = new FormGroup(
         {
             currentPassword: new FormControl('', Validators.required),

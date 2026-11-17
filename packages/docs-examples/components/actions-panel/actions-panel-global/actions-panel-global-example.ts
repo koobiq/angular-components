@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
 import { KbqActionsPanel, KbqActionsPanelRef } from '@koobiq/components/actions-panel';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Actions panel opened globally
@@ -9,15 +11,15 @@ import { KbqButtonModule } from '@koobiq/components/button';
     selector: 'actions-panel-global-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="open()">open</button>
+        <button kbq-button (click)="open()">{{ t().open }}</button>
 
         <ng-template>
-            <button color="contrast" kbq-button (click)="action('Action1')">Action 1</button>
+            <button color="contrast" kbq-button (click)="action('Action1')">{{ t().action1 }}</button>
             <button color="contrast" kbq-button class="layout-margin-left-xxs" (click)="action('Action2')">
-                Action 2
+                {{ t().action2 }}
             </button>
             <button color="contrast" kbq-button class="layout-margin-left-xxs" (click)="action('Action3')">
-                Action 3
+                {{ t().action3 }}
             </button>
         </ng-template>
     `,
@@ -33,6 +35,8 @@ import { KbqButtonModule } from '@koobiq/components/button';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActionsPanelGlobalExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     private readonly templateRef = viewChild.required(TemplateRef);
     private actionsPanelRef?: KbqActionsPanelRef | null;

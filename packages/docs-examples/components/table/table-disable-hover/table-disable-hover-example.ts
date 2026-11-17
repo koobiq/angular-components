@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqTableModule } from '@koobiq/components/table';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Table without hover
@@ -11,9 +13,9 @@ import { KbqTableModule } from '@koobiq/components/table';
         <table kbq-table disableHover>
             <thead>
                 <tr>
-                    <th>File</th>
-                    <th>Owner</th>
-                    <th>Modified</th>
+                    <th>{{ t().file }}</th>
+                    <th>{{ t().owner }}</th>
+                    <th>{{ t().modified }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -30,6 +32,8 @@ import { KbqTableModule } from '@koobiq/components/table';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableDisableHoverExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly rows = [
         { name: 'document.txt', owner: 'User 1', modified: '27 May 2024' },
         { name: 'report-2023.pdf', owner: 'User 2', modified: '1 Dec 2023' },

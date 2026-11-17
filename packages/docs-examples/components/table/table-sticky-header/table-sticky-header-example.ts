@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KbqRelativeShortDatePipe } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Table with sticky header
@@ -15,13 +17,13 @@ import { DateTime } from 'luxon';
             <table kbq-table stickyHeader style="width: 100%">
                 <thead>
                     <tr>
-                        <th>File</th>
-                        <th>Owner</th>
-                        <th>Modified</th>
+                        <th>{{ t().file }}</th>
+                        <th>{{ t().owner }}</th>
+                        <th>{{ t().modified }}</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for (row of rows; track row.name) {
+                    @for (row of rows(); track row.name) {
                         <tr>
                             <td>{{ row.name }}</td>
                             <td>{{ row.owner }}</td>
@@ -38,10 +40,12 @@ import { DateTime } from 'luxon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableStickyHeaderExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly adapter = inject<DateAdapter<DateTime>>(DateAdapter);
     readonly value = this.adapter.today();
 
-    protected readonly rows = [
+    protected readonly rows = computed(() => [
         { name: 'document.txt', owner: 'User 1', modified: this.value },
         { name: 'report-2023.pdf', owner: 'User 2', modified: this.value },
         { name: 'notes.doc', owner: 'User 3', modified: this.value },
@@ -52,5 +56,5 @@ export class TableStickyHeaderExample {
         { name: 'contract.pdf', owner: 'User 8', modified: this.value },
         { name: 'summary.doc', owner: 'User 9', modified: this.value },
         { name: 'backup.zip', owner: 'User 10', modified: this.value }
-    ];
+    ]);
 }

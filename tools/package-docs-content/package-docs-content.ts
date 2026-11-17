@@ -3,16 +3,17 @@ import { dirname } from 'path';
 
 if (require.main === module) {
     // copy Stackblitz Examples
-    const execPath = 'packages/docs-examples/components/';
-    const outDir = 'dist/docs-content/examples-source/components';
+    const outDir = 'dist/docs-content/examples-source';
 
     mkdirSync(dirname(outDir), { recursive: true });
 
-    // eslint-disable-next-line @angular-eslint/no-experimental
-    cpSync(execPath, outDir, {
-        recursive: true,
-        // Copy the example sources (.ts/.html/.css) for the live example viewer; skip json (e.g.
-        // ng-package.json). The filter must return true for directories so cpSync recurses.
-        filter: (path) => !path.endsWith('.json')
-    });
+    for (const dir of ['components', 'i18n']) {
+        // eslint-disable-next-line @angular-eslint/no-experimental
+        cpSync(`packages/docs-examples/${dir}/`, `${outDir}/${dir}`, {
+            recursive: true,
+            // Copy the example sources (.ts/.html/.css) for the live example viewer; skip json (e.g.
+            // ng-package.json). The filter must return true for directories so cpSync recurses.
+            filter: (path) => !path.endsWith('.json')
+        });
+    }
 }

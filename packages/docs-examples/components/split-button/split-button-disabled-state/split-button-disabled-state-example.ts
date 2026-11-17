@@ -3,6 +3,8 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title split-button-disabled-state
@@ -17,39 +19,44 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
     ],
     template: `
         <div>
-            <div class="example-split-button-styles__header">Primary Disabled</div>
+            <div class="example-split-button-styles__header">{{ t().primaryDisabled }}</div>
             <kbq-split-button>
                 <button kbq-button [disabled]="true">
                     <i kbq-icon="kbq-plus_16"></i>
-                    Split Button
+                    {{ t().splitButton }}
                 </button>
-                <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
+                <button kbq-button [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
             </kbq-split-button>
         </div>
 
         <div>
-            <div class="example-split-button-styles__header">Secondary Disabled</div>
+            <div class="example-split-button-styles__header">{{ t().secondaryDisabled }}</div>
             <kbq-split-button>
                 <button kbq-button>
                     <i kbq-icon="kbq-plus_16"></i>
-                    Split Button
+                    {{ t().splitButton }}
                 </button>
-                <button kbq-button aria-label="More options" [disabled]="true" [kbqDropdownTriggerFor]="dropdown">
+                <button
+                    kbq-button
+                    [attr.aria-label]="t().moreOptions"
+                    [disabled]="true"
+                    [kbqDropdownTriggerFor]="dropdown"
+                >
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
             </kbq-split-button>
         </div>
 
         <div>
-            <div class="example-split-button-styles__header">Сompletely Disabled</div>
+            <div class="example-split-button-styles__header">{{ t().completelyDisabled }}</div>
             <kbq-split-button [disabled]="true">
                 <button kbq-button>
                     <i kbq-icon="kbq-plus_16"></i>
-                    Split Button
+                    {{ t().splitButton }}
                 </button>
-                <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
+                <button kbq-button [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
             </kbq-split-button>
@@ -79,4 +86,6 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SplitButtonDisabledStateExample {}
+export class SplitButtonDisabledStateExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+}

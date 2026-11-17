@@ -4,6 +4,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title List with virtual-scroll
@@ -12,9 +14,9 @@ import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
     selector: 'list-virtual-scroll-example',
     imports: [KbqListModule, FormsModule, ScrollingModule, JsonPipe, KbqScrollbarViewport],
     template: `
-        <div>Selected: {{ selected | json }}</div>
+        <div>{{ t().selected }} {{ selected | json }}</div>
         <br />
-        <kbq-list-selection style="height: 200px" multiple aria-label="Items" [(ngModel)]="selected">
+        <kbq-list-selection style="height: 200px" multiple [attr.aria-label]="t().items" [(ngModel)]="selected">
             <cdk-virtual-scroll-viewport
                 kbqScrollbarViewport
                 style="height: 100%"
@@ -31,9 +33,11 @@ import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListVirtualScrollExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly options = Array.from({ length: 10000 }).map((_, i) => ({
         id: i,
-        label: `Option #${i}`
+        label: 'Option #' + i
     }));
 
     selected = [];

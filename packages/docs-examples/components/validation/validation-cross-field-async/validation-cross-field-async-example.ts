@@ -15,7 +15,9 @@ import {
     ShowOnCrossFieldErrorStateMatcher
 } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { map, Observable, of, timer } from 'rxjs';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * Payload the cross-field validator publishes, so that the `ErrorStateMatcher` can tell which controls a
@@ -70,7 +72,7 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher((_key, va
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
                     <kbq-form-field>
-                        <kbq-label>Current password</kbq-label>
+                        <kbq-label>{{ t().currentPassword }}</kbq-label>
                         <input formControlName="currentPassword" kbqInputPassword />
                         <kbq-password-toggle />
                     </kbq-form-field>
@@ -78,7 +80,7 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher((_key, va
 
                 <div class="kbq-form__row">
                     <kbq-form-field>
-                        <kbq-label>New password</kbq-label>
+                        <kbq-label>{{ t().newPassword }}</kbq-label>
                         <input formControlName="newPassword" kbqInputPassword />
                         <kbq-password-toggle />
 
@@ -88,11 +90,11 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher((_key, va
                             change when the error lands on the group, so nothing else would mark the view dirty.
                         -->
                         @if (pending()) {
-                            <kbq-hint>Checking with the server&hellip;</kbq-hint>
+                            <kbq-hint>{{ t().checkingWithServer }}</kbq-hint>
                         }
 
                         @if (form.hasError('tooSimilar')) {
-                            <kbq-error>The new password is too similar to the current one</kbq-error>
+                            <kbq-error>{{ t().passwordTooSimilar }}</kbq-error>
                         }
                     </kbq-form-field>
                 </div>
@@ -113,6 +115,8 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher((_key, va
     }
 })
 export class ValidationCrossFieldAsyncExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly form = new FormGroup(
         {
             currentPassword: new FormControl('', Validators.required),

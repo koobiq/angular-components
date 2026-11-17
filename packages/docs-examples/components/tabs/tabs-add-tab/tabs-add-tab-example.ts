@@ -1,8 +1,19 @@
-import { afterNextRender, ChangeDetectionStrategy, Component, inject, Injector, viewChildren } from '@angular/core';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    effect,
+    inject,
+    Injector,
+    viewChildren
+} from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabLink, KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Tabs add tab
@@ -51,14 +62,40 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabsAddTabExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly injector = inject(Injector);
     private readonly tabLinks = viewChildren(KbqTabLink);
 
-    protected tabs = ['BruteForce', 'Complex Attack', 'DDoS', 'HIPS alert'];
-    protected activeTab = this.tabs[0];
+    private readonly defaultTabs = computed(() => [
+        this.t().bruteforce,
+        this.t().complexAttack,
+        this.t().ddos,
+        this.t().hipsAlert
+    ]);
+
+    protected tabs: string[] = [];
+    protected activeTab: string = '';
+
+    constructor() {
+        effect(() => {
+            // Rebuild the localized tabs on a locale switch, keeping the tabs added at runtime.
+            const base = this.defaultTabs();
+            const added = this.tabs.filter((tab) => !this.baseTabs.includes(tab));
+
+            this.baseTabs = base;
+            this.tabs = [...base, ...added];
+
+            if (!this.tabs.includes(this.activeTab)) {
+                this.activeTab = this.tabs[0];
+            }
+        });
+    }
+
+    private baseTabs: string[] = [];
 
     protected addTab(): void {
-        const newTab = `Tab ${this.tabs.length + 1}`;
+        const newTab = 'Tab ' + (this.tabs.length + 1);
 
         this.tabs = [...this.tabs, newTab];
         this.activeTab = newTab;
