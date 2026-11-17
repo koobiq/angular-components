@@ -95,6 +95,16 @@
 
                 background: transparent;
 
+                // Hover included, not left to the base rule: the `.kbq-selected` group above paints the
+                // single-select tint on hover at (0,7,0), one class over this block's base, and would
+                // otherwise win it back. Transparent, like an unselected row's hover in this panel.
+                &:hover:not(.kbq-focused),
+                &.kbq-hovered:not(.kbq-focused) {
+                    --kbq-option-background: transparent;
+
+                    background: transparent;
+                }
+
                 &.kbq-focused {
                     --kbq-option-background: var(--kbq-tree-states-hover-container-background);
 
