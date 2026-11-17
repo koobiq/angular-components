@@ -1,6 +1,35 @@
-import { booleanAttribute, ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@angular/core';
+import {
+    AfterContentInit,
+    booleanAttribute,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    contentChildren,
+    Directive,
+    input,
+    isDevMode,
+    ViewEncapsulation
+} from '@angular/core';
+
+// Imported for the query locator below, although `./option` imports this file back: that cycle only
+// stays loadable because `index.ts` imports `./optgroup` before `./option`, so `KbqOption` is defined
+// by the time its decorator argument is evaluated here. Keep that order.
+import { KbqOption } from './option';
 
 let uniqueOptgroupIdCounter = 0;
+
+/**
+ * Marker for custom content of the group heading: the element it sits on is projected into the label
+ * of the enclosing `kbq-optgroup` in place of its `label` input. A `kbq-badge` counter, icons or any
+ * other content can go there.
+ */
+@Directive({
+    selector: 'kbq-optgroup-label, [kbq-optgroup-label]',
+    host: {
+        class: 'kbq-optgroup-label-content'
+    }
+})
+export class KbqOptgroupLabel {}
 
 /**
  * Component that is used to group instances of `kbq-option`.
@@ -20,7 +49,8 @@ let uniqueOptgroupIdCounter = 0;
     },
     exportAs: 'kbqOptgroup'
 })
-export class KbqOptgroup {
+export class KbqOptgroup implements AfterContentInit {
+    /** Plain-text heading of the group; content projected with `kbq-optgroup-label` takes precedence. */
     readonly label = input<string>(undefined!);
 
     /** Whether the group, and every option in it, is disabled. */
@@ -28,4 +58,29 @@ export class KbqOptgroup {
 
     /** Unique id for the underlying label. */
     labelId: string = `kbq-optgroup-label-${uniqueOptgroupIdCounter++}`;
+
+    private readonly projectedLabels = contentChildren(KbqOptgroupLabel);
+
+    private readonly projectedOptions = contentChildren(KbqOption, { descendants: true });
+
+    private readonly selectedCountState = computed(() => this.projectedOptions().filter((o) => o.selected).length);
+
+    /** @docs-private */
+    protected readonly hasProjectedLabel = computed(() => this.projectedLabels().length > 0);
+
+    /** The number of options in this group that are currently selected. */
+    get selectedCount(): number {
+        return this.selectedCountState();
+    }
+
+    ngAfterContentInit(): void {
+        if (!isDevMode() || this.warnedAboutExtraLabels || this.projectedLabels().length <= 1) return;
+
+        this.warnedAboutExtraLabels = true;
+
+        // eslint-disable-next-line no-console
+        console.warn('KbqOptgroup: at most one kbq-optgroup-label is supported; every extra one also renders.');
+    }
+
+    private warnedAboutExtraLabels = false;
 }

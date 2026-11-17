@@ -13,5 +13,15 @@
     cursor: default;
 }
 
+// Custom heading content: the label box stays the flex row of the heading, this element keeps a long
+// label from stretching a narrow panel. Wrap the truncating text in `.kbq-truncate-line` yourself.
+.kbq-optgroup-label-content {
+    display: flex;
+    align-items: center;
+
+    gap: var(--kbq-optgroup-label-gap);
+    min-width: 0;
+}
+
 @include optgroup-theme.kbq-optgroup-theme();
 @include optgroup-theme.kbq-optgroup-typography();

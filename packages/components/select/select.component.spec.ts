@@ -1199,6 +1199,49 @@ class SelectWithGroupsAndNgContainer {
 }
 
 @Component({
+    selector: 'select-with-projected-group-label',
+    imports: [
+        KbqSelectModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-select multiple placeholder="Pokemon" [formControl]="control">
+                @for (group of pokemonTypes; track group.name) {
+                    <kbq-optgroup #groupRef="kbqOptgroup" [label]="group.name">
+                        <div kbq-optgroup-label>
+                            {{ group.name }}
+                            <span class="count">{{ groupRef.selectedCount }}</span>
+                        </div>
+                        @for (pokemon of group.pokemon; track pokemon.value) {
+                            <kbq-option [value]="pokemon.value">{{ pokemon.viewValue }}</kbq-option>
+                        }
+                    </kbq-optgroup>
+                }
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectWithProjectedGroupLabel {
+    control = new UntypedFormControl();
+    pokemonTypes = [
+        {
+            name: 'Grass',
+            pokemon: [
+                { value: 'bulbasaur-0', viewValue: 'Bulbasaur' },
+                { value: 'oddish-1', viewValue: 'Oddish' }
+            ]
+        },
+        {
+            name: 'Water',
+            pokemon: [{ value: 'squirtle-3', viewValue: 'Squirtle' }]
+        }
+    ];
+
+    readonly select = viewChild.required(KbqSelect);
+}
+
+@Component({
     imports: [
         KbqSelectModule,
         FormsModule
@@ -2771,6 +2814,7 @@ describe('KbqSelect', () => {
                 MultiSelectWithClearPredicate,
                 SelectWithGroups,
                 SelectWithGroupsAndNgContainer,
+                SelectWithProjectedGroupLabel,
                 SelectWithFormFieldLabel,
                 SelectWithChangeEvent
             ]);
@@ -3886,6 +3930,54 @@ describe('KbqSelect', () => {
                 expect(groupFixture.componentInstance.select().panelOpen).toBe(true);
                 expect(options[0].classList).not.toContain('kbq-selected');
                 expect(groupFixture.componentInstance.select().selected).toBeUndefined();
+            });
+
+            it('should replace the label input of a group with the projected kbq-optgroup-label', async () => {
+                fixture.destroy();
+
+                const groupFixture = TestBed.createComponent(SelectWithProjectedGroupLabel);
+
+                groupFixture.detectChanges();
+                groupFixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement.click();
+                groupFixture.detectChanges();
+
+                const group = overlayContainerElement.querySelector('kbq-optgroup')!;
+                const label = group.querySelector('.kbq-optgroup-label') as HTMLElement;
+                const content = group.querySelector('.kbq-optgroup-label-content') as HTMLElement;
+
+                expect(content.closest('.kbq-optgroup-label')).toBe(label);
+                expect(group.getAttribute('aria-labelledby')).toBe(label.id);
+                // The `label` input the fixture also sets gives way to the projected content.
+                expect(label.textContent!.replace(/\s+/g, ' ').trim()).toBe('Grass 0');
+            });
+
+            it('should update the projected label counter as options of the group are selected', async () => {
+                fixture.destroy();
+
+                const groupFixture = TestBed.createComponent(SelectWithProjectedGroupLabel);
+
+                groupFixture.detectChanges();
+                groupFixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement.click();
+                groupFixture.detectChanges();
+
+                const group = overlayContainerElement.querySelector('kbq-optgroup')!;
+                const counter = () => (group.querySelector('.count') as HTMLElement).textContent!.trim();
+                const options: NodeListOf<HTMLElement> = group.querySelectorAll('kbq-option');
+
+                expect(counter()).toBe('0');
+
+                options[0].click();
+                groupFixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(counter()).toBe('1');
+
+                options[1].click();
+                groupFixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(counter()).toBe('2');
+                expect(groupFixture.componentInstance.control.value).toEqual(['bulbasaur-0', 'oddish-1']);
             });
 
             it('should not throw if triggerValue accessed with no selected value', async () => {

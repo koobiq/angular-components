@@ -55,3 +55,11 @@ kbq-select-matcher allows you to replace the entire contents of kbq-select, incl
 Override the scroll strategy via `KBQ_SELECT_SCROLL_STRATEGY`. `KbqAutoHideScrollStrategy` (from `@koobiq/components/core`) stops repositioning once the trigger scrolls out of view and emits on `hide`, so you can close the panel yourself.
 
 <Example id="select-auto-hide-scroll-strategy" />
+
+## Custom group label
+
+Project content into the group heading with the `kbq-optgroup-label` attribute: the element it marks replaces the `label` input, so a counter, icons or any other content can join the title. Import `KbqOptgroupLabel` (or the whole `KbqOptionModule`) for the attribute to take effect. The number of options in the group that are selected comes from the group's `selectedCount`, reached through a template reference (`exportAs` is `kbqOptgroup`).
+
+At most one `kbq-optgroup-label` per group is supported; extra ones warn in development mode. `selectedCount` counts the options rendered in the group — under an active search it follows the filtered list, like the "select all" row. Wrap the title text in `.kbq-truncate-line` so a long label truncates instead of stretching a narrow panel.
+
+<Example id="select-groups-label" />

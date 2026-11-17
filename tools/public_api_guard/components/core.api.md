@@ -3642,15 +3642,26 @@ export interface KbqNumericPipe {
 }
 
 // @public
-export class KbqOptgroup {
+export class KbqOptgroup implements AfterContentInit {
     readonly disabled: i0.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
-    // (undocumented)
+    protected readonly hasProjectedLabel: i0.Signal<boolean>;
     readonly label: i0.InputSignal<string>;
     labelId: string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptgroup, "kbq-optgroup", ["kbqOptgroup"], { "label": { "alias": "label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, never, ["kbq-option, kbq-list-option, kbq-timezone-option, ng-container"], true, never>;
+    ngAfterContentInit(): void;
+    get selectedCount(): number;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptgroup, "kbq-optgroup", ["kbqOptgroup"], { "label": { "alias": "label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, ["projectedLabels", "projectedOptions"], ["kbq-optgroup-label, [kbq-optgroup-label]", "kbq-option, kbq-list-option, kbq-timezone-option, ng-container"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptgroup, never>;
+}
+
+// @public
+export class KbqOptgroupLabel {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOptgroupLabel, "kbq-optgroup-label, [kbq-optgroup-label]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptgroupLabel, never>;
 }
 
 // @public
@@ -3779,7 +3790,7 @@ export class KbqOptionModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqOptionModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqOptionModule, never, [typeof KbqPseudoCheckbox, typeof KbqOption, typeof KbqOptgroup, typeof KbqOptionActionComponent], [typeof KbqOption, typeof KbqOptgroup, typeof KbqOptionActionComponent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqOptionModule, never, [typeof KbqPseudoCheckbox, typeof KbqOption, typeof KbqOptgroup, typeof KbqOptgroupLabel, typeof KbqOptionActionComponent], [typeof KbqOption, typeof KbqOptgroup, typeof KbqOptgroupLabel, typeof KbqOptionActionComponent]>;
 }
 
 // @public

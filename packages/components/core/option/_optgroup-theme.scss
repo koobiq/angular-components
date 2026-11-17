@@ -3,17 +3,12 @@
 @mixin kbq-optgroup-theme() {
     .kbq-optgroup-label {
         --kbq-optgroup-label-color: var(--kbq-foreground-contrast-secondary);
+        --kbq-optgroup-label-gap: var(--kbq-size-xs);
 
         color: var(--kbq-optgroup-label-color);
     }
 
     .kbq-disabled .kbq-optgroup-label {
         --kbq-optgroup-label-color: var(--kbq-states-foreground-disabled);
-    }
-}
-
-@mixin kbq-optgroup-typography() {
-    .kbq-optgroup-label {
-        @include tokens.kbq-typography-level-to-styles-css-variables(typography, caps-compact-strong);
     }
 }
