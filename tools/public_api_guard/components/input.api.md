@@ -204,7 +204,7 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanU
 // @public
 export class KbqMaxValidator implements Validator, OnChanges {
     protected readonly coercedMax: _angular_core.Signal<number | null>;
-    readonly max: _angular_core.InputSignalWithTransform<number, object | NumberInput>;
+    readonly max: _angular_core.InputSignalWithTransform<number, NumberInput>;
     // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
@@ -212,7 +212,7 @@ export class KbqMaxValidator implements Validator, OnChanges {
     // (undocumented)
     validate(c: AbstractControl): ValidationErrors | null;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqMaxValidator, "[max][formControlName],[max][formControl],[max][ngModel]", never, { "max": { "alias": "max"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqMaxValidator, "input[kbqNumberInput][max][formControlName],input[kbqNumberInput][max][formControl],input[kbqNumberInput][max][ngModel]", never, { "max": { "alias": "max"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqMaxValidator, never>;
 }
@@ -220,7 +220,7 @@ export class KbqMaxValidator implements Validator, OnChanges {
 // @public
 export class KbqMinValidator implements Validator, OnChanges {
     protected readonly coercedMin: _angular_core.Signal<number | null>;
-    readonly min: _angular_core.InputSignalWithTransform<number, object | NumberInput>;
+    readonly min: _angular_core.InputSignalWithTransform<number, NumberInput>;
     // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
@@ -228,7 +228,7 @@ export class KbqMinValidator implements Validator, OnChanges {
     // (undocumented)
     validate(c: AbstractControl): ValidationErrors | null;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqMinValidator, "[min][formControlName],[min][formControl],[min][ngModel]", never, { "min": { "alias": "min"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqMinValidator, "input[kbqNumberInput][min][formControlName],input[kbqNumberInput][min][formControl],input[kbqNumberInput][min][ngModel]", never, { "min": { "alias": "min"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqMinValidator, never>;
 }

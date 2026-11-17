@@ -1,7 +1,11 @@
+import { NumberInput } from '@angular/cdk/coercion';
 import { Component, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import { DateAdapter } from '@koobiq/components/core';
+import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { DateTime } from 'luxon';
 import { KbqInputModule, KbqMaxValidator, KbqMinValidator } from './index';
 
@@ -38,8 +42,8 @@ class NumberInputWithBounds {
     readonly maxValidator = viewChild.required(KbqMaxValidator);
 
     control = new FormControl<number | null>(null);
-    min: number | undefined = 0.5;
-    max: number | undefined = 9.5;
+    min: NumberInput = 0.5;
+    max: NumberInput = 9.5;
 }
 
 @Component({
@@ -55,6 +59,24 @@ class NumberInputWithBounds {
 })
 class NumberInputWithStaticBounds {
     control = new FormControl<number | null>(null);
+}
+
+@Component({
+    imports: [
+        KbqDatepickerModule,
+        KbqInputModule,
+        ReactiveFormsModule,
+        KbqLuxonDateModule
+    ],
+    template: `
+        <input [kbqDatepicker]="datepicker" [formControl]="control" [min]="min" [max]="max" />
+        <kbq-datepicker #datepicker />
+    `
+})
+class DatepickerWithBounds {
+    control = new FormControl<DateTime | null>(DateTime.fromISO('2024-06-02'));
+    min: DateTime | string = DateTime.fromISO('2024-06-01');
+    max: DateTime | string = DateTime.fromISO('2024-08-31');
 }
 
 describe('KbqMinValidator/KbqMaxValidator', () => {
@@ -101,22 +123,6 @@ describe('KbqMinValidator/KbqMaxValidator', () => {
     });
 
     describe('numeric string bounds', () => {
-        it('should validate a string bound like a number', async () => {
-            const fixture = createComponent(NumberInputWithBounds);
-
-            // Not assignable under the `number` typing, but the string form is what a static
-            // `min="0.5"` attribute and an untyped template deliver.
-            fixture.componentInstance.min = '0.5' as unknown as number;
-            fixture.detectChanges();
-            await fixture.whenStable();
-
-            fixture.componentInstance.control.setValue(0.2);
-            fixture.detectChanges();
-            await fixture.whenStable();
-
-            expect(fixture.componentInstance.control.errors).toEqual({ min: { min: 0.5, actual: 0.2 } });
-        });
-
         it('should validate the string form of a static attribute', async () => {
             const fixture = createComponent(NumberInputWithStaticBounds);
 
@@ -139,52 +145,48 @@ describe('KbqMinValidator/KbqMaxValidator', () => {
         });
     });
 
-    describe('non-numeric object bounds', () => {
-        // A datepicker input shares its `min`/`max` bindings with these validators through the selector,
-        // so a date reaches the transform at runtime despite the `number` typing.
-        const objectWithEpochValueOf = () => ({
-            valueOf: () => 1717189200000,
-            toString: () => '2024-06-01T00:00:00.000Z'
-        });
-
-        it('should validate nothing for a bound DateTime and write no attribute', async () => {
+    describe('coercible object bounds', () => {
+        it('should preserve object coercion for an untyped template', async () => {
             const fixture = createComponent(NumberInputWithBounds);
 
-            fixture.componentInstance.min = DateTime.fromISO('2024-06-01') as unknown as number;
-            fixture.componentInstance.max = DateTime.fromISO('2024-08-31') as unknown as number;
+            fixture.componentInstance.min = {
+                valueOf: () => 5,
+                toString: () => '5'
+            } as unknown as NumberInput;
             fixture.detectChanges();
             await fixture.whenStable();
 
-            fixture.componentInstance.control.setValue(0.2);
+            fixture.componentInstance.control.setValue(4);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(fixture.componentInstance.control.errors).toEqual({ min: { min: 5, actual: 4 } });
+
+            const inputElement: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+
+            expect(inputElement.getAttribute('min')).toBe('5');
+        });
+    });
+
+    describe('datepicker bounds', () => {
+        it.each([
+            ['DateTime', DateTime.fromISO('2024-06-01'), DateTime.fromISO('2024-08-31')],
+            ['basic ISO string', '20240601', '20240831']
+        ])('should leave %s bounds to the datepicker', async (_name, min, max) => {
+            const fixture = createComponent(DatepickerWithBounds);
+
+            fixture.componentInstance.min = min;
+            fixture.componentInstance.max = max;
             fixture.detectChanges();
             await fixture.whenStable();
 
             expect(fixture.componentInstance.control.errors).toBeNull();
 
+            const adapter = TestBed.inject<DateAdapter<DateTime>>(DateAdapter);
             const inputElement: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
-            expect(inputElement.getAttribute('min')).toBeNull();
-            expect(inputElement.getAttribute('max')).toBeNull();
-        });
-
-        it('should validate nothing for any other object with a `valueOf` and write no attribute', async () => {
-            const fixture = createComponent(NumberInputWithBounds);
-
-            fixture.componentInstance.min = objectWithEpochValueOf() as unknown as number;
-            fixture.componentInstance.max = objectWithEpochValueOf() as unknown as number;
-            fixture.detectChanges();
-            await fixture.whenStable();
-
-            fixture.componentInstance.control.setValue(0.2);
-            fixture.detectChanges();
-            await fixture.whenStable();
-
-            expect(fixture.componentInstance.control.errors).toBeNull();
-
-            const inputElement: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
-
-            expect(inputElement.getAttribute('min')).toBeNull();
-            expect(inputElement.getAttribute('max')).toBeNull();
+            expect(inputElement.getAttribute('min')).toBe(adapter.toIso8601(adapter.deserialize(min)!));
+            expect(inputElement.getAttribute('max')).toBe(adapter.toIso8601(adapter.deserialize(max)!));
         });
     });
 
@@ -220,10 +222,8 @@ describe('KbqMinValidator/KbqMaxValidator', () => {
         it('should drop a non-numeric bound instead of writing it raw to the DOM', async () => {
             const fixture = createComponent(NumberInputWithBounds);
 
-            // Not assignable under the `number` typing, but reachable at runtime through a static
-            // attribute or an untyped template, same as the coercion in `createValidator` guards against.
-            fixture.componentInstance.min = '5px' as unknown as number;
-            fixture.componentInstance.max = '5px' as unknown as number;
+            fixture.componentInstance.min = '5px';
+            fixture.componentInstance.max = '5px';
             fixture.detectChanges();
             await fixture.whenStable();
 

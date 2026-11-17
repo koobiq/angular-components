@@ -5,13 +5,9 @@ import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator, ValidatorF
 /**
  * Transform for the validator bounds. `coerceNumberProperty`, not `parseInt`: the bound value may be a
  * fractional number or the string form of a static `min="0.5"` attribute, and `parseInt` would truncate
- * both to `0`. Only a `number` or a `string` is a numeric bound: a datepicker input shares its
- * `min`/`max` bindings with these validators, so a `DateTime` reaches the transform too, and its
- * `valueOf()` would coerce it to epoch milliseconds. Any other bound reads back as `NaN`, which installs
- * no validator and writes no attribute.
+ * both to `0`. A non-numeric bound becomes `NaN`, which installs no validator and writes no attribute.
  */
-const bound = (value: NumberInput | object): number =>
-    typeof value === 'number' || typeof value === 'string' ? coerceNumberProperty(value, NaN) : NaN;
+const bound = (value: NumberInput): number => coerceNumberProperty(value, NaN);
 
 export const KBQ_MIN_VALIDATOR: Provider = {
     provide: NG_VALIDATORS,
@@ -20,11 +16,12 @@ export const KBQ_MIN_VALIDATOR: Provider = {
 };
 
 /**
- * A directive which installs the `KbqMinValidator` for any `formControlName`,
- * `formControl`, or control with `ngModel` that also has a `min` attribute.
+ * A directive which installs the `KbqMinValidator` for a `kbqNumberInput` with
+ * `formControlName`, `formControl`, or `ngModel` that also has a `min` attribute.
  */
 @Directive({
-    selector: '[min][formControlName],[min][formControl],[min][ngModel]',
+    selector:
+        'input[kbqNumberInput][min][formControlName],input[kbqNumberInput][min][formControl],input[kbqNumberInput][min][ngModel]',
     providers: [KBQ_MIN_VALIDATOR],
     host: {
         // Coerced rather than the raw `min()`, so a non-numeric bound (e.g. `"5px"`) is dropped from the
@@ -35,12 +32,8 @@ export const KBQ_MIN_VALIDATOR: Provider = {
     }
 })
 export class KbqMinValidator implements Validator, OnChanges {
-    /**
-     * Lower bound installed as `Validators.min`. A non-numeric bound reads back as `NaN`, which installs no
-     * validator and writes no attribute: an input bound to `[kbqDatepicker]` shares this `min` with the
-     * datepicker, so a date bound for the datepicker has to be ignored here.
-     */
-    readonly min = input<number, NumberInput | object>(undefined!, { transform: bound });
+    /** Lower bound installed as `Validators.min`. A non-numeric bound reads back as `NaN`. */
+    readonly min = input<number, NumberInput>(undefined!, { transform: bound });
 
     private validator: ValidatorFn;
     private onChange: () => void;
@@ -80,11 +73,12 @@ export const KBQ_MAX_VALIDATOR: Provider = {
 };
 
 /**
- * A directive which installs the `KbqMaxValidator` for any `formControlName`,
- * `formControl`, or control with `ngModel` that also has a `max` attribute.
+ * A directive which installs the `KbqMaxValidator` for a `kbqNumberInput` with
+ * `formControlName`, `formControl`, or `ngModel` that also has a `max` attribute.
  */
 @Directive({
-    selector: '[max][formControlName],[max][formControl],[max][ngModel]',
+    selector:
+        'input[kbqNumberInput][max][formControlName],input[kbqNumberInput][max][formControl],input[kbqNumberInput][max][ngModel]',
     providers: [KBQ_MAX_VALIDATOR],
     host: {
         // See `KbqMinValidator`'s `[attr.min]` for why this is coerced rather than the raw `max()`.
@@ -92,12 +86,8 @@ export const KBQ_MAX_VALIDATOR: Provider = {
     }
 })
 export class KbqMaxValidator implements Validator, OnChanges {
-    /**
-     * Upper bound installed as `Validators.max`. A non-numeric bound reads back as `NaN`, which installs no
-     * validator and writes no attribute: an input bound to `[kbqDatepicker]` shares this `max` with the
-     * datepicker, so a date bound for the datepicker has to be ignored here.
-     */
-    readonly max = input<number, NumberInput | object>(undefined!, { transform: bound });
+    /** Upper bound installed as `Validators.max`. A non-numeric bound reads back as `NaN`. */
+    readonly max = input<number, NumberInput>(undefined!, { transform: bound });
 
     private validator: ValidatorFn;
     private onChange: () => void;
