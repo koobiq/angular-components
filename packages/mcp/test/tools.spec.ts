@@ -14,6 +14,33 @@ import { componentsAvailable, CONSUMER } from './project';
 
 const catalog = loadCatalog(CONSUMER);
 
+describe('get_token', () => {
+    test('reports resolved theme token values without a degraded note', () => {
+        const output = toolGetToken(catalog, { name: 'background-bg' });
+
+        expect(output).toMatch(/--kbq-background-bg/);
+        expect(output).toMatch(/value \(light\): oklch/);
+        expect(output).toMatch(/value \(dark\): oklch/);
+        expect(output).not.toMatch(/Degraded:/);
+    });
+
+    test.each(['size-s', 'plt-white', 'font-family-accent'])('finds common token %s', (name) => {
+        const output = toolGetToken(catalog, { name });
+
+        expect(output).toMatch(new RegExp(`--kbq-${name}`));
+        expect(output).not.toMatch(/No token named/);
+        expect(output).not.toMatch(/Degraded:/);
+    });
+
+    test('gives no theming advice of its own', () => {
+        // The package no longer marks theme tokens as deprecated, but the tool must still avoid
+        // repeating the old house rule about redefining component tokens.
+        const output = toolGetToken(catalog, { name: 'background-bg' });
+
+        expect(!/redefining/.test(output)).toBeTruthy();
+    });
+});
+
 // `unit:all` sweeps this file in `units.yml` too, which never builds the library — skipped, not
 // failed, is the honest report there. `unit:mcp:dts` runs it for real after `build:components`.
 describe.skipIf(!componentsAvailable())('the live reader, and the tools built on it', () => {
@@ -112,32 +139,6 @@ describe.skipIf(!componentsAvailable())('the live reader, and the tools built on
 
     test('get_icon accepts the name with the prefix already on it', () => {
         expect(toolGetIcon(catalog, { name: 'kbq-trash_16' })).toMatch(/kbq-icon="kbq-trash_16"/);
-    });
-
-    test('get_token reports the value and flags deprecated tokens', () => {
-        expect(toolGetToken(catalog, { name: 'background-bg' })).toMatch(/--kbq-background-bg\n {2}value: hsla/);
-        expect(toolGetToken(catalog, { name: 'theme-default' })).toMatch(/DEPRECATED/);
-    });
-
-    test('get_token passes on what the package says to use instead', () => {
-        if (!catalog.tokens.ok) throw new Error('tokens not readable');
-
-        const withNote = catalog.tokens.data.find((token) => token.deprecationNote);
-
-        expect(withNote, 'no deprecation carried a note — the comment parse regressed').toBeTruthy();
-        expect(
-            toolGetToken(catalog, { name: withNote!.cssName }),
-            'the tool is dispensing theming advice again'
-        ).toMatch(/instead: /);
-    });
-
-    test('get_token gives no theming advice of its own', () => {
-        // 1862 of 2004 tokens in 3.20.0 are deprecated, most of them component-level ones the package
-        // tells callers to replace with global tokens. Repeating the old house rule here would
-        // contradict the deprecation note printed alongside it.
-        const output = toolGetToken(catalog, { name: 'background-bg' });
-
-        expect(!/redefining/.test(output)).toBeTruthy();
     });
 
     test('an unreadable source refuses instead of answering emptily', () => {
