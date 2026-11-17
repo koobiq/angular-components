@@ -1,3 +1,4 @@
+import { LowerCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
 import { KbqClampedList, KbqClampedListTrigger } from '@koobiq/components/clamped-text';
 import { KbqLink } from '@koobiq/components/link';
@@ -9,7 +10,7 @@ import { TRANSLATIONS } from './l10n';
  */
 @Component({
     selector: 'clamped-list-example',
-    imports: [KbqClampedList, KbqClampedListTrigger, KbqLink],
+    imports: [KbqClampedList, KbqClampedListTrigger, KbqLink, LowerCasePipe],
     template: `
         <div class="layout-margin-bottom-l layout-margin-top-l">
             <div
@@ -32,7 +33,7 @@ import { TRANSLATIONS } from './l10n';
                 @if (clampedList.hasToggle()) {
                     <a kbqClampedListTrigger kbqLink pseudo>
                         @if (clampedList.isCollapsed()) {
-                            {{ clampedList.exceededItemCount() }} {{ clampedList.localeConfiguration().moreText }}
+                            {{ clampedList.showMoreCompactCountText() | lowercase }}
                         } @else {
                             {{ clampedList.localeConfiguration().closeText }}
                         }

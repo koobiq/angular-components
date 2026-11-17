@@ -138,8 +138,9 @@ export const ruRULocaleData = {
     clampedText: {
         openText: 'Развернуть',
         closeText: 'Свернуть',
-        showMoreText: 'Показать еще {exceededItemCount}',
-        moreText: 'еще'
+        showMoreText: 'Еще {exceededItemCount}',
+        moreText: 'еще',
+        showMoreTextCompact: 'Еще {exceededItemCount}'
     },
     navbar: {
         toggle: {

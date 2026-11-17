@@ -2,7 +2,7 @@ import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { Component, type DebugElement, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { dispatchKeyboardEvent } from '@koobiq/components/core';
+import { dispatchKeyboardEvent, kbqLocaleIDProvider, kbqLocaleServiceProvider } from '@koobiq/components/core';
 import { KbqClampedList, KbqClampedListTrigger } from './clamped-list';
 
 const AXE_TIMEOUT = 15000;
@@ -79,6 +79,30 @@ class TestHostComponent {
     readonly collapsedVisibleCount = signal(10);
     readonly hiddenThreshold = signal(6);
     readonly duration = signal(100);
+}
+
+@Component({
+    imports: [KbqClampedListTrigger, KbqClampedList],
+    template: `
+        <div #clampedList="kbqClampedList" kbqClampedList [items]="items()">
+            @for (item of clampedList.visibleItems(); track item) {
+                <span class="item">{{ item }}</span>
+            }
+
+            @if (clampedList.hasToggle()) {
+                <span class="trigger">
+                    {{
+                        clampedList.isCollapsed()
+                            ? clampedList.showMoreCompactCountText()
+                            : clampedList.localeConfiguration().closeText
+                    }}
+                </span>
+            }
+        </div>
+    `
+})
+class TestLocalizedHostComponent {
+    readonly items = signal(Array.from({ length: 17 }, (_, i) => `Item ${i + 1}`));
 }
 
 describe('KbqClampedList', () => {
@@ -210,6 +234,49 @@ describe('KbqClampedList', () => {
             },
             AXE_TIMEOUT
         );
+    });
+
+    describe('localized labels', () => {
+        beforeEach(() => TestBed.resetTestingModule());
+
+        it('should render showMoreCompactCountText for the default locale', () => {
+            TestBed.configureTestingModule({ imports: [TestLocalizedHostComponent] });
+
+            const fixture = TestBed.createComponent(TestLocalizedHostComponent);
+
+            fixture.detectChanges();
+
+            const clampedList = fixture.debugElement.query(By.directive(KbqClampedList)).injector.get(KbqClampedList);
+
+            expect(clampedList.showMoreCompactCountText()).toBe('Еще 7');
+        });
+
+        it('should render showMoreCountText for the default locale', () => {
+            TestBed.configureTestingModule({ imports: [TestLocalizedHostComponent] });
+
+            const fixture = TestBed.createComponent(TestLocalizedHostComponent);
+
+            fixture.detectChanges();
+
+            const clampedList = fixture.debugElement.query(By.directive(KbqClampedList)).injector.get(KbqClampedList);
+
+            expect(clampedList.showMoreCountText()).toBe('Еще 7');
+        });
+
+        it('should render showMoreCompactCountText for en-US', () => {
+            TestBed.configureTestingModule({
+                imports: [TestLocalizedHostComponent],
+                providers: [kbqLocaleServiceProvider(), kbqLocaleIDProvider('en-US')]
+            });
+
+            const fixture = TestBed.createComponent(TestLocalizedHostComponent);
+
+            fixture.detectChanges();
+
+            const clampedList = fixture.debugElement.query(By.directive(KbqClampedList)).injector.get(KbqClampedList);
+
+            expect(clampedList.showMoreCompactCountText()).toBe('7 more');
+        });
     });
 
     describe('animation', () => {

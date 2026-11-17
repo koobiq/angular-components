@@ -341,7 +341,16 @@ export type KbqInputLocaleConfiguration = {
 export type KbqClampedTextLocaleConfiguration = {
     openText: string;
     closeText: string;
+    /** Collapsed trigger label for the expanded list view. Supports the `{exceededItemCount}` placeholder. */
     showMoreText: string;
+    /** Сollapsed trigger label for the inline "more" trigger. Supports the `{exceededItemCount}` placeholder. */
+    showMoreTextCompact: string;
+
+    /**
+     * Short word used for the inline "more" trigger.
+     *
+     * @deprecated Use `showMoreTextCompact` instead; it supports per-locale word order and placeholders.
+     */
     moreText: string;
 };
 

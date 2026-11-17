@@ -142,7 +142,8 @@ export const tkTMLocaleData = {
         openText: 'Giňelt',
         closeText: 'Ýap',
         showMoreText: 'Ýene {exceededItemCount} görkeziň',
-        moreText: 'has köp'
+        moreText: 'has köp',
+        showMoreTextCompact: '{exceededItemCount} has köp'
     },
     navbar: {
         toggle: {

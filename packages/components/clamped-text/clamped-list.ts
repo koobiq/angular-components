@@ -64,6 +64,14 @@ export class KbqClampedList<T> implements KbqClamped {
         this.localeConfiguration().showMoreText.replace('{exceededItemCount}', this.exceededItemCount().toString(10))
     );
 
+    /** Localized "show more compact" label with the exceeded item count interpolated into the `{exceededItemCount}` placeholder. */
+    readonly showMoreCompactCountText = computed(() =>
+        this.localeConfiguration().showMoreTextCompact.replace(
+            '{exceededItemCount}',
+            this.exceededItemCount().toString(10)
+        )
+    );
+
     /** Clamped text locale configuration. */
     readonly localeConfiguration = kbqInjectClampedTextLocaleConfiguration();
 
