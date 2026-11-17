@@ -2646,6 +2646,27 @@ describe('KbqNavbar', () => {
             expect(third.navbarFocusableItem.disabled).toBe(true);
         });
 
+        it('should move focus to «Ещё» when a recalculation hides the focused item', async () => {
+            const fixture = await setup();
+            const navbar = getNavbar(fixture);
+            const third = getItems(fixture)[2];
+            const thirdElement = queryNavbarItems(fixture.debugElement)[2].nativeElement as HTMLElement;
+
+            thirdElement.focus();
+            expect(document.activeElement).toBe(thirdElement);
+
+            stubNavbarWidths(fixture.debugElement, { navbar: 350, item: 100, collapsible: 10 });
+
+            navbar.updateExpandedStateForItems();
+            fixture.detectChanges();
+
+            expect(third.rectangleElement.hidden()).toBe(true);
+            expect(document.activeElement).toBe(getTrigger(fixture));
+            expect(navbar.keyManager.activeItem).toBe(
+                fixture.debugElement.query(By.css('.kbq-navbar__more-trigger')).injector.get(KbqNavbarFocusableItem)
+            );
+        });
+
         it('should close the panel once a recalculation has nothing left to hide', async () => {
             const fixture = await setup();
             const navbar = getNavbar(fixture);

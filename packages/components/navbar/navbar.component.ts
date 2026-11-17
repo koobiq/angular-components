@@ -1,4 +1,4 @@
-import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
+import { FocusMonitor, type FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
@@ -332,6 +332,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     private readonly ngZone = inject(NgZone);
     private readonly window = inject(KBQ_WINDOW);
     private readonly document = inject(DOCUMENT);
+    private readonly inputModalityDetector = inject(InputModalityDetector);
 
     /**
      * Localized strings of the navbar, the accessible name of the «Ещё» trigger among them, see
@@ -636,6 +637,26 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
             } else {
                 dropdownTrigger.close();
             }
+        }
+
+        this.moveFocusFromHiddenItems(rectangles);
+    }
+
+    /** Keeps DOM focus out of an item hidden by a recalculation, preserving the user's focus origin. */
+    private moveFocusFromHiddenItems(rectangles: readonly KbqNavbarRectangleElement[]): void {
+        const activeElement = this.document.activeElement;
+        const trigger = this.moreTriggerElement()?.nativeElement;
+        const triggerFocusable = this.moreTriggerFocusable();
+
+        if (!activeElement || !trigger || !triggerFocusable || !this.moreTriggerVisible()) return;
+
+        const focusedItemHidden = rectangles.some(
+            (rectangle) => rectangle.hidden() && rectangle.element.contains(activeElement)
+        );
+
+        if (focusedItemHidden) {
+            this.focusMonitor.focusVia(trigger, this.inputModalityDetector.mostRecentModality ?? 'program');
+            this.keyManager.updateActiveItem(this.focusableItems.toArray().indexOf(triggerFocusable));
         }
     }
 
