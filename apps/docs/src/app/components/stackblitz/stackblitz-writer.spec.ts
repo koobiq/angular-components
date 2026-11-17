@@ -126,6 +126,57 @@ describe(DocsStackblitzWriter.name, () => {
         expect(files['src/index.html']).toContain('<basic-button-example></basic-button-example>');
     });
 
+    it('keeps the header in its own folder, apart from the example', async () => {
+        const files = await buildProject();
+
+        expect(files['src/language-switcher.ts']).toBeUndefined();
+        expect(files['src/docs-header/docs-header.ts']).toContain(`selector: 'docs-header'`);
+        expect(files['src/docs-header/mount.ts']).toContain('docsMountHeader');
+        expect(files['src/index.html']).toContain('<docs-header></docs-header>');
+        expect(files['src/main.ts']).toContain(`from './docs-header/mount'`);
+    });
+
+    it('links the header to Telegram, drops the stars badge and takes the theme from the theme service', async () => {
+        const files = await buildProject();
+
+        expect(files['src/docs-header/docs-header.ts']).toContain('https://t.me/koobiq_io');
+        expect(files['src/docs-header/docs-header.ts']).toContain('KbqThemeService');
+        expect(files['src/index.html']).not.toContain('kbq-light');
+        expect(files['src/index.html']).not.toContain('img.shields.io');
+        expect(files['src/main.ts']).toContain('kbqThemeProvider({');
+    });
+
+    it('keeps the social links beside the logo and the language and theme selects on the right', async () => {
+        const header = (await buildProject())['src/docs-header/docs-header.ts'];
+        const actions = header.indexOf('class="docs-header__actions"');
+
+        expect(header.indexOf('kbq-telegram_16')).toBeLessThan(actions);
+        expect(header.indexOf('kbq-github_16')).toBeLessThan(actions);
+        expect(header.indexOf('<kbq-select', actions)).toBeGreaterThan(actions);
+        expect(header.split('<kbq-select').length - 1).toBe(2);
+        expect(header.split('kbq-select-matcher').length - 1).toBe(2);
+        expect(header).toContain(`originX: 'end'`);
+        expect(header).toContain(`[class.kbq-active]="languageSelect.panelOpen"`);
+        expect(header).toContain(`[class.kbq-active]="themeSelect.panelOpen"`);
+        expect(header).toContain(`(focus)="languageButton.focus()"`);
+        expect(header).toContain(`(focus)="themeButton.focus()"`);
+        expect(header).not.toContain('kbq-dropdown');
+    });
+
+    it('draws the divider as a shadow below the 48px header, as the design does', async () => {
+        const header = (await buildProject())['src/docs-header/docs-header.ts'];
+
+        expect(header).toContain('box-shadow: 0 1px 0 0 var(--kbq-line-contrast-less)');
+        expect(header).not.toContain('border-bottom');
+    });
+
+    it('draws the wordmark in the text color, so it stays visible in the dark theme', async () => {
+        const files = await buildProject();
+
+        expect(files['src/docs-header/docs-header.ts']).toContain('fill="currentColor"');
+        expect(files['src/docs-header/docs-header.ts']).toContain('color: var(--kbq-foreground-contrast)');
+    });
+
     it('adds an optional dependency only to an example that imports it', async () => {
         const files = await buildProject(`import { KbqMarkdownModule } from '@koobiq/components/markdown';`);
         const { dependencies } = JSON.parse(files['package.json']);
