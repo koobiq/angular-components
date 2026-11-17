@@ -69,7 +69,10 @@ export class KbqOptgroup implements AfterContentInit {
     /** @docs-private */
     protected readonly hasProjectedLabel = computed(() => this.projectedLabels().length > 0);
 
-    /** The number of options in this group that are currently selected. */
+    /**
+     * The number of options in this group that are currently selected. A `kbq-list-option` is not
+     * counted: `core/option` cannot depend on the `list` entry point.
+     */
     get selectedCount(): number {
         return this.selectedCountState();
     }

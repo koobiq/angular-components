@@ -15,7 +15,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
                     <kbq-optgroup #optgroup="kbqOptgroup" [label]="group.name">
                         <div kbq-optgroup-label>
                             {{ group.name }}
-                            <kbq-badge>{{ optgroup.selectedCount }}</kbq-badge>
+                            <kbq-badge aria-hidden="true">{{ optgroup.selectedCount }}</kbq-badge>
                         </div>
                         @for (pokemon of group.pokemon; track pokemon.value) {
                             <kbq-option [value]="pokemon.value">{{ pokemon.viewValue }}</kbq-option>
