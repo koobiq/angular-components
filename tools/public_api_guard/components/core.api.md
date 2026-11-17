@@ -436,6 +436,7 @@ export const enUSLocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        search: string;
     };
     select: {
         hiddenItemsText: string;
@@ -721,6 +722,7 @@ export const esLALocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        search: string;
     };
     select: {
         hiddenItemsText: string;
@@ -1251,6 +1253,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            search: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1511,6 +1514,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            search: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1766,6 +1770,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            search: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2026,6 +2031,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            search: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2283,6 +2289,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            search: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2567,6 +2574,9 @@ export const KBQ_SELECT_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 export const KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD = 10;
 
 // @public
+export const KBQ_SELECT_SEARCH_POPUP: InjectionToken<KbqSearchFieldPopup>;
+
+// @public
 export const KBQ_SHADOW_DOM_OVERLAY_HOST: InjectionToken<KbqShadowDomOverlayHost>;
 
 // @public
@@ -2631,6 +2641,7 @@ export type KbqA11yLocaleConfiguration = {
     toastRegion: string;
     optionActions: string;
     progressBar: string;
+    search: string;
 };
 
 // @public
@@ -4262,6 +4273,13 @@ export type KbqSearchExpandableLocaleConfiguration = {
 };
 
 // @public
+export interface KbqSearchFieldPopup {
+    activeDescendant(): HTMLElement | null | undefined;
+    readonly comboboxPopupRole: 'listbox' | 'tree' | null;
+    popup(): HTMLElement | null | undefined;
+}
+
+// @public
 export interface KbqSelectAllAdapter<T> {
     isSelectable: (item: T) => boolean;
     isSelected: (item: T) => boolean;
@@ -4489,6 +4507,9 @@ export type KbqStickToWindowPlacementValues = KbqEnumValues<PopUpPlacements.Top 
 
 // @public
 export const kbqStructuralStateSavingKey: KbqStateSavingKeyResolver;
+
+// @public
+export function kbqSyncSearchFieldA11y(host: HTMLElement, popup: () => KbqSearchFieldPopup | null | undefined, fallbackLabel: () => string): void;
 
 // @public (undocumented)
 export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
@@ -5076,6 +5097,7 @@ export const ptBRLocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        search: string;
     };
     select: {
         hiddenItemsText: string;
@@ -5546,6 +5568,7 @@ export const ruRULocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        search: string;
     };
     select: {
         hiddenItemsText: string;
@@ -5892,6 +5915,7 @@ export const tkTMLocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        search: string;
     };
     select: {
         hiddenItemsText: string;

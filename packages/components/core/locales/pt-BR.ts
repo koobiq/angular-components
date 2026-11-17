@@ -22,7 +22,8 @@ export const ptBRLocaleData = {
         resizePanels: 'Redimensionar painéis',
         toastRegion: 'Notificações',
         optionActions: 'Ações',
-        progressBar: 'Progresso'
+        progressBar: 'Progresso',
+        search: 'Buscar'
     },
     select: {
         hiddenItemsText: '+{{ number }}',

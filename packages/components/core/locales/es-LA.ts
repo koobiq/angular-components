@@ -22,7 +22,8 @@ export const esLALocaleData = {
         resizePanels: 'Redimensionar paneles',
         toastRegion: 'Notificaciones',
         optionActions: 'Acciones',
-        progressBar: 'Progreso'
+        progressBar: 'Progreso',
+        search: 'Búsqueda'
     },
     select: {
         hiddenItemsText: '+{{ number }}',

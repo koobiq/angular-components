@@ -22,7 +22,8 @@ export const ruRULocaleData = {
         resizePanels: 'Изменить размер панелей',
         toastRegion: 'Уведомления',
         optionActions: 'Действия',
-        progressBar: 'Прогресс'
+        progressBar: 'Прогресс',
+        search: 'Поиск'
     },
     select: { hiddenItemsText: '+{{ number }}', selectAll: 'Выбрать все' },
     datepicker: {

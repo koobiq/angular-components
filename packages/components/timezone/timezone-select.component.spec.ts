@@ -1071,6 +1071,22 @@ describe('KbqTimezoneSelect', () => {
 
             expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
         });
+
+        it('should make the search field a combobox of the option list', async () => {
+            trigger.click();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const input: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+            const highlighted = overlayContainerElement.querySelector('kbq-timezone-option.kbq-active')!;
+
+            expect(input.getAttribute('role')).toBe('combobox');
+            expect(input.getAttribute('aria-controls')).toBe(
+                overlayContainerElement.querySelector('[role="listbox"]')!.id
+            );
+            expect(input.getAttribute('aria-activedescendant')).toBe(highlighted.id);
+        });
     });
 
     describe('option tooltip', () => {

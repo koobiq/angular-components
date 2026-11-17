@@ -57,6 +57,8 @@ export type KbqA11yLocaleConfiguration = {
     optionActions: string;
     /** Progress bar that carries neither an `aria-label` nor a projected `[kbq-progress-bar-text]`. */
     progressBar: string;
+    /** Search field in a select or a dropdown that has no label, `aria-label` or placeholder of its own. */
+    search: string;
 };
 
 /** Locale configuration for `KbqCodeBlockModule`. */
