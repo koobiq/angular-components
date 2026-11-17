@@ -48,6 +48,11 @@
 }
 
 @mixin kbq-datepicker-typography() {
+    // tabular digits keep the field width stable when the value changes via stepper or keyboard
+    .kbq-input.kbq-datepicker {
+        @include kbq-typography-level-to-styles-css-variables(typography, tabular-normal);
+    }
+
     .kbq-calendar {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }

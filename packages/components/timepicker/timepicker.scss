@@ -3,6 +3,11 @@
     padding-right: var(--kbq-timepicker-size-padding-right, var(--kbq-size-s));
 }
 
+// tabular digits keep the field width stable when the value changes via stepper or keyboard
+.kbq-input.kbq-timepicker {
+    @include kbq-typography-level-to-styles-css-variables(typography, tabular-normal);
+}
+
 .kbq-form-field-type-timepicker {
     width: 136px;
 }

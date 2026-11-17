@@ -170,6 +170,7 @@ export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any = {
     selector: `input[kbqNumberInput]`,
     providers: [KBQ_NUMBER_INPUT_VALUE_ACCESSOR],
     host: {
+        class: 'kbq-number-input',
         role: 'spinbutton',
         '[attr.inputmode]': "integer() ? 'numeric' : 'decimal'",
         '[attr.aria-valuenow]': 'value',

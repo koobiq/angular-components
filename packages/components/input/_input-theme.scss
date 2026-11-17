@@ -6,6 +6,11 @@
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
+    // tabular digits keep the field width stable when the value changes via stepper or keyboard
+    .kbq-input.kbq-number-input {
+        @include kbq-typography-level-to-styles-css-variables(typography, tabular-normal);
+    }
+
     .kbq-input.kbq-input-password,
     .kbq-input.kbq-input_monospace {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-normal);
