@@ -1006,7 +1006,7 @@ export class E2eNavbarTooltipOffset {}
         <div style="padding: 160px 160px 800px">
             <kbq-navbar aria-label="Popup arrow centering">
                 <kbq-navbar-container>
-                    <kbq-navbar-item>
+                    <kbq-navbar-item alwaysVisible>
                         <button
                             type="button"
                             kbq-button
@@ -1023,7 +1023,7 @@ export class E2eNavbarTooltipOffset {}
                         </button>
                     </kbq-navbar-item>
 
-                    <kbq-navbar-item>
+                    <kbq-navbar-item alwaysVisible>
                         <button
                             type="button"
                             kbq-button
