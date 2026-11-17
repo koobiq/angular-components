@@ -437,25 +437,36 @@ describe(DocsApiPage.name, () => {
 
     const withMemberType = (type: DocsApiTypePart[]): DocsApiEntryPoint => withEntry('class KbqActionsPanel {}', type);
 
-    it('links the entries a type names to their sections, on this tab or on the tab of their entry point', () => {
+    it('links the entries a type names to their sections, and the declarations of Angular to its documentation', () => {
         const type = render(
             withMemberType([
                 { text: 'KbqActionsPanelRef', link: {} },
                 { text: '<T, ' },
                 { text: 'KbqOption', link: { page: 'components/core/api' } },
-                { text: '>' }
+                { text: '> | ' },
+                { text: 'Signal', link: { url: 'https://v21.angular.dev/api/core/Signal' } },
+                { text: '<T>' }
             ])
         ).querySelector('.docs-api__term-type')!;
+        const links = Array.from(type.querySelectorAll('a'));
 
-        expect(type.textContent).toBe('KbqActionsPanelRef<T, KbqOption>');
-        expect(Array.from(type.querySelectorAll('a'), (link) => link.getAttribute('href'))).toEqual([
+        expect(type.textContent).toBe('KbqActionsPanelRef<T, KbqOption> | Signal<T>');
+        expect(links.map((link) => link.getAttribute('href'))).toEqual([
             '/#KbqActionsPanelRef',
-            '/ru/components/core/api#KbqOption'
+            '/ru/components/core/api#KbqOption',
+            'https://v21.angular.dev/api/core/Signal'
+        ]);
+        // The documentation of another site opens in a new tab, and the links of this one in this tab.
+        expect(links.map((link) => [link.getAttribute('target'), link.getAttribute('rel')])).toEqual([
+            [null, null],
+            [null, null],
+            ['_blank', 'noopener noreferrer']
         ]);
         // Links of the design system, set apart from the type by their colour rather than an underline.
         expect(
             Array.from(type.querySelectorAll('a'), ({ classList }) => classList.contains('kbq-link_underline_none'))
         ).toEqual([
+            true,
             true,
             true
         ]);

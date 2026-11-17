@@ -4,6 +4,7 @@ import type {
     DocsApiMember,
     DocsApiParam,
     DocsApiReturns,
+    DocsApiTypeLink,
     DocsApiTypePart
 } from '../../../apps/docs/src/app/components/api-page/api-page.types';
 import {
@@ -48,10 +49,17 @@ export interface ApiEntryPage {
     isValue?: boolean;
 }
 
+/** Where a declaration of Angular, its CDK or RxJS is documented: on the site of its library. */
+export interface ExternalApiPage {
+    url: string;
+    /** Set on a constant or a function, as on an entry. */
+    isValue?: boolean;
+}
+
 /** What the types of an entry link to. */
 export interface TypeLinks {
-    /** Where each entry the API tabs document is, by its name. */
-    pages: ReadonlyMap<string, ApiEntryPage>;
+    /** Where each entry the API tabs document is, and each declaration of another library, by its name. */
+    pages: ReadonlyMap<string, ApiEntryPage | ExternalApiPage>;
     /** The entry point whose tab the types are on: an entry of it is linked on the tab itself. */
     entryPoint: string;
     /** The entry the types are shown in, which a link would only lead back to. */
@@ -61,10 +69,17 @@ export interface TypeLinks {
 /** A quoted string, taken whole so that a name inside it stays text, or an identifier. */
 const TYPE_TOKEN = /(["'`])(?:\\[\s\S]|(?!\1)[^\\])*\1|[A-Za-z_$][\w$]*/g;
 
+/** Where a name in a type leads: to the documentation of another library, or to a section of this tab or another. */
+function getTypeLink(target: ApiEntryPage | ExternalApiPage, entryPoint: string): DocsApiTypeLink {
+    if ('url' in target) return { url: target.url };
+
+    return target.entryPoint === entryPoint ? {} : { page: target.page };
+}
+
 /**
- * The type in parts, the names of the entries documented on an API tab linked to their sections. A name counts where
- * it names a type: not inside a string, after the dot of a member access (a spread is no access), or as the name of a
- * field or a parameter, followed by a colon.
+ * The type in parts, the names of the entries documented on an API tab linked to their sections, and those of Angular,
+ * its CDK and RxJS to their documentation. A name counts where it names a type: not inside a string, after the dot of
+ * a member access (a spread is no access), or as the name of a field or a parameter, followed by a colon.
  * The name of a constant or a function counts only after `typeof`: anywhere else, `T` is a type parameter rather than
  * the key code.
  */
@@ -83,7 +98,7 @@ export function linkType(type: string, { pages, entryPoint, self }: TypeLinks): 
 
         if (index > textStart) parts.push({ text: type.slice(textStart, index) });
 
-        parts.push({ text: token, link: target.entryPoint === entryPoint ? {} : { page: target.page } });
+        parts.push({ text: token, link: getTypeLink(target, entryPoint) });
         textStart = index + token.length;
     }
 
@@ -205,7 +220,7 @@ export function getApiEntryPoint(
     entries: DocEntry[],
     moduleName: string,
     packageName: string,
-    pages: ReadonlyMap<string, ApiEntryPage> = new Map()
+    pages: ReadonlyMap<string, ApiEntryPage | ExternalApiPage> = new Map()
 ): DocsApiEntryPoint {
     const path = `@koobiq/${moduleName}/${packageName}`;
     // `core` declares a dozen of modules, and none of them is the one to import.

@@ -14,9 +14,9 @@ const modules: ModuleInfo[] = [
 ];
 
 const generateApiDocs = () => {
-    const data = extractApiToJson(modules);
-    const filteredData = generateManifest(data);
-    const pageCount = generateApiPages(filteredData);
+    const { entryCollections, externalPages } = extractApiToJson(modules);
+    const filteredData = generateManifest(entryCollections);
+    const pageCount = generateApiPages(filteredData, externalPages);
 
     console.log(`Generated ${pageCount} API pages into dist/docs-pages-api`);
 };
