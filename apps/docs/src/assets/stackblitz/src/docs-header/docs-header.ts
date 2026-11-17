@@ -131,6 +131,7 @@ const END_ALIGNED_POSITIONS: KbqSelect['positions'] = [
             <kbq-select
                 #themeSelect="kbqSelect"
                 class="docs-header__select"
+                [aria-label]="text().theme"
                 [tabIndex]="-1"
                 [value]="themeService.mode()"
                 (valueChange)="themeService.setMode($event)"
