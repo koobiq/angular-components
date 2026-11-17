@@ -57,9 +57,10 @@
         margin-inline-start: 0;
     }
 
-    // a pair of icons is spaced by a single gap rather than by two facing margins
+    // a pair of icons is spaced by a single gap rather than by two facing margins. Logical, so the
+    // gap sits between the icons under `dir="rtl"` too, where the DOM-first icon is the rightmost.
     &.kbq-button-icon_left.kbq-button-icon_right .kbq-icon_left {
-        margin-right: var(--kbq-button-icon-size-content-padding);
+        margin-inline-end: var(--kbq-button-icon-size-content-padding);
     }
 }
 

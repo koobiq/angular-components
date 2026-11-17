@@ -102,14 +102,14 @@
                 gap: var(--kbq-button-toggle-size-item-content-gap-horizontal);
 
                 // The button's base styles space its own slots with the button token; inside a toggle
-                // the row's `gap` is the whole spacing. Physical properties on purpose, so they
-                // override the same ones from the button.
+                // the row's `gap` is the whole spacing. Logical, like the base rules they override:
+                // a physical zero would miss the base margin under `dir="rtl"`.
                 > .kbq-button-prefix {
-                    margin-right: 0;
+                    margin-inline-end: 0;
                 }
 
                 > .kbq-button-suffix {
-                    margin-left: 0;
+                    margin-inline-start: 0;
                 }
             }
 
