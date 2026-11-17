@@ -1135,11 +1135,14 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     private subscribeOnClosingActions() {
         this.closingActionsSubscription?.unsubscribe();
 
+        // `rxDelay(0)` is load-bearing: the stream emits a click from CDK's capture-phase
+        // document listener, before the bubble-phase handlers that mark the event run, so the
+        // mark is only visible after the dispatch completes.
         this.closingActionsSubscription = this.closingActions()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .pipe(rxDelay(0))
             .subscribe((event) => {
-                if (event instanceof Event && event.type === 'click' && kbqIsEventPreventHide(event)) {
+                if (event instanceof Event && event.type === PopUpTriggers.Click && kbqIsEventPreventHide(event)) {
                     return;
                 }
 

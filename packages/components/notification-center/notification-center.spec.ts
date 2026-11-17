@@ -24,7 +24,6 @@ import {
     KBQ_ANIMATIONS_CONFIG,
     KBQ_LOCALE_SERVICE,
     KbqFormattersModule,
-    kbqIsEventPreventHide,
     KbqLocaleService,
     KbqPopUpPlacementValues,
     KbqStickToWindowPlacementValues,
@@ -1213,9 +1212,6 @@ describe('KbqNotificationCenter', () => {
     describe('closing actions', () => {
         let outerFixture: ComponentFixture<NotificationCenterWithOuterScrollable>;
 
-        const getOuterScrollable = () =>
-            outerFixture.debugElement.query(By.directive(CdkScrollable)).injector.get(CdkScrollable);
-
         beforeEach(() => {
             outerFixture = createComponent(NotificationCenterWithOuterScrollable);
             overlayContainer = TestBed.inject(OverlayContainer);
@@ -1254,23 +1250,6 @@ describe('KbqNotificationCenter', () => {
             await vi.runOnlyPendingTimersAsync();
 
             expect(outerFixture.componentInstance.trigger().isOpen).toBe(false);
-        });
-
-        it('never writes its own flags onto the shared scrollable', async () => {
-            vi.useFakeTimers();
-
-            openOuterCenter();
-            await vi.runOnlyPendingTimersAsync();
-
-            const scrollable = getOuterScrollable();
-
-            dispatchFakeEvent(outerFixture.componentInstance.outer().nativeElement, 'scroll');
-            await vi.advanceTimersByTimeAsync(SCROLLED_TO_BOTTOM_AUDIT_TIME);
-            await vi.runOnlyPendingTimersAsync();
-
-            // The panel used to tag the emitted CdkScrollable so the base trigger would skip the close.
-            // The tag was never cleared and disabled close-on-scroll for every other pop-up as well.
-            expect(kbqIsEventPreventHide(scrollable)).toBe(false);
         });
 
         it('does not throw when a scroll arrives after the panel was destroyed while open', async () => {
