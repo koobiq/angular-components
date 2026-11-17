@@ -343,8 +343,8 @@ export type KbqClampedTextLocaleConfiguration = {
     closeText: string;
     /** Collapsed trigger label for the expanded list view. Supports the `{exceededItemCount}` placeholder. */
     showMoreText: string;
-    /** Сollapsed trigger label for the inline "more" trigger. Supports the `{exceededItemCount}` placeholder. */
-    showMoreTextCompact: string;
+    /** Сollapsed trigger label for the inline "more" trigger. Supports the `{exceededItemCount}` placeholder; falls back to `moreText` when not set. */
+    showMoreTextCompact?: string; // TODO: will be required in the next major release
 
     /**
      * Short word used for the inline "more" trigger.

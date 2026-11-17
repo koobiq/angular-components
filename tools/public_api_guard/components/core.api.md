@@ -2909,7 +2909,7 @@ export type KbqClampedTextLocaleConfiguration = {
     openText: string;
     closeText: string;
     showMoreText: string;
-    showMoreTextCompact: string;
+    showMoreTextCompact?: string;
     moreText: string;
 };
 

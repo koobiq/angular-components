@@ -4,6 +4,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { dispatchKeyboardEvent, kbqLocaleIDProvider, kbqLocaleServiceProvider } from '@koobiq/components/core';
 import { KbqClampedList, KbqClampedListTrigger } from './clamped-list';
+import { KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION } from './constants';
 
 const AXE_TIMEOUT = 15000;
 
@@ -267,6 +268,31 @@ describe('KbqClampedList', () => {
             TestBed.configureTestingModule({
                 imports: [TestLocalizedHostComponent],
                 providers: [kbqLocaleServiceProvider(), kbqLocaleIDProvider('en-US')]
+            });
+
+            const fixture = TestBed.createComponent(TestLocalizedHostComponent);
+
+            fixture.detectChanges();
+
+            const clampedList = fixture.debugElement.query(By.directive(KbqClampedList)).injector.get(KbqClampedList);
+
+            expect(clampedList.showMoreCompactCountText()).toBe('7 more');
+        });
+
+        it('should fall back to moreText when showMoreTextCompact is not set', () => {
+            TestBed.configureTestingModule({
+                imports: [TestLocalizedHostComponent],
+                providers: [
+                    {
+                        provide: KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION,
+                        useValue: {
+                            openText: 'Expand',
+                            closeText: 'Collapse',
+                            showMoreText: 'Show more',
+                            moreText: 'more'
+                        }
+                    }
+                ]
             });
 
             const fixture = TestBed.createComponent(TestLocalizedHostComponent);
