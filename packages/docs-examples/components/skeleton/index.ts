@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { SkeletonAccordionExample } from './skeleton-accordion/skeleton-accordion-example';
+import { SkeletonAnimationDurationExample } from './skeleton-animation-duration/skeleton-animation-duration-example';
 import { SkeletonBasicExample } from './skeleton-basic/skeleton-basic-example';
 import { SkeletonCheckableExample } from './skeleton-checkable/skeleton-checkable-example';
 import { SkeletonCodeBlockExample } from './skeleton-code-block/skeleton-code-block-example';
@@ -16,6 +17,7 @@ import { SkeletonTypographyExample } from './skeleton-typography/skeleton-typogr
 
 export {
     SkeletonAccordionExample,
+    SkeletonAnimationDurationExample,
     SkeletonBasicExample,
     SkeletonCheckableExample,
     SkeletonCodeBlockExample,
@@ -34,6 +36,7 @@ export {
 const EXAMPLES = [
     SkeletonBasicExample,
     SkeletonDirectiveExample,
+    SkeletonAnimationDurationExample,
     SkeletonElementsExample,
     SkeletonTypographyExample,
     SkeletonDlExample,

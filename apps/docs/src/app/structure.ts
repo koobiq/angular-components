@@ -966,7 +966,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'skeleton',
                     hasApi: true,
                     apiId: 'skeleton',
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-12-01')
                 },
                 {
                     id: DocsStructureItemId.Splitter,

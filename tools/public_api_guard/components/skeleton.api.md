@@ -9,15 +9,19 @@ import { InjectionToken } from '@angular/core';
 import { Provider } from '@angular/core';
 
 // @public
+export const KBQ_SKELETON_OPTIONS: InjectionToken<KbqSkeletonOptions>;
+
+// @public
 export const KBQ_SKELETON_PRESETS_CONFIGURATION: InjectionToken<KbqSkeletonPresetsConfiguration>;
 
 // @public
 export class KbqSkeleton {
     constructor();
+    readonly animationDuration: _angular_core.InputSignalWithTransform<number, string | number | null | undefined>;
     protected readonly animationsDisabled: boolean;
     readonly enabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqSkeleton, "kbq-skeleton, [kbqSkeleton]", ["kbqSkeleton"], { "enabled": { "alias": "kbqSkeleton"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqSkeleton, "kbq-skeleton, [kbqSkeleton]", ["kbqSkeleton"], { "enabled": { "alias": "kbqSkeleton"; "required": false; "isSignal": true; }; "animationDuration": { "alias": "animationDuration"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSkeleton, never>;
 }
@@ -138,6 +142,14 @@ export class KbqSkeletonModule {
     // (undocumented)
     static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqSkeletonModule, never, [typeof KbqSkeleton, typeof KbqSkeletonButton, typeof KbqSkeletonBadge, typeof KbqSkeletonTag, typeof KbqSkeletonIcon, typeof KbqSkeletonLink, typeof KbqSkeletonTypography, typeof KbqSkeletonDl, typeof KbqSkeletonTable, typeof KbqSkeletonGroup, typeof KbqSkeletonFormField, typeof KbqSkeletonAccordion, typeof KbqSkeletonCheckable, typeof KbqSkeletonTabs, typeof KbqSkeletonTree], [typeof KbqSkeleton, typeof KbqSkeletonButton, typeof KbqSkeletonBadge, typeof KbqSkeletonTag, typeof KbqSkeletonIcon, typeof KbqSkeletonLink, typeof KbqSkeletonTypography, typeof KbqSkeletonDl, typeof KbqSkeletonTable, typeof KbqSkeletonGroup, typeof KbqSkeletonFormField, typeof KbqSkeletonAccordion, typeof KbqSkeletonCheckable, typeof KbqSkeletonTabs, typeof KbqSkeletonTree]>;
 }
+
+// @public
+export type KbqSkeletonOptions = {
+    animationDuration: number;
+};
+
+// @public
+export const kbqSkeletonOptionsProvider: (options: Partial<KbqSkeletonOptions>) => Provider;
 
 // @public
 export interface KbqSkeletonPresetsConfiguration {

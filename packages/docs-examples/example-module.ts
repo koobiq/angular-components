@@ -3047,7 +3047,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "filter-bar-localization-example.ts"
     ],
     "localImportFiles": [
-      "../../../i18n/index.ts"
+      "../../../i18n/index.ts",
+      "l10n.ts"
     ],
     "selector": "filter-bar-localization-example",
     "primaryFile": "filter-bar-localization-example.ts",
@@ -6715,6 +6716,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "skeleton-accordion-example.ts",
     "importPath": "components/skeleton"
   },
+  "skeleton-animation-duration": {
+    "packagePath": "components/skeleton/skeleton-animation-duration",
+    "title": "Skeleton animation duration",
+    "componentName": "SkeletonAnimationDurationExample",
+    "files": [
+      "skeleton-animation-duration-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-animation-duration-example",
+    "primaryFile": "skeleton-animation-duration-example.ts",
+    "importPath": "components/skeleton"
+  },
   "skeleton-basic": {
     "packagePath": "components/skeleton/skeleton-basic",
     "title": "Skeleton basic block",
@@ -9988,6 +10001,7 @@ export type LiveExampleId =
   | 'sidepanel-with-custom-injector'
   | 'sidepanel-with-dynamic-config-update'
   | 'skeleton-accordion'
+  | 'skeleton-animation-duration'
   | 'skeleton-basic'
   | 'skeleton-checkable'
   | 'skeleton-code-block'
