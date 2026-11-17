@@ -148,7 +148,8 @@ export const tkTMLocaleData = {
         toggle: {
             expand: 'Giňeltmek',
             collapse: 'Ýykmak'
-        }
+        },
+        more: 'Köpräk'
     },
     searchExpandable: {
         tooltip: 'Gözleg',

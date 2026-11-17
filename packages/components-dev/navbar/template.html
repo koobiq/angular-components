@@ -95,8 +95,8 @@
             <kbq-navbar-title>Проекты</kbq-navbar-title>
         </kbq-navbar-item>
 
-        <kbq-navbar-item>
-            <button kbq-button color="contrast">
+        <kbq-navbar-item alwaysVisible>
+            <button kbq-button [color]="'contrast'">
                 <span>Новая задача</span>
             </button>
         </kbq-navbar-item>
@@ -114,6 +114,18 @@
             <kbq-navbar-title>Ссылка на внешний ресурс</kbq-navbar-title>
             <i kbq-icon="kbq-arrow-up-right-from-square_16" kbqNavbarItemSuffix></i>
         </a>
+
+        <kbq-navbar-item collapsedText="Поиск" [kbqPlacement]="popUpPlacements.Bottom" [tooltipText]="'Поиск'">
+            <i kbq-icon="kbq-magnifying-glass_16" color="contrast"></i>
+        </kbq-navbar-item>
+
+        <kbq-navbar-item collapsedText="Загрузки" [kbqPlacement]="popUpPlacements.Bottom" [tooltipText]="'Загрузки'">
+            <i kbq-icon="kbq-arrow-down-to-line_16" color="contrast"></i>
+        </kbq-navbar-item>
+
+        <kbq-navbar-item collapsedText="Справка" [kbqPlacement]="popUpPlacements.Bottom" [tooltipText]="'Справка'">
+            <i kbq-icon="kbq-circle-question_16" color="contrast"></i>
+        </kbq-navbar-item>
     </kbq-navbar-container>
 
     <kbq-navbar-container>

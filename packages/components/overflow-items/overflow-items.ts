@@ -1,5 +1,3 @@
-import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
 import {
     booleanAttribute,
@@ -18,23 +16,14 @@ import {
     untracked
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { debounce, EMPTY, fromEvent, merge, switchMap, timer } from 'rxjs';
 import {
     KBQ_WINDOW,
-    type KbqFlexDirection,
     type KbqFlexWrap,
     kbqInjectNativeElement,
     type KbqOrientation
 } from '@koobiq/components/core';
-
-/**
- * Overflow, in device pixels, from which an item is hidden. At a fractional `devicePixelRatio` (browser zoom, display
- * scaling) the summed sizes drift from the layout by a fraction of a device pixel: computed margins, paddings and gaps
- * are not snapped to the layout grid of 1/64 device pixel, and `DOMRect` is single-precision. A container sized by its
- * content would read as overflown after every hidden item and lose them all. Half a device pixel absorbs the drift of 32
- * such lengths, while a larger overflow can already cost the item a device pixel when it is painted.
- */
-const MIN_OVERFLOW_IN_DEVICE_PIXELS = 0.5;
+import { map } from 'rxjs';
+import { KbqOverflowFitEngine, kbqOverflowRecalculationTriggers } from './overflow-fit-engine';
 
 /**
  * Elements that `KbqOverflowItems` observes for resize changes on top of its own element and
@@ -159,12 +148,15 @@ export class KbqOverflowItem extends ElementVisibilityManager {
 export class KbqOverflowItems {
     private readonly element = kbqInjectNativeElement();
     private readonly destroyRef = inject(DestroyRef);
-    private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly renderer = inject(Renderer2);
-    private readonly document = inject(DOCUMENT);
     private readonly window = inject(KBQ_WINDOW);
-    private readonly platform = inject(Platform);
+    private readonly document = inject(DOCUMENT);
     private readonly resizeObserverTargets = inject(KBQ_OVERFLOW_ITEMS_RESIZE_OBSERVER_TARGETS);
+
+    /**
+     * The measurement and hiding core, shared with the horizontal navbar, see `KbqOverflowFitEngine`.
+     */
+    private readonly engine = new KbqOverflowFitEngine(this.window);
 
     /**
      * `KbqOverflowItem` directive references.
@@ -219,68 +211,12 @@ export class KbqOverflowItems {
      */
     readonly wrap = input<KbqFlexWrap>('nowrap');
 
-    /** The main axis of each orientation, as the `DOMRect` and `CSSStyleDeclaration` members to read. */
-    private readonly orientationConfig: Record<
-        KbqOrientation,
-        {
-            size: 'width' | 'height';
-            marginStart: 'marginLeft' | 'marginTop';
-            marginEnd: 'marginRight' | 'marginBottom';
-            paddingStart: 'paddingLeft' | 'paddingTop';
-            paddingEnd: 'paddingRight' | 'paddingBottom';
-            borderStart: 'borderLeftWidth' | 'borderTopWidth';
-            borderEnd: 'borderRightWidth' | 'borderBottomWidth';
-            gap: 'columnGap' | 'rowGap';
-            isCrossAxisExceeded: (element: HTMLElement) => boolean;
-            flexDirection: KbqFlexDirection;
-        }
-    > = {
-        horizontal: {
-            size: 'width',
-            marginStart: 'marginLeft',
-            marginEnd: 'marginRight',
-            paddingStart: 'paddingLeft',
-            paddingEnd: 'paddingRight',
-            borderStart: 'borderLeftWidth',
-            borderEnd: 'borderRightWidth',
-            gap: 'columnGap',
-            isCrossAxisExceeded: ({ clientHeight, scrollHeight }) => scrollHeight > clientHeight,
-            flexDirection: 'row'
-        },
-        vertical: {
-            size: 'height',
-            marginStart: 'marginTop',
-            marginEnd: 'marginBottom',
-            paddingStart: 'paddingTop',
-            paddingEnd: 'paddingBottom',
-            borderStart: 'borderTopWidth',
-            borderEnd: 'borderBottomWidth',
-            gap: 'rowGap',
-            isCrossAxisExceeded: ({ clientWidth, scrollWidth }) => scrollWidth > clientWidth,
-            flexDirection: 'column'
-        }
-    } as const;
-
     constructor() {
         this.setStyles();
         this.setupObservers();
     }
 
     private setupObservers(): void {
-        if (!this.platform.isBrowser) return;
-
-        const resizeObservers = merge(
-            this.resizeObserver.observe(this.element),
-            ...this.resizeObserverTargets.map((target) => this.resizeObserver.observe(target)),
-            toObservable(this.additionalResizeObserverTargets).pipe(
-                switchMap((targets) => {
-                    return Array.isArray(targets)
-                        ? merge(...targets.map((target) => this.resizeObserver.observe(target)))
-                        : this.resizeObserver.observe(targets);
-                })
-            )
-        );
-
         // What the hidden set depends on besides the geometry.
         const inputs = computed(() => [
             this.items().map((item) => [item.order(), item.alwaysVisible()]),
@@ -290,15 +226,14 @@ export class KbqOverflowItems {
             this.wrap()
         ]);
 
-        // A web font that loads lays the items out again without resizing a container of fixed size.
-        const fontsLoaded = this.document.fonts ? fromEvent(this.document.fonts, 'loadingdone') : EMPTY;
-
-        merge(toObservable(inputs), resizeObservers, fontsLoaded)
-            .pipe(
-                // Read per emission: the constructor that builds this runs before the input is set.
-                debounce(() => timer(this.debounceTime())),
-                takeUntilDestroyed(this.destroyRef)
-            )
+        kbqOverflowRecalculationTriggers({
+            element: this.element,
+            targets: this.resizeObserverTargets,
+            additionalTargets: this.additionalResizeObserverTargets,
+            debounceTime: this.debounceTime,
+            extra: [toObservable(inputs).pipe(map(() => undefined))]
+        })
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 const hiddenItems = this.getHiddenItems(
                     this.sortItemsByOrder(this.items()),
@@ -314,16 +249,6 @@ export class KbqOverflowItems {
     }
 
     /**
-     * Sort items by their `order` attribute.
-     * If an item does not have an `order` defined, its index is used as a fallback.
-     */
-    private sortItemsByOrder(items: ReadonlyArray<KbqOverflowItem>): ReadonlyArray<KbqOverflowItem> {
-        const itemsWithOrder = Array.from(items, (item, index) => ({ item, order: item.order() ?? index }));
-
-        return itemsWithOrder.sort((a, b) => a.order - b.order).map(({ item }) => item);
-    }
-
-    /**
      * Manages the visibility of items based on the available space in the container and returns the hidden items.
      * Direction of hiding is determined by the `reverseOverflowOrder` attribute.
      */
@@ -334,38 +259,25 @@ export class KbqOverflowItems {
         container: HTMLElement,
         orientation: KbqOrientation
     ): ReadonlyArray<KbqOverflowItem> {
-        result?.hide();
-        items.forEach((item) => item.show());
+        this.engine.showAll(items, result);
 
-        const hideable = (reverseOverflowOrder ? items : [...items].reverse()).filter(
-            ({ alwaysVisible }) => !alwaysVisible()
-        );
-        const threshold = MIN_OVERFLOW_IN_DEVICE_PIXELS / (this.window.devicePixelRatio || 1);
-        let hiddenCount = 0;
+        // The engine hides in the order the items are handed in; the default order is the end of the list.
+        const subject = this.engine.containerSubject(container, orientation, this.wrap());
+        const hideOrder = reverseOverflowOrder ? items : [...items].reverse();
 
-        if (this.wrap() !== 'wrap') {
-            // Hides in one go what the first measurement already shows to be too much, sparing the loop below a layout
-            // per item. With every item visible the items are at their smallest and the container at its largest, and
-            // the result is not counted yet, so this never hides more than the loop would.
-            const { overflow, sizes } = this.measure(container, orientation);
-            let excess = overflow;
+        this.engine.hideOverflownItems(hideOrder, subject, result, this.wrap());
 
-            while (hiddenCount < hideable.length && excess >= threshold) {
-                const item = hideable[hiddenCount++]!;
+        return items.filter((item) => item.hidden());
+    }
 
-                excess -= sizes.get(item.element) ?? 0;
-                item.hide();
-            }
+    /**
+     * Sort items by their `order` attribute.
+     * If an item does not have an `order` defined, its index is used as a fallback.
+     */
+    private sortItemsByOrder(items: ReadonlyArray<KbqOverflowItem>): ReadonlyArray<KbqOverflowItem> {
+        const itemsWithOrder = Array.from(items, (item, index) => ({ item, order: item.order() ?? index }));
 
-            if (hiddenCount) result?.show();
-        }
-
-        while (hiddenCount < hideable.length && this.hasOverflown(container, orientation, threshold)) {
-            hideable[hiddenCount++]!.hide();
-            result?.show();
-        }
-
-        return items.filter(({ hidden }) => hidden());
+        return itemsWithOrder.sort((a, b) => a.order - b.order).map(({ item }) => item);
     }
 
     /**
@@ -380,7 +292,7 @@ export class KbqOverflowItems {
         toObservable(this.orientation)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((orientation) => {
-                const { flexDirection } = this.orientationConfig[orientation];
+                const { flexDirection } = this.engine.orientationConfig[orientation];
 
                 this.renderer.setStyle(this.element, 'flex-direction', flexDirection);
             });
@@ -388,66 +300,5 @@ export class KbqOverflowItems {
         toObservable(this.wrap)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((wrap) => this.renderer.setStyle(this.element, 'flex-wrap', wrap));
-    }
-
-    private hasOverflown(container: HTMLElement, orientation: KbqOrientation, threshold: number): boolean {
-        if (this.wrap() === 'wrap') return this.orientationConfig[orientation].isCrossAxisExceeded(container);
-
-        return this.measure(container, orientation).overflow >= threshold;
-    }
-
-    /**
-     * Measures how far the children of the container that take part in its layout exceed its content box along the
-     * main axis, and the space each of them takes, its margins and one gap included.
-     */
-    private measure(
-        container: HTMLElement,
-        orientation: KbqOrientation
-    ): { overflow: number; sizes: ReadonlyMap<Element, number> } {
-        const axis = this.orientationConfig[orientation];
-        const style = this.window.getComputedStyle(container);
-        const size = container.getBoundingClientRect()[axis.size];
-        const edges =
-            this.px(style[axis.borderStart]) +
-            this.px(style[axis.paddingStart]) +
-            this.px(style[axis.paddingEnd]) +
-            this.px(style[axis.borderEnd]);
-        // Rects are measured after transforms and CSS `zoom`, computed lengths before them.
-        const layoutSize = parseFloat(style[axis.size]);
-        const scale = layoutSize > 0 ? size / (layoutSize + (style.boxSizing === 'border-box' ? 0 : edges)) : 1;
-        const gap = this.px(style[axis.gap]) * scale;
-        const sizes = new Map<Element, number>();
-        // Gaps lie between the children, one fewer than there are.
-        let used = -gap;
-
-        for (const { element, style: childStyle } of this.getLaidOutChildren(container)) {
-            const margins = this.px(childStyle[axis.marginStart]) + this.px(childStyle[axis.marginEnd]);
-            const childSize = element.getBoundingClientRect()[axis.size] + margins * scale + gap;
-
-            sizes.set(element, childSize);
-            used += childSize;
-        }
-
-        return { overflow: used - (size - edges * scale), sizes };
-    }
-
-    /**
-     * Children of the element that take part in its flex layout: neither `display: none` nor taken out of flow, as
-     * hidden items are, with the children of a `display: contents` child in its place.
-     */
-    private getLaidOutChildren(element: Element): Array<{ element: Element; style: CSSStyleDeclaration }> {
-        return Array.from(element.children).flatMap((child) => {
-            const style = this.window.getComputedStyle(child);
-
-            if (style.display === 'contents') return this.getLaidOutChildren(child);
-
-            if (style.display === 'none' || style.position === 'absolute' || style.position === 'fixed') return [];
-
-            return [{ element: child, style }];
-        });
-    }
-
-    private px(value: string): number {
-        return parseFloat(value) || 0;
     }
 }

@@ -180,7 +180,7 @@ export type KbqTimezoneLocaleConfiguration = {
     otherCountriesLabel: string;
 };
 
-/** Locale configuration for the `kbq-vertical-navbar` collapse toggle. */
+/** Locale configuration for the navbar: the vertical collapse toggle and the horizontal «Ещё» trigger. */
 export type KbqNavbarLocaleConfiguration = {
     toggle: {
         /** Accessible name of the toggle while the navbar is collapsed. */
@@ -188,6 +188,8 @@ export type KbqNavbarLocaleConfiguration = {
         /** Accessible name of the toggle while the navbar is expanded. */
         collapse: string;
     };
+    /** Accessible name of the horizontal navbar's trigger revealing the items hidden by overflow. */
+    more: string;
 };
 
 /** Locale configuration for `KbqSearchExpandableModule`. */

@@ -133,6 +133,7 @@ describe('KbqNavbar', () => {
                 TestExternalConfigApp,
                 TestCollapseApp,
                 TestTwoContainersApp,
+                TestMoreApp,
                 TestTooltipApp,
                 TestTooltipSelectorApp,
                 TestNestedTooltipDefaultsApp,
@@ -798,7 +799,7 @@ describe('KbqNavbar', () => {
         const getOwnedTooltips = (fixture: ComponentFixture<TestTooltipApp>): KbqTooltipTrigger[] => {
             const owners = [
                 ...fixture.debugElement.queryAll(By.directive(KbqNavbarBrand)),
-                ...fixture.debugElement.queryAll(By.directive(KbqNavbarItem))
+                ...queryNavbarItems(fixture.debugElement)
             ];
 
             return owners.map(({ componentInstance }) => (componentInstance as KbqNavbarBrand | KbqNavbarItem).tooltip);
@@ -2362,6 +2363,7 @@ describe('KbqNavbar', () => {
             const navbar = fixture.debugElement.query(By.directive(KbqNavbar)).componentInstance as KbqNavbar;
             const items = fixture.debugElement
                 .queryAll(By.directive(KbqNavbarItem))
+                .filter((el) => !el.nativeElement.classList.contains('kbq-navbar__more-trigger'))
                 .map((el) => el.componentInstance as KbqNavbarItem);
 
             // Four elements of 100px each (three items plus the divider) in a 350px navbar: collapsing the last
@@ -2384,6 +2386,7 @@ describe('KbqNavbar', () => {
             const navbar = fixture.debugElement.query(By.directive(KbqNavbar)).componentInstance as KbqNavbar;
             const items = fixture.debugElement
                 .queryAll(By.directive(KbqNavbarItem))
+                .filter((el) => !el.nativeElement.classList.contains('kbq-navbar__more-trigger'))
                 .map((el) => el.componentInstance as KbqNavbarItem);
 
             stubNavbarWidths(fixture.debugElement, { navbar: 350, item: 100 });
@@ -2409,6 +2412,7 @@ describe('KbqNavbar', () => {
             const navbar = fixture.debugElement.query(By.directive(KbqNavbar)).componentInstance as KbqNavbar;
             const items = fixture.debugElement
                 .queryAll(By.directive(KbqNavbarItem))
+                .filter((el) => !el.nativeElement.classList.contains('kbq-navbar__more-trigger'))
                 .map((el) => el.componentInstance as KbqNavbarItem);
 
             // Three 100px items fit a 320px navbar only if the 24px margin of the second container is ignored.
@@ -2430,6 +2434,7 @@ describe('KbqNavbar', () => {
             const navbar = fixture.debugElement.query(By.directive(KbqNavbar)).componentInstance as KbqNavbar;
             const items = fixture.debugElement
                 .queryAll(By.directive(KbqNavbarItem))
+                .filter((el) => !el.nativeElement.classList.contains('kbq-navbar__more-trigger'))
                 .map((el) => el.componentInstance as KbqNavbarItem);
 
             // A hidden navbar has no width, while the margins of its containers still resolve.
@@ -2462,6 +2467,183 @@ describe('KbqNavbar', () => {
             expect(spy).toHaveBeenCalledTimes(1);
 
             await vi.runOnlyPendingTimersAsync();
+        });
+    });
+
+    describe('overflow hiding', () => {
+        const getItems = (fixture: ComponentFixture<TestMoreApp>): KbqNavbarItem[] =>
+            queryNavbarItems(fixture.debugElement).map((el) => el.componentInstance as KbqNavbarItem);
+
+        const getNavbar = (fixture: ComponentFixture<TestMoreApp>): KbqNavbar =>
+            fixture.debugElement.query(By.directive(KbqNavbar)).componentInstance as KbqNavbar;
+
+        const getTrigger = (fixture: ComponentFixture<TestMoreApp>): HTMLElement =>
+            fixture.nativeElement.querySelector('.kbq-navbar__more-trigger');
+
+        const getDivider = (fixture: ComponentFixture<TestMoreApp>): HTMLElement =>
+            fixture.nativeElement.querySelector('kbq-navbar-divider');
+
+        const getTriggerDropdown = (fixture: ComponentFixture<TestMoreApp>): KbqDropdownTrigger =>
+            fixture.debugElement.query(By.css('.kbq-navbar__more-trigger')).injector.get(KbqDropdownTrigger);
+
+        const setup = async (): Promise<ComponentFixture<TestMoreApp>> => {
+            const fixture = TestBed.createComponent(TestMoreApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            return fixture;
+        };
+
+        it('should hide items under «Ещё» from the end once collapsing is not enough', async () => {
+            const fixture = await setup();
+            const navbar = getNavbar(fixture);
+
+            // Five 100px elements in a 350px navbar with a collapse that frees 10px each: collapsing cannot
+            // absorb the 200px overflow, so the items hide from the end until what remains fits.
+            stubNavbarWidths(fixture.debugElement, { navbar: 350, item: 100, collapsible: 10 });
+
+            navbar.updateExpandedStateForItems();
+            fixture.detectChanges();
+
+            const [first, clock, third, pinned] = getItems(fixture);
+
+            expect(third.rectangleElement.hidden()).toBe(true);
+            expect(clock.rectangleElement.hidden()).toBe(true);
+            expect(first.rectangleElement.hidden()).toBe(false);
+            expect(pinned.rectangleElement.hidden()).toBe(false);
+        });
+
+        it('should show the trigger only while something is hidden', async () => {
+            const fixture = await setup();
+            const navbar = getNavbar(fixture);
+
+            stubNavbarWidths(fixture.debugElement, { navbar: 350, item: 100, collapsible: 10 });
+
+            navbar.updateExpandedStateForItems();
+            fixture.detectChanges();
+
+            const trigger = getTrigger(fixture);
+
+            expect(trigger.hasAttribute('inert')).toBe(false);
+
+            stubNavbarWidths(fixture.debugElement, { navbar: 1000, item: 100, collapsible: 10 });
+
+            navbar.updateExpandedStateForItems();
+            fixture.detectChanges();
+
+            expect(trigger.hasAttribute('inert')).toBe(true);
+            expect(getItems(fixture).every((item) => !item.rectangleElement.hidden())).toBe(true);
+        });
+
+        it('should name the trigger from the navbar locale', async () => {
+            const fixture = await setup();
+            const navbar = getNavbar(fixture);
+
+            stubNavbarWidths(fixture.debugElement, { navbar: 350, item: 100, collapsible: 10 });
+
+            navbar.updateExpandedStateForItems();
+            fixture.detectChanges();
+
+            expect(getTrigger(fixture).getAttribute('aria-label')).toBe('Ещё');
+        });
+
+        it('should hide a divider whose one neighbour is hidden, without taking it into the panel', async () => {
+            const fixture = await setup();
+            const navbar = getNavbar(fixture);
+
+            // A 460px navbar hides the last item alone — the 50px trigger that showing it adds still fits;
+            // the divider's right neighbour is then hidden while its
+            // left one is not.
+            stubNavbarWidths(fixture.debugElement, { navbar: 460, item: 100, collapsible: 10 });
+
+            navbar.updateExpandedStateForItems();
+            fixture.detectChanges();
+
+            const [first, , third] = getItems(fixture);
+            const itemElements = queryNavbarItems(fixture.debugElement).map((el) => el.nativeElement);
+            const divider = getDivider(fixture);
+
+            expect(third.rectangleElement.hidden()).toBe(true);
+            expect(first.rectangleElement.hidden()).toBe(false);
+
+            getTriggerDropdown(fixture).open();
+            await vi.runOnlyPendingTimersAsync();
+
+            const panelContent = document.querySelector('.kbq-navbar__more-content');
+
+            expect(panelContent).toBeTruthy();
+            expect(panelContent!.contains(itemElements[2])).toBe(true);
+            expect(panelContent!.contains(divider)).toBe(false);
+
+            getTriggerDropdown(fixture).close();
+        });
+
+        it('should move the hidden items into the panel and return them on close', async () => {
+            const fixture = await setup();
+            const navbar = getNavbar(fixture);
+
+            stubNavbarWidths(fixture.debugElement, { navbar: 350, item: 100, collapsible: 10 });
+
+            navbar.updateExpandedStateForItems();
+            fixture.detectChanges();
+
+            const [, clock, third] = getItems(fixture);
+            const itemElements = queryNavbarItems(fixture.debugElement).map((el) => el.nativeElement);
+            const container = itemElements[0].parentElement;
+            const divider = getDivider(fixture);
+
+            getTriggerDropdown(fixture).open();
+            await vi.runOnlyPendingTimersAsync();
+
+            const panelContent = document.querySelector('.kbq-navbar__more-content');
+
+            // The original host elements, not copies: their own routers, listeners and submenus keep working.
+            expect(panelContent!.contains(itemElements[2])).toBe(true);
+            expect(panelContent!.contains(itemElements[1])).toBe(true);
+            expect(panelContent!.contains(divider)).toBe(true);
+            expect(panelContent!.contains(itemElements[0])).toBe(false);
+            expect(panelContent!.contains(itemElements[3])).toBe(false);
+
+            // An icon-only item renders the text of its `collapsedText` in the panel.
+            expect(itemElements[2].textContent).toContain('Third');
+            expect(itemElements[1].textContent).toContain('Clock');
+            expect(clock.isCollapsed()).toBe(false);
+
+            getTriggerDropdown(fixture).close();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            // Back in the container, hidden again, the collapsed state the fit left restored.
+            expect(container.contains(itemElements[2])).toBe(true);
+            expect(container.contains(itemElements[1])).toBe(true);
+            expect(container.contains(divider)).toBe(true);
+            expect(third.rectangleElement.hidden()).toBe(true);
+            expect(clock.rectangleElement.hidden()).toBe(true);
+            expect(clock.inMorePanel()).toBe(false);
+            expect(third.isCollapsed()).toBe(true);
+        });
+
+        it('should keep the hidden items out of the roving focus and the trigger last in it', async () => {
+            const fixture = await setup();
+            const navbar = getNavbar(fixture);
+
+            stubNavbarWidths(fixture.debugElement, { navbar: 350, item: 100, collapsible: 10 });
+
+            navbar.updateExpandedStateForItems();
+            fixture.detectChanges();
+
+            const [, clock, third] = getItems(fixture);
+            const triggerFocusable = fixture.debugElement
+                .query(By.css('.kbq-navbar__more-trigger'))
+                .injector.get(KbqNavbarFocusableItem);
+
+            const focusables = navbar.focusableItems.toArray();
+
+            expect(focusables[focusables.length - 1]).toBe(triggerFocusable);
+            expect(clock.navbarFocusableItem.disabled).toBe(true);
+            expect(third.navbarFocusableItem.disabled).toBe(true);
         });
     });
 
@@ -2704,9 +2886,17 @@ describe('overlay layer', () => {
  * browser's answer to "how much room is there, how much does every element in a container take, and how much does
  * an item free by collapsing?".
  */
+/**
+ * The consumer's items of a navbar: every `kbq-navbar-item` but the internal «Ещё» trigger, which is one as well.
+ */
+const queryNavbarItems = (root: DebugElement): DebugElement[] =>
+    root
+        .queryAll(By.directive(KbqNavbarItem))
+        .filter((item) => !item.nativeElement.classList.contains('kbq-navbar__more-trigger'));
+
 const stubNavbarWidths = (
     root: DebugElement,
-    { navbar, item, collapsible }: { navbar: number; item: number; collapsible?: number }
+    { navbar, item, collapsible, more = 50 }: { navbar: number; item: number; collapsible?: number; more?: number }
 ): void => {
     const navbarEl = root.query(By.directive(KbqNavbar)).nativeElement as HTMLElement;
 
@@ -2718,7 +2908,14 @@ const stubNavbarWidths = (
         }
     }
 
-    root.queryAll(By.directive(KbqNavbarItem)).forEach((el) => {
+    // The «Ещё» trigger joins the content only once the engine shows it, so it is stubbed apart.
+    const moreTrigger = root.query(By.css('.kbq-navbar__more-trigger'));
+
+    if (moreTrigger) {
+        moreTrigger.nativeElement.getBoundingClientRect = () => ({ width: more }) as DOMRect;
+    }
+
+    queryNavbarItems(root).forEach((el) => {
         const navbarItem = el.componentInstance as KbqNavbarItem;
 
         navbarItem.measureWidths = () => {};
@@ -2927,6 +3124,35 @@ class TestItemCustomTriggerApp {}
 class TestCollapseApp {
     asLinks = false;
 }
+
+/** An icon-only item, a divider, titled items and an `alwaysVisible` one: the third fit stage over them. */
+@Component({
+    selector: 'test-more-app',
+    imports: [KbqNavbarModule, KbqIconModule],
+    template: `
+        <kbq-navbar>
+            <kbq-navbar-container>
+                <kbq-navbar-item>
+                    <i kbq-icon="kbq-circle-info_16"></i>
+                    <kbq-navbar-title>First</kbq-navbar-title>
+                </kbq-navbar-item>
+                <kbq-navbar-item collapsedText="Clock" aria-label="Clock">
+                    <i kbq-icon="kbq-clock_16"></i>
+                </kbq-navbar-item>
+                <kbq-navbar-divider />
+                <kbq-navbar-item>
+                    <i kbq-icon="kbq-play_16"></i>
+                    <kbq-navbar-title>Third</kbq-navbar-title>
+                </kbq-navbar-item>
+                <kbq-navbar-item alwaysVisible>
+                    <i kbq-icon="kbq-pause_16"></i>
+                    <kbq-navbar-title>Pinned</kbq-navbar-title>
+                </kbq-navbar-item>
+            </kbq-navbar-container>
+        </kbq-navbar>
+    `
+})
+class TestMoreApp {}
 
 @Component({
     selector: 'test-two-containers-app',

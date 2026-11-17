@@ -823,7 +823,7 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'navbar',
                     hasExamples: true,
-                    isUpdated: expiresAt('2026-11-23')
+                    isUpdated: expiresAt('2026-12-01')
                 },
                 {
                     id: DocsStructureItemId.NotificationCenter,

@@ -562,6 +562,7 @@ export const enUSLocaleData: {
             expand: string;
             collapse: string;
         };
+        more: string;
     };
     searchExpandable: {
         tooltip: string;
@@ -851,6 +852,7 @@ export const esLALocaleData: {
             expand: string;
             collapse: string;
         };
+        more: string;
     };
     searchExpandable: {
         tooltip: string;
@@ -1387,6 +1389,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 expand: string;
                 collapse: string;
             };
+            more: string;
         };
         searchExpandable: {
             tooltip: string;
@@ -1651,6 +1654,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 expand: string;
                 collapse: string;
             };
+            more: string;
         };
         searchExpandable: {
             tooltip: string;
@@ -1911,6 +1915,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 expand: string;
                 collapse: string;
             };
+            more: string;
         };
         searchExpandable: {
             tooltip: string;
@@ -2177,6 +2182,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 expand: string;
                 collapse: string;
             };
+            more: string;
         };
         searchExpandable: {
             tooltip: string;
@@ -2439,6 +2445,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 expand: string;
                 collapse: string;
             };
+            more: string;
         };
         searchExpandable: {
             tooltip: string;
@@ -3586,6 +3593,7 @@ export type KbqNavbarLocaleConfiguration = {
         expand: string;
         collapse: string;
     };
+    more: string;
 };
 
 // @public (undocumented)
@@ -5260,6 +5268,7 @@ export const ptBRLocaleData: {
             expand: string;
             collapse: string;
         };
+        more: string;
     };
     searchExpandable: {
         tooltip: string;
@@ -5736,6 +5745,7 @@ export const ruRULocaleData: {
             expand: string;
             collapse: string;
         };
+        more: string;
     };
     searchExpandable: {
         tooltip: string;
@@ -6087,6 +6097,7 @@ export const tkTMLocaleData: {
             expand: string;
             collapse: string;
         };
+        more: string;
     };
     searchExpandable: {
         tooltip: string;

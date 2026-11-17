@@ -24,5 +24,45 @@
     margin-left: var(--kbq-size-xxl);
 }
 
+.kbq-navbar__more-trigger.kbq-navbar__more-trigger_hidden {
+    display: none;
+}
+
+// The «Ещё» panel of a horizontal navbar: the hidden items, their original host elements, render as rows.
+// It renders in the overlay, so it re-declares the navbar tokens itself, see `navbar-tokens.scss`.
+.kbq-navbar__more-content {
+    display: flex;
+    flex-direction: column;
+
+    min-width: var(--kbq-navbar-more-panel-size-min-width);
+
+    & .kbq-navbar-item.kbq-horizontal {
+        // A row keeps the item's own states; only its geometry becomes that of a menu row.
+        justify-content: flex-start;
+
+        width: 100%;
+        margin: 0;
+
+        &.kbq-navbar-item_with-title:not(.kbq-navbar-item_collapsed) {
+            padding-left: var(--kbq-size-xs);
+            padding-right: var(--kbq-size-xs);
+        }
+    }
+
+    // A divider between hidden items runs across the panel; runs of them collapse, and none lead or trail it.
+    & .kbq-navbar-divider {
+        width: auto;
+        height: 1px;
+
+        margin: var(--kbq-size-3xs) 0;
+
+        & + .kbq-navbar-divider,
+        &:first-child,
+        &:last-child {
+            display: none;
+        }
+    }
+}
+
 @include navbar-theme.kbq-navbar-theme();
 @include navbar-theme.kbq-navbar-typography();

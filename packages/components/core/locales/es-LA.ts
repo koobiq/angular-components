@@ -147,7 +147,8 @@ export const esLALocaleData = {
         toggle: {
             expand: 'Expandir',
             collapse: 'Colapsar'
-        }
+        },
+        more: 'Más'
     },
     searchExpandable: {
         tooltip: 'Búsqueda',

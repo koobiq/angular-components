@@ -145,7 +145,8 @@ export const ruRULocaleData = {
         toggle: {
             expand: 'Развернуть',
             collapse: 'Свернуть'
-        }
+        },
+        more: 'Ещё'
     },
     searchExpandable: {
         tooltip: 'Поиск',

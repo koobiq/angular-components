@@ -22,6 +22,7 @@ import {
     input,
     type OnChanges,
     type OnDestroy,
+    Renderer2,
     type Signal,
     signal,
     type SimpleChanges,
@@ -278,11 +279,17 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
 
     private readonly hasFocusState = signal(false);
 
-    /** Whether the item is disabled. Also `true` for a decorative element, which the key manager skips as well. */
+    // Co-located on the same element; a toggle carries no rectangle element.
+    private readonly rectangleElement = inject(KbqNavbarRectangleElement, { optional: true });
+
+    /**
+     * Whether the item is disabled. Also `true` for a decorative element and for one hidden under the «Ещё» panel
+     * of a horizontal navbar, which the key manager skips as well.
+     */
     // An accessor, not a signal: `FocusKeyManager` reads it as a boolean through its default skip predicate, where a
     // signal would always read truthy — the manager would skip every item and arrow navigation would stop working.
     get disabled(): boolean {
-        return this.disabledState() || this.decorative();
+        return this.disabledState() || this.decorative() || !!this.rectangleElement?.hidden();
     }
 
     set disabled(value: boolean) {
@@ -471,16 +478,19 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
         '[class.kbq-horizontal]': 'isHorizontal()',
 
         '[class.kbq-expanded]': 'isVertical() && !collapsed',
-        '[class.kbq-collapsed]': 'isVertical() && collapsed'
+        '[class.kbq-collapsed]': 'isVertical() && collapsed',
+
+        '[attr.aria-hidden]': 'hidden() || null'
     }
 })
 export class KbqNavbarRectangleElement {
     /** @docs-private */
     protected readonly isBrowser = inject(Platform).isBrowser;
-    /** @docs-private */
-    protected readonly nativeElement = kbqInjectNativeElement();
+    /** Element the rectangle renders in, the handle the ambient navbar hides it by. @docs-private */
+    readonly element = kbqInjectNativeElement();
     private readonly window = inject(KBQ_WINDOW);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly renderer = inject(Renderer2);
 
     /** Emits whenever the orientation or the collapsed state of the element changes. @docs-private */
     readonly state = new Subject<void>();
@@ -501,6 +511,42 @@ export class KbqNavbarRectangleElement {
         this._orientation.set(value);
 
         this.state.next();
+    }
+
+    /**
+     * Element with this attribute is never hidden under the «Ещё» panel of a horizontal navbar, whatever the
+     * overflow. Defaults to `false`.
+     */
+    readonly alwaysVisible = input<boolean, boolean | string | null | undefined>(false, {
+        transform: booleanAttribute
+    });
+
+    /** Whether the element is hidden under the «Ещё» panel of a horizontal navbar. @docs-private */
+    readonly hidden = computed(() => this.hiddenState());
+
+    private readonly hiddenState = signal(false);
+
+    /**
+     * Hides the element, out of the layout flow of its container. Written by the ambient `KbqNavbar`, never by
+     * the element itself.
+     *
+     * @docs-private
+     */
+    hide(): void {
+        this.renderer.setStyle(this.element, 'visibility', 'hidden');
+        this.renderer.setStyle(this.element, 'position', 'absolute');
+        this.hiddenState.set(true);
+    }
+
+    /**
+     * Restores the element into the layout flow of its container.
+     *
+     * @docs-private
+     */
+    show(): void {
+        this.renderer.removeStyle(this.element, 'visibility');
+        this.renderer.removeStyle(this.element, 'position');
+        this.hiddenState.set(false);
     }
 
     /** Whether the ambient navbar is horizontal. @docs-private */
@@ -539,7 +585,7 @@ export class KbqNavbarRectangleElement {
 
     /** Outer width of the element: its border box plus horizontal margins. */
     getOuterElementWidth(): number {
-        return this.isBrowser ? getOuterWidth(this.nativeElement, this.window) : 0;
+        return this.isBrowser ? getOuterWidth(this.element, this.window) : 0;
     }
 }
 
@@ -637,6 +683,14 @@ export class KbqNavbarItem implements AfterContentInit {
     });
 
     private readonly ownCollapsed = signal<boolean | undefined>(undefined);
+
+    /**
+     * Whether the item is currently moved into the «Ещё» panel of a horizontal navbar: there it renders its title,
+     * an icon-only item the text of `collapsedText`. Written by the ambient `KbqNavbar`.
+     *
+     * @docs-private
+     */
+    readonly inMorePanel = signal(false);
 
     /** Collapses the item regardless of what the ambient navbar decided. */
     set collapsed(value: boolean) {
