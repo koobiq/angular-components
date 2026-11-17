@@ -89,6 +89,17 @@ class OptgroupWithProjectedLabel {
 })
 class OptgroupWithTwoLabels {}
 
+// `KbqOptgroup` only: no `KbqOptgroupLabel` in scope, the way a standalone consumer misses the import.
+@Component({
+    imports: [KbqOptgroup],
+    template: `
+        <kbq-optgroup [label]="'Meat'">
+            <div kbq-optgroup-label>Custom</div>
+        </kbq-optgroup>
+    `
+})
+class OptgroupWithLabelWithoutDirective {}
+
 @Component({
     imports: [KbqOptionModule],
     template: `
@@ -442,7 +453,13 @@ describe('KbqOptionActionComponent', () => {
 describe('KbqOptgroup component', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqOptionModule, OptgroupWithLabel, OptgroupWithProjectedLabel, OptgroupWithTwoLabels]
+            imports: [
+                KbqOptionModule,
+                OptgroupWithLabel,
+                OptgroupWithProjectedLabel,
+                OptgroupWithTwoLabels,
+                OptgroupWithLabelWithoutDirective
+            ]
         }).compileComponents();
     });
 
@@ -536,6 +553,23 @@ describe('KbqOptgroup component', () => {
             fixture.detectChanges();
 
             expect(warn).toHaveBeenCalledTimes(1);
+        } finally {
+            warn.mockRestore();
+        }
+    });
+
+    // The selector alone projects the element, but only the directive makes it replace the `label` input.
+    it('should warn when the projected label renders next to the label input', () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+        try {
+            const fixture = TestBed.createComponent(OptgroupWithLabelWithoutDirective);
+
+            fixture.detectChanges();
+            fixture.detectChanges();
+
+            expect(warn).toHaveBeenCalledTimes(1);
+            expect(warn).toHaveBeenCalledWith(expect.stringContaining('KbqOptgroupLabel'));
         } finally {
             warn.mockRestore();
         }

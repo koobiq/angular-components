@@ -10,6 +10,7 @@ import {
     isDevMode,
     ViewEncapsulation
 } from '@angular/core';
+import { kbqInjectNativeElement } from '../utils';
 
 // Imported for the query locator below, although `./option` imports this file back: that cycle only
 // stays loadable because `index.ts` imports `./optgroup` before `./option`, so `KbqOption` is defined
@@ -74,6 +75,29 @@ export class KbqOptgroup implements AfterContentInit {
     }
 
     ngAfterContentInit(): void {
+        this.warnAboutExtraLabels();
+        this.warnAboutLabelWithoutDirective();
+    }
+
+    // An ng-content selector matches the projected element even without the directive in scope, so the
+    // content would then render next to the `label` input rather than replace it.
+    private warnAboutLabelWithoutDirective(): void {
+        if (!isDevMode() || this.warnedAboutLabelWithoutDirective || !this.label()) return;
+
+        const label = this.nativeElement.querySelector('.kbq-optgroup-label');
+
+        if (!label?.childElementCount || this.projectedLabels().length > 0) return;
+
+        this.warnedAboutLabelWithoutDirective = true;
+
+        // eslint-disable-next-line no-console
+        console.warn(
+            'KbqOptgroup: kbq-optgroup-label content renders together with the label input. ' +
+                'Import KbqOptgroupLabel for it to take over the label.'
+        );
+    }
+
+    private warnAboutExtraLabels(): void {
         if (!isDevMode() || this.warnedAboutExtraLabels || this.projectedLabels().length <= 1) return;
 
         this.warnedAboutExtraLabels = true;
@@ -82,5 +106,9 @@ export class KbqOptgroup implements AfterContentInit {
         console.warn('KbqOptgroup: at most one kbq-optgroup-label is supported; every extra one also renders.');
     }
 
+    private readonly nativeElement = kbqInjectNativeElement();
+
     private warnedAboutExtraLabels = false;
+
+    private warnedAboutLabelWithoutDirective = false;
 }
