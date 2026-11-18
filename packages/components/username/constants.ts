@@ -1,15 +1,15 @@
-import { InjectionToken, Provider, Signal } from '@angular/core';
+import { InjectionToken, type Provider, type Signal } from '@angular/core';
 import {
-    KbqDeepPartial,
+    type KbqDeepPartial,
     kbqInjectLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
-    KbqUsernameLocaleConfiguration,
+    type KbqUsernameLocaleConfiguration,
     ruRULocaleData
 } from '@koobiq/components/core';
 import {
-    KbqFormatKeyToProfileMapping,
-    KbqFormatKeyToProfileMappingExtended,
-    KbqUserInfo,
+    type KbqFormatKeyToProfileMapping,
+    type KbqFormatKeyToProfileMappingExtended,
+    type KbqUserInfo,
     KbqUsernameFormatKey
 } from './types';
 

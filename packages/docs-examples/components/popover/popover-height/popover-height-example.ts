@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
+import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/popover';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
 
@@ -12,7 +12,7 @@ import { TRANSLATIONS } from './l10n';
 @Component({
     selector: 'popover-height-example',
     imports: [KbqInputModule, KbqButtonModule, KbqPopoverModule, KbqFormsModule],
-    templateUrl: 'popover-height-example.html',
+    templateUrl: './popover-height-example.html',
     styles: `
         ::ng-deep .kbq-popover.popover-height-custom-example .kbq-popover__container {
             max-height: 240px;
@@ -27,5 +27,5 @@ import { TRANSLATIONS } from './l10n';
 export class PopoverHeightExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
 
-    activePopover: KbqPopoverTrigger;
+    activePopover?: KbqPopoverTrigger;
 }

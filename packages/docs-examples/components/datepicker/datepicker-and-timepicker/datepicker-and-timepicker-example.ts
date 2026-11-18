@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import type { DateTime } from 'luxon';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { DateTime } from 'luxon';
 import { TRANSLATIONS } from './l10n';
 
 /**
@@ -48,5 +48,5 @@ import { TRANSLATIONS } from './l10n';
 export class DatepickerAndTimepickerExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
 
-    selectedDateTime: DateTime;
+    selectedDateTime?: DateTime;
 }

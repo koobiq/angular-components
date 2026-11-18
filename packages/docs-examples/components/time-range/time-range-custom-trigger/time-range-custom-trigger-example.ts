@@ -6,7 +6,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/core';
 import { KbqFormField, KbqSuffix } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeTitleAsControl } from '@koobiq/components/time-range';
+import { KbqTimeRange, type KbqTimeRangeRange, KbqTimeRangeTitleAsControl } from '@koobiq/components/time-range';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
 
@@ -28,7 +28,12 @@ import { TRANSLATIONS } from './l10n';
     ],
     template: `
         <ng-template #titleTemplate let-context>
-            <button kbq-button [attr.aria-label]="t().trigger" [class.kbq-active]="context.popover.isOpen">
+            <button
+                kbq-button
+                type="button"
+                [attr.aria-label]="t().trigger"
+                [class.kbq-active]="context.popover.isOpen"
+            >
                 <i kbq-icon="kbq-calendar-o_16"></i>
             </button>
         </ng-template>
@@ -40,7 +45,7 @@ import { TRANSLATIONS } from './l10n';
                 <kbq-time-range-title-as-control>
                     {{ context.formattedDate[0] | titlecase }}{{ context.formattedDate.slice(1) }}
                 </kbq-time-range-title-as-control>
-                <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix [color]="'contrast-fade'"></i>
+                <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix color="contrast-fade"></i>
             </kbq-form-field>
         </ng-template>
 

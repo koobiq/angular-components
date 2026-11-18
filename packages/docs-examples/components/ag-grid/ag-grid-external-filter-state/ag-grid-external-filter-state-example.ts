@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AgGridModule } from 'ag-grid-angular';
+import { AllCommunityModule, type ColDef, type IRowNode, ModuleRegistry } from 'ag-grid-community';
 import {
     KbqAgGridExternalFilterStateLocalStorageStore,
     kbqAgGridExternalFilterStateStoreProvider,
@@ -8,8 +10,6 @@ import {
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { AgGridModule } from 'ag-grid-angular';
-import { AllCommunityModule, ColDef, IRowNode, ModuleRegistry } from 'ag-grid-community';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);

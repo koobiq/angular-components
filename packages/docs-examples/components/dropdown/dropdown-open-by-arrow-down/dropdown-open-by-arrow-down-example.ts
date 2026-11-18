@@ -27,7 +27,7 @@ import { TRANSLATIONS } from './l10n';
         KbqInputModule,
         KbqOptionModule
     ],
-    templateUrl: 'dropdown-open-by-arrow-down-example.html',
+    templateUrl: './dropdown-open-by-arrow-down-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownOpenByArrowDownExample {

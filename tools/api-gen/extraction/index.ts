@@ -1,12 +1,18 @@
 import { NgtscProgram } from '@angular/compiler-cli';
 import { basename, join } from 'path';
 import ts from 'typescript';
-import { ConstantEntry, DocEntry, EntryType } from '../rendering/entities';
-import { ClassEntryMetadata, DeclarationSourceMetadata, EntryCollection, ModuleInfo, PackageMetadata } from '../types';
+import { type ConstantEntry, type DocEntry, EntryType } from '../rendering/entities';
+import type {
+    ClassEntryMetadata,
+    DeclarationSourceMetadata,
+    EntryCollection,
+    ModuleInfo,
+    PackageMetadata
+} from '../types';
 import { src } from '../utils';
 import { prepareMergedMetadata, readSourceFile, updateEntries } from './helpers';
 
-const BASE_PATH = process.env.BASE_PATH ?? 'packages';
+const BASE_PATH = process.env['BASE_PATH'] ?? 'packages';
 
 const mergeRecords = <T>(records: Record<string, T>[]): Record<string, T> => Object.assign({}, ...records);
 
@@ -66,7 +72,7 @@ const getModulePackagePaths = ({ moduleName, include, exclude }: ModuleInfo): st
 };
 
 export function extractApiToJson(packages: ModuleInfo[]) {
-    const modules: { [moduleName: string]: PackageMetadata[] } = packages.reduce((res, current) => {
+    const modules = packages.reduce<{ [moduleName: string]: PackageMetadata[] }>((res, current) => {
         res[current.moduleName] = getModulePackagePaths(current)
             .map((packagePath: string) => basename(packagePath))
             .map((packageName: string) => getMetadataFrom(current.moduleName, packageName));

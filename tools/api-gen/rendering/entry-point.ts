@@ -7,15 +7,15 @@ import type {
     DocsApiTypePart
 } from '../../../apps/docs/src/app/components/api-page/api-page.types';
 import {
-    ClassEntry,
-    DocEntry,
+    type ClassEntry,
+    type DocEntry,
     EntryType,
-    FunctionEntry,
-    JsDocTagEntry,
-    MemberEntry,
+    type FunctionEntry,
+    type JsDocTagEntry,
+    type MemberEntry,
     MemberType,
-    ParameterEntry,
-    PropertyEntry
+    type ParameterEntry,
+    type PropertyEntry
 } from './entities';
 import { isDeprecatedEntry } from './entities/categorization';
 import {

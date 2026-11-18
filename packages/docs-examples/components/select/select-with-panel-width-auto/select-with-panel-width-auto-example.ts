@@ -13,7 +13,7 @@ import { TRANSLATIONS } from './l10n';
     ],
     template: `
         <kbq-form-field>
-            <kbq-select [placeholder]="t().placeholder" [panelWidth]="'auto'" [(value)]="value">
+            <kbq-select panelWidth="auto" [placeholder]="t().placeholder" [(value)]="value">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }

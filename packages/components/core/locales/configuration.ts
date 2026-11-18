@@ -1,9 +1,9 @@
-import { computed, inject, InjectionToken, Provider, Signal } from '@angular/core';
+import { computed, inject, InjectionToken, type Provider, type Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map, of } from 'rxjs';
-import { kbqDeepMerge, KbqDeepPartial } from '../utils';
+import { kbqDeepMerge, type KbqDeepPartial } from '../utils';
 import { KBQ_LOCALE_SERVICE } from './locale-service';
-import { KbqLocaleData, KbqLocaleSection, KbqPartialLocaleData } from './types';
+import type { KbqLocaleData, KbqLocaleSection, KbqPartialLocaleData } from './types';
 
 /**
  * Element-level source of localized strings, resolved by {@link kbqInjectLocaleConfiguration}.

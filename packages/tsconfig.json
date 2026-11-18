@@ -1,6 +1,10 @@
 {
-    // Only for the editor: `packages/components/tsconfig.json` leaves the MDX pages out, so the editor looks
-    // further up, reaches this file and follows its reference to the project that types them.
+    // Only for the editor: the projects under packages/ leave the MDX pages and the specs out, so the editor looks
+    // further up, reaches this file and follows its references to the projects that type them.
     "files": [],
-    "references": [{ "path": "../tsconfig.mdx.json" }]
+    "references": [
+        { "path": "../tsconfig.mdx.json" },
+        { "path": "../tsconfig.spec.json" },
+        { "path": "../tsconfig.playwright-spec.json" }
+    ]
 }

@@ -1,10 +1,10 @@
 .kbq-pipe.kbq-pipe__input {
+    flex: none;
     // Fall back like base-pipe.scss does for --kbq-filter-bar-pipe-max-width: the token is declared on
     // .kbq-filter-bar, which a pipe rendered outside a bar never sees. The width is explicit, so the cap
     // every other pipe takes from that token does not apply here.
     width: var(--kbq-filter-bar-pipe-input-width, 240px);
     max-width: none;
-    flex: none;
 
     .kbq-form-field {
         width: 100%;

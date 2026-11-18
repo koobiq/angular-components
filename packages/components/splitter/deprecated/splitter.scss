@@ -1,8 +1,9 @@
-@use './splitter-theme' as *;
+@use './splitter-theme';
 
 .kbq-splitter-component {
-    display: flex;
     position: relative;
+
+    display: flex;
     flex-wrap: nowrap;
     align-items: stretch;
 
@@ -19,12 +20,10 @@
 
 .kbq-gutter {
     display: flex;
-
     flex-grow: 0;
     flex-shrink: 0;
-
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 
     overflow: hidden;
 
@@ -48,4 +47,4 @@
     }
 }
 
-@include kbq-splitter-theme();
+@include splitter-theme.kbq-splitter-theme();

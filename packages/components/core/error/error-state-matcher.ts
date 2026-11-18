@@ -1,5 +1,5 @@
-import { Injectable, isDevMode, Provider, Type } from '@angular/core';
-import { AbstractControl, FormGroupDirective, NgForm } from '@angular/forms';
+import { Injectable, isDevMode, type Provider, Type } from '@angular/core';
+import type { AbstractControl, FormGroupDirective, NgForm } from '@angular/forms';
 
 /** Utility provider for `ErrorStateMatcher`. */
 export const kbqErrorStateMatcherProvider = (

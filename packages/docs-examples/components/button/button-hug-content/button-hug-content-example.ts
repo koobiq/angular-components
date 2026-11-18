@@ -13,17 +13,17 @@ import { TRANSLATIONS } from './l10n';
         KbqButtonModule
     ],
     template: `
-        <button class="example-hug-content__button" kbq-button [color]="colors.Contrast">
+        <button class="example-hug-content__button" kbq-button type="button" [color]="colors.Contrast">
             {{ t().buttonText }}
         </button>
         &nbsp;
         <br />
-        <button class="example-hug-content__button" kbq-button [color]="colors.Contrast">
+        <button class="example-hug-content__button" kbq-button type="button" [color]="colors.Contrast">
             {{ t().longButtonText }}
         </button>
         &nbsp;
     `,
-    styleUrls: ['button-hug-content-example.css'],
+    styleUrl: 'button-hug-content-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonHugContentExample {

@@ -1,12 +1,12 @@
 import {
-    KbqPanelAnchorOptions,
-    KbqPanelSpaceContext,
-    KbqTriggerFirstRowMeasurements,
+    type KbqPanelAnchorOptions,
+    type KbqPanelSpaceContext,
     kbqResolveOverlapPanelSpace,
     kbqResolvePanelMaxHeightToken,
     kbqResolvePanelSideSpace,
     kbqResolveTriggerFirstRowOffset,
-    kbqShouldAnchorPanelToFirstRow
+    kbqShouldAnchorPanelToFirstRow,
+    type KbqTriggerFirstRowMeasurements
 } from './panel-height';
 
 describe('kbqResolvePanelMaxHeightToken', () => {

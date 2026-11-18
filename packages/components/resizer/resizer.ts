@@ -16,8 +16,8 @@ import {
     signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KBQ_WINDOW, kbqInjectNativeElement } from '@koobiq/components/core';
 import { fromEvent } from 'rxjs';
+import { KBQ_WINDOW, kbqInjectNativeElement } from '@koobiq/components/core';
 
 /**
  * Directions for resizing.

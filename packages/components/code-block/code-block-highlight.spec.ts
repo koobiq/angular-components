@@ -1,15 +1,23 @@
-import { ApplicationRef, ChangeDetectionStrategy, Component, PLATFORM_ID, Provider, signal, Type } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+    ApplicationRef,
+    ChangeDetectionStrategy,
+    Component,
+    PLATFORM_ID,
+    type Provider,
+    signal,
+    type Type
+} from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { HLJSApi } from 'highlight.js';
+import type { HLJSApi } from 'highlight.js';
 import { firstValueFrom } from 'rxjs';
 import {
     kbqCodeBlockFallbackFileLanguageProvider,
     KbqCodeBlockHighlight,
-    KbqCodeBlockHighlightJsConfig,
+    type KbqCodeBlockHighlightJsConfig,
     kbqCodeBlockHighlightJsConfigProvider
 } from './code-block-highlight';
-import { KbqCodeBlockFile } from './types';
+import type { KbqCodeBlockFile } from './types';
 
 const buildMockCore = (): HLJSApi =>
     ({

@@ -1,5 +1,5 @@
-import { KbqPopoverTrigger } from '@koobiq/components/popover';
-import { DurationObjectUnits, DurationUnit } from '@koobiq/date-adapter';
+import type { KbqPopoverTrigger } from '@koobiq/components/popover';
+import type { DurationObjectUnits, DurationUnit } from '@koobiq/date-adapter';
 
 /**
  * Represents a time range with optional start and end date-time values.

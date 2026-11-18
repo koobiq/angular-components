@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTagEditChange, KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { type KbqTagEditChange, type KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTitleModule } from '@koobiq/components/title';
 
 const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Editable tag ${i}` }));
@@ -76,7 +76,11 @@ export class TagListEditableExample {
                     tag.remove();
                 } else {
                     this.tags.update((tags) => {
-                        tags[index].value = this.editInputModel();
+                        const editedTag = tags[index];
+
+                        if (editedTag) {
+                            editedTag.value = this.editInputModel();
+                        }
 
                         return tags;
                     });

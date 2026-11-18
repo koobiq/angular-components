@@ -1,12 +1,12 @@
-import { NumberInput } from '@angular/cdk/coercion';
-import { Component, Provider, Type, viewChild } from '@angular/core';
-import { ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
+import type { NumberInput } from '@angular/cdk/coercion';
+import { Component, type Provider, type Type, viewChild } from '@angular/core';
+import { type ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { DateTime } from 'luxon';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
-import { DateTime } from 'luxon';
 import { KbqInputModule, KbqMaxValidator, KbqMinValidator } from './index';
 
 function createComponent<T>(component: Type<T>, imports: any[] = [], providers: Provider[] = []): ComponentFixture<T> {
@@ -287,5 +287,17 @@ describe('KbqMinValidator/KbqMaxValidator', () => {
 
             expect(fixture.componentInstance.control.errors).toBeNull();
         });
+    });
+
+    // A form can validate the control before the directive gets its first inputs
+    it('should pass any value before the bounds arrive', () => {
+        const [minValidator, maxValidator] = TestBed.runInInjectionContext(() => [
+            new KbqMinValidator(),
+            new KbqMaxValidator()
+        ]);
+        const control = new FormControl(5);
+
+        expect(minValidator.validate(control)).toBeNull();
+        expect(maxValidator.validate(control)).toBeNull();
     });
 });

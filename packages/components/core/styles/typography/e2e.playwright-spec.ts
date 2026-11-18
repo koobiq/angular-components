@@ -1,4 +1,4 @@
-import { expect, Page, test } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
 
 test.describe('[Core] Typography', () => {
     test.describe('E2eTypographyStyles', () => {

@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component, ElementRef, viewChild } from '@angular/core';
 import {
-    AbstractControl,
+    type AbstractControl,
     FormControl,
     ReactiveFormsModule,
-    ValidationErrors,
-    ValidatorFn,
+    type ValidationErrors,
+    type ValidatorFn,
     Validators
 } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { KbqTagInput, type KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 
 const MAX_TAG_COUNT = 5;
 const LATIN_PATTERN = /^[a-zA-Z]+$/;

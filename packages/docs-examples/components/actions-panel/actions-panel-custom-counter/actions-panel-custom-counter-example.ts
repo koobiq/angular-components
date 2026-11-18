@@ -8,7 +8,7 @@ import {
     TemplateRef,
     viewChild
 } from '@angular/core';
-import { KbqActionsPanel, KbqActionsPanelRef } from '@koobiq/components/actions-panel';
+import { KbqActionsPanel, type KbqActionsPanelRef } from '@koobiq/components/actions-panel';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -40,7 +40,7 @@ type ExampleAction = {
         KbqToolTipModule
     ],
     template: `
-        <button kbq-button (click)="open()">{{ t().open }}</button>
+        <button kbq-button type="button" (click)="open()">{{ t().open }}</button>
 
         <ng-template let-data>
             <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
@@ -66,6 +66,7 @@ type ExampleAction = {
                             <kbq-divider class="example-divider-vertical" [vertical]="true" />
                         }
                         <button
+                            type="button"
                             color="contrast"
                             kbq-button
                             [class.layout-margin-left-xxs]="!$first"
@@ -83,6 +84,7 @@ type ExampleAction = {
             @if (hiddenItemIDs.size > 1) {
                 <button
                     kbqOverflowItemsResult
+                    type="button"
                     color="contrast"
                     kbq-button
                     [attr.aria-label]="t().more"
@@ -109,10 +111,10 @@ type ExampleAction = {
 
                 @for (action of actions(); track action.id) {
                     @if (hiddenItemIDs.has(action.id)) {
-                        @if (action.divider && hiddenItemIDs.has(actions()[$index - 1].id)) {
+                        @if (action.divider && hiddenItemIDs.has(actions()[$index - 1]?.id)) {
                             <kbq-divider />
                         }
-                        <button kbq-dropdown-item (click)="onAction(action)">
+                        <button kbq-dropdown-item type="button" (click)="onAction(action)">
                             <i [kbq-icon]="action.icon"></i>
                             {{ action.label }}
                         </button>
@@ -188,10 +190,14 @@ export class ActionsPanelCustomCounterExample {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly templateRef = viewChild.required(TemplateRef);
     private readonly toast = inject(KbqToastService);
-    private actionsPanelRef: KbqActionsPanelRef | null;
+    private actionsPanelRef: KbqActionsPanelRef | null = null;
 
     constructor() {
         afterNextRender(() => this.open());
+    }
+
+    protected counterLabel(counter: number): string {
+        return `Total number of items in selected groups: +${counter}`;
     }
 
     protected open(): void {

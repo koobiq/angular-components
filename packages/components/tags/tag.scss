@@ -1,35 +1,30 @@
 @use '../core/styles/common/animation';
-@use '../core/styles/common/tokens' as *;
 @use '../core/styles/common/vendor-prefixes';
 @use '../core/styles/common/input';
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
 .kbq-tag {
     @include vendor-prefixes.user-select(none);
+    @include squircle.kbq-squircle(4px);
 
     position: relative;
 
     display: inline-block;
 
+    box-sizing: border-box;
     max-width: 100%;
     height: var(--kbq-size-xxl);
-
     padding: var(--kbq-tag-size-padding-vertical) var(--kbq-tag-size-padding-horizontal);
-
-    @include kbq-squircle(4px);
-
-    cursor: default;
 
     outline: none;
 
-    box-sizing: border-box;
+    cursor: default;
 
     & .kbq-icon.kbq-tag-remove {
         display: flex;
+        flex-shrink: 0;
         align-items: center;
         justify-content: center;
-
-        flex-shrink: 0;
 
         margin-right: var(--kbq-tag-size-close-button-margin-right);
 
@@ -43,11 +38,10 @@
     }
 
     & .kbq-tag__text {
+        margin: 0 var(--kbq-tag-size-content-gap-horizontal);
+        overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        overflow: hidden;
-
-        margin: 0 var(--kbq-tag-size-content-gap-horizontal);
     }
 
     & .kbq-tag-prefix {
@@ -76,8 +70,8 @@
 
         &.kbq-input {
             min-height: unset !important;
-            border-radius: unset !important;
             padding: unset !important;
+            border-radius: unset !important;
         }
     }
 
@@ -90,17 +84,15 @@
     }
 
     &.cdk-drag-animating {
-        transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
-
         @include animation.kbq-animations-off();
+
+        transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
     }
 }
 
 .kbq-tag__wrapper {
     display: flex;
-    align-items: center;
-
-    height: 100%;
-
     flex: 1 1 100%;
+    align-items: center;
+    height: 100%;
 }

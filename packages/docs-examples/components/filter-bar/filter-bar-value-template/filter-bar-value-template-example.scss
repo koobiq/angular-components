@@ -4,8 +4,9 @@ kbq-filter-bar {
 
 .example-tree-node {
     display: flex;
-    align-items: flex-start;
     gap: var(--kbq-size-s);
+    align-items: flex-start;
+
     width: 100%;
     min-width: 0;
 }
@@ -23,6 +24,6 @@ kbq-filter-bar {
 .example-tree-node__count {
     flex: 0 0 auto;
     margin-inline-start: auto;
-    color: var(--kbq-foreground-contrast-secondary);
     font-variant-numeric: tabular-nums;
+    color: var(--kbq-foreground-contrast-secondary);
 }

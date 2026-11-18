@@ -3,10 +3,10 @@
 @use '../core/styles/common/link';
 
 .kbq-file-upload {
-    box-sizing: border-box;
+    position: relative;
     display: flex;
     align-items: center;
-    position: relative;
+    box-sizing: border-box;
 
     .kbq-file-item {
         display: flex;
@@ -15,8 +15,8 @@
 
     .kbq-file-dropzone {
         display: flex;
-        align-items: baseline;
         gap: var(--dropzone-gap, var(--kbq-file-upload-size-dropzone-content-gap-horizontal));
+        align-items: baseline;
     }
 }
 

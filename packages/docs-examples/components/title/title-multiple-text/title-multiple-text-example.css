@@ -18,8 +18,7 @@
 
 .example-title-multiple-text__value {
     flex-grow: 1;
-
     overflow: hidden;
-    white-space: nowrap;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }

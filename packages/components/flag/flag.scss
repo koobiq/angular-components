@@ -1,16 +1,20 @@
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
 .kbq-flag {
-    display: inline-block;
+    @include squircle.kbq-squircle(var(--kbq-flag-border-radius));
+
     position: relative;
+
+    display: inline-block;
+
     box-sizing: border-box;
     // Sizing follows the surrounding text; 3:2 gives width = 1.5 × line height. Override via
     // font-size / width / height to resize.
     height: 1em;
     aspect-ratio: var(--kbq-flag-aspect-ratio);
-    vertical-align: middle;
     overflow: hidden;
-    @include kbq-squircle(var(--kbq-flag-border-radius));
+
+    vertical-align: middle;
 
     // The flag fills the box whether it is projected directly or passed through the `svg` input
     // (the markup may sit inside a wrapper element). The two carriers need different mechanisms.
@@ -31,11 +35,13 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%);
+
         width: auto;
-        height: auto;
         min-width: 100%;
+        height: auto;
         min-height: 100%;
+
+        transform: translate(-50%, -50%);
     }
 
     // The `svg` input renders into this slot instead of the host element, so it cannot overwrite
@@ -46,11 +52,15 @@
 
     // Inset hairline drawn on top of the flag, gated by the shadow input.
     &.kbq-flag_shadow-inset::after {
+        @include squircle.kbq-squircle-inherit();
+
         content: '';
+
         position: absolute;
         inset: 0;
-        @include kbq-squircle-inherit();
+
         box-shadow: inset 0 0 0 1px var(--kbq-flag-shadow-color);
+
         pointer-events: none;
     }
 

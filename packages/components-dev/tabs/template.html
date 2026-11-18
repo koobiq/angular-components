@@ -123,22 +123,22 @@
 
 <h4>Tabs underlined</h4>
 <kbq-tab-group underlined>
-    <kbq-tab [label]="'Spam Attack'">Spam Attack Content</kbq-tab>
-    <kbq-tab disabled [label]="'Miscellaneous'">Miscellaneous Content</kbq-tab>
-    <kbq-tab [label]="'DDoS'">DDoS Content</kbq-tab>
-    <kbq-tab [label]="'IDS/IPS Alert'">IDS/IPS Alert Content</kbq-tab>
-    <kbq-tab [label]="'IDS/IPS Alert'">IDS/IPS Alert Content</kbq-tab>
-    <kbq-tab [label]="'IDS/IPS Alert'">IDS/IPS Alert Content</kbq-tab>
-    <kbq-tab [label]="'IDS/IPS Alert'">IDS/IPS Alert Content</kbq-tab>
+    <kbq-tab label="Spam Attack">Spam Attack Content</kbq-tab>
+    <kbq-tab disabled label="Miscellaneous">Miscellaneous Content</kbq-tab>
+    <kbq-tab label="DDoS">DDoS Content</kbq-tab>
+    <kbq-tab label="IDS/IPS Alert">IDS/IPS Alert Content</kbq-tab>
+    <kbq-tab label="IDS/IPS Alert">IDS/IPS Alert Content</kbq-tab>
+    <kbq-tab label="IDS/IPS Alert">IDS/IPS Alert Content</kbq-tab>
+    <kbq-tab label="IDS/IPS Alert">IDS/IPS Alert Content</kbq-tab>
 </kbq-tab-group>
 
 <hr />
 
 <h4>Tabs kbq-stretch-tabs</h4>
 <kbq-tab-group kbq-stretch-tabs>
-    <kbq-tab [label]="'Bruteforce'">content 1</kbq-tab>
-    <kbq-tab [label]="'Identity Theft'">content 2</kbq-tab>
-    <kbq-tab [label]="'Spam Attack'">content 3</kbq-tab>
+    <kbq-tab label="Bruteforce">content 1</kbq-tab>
+    <kbq-tab label="Identity Theft">content 2</kbq-tab>
+    <kbq-tab label="Spam Attack">content 3</kbq-tab>
 </kbq-tab-group>
 
 <hr />
@@ -154,7 +154,7 @@
                 <button
                     kbq-button
                     kbqPopover
-                    [kbqPopoverContent]="'Сегодня этот текст используют практически все дизайнеры, набирающие рыбу латиницей. Абзац считается каноническим во всех справочниках по типографике и предлагается к использованию в статьях, посвященных изготовлению макета верстки при отсутствии финальных текстов. В руководствах по работе с фирменным стилем крупных международных компаний именно с этих слов начинаются образцы верстки. Существуют даже издания с названием Lorem ipsum'"
+                    kbqPopoverContent="Сегодня этот текст используют практически все дизайнеры, набирающие рыбу латиницей. Абзац считается каноническим во всех справочниках по типографике и предлагается к использованию в статьях, посвященных изготовлению макета верстки при отсутствии финальных текстов. В руководствах по работе с фирменным стилем крупных международных компаний именно с этих слов начинаются образцы верстки. Существуют даже издания с названием Lorem ipsum"
                 >
                     click me
                 </button>
@@ -204,7 +204,7 @@
 
 <h4>Tabs vertical with custom label</h4>
 <kbq-tab-group vertical class="dev-vertical-tabs" (selectedTabChange)="selectedTabChange($event)">
-    <kbq-tab [tabId]="'firstTab'">
+    <kbq-tab tabId="firstTab">
         <ng-template kbq-tab-label>
             <i kbq-icon="kbq-play_16"></i>
             Very long long long long long long long long tab label
@@ -212,7 +212,7 @@
         </ng-template>
         Content
     </kbq-tab>
-    <kbq-tab tooltipTitle="Empty tooltip" [empty]="true" [tabId]="'Empty'">
+    <kbq-tab tooltipTitle="Empty tooltip" tabId="Empty" [empty]="true">
         <ng-template kbq-tab-label>
             Empty
             <i kbq-icon="kbq-play_16"></i>

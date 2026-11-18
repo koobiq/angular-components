@@ -23,9 +23,9 @@ import { TRANSLATIONS } from './l10n';
                     <kbq-tag
                         [selectable]="false"
                         [disabled]="option.disabled || select.disabled()"
-                        [color]="severities()[option.value].color"
+                        [color]="severities()[option.value]?.color"
                     >
-                        <i kbqTagPrefix [kbq-icon]="severities()[option.value].icon"></i>
+                        <i kbqTagPrefix [kbq-icon]="severities()[option.value]?.icon"></i>
                         {{ option.viewValue }}
                         <!-- The custom template replaces the built-in markup, so the remove control is up to us. -->
                         @if (!option.disabled && !select.disabled()) {
@@ -63,10 +63,10 @@ export class SelectCustomTagContentExample {
      * Only these four colors are themed for `kbq-tag`.
      */
     readonly severities = computed<Record<string, { color: KbqComponentColors; icon: string }>>(() => ({
-        [this.t().severities[0]]: { color: KbqComponentColors.Error, icon: 'kbq-circle-xmark_16' },
-        [this.t().severities[1]]: { color: KbqComponentColors.Warning, icon: 'kbq-triangle-exclamation_16' },
-        [this.t().severities[2]]: { color: KbqComponentColors.Theme, icon: 'kbq-circle-info_16' },
-        [this.t().severities[3]]: { color: KbqComponentColors.ContrastFade, icon: 'kbq-circle-info_16' }
+        [this.t().severities[0]!]: { color: KbqComponentColors.Error, icon: 'kbq-circle-xmark_16' },
+        [this.t().severities[1]!]: { color: KbqComponentColors.Warning, icon: 'kbq-triangle-exclamation_16' },
+        [this.t().severities[2]!]: { color: KbqComponentColors.Theme, icon: 'kbq-circle-info_16' },
+        [this.t().severities[3]!]: { color: KbqComponentColors.ContrastFade, icon: 'kbq-circle-info_16' }
     }));
 
     /** List of options — the keys of `severities`, computed once so the template doesn't rebuild it. */

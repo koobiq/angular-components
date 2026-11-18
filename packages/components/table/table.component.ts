@@ -1,15 +1,15 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
 import {
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    ElementRef,
-    ViewEncapsulation,
-    booleanAttribute,
     effect,
+    ElementRef,
     inject,
     input,
-    signal
+    signal,
+    ViewEncapsulation
 } from '@angular/core';
 import { kbqGetElementHeight } from '@koobiq/components/core';
 
@@ -21,7 +21,7 @@ import { kbqGetElementHeight } from '@koobiq/components/core';
 @Component({
     selector: 'table[kbq-table]',
     template: '<ng-content />',
-    styleUrls: ['table.scss', 'table-tokens.scss'],
+    styleUrls: ['./table.scss', './table-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

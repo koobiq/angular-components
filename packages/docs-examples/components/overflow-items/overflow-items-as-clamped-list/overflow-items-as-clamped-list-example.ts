@@ -20,7 +20,7 @@ import { TRANSLATIONS } from './l10n';
             #kbqOverflowItems="kbqOverflowItems"
             kbqOverflowItems
             style="max-height: 48px; min-width: 60px"
-            [wrap]="'wrap'"
+            wrap="wrap"
         >
             @for (item of countries(); track item) {
                 <span [kbqOverflowItem]="item" [class.layout-margin-right-xs]="!$last">

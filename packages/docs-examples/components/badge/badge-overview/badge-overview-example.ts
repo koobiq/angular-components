@@ -11,8 +11,8 @@ import { TRANSLATIONS } from './l10n';
     imports: [
         KbqBadgeModule
     ],
-    templateUrl: 'badge-overview-example.html',
-    styleUrls: ['badge-overview-example.css'],
+    templateUrl: './badge-overview-example.html',
+    styleUrl: './badge-overview-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BadgeOverviewExample {

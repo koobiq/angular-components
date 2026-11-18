@@ -33,7 +33,7 @@ import { TRANSLATIONS } from './l10n';
             </div>
         </ng-template>
     `,
-    styleUrls: ['./title-custom-content-example.css'],
+    styleUrl: './title-custom-content-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleCustomContentExample {

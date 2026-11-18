@@ -1,4 +1,4 @@
-import { AfterContentInit, Directive, ElementRef, contentChildren, inject } from '@angular/core';
+import { type AfterContentInit, contentChildren, Directive, ElementRef, inject } from '@angular/core';
 
 @Directive({
     selector: '.kbq-form__row, .kbq-form__fieldset, .kbq-form__legend',

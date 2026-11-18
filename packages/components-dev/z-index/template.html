@@ -118,9 +118,9 @@
         <kbq-navbar-item
             #popover="kbqPopover"
             kbqPopover
+            kbqPopoverContent="Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover "
+            kbqPopoverHeader="Центр уведомлений"
             [class.kbq-active]="popover.isOpen"
-            [kbqPopoverContent]="'Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover '"
-            [kbqPopoverHeader]="'Центр уведомлений'"
             [kbqPopoverPlacement]="popUpPlacements.BottomRight"
         >
             <i kbq-icon="kbq-bell_16"></i>
@@ -151,11 +151,11 @@
 
         <br />
 
-        <button kbq-button kbqPopover class="dev-button" [kbqPopoverContent]="'customContent'">show popover</button>
+        <button kbq-button kbqPopover class="dev-button" kbqPopoverContent="customContent">show popover</button>
 
         <br />
 
-        <button kbq-button class="dev-button" [kbqTooltip]="'inputText'">show tooltip</button>
+        <button kbq-button class="dev-button" kbqTooltip="inputText">show tooltip</button>
 
         <br />
 
@@ -186,22 +186,22 @@
     </div>
 
     <kbq-form-field>
-        <kbq-select [placeholder]="'placeholder'" [(value)]="selectValue">
-            <kbq-option disabled [value]="'Disabled'">Disabled</kbq-option>
-            <kbq-option [value]="'Normal'">Normal</kbq-option>
-            <kbq-option [value]="'Hovered'">Hovered</kbq-option>
-            <kbq-option [value]="'Focused'">Focused</kbq-option>
-            <kbq-option [value]="'Selected'">Selected</kbq-option>
-            <kbq-option [value]="'Selected1'">Selected1</kbq-option>
-            <kbq-option [value]="'Selected2'">Selected2</kbq-option>
-            <kbq-option [value]="'Selected3'">Selected3</kbq-option>
-            <kbq-option [value]="'Selected4'">Selected4</kbq-option>
-            <kbq-option [value]="'Selected5'">Selected5</kbq-option>
-            <kbq-option [value]="'Selected6'">Selected6</kbq-option>
-            <kbq-option [value]="'Selected7'">Selected7</kbq-option>
-            <kbq-option [value]="'Selected8'">Selected8</kbq-option>
-            <kbq-option [value]="'Selected9'">Selected9</kbq-option>
-            <kbq-option [value]="'Selected10'">Selected10</kbq-option>
+        <kbq-select placeholder="placeholder" [(value)]="selectValue">
+            <kbq-option disabled value="Disabled">Disabled</kbq-option>
+            <kbq-option value="Normal">Normal</kbq-option>
+            <kbq-option value="Hovered">Hovered</kbq-option>
+            <kbq-option value="Focused">Focused</kbq-option>
+            <kbq-option value="Selected">Selected</kbq-option>
+            <kbq-option value="Selected1">Selected1</kbq-option>
+            <kbq-option value="Selected2">Selected2</kbq-option>
+            <kbq-option value="Selected3">Selected3</kbq-option>
+            <kbq-option value="Selected4">Selected4</kbq-option>
+            <kbq-option value="Selected5">Selected5</kbq-option>
+            <kbq-option value="Selected6">Selected6</kbq-option>
+            <kbq-option value="Selected7">Selected7</kbq-option>
+            <kbq-option value="Selected8">Selected8</kbq-option>
+            <kbq-option value="Selected9">Selected9</kbq-option>
+            <kbq-option value="Selected10">Selected10</kbq-option>
             <kbq-select-footer class="kbq-select__footer_icon">
                 <button kbq-button class="kbq-button_transparent" (click)="showModal(modalTitle, controls)">
                     <i kbq-icon="kbq-arrow-up-from-line_16"></i>
@@ -239,7 +239,7 @@
 
     <kbq-sidepanel-footer>
         <kbq-sidepanel-actions align="left">
-            <button cdkFocusInitial kbq-button [color]="'contrast'" (click)="openTemplateSidepanel()">
+            <button cdkFocusInitial kbq-button color="contrast" (click)="openTemplateSidepanel()">
                 <span>Open another sidepanel</span>
             </button>
         </kbq-sidepanel-actions>

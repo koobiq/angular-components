@@ -1,5 +1,5 @@
-import { workspaces } from '@angular-devkit/core';
-import { DirEntry, SchematicsException, Tree } from '@angular-devkit/schematics';
+import type { workspaces } from '@angular-devkit/core';
+import { type DirEntry, SchematicsException, type Tree } from '@angular-devkit/schematics';
 import { readWorkspace } from '@schematics/angular/utility';
 import * as messages from './messages';
 import { visitProjectFiles } from './project-files';
@@ -9,9 +9,7 @@ import { visitProjectFiles } from './project-files';
  * @returns A new object instance with sorted keys
  */
 function sortObjectByKeys(obj: Record<string, string>) {
-    return Object.keys(obj)
-        .sort()
-        .reduce((result, key) => (result[key] = obj[key]) && result, {});
+    return Object.fromEntries(Object.entries(obj).sort(([a], [b]) => (a < b ? -1 : 1)));
 }
 
 /**
@@ -75,6 +73,8 @@ export async function setupOptions(
 
         return projectWorkspace as unknown as workspaces.ProjectDefinition;
     }
+
+    return undefined;
 }
 
 export async function resolveTargetDir(project: string | undefined, tree: Tree): Promise<DirEntry> {

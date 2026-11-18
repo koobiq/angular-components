@@ -1,19 +1,19 @@
 import { coerceNumberProperty } from '@angular/cdk/coercion';
-import { inject, Injectable, InjectionToken, Pipe, PipeTransform, Provider } from '@angular/core';
+import { inject, Injectable, InjectionToken, Pipe, type PipeTransform, type Provider } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     KBQ_DEFAULT_LOCALE_ID,
     KBQ_LOCALE_ID,
     KBQ_LOCALE_SERVICE,
-    KbqFormattersLocaleConfiguration,
+    type KbqFormattersLocaleConfiguration,
     kbqInjectLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
-    KbqLocaleService,
-    KbqNumberFormatOptions,
-    KbqNumberRoundingLocaleConfiguration,
+    type KbqLocaleService,
+    type KbqNumberFormatOptions,
+    type KbqNumberRoundingLocaleConfiguration,
     ruRUFormattersData
 } from '../../locales';
-import { KbqDeepPartial } from '../../utils';
+import type { KbqDeepPartial } from '../../utils';
 
 export const KBQ_NUMBER_FORMATTER_OPTIONS = new InjectionToken<ParsedDigitsInfo>('KbqNumberFormatterOptions');
 
@@ -144,10 +144,10 @@ const intervalsConfig = {
 };
 
 class ParsedDigitsInfo {
-    useGrouping: boolean;
-    minimumIntegerDigits: number;
-    minimumFractionDigits: number;
-    maximumFractionDigits: number;
+    useGrouping: boolean | undefined;
+    minimumIntegerDigits: number | undefined;
+    minimumFractionDigits: number | undefined;
+    maximumFractionDigits: number | undefined;
 }
 
 const defaultValueForGroupingInRULocale: number = 10000;
@@ -176,8 +176,6 @@ function parseDigitsInfo(digitsInfo: string): ParsedDigitsInfo {
 
     if (maxFractionPart != null) {
         result.maximumFractionDigits = parseInt(maxFractionPart);
-    } else if (minFractionPart != null && result.minimumFractionDigits > result.maximumFractionDigits) {
-        result.maximumFractionDigits = result.minimumFractionDigits;
     }
 
     if (useGroupingPart != null) {
@@ -339,7 +337,7 @@ function isWithin(startRange: number, endRange: number, valueToCheck: number): b
 export class KbqRoundDecimalPipe implements PipeTransform {
     private id = inject(KBQ_LOCALE_ID, { optional: true });
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
-    private roundingOptions: RoundDecimalOptions;
+    private roundingOptions: RoundDecimalOptions = ruRUFormattersData.formatters.number.rounding;
     private readonly formatters = kbqInjectLocaleConfiguration('formatters', KBQ_FORMATTERS_LOCALE_CONFIGURATION);
 
     constructor() {
@@ -394,19 +392,18 @@ export class KbqRoundDecimalPipe implements PipeTransform {
                 });
             }
 
-            parts = parts.num
-                ? parts
+            const { num: integer, fraction } = parts.num
+                ? { num: parts.num, fraction: parts.fraction }
                 : {
                       num: Math.trunc(num / ROUNDING_UNITS[unit]),
                       fraction: this.calculateDecimal(num, ROUNDING_UNITS[unit])
                   };
-            Object.keys(parts).forEach((key) => {
-                parts[key] = Intl.NumberFormat.call(this, currentLocale, { useGrouping: false }).format(parts[key]);
-            });
-
-            const calculatedValue = parts.fraction
-                ? `${parts.num}${this.roundingOptions.groupSeparator}${parts.fraction}`
-                : `${parts.num}`;
+            const formatter = new Intl.NumberFormat(currentLocale, { useGrouping: false });
+            // A fraction of 0 is shown too (`2.0K`), so its presence is tested, not its truthiness.
+            const calculatedValue =
+                fraction === undefined
+                    ? formatter.format(integer)
+                    : `${formatter.format(integer)}${this.roundingOptions.groupSeparator}${formatter.format(fraction)}`;
 
             return `${calculatedValue}${this.roundingOptions.separator}${this.roundingOptions[unit]}`;
         } catch (error: any) {

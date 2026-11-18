@@ -1,4 +1,4 @@
-import { Replacement } from '../../utils/typescript';
+import type { Replacement } from '../../utils/typescript';
 
 export const iconReplacementData: Replacement[] = [
     { from: 'anomaly-square_16', to: 'square-a_16' },

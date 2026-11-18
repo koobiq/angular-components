@@ -2,7 +2,7 @@ import { TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
-import { KbqDefaultSizes } from '@koobiq/components/core';
+import type { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
@@ -28,9 +28,9 @@ import { TRANSLATIONS } from './l10n';
                     <nav kbq-breadcrumbs [size]="size">
                         @for (breadcrumb of breadcrumbs(); track breadcrumb; let last = $last) {
                             <kbq-breadcrumb-item
+                                fragment="fragment"
                                 [routerLink]="breadcrumb.url"
                                 [queryParams]="{ queryParams: 'queryParams' }"
-                                [fragment]="'fragment'"
                                 [text]="breadcrumb.label"
                             />
                         }

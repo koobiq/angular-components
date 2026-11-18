@@ -1,10 +1,10 @@
 import { InputModalityDetector } from '@angular/cdk/a11y';
 import { DOCUMENT } from '@angular/common';
-import { DebugElement, ElementRef } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type DebugElement, ElementRef } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { dispatchKeyboardEvent, ENTER } from '@koobiq/components/core';
-import { KbqFilter, KbqPipe } from '@koobiq/components/filter-bar';
+import type { KbqFilter, KbqPipe } from '@koobiq/components/filter-bar';
 
 /**
  * Drives the real `InputModalityDetector` the way a browser would, so focus-origin behaviour can be

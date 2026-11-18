@@ -8,11 +8,22 @@ import {
     inject,
     input,
     output,
-    Signal,
+    type Signal,
     signal,
     viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AgGridModule } from 'ag-grid-angular';
+import {
+    AllCommunityModule,
+    type ColDef,
+    type FirstDataRenderedEvent,
+    type GridApi,
+    ModuleRegistry,
+    type RowSelectionOptions,
+    type SelectionChangedEvent,
+    type SelectionColumnDef
+} from 'ag-grid-community';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { KBQ_ACTIONS_PANEL_DATA, KbqActionsPanel, KbqActionsPanelRef } from '@koobiq/components/actions-panel';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -22,17 +33,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToastService } from '@koobiq/components/toast';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { AgGridModule } from 'ag-grid-angular';
-import {
-    AllCommunityModule,
-    ColDef,
-    FirstDataRenderedEvent,
-    GridApi,
-    ModuleRegistry,
-    RowSelectionOptions,
-    SelectionChangedEvent,
-    SelectionColumnDef
-} from 'ag-grid-community';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -216,6 +216,7 @@ export class ExampleGrid {
                         <kbq-divider class="example-divider-vertical" [vertical]="true" />
                     }
                     <button
+                        type="button"
                         color="contrast"
                         kbq-button
                         [class.layout-margin-left-xxs]="!$first"
@@ -232,6 +233,7 @@ export class ExampleGrid {
             @if (hiddenItemIDs.size > 1) {
                 <button
                     kbqOverflowItemsResult
+                    type="button"
                     color="contrast"
                     kbq-button
                     [attr.aria-label]="t().more"
@@ -247,10 +249,10 @@ export class ExampleGrid {
 
                 @for (action of actions(); track action.id) {
                     @if (hiddenItemIDs.has(action.id)) {
-                        @if (action.divider && hiddenItemIDs.has(actions()[$index - 1].id)) {
+                        @if (action.divider && hiddenItemIDs.has(actions()[$index - 1]?.id)) {
                             <kbq-divider />
                         }
-                        <button kbq-dropdown-item (click)="onAction(action)">
+                        <button kbq-dropdown-item type="button" (click)="onAction(action)">
                             <i kbq-icon [class]="action.icon"></i>
                             {{ action.label }}
                         </button>
@@ -336,7 +338,7 @@ export class AgGridAndActionsPanelExample {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     private readonly container = viewChild.required(ExampleGrid, { read: ElementRef });
     private readonly grid = viewChild.required(ExampleGrid);
-    private actionsPanelRef!: KbqActionsPanelRef<ExampleActionsPanel> | null;
+    private actionsPanelRef: KbqActionsPanelRef<ExampleActionsPanel> | null = null;
     private readonly data = signal<ExampleTableItem[]>([]);
     private readonly destroyRef = inject(DestroyRef);
     protected readonly panelOpened = signal(false);

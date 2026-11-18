@@ -1,4 +1,4 @@
-/* stylelint-disable scss/at-extend-no-missing-placeholder */
+/* stylelint-disable scss/at-extend-no-missing-placeholder -- the callout icon extends the classes of the icon font */
 
 /**
     Usage:
@@ -14,9 +14,9 @@
 @use '@koobiq/icons/fonts/kbq-icons';
 @use '../dist/components/core/styles/common/tokens';
 
-%kbq-callout_contrast {
-    border-color: var(--kbq-line-contrast-less);
+%kbq-callout-contrast {
     background-color: var(--kbq-background-bg-secondary);
+    border-color: var(--kbq-line-contrast-less);
 
     .kbq-callout__header {
         color: var(--kbq-foreground-contrast-secondary);
@@ -34,39 +34,42 @@
 }
 
 .kbq-callout {
+    // setup contrast theme by default
+    @extend %kbq-callout-contrast;
+
+    margin-bottom: var(--kbq-size-xxl);
     overflow: hidden;
+
     border-width: 2px;
     border-style: solid;
     border-radius: var(--kbq-size-border-radius);
-    margin-bottom: var(--kbq-size-xxl);
 
     .kbq-callout__header {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-strong);
-        font-size: 15px;
 
         display: flex;
-        align-items: center;
         gap: var(--kbq-size-s);
+        align-items: center;
+
         padding: var(--kbq-size-s) var(--kbq-size-l) var(--kbq-size-xs);
+
+        font-size: 15px;
     }
 
     .kbq-callout__content {
         @include tokens.kbq-typography-level-to-styles-css-variables(md-typography, md-body);
 
-        border-radius: var(--kbq-size-border-radius) var(--kbq-size-border-radius) 0;
         padding: var(--kbq-size-s) var(--kbq-size-l) var(--kbq-size-m);
+        border-radius: var(--kbq-size-border-radius) var(--kbq-size-border-radius) 0;
     }
 
-    // setup contrast theme by default
-    @extend %kbq-callout_contrast;
-
     &.kbq-callout_contrast {
-        @extend %kbq-callout_contrast;
+        @extend %kbq-callout-contrast;
     }
 
     &.kbq-callout_theme {
-        border-color: var(--kbq-line-theme);
         background-color: var(--kbq-background-theme-fade);
+        border-color: var(--kbq-line-theme);
 
         .kbq-callout__header {
             color: var(--kbq-foreground-theme);
@@ -79,8 +82,8 @@
     }
 
     &.kbq-callout_success {
-        border-color: var(--kbq-line-success);
         background-color: var(--kbq-background-success-fade);
+        border-color: var(--kbq-line-success);
 
         .kbq-callout__header {
             color: var(--kbq-foreground-success);
@@ -93,8 +96,8 @@
     }
 
     &.kbq-callout_warning {
-        border-color: var(--kbq-line-warning);
         background-color: var(--kbq-background-warning-fade);
+        border-color: var(--kbq-line-warning);
 
         .kbq-callout__header {
             color: var(--kbq-foreground-warning);
@@ -107,8 +110,8 @@
     }
 
     &.kbq-callout_error {
-        border-color: var(--kbq-line-error);
         background-color: var(--kbq-background-error-fade);
+        border-color: var(--kbq-line-error);
 
         .kbq-callout__header {
             color: var(--kbq-foreground-error);

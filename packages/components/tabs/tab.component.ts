@@ -6,26 +6,26 @@ import {
     contentChild,
     inject,
     input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
+    type OnChanges,
+    type OnDestroy,
+    type OnInit,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     TemplateRef,
     viewChild,
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
+import { Subject } from 'rxjs';
 import {
     KBQ_CUSTOM_SCROLL_STRATEGY_PROVIDER,
     KBQ_SELECT_SCROLL_STRATEGY,
-    KbqPopUpPlacementValues,
+    type KbqPopUpPlacementValues,
     PopUpPlacements
 } from '@koobiq/components/core';
 import { KBQ_DROPDOWN_SCROLL_STRATEGY } from '@koobiq/components/dropdown';
-import { Subject } from 'rxjs';
 import { KbqTabContent } from './tab-content.directive';
-import { KBQ_TAB_LABEL, KbqTabLabel } from './tab-label.directive';
+import { KBQ_TAB_LABEL, type KbqTabLabel } from './tab-label.directive';
 
 @Component({
     selector: 'kbq-tab',
@@ -52,8 +52,11 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
 
     private readonly templateLabelQuery = contentChild(KBQ_TAB_LABEL);
 
-    /** The label template of the tab: the `kbqTabLabel` in its content, or else the one assigned in code. */
-    get templateLabel(): KbqTabLabel {
+    /**
+     * The label template of the tab: the `kbqTabLabel` in its content, or else the one assigned in code. `undefined`
+     * for a tab labelled with text.
+     */
+    get templateLabel(): KbqTabLabel | undefined {
         return this.templateLabelQuery() ?? this._templateLabel;
     }
 
@@ -61,7 +64,7 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
         this.setTemplateLabelInput(value);
     }
 
-    private _templateLabel: KbqTabLabel;
+    private _templateLabel?: KbqTabLabel;
 
     /**
      * Template provided in the tab content that will be used if present, used to enable lazy-loading

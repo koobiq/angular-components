@@ -18,9 +18,15 @@ import { TRANSLATIONS } from './l10n';
         <kbq-empty-state style="min-height: 216px">
             <div kbq-empty-state-text>{{ t().agentsGroupText }}</div>
             <div kbq-empty-state-actions>
-                <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">Action 1</button>
-                <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">Action 2</button>
-                <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">Action 3</button>
+                <button kbq-button type="button" [color]="colors.Theme" [kbqStyle]="styles.Transparent">
+                    Action 1
+                </button>
+                <button kbq-button type="button" [color]="colors.Theme" [kbqStyle]="styles.Transparent">
+                    Action 2
+                </button>
+                <button kbq-button type="button" [color]="colors.Theme" [kbqStyle]="styles.Transparent">
+                    Action 3
+                </button>
             </div>
         </kbq-empty-state>
     `,

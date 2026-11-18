@@ -15,7 +15,7 @@ import { TRANSLATIONS } from './l10n';
         FormsModule,
         KbqIconModule
     ],
-    templateUrl: 'button-toggle-disabled-all-overview-example.html',
+    templateUrl: './button-toggle-disabled-all-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonToggleDisabledAllOverviewExample {

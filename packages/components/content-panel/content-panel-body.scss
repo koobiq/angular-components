@@ -1,10 +1,10 @@
 .kbq-content-panel-body {
-    overflow: hidden;
     flex-grow: 1;
+    overflow: hidden;
 
     .kbq-content-panel-body__content {
-        padding: 0 var(--kbq-content-panel-vertical-padding);
         height: 100%;
+        padding: 0 var(--kbq-content-panel-vertical-padding);
     }
 
     // Without a footer the body is the last child of the card, and its content would end at the bottom edge.

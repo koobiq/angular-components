@@ -33,6 +33,7 @@
                 #breadcrumbsResult
                 kbq-button
                 kbqBreadcrumb
+                type="button"
                 class="kbq-breadcrumb__expand"
                 [attr.aria-label]="a11yLocaleConfiguration().expandBreadcrumbs"
                 [focusable]="!disabled()"
@@ -86,8 +87,8 @@
 }
 
 <ng-template #breadcrumbTemplate let-item let-last="last">
-    @if (item.customTemplateRef()) {
-        <ng-container [ngTemplateOutlet]="item.customTemplateRef()!" />
+    @if (item.customTemplateRef(); as customTemplateRef) {
+        <ng-container [ngTemplateOutlet]="customTemplateRef" />
     } @else {
         <a
             kbq-button

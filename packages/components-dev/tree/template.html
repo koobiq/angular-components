@@ -80,9 +80,9 @@
         <span [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"></span>
 
         <kbq-option-action
+            kbqTooltip="Tooltip text"
             [kbqDropdownTriggerFor]="dropdown"
             [kbqPlacement]="popUpPlacements.Right"
-            [kbqTooltip]="'Tooltip text'"
         />
     </kbq-tree-option>
 </kbq-tree-selection>
@@ -116,9 +116,9 @@
             <span [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"></span>
 
             <kbq-option-action
+                kbqTooltip="Tooltip text"
                 [kbqDropdownTriggerFor]="dropdown"
                 [kbqPlacement]="popUpPlacements.Right"
-                [kbqTooltip]="'Tooltip text'"
             />
         </kbq-tree-option>
     </kbq-tree-selection>

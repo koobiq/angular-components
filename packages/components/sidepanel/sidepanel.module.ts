@@ -5,6 +5,7 @@ import { NgModule } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
+import { KbqSidepanelService } from './sidepanel.service';
 import { KbqSidepanelContainerComponent } from './sidepanel-container.component';
 import {
     KbqSidepanelActions,
@@ -13,7 +14,6 @@ import {
     KbqSidepanelFooter,
     KbqSidepanelHeader
 } from './sidepanel-directives';
-import { KbqSidepanelService } from './sidepanel.service';
 
 @NgModule({
     imports: [

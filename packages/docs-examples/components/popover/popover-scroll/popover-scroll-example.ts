@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
+import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/popover';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
 
@@ -25,8 +25,10 @@ import { TRANSLATIONS } from './l10n';
 
         <ng-template #customFooter>
             <div class="layout-row layout-wrap" style="gap: 16px">
-                <button kbq-button [color]="'contrast'" (click)="activePopover.hide(0)">{{ t().save }}</button>
-                <button kbq-button (click)="activePopover.hide(0)">{{ t().cancel }}</button>
+                <button kbq-button type="button" color="contrast" (click)="activePopover?.hide(0)">
+                    {{ t().save }}
+                </button>
+                <button kbq-button type="button" (click)="activePopover?.hide(0)">{{ t().cancel }}</button>
             </div>
         </ng-template>
 
@@ -35,7 +37,8 @@ import { TRANSLATIONS } from './l10n';
                 #kbqNoClosePopover="kbqPopover"
                 kbq-button
                 kbqPopover
-                [kbqPopoverClass]="'popover-scroll-example'"
+                type="button"
+                kbqPopoverClass="popover-scroll-example"
                 [kbqPopoverContent]="customContent"
                 [kbqPopoverFooter]="customFooter"
                 (click)="activePopover = kbqNoClosePopover"
@@ -46,8 +49,9 @@ import { TRANSLATIONS } from './l10n';
                 #kbqClosePopover="kbqPopover"
                 kbq-button
                 kbqPopover
+                type="button"
+                kbqPopoverClass="popover-scroll-example"
                 [kbqPopoverCloseOnScroll]="true"
-                [kbqPopoverClass]="'popover-scroll-example'"
                 [kbqPopoverContent]="customContent"
                 [kbqPopoverFooter]="customFooter"
                 (click)="activePopover = kbqClosePopover"
@@ -66,5 +70,5 @@ import { TRANSLATIONS } from './l10n';
 export class PopoverScrollExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
 
-    activePopover: KbqPopoverTrigger;
+    activePopover?: KbqPopoverTrigger;
 }

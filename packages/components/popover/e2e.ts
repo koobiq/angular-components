@@ -1,6 +1,6 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, TemplateRef, viewChild } from '@angular/core';
+import { type AfterViewInit, ChangeDetectionStrategy, Component, type TemplateRef, viewChild } from '@angular/core';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
-import { KbqPopoverComponent, KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
+import { type KbqPopoverComponent, KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 @Component({
@@ -14,9 +14,9 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
             <ng-template #customFooter>
                 <div class="flex-100 layout-row layout-align-space-between-center">
-                    <button kbq-button class="step" [color]="'contrast'">&larr; Назад</button>
+                    <button kbq-button class="step" color="contrast">&larr; Назад</button>
 
-                    <button kbq-button class="step" [color]="'contrast'">Дальше &rarr;</button>
+                    <button kbq-button class="step" color="contrast">Дальше &rarr;</button>
                 </div>
             </ng-template>
 
@@ -266,7 +266,7 @@ export class E2ePopoverScrollbar {
             kbqPopoverSize="small"
             kbqPopoverPlacement="bottom"
             kbqTrigger="click"
-            [kbqPopoverContent]="'Short content'"
+            kbqPopoverContent="Short content"
         >
             Open
         </button>

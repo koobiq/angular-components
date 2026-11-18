@@ -3,9 +3,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import {
     getZonesGroupedByCountry,
     kbqResolveHostCountry,
-    KbqTimezoneGroup,
+    type KbqTimezoneGroup,
     KbqTimezoneModule,
-    KbqTimezoneZone,
+    type KbqTimezoneZone,
     promoteCountry
 } from '@koobiq/components/timezone';
 import { timezones } from '../timezone-data';

@@ -17,7 +17,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
         KbqLinkSuffix,
         KbqIcon
     ],
-    templateUrl: 'popover-small-example.html',
+    templateUrl: './popover-small-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverSmallExample {

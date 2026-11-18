@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { AgGridModule } from 'ag-grid-angular';
+import { AllCommunityModule, type ColDef, ModuleRegistry } from 'ag-grid-community';
 import {
     KbqAgGridFilterStateLocalStorageStore,
     kbqAgGridFilterStateStoreProvider,
@@ -6,8 +8,6 @@ import {
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { AgGridModule } from 'ag-grid-angular';
-import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);

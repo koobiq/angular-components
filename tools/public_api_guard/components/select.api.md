@@ -88,7 +88,6 @@ export const KBQ_SELECT_OPTIONS: InjectionToken<Partial<{
 
 // @public (undocumented)
 export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
-    constructor();
     protected readonly derivedDisabledWins = true;
     // (undocumented)
     handleElementEnter(): void;
@@ -264,9 +263,9 @@ export class KbqSelect extends KbqAbstractSelect implements AfterViewChecked, Af
     get selectAllState(): KbqPseudoCheckboxState;
     protected get selectAllText(): string;
     readonly selectAllToggle: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    get selected(): KbqOptionBase | KbqOptionBase[];
+    get selected(): KbqOptionBase | KbqOptionBase[] | undefined;
     readonly selectionChange: _angular_core.OutputEmitterRef<KbqSelectChange>;
-    selectionModel: SelectionModel<KbqOptionBase>;
+    selectionModel: SelectionModel<KbqOptionBase> | undefined;
     setDisabledState(isDisabled: boolean): void;
     setSelectedOptionsByClick(option: KbqOption): void;
     protected shouldShowSearch(): boolean;
@@ -282,7 +281,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterViewChecked, Af
     transformOrigin: string;
     readonly trigger: _angular_core.Signal<ElementRef<any> | undefined>;
     triggerFontSize: number;
-    protected triggerRect: DOMRect;
+    protected triggerRect: DOMRect | undefined;
     get triggerValue(): string;
     get triggerValues(): KbqOptionBase[];
     readonly triggerValuesLimit: _angular_core.InputSignal<number>;

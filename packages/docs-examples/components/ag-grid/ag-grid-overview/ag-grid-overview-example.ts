@@ -1,17 +1,17 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { AgGridModule, type ICellRendererAngularComp } from 'ag-grid-angular';
+import {
+    AllCommunityModule,
+    type ColDef,
+    type FirstDataRenderedEvent,
+    type ICellRendererParams,
+    ModuleRegistry,
+    type RowSelectionOptions,
+    type SelectionColumnDef
+} from 'ag-grid-community';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { KbqLink } from '@koobiq/components/link';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { AgGridModule, ICellRendererAngularComp } from 'ag-grid-angular';
-import {
-    AllCommunityModule,
-    ColDef,
-    FirstDataRenderedEvent,
-    ICellRendererParams,
-    ModuleRegistry,
-    RowSelectionOptions,
-    SelectionColumnDef
-} from 'ag-grid-community';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -25,7 +25,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
-    cellValue: string;
+    cellValue = '';
 
     agInit(params: ICellRendererParams): void {
         this.cellValue = this.getValueToDisplay(params);

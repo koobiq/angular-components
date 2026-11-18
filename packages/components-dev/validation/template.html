@@ -39,12 +39,12 @@
 
         <kbq-form-field>
             <kbq-select formControlName="reactiveSelectValue">
-                <kbq-option disabled [value]="'Disabled'">Disabled</kbq-option>
-                <kbq-option [value]="'Normal'">Normal</kbq-option>
-                <kbq-option [value]="'Hovered'">Hovered</kbq-option>
-                <kbq-option [value]="'Focused'">Focused</kbq-option>
-                <kbq-option [value]="'Selected'">Selected</kbq-option>
-                <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+                <kbq-option disabled value="Disabled">Disabled</kbq-option>
+                <kbq-option value="Normal">Normal</kbq-option>
+                <kbq-option value="Hovered">Hovered</kbq-option>
+                <kbq-option value="Focused">Focused</kbq-option>
+                <kbq-option value="Selected">Selected</kbq-option>
+                <kbq-option value="Selected1">Selected1</kbq-option>
             </kbq-select>
         </kbq-form-field>
 
@@ -98,7 +98,7 @@
 
         @if (reactiveForm.controls.reactiveTypeaheadValue.errors) {
             <div class="kbq-form-field_error">
-                @if (reactiveForm.controls.reactiveTypeaheadValue.errors?.required) {
+                @if (reactiveForm.controls.reactiveTypeaheadValue.hasError('required')) {
                     <div>error</div>
                 }
             </div>
@@ -111,7 +111,7 @@
 
         @if (reactiveForm.controls.reactiveInputValue.errors) {
             <div>
-                @if (reactiveForm.controls.reactiveInputValue.errors?.required) {
+                @if (reactiveForm.controls.reactiveInputValue.hasError('required')) {
                     <div>required error</div>
                 }
             </div>
@@ -157,12 +157,12 @@
 
         <kbq-form-field>
             <kbq-select [formControl]="formControlSelect">
-                <kbq-option disabled [value]="'Disabled'">Disabled</kbq-option>
-                <kbq-option [value]="'Normal'">Normal</kbq-option>
-                <kbq-option [value]="'Hovered'">Hovered</kbq-option>
-                <kbq-option [value]="'Focused'">Focused</kbq-option>
-                <kbq-option [value]="'Selected'">Selected</kbq-option>
-                <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+                <kbq-option disabled value="Disabled">Disabled</kbq-option>
+                <kbq-option value="Normal">Normal</kbq-option>
+                <kbq-option value="Hovered">Hovered</kbq-option>
+                <kbq-option value="Focused">Focused</kbq-option>
+                <kbq-option value="Selected">Selected</kbq-option>
+                <kbq-option value="Selected1">Selected1</kbq-option>
             </kbq-select>
         </kbq-form-field>
 
@@ -217,7 +217,7 @@
 
         @if (formControlTags.errors) {
             <div class="kbq-form-field_error">
-                @if (formControlTags.errors?.required) {
+                @if (formControlTags.hasError('required')) {
                     <div>error</div>
                 }
             </div>
@@ -230,7 +230,7 @@
 
         @if (formControlTagInputFormControl.errors) {
             <div>
-                @if (formControlTagInputFormControl.errors?.required) {
+                @if (formControlTagInputFormControl.hasError('required')) {
                     <div>required error</div>
                 }
             </div>
@@ -279,12 +279,12 @@
 
         <kbq-form-field>
             <kbq-select name="select" [required]="true" [(ngModel)]="selectValue">
-                <kbq-option disabled [value]="'Disabled'">Disabled</kbq-option>
-                <kbq-option [value]="'Normal'">Normal</kbq-option>
-                <kbq-option [value]="'Hovered'">Hovered</kbq-option>
-                <kbq-option [value]="'Focused'">Focused</kbq-option>
-                <kbq-option [value]="'Selected'">Selected</kbq-option>
-                <kbq-option [value]="'Selected1'">Selected1</kbq-option>
+                <kbq-option disabled value="Disabled">Disabled</kbq-option>
+                <kbq-option value="Normal">Normal</kbq-option>
+                <kbq-option value="Hovered">Hovered</kbq-option>
+                <kbq-option value="Focused">Focused</kbq-option>
+                <kbq-option value="Selected">Selected</kbq-option>
+                <kbq-option value="Selected1">Selected1</kbq-option>
             </kbq-select>
         </kbq-form-field>
 
@@ -370,7 +370,7 @@
 
         @if (formWithCustomValidator.controls.login.errors) {
             <div class="kbq-form-field_error">
-                @if (formWithCustomValidator.controls.login.errors?.required) {
+                @if (formWithCustomValidator.controls.login.hasError('required')) {
                     <div>error</div>
                 }
             </div>

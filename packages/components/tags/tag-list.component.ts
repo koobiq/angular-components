@@ -1,11 +1,11 @@
 ﻿import { _IdGenerator, FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
-import { CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
+import { type CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { BACKSPACE, END, HOME, LEFT_ARROW, RIGHT_ARROW, TAB } from '@angular/cdk/keycodes';
 import {
-    AfterContentChecked,
-    AfterContentInit,
-    AfterViewInit,
+    type AfterContentChecked,
+    type AfterContentInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -14,26 +14,27 @@ import {
     contentChild,
     contentChildren,
     DestroyRef,
-    DoCheck,
+    type DoCheck,
     effect,
     ElementRef,
     forwardRef,
     inject,
     input,
     linkedSignal,
-    OnChanges,
-    OnDestroy,
+    type OnChanges,
+    type OnDestroy,
     output,
-    QueryList,
+    type QueryList,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     untracked,
     ViewEncapsulation
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import { type ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import { filter, merge, type Observable, startWith, Subject, takeUntil } from 'rxjs';
 import {
-    CanUpdateErrorState,
+    type CanUpdateErrorState,
     ErrorStateMatcher,
     FocusKeyManager,
     isNull,
@@ -44,10 +45,15 @@ import {
     runClearPredicate
 } from '@koobiq/components/core';
 import { KbqCleaner, kbqCleanerFactoryProvider, KbqFormFieldControl } from '@koobiq/components/form-field';
-import { merge, Observable, Subject } from 'rxjs';
-import { filter, startWith, takeUntil } from 'rxjs/operators';
-import { KbqTagTextControl } from './tag-text-control';
-import { KbqTag, KbqTagDragData, KbqTagEditChange, KbqTagEvent, KbqTagFocusEvent } from './tag.component';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
+import {
+    KbqTag,
+    type KbqTagDragData,
+    type KbqTagEditChange,
+    type KbqTagEvent,
+    type KbqTagFocusEvent
+} from './tag.component';
+import type { KbqTagTextControl } from './tag-text-control';
 
 /** Change event object that is emitted when the tag list value has changed. */
 export class KbqTagListChange {
@@ -74,7 +80,7 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
             </div>
         }
     `,
-    styleUrls: ['tag-list.scss', 'tag-tokens.scss'],
+    styleUrls: ['./tag-list.scss', './tag-tokens.scss'],
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqTagList },
         kbqCleanerFactoryProvider(() => {
@@ -446,7 +452,7 @@ export class KbqTagList
     readonly errorState = this.errorStateTracker.errorState;
 
     /** The tag input to add more tags */
-    private tagInput: KbqTagTextControl;
+    private tagInput?: KbqTagTextControl;
 
     /**
      * The same control as `tagInput`, kept in a signal so `autofilled` can track it reactively —
@@ -505,6 +511,11 @@ export class KbqTagList
             this.ngControl.valueAccessor = this;
         }
 
+        // The horizontal orientation follows the direction, which is read once the content is initialized.
+        this.keyManager = new FocusKeyManager<KbqTag>(this.tags)
+            .withVerticalOrientation()
+            .skipPredicate(({ disabled }) => disabled);
+
         this.setupDropListInitialProperties();
 
         // A disabled list cannot be reordered.
@@ -525,10 +536,7 @@ export class KbqTagList
     }
 
     ngAfterContentInit() {
-        this.keyManager = new FocusKeyManager<KbqTag>(this.tags)
-            .withVerticalOrientation()
-            .withHorizontalOrientation(this.dir ? this.dir.value : 'ltr')
-            .skipPredicate(({ disabled }) => disabled);
+        this.keyManager.withHorizontalOrientation(this.dir ? this.dir.value : 'ltr');
 
         if (this.dir) {
             this.dir.change
@@ -566,7 +574,7 @@ export class KbqTagList
 
                 // Defer setting the value in order to avoid the "Expression
                 // has changed after it was checked" errors from Angular.
-                Promise.resolve().then(() => {
+                void Promise.resolve().then(() => {
                     if (currentTags && this.pendingUIChange) {
                         this.pendingUIChange = false;
 

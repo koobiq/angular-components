@@ -58,7 +58,7 @@
                 <label for="element" class="kbq-form__label">Choose color</label>
 
                 <kbq-form-field id="color" class="kbq-form__control">
-                    <kbq-select [placeholder]="'Select element'" [(value)]="selectedColor">
+                    <kbq-select placeholder="Select element" [(value)]="selectedColor">
                         <kbq-option [value]="componentColors.Contrast">Contrast</kbq-option>
                         <kbq-option [value]="componentColors.ContrastFade">ContrastFade</kbq-option>
                         <kbq-option [value]="componentColors.Theme">Theme</kbq-option>
@@ -72,12 +72,12 @@
                 <label for="element" class="kbq-form__label">Choose trigger element</label>
 
                 <kbq-form-field id="element" class="kbq-form__control">
-                    <kbq-select [placeholder]="'Select element'" [(value)]="selectedElement">
-                        <kbq-option [value]="'button'">Button</kbq-option>
-                        <kbq-option [value]="'icon'">Icon</kbq-option>
-                        <kbq-option [value]="'input'">Input</kbq-option>
-                        <kbq-option [value]="'caret'">Caret</kbq-option>
-                        <kbq-option [value]="'extended'">extended</kbq-option>
+                    <kbq-select placeholder="Select element" [(value)]="selectedElement">
+                        <kbq-option value="button">Button</kbq-option>
+                        <kbq-option value="icon">Icon</kbq-option>
+                        <kbq-option value="input">Input</kbq-option>
+                        <kbq-option value="caret">Caret</kbq-option>
+                        <kbq-option value="extended">extended</kbq-option>
                     </kbq-select>
                 </kbq-form-field>
             </div>
@@ -86,10 +86,10 @@
                 <label for="trigger" class="kbq-form__label">Choose popover trigger</label>
 
                 <kbq-form-field id="trigger" class="kbq-form__control">
-                    <kbq-select [placeholder]="'Select trigger'" [(value)]="selectedTrigger">
-                        <kbq-option [value]="'click'">Click</kbq-option>
-                        <kbq-option [value]="'hover'">Hover</kbq-option>
-                        <kbq-option [value]="'focus'">Focus</kbq-option>
+                    <kbq-select placeholder="Select trigger" [(value)]="selectedTrigger">
+                        <kbq-option value="click">Click</kbq-option>
+                        <kbq-option value="hover">Hover</kbq-option>
+                        <kbq-option value="focus">Focus</kbq-option>
                     </kbq-select>
                 </kbq-form-field>
             </div>
@@ -98,16 +98,16 @@
                 <label for="layout" class="kbq-form__label">Choose layout content placement</label>
 
                 <kbq-form-field id="layout" class="kbq-form__control">
-                    <kbq-select [placeholder]="'Select layout'" [(value)]="layoutClass">
-                        <kbq-option [value]="'layout-row layout-align-start-start'">Start start</kbq-option>
-                        <kbq-option [value]="'layout-row layout-align-start-center'">Start center</kbq-option>
-                        <kbq-option [value]="'layout-row layout-align-start-end'">Start end</kbq-option>
-                        <kbq-option [value]="'layout-row layout-align-center-start'">Center start</kbq-option>
-                        <kbq-option [value]="'layout-row layout-align-center-center'">Center center</kbq-option>
-                        <kbq-option [value]="'layout-row layout-align-center-end'">Center end</kbq-option>
-                        <kbq-option [value]="'layout-row layout-align-end-start'">End start</kbq-option>
-                        <kbq-option [value]="'layout-row layout-align-end-center'">End center</kbq-option>
-                        <kbq-option [value]="'layout-row layout-align-end-end'">End end</kbq-option>
+                    <kbq-select placeholder="Select layout" [(value)]="layoutClass">
+                        <kbq-option value="layout-row layout-align-start-start">Start start</kbq-option>
+                        <kbq-option value="layout-row layout-align-start-center">Start center</kbq-option>
+                        <kbq-option value="layout-row layout-align-start-end">Start end</kbq-option>
+                        <kbq-option value="layout-row layout-align-center-start">Center start</kbq-option>
+                        <kbq-option value="layout-row layout-align-center-center">Center center</kbq-option>
+                        <kbq-option value="layout-row layout-align-center-end">Center end</kbq-option>
+                        <kbq-option value="layout-row layout-align-end-start">End start</kbq-option>
+                        <kbq-option value="layout-row layout-align-end-center">End center</kbq-option>
+                        <kbq-option value="layout-row layout-align-end-end">End end</kbq-option>
                     </kbq-select>
                 </kbq-form-field>
             </div>
@@ -258,7 +258,7 @@
         </div>
     </div>
 
-    <div class="{{ layoutClass }} dev-result" [style]="getOrder('result')">
+    <div class="dev-result" [class]="layoutClass" [style]="getOrder('result')">
         <div>
             @switch (showElement()) {
                 @case (ELEMENTS.BUTTON) {
@@ -281,11 +281,11 @@
                     <button
                         kbq-button
                         kbqTooltipModifier="extended"
+                        kbqTooltipClass="dev-tooltip-485"
                         [kbqTooltip]="tooltipContent"
                         [kbqPlacement]="selectedPlacement"
                         [kbqPlacementPriority]="multipleSelected"
                         [kbqTooltipArrow]="hasArrow"
-                        [kbqTooltipClass]="'dev-tooltip-485'"
                         [kbqTooltipColor]="selectedColor"
                         [kbqTooltipContext]="toolTipContext"
                         [kbqTooltipHeader]="tooltipHeader"
@@ -321,13 +321,13 @@
                                 #caretInput="kbqTooltip"
                                 kbqInput
                                 placeholder="Type a long value and scroll it"
+                                kbqTrigger="manual"
                                 [kbqPlacement]="selectedPlacement"
                                 [kbqPlacementPriority]="multipleSelected"
                                 [kbqRelativeToCaret]="true"
                                 [kbqTooltip]="inputText"
                                 [kbqTooltipArrow]="hasArrow"
                                 [kbqTooltipColor]="selectedColor"
-                                [kbqTrigger]="'manual'"
                                 (blur)="caretInput.hide()"
                                 (input)="caretInput.show()"
                                 (kbqPlacementChange)="onPlacementChange($event)"
@@ -340,13 +340,13 @@
                                 #caretTextarea="kbqTooltip"
                                 kbqTextarea
                                 placeholder="Type several wrapped lines"
+                                kbqTrigger="manual"
                                 [kbqPlacement]="selectedPlacement"
                                 [kbqPlacementPriority]="multipleSelected"
                                 [kbqRelativeToCaret]="true"
                                 [kbqTooltip]="inputText"
                                 [kbqTooltipArrow]="hasArrow"
                                 [kbqTooltipColor]="selectedColor"
-                                [kbqTrigger]="'manual'"
                                 (blur)="caretTextarea.hide()"
                                 (input)="caretTextarea.show()"
                             ></textarea>

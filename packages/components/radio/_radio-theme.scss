@@ -1,11 +1,11 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-radio-state($type, $state-name) {
     $base-path: radio-#{$type}-#{$state-name};
 
     & .kbq-radio-button__outer-circle {
-        border-color: var(--kbq-#{$base-path}-outer-circle-border);
         background: var(--kbq-#{$base-path}-outer-circle-background);
+        border-color: var(--kbq-#{$base-path}-outer-circle-border);
     }
 
     & .kbq-radio-button__inner-circle {
@@ -49,8 +49,8 @@
         @include kbq-radio-state($type-name, states-disabled);
 
         & .kbq-radio-label {
-            cursor: default;
             color: var(--kbq-radio-#{$type-name}-states-disabled-caption);
+            cursor: default;
         }
     }
 }
@@ -78,10 +78,10 @@
 
 @mixin kbq-radio-typography() {
     .kbq-radio-button {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
     .kbq-radio-button.kbq-radio-button_big {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-big);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
     }
 }

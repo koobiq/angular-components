@@ -17,7 +17,7 @@
         // Isn't currently in button styles due to performance concerns
         -webkit-font-smoothing: antialiased;
         // Change the default tap highlight to be completely transparent in iOS.
-        -webkit-tap-highlight-color: rgba(0, 0, 0, 0); // 4
+        -webkit-tap-highlight-color: rgb(0 0 0 / 0%); // 4
         -webkit-touch-callout: none;
     }
 

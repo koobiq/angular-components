@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { Direction, Directionality } from '@angular/cdk/bidi';
+import { type Direction, Directionality } from '@angular/cdk/bidi';
 import {
     FlexibleConnectedPositionStrategy,
     Overlay,
@@ -10,37 +10,26 @@ import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import {
     ChangeDetectionStrategy,
     Component,
-    ElementRef,
-    Provider,
-    Signal,
-    TemplateRef,
-    Type,
     effect,
+    ElementRef,
     input,
     output,
+    type Provider,
+    type Signal,
     signal,
+    TemplateRef,
+    type Type,
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { type ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { Subject } from 'rxjs';
+import type { MockInstance } from 'vitest';
 import {
     A,
     B,
-    DOWN_ARROW,
-    END,
-    ENTER,
-    ESCAPE,
-    HOME,
-    KbqOverlayLayer,
-    KbqOverlayOrigin,
-    KbqPanelWidth,
-    LEFT_ARROW,
-    RIGHT_ARROW,
-    SPACE,
-    TAB,
-    UP_ARROW,
     createKeyboardEvent,
     createMouseEvent,
     defaultOffsetY,
@@ -48,10 +37,23 @@ import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
+    DOWN_ARROW,
+    END,
+    ENTER,
+    ESCAPE,
+    HOME,
+    KbqOverlayLayer,
+    type KbqOverlayOrigin,
+    type KbqPanelWidth,
+    LEFT_ARROW,
     patchElementFocus,
-    ruRULocaleData
+    RIGHT_ARROW,
+    ruRULocaleData,
+    SPACE,
+    TAB,
+    UP_ARROW
 } from '@koobiq/components/core';
-import { KbqFormField, KbqFormFieldModule, kbqFormFieldDefaultOptionsProvider } from '@koobiq/components/form-field';
+import { KbqFormField, kbqFormFieldDefaultOptionsProvider, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTitleDirective } from '@koobiq/components/title';
@@ -60,18 +62,17 @@ import {
     KbqToolTipModule,
     KbqTooltipTrigger
 } from '@koobiq/components/tooltip';
-import { Subject } from 'rxjs';
-import type { MockInstance } from 'vitest';
 import {
+    type DropdownCloseReason,
     KBQ_DROPDOWN_DEFAULT_OPTIONS,
     KBQ_DROPDOWN_SCROLL_STRATEGY,
     KbqDropdown,
-    KbqDropdownContent,
+    type KbqDropdownContent,
     KbqDropdownItem,
     KbqDropdownModule,
-    KbqDropdownPanel,
-    KbqDropdownPositionX,
-    KbqDropdownPositionY,
+    type KbqDropdownPanel,
+    type KbqDropdownPositionX,
+    type KbqDropdownPositionY,
     KbqDropdownSearch,
     KbqDropdownTrigger,
     NESTED_HOVER_SWITCH_DELAY
@@ -324,7 +325,7 @@ describe('KbqDropdown', () => {
 
         patchElementFocus(triggerEl);
 
-        focusMonitor.monitor(triggerEl, false);
+        void focusMonitor.monitor(triggerEl, false);
         triggerEl.click(); // A click without a mousedown before it is considered a keyboard open.
         fixture.detectChanges();
         fixture.componentInstance.trigger().close();
@@ -349,7 +350,7 @@ describe('KbqDropdown', () => {
         fixture.detectChanges();
         patchElementFocus(triggerEl);
 
-        focusMonitor.monitor(triggerEl, false);
+        void focusMonitor.monitor(triggerEl, false);
         fixture.componentInstance.trigger().close();
         fixture.detectChanges();
         await vi.advanceTimersByTimeAsync(500);
@@ -369,7 +370,7 @@ describe('KbqDropdown', () => {
 
         patchElementFocus(triggerEl);
 
-        focusMonitor.monitor(triggerEl, false);
+        void focusMonitor.monitor(triggerEl, false);
 
         // Trigger a fake right click.
         dispatchEvent(triggerEl, createMouseEvent('mousedown', 50, 100, 2));
@@ -400,7 +401,7 @@ describe('KbqDropdown', () => {
         fixture.detectChanges();
         patchElementFocus(triggerEl);
 
-        focusMonitor.monitor(triggerEl, false);
+        void focusMonitor.monitor(triggerEl, false);
         fixture.componentInstance.trigger().close();
         fixture.detectChanges();
         await vi.advanceTimersByTimeAsync(500);
@@ -4945,7 +4946,7 @@ class CustomDropdownPanel implements KbqDropdownPanel {
     readonly items = signal<readonly KbqDropdownItem[]>([]);
 
     readonly templateRef = viewChild.required(TemplateRef);
-    readonly closed = output<void | 'click' | 'keydown' | 'tab'>();
+    readonly closed = output<DropdownCloseReason>();
     readonly backdropClass = signal('');
     readonly hasBackdrop = signal(false);
     readonly lazyContent = signal<KbqDropdownContent | undefined>(undefined);
@@ -5335,7 +5336,7 @@ class DropdownWithTooltip implements TestableDropdown {
         KbqToolTipModule
     ],
     template: `
-        <button #triggerEl [kbqDropdownTriggerFor]="dropdown" [kbqTooltip]="'TOOLTIP'">Toggle dropdown</button>
+        <button #triggerEl kbqTooltip="TOOLTIP" [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown">
             <button kbq-dropdown-item>Item</button>
         </kbq-dropdown>

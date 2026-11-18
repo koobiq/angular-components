@@ -1,13 +1,10 @@
-@use '../core/styles/common/tokens' as *;
-
 .kbq-toast-container {
     display: flex;
     flex-direction: column;
+    gap: var(--kbq-toast-stack-size-gap);
 
     // Matches the default `KbqToastPosition.TOP_RIGHT`; every other anchor overrides it below.
     align-items: flex-end;
-
-    gap: var(--kbq-toast-stack-size-gap);
 
     // @see KbqToastPosition
     &.kbq-toast-container-top-right,
@@ -30,7 +27,6 @@
     &.kbq-toast-container-top-left,
     &.kbq-toast-container-bottom-left {
         align-items: flex-start;
-
         margin-left: var(--kbq-toast-stack-size-margin-horizontal);
     }
 

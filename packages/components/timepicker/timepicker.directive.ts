@@ -1,10 +1,10 @@
 ﻿import { _IdGenerator } from '@angular/cdk/a11y';
 import {
-    AfterContentInit,
+    type AfterContentInit,
     booleanAttribute,
     computed,
     Directive,
-    DoCheck,
+    type DoCheck,
     effect,
     ElementRef,
     forwardRef,
@@ -12,28 +12,29 @@ import {
     InjectionToken,
     input,
     linkedSignal,
-    OnChanges,
+    type OnChanges,
     output,
-    Provider,
+    type Provider,
     Renderer2,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     untracked
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
-    AbstractControl,
-    ControlValueAccessor,
+    type AbstractControl,
+    type ControlValueAccessor,
     FormGroupDirective,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
-    NgControl,
+    type NgControl,
     NgForm,
-    ValidationErrors,
-    Validator,
-    ValidatorFn,
+    type ValidationErrors,
+    type Validator,
+    type ValidatorFn,
     Validators
 } from '@angular/forms';
+import { noop } from 'rxjs';
 import {
     BACKSPACE,
     DateAdapter,
@@ -47,13 +48,13 @@ import {
     isLetterKey,
     isVerticalMovement,
     KbqDateTimezoneService,
-    KbqDeepPartial,
+    type KbqDeepPartial,
     KbqErrorStateTracker,
     kbqLocaleConfigurationOverrideProvider,
     KbqLocaleOverridesDirective,
     kbqRevealSelection,
     kbqSetSelectionRange,
-    KbqTimepickerLocaleConfiguration,
+    type KbqTimepickerLocaleConfiguration,
     LEFT_ARROW,
     PAGE_DOWN,
     PAGE_UP,
@@ -67,8 +68,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import type { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { noop } from 'rxjs';
-
 import {
     AM_PM_FORMAT_REGEXP,
     DEFAULT_TIME_FORMAT,
@@ -327,7 +326,7 @@ export class KbqTimepicker<D>
     get timeFormatPlaceholder(): string {
         return (
             this.localeConfiguration().placeholder[TimeFormatToLocaleKeys[this.format()]] ||
-            TIMEFORMAT_PLACEHOLDERS[this.format()]
+            TIMEFORMAT_PLACEHOLDERS[this.format()]!
         );
     }
 
@@ -519,10 +518,10 @@ export class KbqTimepicker<D>
         if (wasFocused) this.onTouched();
     }
 
-    onPaste($event) {
-        $event.preventDefault();
+    onPaste(event: ClipboardEvent) {
+        event.preventDefault();
 
-        this.replaceText($event.clipboardData.getData('text'));
+        this.replaceText(event.clipboardData?.getData('text') ?? '');
     }
 
     /**
@@ -685,19 +684,15 @@ export class KbqTimepicker<D>
             return value;
         }
 
-        const match: RegExpMatchArray | null = value.match(
-            /^(\D+)?(?<hours>\d+)?(\D+)?(\D+)?(?<minutes>\d+)?(\D+)?(\D+)?(?<seconds>\d+)?(\D+)?$/
-        );
+        const { hours, minutes, seconds } =
+            value.match(/^(\D+)?(?<hours>\d+)?(\D+)?(\D+)?(?<minutes>\d+)?(\D+)?(\D+)?(?<seconds>\d+)?(\D+)?$/)
+                ?.groups ?? {};
 
-        if (!match?.groups?.hours) {
+        if (!hours) {
             return value;
         }
 
-        return this.replaceNumbers(
-            Object.values(match.groups)
-                .map((group) => (group || '').padStart(2, '0'))
-                .join(':')
-        );
+        return this.replaceNumbers([hours, minutes, seconds].map((group) => (group || '').padStart(2, '0')).join(':'));
     }
 
     private formatUserInput(value: string): string {
@@ -712,7 +707,7 @@ export class KbqTimepicker<D>
         if (match?.groups) {
             const { number, symbol } = match.groups;
 
-            formattedValue = value.replace(number + symbol, `0${number}`);
+            formattedValue = value.replace(`${number}${symbol}`, `0${number}`);
         }
 
         return formattedValue;
@@ -726,15 +721,15 @@ export class KbqTimepicker<D>
         if (match?.groups) {
             const { hours, minutes, seconds } = match.groups;
 
-            if (hours.length) {
+            if (hours) {
                 formattedValue = formattedValue.replace(hours, this.normalizeTimePart(hours, HOURS_PER_DAY));
             }
 
-            if (minutes.length) {
+            if (minutes) {
                 formattedValue = formattedValue.replace(minutes, this.normalizeTimePart(minutes, MINUTES_PER_HOUR));
             }
 
-            if (seconds.length) {
+            if (seconds) {
                 formattedValue = formattedValue.replace(seconds, this.normalizeTimePart(seconds, SECONDS_PER_MINUTE));
             }
         }
@@ -797,7 +792,7 @@ export class KbqTimepicker<D>
             return;
         }
 
-        let changedTime;
+        let changedTime: D | null = null;
 
         const newEditParams = this.getTimeEditMetrics(this.selectionStart as number);
 
@@ -1022,7 +1017,7 @@ export class KbqTimepicker<D>
             }
 
             // 12 opens its half of the day: 12 am is midnight and 12 pm is noon.
-            hours = (hours % hoursPerHalfDay) + (/p/i.test(amPm[3]) ? hoursPerHalfDay : 0);
+            hours = (hours % hoursPerHalfDay) + (/p/i.test(amPm[3] ?? '') ? hoursPerHalfDay : 0);
         } else if (HMS && this.isShortFormat) {
             hours = Number(HMS[1]);
             minutes = Number(HMS[2]);

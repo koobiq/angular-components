@@ -1,15 +1,14 @@
 import {
-    CdkScrollable,
+    type CdkScrollable,
     FlexibleConnectedPositionStrategy,
-    FlexibleConnectedPositionStrategyOrigin,
-    OverlayRef,
-    ScrollDispatcher,
-    ScrollStrategy
+    type FlexibleConnectedPositionStrategyOrigin,
+    type OverlayRef,
+    type ScrollDispatcher,
+    type ScrollStrategy
 } from '@angular/cdk/overlay';
-import { ViewportRuler } from '@angular/cdk/scrolling';
-import { ElementRef, isDevMode, NgZone } from '@angular/core';
-import { Observable, Subject, Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import type { ViewportRuler } from '@angular/cdk/scrolling';
+import { ElementRef, isDevMode, type NgZone } from '@angular/core';
+import { filter, type Observable, Subject, type Subscription } from 'rxjs';
 import { isScrollFromInsideOverlay } from './scroll-strategy-utils';
 
 /** Configuration options for `KbqAutoHideScrollStrategy`. */

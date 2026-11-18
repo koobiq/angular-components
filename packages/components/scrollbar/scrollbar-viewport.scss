@@ -8,8 +8,8 @@
 }
 
 .kbq-scrollbar-viewport_native-scrollbar-hidden {
-    scrollbar-width: none;
     -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 .kbq-scrollbar-viewport_native-scrollbar-hidden::-webkit-scrollbar,
@@ -18,16 +18,16 @@
 }
 
 .kbq-scrollbar-track_hover:not(:active) {
-    transition: opacity var(--kbq-scrollbar-transition-duration) ease;
-    opacity: 0;
-
     @include animation.kbq-animations-off();
+
+    opacity: 0;
+    transition: opacity var(--kbq-scrollbar-transition-duration) ease;
 }
 
 .kbq-scrollbar-viewport:hover > .kbq-scrollbar-track_hover,
 .kbq-scrollbar-track_hover.kbq-scrollbar-track_revealed {
-    transition: opacity var(--kbq-scrollbar-transition-duration) ease;
-    opacity: 1;
-
     @include animation.kbq-animations-off();
+
+    opacity: 1;
+    transition: opacity var(--kbq-scrollbar-transition-duration) ease;
 }

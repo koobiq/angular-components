@@ -1,13 +1,12 @@
 .docs-anchors {
     position: sticky;
-
     top: var(--kbq-size-7xl);
 
     display: flex;
     flex-direction: column;
 
-    min-width: 300px;
     width: 340px;
+    min-width: 300px;
 
     @media (1200px < width <= 1280px) {
         width: 300px;
@@ -19,8 +18,8 @@
 }
 
 .docs-anchors__element {
-    list-style-type: none;
     padding: var(--kbq-size-xs) var(--kbq-size-l);
+    list-style-type: none;
 }
 
 // One indent step per nesting level. Level 0 needs no rule of its own: the base padding above is
@@ -38,25 +37,28 @@
 }
 
 .docs-anchors__link {
-    outline: none;
-    text-decoration: none;
-    color: inherit;
     display: -webkit-box;
-    line-clamp: 2;
-    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+
     overflow: hidden;
+
+    text-decoration: none;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+
+    color: inherit;
+    outline: none;
 }
 
 .docs-anchors__element {
     &:first-child {
+        margin: 0;
         // Longhands only: the `padding` shorthand would also set `padding-left`, and this selector
         // (0,2,0) outweighs the level rule (0,1,0), so a shorthand here flattens the first anchor
         // to the base indent whatever its nesting level.
         padding-top: 0;
         padding-right: 0;
         padding-bottom: 0;
-        margin: 0;
 
         & .docs-anchors__link {
             padding: var(--kbq-size-xs) var(--kbq-size-l) var(--kbq-size-xs) 0;

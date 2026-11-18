@@ -23,7 +23,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
             </div>
         </div>
     `,
-    styleUrls: ['icon-item-variant-example.css'],
+    styleUrl: 'icon-item-variant-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IconItemVariantExample {

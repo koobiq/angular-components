@@ -3,8 +3,8 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { Component, ErrorHandler, viewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
-import { KBQ_WINDOW } from '@koobiq/components/core';
 import type { Mock } from 'vitest';
+import { KBQ_WINDOW } from '@koobiq/components/core';
 import { DocsVersionPickerDirective } from './version-picker.directive';
 
 const VERSIONS = {

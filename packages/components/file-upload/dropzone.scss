@@ -1,11 +1,15 @@
 @use '../core/styles/common/animation';
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
 // `--kbq-background-overlay-theme` was dropped in @koobiq/design-tokens v4; it is now an opaque base
 // plus `--kbq-opacity-overlay`. The two are normally composed with `opacity`, which is not available
 // here — the overlay already animates its own appearance with it, and it would fade the dashed border
 // and the empty state along with the background. Mixing keeps the alpha on the colour alone.
 .kbq-dropzone-overlay {
+    // The overlay covers the whole viewport, so the fade is the largest animated surface the library
+    // produces — the one a reduced-motion preference is most about.
+    @include animation.kbq-animations-off();
+
     --kbq-dropzone-padding: var(--kbq-size-s);
     --kbq-dropzone-overlay-background: color-mix(
         in srgb,
@@ -23,29 +27,24 @@
 
     padding: var(--kbq-dropzone-padding);
     background-color: var(--kbq-dropzone-overlay-background);
-
     opacity: 0;
     transition: opacity 100ms ease-in-out;
-
-    // The overlay covers the whole viewport, so the fade is the largest animated surface the library
-    // produces — the one a reduced-motion preference is most about.
-    @include animation.kbq-animations-off();
 
     &.kbq-dropzone-overlay__attached {
         opacity: 1;
     }
 
     .kbq-dropzone-content {
-        display: flex;
-        width: 100%;
+        @include squircle.kbq-squircle(var(--kbq-size-border-radius));
 
+        display: flex;
         align-items: center;
         justify-content: center;
 
-        @include kbq-squircle(var(--kbq-size-border-radius));
-        border: var(--kbq-size-border-width) dashed var(--kbq-dropzone-border-color);
-        background-color: var(--kbq-dropzone-component-background);
+        width: 100%;
 
+        background-color: var(--kbq-dropzone-component-background);
+        border: var(--kbq-size-border-width) dashed var(--kbq-dropzone-border-color);
         outline: none;
     }
 }

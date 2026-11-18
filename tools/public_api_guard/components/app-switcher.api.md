@@ -89,7 +89,6 @@ export interface KbqAppSwitcherApp {
 
 // @public
 export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecked, OnChanges, AfterViewInit, OnDestroy {
-    constructor();
     protected get allItems(): QueryList<KbqDropdownItem>;
     escapeHandler(): void;
     filteredSites: KbqAppSwitcherSite[];
@@ -97,7 +96,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
     protected focusoutHandler(event: FocusEvent): void;
     readonly input: _angular_core.Signal<KbqInput | undefined>;
     protected keydownHandler(event: KeyboardEvent): void;
-    protected keyManager: FocusKeyManager<KbqDropdownItem>;
+    protected keyManager: FocusKeyManager<KbqDropdownItem> | undefined;
     readonly localeConfiguration: _angular_core.Signal<KbqAppSwitcherLocaleConfiguration>;
     protected readonly nestedAliasClass = "kbq-app-switcher-site_nested";
     // (undocumented)
@@ -111,7 +110,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
     prefix: string;
     readonly searchControl: FormControl<string | null>;
     selectAppInSite(site: KbqAppSwitcherSite | undefined, app: KbqAppSwitcherApp): void;
-    trigger: KbqAppSwitcherTrigger;
+    trigger: KbqAppSwitcherTrigger | undefined;
     readonly triggerInput: _angular_core.InputSignal<KbqAppSwitcherTrigger | undefined>;
     updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues): void;
     // (undocumented)

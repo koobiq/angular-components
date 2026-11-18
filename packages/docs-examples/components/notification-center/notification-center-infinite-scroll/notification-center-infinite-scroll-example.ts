@@ -1,9 +1,16 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { map, timer } from 'rxjs';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
-import { KbqButtonColor, KbqButtonModule, KbqButtonStyleInput, KbqButtonStyles } from '@koobiq/components/button';
+import {
+    type KbqButtonColor,
+    KbqButtonModule,
+    type KbqButtonStyleInput,
+    KbqButtonStyles
+} from '@koobiq/components/button';
 import { KbqComponentColors, KbqFormattersModule, KbqThemeService } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
@@ -12,13 +19,11 @@ import { KbqNavbarModule } from '@koobiq/components/navbar';
 import {
     KbqNotificationCenterModule,
     KbqNotificationCenterService,
-    KbqNotificationItem
+    type KbqNotificationItem
 } from '@koobiq/components/notification-center';
 import { KbqToastStyle } from '@koobiq/components/toast';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { timer } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { TRANSLATIONS } from './l10n';
 
 /** Items per loaded page. */
@@ -67,9 +72,10 @@ enum NavbarIcItems {
         KbqDropdownModule,
         KbqEmptyStateModule,
         KbqNavbarModule,
-        KbqTopBarModule
+        KbqTopBarModule,
+        NgOptimizedImage
     ],
-    templateUrl: 'notification-center-infinite-scroll-example.html',
+    templateUrl: './notification-center-infinite-scroll-example.html',
     providers: [{ provide: KbqNotificationCenterService, useClass: KbqNotificationCenterService }],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -168,12 +174,6 @@ export class NotificationCenterInfiniteScrollExample {
             };
         });
     }
-
-    protected readonly srcSet = computed(() => {
-        const currentTheme = this.currentTheme();
-
-        return `https://koobiq.io/assets/images/${currentTheme}/empty_192.webp 1x, https://koobiq.io/assets/images/${currentTheme}/empty_192@2x.webp 2x`;
-    });
 
     private readonly themeService = inject(KbqThemeService, { optional: true });
     protected readonly currentTheme = computed(() => this.themeService?.colorScheme() ?? 'light');

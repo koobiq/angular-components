@@ -12,7 +12,7 @@
 <hr />
 
 <kbq-form-field>
-    <kbq-select [placeholder]="placeholder" [value]="''">
+    <kbq-select value="" [placeholder]="placeholder">
         <kbq-cleaner />
 
         @for (option of options; track option) {
@@ -193,11 +193,11 @@
         }
 
         <input
-            placeholder="{{ placeholder }}"
             kbqInput
+            ngModel=""
+            [placeholder]="placeholder"
             [kbqTagInputFor]="inputTagList"
             [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
-            [ngModel]="''"
         />
         <kbq-cleaner />
     </kbq-tag-list>
@@ -215,11 +215,11 @@
         }
 
         <input
-            placeholder="{{ placeholder }}"
             kbqInput
+            ngModel="value"
+            [placeholder]="placeholder"
             [kbqTagInputFor]="inputTagList1"
             [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
-            [ngModel]="'value'"
         />
         <kbq-cleaner />
     </kbq-tag-list>
@@ -237,11 +237,11 @@
         }
         <input
             #autocompleteTagInput
-            placeholder="{{ placeholder }}"
+            ngModel=""
+            [placeholder]="placeholder"
             [kbqAutocomplete]="autocomplete"
             [kbqTagInputAddOnBlur]="false"
             [kbqTagInputFor]="autocompleteTagList"
-            [ngModel]="''"
         />
     </kbq-tag-list>
     <kbq-autocomplete #autocomplete>
@@ -270,9 +270,9 @@
         }
         <input
             #autocompleteTagInput1
+            ngModel="value"
             [kbqAutocomplete]="autocomplete1"
             [kbqTagInputFor]="autocompleteTagList1"
-            [ngModel]="'value'"
         />
     </kbq-tag-list>
     <kbq-autocomplete #autocomplete1>
@@ -299,7 +299,7 @@
 <hr />
 
 <kbq-form-field>
-    <input kbqInput placeholder="Placeholder" [ngModel]="'value'" />
+    <input kbqInput placeholder="Placeholder" ngModel="value" />
 
     <kbq-cleaner />
 </kbq-form-field>
@@ -310,7 +310,7 @@
     <i kbq-icon="kbq-calendar-o_16" kbqPrefix [autoColor]="true"></i>
     <i kbq-icon="kbq-calendar-o_16" kbqSuffix [autoColor]="true"></i>
 
-    <input placeholder="{{ placeholder }}" kbqInput [ngModel]="''" />
+    <input kbqInput ngModel="" [placeholder]="placeholder" />
 </kbq-form-field>
 
 <hr />
@@ -319,11 +319,7 @@
     <i kbq-icon="kbq-calendar-o_16" kbqPrefix [autoColor]="true"></i>
     <i kbq-icon="kbq-calendar-o_16" kbqSuffix [autoColor]="true"></i>
 
-    <input
-        kbqInput
-        placeholder="Placeholder"
-        [ngModel]="'value value value value value value value value value value'"
-    />
+    <input kbqInput placeholder="Placeholder" ngModel="value value value value value value value value value value" />
 </kbq-form-field>
 
 <hr />

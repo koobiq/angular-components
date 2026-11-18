@@ -1,12 +1,11 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { map, type Observable, startWith } from 'rxjs';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqFormsModule, KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { TRANSLATIONS } from './l10n';
 
 /**
@@ -44,20 +43,16 @@ import { TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AutocompleteOverviewExample implements OnInit {
+export class AutocompleteOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
 
     protected readonly options = computed(() => this.t().countries);
 
     control = new FormControl('');
-    filteredOptions: Observable<string[]>;
-
-    ngOnInit(): void {
-        this.filteredOptions = this.control.valueChanges.pipe(
-            startWith(''),
-            map((value) => this.filter(value as string))
-        );
-    }
+    filteredOptions: Observable<string[]> = this.control.valueChanges.pipe(
+        startWith(''),
+        map((value) => this.filter(value as string))
+    );
 
     private filter(value: string): string[] {
         const filterValue = value ? value.toLowerCase() : '';

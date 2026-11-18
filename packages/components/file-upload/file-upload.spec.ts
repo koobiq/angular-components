@@ -1,50 +1,59 @@
-﻿import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+﻿import { Overlay, type OverlayRef } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import {
     ChangeDetectorRef,
     Component,
-    ElementRef,
-    Provider,
     effect,
+    ElementRef,
     inject as inject_1,
+    type Provider,
     signal,
     viewChild
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import {
-    AbstractControl,
-    AsyncValidatorFn,
+    type AbstractControl,
+    type AsyncValidatorFn,
     FormControl,
-    FormControlStatus,
+    type FormControlStatus,
     FormsModule,
     ReactiveFormsModule,
-    ValidationErrors,
+    type ValidationErrors,
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { BehaviorSubject, map, Observable, timer } from 'rxjs';
 import {
-    DELETE,
-    ErrorStateMatcher,
-    KBQ_LOCALE_SERVICE,
-    KbqDefaultSizes,
-    KbqPartialLocaleData,
-    TAB,
     createFakeEvent,
     createMouseEvent,
+    DELETE,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
     enUSLocaleData,
+    type ErrorStateMatcher,
+    KBQ_LOCALE_SERVICE,
+    type KbqDefaultSizes,
     kbqLocaleServiceProvider,
-    ruRULocaleData
+    type KbqPartialLocaleData,
+    ruRULocaleData,
+    TAB
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqProgressSpinner } from '@koobiq/components/progress-spinner';
-import { BehaviorSubject, Observable, timer } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { KbqDropzoneData, KbqFileUploadEmptyState, KbqFullScreenDropzoneService, KbqLocalDropzone } from './dropzone';
-import { KbqFile, KbqFileItem, KbqFileUploadAddStrategy, KbqFileUploadAddStrategyValues } from './file-upload';
+import {
+    type KbqDropzoneData,
+    KbqFileUploadEmptyState,
+    KbqFullScreenDropzoneService,
+    KbqLocalDropzone
+} from './dropzone';
+import {
+    type KbqFile,
+    type KbqFileItem,
+    KbqFileUploadAddStrategy,
+    type KbqFileUploadAddStrategyValues
+} from './file-upload';
 import { KbqFileUploadModule } from './file-upload.module';
 import { kbqFileUploadLocaleConfigurationProvider } from './file-upload.tokens';
 import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
@@ -2999,6 +3008,36 @@ describe('file upload localization', () => {
         fixture.detectChanges();
 
         expect(browseLink(fixture)).toBe('Bound');
+    });
+});
+
+describe('file upload caption without the browse link', () => {
+    @Component({
+        imports: [KbqMultipleFileUploadComponent, KbqSingleFileUploadComponent],
+        template: `
+            <kbq-multiple-file-upload allowed="mixed" />
+            <kbq-single-file-upload allowed="mixed" />
+        `
+    })
+    class TestApp {}
+
+    // A locale text without the `{{ browseLink }}` placeholder has no link to split the caption around
+    it('should show the whole text as the caption in the mixed mode', () => {
+        TestBed.configureTestingModule({
+            providers: [
+                kbqFileUploadLocaleConfigurationProvider({
+                    multiple: { captionTextWithFolder: 'Drop the files here' },
+                    single: { captionTextWithFolder: 'Drop a file here' }
+                })
+            ]
+        });
+
+        const fixture = TestBed.createComponent(TestApp);
+
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.textContent).toContain('Drop the files here');
+        expect(fixture.nativeElement.textContent).toContain('Drop a file here');
     });
 });
 

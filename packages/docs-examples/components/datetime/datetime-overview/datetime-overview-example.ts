@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import type { DateTime } from 'luxon';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqDatetime } from '@koobiq/components/datetime';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { DateTime } from 'luxon';
 import { TRANSLATIONS } from './l10n';
 
 /**

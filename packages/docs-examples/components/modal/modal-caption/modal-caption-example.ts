@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, type TemplateRef } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
@@ -11,8 +11,10 @@ import { TRANSLATIONS } from './l10n';
     selector: 'modal-caption-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="openWithStringCaption()">{{ t().stringCaption }}</button>
-        <button kbq-button (click)="openWithTemplateCaption(captionTpl)">{{ t().templateCaption }}</button>
+        <button kbq-button type="button" (click)="openWithStringCaption()">{{ t().stringCaption }}</button>
+        <button kbq-button type="button" (click)="openWithTemplateCaption(captionTpl)">
+            {{ t().templateCaption }}
+        </button>
 
         <ng-template #captionTpl>
             <span>

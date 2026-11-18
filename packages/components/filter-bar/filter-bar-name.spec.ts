@@ -1,22 +1,22 @@
 import { Component, Directive, inject, signal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
     KBQ_FILTER_BAR_HOST,
     KBQ_FILTER_BAR_NAME_RESOLVER,
-    KbqDateTimeValue,
-    KbqFilterBar,
+    type KbqDateTimeValue,
+    type KbqFilterBar,
     KbqFilterBarModule,
-    KbqFilterBarNameContext,
-    KbqFilterBarNameKind,
-    KbqFilterBarNameResolver,
+    type KbqFilterBarNameContext,
+    type KbqFilterBarNameKind,
+    type KbqFilterBarNameResolver,
     kbqFilterBarNameResolverProvider,
-    KbqPipe,
-    KbqPipeTemplate,
+    type KbqPipe,
+    type KbqPipeTemplate,
     KbqPipeTypes,
-    KbqSelectValue,
+    type KbqSelectValue,
     KbqTreeSelectFlatNode,
-    KbqTreeSelectNode
+    type KbqTreeSelectNode
 } from '@koobiq/components/filter-bar';
 import { KBQ_PIPE_DATA, KbqBasePipe } from './pipes/base-pipe';
 

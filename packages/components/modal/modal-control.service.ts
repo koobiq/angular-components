@@ -1,9 +1,9 @@
 import { DOCUMENT } from '@angular/common';
-import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
-import { KbqModalRef } from './modal-ref.class';
-import { KbqModalComponent } from './modal.component';
+import { computed, inject, Injectable, type Signal, signal, type WritableSignal } from '@angular/core';
+import { Subject, type Subscription } from 'rxjs';
+import type { KbqModalComponent } from './modal.component';
 import { MODAL_ANIMATE_DURATION } from './modal.type';
+import type { KbqModalRef } from './modal-ref.class';
 
 interface IRegisteredMeta {
     modalRef: KbqModalRef;
@@ -57,11 +57,9 @@ export class KbqModalControlService {
         : signal<KbqModalRef[]>([]);
 
     // Lazy, so the copy a child-level service never reads costs nothing.
-    private readonly rootTopVisibleModal: Signal<KbqModalRef | null> = computed(() => {
-        const modals = this.visibleModals();
-
-        return modals.length ? modals[modals.length - 1] : null;
-    });
+    private readonly rootTopVisibleModal: Signal<KbqModalRef | null> = computed(
+        () => this.visibleModals().at(-1) ?? null
+    );
 
     /** Elements this service took out of the accessibility tree while a dialog is shown. */
     private inertedElements: Element[] = [];
@@ -127,7 +125,7 @@ export class KbqModalControlService {
         let i = this.openModals.length;
 
         while (i--) {
-            this.openModals[i].close();
+            this.openModals[i]?.close();
         }
     }
 

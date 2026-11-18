@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, inject, isDevMode, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { Event, NavigationEnd, PRIMARY_OUTLET, Router, RouterOutlet } from '@angular/router';
+import { type Event, NavigationEnd, PRIMARY_OUTLET, Router, RouterOutlet } from '@angular/router';
+import { filter, map } from 'rxjs';
 import { KbqHighlightModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { filter, map } from 'rxjs/operators';
 import { DevThemeToggle } from '../components-dev/theme-toggle';
 import { e2eRoutes } from './routes';
 
@@ -68,8 +68,8 @@ class ScenarioSelect {
 @Component({
     selector: 'e2e-app',
     imports: [DevThemeToggle, RouterOutlet, ScenarioSelect],
-    templateUrl: 'template.html',
-    styleUrl: 'main.scss',
+    templateUrl: './template.html',
+    styleUrl: './main.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class E2eApp {

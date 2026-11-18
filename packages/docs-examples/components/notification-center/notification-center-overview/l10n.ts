@@ -1,5 +1,5 @@
-import { Translations } from '@koobiq/docs-examples/i18n';
-import { ExampleNotificationText } from '../create-notifications';
+import type { Translations } from '@koobiq/docs-examples/i18n';
+import type { ExampleNotificationText } from '../create-notifications';
 
 /** Text of the notification-center-overview example. */
 export interface ExampleTranslation {

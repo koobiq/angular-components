@@ -25,7 +25,7 @@ import { TRANSLATIONS } from './l10n';
         KbqTitleModule,
         KbqOptionModule
     ],
-    templateUrl: 'dropdown-disabled-example.html',
+    templateUrl: './dropdown-disabled-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownDisabledExample {

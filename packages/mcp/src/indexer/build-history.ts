@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
 import { compare, isRelease, sortReleases } from '../semver.js';
+import type { ApiHistory, MemberChange } from '../sources/history.js';
 import { dataDir, git, readBlobs, repoRoot, requireTags, stagedVersion } from './git.js';
 import { parseApiReport } from './parse-api-md.js';
 
@@ -17,8 +18,6 @@ import { parseApiReport } from './parse-api-md.js';
 
 // Shapes live in `src/sources/history.ts`, next to the code that reads the file back.
 export type { ApiHistory, MemberChange } from '../sources/history.js';
-
-import type { ApiHistory, MemberChange } from '../sources/history.js';
 
 const GUARD_DIR = 'tools/public_api_guard/components';
 

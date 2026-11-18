@@ -1,7 +1,20 @@
-@use '../core/styles/common/tokens' as *;
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
 .kbq-markdown {
+    // h1, h2, h3, h4, h5, h6
+    @for $i from 1 through 6 {
+        .kbq-markdown__h#{$i} {
+            @for $i from 1 through 6 {
+                & + .kbq-markdown__h#{$i} {
+                    margin-top: 0;
+                }
+            }
+
+            margin-top: var(--kbq-markdown-h#{$i}-size-margin-top);
+            margin-bottom: var(--kbq-markdown-h#{$i}-size-margin-bottom);
+        }
+    }
+
     display: block;
 
     .kbq-markdown__input {
@@ -17,20 +30,6 @@
 
         & > :last-child {
             margin-bottom: 0;
-        }
-    }
-
-    // h1, h2, h3, h4, h5, h6
-    @for $i from 1 through 6 {
-        .kbq-markdown__h#{$i} {
-            margin-top: var(--kbq-markdown-h#{$i}-size-margin-top);
-            margin-bottom: var(--kbq-markdown-h#{$i}-size-margin-bottom);
-
-            @for $i from 1 through 6 {
-                & + .kbq-markdown__h#{$i} {
-                    margin-top: 0;
-                }
-            }
         }
     }
 
@@ -51,26 +50,30 @@
 
     .kbq-markdown__ul {
         position: relative;
-        list-style: none;
         padding: var(--kbq-markdown-list-size-ul-padding);
+        list-style: none;
     }
 
-    .kbq-markdown__ul > li:before {
+    .kbq-markdown__ul > li::before {
         content: '—';
-        display: block;
+
         position: absolute;
-        width: 24px;
-        text-align: left;
         left: 0;
+
+        display: block;
+
+        width: 24px;
+
+        text-align: left;
     }
 
     .kbq-markdown__ol {
-        list-style: none;
-        padding: 0;
         counter-reset: li;
+        padding: 0;
+        list-style: none;
 
         > li {
-            &:before {
+            &::before {
                 content: counter(li) '.';
                 counter-increment: li;
                 padding-right: var(--kbq-markdown-list-size-ol-number-padding-right);
@@ -89,15 +92,13 @@
 
     .kbq-markdown__blockquote {
         margin-top: var(--kbq-markdown-blockquote-size-margin-top);
-        margin-left: 0;
-        margin-bottom: var(--kbq-markdown-blockquote-size-margin-bottom);
         margin-right: 0;
-
-        border-left-width: var(--kbq-markdown-blockquote-size-line-width);
+        margin-bottom: var(--kbq-markdown-blockquote-size-margin-bottom);
+        margin-left: 0;
+        padding: var(--kbq-markdown-blockquote-size-padding);
 
         border-left-style: solid;
-
-        padding: var(--kbq-markdown-blockquote-size-padding);
+        border-left-width: var(--kbq-markdown-blockquote-size-line-width);
     }
 
     .kbq-markdown__blockquote > .kbq-markdown__p {
@@ -107,22 +108,21 @@
 
     .kbq-markdown__pre {
         position: relative;
-        overflow-x: auto;
 
         margin-top: var(--kbq-markdown-code-size-multiline-margin-top);
         margin-bottom: var(--kbq-markdown-code-size-multiline-margin-bottom);
-
         padding: var(--kbq-markdown-code-size-multiline-padding);
+        overflow-x: auto;
     }
 
     .kbq-markdown__pre,
     .kbq-markdown__code {
-        @include kbq-squircle(var(--kbq-markdown-code-size-border-radius));
+        @include squircle.kbq-squircle(var(--kbq-markdown-code-size-border-radius));
     }
 
     .kbq-markdown__code:not(.kbq-markdown__pre > .kbq-markdown__code) {
-        white-space: nowrap;
         padding: var(--kbq-markdown-code-size-inline-padding);
+        white-space: nowrap;
     }
 
     .kbq-markdown__img {
@@ -138,20 +138,22 @@
     }
 
     .kbq-markdown__hr {
+        margin: var(--kbq-markdown-hr-size-margin-vertical) 0;
+
         border-top: none;
-        border-left: none;
         border-right: none;
         border-bottom-style: solid;
         border-bottom-width: var(--kbq-markdown-hr-size-width);
-        margin: var(--kbq-markdown-hr-size-margin-vertical) 0;
+        border-left: none;
     }
 
     .kbq-markdown__table {
-        max-width: 100%;
-        overflow-x: auto;
         display: table;
         border-collapse: collapse;
+
+        max-width: 100%;
         margin-bottom: var(--kbq-markdown-table-size-margin-bottom);
+        overflow-x: auto;
 
         td {
             vertical-align: top;
@@ -165,10 +167,9 @@
     }
 
     .kbq-markdown__table > .kbq-markdown__thead {
+        text-align: left;
         border-bottom-style: solid;
         border-bottom-width: var(--kbq-markdown-table-size-border-width);
-
-        text-align: left;
 
         th:first-child {
             padding-left: 0;

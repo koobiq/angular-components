@@ -1,8 +1,8 @@
-import { InjectionToken, Provider } from '@angular/core';
-import { KbqDeepPartial } from '../utils';
+import { InjectionToken, type Provider } from '@angular/core';
+import type { KbqDeepPartial } from '../utils';
 import { kbqLocaleConfigurationOverrideProvider } from './configuration';
 import { ruRULocaleData } from './ru-RU';
-import { KbqSelectLocaleConfiguration } from './types';
+import type { KbqSelectLocaleConfiguration } from './types';
 
 /** Default localized strings shared by the select-like components. */
 export const KBQ_SELECT_DEFAULT_LOCALE_CONFIGURATION: KbqSelectLocaleConfiguration = ruRULocaleData.select;

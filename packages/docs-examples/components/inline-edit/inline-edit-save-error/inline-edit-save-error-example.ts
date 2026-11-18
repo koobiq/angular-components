@@ -1,20 +1,20 @@
-import { ChangeDetectionStrategy, Component, forwardRef, inject, TemplateRef, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, forwardRef, inject, type TemplateRef, viewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { type Observable, of, switchMap, throwError, timer } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
     KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER,
-    KbqInlineEdit,
-    KbqInlineEditMode,
+    type KbqInlineEdit,
+    type KbqInlineEditMode,
     KbqInlineEditModule,
-    KbqInlineEditSaveErrorContext,
-    KbqInlineEditSaveHandler
+    type KbqInlineEditSaveErrorContext,
+    type KbqInlineEditSaveHandler
 } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLink } from '@koobiq/components/link';
-import { KbqToastComponent, KbqToastModule, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
+import { type KbqToastComponent, KbqToastModule, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { Observable, of, switchMap, throwError, timer } from 'rxjs';
 import { TRANSLATIONS } from './l10n';
 
 const TAKEN_NAMES = ['Admins', 'Support'];

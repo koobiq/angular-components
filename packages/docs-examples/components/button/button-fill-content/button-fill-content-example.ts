@@ -13,11 +13,11 @@ import { TRANSLATIONS } from './l10n';
         KbqButtonModule
     ],
     template: `
-        <button class="example-fill-content__button" kbq-button [color]="colors.Contrast">
+        <button class="example-fill-content__button" kbq-button type="button" [color]="colors.Contrast">
             {{ t().truncatedButtonText }}
         </button>
     `,
-    styleUrls: ['button-fill-content-example.css'],
+    styleUrl: 'button-fill-content-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonFillContentExample {

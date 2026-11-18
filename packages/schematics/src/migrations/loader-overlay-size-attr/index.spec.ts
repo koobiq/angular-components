@@ -1,10 +1,10 @@
-import { workspaces } from '@angular-devkit/core';
-import { Tree } from '@angular-devkit/schematics';
-import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import type { workspaces } from '@angular-devkit/core';
+import type { Tree } from '@angular-devkit/schematics';
+import { SchematicTestRunner, type UnitTestTree } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
 import { createTestApp } from '../../utils/testing';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
 const SCHEMATIC_NAME = 'loader-overlay-size-attr';

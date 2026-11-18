@@ -1,16 +1,16 @@
-import { ChangeDetectorRef, Component, DebugElement, inject, signal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChangeDetectorRef, Component, type DebugElement, inject, signal } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { createKeyboardEvent, dispatchEvent, ENTER, SPACE } from '@koobiq/components/core';
 import {
     KBQ_FILTER_BAR_NAME_RESOLVER,
-    KbqFilter,
+    type KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
-    KbqFilterBarNameResolver,
-    KbqPipe,
+    type KbqFilterBarNameResolver,
+    type KbqPipe,
     KbqPipeAdd,
-    KbqPipeTemplate,
+    type KbqPipeTemplate,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
 

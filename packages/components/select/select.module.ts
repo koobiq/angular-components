@@ -15,9 +15,9 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { KbqSelect } from './select.component';
 import { KbqSelectError, KbqSelectErrorText, KbqSelectLoading, KbqSelectNoOptions } from './select-common';
 import { KbqOptionTooltip } from './select-option.directive';
-import { KbqSelect } from './select.component';
 
 @NgModule({
     imports: [

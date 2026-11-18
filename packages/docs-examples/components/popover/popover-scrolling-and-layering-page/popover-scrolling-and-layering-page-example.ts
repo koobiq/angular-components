@@ -43,7 +43,13 @@ import { TRANSLATIONS } from './l10n';
                 navigating away from the current view.
             </p>
 
-            <button kbq-button kbqPopover [kbqPopoverContent]="popoverContent" [kbqPopoverHideIfNotInViewPort]="false">
+            <button
+                kbq-button
+                kbqPopover
+                type="button"
+                [kbqPopoverContent]="popoverContent"
+                [kbqPopoverHideIfNotInViewPort]="false"
+            >
                 Open popover
             </button>
 

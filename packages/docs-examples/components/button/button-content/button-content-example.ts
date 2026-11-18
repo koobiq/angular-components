@@ -18,25 +18,25 @@ import { TRANSLATIONS } from './l10n';
         <div class="example-content__button-group">
             <div class="example-button">
                 <div class="example-label kbq-text-compact">Text</div>
-                <button kbq-button [color]="colors.Contrast">{{ t().button }}</button>
+                <button kbq-button type="button" [color]="colors.Contrast">{{ t().button }}</button>
             </div>
             <div class="example-button">
                 <div class="example-label kbq-text-compact">Icon+Text</div>
-                <button kbq-button [color]="colors.Contrast">
+                <button kbq-button type="button" [color]="colors.Contrast">
                     <i kbqButtonPrefix kbq-icon="kbq-plus_16"></i>
                     {{ t().button }}
                 </button>
             </div>
             <div class="example-button">
                 <div class="example-label kbq-text-compact">Text+Icon</div>
-                <button kbq-button [color]="colors.Contrast">
+                <button kbq-button type="button" [color]="colors.Contrast">
                     {{ t().button }}
                     <i kbqButtonSuffix kbq-icon="kbq-plus_16"></i>
                 </button>
             </div>
             <div class="example-button">
                 <div class="example-label kbq-text-compact">Icon+Text+Icon</div>
-                <button kbq-button [color]="colors.Contrast">
+                <button kbq-button type="button" [color]="colors.Contrast">
                     <i kbqButtonPrefix kbq-icon="kbq-plus_16"></i>
                     {{ t().button }}
                     <i kbqButtonSuffix kbq-icon="kbq-plus_16"></i>
@@ -44,7 +44,7 @@ import { TRANSLATIONS } from './l10n';
             </div>
             <div class="example-button">
                 <div class="example-label kbq-text-compact">Slots (order-independent)</div>
-                <button kbq-button [color]="colors.Contrast">
+                <button kbq-button type="button" [color]="colors.Contrast">
                     <i kbqButtonSuffix kbq-icon="kbq-plus_16"></i>
                     {{ t().button }}
                     <i kbqButtonPrefix kbq-icon="kbq-plus_16"></i>
@@ -52,7 +52,7 @@ import { TRANSLATIONS } from './l10n';
             </div>
         </div>
     `,
-    styleUrls: ['button-content-example.css'],
+    styleUrl: 'button-content-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonContentExample {

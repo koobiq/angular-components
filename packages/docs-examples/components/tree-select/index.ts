@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { TreeSelectChildSelectionOverviewExample } from './tree-select-child-selection-overview/tree-select-child-selection-overview-example';
 import { TreeSelectCleanerWithDisabledExample } from './tree-select-cleaner-with-disabled/tree-select-cleaner-with-disabled-example';
-import { TreeSelectCustomMatcherWithInputExample } from './tree-select-custom-matcher-with-input/tree-select-custom-matcher-with-input-example';
 import { TreeSelectCustomMatcherExample } from './tree-select-custom-matcher/tree-select-custom-matcher-example';
+import { TreeSelectCustomMatcherWithInputExample } from './tree-select-custom-matcher-with-input/tree-select-custom-matcher-with-input-example';
 import { TreeSelectCustomTriggerExample } from './tree-select-custom-trigger/tree-select-custom-trigger-example';
 import { TreeSelectDeletedNodesExample } from './tree-select-deleted-nodes/tree-select-deleted-nodes-example';
 import { TreeSelectFooterOverviewExample } from './tree-select-footer-overview/tree-select-footer-overview-example';
@@ -12,8 +12,8 @@ import { TreeSelectMultipleOverviewExample } from './tree-select-multiple-overvi
 import { TreeSelectOverviewExample } from './tree-select-overview/tree-select-overview-example';
 import { TreeSelectSearchOverviewExample } from './tree-select-search-overview/tree-select-search-overview-example';
 import { TreeSelectSearchSmartExample } from './tree-select-search-smart/tree-select-search-smart-example';
-import { TreeSelectSelectAllLabelExample } from './tree-select-select-all-label/tree-select-select-all-label-example';
 import { TreeSelectSelectAllExample } from './tree-select-select-all/tree-select-select-all-example';
+import { TreeSelectSelectAllLabelExample } from './tree-select-select-all-label/tree-select-select-all-label-example';
 import { TreeSelectTwoLineOptionExample } from './tree-select-two-line-option/tree-select-two-line-option-example';
 import { TreeSelectWithMultilineMatcherExample } from './tree-select-with-multiline-matcher-overview/tree-select-with-multiline-matcher-example';
 

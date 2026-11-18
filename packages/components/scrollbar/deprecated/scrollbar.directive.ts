@@ -1,7 +1,12 @@
 import { CdkScrollable } from '@angular/cdk/overlay';
-import { Directive, Input, NgZone, OnDestroy, inject, input } from '@angular/core';
+import { Directive, inject, Input, input, NgZone, type OnDestroy } from '@angular/core';
 import { OverlayScrollbars } from 'overlayscrollbars';
-import { KBQ_SCROLLBAR_CONFIG, KbqScrollbarEvents, KbqScrollbarOptions, KbqScrollbarTarget } from './scrollbar.types';
+import {
+    KBQ_SCROLLBAR_CONFIG,
+    type KbqScrollbarEvents,
+    type KbqScrollbarOptions,
+    type KbqScrollbarTarget
+} from './scrollbar.types';
 
 type Defer = [
     requestDefer: (callback: () => any, options?: boolean | IdleRequestOptions) => void,
@@ -68,7 +73,7 @@ export class KbqScrollbarDirective implements OnDestroy {
     private requestDefer: ReturnType<typeof createDefer>[0];
     private cancelDefer: ReturnType<typeof createDefer>[1];
 
-    private _options: KbqScrollbarOptions;
+    private _options?: KbqScrollbarOptions;
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.

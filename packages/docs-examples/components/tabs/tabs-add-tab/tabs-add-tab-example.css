@@ -1,7 +1,8 @@
 :host {
+    --tab-nav-selected: var(--kbq-tabs-tab-item-filled-on-background-states-selected-background);
+
     display: flex;
     flex-direction: column;
-    --tab-nav-selected: var(--kbq-tabs-tab-item-filled-on-background-states-selected-background);
 }
 
 .example-tabs-add-tab__bar {
@@ -19,13 +20,16 @@
 
 .example-tab-close {
     position: absolute;
-    right: calc(var(--kbq-tabs-size-tab-item-padding-horizontal) - var(--kbq-tabs-size-tab-item-focus-outline-width));
     top: 0;
+    right: calc(var(--kbq-tabs-size-tab-item-padding-horizontal) - var(--kbq-tabs-size-tab-item-focus-outline-width));
     bottom: 0;
-    width: 32px;
+
     display: flex;
     align-items: center;
     justify-content: flex-end;
+
+    width: 32px;
+
     background: linear-gradient(var(--tab-nav-selected), var(--tab-nav-selected)), var(--kbq-background-bg);
     mask-image: linear-gradient(to right, transparent 0%, black 50%);
 }

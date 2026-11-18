@@ -4,15 +4,14 @@ en-locale {
 }
 
 .dev-number-input {
+    max-width: 200px;
     margin-top: 32px;
     margin-bottom: 32px;
-
-    max-width: 200px;
 }
 
 .dev-container {
-    padding-left: 16px;
     padding-right: 16px;
+    padding-left: 16px;
 }
 
 .dev-light-text-secondary {

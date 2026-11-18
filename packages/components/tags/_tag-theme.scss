@@ -1,7 +1,7 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 @use './tag-tokens';
 
-@mixin _kbq-tag-state($type, $style-name) {
+@mixin -kbq-tag-state($type, $style-name) {
     $base: tag-#{$type}-#{$style-name};
 
     background: var(--kbq-#{$base}-background);
@@ -15,23 +15,23 @@
     }
 }
 
-@mixin _kbq-tag-color($type) {
-    @include _kbq-tag-state($type, default);
+@mixin -kbq-tag-color($type) {
+    @include -kbq-tag-state($type, default);
 
     &:hover,
     &.kbq-hovered {
-        @include _kbq-tag-state($type, states-hover);
+        @include -kbq-tag-state($type, states-hover);
     }
 
     &.cdk-keyboard-focused,
     &.kbq-tag_editing {
-        @include _kbq-tag-state($type, states-focus);
+        @include -kbq-tag-state($type, states-focus);
 
         outline: 2px solid var(--kbq-tag-#{$type}-states-focus-outline);
     }
 
     &.kbq-selected:not(.kbq-disabled, .kbq-tag_editing) {
-        @include _kbq-tag-state($type, states-selected);
+        @include -kbq-tag-state($type, states-selected);
 
         &.cdk-keyboard-focused {
             box-shadow: inset 0 0 0 var(--kbq-size-border-width) var(--kbq-background-bg);
@@ -40,7 +40,7 @@
 
     // TODO: Combine disabled states for all colors (#DS-3778)
     &.kbq-disabled {
-        @include _kbq-tag-state($type, states-disabled);
+        @include -kbq-tag-state($type, states-disabled);
     }
 
     &.kbq-tag_editing {
@@ -55,19 +55,19 @@
 @mixin kbq-tag-theme() {
     .kbq-tag {
         &.kbq-theme {
-            @include _kbq-tag-color(theme-fade-on);
+            @include -kbq-tag-color(theme-fade-on);
         }
 
         &.kbq-contrast-fade {
-            @include _kbq-tag-color(contrast-fade-on);
+            @include -kbq-tag-color(contrast-fade-on);
         }
 
         &.kbq-error {
-            @include _kbq-tag-color(error-fade-on);
+            @include -kbq-tag-color(error-fade-on);
         }
 
         &.kbq-warning {
-            @include _kbq-tag-color(warning-fade);
+            @include -kbq-tag-color(warning-fade);
         }
     }
 }
@@ -75,10 +75,10 @@
 @mixin kbq-tag-typography() {
     .kbq-tag,
     .kbq-tag-edit-input {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
     }
 
     .kbq-tag-input {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }

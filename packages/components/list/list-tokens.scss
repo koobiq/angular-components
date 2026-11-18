@@ -50,6 +50,8 @@
 // the option, and the plate of its text.
 .kbq-list-option.cdk-drag-preview,
 .kbq-list-drag-preview_text {
+    /* THEME TOKENS */
+    @include list-theme-tokens;
     /* SIZE TOKENS — consumed by `.kbq-list-item` / `.kbq-list-option` in list.scss */
     --kbq-list-size-container-padding-left: var(--kbq-size-m);
     --kbq-list-size-container-padding-right: var(--kbq-size-m);
@@ -57,8 +59,6 @@
     --kbq-list-size-container-content-gap-horizontal: var(--kbq-size-s);
     --kbq-list-size-container-content-gap-vertical: var(--kbq-size-3xs);
     --kbq-list-size-container-focus-outline-width: var(--kbq-size-3xs);
-    /* THEME TOKENS */
-    @include list-theme-tokens;
 }
 
 // Declared here rather than in `list-theme-tokens`, which is also included by the option and dropdown

@@ -1,10 +1,9 @@
-import { Path } from '@angular-devkit/core';
-import { DirEntry, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Path } from '@angular-devkit/core';
+import type { DirEntry, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import * as path from 'path';
-
 import { setupOptions } from '../../utils/package-config';
-import { colorsVarsReplacement, ReplaceData, typographyCssSelectorsReplacement } from './data';
-import { Schema } from './schema';
+import { colorsVarsReplacement, type ReplaceData, typographyCssSelectorsReplacement } from './data';
+import type { Schema } from './schema';
 
 export default function cssSelectors(options: Schema): Rule {
     let targetDir: Tree | DirEntry;

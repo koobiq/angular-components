@@ -1,6 +1,12 @@
-import { workspaces } from '@angular-devkit/core';
-import { chain, Rule, SchematicContext, SchematicsException, Tree } from '@angular-devkit/schematics';
+import type { workspaces } from '@angular-devkit/core';
+import { chain, type Rule, type SchematicContext, SchematicsException, type Tree } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
+// `@schematics/angular`'s own bundled copy of the TypeScript compiler, not the `typescript`
+// package — `findAppConfig`/`findProvidersLiteral` return nodes created by this exact instance,
+// and `ts.isCallExpression`/`ts.isIdentifier` key off `SyntaxKind` numeric values, which are not
+// guaranteed to line up between two different compiler versions (they didn't: `CallExpression` is
+// 213 in this repo's `typescript` and 214 in the compiler `@schematics/angular` 20.3.34 bundles).
+import ts from '@schematics/angular/third_party/github.com/Microsoft/TypeScript/lib/typescript';
 import { addRootProvider, readWorkspace, writeWorkspace } from '@schematics/angular/utility';
 import { findAppConfig } from '@schematics/angular/utility/standalone/app_config';
 import {
@@ -8,19 +14,13 @@ import {
     findProvidersLiteral,
     getMainFilePath
 } from '@schematics/angular/utility/standalone/util';
-// `@schematics/angular`'s own bundled copy of the TypeScript compiler, not the `typescript`
-// package — `findAppConfig`/`findProvidersLiteral` return nodes created by this exact instance,
-// and `ts.isCallExpression`/`ts.isIdentifier` key off `SyntaxKind` numeric values, which are not
-// guaranteed to line up between two different compiler versions (they didn't: `CallExpression` is
-// 213 in this repo's `typescript` and 214 in the compiler `@schematics/angular` 20.3.34 bundles).
-import ts from '@schematics/angular/third_party/github.com/Microsoft/TypeScript/lib/typescript';
 import { setKoobiqThemeBodyClass } from '../utils/html-config';
 import { logMessage } from '../utils/messages';
 import { addPackageToPackageJson } from '../utils/package-config';
 import { safeRule } from '../utils/safe-rule';
-import { applyKoobiqWorkspaceStyles, KoobiqTheme } from '../utils/workspace-styles';
+import { applyKoobiqWorkspaceStyles, type KoobiqTheme } from '../utils/workspace-styles';
 import * as messages from './messages';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 const VERSIONS = {
     ANGULAR_CDK: '^0.0.0',

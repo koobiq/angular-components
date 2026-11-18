@@ -5,7 +5,6 @@
 
     .kbq-badge {
         align-self: center;
-
         margin-inline-start: var(--kbq-size-xs);
     }
 
@@ -33,10 +32,11 @@
 .kbq-pipe-multi-tree-select__panel_multiline {
     .kbq-tree-option .kbq-option-text {
         flex: 1 1 auto;
+
         min-width: 0;
 
+        text-overflow: clip;
         white-space: normal;
         overflow-wrap: break-word;
-        text-overflow: clip;
     }
 }

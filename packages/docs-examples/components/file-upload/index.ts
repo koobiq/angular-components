@@ -12,8 +12,8 @@ import { FileUploadMultipleCustomTextOverviewExample } from './file-upload-multi
 import { FileUploadMultipleDefaultOverviewExample } from './file-upload-multiple-default-overview/file-upload-multiple-default-overview-example';
 import { FileUploadMultipleDefaultValidationReactiveFormsOverviewExample } from './file-upload-multiple-default-validation-reactive-forms-overview/file-upload-multiple-default-validation-reactive-forms-overview-example';
 import { FileUploadMultipleDisabledExample } from './file-upload-multiple-disabled/file-upload-multiple-disabled-example';
-import { FileUploadMultipleErrorFilledExample } from './file-upload-multiple-error-filled/file-upload-multiple-error-filled-example';
 import { FileUploadMultipleErrorExample } from './file-upload-multiple-error/file-upload-multiple-error-example';
+import { FileUploadMultipleErrorFilledExample } from './file-upload-multiple-error-filled/file-upload-multiple-error-filled-example';
 import { FileUploadMultipleMixedValidationExample } from './file-upload-multiple-mixed-validation/file-upload-multiple-mixed-validation-example';
 import { FileUploadMultipleRequiredReactiveValidationExample } from './file-upload-multiple-required-reactive-validation/file-upload-multiple-required-reactive-validation-example';
 import { FileUploadMultipleWithCustomIconExample } from './file-upload-multiple-with-custom-icon/file-upload-multiple-with-custom-icon-example';

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, type TemplateRef } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
@@ -25,7 +25,9 @@ import { TRANSLATIONS } from './l10n';
             <a kbqLink pseudo (click)="toast.close()">{{ t().restore }}</a>
         </ng-template>
 
-        <button kbq-button (click)="showToast(toastContentTemplate, toastActionsTemplate)">{{ t().report }}</button>
+        <button kbq-button type="button" (click)="showToast(toastContentTemplate, toastActionsTemplate)">
+            {{ t().report }}
+        </button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

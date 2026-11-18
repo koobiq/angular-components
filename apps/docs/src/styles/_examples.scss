@@ -2,13 +2,12 @@
 // viewer. The modifiers below only assign custom properties, so they apply whatever the order of the stylesheets.
 .docs-live-example__example:not(.docs-live-example__example_notification-center-popover) {
     padding: var(--docs-live-example-example-padding, var(--kbq-size-xl));
-
     overflow: auto;
 
-    border-radius: inherit;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
     background: var(--docs-live-example-example-background, transparent);
+    border-radius: inherit;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 .docs-live-example__example {

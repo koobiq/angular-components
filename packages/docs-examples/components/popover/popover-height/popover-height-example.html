@@ -72,8 +72,8 @@
 
 <ng-template #customFooter>
     <div style="gap: 16px" class="layout-row layout-wrap">
-        <button kbq-button [color]="'contrast'" (click)="activePopover.hide(0)">{{ t().save }}</button>
-        <button kbq-button (click)="activePopover.hide(0)">{{ t().cancel }}</button>
+        <button kbq-button type="button" color="contrast" (click)="activePopover?.hide(0)">{{ t().save }}</button>
+        <button kbq-button type="button" (click)="activePopover?.hide(0)">{{ t().cancel }}</button>
     </div>
 </ng-template>
 
@@ -82,9 +82,10 @@
         #kbqNoScrollPopover="kbqPopover"
         kbq-button
         kbqPopover
+        type="button"
+        kbqPopoverHeader="SSO-connection"
         [kbqPopoverContent]="shortContent"
         [kbqPopoverFooter]="customFooter"
-        [kbqPopoverHeader]="'SSO-connection'"
         (click)="activePopover = kbqNoScrollPopover"
     >
         {{ t().withoutScroll }}
@@ -93,9 +94,10 @@
         #kbqAutoHeightPopover="kbqPopover"
         kbq-button
         kbqPopover
+        type="button"
+        kbqPopoverHeader="SSO-connection"
         [kbqPopoverContent]="customContent"
         [kbqPopoverFooter]="customFooter"
-        [kbqPopoverHeader]="'SSO-connection'"
         (click)="activePopover = kbqAutoHeightPopover"
     >
         {{ t().defaultHeight }}
@@ -104,10 +106,11 @@
         #kbqCustomHeightPopover="kbqPopover"
         kbq-button
         kbqPopover
-        [kbqPopoverClass]="'popover-height-custom-example'"
+        type="button"
+        kbqPopoverClass="popover-height-custom-example"
+        kbqPopoverHeader="SSO-connection"
         [kbqPopoverContent]="customContent"
         [kbqPopoverFooter]="customFooter"
-        [kbqPopoverHeader]="'SSO-connection'"
         (click)="activePopover = kbqCustomHeightPopover"
     >
         {{ t().customHeight }}

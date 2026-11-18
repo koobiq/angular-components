@@ -1,7 +1,7 @@
-import { Component, DebugElement } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, type DebugElement } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { KbqFilter, KbqFilterBarModule, KbqFilterReset } from '@koobiq/components/filter-bar';
+import { type KbqFilter, KbqFilterBarModule, KbqFilterReset } from '@koobiq/components/filter-bar';
 
 @Component({
     selector: 'test-app',

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqFilter, KbqFilterBarModule, KbqPipeTypes } from '@koobiq/components/filter-bar';
+import { type KbqFilter, KbqFilterBarModule, KbqPipeTypes } from '@koobiq/components/filter-bar';
 
 /**
  * @title filter-bar-readonly-pipe
