@@ -699,6 +699,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/markdown').then((m) => m.MarkdownSelectionExample);
         case 'markdown-table':
             return import('@koobiq/docs-examples/components/markdown').then((m) => m.MarkdownTableExample);
+        case 'modal-button-loading':
+            return import('@koobiq/docs-examples/components/modal').then((m) => m.ModalButtonLoadingExample);
         case 'modal-caption':
             return import('@koobiq/docs-examples/components/modal').then((m) => m.ModalCaptionExample);
         case 'modal-component-with-injector':
