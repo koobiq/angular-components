@@ -14,6 +14,8 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqCleaner, KbqFormField, KbqPrefix } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInput } from '@koobiq/components/input';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Dropdown with filter
@@ -42,7 +44,7 @@ import { KbqInput } from '@koobiq/components/input';
         <kbq-dropdown #dropdown="kbqDropdown">
             <kbq-form-field kbqDropdownSearch>
                 <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
-                <input autocomplete="off" kbqInput placeholder="Search" [formControl]="control" />
+                <input autocomplete="off" kbqInput [placeholder]="t().search" [formControl]="control" />
                 <kbq-cleaner />
             </kbq-form-field>
 
@@ -61,7 +63,7 @@ import { KbqInput } from '@koobiq/components/input';
             }
 
             @if (filtered.actions.length > 0) {
-                <kbq-optgroup label="Subheader for actions" />
+                <kbq-optgroup [label]="t().subheaderForActions" />
             }
 
             @for (item of filtered.actions; track item) {
@@ -87,6 +89,8 @@ import { KbqInput } from '@koobiq/components/input';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownWithFilterExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly groups = {
         items: ['New tab', 'New window'],
         actions: ['Action one', 'Action two', 'Action three']

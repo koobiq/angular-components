@@ -229,6 +229,10 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/code-block').then((m) => m.CodeBlockWithTabsAndShadowExample);
         case 'code-block-with-tabs':
             return import('@koobiq/docs-examples/components/code-block').then((m) => m.CodeBlockWithTabsExample);
+        case 'content-panel-before-close':
+            return import('@koobiq/docs-examples/components/content-panel').then((m) => m.ContentPanelBeforeCloseExample);
+        case 'content-panel-close-on-escape':
+            return import('@koobiq/docs-examples/components/content-panel').then((m) => m.ContentPanelCloseOnEscapeExample);
         case 'content-panel-overview':
             return import('@koobiq/docs-examples/components/content-panel').then((m) => m.ContentPanelOverviewExample);
         case 'content-panel-state-saving':
@@ -651,6 +655,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/loader-overlay').then((m) => m.LoaderOverlayDefaultExample);
         case 'loader-overlay-delay':
             return import('@koobiq/docs-examples/components/loader-overlay').then((m) => m.LoaderOverlayDelayExample);
+        case 'loader-overlay-fixed-top':
+            return import('@koobiq/docs-examples/components/loader-overlay').then((m) => m.LoaderOverlayFixedTopExample);
         case 'loader-overlay-large':
             return import('@koobiq/docs-examples/components/loader-overlay').then((m) => m.LoaderOverlayLargeExample);
         case 'loader-overlay-overview':

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqAccordionModule } from '@koobiq/components/accordion';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -7,6 +7,8 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 type ExampleSection = {
     id: string;
@@ -34,9 +36,11 @@ type ExampleSection = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionInteractiveElementsExample {
-    protected readonly sections: ExampleSection[] = [
-        { id: 'section-1', title: 'Profile', enabled: true, name: '' },
-        { id: 'section-2', title: 'Specifications', enabled: false, name: '' },
-        { id: 'section-3', title: 'Servers', enabled: false, name: '' }
-    ];
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    protected readonly sections = computed<ExampleSection[]>(() => [
+        { id: 'section-1', title: this.t().profile, enabled: true, name: '' },
+        { id: 'section-2', title: this.t().specifications, enabled: false, name: '' },
+        { id: 'section-3', title: this.t().servers, enabled: false, name: '' }
+    ]);
 }

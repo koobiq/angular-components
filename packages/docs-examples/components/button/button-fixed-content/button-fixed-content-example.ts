@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Button fixed content
@@ -12,13 +14,13 @@ import { KbqComponentColors } from '@koobiq/components/core';
     ],
     template: `
         <div class="example-fixed-content__button-group">
-            <button type="button" class="example-fixed-content__button" kbq-button [color]="colors.Contrast">
-                Текст кнопки
+            <button class="example-fixed-content__button" kbq-button type="button" [color]="colors.Contrast">
+                {{ t().buttonText }}
             </button>
             &nbsp;
             <br />
-            <button type="button" class="example-fixed-content__button" kbq-button [color]="colors.Contrast">
-                Очень длинный текст кнопки
+            <button class="example-fixed-content__button" kbq-button type="button" [color]="colors.Contrast">
+                {{ t().longButtonText }}
             </button>
             &nbsp;
         </div>
@@ -27,5 +29,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonFixedContentExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     colors = KbqComponentColors;
 }

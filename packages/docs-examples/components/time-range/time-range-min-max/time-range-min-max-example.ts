@@ -1,38 +1,14 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, InjectionToken } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import type { DateTime } from 'luxon';
-import { of } from 'rxjs';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
+import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTimeRangeModule, type KbqTimeRangeRange } from '@koobiq/components/time-range';
-
-type ExampleText = {
-    placeholder: string;
-    withPresets: string;
-    withoutPresets: string;
-};
-
-const ExampleLocalizedData = new InjectionToken<Record<string, ExampleText> & { default: ExampleText }>(
-    'ExampleLocalizedData',
-    {
-        factory: () => ({
-            'ru-RU': {
-                placeholder: 'Период',
-                withPresets: 'С предустановками',
-                withoutPresets: 'Без предустановок'
-            },
-            default: {
-                placeholder: 'Period',
-                withPresets: 'With presets',
-                withoutPresets: 'Without presets'
-            }
-        })
-    }
-);
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Time range min max
@@ -50,7 +26,7 @@ const ExampleLocalizedData = new InjectionToken<Record<string, ExampleText> & { 
     template: `
         <ng-template #titleValue let-context>
             @if (!context.type) {
-                <span kbqTimeRangeTitlePlaceholder>{{ text().placeholder }}</span>
+                <span kbqTimeRangeTitlePlaceholder>{{ t().placeholder }}</span>
             } @else if (context.type === 'range') {
                 {{
                     dateFormatter.rangeLongDate(
@@ -69,7 +45,7 @@ const ExampleLocalizedData = new InjectionToken<Record<string, ExampleText> & { 
                     <ng-container *ngTemplateOutlet="titleValue; context: { $implicit: context }" />
                 </kbq-time-range-title-as-control>
                 <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix color="contrast-fade"></i>
-                <kbq-hint>{{ text().withPresets }}</kbq-hint>
+                <kbq-hint>{{ t().withPresets }}</kbq-hint>
             </kbq-form-field>
         </ng-template>
 
@@ -79,7 +55,7 @@ const ExampleLocalizedData = new InjectionToken<Record<string, ExampleText> & { 
                     <ng-container *ngTemplateOutlet="titleValue; context: { $implicit: context }" />
                 </kbq-time-range-title-as-control>
                 <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix color="contrast-fade"></i>
-                <kbq-hint>{{ text().withoutPresets }}</kbq-hint>
+                <kbq-hint>{{ t().withoutPresets }}</kbq-hint>
             </kbq-form-field>
         </ng-template>
 
@@ -111,6 +87,8 @@ const ExampleLocalizedData = new InjectionToken<Record<string, ExampleText> & { 
     }
 })
 export class TimeRangeMinMaxExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly dateAdapter = inject<DateAdapter<DateTime>>(DateAdapter);
     protected readonly dateFormatter = inject(DateFormatter);
 
@@ -128,11 +106,6 @@ export class TimeRangeMinMaxExample {
         },
         { nonNullable: true }
     );
-
-    private readonly data = inject(ExampleLocalizedData);
-    private readonly localeId = toSignal(inject(KBQ_LOCALE_SERVICE, { optional: true })?.changes || of(''));
-
-    protected readonly text = computed(() => this.data[this.localeId() || 'default'] ?? this.data['default']);
 
     protected capitalize(text: string): string {
         return text.charAt(0).toUpperCase() + text.slice(1);

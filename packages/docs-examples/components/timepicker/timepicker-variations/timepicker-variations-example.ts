@@ -8,6 +8,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Timepicker variations
@@ -28,6 +30,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimepickerVariationsExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
     value: DateTime;

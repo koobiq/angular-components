@@ -18,7 +18,7 @@
         <div class="kbq-select__matcher">
             @if (empty()) {
                 <span class="kbq-select__placeholder">
-                    {{ placeholder() || '\u00A0' }}
+                    {{ disabled() || !placeholder() ? '\u00A0' : placeholder() }}
                 </span>
             } @else {
                 <span>

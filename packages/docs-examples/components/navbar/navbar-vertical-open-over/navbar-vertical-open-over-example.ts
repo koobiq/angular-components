@@ -5,7 +5,8 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { injectExampleText } from '../localized-data';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Navbar vertical open over
@@ -23,7 +24,7 @@ import { injectExampleText } from '../localized-data';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarVerticalOpenOverExample {
-    protected readonly text = injectExampleText();
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     popUpPlacements = PopUpPlacements;
 }

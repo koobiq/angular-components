@@ -12,6 +12,8 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/popover';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Actions panel with dropdown and popover
@@ -20,7 +22,7 @@ import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/pop
     selector: 'actions-panel-with-dropdown-and-popover-example',
     imports: [KbqButtonModule, KbqIconModule, KbqDropdownModule, KbqPopoverModule],
     template: `
-        <button kbq-button type="button" (click)="open()">open</button>
+        <button kbq-button type="button" (click)="open()">{{ t().open }}</button>
 
         <ng-template let-data>
             <button
@@ -34,26 +36,26 @@ import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/pop
                 [kbqPopoverFooter]="popoverFooter"
             >
                 <i kbq-icon="kbq-shield_16"></i>
-                Protection
+                {{ t().protection }}
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
 
             <kbq-dropdown #dropdown="kbqDropdown">
                 <button kbq-dropdown-item type="button" (click)="enable(popover)">
                     <i kbq-icon="kbq-shield_16"></i>
-                    Enable
+                    {{ t().enable }}
                 </button>
                 <button kbq-dropdown-item type="button" (click)="disable(popover)">
                     <i kbq-icon="kbq-shield-slash_16"></i>
-                    Disable
+                    {{ t().disable }}
                 </button>
             </kbq-dropdown>
         </ng-template>
 
         <ng-template #popoverFooter>
             <div class="example-popover-footer">
-                <button kbq-button type="button" color="contrast" (click)="save()">Save</button>
-                <button kbq-button type="button" (click)="cancel()">Cancel</button>
+                <button kbq-button color="contrast" type="button" (click)="save()">{{ t().save }}</button>
+                <button kbq-button type="button" (click)="cancel()">{{ t().cancel }}</button>
             </div>
         </ng-template>
     `,
@@ -75,6 +77,8 @@ import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/pop
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActionsPanelWithDropdownAndPopoverExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly templateRef = viewChild.required(TemplateRef);
@@ -97,13 +101,13 @@ export class ActionsPanelWithDropdownAndPopoverExample {
 
     protected disable(popoverTriggerRef: KbqPopoverTrigger): void {
         this.popoverTriggerRef = popoverTriggerRef;
-        this.popoverTriggerRef.header = 'Disable protection?';
+        this.popoverTriggerRef.header = this.t().disableProtectionTitle;
         this.popoverTriggerRef.show(0);
     }
 
     protected enable(popoverTriggerRef: KbqPopoverTrigger): void {
         this.popoverTriggerRef = popoverTriggerRef;
-        this.popoverTriggerRef.header = 'Enable protection?';
+        this.popoverTriggerRef.header = this.t().enableProtectionTitle;
         this.popoverTriggerRef.show(0);
     }
 

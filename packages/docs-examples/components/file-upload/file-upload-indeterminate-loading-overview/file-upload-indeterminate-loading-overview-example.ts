@@ -6,6 +6,8 @@ import {
     KbqSingleFileUploadComponent
 } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title File-upload indeterminate loading
@@ -29,7 +31,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
         </kbq-file-upload>
 
         @if (isLoading) {
-            <p class="kbq-text-big">Immediately load to backend...</p>
+            <p class="kbq-text-big">{{ t().immediatelyLoad }}</p>
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,6 +40,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
     }
 })
 export class FileUploadIndeterminateLoadingOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     isLoading = false;
 
     onFileChange(file: KbqFileItem | null) {

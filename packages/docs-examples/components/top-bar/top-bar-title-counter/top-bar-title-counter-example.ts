@@ -15,6 +15,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 type ExampleAction = {
     id: string;
@@ -48,7 +50,7 @@ type ExampleAction = {
                     <img alt="example icon" ngSrc="https://koobiq.io/assets/example-icon.svg" width="24" height="24" />
                 </div>
                 <div class="kbq-truncate-line example-kbq-top-bar__title" kbqTopBarTitle>
-                    <span class="kbq-truncate-line layout-margin-right-xs">Dashboards</span>
+                    <span class="kbq-truncate-line layout-margin-right-xs">{{ t().dashboards }}</span>
 
                     <span class="example-kbq-top-bar__counter">{{ 13294 | kbqNumber: '' : 'en-US' }}</span>
                 </div>
@@ -124,6 +126,8 @@ type ExampleAction = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopBarTitleCounterExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')

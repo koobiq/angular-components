@@ -5,6 +5,8 @@ import { KbqComponentColors, KbqHighlightBackgroundPipe } from '@koobiq/componen
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLink } from '@koobiq/components/link';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 type SearchResult = {
     title: string;
@@ -30,10 +32,10 @@ type SearchResult = {
             <kbq-fieldset>
                 <kbq-form-field kbqFieldsetItem>
                     <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
-                    <input kbqInput placeholder="Search" [formControl]="control" />
+                    <input kbqInput [placeholder]="t().search" [formControl]="control" />
                 </kbq-form-field>
                 <button kbqFieldsetItem kbq-button type="button" [color]="colors.Contrast" (click)="applySearch()">
-                    Search
+                    {{ t().search }}
                 </button>
             </kbq-fieldset>
         </div>
@@ -64,6 +66,8 @@ type SearchResult = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HighlightBackgroundComplexExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly colors = KbqComponentColors;
     protected readonly control = new FormControl('cube');
     protected readonly query = signal(this.control.value);

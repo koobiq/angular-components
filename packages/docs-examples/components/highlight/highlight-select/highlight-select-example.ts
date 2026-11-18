@@ -6,6 +6,8 @@ import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Highlight in select
@@ -22,14 +24,14 @@ import { KbqSelectModule } from '@koobiq/components/select';
     ],
     template: `
         <kbq-form-field>
-            <kbq-select placeholder="Choose a club">
+            <kbq-select [placeholder]="t().chooseClub">
                 <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input kbqInput type="text" [formControl]="searchControl" />
                     <kbq-cleaner />
                 </kbq-form-field>
 
-                <div kbq-select-search-empty-result>Nothing found</div>
+                <div kbq-select-search-empty-result>{{ t().nothingFound }}</div>
 
                 @for (option of filteredOptions | async; track option) {
                     <kbq-option [value]="option">
@@ -52,6 +54,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HighlightSelectExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly options = [
         'Manchester United',
         'Manchester 62 FC',

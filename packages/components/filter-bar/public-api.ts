@@ -2,6 +2,7 @@ export * from './filter-bar';
 export * from './filter-bar.module';
 export * from './filter-bar.types';
 export * from './filter-bar-button';
+export * from './filter-bar-name';
 export * from './filter-bar-pipes';
 export * from './filter-refresher';
 export * from './filter-reset';

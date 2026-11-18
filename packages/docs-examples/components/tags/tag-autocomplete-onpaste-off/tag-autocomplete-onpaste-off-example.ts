@@ -13,6 +13,8 @@ import {
     kbqTagsDefaultOptionsProvider,
     KbqTagsModule
 } from '@koobiq/components/tags';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 type AutocompleteValue = string | { new: true; value: string } | null;
 
@@ -48,6 +50,8 @@ const autocompleteValueCoercion = (value: AutocompleteValue): string =>
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagAutocompleteOnpasteOffExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly tagInput = viewChild.required<ElementRef<HTMLInputElement>>('tagInput');
     readonly tagInputDirective = viewChild.required('tagInput', { read: KbqTagInput });
 

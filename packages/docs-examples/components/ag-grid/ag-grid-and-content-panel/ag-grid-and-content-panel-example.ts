@@ -1,5 +1,5 @@
 import { ENTER } from '@angular/cdk/keycodes';
-import { ChangeDetectionStrategy, Component, inject, model, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, model, output, signal } from '@angular/core';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -20,6 +20,8 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -39,9 +41,9 @@ type ExampleRowData = Record<string, string>;
             [alwaysMultiSort]="true"
             [rowSelection]="rowSelection"
             [style.height]="'100%'"
-            [columnDefs]="columnDefs"
+            [columnDefs]="columnDefs()"
             [defaultColDef]="defaultColDef"
-            [rowData]="rowData"
+            [rowData]="rowData()"
             (firstDataRendered)="onFirstDataRendered($event)"
             (cellClicked)="cellClicked.emit($event)"
             (cellFocused)="cellFocused.emit($event)"
@@ -51,6 +53,8 @@ type ExampleRowData = Record<string, string>;
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleGrid {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly cellClicked = output<CellClickedEvent>();
     readonly cellFocused = output<CellFocusedEvent>();
     readonly cellKeyDown = output<CellKeyDownEvent | FullWidthCellKeyDownEvent>();
@@ -68,20 +72,22 @@ export class ExampleGrid {
         hideDisabledCheckboxes: false
     };
 
-    private readonly _columnDefs: ColDef[] = Array.from({ length: 20 }, (_, index) => ({
-        headerName: 'Text ',
-        field: 'column' + index
-    }));
+    protected readonly columnDefs = computed<ColDef[]>(() =>
+        Array.from({ length: 20 }, (_, index) => ({
+            headerName: this.t().headerText,
+            field: 'column' + index
+        }))
+    );
 
-    protected readonly columnDefs: ColDef[] = this._columnDefs;
+    protected readonly rowData = computed<ExampleRowData[]>(() =>
+        Array.from({ length: 100 }, (_, index) => {
+            return this.columnDefs().reduce((prev, _cur, i) => {
+                prev['column' + i] = `${this.t().headerText} ${index}`;
 
-    protected readonly rowData: ExampleRowData[] = Array.from({ length: 100 }, (_, index) => {
-        return this._columnDefs.reduce((prev, _cur, i) => {
-            prev['column' + i] = 'Text ' + index;
-
-            return prev;
-        }, {} as ExampleRowData);
-    });
+                return prev;
+            }, {} as ExampleRowData);
+        })
+    );
 
     protected onFirstDataRendered({ api }: FirstDataRenderedEvent): void {
         api.forEachNode((node) => {
@@ -105,15 +111,15 @@ export class ExampleGrid {
     ],
     template: `
         <kbq-modal-title class="example-modal-title">
-            <div>Click any table row to open Content panel</div>
+            <div>{{ t().clickRowHint }}</div>
             <div class="example-modal-title-actions">
                 <button kbq-button type="button" [color]="componentColors.Contrast" (click)="modalRef.close()">
-                    Close window
+                    {{ t().closeWindow }}
                 </button>
                 <button
                     kbq-button
                     type="button"
-                    aria-label="More"
+                    [attr.aria-label]="t().more"
                     [color]="componentColors.Contrast"
                     [kbqStyle]="buttonStyles.Transparent"
                 >
@@ -134,7 +140,7 @@ export class ExampleGrid {
                             <button
                                 kbq-button
                                 type="button"
-                                aria-label="Report a bug"
+                                [attr.aria-label]="t().reportBug"
                                 [class.kbq-active]="$first"
                                 [color]="componentColors.Contrast"
                                 [kbqStyle]="buttonStyles.Transparent"
@@ -145,7 +151,7 @@ export class ExampleGrid {
                     </kbq-content-panel-aside>
                     <kbq-content-panel-header>
                         <div class="example-content-header-title" kbqContentPanelHeaderTitle>
-                            <span>Selected row {{ selectedRowIndex() }}</span>
+                            <span>{{ t().selectedRow(selectedRowIndex()) }}</span>
                             <kbq-badge [badgeColor]="badgeColors.FadeError">8,6</kbq-badge>
                             <a kbqLink pseudo>July 21, 2025 2:29 PM</a>
                         </div>
@@ -153,7 +159,7 @@ export class ExampleGrid {
                             <button
                                 kbq-button
                                 type="button"
-                                aria-label="Copy link"
+                                [attr.aria-label]="t().copyLink"
                                 [color]="componentColors.Contrast"
                                 [kbqStyle]="buttonStyles.Transparent"
                             >
@@ -162,7 +168,7 @@ export class ExampleGrid {
                             <button
                                 kbq-button
                                 type="button"
-                                aria-label="Expand"
+                                [attr.aria-label]="t().expand"
                                 [color]="componentColors.Contrast"
                                 [kbqStyle]="buttonStyles.Transparent"
                             >
@@ -171,42 +177,32 @@ export class ExampleGrid {
                             <button
                                 kbq-button
                                 type="button"
-                                aria-label="More"
+                                [attr.aria-label]="t().more"
                                 [color]="componentColors.Contrast"
                                 [kbqStyle]="buttonStyles.Transparent"
                             >
                                 <i kbq-icon="kbq-ellipsis-vertical_16"></i>
                             </button>
                         </div>
-                        <div class="example-content-header-caption">Caption</div>
+                        <div class="example-content-header-caption">{{ t().caption }}</div>
                         <div class="example-content-header-buttons">
                             <button kbq-button type="button" [color]="componentColors.ContrastFade">
                                 <i kbq-icon="kbq-pencil_16"></i>
-                                Edit
+                                {{ t().edit }}
                             </button>
                             <button kbq-button type="button" [color]="componentColors.ContrastFade">
                                 <i kbq-icon="kbq-square-multiple-o_16"></i>
-                                Copy
+                                {{ t().copy }}
                             </button>
                             <button kbq-button type="button" [color]="componentColors.ContrastFade">
                                 <i kbq-icon="kbq-trash_16"></i>
-                                Delete
+                                {{ t().delete }}
                             </button>
                         </div>
                     </kbq-content-panel-header>
                     <kbq-content-panel-body class="example-content-panel-body">
                         @for (_i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; track $index) {
-                            <p>
-                                In computing [{{ $index }}], a denial-of-service attack (DoS attack) is a cyber-attack
-                                in which the perpetrator seeks to make a machine or network resource unavailable to its
-                                intended users by temporarily or indefinitely disrupting services of a host connected to
-                                a network. Denial of service is typically accomplished by flooding the targeted machine
-                                or resource with superfluous requests in an attempt to overload systems and prevent some
-                                or all legitimate requests from being fulfilled. The range of attacks varies widely,
-                                spanning from inundating a server with millions of requests to slow its performance,
-                                overwhelming a server with a substantial amount of invalid data, to submitting requests
-                                with an illegitimate IP address.
-                            </p>
+                            <p>{{ t().dosText($index) }}</p>
                         }
                     </kbq-content-panel-body>
                     <kbq-content-panel-footer>
@@ -287,6 +283,8 @@ export class ExampleGrid {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleContentPanel {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly modalRef = inject(KbqModalRef);
 
     protected readonly componentColors = KbqComponentColors;
@@ -320,7 +318,7 @@ export class ExampleContentPanel {
     selector: 'ag-grid-and-content-panel-example',
     imports: [KbqButtonModule, KbqModalModule],
     template: `
-        <button kbq-button type="button" (click)="openModal()">Show example</button>
+        <button kbq-button type="button" (click)="openModal()">{{ t().showExample }}</button>
     `,
     styles: `
         :host {
@@ -333,6 +331,8 @@ export class ExampleContentPanel {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridAndContentPanelExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly modal = inject(KbqModalService);
 
     openModal(): void {

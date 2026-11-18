@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Tooltip style
@@ -13,23 +15,23 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule
     ],
     template: `
-        <button kbq-button type="button" kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Contrast">
+        <button kbq-button type="button" [kbqTooltip]="t().tooltip" [kbqTooltipColor]="KbqComponentColors.Contrast">
             Contrast (default)
         </button>
 
-        <button kbq-button type="button" kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.ContrastFade">
+        <button kbq-button type="button" [kbqTooltip]="t().tooltip" [kbqTooltipColor]="KbqComponentColors.ContrastFade">
             Contrast Fade
         </button>
 
-        <button kbq-button type="button" kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Error">
+        <button kbq-button type="button" [kbqTooltip]="t().tooltip" [kbqTooltipColor]="KbqComponentColors.Error">
             Error
         </button>
 
-        <button kbq-button type="button" kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Warning">
+        <button kbq-button type="button" [kbqTooltip]="t().tooltip" [kbqTooltipColor]="KbqComponentColors.Warning">
             Warning
         </button>
 
-        <button kbq-button type="button" kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Theme">
+        <button kbq-button type="button" [kbqTooltip]="t().tooltip" [kbqTooltipColor]="KbqComponentColors.Theme">
             Theme
         </button>
     `,
@@ -39,5 +41,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     }
 })
 export class TooltipStyleExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     KbqComponentColors = KbqComponentColors;
 }

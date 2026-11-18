@@ -4,7 +4,7 @@
 </button>
 
 <kbq-dropdown #appDropdown="kbqDropdown" [panelMaxWidth]="200">
-    <button kbq-dropdown-item type="button">Text Normal</button>
+    <button kbq-dropdown-item type="button">{{ t().textNormal }}</button>
 
     <button kbq-dropdown-item type="button">
         <i kbq-icon="kbq-circle-info_16" color="contrast"></i>
@@ -13,13 +13,13 @@
 
     <button kbq-dropdown-item type="button">
         Text Normal
-        <div kbqDropdownItemCaption>Caption</div>
+        <div kbqDropdownItemCaption>{{ t().caption }}</div>
     </button>
 
     <button kbq-dropdown-item type="button">
         <i kbq-icon="kbq-circle-info_16" color="contrast"></i>
         Text Normal
-        <div kbqDropdownItemCaption>Caption</div>
+        <div kbqDropdownItemCaption>{{ t().caption }}</div>
     </button>
 
     <button kbq-dropdown-item type="button">
@@ -32,13 +32,13 @@
         very long text
     </button>
 
-    <button kbq-dropdown-item progress type="button">Loading item</button>
+    <button kbq-dropdown-item progress type="button">{{ t().loadingItem }}</button>
 
     <kbq-divider />
 
-    <div kbqDropdownGroupHeader>Header</div>
+    <div kbqDropdownGroupHeader>{{ t().header }}</div>
 
-    <button disabled kbq-dropdown-item type="button">Disabled</button>
+    <button disabled kbq-dropdown-item type="button">{{ t().disabled }}</button>
 
     <kbq-divider />
 
@@ -51,9 +51,9 @@
 
     <kbq-divider />
 
-    <button kbq-dropdown-item type="button">Point 2</button>
+    <button kbq-dropdown-item type="button">{{ t().point2 }}</button>
 
-    <button kbq-dropdown-item type="button">Point 3</button>
+    <button kbq-dropdown-item type="button">{{ t().point3 }}</button>
 
-    <button kbq-dropdown-item type="button">Link</button>
+    <button kbq-dropdown-item type="button">{{ t().link }}</button>
 </kbq-dropdown>

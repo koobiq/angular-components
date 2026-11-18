@@ -28,7 +28,9 @@ import { KbqLink } from '@koobiq/components/link';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koobiq/components/notification-center';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
-import { createNotifications, injectExampleText } from '../localized-data';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { createNotifications } from '../create-notifications';
+import { TRANSLATIONS } from './l10n';
 
 type ExampleAction = {
     id: string;
@@ -78,9 +80,9 @@ enum NavbarIcItems {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationCenterErrorExample {
-    notificationService = inject(KbqNotificationCenterService);
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    protected readonly text = injectExampleText();
+    notificationService = inject(KbqNotificationCenterService);
 
     private readonly actionsTemplate = viewChild<TemplateRef<unknown>>('actionsTemplate');
 
@@ -108,7 +110,7 @@ export class NotificationCenterErrorExample {
             id: '1',
             color: KbqComponentColors.Contrast,
             style: KbqButtonStyles.Filled,
-            text: this.text().primaryAction
+            text: this.t().primaryAction
         },
         {
             id: '2',
@@ -138,7 +140,7 @@ export class NotificationCenterErrorExample {
             if (!this.loaded() || !actions) return;
 
             this.notificationService.items = createNotifications(
-                this.text(),
+                this.t().list,
                 { actions },
                 this.notificationService.items
             );

@@ -5,6 +5,8 @@ import { KbqForm, KbqFormElement } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 const delayBeforeShowError = 3000;
 
@@ -25,7 +27,7 @@ const delayBeforeShowError = 3000;
     template: `
         <form novalidate class="kbq-form-vertical">
             <div class="kbq-form__row">
-                <label class="kbq-form__label">Custom Error State</label>
+                <label class="kbq-form__label">{{ t().customErrorState }}</label>
                 <kbq-form-field>
                     <kbq-select (opened)="loadOptions()" (closed)="reset()">
                         @if (loading()) {
@@ -41,10 +43,10 @@ const delayBeforeShowError = 3000;
                                     [big]="true"
                                     [fade]="true"
                                 ></i>
-                                <div kbq-empty-state-text>Failed to load the location list</div>
+                                <div kbq-empty-state-text>{{ t().failedToLoadLocations }}</div>
                                 <div kbq-empty-state-actions>
                                     <button kbq-button type="button" color="theme" kbqStyle="transparent">
-                                        Try Again
+                                        {{ t().tryAgain }}
                                     </button>
                                 </div>
                             </kbq-empty-state>
@@ -65,6 +67,8 @@ const delayBeforeShowError = 3000;
     }
 })
 export class SelectLoadingErrorCustomExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly error = signal(false);
     readonly loading = signal(true);
 

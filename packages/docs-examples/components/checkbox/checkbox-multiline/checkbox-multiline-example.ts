@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Checkbox multiline example
@@ -10,11 +12,9 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
     imports: [KbqCheckboxModule, KbqFormFieldModule],
     template: `
         <kbq-checkbox>
-            I accept the security policy terms and acknowledge the responsibility to safeguard sensitive information
+            {{ t().multilineText }}
             <kbq-hint>
-                Please review our security policy for detailed information about data protection and privacy standards.
-                By checking this box, you confirm that you understand and agree to comply with all security
-                requirements.
+                {{ t().multilineHint }}
             </kbq-hint>
         </kbq-checkbox>
     `,
@@ -30,4 +30,6 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CheckboxMultilineExample {}
+export class CheckboxMultilineExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+}

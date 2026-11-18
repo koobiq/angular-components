@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title tooltip-hide-with-timeout
@@ -14,8 +16,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqIconModule
     ],
     template: `
-        @for (action of ['Action1', 'Action2', 'Action3', 'Action4', 'Action5', 'Action6']; track action) {
-            <button kbq-button type="button" aria-label="Diamond" [kbqTooltip]="action">
+        @for (item of [1, 2, 3, 4, 5, 6]; track item) {
+            <button kbq-button type="button" [kbqTooltip]="'Action' + item" [attr.aria-label]="t().diamond">
                 <i kbq-icon="kbq-diamond_16"></i>
             </button>
         }
@@ -25,4 +27,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         class: 'layout-margin-5xl layout-row layout-align-center-center layout-gap-m'
     }
 })
-export class TooltipHideWithTimeoutExample {}
+export class TooltipHideWithTimeoutExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+}

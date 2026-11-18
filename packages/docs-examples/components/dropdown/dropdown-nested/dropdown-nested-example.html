@@ -4,47 +4,59 @@
 </button>
 
 <kbq-dropdown #appDropdownWithNested="kbqDropdown">
-    <button kbq-dropdown-item type="button">Search settings</button>
+    <button kbq-dropdown-item type="button">{{ t().searchSettings }}</button>
 
     <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNested">Text</button>
-    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNested">Paragraph styles</button>
-    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNested">Align & intent</button>
-    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNested">Line spacing</button>
-    <button kbq-dropdown-item type="button" [disabled]="true" [kbqDropdownTriggerFor]="appDropdownNested">
-        Columns
+    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNested">
+        {{ t().paragraphStyles }}
     </button>
-    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNested">Bullets & numbering</button>
+    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNested">{{ t().alignIntent }}</button>
+    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNested">{{ t().lineSpacing }}</button>
+    <button kbq-dropdown-item type="button" [disabled]="true" [kbqDropdownTriggerFor]="appDropdownNested">
+        {{ t().columns }}
+    </button>
+    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNested">
+        {{ t().bulletsNumbering }}
+    </button>
 
     <kbq-divider />
 
-    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNested">Headers & footers</button>
-    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNested">Page numbers</button>
+    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNested">
+        {{ t().headersFooters }}
+    </button>
+    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNested">{{ t().pageNumbers }}</button>
 
     <kbq-divider />
 
-    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNested">Table</button>
+    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNested">{{ t().table }}</button>
 
     <kbq-divider />
 
-    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNested">Image</button>
+    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNested">{{ t().image }}</button>
 
     <kbq-divider />
 
-    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNested">Clear formatting</button>
+    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNested">
+        {{ t().clearFormatting }}
+    </button>
 
     <kbq-divider />
 
-    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNested">Border & lines</button>
+    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNested">{{ t().borderLines }}</button>
 </kbq-dropdown>
 
 <kbq-dropdown #appDropdownNested="kbqDropdown">
-    <button kbq-dropdown-item type="button">Border and shading</button>
+    <button kbq-dropdown-item type="button">{{ t().borderAndShading }}</button>
 
     <kbq-divider />
 
-    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNestedNested">Normal text</button>
-    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNestedNested">Title</button>
-    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNestedNested">Subtitle</button>
+    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNestedNested">
+        {{ t().normalText }}
+    </button>
+    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNestedNested">{{ t().title }}</button>
+    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNestedNested">
+        {{ t().subtitle }}
+    </button>
     <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNestedNested">Heading 1</button>
     <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNestedNested">Heading 2</button>
     <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNestedNested">Heading 3</button>
@@ -54,10 +66,10 @@
 
     <kbq-divider />
 
-    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNestedNested">Options</button>
+    <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="appDropdownNestedNested">{{ t().options }}</button>
 </kbq-dropdown>
 
 <kbq-dropdown #appDropdownNestedNested="kbqDropdown">
-    <button kbq-dropdown-item type="button">Apply 'Title'</button>
-    <button kbq-dropdown-item type="button">Update 'Title' to match style</button>
+    <button kbq-dropdown-item type="button">{{ t().applyTitle(t().title) }}</button>
+    <button kbq-dropdown-item type="button">{{ t().updateTitle(t().title) }}</button>
 </kbq-dropdown>

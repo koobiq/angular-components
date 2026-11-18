@@ -98,7 +98,11 @@ export const KBQ_STEPPER_INTERVAL_DELAY = 75;
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'kbq-stepper'
+        class: 'kbq-stepper',
+        // `visibility` keeps the field's geometry stable while the control is disabled and takes the
+        // buttons out of the accessibility tree; they are already outside the tab order (`tabindex=-1`).
+        '[style.visibility]': 'visibility()',
+        '[attr.aria-hidden]': 'visibility() === "hidden"'
     },
     exportAs: 'kbqStepper'
 })
@@ -150,11 +154,18 @@ export class KbqStepper {
     });
 
     /**
-     * Whether the steps are blocked. A read-only field keeps the stepper visible, as a disabled one does.
+     * Whether the steps are blocked. A read-only field keeps the stepper visible but inactive.
      *
      * @docs-private
      */
     protected readonly inactive = computed(() => this.control().disabled || this.control().readonly());
+
+    /**
+     * Whether the stepper is rendered: a disabled field hides it, a read-only one keeps it.
+     *
+     * @docs-private
+     */
+    protected readonly visibility = computed(() => (this.control().disabled ? 'hidden' : 'visible'));
 
     constructor() {
         this.destroyRef.onDestroy(() => this.mouseUp.complete());

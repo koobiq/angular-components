@@ -1,21 +1,16 @@
-- [Contribution checklist][contribution-checklist]
-- [Directory Structure][directory-structure]
-- [Versioning][versioning]
-- [Testing][testing]
-- [Linting][linting]
-- [Release CLI][release-cli]
+# Contributor guides
 
-## Code of Conduct
+Start with [CONTRIBUTING.md](../../CONTRIBUTING.md): how to report a problem, set up the repository, write commit messages and get a pull request merged.
 
-This project is bound by a [Code of Conduct][code-of-conduct].
+The guides below go into specific areas:
 
-## Commit Message Format
+- [Contribution checklist](./01-contribution-checklist.md): what a pull request needs before review
+- [Testing](./06-testing.md): unit tests, e2e tests and screenshot baselines
+- [Linting](./07-linting.md): what the hooks and CI check, and how to fix it
+- [Design tokens](./08-design-tokens.md)
+- [Versioning](https://koobiq.io/en/main/versioning/overview): the semver policy on the docs site
+- [Releasing packages](./05-releasing-packages.md) and the [release CLI](./09-cli.md), for maintainers
 
-[commit-msg-format]: https://github.com/koobiq/community-guidelines/blob/master/COMMIT_MESSAGE_FORMAT.md
-[contribution-checklist]: ./01-contribution-checklist.md
-[directory-structure]: ./02-directory-structure.md
-[versioning]: ./04-versioning.md
-[testing]: ./06-testing.md
-[linting]: ./07-linting.md
-[release-cli]: ./09-cli.md
-[code-of-conduct]: ../../CODE_OF_CONDUCT.md
+The package layout, the structure of a component and the full list of commands are described in [AGENTS.md](../../AGENTS.md).
+
+This project is bound by a [Code of Conduct](../../CODE_OF_CONDUCT.md).

@@ -8,7 +8,7 @@ import {
     type KbqPipeTemplate,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
-import { injectLocalizedPeriods } from '../localized-data';
+import { injectLocalizedPeriods } from '../localized-periods';
 
 /**
  * @title filter-bar-required

@@ -24,6 +24,8 @@ import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Validation message global
@@ -54,7 +56,7 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
             >
                 <kbq-alert class="example-alert" alertColor="error" alertStyle="colored" [compact]="true">
                     <i color="error" kbq-icon="kbq-circle-info_16"></i>
-                    The server didn’t respond while sending data. Please try again.
+                    {{ t().serverError }}
                 </kbq-alert>
             </div>
 
@@ -62,14 +64,14 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
                 <div class="kbq-form__fieldset">
                     <div class="kbq-form__row">
                         <kbq-form-field>
-                            <kbq-label>Name</kbq-label>
+                            <kbq-label>{{ t().name }}</kbq-label>
                             <input formControlName="firstName" kbqInput />
                         </kbq-form-field>
                     </div>
 
                     <div class="kbq-form__row layout-margin-bottom-xxl">
                         <kbq-form-field>
-                            <kbq-label>Last name</kbq-label>
+                            <kbq-label>{{ t().lastName }}</kbq-label>
                             <input formControlName="lastName" kbqInput />
                         </kbq-form-field>
                     </div>
@@ -86,7 +88,7 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
                             (keydown.space)="submitOrigin = 'keyboard'"
                             (mouseleave)="submitOrigin = 'mouse'"
                         >
-                            Submit
+                            {{ t().submit }}
                         </button>
                     </div>
                 </div>
@@ -132,6 +134,8 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
     }
 })
 export class ValidationMessageGlobalExample implements AfterViewInit, OnDestroy {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly alertContainer = viewChild<ElementRef<HTMLDivElement>>('alertContainer');
 
     protected readonly showServerErrors = signal(false);

@@ -7,6 +7,8 @@ import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/
 import { KbqFormField, KbqSuffix } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTimeRange, type KbqTimeRangeRange, KbqTimeRangeTitleAsControl } from '@koobiq/components/time-range';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Time range custom trigger
@@ -29,7 +31,7 @@ import { KbqTimeRange, type KbqTimeRangeRange, KbqTimeRangeTitleAsControl } from
             <button
                 kbq-button
                 type="button"
-                aria-label="time range trigger"
+                [attr.aria-label]="t().trigger"
                 [class.kbq-active]="context.popover.isOpen"
             >
                 <i kbq-icon="kbq-calendar-o_16"></i>
@@ -58,6 +60,8 @@ import { KbqTimeRange, type KbqTimeRangeRange, KbqTimeRangeTitleAsControl } from
     }
 })
 export class TimeRangeCustomTriggerExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly control = new FormControl<KbqTimeRangeRange | null>(
         {
             type: 'last5Minutes'

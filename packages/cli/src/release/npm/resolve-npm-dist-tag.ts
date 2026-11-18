@@ -10,9 +10,14 @@ import { npmViewDistTag, NpmViewError } from './npm-client';
  * as `latest` on the registry (not off branch names or publish order). A prerelease never
  * competes for either tag — it always publishes under `next`.
  *
+ * If the `v<major>-lts` tag already points at a newer version than the one being published
+ * (e.g. `v20-lts` is at `20.4.5` and a `20.3.5` backport is being published), the package is
+ * published under a minor-specific `v<major>.<minor>-lts` tag instead. This keeps the backport
+ * available on npm without moving the major LTS tag backward.
+ *
  * @throws {NpmViewError} if the registry can't be queried for a reason other than the package
  * having never been published (E404), if what it reports back isn't a valid semver version, or if
- * publishing under the resolved `v<major>-lts` tag would move that tag backward. None of these are
+ * publishing under the resolved tag would move that tag backward. None of these are
  * "nothing published yet" and none should be silently guessed at. Callers should let this fail the
  * publish rather than falling back to a tag.
  */
@@ -31,18 +36,28 @@ export function resolveNpmDistTag(packageName: string, version: Version): string
         return 'latest';
     }
 
-    const ltsTag = `v${version.major}-lts`;
-    const currentLtsVersion = readPublishedVersion(packageName, ltsTag);
+    const majorLtsTag = `v${version.major}-lts`;
+    const currentMajorLtsVersion = readPublishedVersion(packageName, majorLtsTag);
 
-    if (currentLtsVersion && semver.lt(versionName, currentLtsVersion)) {
+    if (!currentMajorLtsVersion || semver.gte(versionName, currentMajorLtsVersion)) {
+        return majorLtsTag;
+    }
+
+    // The major LTS tag already points at a newer version (e.g. `v20-lts` is at `20.4.5` while
+    // a `20.3.5` backport is being published). Fall back to a minor-specific LTS tag so the
+    // backport is still available without moving the major LTS tag backward.
+    const minorLtsTag = `v${version.major}.${version.minor}-lts`;
+    const currentMinorLtsVersion = readPublishedVersion(packageName, minorLtsTag);
+
+    if (currentMinorLtsVersion && semver.lt(versionName, currentMinorLtsVersion)) {
         throw new NpmViewError(
-            `Publishing ${packageName}@${versionName} under "${ltsTag}" would move that tag backward ` +
-                `from the currently published ${currentLtsVersion}. Refusing to publish — check that ` +
+            `Publishing ${packageName}@${versionName} under "${minorLtsTag}" would move that tag backward ` +
+                `from the currently published ${currentMinorLtsVersion}. Refusing to publish — check that ` +
                 `the right branch/version is being released.`
         );
     }
 
-    return ltsTag;
+    return minorLtsTag;
 }
 
 /**

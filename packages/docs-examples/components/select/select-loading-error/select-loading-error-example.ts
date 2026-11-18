@@ -23,6 +23,8 @@ import {
     KbqSelectModule,
     minimumTimeToDisplayLoading
 } from '@koobiq/components/select';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 type Option = {
     id: number;
@@ -30,9 +32,11 @@ type Option = {
 };
 
 export class OptionsApiService {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private delay: number = 3000;
 
-    private data = Array.from({ length: 10 }).map((_, i) => ({ id: i, label: `Option #${i}` }));
+    private readonly data = Array.from({ length: 10 }, (_, i) => ({ id: i, label: 'Option #' + i }));
 
     setDelay(delay: number) {
         this.delay = delay;
@@ -131,11 +135,11 @@ export class SelectFacade {
                                 <kbq-select-loading />
                             }
                             @case ('empty') {
-                                <div kbq-select-search-empty-result>Ничего не найдено</div>
+                                <div kbq-select-search-empty-result>{{ t().nothingFound }}</div>
                             }
                             @case ('error') {
                                 <kbq-select-error>
-                                    <span kbq-select-error-text>Не удалось показать записи</span>
+                                    <span kbq-select-error-text>{{ t().loadFailedRecords }}</span>
                                     <button
                                         kbq-button
                                         type="button"
@@ -144,7 +148,7 @@ export class SelectFacade {
                                         (click)="reloadOptions()"
                                     >
                                         <i kbq-icon="kbq-arrow-rotate-left_16"></i>
-                                        Повторить
+                                        {{ t().tryAgain }}
                                     </button>
                                 </kbq-select-error>
                             }
@@ -175,6 +179,8 @@ export class SelectFacade {
     }
 })
 export class SelectLoadingErrorExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly facade = inject(SelectFacade);
 
     readonly state$ = this.facade.state$;

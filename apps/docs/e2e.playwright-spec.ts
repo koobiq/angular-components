@@ -342,8 +342,9 @@ test.describe('docs app', () => {
         await dropdownItem(page, 'Interface').hover();
         await dropdownItem(page, 'Русский').click();
 
-        // The locale segment is replaced in place — the rest of the route must survive.
-        await expect(page).toHaveURL(/\/ru\/components\/alert\/overview$/);
+        // The locale segment is replaced in place — the rest of the route must survive. The mirrored
+        // examples language rides along as a query param.
+        await expect(page).toHaveURL(/\/ru\/components\/alert\/overview(?:\?.*)?$/);
         await expect(page.locator('html')).toHaveAttribute('lang', 'ru');
     });
 

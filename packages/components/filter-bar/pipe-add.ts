@@ -16,6 +16,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KBQ_FILTER_BAR_HOST, type KbqFilter, type KbqPipe, type KbqPipeTemplate } from './filter-bar.types';
+import { KBQ_FILTER_BAR_NAME_RESOLVER, type KbqFilterBarNameContext } from './filter-bar-name';
 import { getId } from './pipes/base-pipe';
 
 @Component({
@@ -53,7 +54,7 @@ import { getId } from './pipes/base-pipe';
                     (keydown.enter)="addPipeFromTemplate(option)"
                     (keydown.space)="addPipeFromTemplate(option)"
                 >
-                    {{ template.name }}
+                    {{ resolveTemplateName(template) }}
                 </kbq-option>
             }
         </kbq-select>
@@ -71,6 +72,8 @@ import { getId } from './pipes/base-pipe';
 export class KbqPipeAdd {
     /** KbqFilterBar instance */
     protected readonly filterBar = inject(KBQ_FILTER_BAR_HOST);
+
+    private readonly nameResolverFromDi = inject(KBQ_FILTER_BAR_NAME_RESOLVER);
 
     /** @docs-private */
     readonly select = viewChild.required(KbqSelect);
@@ -128,7 +131,7 @@ export class KbqPipeAdd {
 
             const message = this.filterBar
                 .localeConfiguration()
-                .add.addedAnnouncement.replace('{{ name }}', option.value.name);
+                .add.addedAnnouncement.replace('{{ name }}', this.resolveTemplateName(option.value));
 
             // Empty then re-fill on the next tick so an identical consecutive message still changes the
             // live-region text node and is re-announced (a same-string `set` would be an `Object.is` no-op
@@ -147,5 +150,28 @@ export class KbqPipeAdd {
      */
     compareWith(o1: KbqPipe, o2: string): boolean {
         return getId(o1) === o2;
+    }
+
+    /**
+     * Resolves a display name for the given pipe template.
+     *
+     * Constructs a context with kind `'pipe-template'` where both `pipe` and `source` are the template,
+     * then asks the host filter bar first and the DI resolver second, falling back to `template.name`.
+     */
+    protected resolveTemplateName(template: KbqPipeTemplate): string {
+        const fallback = template.name ?? '';
+        const nameKey = template.nameKey;
+
+        if (!nameKey) return fallback;
+
+        const context: KbqFilterBarNameContext = {
+            key: nameKey,
+            fallback,
+            kind: 'pipe-template',
+            pipe: template,
+            source: template
+        };
+
+        return this.filterBar.resolveName?.(context) ?? this.nameResolverFromDi(context) ?? fallback;
     }
 }

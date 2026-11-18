@@ -4,6 +4,8 @@ import { KbqContentPanelModule } from '@koobiq/components/content-panel';
 import { KbqLocalDropzone, KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSidebar, KbqSidebarClosed, KbqSidebarOpened, SidebarPositions } from '@koobiq/components/sidebar';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title File-upload local dropzone
@@ -36,7 +38,7 @@ import { KbqSidebar, KbqSidebarClosed, KbqSidebarOpened, SidebarPositions } from
             [kbqConnectedTo]="fileUploadLocal"
         >
             <div kbq-sidebar-opened width="100%" minWidth="350px" maxWidth="350px">
-                <div class="layout-margin-bottom-m">Drag your files on sidepanel</div>
+                <div class="layout-margin-bottom-m">{{ t().dragOnSidepanel }}</div>
 
                 <kbq-file-upload #fileUploadLocal>
                     <i kbq-icon="kbq-file-text-o_16"></i>
@@ -71,6 +73,8 @@ import { KbqSidebar, KbqSidebarClosed, KbqSidebarOpened, SidebarPositions } from
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadLocalDropzoneExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly value = signal(false);
     readonly position = SidebarPositions;
 }

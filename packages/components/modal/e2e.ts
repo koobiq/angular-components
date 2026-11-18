@@ -343,3 +343,40 @@ export class E2eModalNoFooter {
         });
     }
 }
+
+/**
+ * A title and caption made of single unbroken words: without overflow-wrap the line-clamp would
+ * never engage and the header would overflow the dialog instead of showing an ellipsis.
+ */
+@Component({
+    selector: 'e2e-modal-long-title-without-spaces',
+    template: `
+        <button data-testid="e2eOpenModal" (click)="open()">Open modal</button>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 350px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eModalLongTitleWithoutSpaces'
+    }
+})
+export class E2eModalLongTitleWithoutSpaces {
+    private readonly modal = inject(KbqModalService);
+
+    protected open(): void {
+        this.modal.create({
+            kbqWidth: '400px',
+            kbqTitle: 'VeryLongModalTitleWithoutAnySpacesAtAllVeryLongModalTitleWithoutAnySpacesAtAll',
+            kbqCaption: 'VeryLongModalCaptionWithoutAnySpacesAtAllVeryLongModalCaptionWithoutAnySpacesAtAll',
+            kbqContent: 'Short content.',
+            kbqOkText: 'Ok',
+            kbqCancelText: 'Cancel'
+        });
+    }
+}

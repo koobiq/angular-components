@@ -1,51 +1,19 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, InjectionToken } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { map, of } from 'rxjs';
+import { map } from 'rxjs';
 import { kbqBreadcrumbsConfigurationProvider, KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KBQ_LOCALE_SERVICE, KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
+import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
-
-interface ExampleLocalizedText {
-    breadcrumbShortening: string;
-    leftmostHidden: string;
-    currentItemTruncation: string;
-    rightSideCompression: string;
-}
-
-const ExampleLocalizedData = new InjectionToken<
-    Record<string, ExampleLocalizedText> & { default: ExampleLocalizedText }
->('ExampleLocalizedData', {
-    factory: () => ({
-        'ru-RU': {
-            breadcrumbShortening:
-                'За основу берется автоматическое сокращение хлебных крошек, когда средние пункты скрываются при отсутствии свободного пространства.',
-            leftmostHidden:
-                'Если пространство становится еще уже, то скрывается и левый крайний уровень у хлебных крошек, оставляя видимым только крайний правый уровень.',
-            currentItemTruncation:
-                'Минимальная ширина левой стороны зависит от заголовка текущего пункта, который может быть обрезан до 3 символов с добавлением трех точек (…).',
-            rightSideCompression:
-                'После достижения минимальной ширины у левой стороны можно приступить к сжатию правой стороны с действиями. '
-        } satisfies ExampleLocalizedText,
-        default: {
-            breadcrumbShortening:
-                'The automatic breadcrumb shortening is used as the basis, where middle items are hidden when there is not enough free space.',
-            leftmostHidden:
-                'If the space becomes even narrower, the leftmost breadcrumb level is also hidden, leaving only the rightmost level visible.',
-            currentItemTruncation:
-                'The minimum width of the left side depends on the title of the current item, which can be truncated to 3 characters with an ellipsis (…).',
-            rightSideCompression:
-                'After reaching the minimum width on the left side, the compression of the right side with actions can begin.'
-        } satisfies ExampleLocalizedText
-    })
-});
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 @Component({
     selector: 'example-top-bar-breadcrumbs',
@@ -76,8 +44,8 @@ const ExampleLocalizedData = new InjectionToken<
                             routerLink="./main/sections/page/details"
                             tabindex="-1"
                         >
-                            <button disabled type="button" aria-current="page" kbq-button kbqBreadcrumb>
-                                <span>Details</span>
+                            <button disabled aria-current="page" kbq-button kbqBreadcrumb type="button">
+                                <span>{{ t().details }}</span>
                                 <i
                                     kbq-icon="kbq-circle-info_16"
                                     kbqTooltip="Info"
@@ -95,9 +63,9 @@ const ExampleLocalizedData = new InjectionToken<
                     <button
                         type="button"
                         kbqOverflowItem="filter"
-                        kbqTooltip="Filter"
                         kbq-button
-                        aria-label="Filter"
+                        [kbqTooltip]="t().filter"
+                        [attr.aria-label]="t().filter"
                         [kbqStyle]="KbqButtonStyles.Transparent"
                         [color]="KbqComponentColors.Contrast"
                         [kbqPlacement]="PopUpPlacements.Bottom"
@@ -109,8 +77,8 @@ const ExampleLocalizedData = new InjectionToken<
                     <button
                         type="button"
                         kbqOverflowItem="share"
-                        kbqTooltip="Share"
                         kbq-button
+                        [kbqTooltip]="t().share"
                         [kbqStyle]="KbqButtonStyles.Filled"
                         [color]="KbqComponentColors.ContrastFade"
                         [kbqTooltipDisabled]="isDesktop()"
@@ -138,10 +106,10 @@ const ExampleLocalizedData = new InjectionToken<
 
                         <kbq-dropdown #appDropdown="kbqDropdown">
                             @if (kbqOverflowItems.hiddenItemIDs().has('filter')) {
-                                <button kbq-dropdown-item type="button">Filter</button>
+                                <button kbq-dropdown-item type="button">{{ t().filter }}</button>
                             }
                             @if (kbqOverflowItems.hiddenItemIDs().has('share')) {
-                                <button kbq-dropdown-item type="button">Share</button>
+                                <button kbq-dropdown-item type="button">{{ t().share }}</button>
                             }
                         </kbq-dropdown>
                     </div>
@@ -186,6 +154,7 @@ export class ExampleTopBarBreadcrumbs {
         { initialValue: true }
     );
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
@@ -199,22 +168,22 @@ export class ExampleTopBarBreadcrumbs {
     imports: [ExampleTopBarBreadcrumbs],
     template: `
         <div class="layout-margin-bottom-l">
-            {{ text().breadcrumbShortening }}
+            {{ t().breadcrumbShortening }}
         </div>
         <example-top-bar-breadcrumbs />
 
         <div class="layout-margin-top-3xl layout-margin-bottom-l">
-            {{ text().leftmostHidden }}
+            {{ t().leftmostHidden }}
         </div>
         <example-top-bar-breadcrumbs [style.width.px]="500" />
 
         <div class="layout-margin-top-3xl layout-margin-bottom-l">
-            {{ text().currentItemTruncation }}
+            {{ t().currentItemTruncation }}
         </div>
         <example-top-bar-breadcrumbs [style.width.px]="400" />
 
         <div class="layout-margin-top-3xl layout-margin-bottom-l">
-            {{ text().rightSideCompression }}
+            {{ t().rightSideCompression }}
         </div>
         <example-top-bar-breadcrumbs [style.width.px]="342" />
     `,
@@ -227,12 +196,5 @@ export class ExampleTopBarBreadcrumbs {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopBarBreadcrumbsAdaptiveExample {
-    protected readonly data = inject(ExampleLocalizedData);
-    protected readonly localeId = toSignal(inject(KBQ_LOCALE_SERVICE, { optional: true })?.changes || of(''));
-
-    protected readonly text = computed(() => {
-        const localeId = this.localeId();
-
-        return (localeId && this.data[localeId]) || this.data['default'];
-    });
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

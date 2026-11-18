@@ -1,4 +1,11 @@
-import { type AfterViewInit, ChangeDetectionStrategy, Component, type TemplateRef, viewChild } from '@angular/core';
+import {
+    type AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    effect,
+    type TemplateRef,
+    viewChild
+} from '@angular/core';
 import { KbqHighlightBackgroundPipe, tokenizeSearchQuery } from '@koobiq/components/core';
 import { type KbqFilter, KbqFilterBarModule, type KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 import {
@@ -7,6 +14,8 @@ import {
     type KbqUserInfo,
     KbqUsernameModule
 } from '@koobiq/components/username';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 const USERS: KbqUserInfo[] = [
     { firstName: 'Maxwell', middleName: 'Alan', lastName: 'Root', login: 'mroot', site: 'corp' },
@@ -65,6 +74,8 @@ const USERS: KbqUserInfo[] = [
     }
 })
 export class UsernameFilterBarOptionExample implements AfterViewInit {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly formatUsername = kbqInjectUsernameFormatter();
     private readonly userOptionTemplate = viewChild<TemplateRef<any>>('userOption');
 
@@ -76,7 +87,7 @@ export class UsernameFilterBarOptionExample implements AfterViewInit {
         saved: false,
         pipes: [
             {
-                name: 'Assignee',
+                name: this.t().assignee,
                 type: KbqPipeTypes.Select,
                 value: null,
                 search: true,
@@ -91,10 +102,22 @@ export class UsernameFilterBarOptionExample implements AfterViewInit {
 
     protected readonly tokenizeSearchQuery = tokenizeSearchQuery;
 
+    constructor() {
+        effect(() => {
+            const assignee = this.t().assignee;
+
+            this.activeFilter.pipes[0]!.name = assignee;
+
+            if (this.pipeTemplates.length) {
+                this.pipeTemplates[0]!.name = assignee;
+            }
+        });
+    }
+
     ngAfterViewInit(): void {
         this.pipeTemplates = [
             {
-                name: 'Assignee',
+                name: this.t().assignee,
                 type: KbqPipeTypes.Select,
                 values: USERS.map((user) => ({
                     name: kbqBuildUsernameText(

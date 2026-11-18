@@ -6,6 +6,8 @@ import { createSearchPredicate, KbqHighlightModule, tokenizeSearchQuery } from '
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule, kbqSelectOptionsProvider } from '@koobiq/components/select';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Select search
@@ -22,14 +24,14 @@ import { KbqSelectModule, kbqSelectOptionsProvider } from '@koobiq/components/se
     ],
     template: `
         <kbq-form-field>
-            <kbq-select multiline placeholder="Placeholder">
+            <kbq-select multiline [placeholder]="t().placeholder">
                 <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input kbqInput type="text" [formControl]="searchControl" />
                     <kbq-cleaner />
                 </kbq-form-field>
 
-                <div kbq-select-search-empty-result>Nothing found</div>
+                <div kbq-select-search-empty-result>{{ t().nothingFound }}</div>
 
                 @for (option of filteredOptions | async; track option) {
                     <kbq-option [value]="option">
@@ -56,6 +58,8 @@ import { KbqSelectModule, kbqSelectOptionsProvider } from '@koobiq/components/se
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectSearchExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly options = [
         '10.125.123.0/24 - all',
         '10.125.10.0/24 - admin',

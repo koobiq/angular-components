@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Description list minimum widths
@@ -9,22 +11,21 @@ import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
     imports: [KbqDl, KbqDt, KbqDd],
     template: `
         <kbq-dl resizable [dtMinWidth]="120" [ddMinWidth]="240">
-            <kbq-dt>Incident type</kbq-dt>
-            <kbq-dd>Malware infection</kbq-dd>
+            <kbq-dt>{{ t().incidentType }}</kbq-dt>
+            <kbq-dd>{{ t().malwareInfection }}</kbq-dd>
 
-            <kbq-dt>Identifier</kbq-dt>
+            <kbq-dt>{{ t().identifier }}</kbq-dt>
             <kbq-dd>INC-2026-125-78253</kbq-dd>
 
-            <kbq-dt>Status</kbq-dt>
-            <kbq-dd>New</kbq-dd>
+            <kbq-dt>{{ t().status }}</kbq-dt>
+            <kbq-dd>{{ t().new }}</kbq-dd>
 
-            <kbq-dt>Assignee</kbq-dt>
+            <kbq-dt>{{ t().assignee }}</kbq-dt>
             <kbq-dd>John Smith</kbq-dd>
 
-            <kbq-dt>Description</kbq-dt>
+            <kbq-dt>{{ t().description }}</kbq-dt>
             <kbq-dd>
-                An employee opened an attachment in a phishing email, and the file ran malicious code on the
-                workstation.
+                {{ t().phishingDescription }}
             </kbq-dd>
         </kbq-dl>
     `,
@@ -36,4 +37,6 @@ import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DlMinWidthExample {}
+export class DlMinWidthExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+}

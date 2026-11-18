@@ -9,6 +9,8 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Validation on submit with custom matcher
@@ -26,14 +28,14 @@ import { KbqInputModule } from '@koobiq/components/input';
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
                     <kbq-form-field>
-                        <kbq-label>Name</kbq-label>
+                        <kbq-label>{{ t().name }}</kbq-label>
                         <input formControlName="firstName" kbqInput />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row layout-margin-bottom-xxl">
                     <kbq-form-field>
-                        <kbq-label>Last name</kbq-label>
+                        <kbq-label>{{ t().lastName }}</kbq-label>
                         <input formControlName="lastName" kbqInput />
                     </kbq-form-field>
                 </div>
@@ -66,6 +68,8 @@ import { KbqInputModule } from '@koobiq/components/input';
     }
 })
 export class ValidationOnSubmitCustomMatcherExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly inProgress = signal(false);
     protected readonly globalErrorForm = new FormGroup({
         firstName: new FormControl('', [Validators.minLength(5), Validators.required]),
