@@ -29,7 +29,7 @@ If the typed integer is greater than `Number.MAX_SAFE_INTEGER`, the field clamps
 
 The directive renders into a `type="text"` field. Do not add `type="number"`: the browser's value sanitizer rejects the formatted value and blanks the field, so the type is reset to `text` with a console warning.
 
-`min` and `max` also drive the `KbqMinValidator` / `KbqMaxValidator` directives shipped in `KbqInputModule`, which install `Validators.min` / `Validators.max` on any `formControl`, `formControlName` or `ngModel` control carrying the corresponding attribute, and mirror the bound value into the native `min` / `max` attribute.
+`min` and `max` also drive the `KbqMinValidator` / `KbqMaxValidator` directives shipped in `KbqInputModule`, which install `Validators.min` / `Validators.max` on a `kbqNumberInput` control using `formControl`, `formControlName` or `ngModel`, and mirror the bound value into the native `min` / `max` attribute.
 
 `min`, `max`, `step` and `bigStep` are signals, so reading one programmatically is a call — `numberInput.max()`. They are read-only: an `input()` has no `.set()`, so a value that changes at runtime is bound rather than assigned. `valueChange` and `disabledChange` are RxJS `Subject`s; subscribing is unchanged, emitting is `.next()`.
 
