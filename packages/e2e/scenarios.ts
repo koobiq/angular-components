@@ -15,6 +15,7 @@ export * from '../components/core/forms/e2e';
 export * from '../components/core/overlay/e2e';
 export * from '../components/core/styles/typography/e2e';
 export * from '../components/datepicker/e2e';
+export * from '../components/datetime/e2e';
 export * from '../components/divider/e2e';
 export * from '../components/dl/e2e';
 export * from '../components/dropdown/e2e';

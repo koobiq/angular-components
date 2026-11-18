@@ -24,7 +24,9 @@ export const tkTMLocaleData = {
         resizePanels: 'Panelleriň ölçegini üýtget',
         toastRegion: 'Bildirişler',
         optionActions: 'Hereketler',
-        progressBar: 'Ösüş'
+        progressBar: 'Ösüş',
+        date: 'Sene',
+        time: 'Wagt'
     },
     select: {
         hiddenItemsText: '+{{ number }}',

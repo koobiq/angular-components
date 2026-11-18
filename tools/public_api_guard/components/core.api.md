@@ -438,6 +438,8 @@ export const enUSLocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        date: string;
+        time: string;
     };
     select: {
         hiddenItemsText: string;
@@ -725,6 +727,8 @@ export const esLALocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        date: string;
+        time: string;
     };
     select: {
         hiddenItemsText: string;
@@ -1257,6 +1261,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            date: string;
+            time: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1519,6 +1525,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            date: string;
+            time: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1776,6 +1784,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            date: string;
+            time: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2038,6 +2048,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            date: string;
+            time: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2297,6 +2309,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            date: string;
+            time: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2647,6 +2661,8 @@ export type KbqA11yLocaleConfiguration = {
     toastRegion: string;
     optionActions: string;
     progressBar: string;
+    date: string;
+    time: string;
 };
 
 // @public
@@ -5094,6 +5110,8 @@ export const ptBRLocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        date: string;
+        time: string;
     };
     select: {
         hiddenItemsText: string;
@@ -5566,6 +5584,8 @@ export const ruRULocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        date: string;
+        time: string;
     };
     select: {
         hiddenItemsText: string;
@@ -5914,6 +5934,8 @@ export const tkTMLocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        date: string;
+        time: string;
     };
     select: {
         hiddenItemsText: string;

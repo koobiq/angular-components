@@ -1,0 +1,33 @@
+.kbq-datetime {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+
+    min-width: 0;
+}
+
+// One line of text: the date takes the width of what it renders, and the time starts a space after it.
+.kbq-datetime__date.kbq-input {
+    flex: none;
+
+    width: auto;
+    padding-right: 0;
+}
+
+.kbq-datetime__time.kbq-input {
+    flex: 1 1 0;
+
+    // Not `auto`: the `size` attribute would give the input a width the form field cannot shrink below.
+    width: 0;
+    min-width: 0;
+    padding-left: var(--kbq-size-xs);
+}
+
+// A fixed width, as the date and the time fields have: it holds the value, the calendar toggle and a cleaner.
+.kbq-form-field-type-datetime {
+    width: 208px;
+
+    &:has(.kbq-datetime_seconds) {
+        width: 232px;
+    }
+}

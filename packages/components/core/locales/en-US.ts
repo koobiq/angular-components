@@ -24,7 +24,9 @@ export const enUSLocaleData = {
         resizePanels: 'Resize panels',
         toastRegion: 'Notifications',
         optionActions: 'Actions',
-        progressBar: 'Progress'
+        progressBar: 'Progress',
+        date: 'Date',
+        time: 'Time'
     },
     select: { hiddenItemsText: '+{{ number }}', selectAll: 'Select all' },
     datepicker: {
