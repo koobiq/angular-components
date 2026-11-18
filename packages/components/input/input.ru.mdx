@@ -29,7 +29,7 @@ Input предоставляет текстовые, числовые поля �
 
 Директива работает в поле с `type="text"`. Не добавляйте `type="number"`: браузер отбраковывает отформатированное значение и очищает поле, поэтому директива принудительно сбрасывает тип в `text` и пишет предупреждение в консоли.
 
-`min` и `max` также включают директивы `KbqMinValidator` / `KbqMaxValidator` из `KbqInputModule`: они устанавливают `Validators.min` / `Validators.max` на любой контрол с `formControl`, `formControlName` или `ngModel` и соответствующим атрибутом, а также переносят значение в нативные атрибуты `min` / `max`.
+`min` и `max` также включают директивы `KbqMinValidator` / `KbqMaxValidator` из `KbqInputModule`: они устанавливают `Validators.min` / `Validators.max` на контрол `kbqNumberInput` с `formControl`, `formControlName` или `ngModel` и соответствующим атрибутом, а также переносят значение в нативные атрибуты `min` / `max`.
 
 `min`, `max`, `step` и `bigStep` — сигналы, поэтому чтение из кода становится вызовом: `numberInput.max()`. Они доступны только для чтения: у `input()` нет `.set()`, поэтому меняющееся во время работы значение привязывают, а не присваивают. `valueChange` и `disabledChange` — это `Subject` из RxJS; подписка не изменилась, отправка значения — `.next()`.
 

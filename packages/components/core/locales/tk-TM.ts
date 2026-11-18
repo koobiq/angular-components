@@ -15,6 +15,8 @@ export const tkTMLocaleData = {
         previousMonth: 'Öňki aý',
         currentDate: 'Şu günki sene',
         nextMonth: 'Indiki aý',
+        month: 'Aý',
+        year: 'Ýyl',
         clear: 'Arassala',
         showPassword: 'Paroly görkez',
         hidePassword: 'Paroly gizle',
@@ -22,7 +24,9 @@ export const tkTMLocaleData = {
         resizePanels: 'Panelleriň ölçegini üýtget',
         toastRegion: 'Bildirişler',
         optionActions: 'Hereketler',
-        progressBar: 'Ösüş'
+        progressBar: 'Ösüş',
+        date: 'Sene',
+        time: 'Wagt'
     },
     select: {
         hiddenItemsText: '+{{ number }}',

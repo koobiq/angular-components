@@ -47,6 +47,7 @@ Rules for code that uses Koobiq:
 - [Content panel](https://koobiq.io/en/components/content-panel.md): `KbqContentPanel` - a slide-out side panel that shifts adjacent content. Entry point: `@koobiq/components/content-panel`.
 - [Core](https://koobiq.io/en/components/core.md): **Core** is the public entry point to the shared APIs of the Koobiq component library. Entry point: `@koobiq/components/core`.
 - [Datepicker](https://koobiq.io/en/components/datepicker.md): A date field (datepicker) is a special input field with a widget for selecting a date. Entry point: `@koobiq/components/datepicker`.
+- [Datetime](https://koobiq.io/en/components/datetime.md): KbqDatetime is a component for entering a date and a time in one field, with the data stored as one value. Entry point: `@koobiq/components/datetime`.
 - [Description list](https://koobiq.io/en/components/dl.md): Description list displays term-description pairs in adaptive, horizontal, or vertical layouts. Entry point: `@koobiq/components/dl`.
 - [Divider](https://koobiq.io/en/components/divider.md): `<kbq-divider>` is a component that allows for koobiq styling of a line separator with various orientation options. Entry point: `@koobiq/components/divider`.
 - [Dropdown](https://koobiq.io/en/components/dropdown.md): Dropdown displays a menu with actions or options next to a trigger and supports disabled, loading, footer, and keyboard interaction states. Entry point: `@koobiq/components/dropdown`.

@@ -12,13 +12,7 @@ import { KbqBasePipe } from './base-pipe';
     imports: [KbqInputModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
-            <input
-                autocomplete="off"
-                kbqInput
-                [attr.aria-label]="pipeName"
-                [formControl]="control"
-                [placeholder]="pipeName"
-            />
+            <input kbqInput [attr.aria-label]="pipeName" [formControl]="control" [placeholder]="pipeName" />
 
             <!-- Must stay a single root element: the compiler copies its tag name onto the block's template
                  so it still matches <ng-content select="kbq-cleaner">. A sibling node here (element or text)
