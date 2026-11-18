@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Link with caption
@@ -9,7 +11,7 @@ import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
     imports: [KbqLink, KbqLinkSuffix],
     template: `
         <a kbqLink external href="https://koobiq.io/en/components/link" target="_blank">
-            Scan report
+            {{ t().scanReport }}
             <span class="example-link-caption" kbqLinkSuffix>task/koobiq.io</span>
         </a>
     `,
@@ -28,4 +30,6 @@ import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LinkWithCaptionExample {}
+export class LinkWithCaptionExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+}

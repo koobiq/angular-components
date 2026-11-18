@@ -211,8 +211,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'install',
                     isGuide: true,
                     hasApi: false,
-                    hasExamples: false,
-                    isUpdated: expiresAt('2026-11-11')
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.AiAgents,
@@ -267,8 +266,7 @@ const structure: DocsStructure = makeStructure({
                     },
                     svgPreview: 'typography',
                     hasApi: false,
-                    hasExamples: false,
-                    isUpdated: expiresAt('2026-11-12')
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.DesignTokens,
@@ -512,7 +510,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'content-panel',
                     hasApi: true,
                     apiId: 'content-panel',
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-11-25')
                 },
                 {
                     id: DocsStructureItemId.Core,
@@ -705,7 +704,7 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'filter-bar',
                     hasExamples: true,
-                    isUpdated: expiresAt('2026-11-17')
+                    isUpdated: expiresAt('2026-11-26')
                 },
                 {
                     id: DocsStructureItemId.Flag,
@@ -729,8 +728,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'form-field',
                     hasApi: true,
                     apiId: 'form-field',
-                    hasExamples: false,
-                    isUpdated: expiresAt('2026-11-09')
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.Highlight,
@@ -788,8 +786,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'overlay',
                     hasApi: true,
                     apiId: 'loader-overlay',
-                    hasExamples: false,
-                    isUpdated: expiresAt('2026-11-06')
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.Markdown,
@@ -1201,8 +1198,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'tree',
                     hasApi: true,
                     apiId: 'tree',
-                    hasExamples: true,
-                    isUpdated: expiresAt('2026-11-11')
+                    hasExamples: true
                 },
                 {
                     id: DocsStructureItemId.TreeSelect,
@@ -1225,8 +1221,7 @@ const structure: DocsStructure = makeStructure({
                     path: 'packages/components/username',
                     hasApi: true,
                     apiId: 'username',
-                    hasExamples: false,
-                    isUpdated: expiresAt('2026-11-11')
+                    hasExamples: false
                 }
             ].sort((a, b) => a.name.en.localeCompare(b.name.en))
         }

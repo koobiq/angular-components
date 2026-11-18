@@ -1,33 +1,32 @@
 <ng-template #customContent>
     <p style="margin-top: 0">
-        Жёлтые кубики — это песок, кубик зелёный — весенний лесок, синие кубики — это река. Кубиков много — река широка.
-        Кубик на кубик — растут этажи: учатся строить UI малыши.
+        {{ t().intro }}
     </p>
     <kbq-dl class="kbq-dl_wide">
-        <kbq-dt>Желтые кубики</kbq-dt>
-        <kbq-dd>Песок</kbq-dd>
+        <kbq-dt>{{ t().dtYellow }}</kbq-dt>
+        <kbq-dd>{{ t().ddSand }}</kbq-dd>
 
-        <kbq-dt>Кубик Зеленый</kbq-dt>
-        <kbq-dd>Весенний лесок</kbq-dd>
+        <kbq-dt>{{ t().dtGreen }}</kbq-dt>
+        <kbq-dd>{{ t().ddForest }}</kbq-dd>
 
-        <kbq-dt>Кубиков много</kbq-dt>
-        <kbq-dd>Река широка Кубик на кубик Растут этажи</kbq-dd>
+        <kbq-dt>{{ t().dtMany }}</kbq-dt>
+        <kbq-dd>{{ t().ddMany }}</kbq-dd>
 
-        <kbq-dt>Кубик на кубик</kbq-dt>
+        <kbq-dt>{{ t().dtFloor }}</kbq-dt>
         <kbq-dd>
-            <kbq-badge [badgeColor]="badgeColors.FadeContrast">Растут этажи</kbq-badge>
+            <kbq-badge [badgeColor]="badgeColors.FadeContrast">{{ t().ddBadge }}</kbq-badge>
         </kbq-dd>
 
-        <kbq-dt>Кубики вместе сложились</kbq-dt>
-        <kbq-dd>И сайт оживает</kbq-dd>
+        <kbq-dt>{{ t().dtStacked }}</kbq-dt>
+        <kbq-dd>{{ t().ddAlive }}</kbq-dd>
 
-        <kbq-dt>Взрослые мир создают</kbq-dt>
-        <kbq-dd>О котором мечтают</kbq-dd>
+        <kbq-dt>{{ t().dtAdults }}</kbq-dt>
+        <kbq-dd>{{ t().ddDream }}</kbq-dd>
     </kbq-dl>
 </ng-template>
 
 <ng-template #customFooter>
-    <button kbq-button (click)="kbqPopover.hide()">Закрыть</button>
+    <button kbq-button (click)="kbqPopover.hide()">{{ t().close }}</button>
 </ng-template>
 
 <div style="gap: 16px" class="layout-row layout-wrap">
@@ -36,9 +35,9 @@
         kbqPopover
         [kbqPopoverHasCloseButton]="true"
         [kbqPopoverContent]="customContent"
-        [kbqPopoverHeader]="'Заголовок поповера'"
+        [kbqPopoverHeader]="t().popoverTitle"
     >
-        Только с шапкой
+        {{ t().onlyHeader }}
     </button>
     <button
         #kbqPopover="kbqPopover"
@@ -47,7 +46,7 @@
         [kbqPopoverContent]="customContent"
         [kbqPopoverFooter]="customFooter"
     >
-        Только с футером
+        {{ t().onlyFooter }}
     </button>
-    <button kbq-button kbqPopover [kbqPopoverContent]="customContent">Без хедера и футера</button>
+    <button kbq-button kbqPopover [kbqPopoverContent]="customContent">{{ t().plain }}</button>
 </div>

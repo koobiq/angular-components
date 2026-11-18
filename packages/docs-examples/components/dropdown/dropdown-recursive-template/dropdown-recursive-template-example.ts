@@ -2,21 +2,18 @@ import {
     ChangeDetectionStrategy,
     Component,
     Directive,
+    inject,
     Injector,
+    input,
     OnInit,
     TemplateRef,
-    ViewContainerRef,
-    inject,
-    input
+    ViewContainerRef
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KBQ_DROPDOWN_PANEL, KbqDropdown, KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-
-type DropdownItem = {
-    label: string;
-    children?: DropdownItem[];
-};
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 @Directive({
     selector: '[exampleDropdownOutlet]'
@@ -60,7 +57,7 @@ export class ExampleDropdownPortal implements OnInit {
         </button>
 
         <kbq-dropdown #egDropdown="kbqDropdown">
-            @for (item of items; track item) {
+            @for (item of t().items; track item) {
                 <ng-container
                     [exampleDropdownOutlet]="dropdownItemTpl"
                     [exampleDropdownOutletContext]="{ item: item }"
@@ -90,36 +87,5 @@ export class ExampleDropdownPortal implements OnInit {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownRecursiveTemplateExample {
-    items: DropdownItem[] = [
-        { label: 'Level 1 - Security Settings' },
-        {
-            label: 'Level 1 - Encryption',
-            children: [
-                { label: 'Level 2 - SSL/TLS' },
-                {
-                    label: 'Level 2 - AES Encryption',
-                    children: [
-                        {
-                            label: 'Level 3 - Key Management',
-                            children: [
-                                { label: 'Level 4 - Public Key Infrastructure (PKI)' },
-                                { label: 'Level 4 - Symmetric Key Management' },
-                                { label: 'Level 4 - Key Exchange Algorithms' }
-                            ]
-                        },
-                        { label: 'Level 3 - Encryption Standards' }
-                    ]
-                },
-                { label: 'Level 2 - Digital Signatures' }
-            ]
-        },
-        {
-            label: 'Level 1 - Access Control',
-            children: [
-                { label: 'Level 2 - Role-Based Access Control (RBAC)' },
-                { label: 'Level 2 - Multi-Factor Authentication (MFA)' },
-                { label: 'Level 2 - Least Privilege Principle' }
-            ]
-        }
-    ];
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Icon-button size
@@ -12,13 +14,18 @@ import { KbqIconButton } from '@koobiq/components/icon';
         <div>
             <div class="kbq-text-compact layout-margin-bottom-m icon-button-style-example__style-label">Normal</div>
 
-            <i kbq-icon-button="kbq-magnifying-glass_24" aria-label="Search" [color]="colors.Theme"></i>
+            <i kbq-icon-button="kbq-magnifying-glass_24" [attr.aria-label]="t().search" [color]="colors.Theme"></i>
         </div>
 
         <div>
             <div class="kbq-text-compact layout-margin-bottom-m icon-button-style-example__style-label">Compact</div>
 
-            <i kbq-icon-button="kbq-magnifying-glass_16" size="compact" aria-label="Search" [color]="colors.Theme"></i>
+            <i
+                kbq-icon-button="kbq-magnifying-glass_16"
+                size="compact"
+                [attr.aria-label]="t().search"
+                [color]="colors.Theme"
+            ></i>
         </div>
     `,
     styles: `
@@ -32,5 +39,7 @@ import { KbqIconButton } from '@koobiq/components/icon';
     }
 })
 export class IconButtonSizeExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     colors = KbqComponentColors;
 }

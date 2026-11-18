@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, InjectionToken, Injector } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidepanelModule, KbqSidepanelService } from '@koobiq/components/sidepanel';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 export const EXAMPLE_SIDEPANEL_TOKEN = new InjectionToken<{ name: string; role: string }>('SidepanelUser');
 
@@ -8,20 +10,22 @@ export const EXAMPLE_SIDEPANEL_TOKEN = new InjectionToken<{ name: string; role: 
     selector: 'example-sidepanel-with-custom-injector-content',
     imports: [KbqSidepanelModule, KbqButtonModule],
     template: `
-        <kbq-sidepanel-header [closeable]="true">User info</kbq-sidepanel-header>
+        <kbq-sidepanel-header [closeable]="true">{{ t().userInfo }}</kbq-sidepanel-header>
         <kbq-sidepanel-body>
-            <p>Name: {{ user.name }}</p>
-            <p>Role: {{ user.role }}</p>
+            <p>{{ t().name }} {{ user.name }}</p>
+            <p>{{ t().role }} {{ user.role }}</p>
         </kbq-sidepanel-body>
         <kbq-sidepanel-footer>
             <kbq-sidepanel-actions>
-                <button kbq-button kbq-sidepanel-close>Close</button>
+                <button kbq-button kbq-sidepanel-close>{{ t().close }}</button>
             </kbq-sidepanel-actions>
         </kbq-sidepanel-footer>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleSidepanelWithCustomInjectorContent {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly user = inject(EXAMPLE_SIDEPANEL_TOKEN);
 }
 
@@ -33,12 +37,14 @@ export class ExampleSidepanelWithCustomInjectorContent {
     imports: [KbqButtonModule],
     template: `
         <button kbq-button (click)="open()">
-            <span>Open</span>
+            <span>{{ t().open }}</span>
         </button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelWithCustomInjectorExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly injector = inject(Injector);
     private readonly sidepanelService = inject(KbqSidepanelService);
 
@@ -49,7 +55,7 @@ export class SidepanelWithCustomInjectorExample {
                 providers: [
                     {
                         provide: EXAMPLE_SIDEPANEL_TOKEN,
-                        useValue: { name: 'John Doe', role: 'Administrator' }
+                        useValue: { name: 'John Doe', role: this.t().administrator }
                     }
                 ]
             })

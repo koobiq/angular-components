@@ -25,6 +25,8 @@ import {
 } from '@koobiq/components/core';
 import { KbqDropdown, KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /** `Node.TEXT_NODE`, spelled out so that the example never reads a DOM global. */
 const TEXT_NODE = 3;
@@ -35,27 +37,6 @@ const EMPTY_RECT: KbqCaretRect = { x: 0, y: 0, width: 0, height: 0 };
 
 /** The keys the menu lives on while the caret stays in the editor. */
 const MENU_KEYS = ['ArrowUp', 'ArrowDown', 'Enter', 'Escape'];
-
-const GROUPS: { label: string; items: { name: string; icon: string }[] }[] = [
-    {
-        label: 'Suggested',
-        items: [
-            { name: 'Text', icon: 'kbq-paragraph-sign_16' },
-            { name: 'Bulleted list', icon: 'kbq-list-ul_16' },
-            { name: 'To-do list', icon: 'kbq-checkbox-multiple_16' }
-        ]
-    },
-    {
-        label: 'Basic blocks',
-        items: [
-            { name: 'Numbered list', icon: 'kbq-list-ol_16' },
-            { name: 'Code', icon: 'kbq-code_16' },
-            { name: 'Table', icon: 'kbq-table_16' },
-            { name: 'Image', icon: 'kbq-image_16' },
-            { name: 'Divider', icon: 'kbq-minus_16' }
-        ]
-    }
-];
 
 /**
  * @title Dropdown at the caret
@@ -71,14 +52,14 @@ const GROUPS: { label: string; items: { name: string; icon: string }[] }[] = [
     template: `
         <div
             #editor
-            aria-label="Article text"
             aria-multiline="true"
             class="example-editor kbq-text-normal"
             contenteditable="plaintext-only"
             role="textbox"
+            [attr.aria-label]="t().editorLabel"
             (keydown)="handleKeydown($event)"
         >
-            Type / anywhere in this text to open the block menu.
+            {{ t().editorText }}
         </div>
 
         <!--
@@ -114,11 +95,11 @@ const GROUPS: { label: string; items: { name: string; icon: string }[] }[] = [
             }
 
             @if (isEmpty()) {
-                <button disabled kbq-dropdown-item>Nothing found</button>
+                <button disabled kbq-dropdown-item>{{ t().nothingFound }}</button>
             }
 
             <kbq-dropdown-footer class="example-slash-menu__footer">
-                <span>Close menu</span>
+                <span>{{ t().closeMenu }}</span>
                 <span class="example-slash-menu__hotkey">Esc</span>
             </kbq-dropdown-footer>
         </kbq-dropdown>
@@ -170,6 +151,8 @@ const GROUPS: { label: string; items: { name: string; icon: string }[] }[] = [
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownSlashMenuExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly document = inject(DOCUMENT);
     private readonly renderer = inject(Renderer2);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -190,7 +173,10 @@ export class DropdownSlashMenuExample {
     protected readonly filteredGroups = computed(() => {
         const matches = createSearchPredicate(this.query());
 
-        return GROUPS.map(({ label, items }) => ({ label, items: items.filter(({ name }) => matches(name)) }));
+        return this.t().groups.map(({ label, items }) => ({
+            label,
+            items: items.filter(({ name }) => matches(name))
+        }));
     });
 
     protected readonly isEmpty = computed(() => this.filteredGroups().every(({ items }) => !items.length));

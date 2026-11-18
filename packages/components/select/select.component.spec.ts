@@ -4634,6 +4634,28 @@ describe('KbqSelect', () => {
             configureKbqSelectTestingModule([NgModelSelect]);
         });
 
+        it('should hide the placeholder text while disabled', async () => {
+            const NBSP = '\u00A0';
+            const fixture = TestBed.createComponent(NgModelSelect);
+
+            fixture.componentInstance.isDisabled = true;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const placeholder = fixture.debugElement.query(By.css('.kbq-select__placeholder')).nativeElement;
+
+            expect(placeholder.textContent.trim()).toBe('');
+            expect(placeholder.textContent).toContain(NBSP);
+
+            fixture.componentInstance.isDisabled = false;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(placeholder.textContent.trim()).toBe('Food');
+        });
+
         it('should disable itself when control is disabled using the property', async () => {
             const fixture = TestBed.createComponent(NgModelSelect);
 
@@ -4857,6 +4879,16 @@ describe('KbqSelect', () => {
             await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
+        });
+
+        it('should turn browser autocomplete off on the search input', async () => {
+            trigger.click();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            const input: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+
+            expect(input.getAttribute('autocomplete')).toBe('off');
         });
 
         it('should focus search field after open', async () => {

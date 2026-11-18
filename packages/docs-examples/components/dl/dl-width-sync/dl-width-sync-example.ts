@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { KbqDivider } from '@koobiq/components/divider';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Description list shared width
@@ -10,26 +12,26 @@ import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
     imports: [KbqDl, KbqDt, KbqDd, KbqDivider],
     template: `
         <kbq-dl resizable [(dtWidth)]="dtWidth">
-            <kbq-dt>Incident type</kbq-dt>
-            <kbq-dd>Malware infection</kbq-dd>
+            <kbq-dt>{{ t().incidentType }}</kbq-dt>
+            <kbq-dd>{{ t().malwareInfection }}</kbq-dd>
 
-            <kbq-dt>Identifier</kbq-dt>
+            <kbq-dt>{{ t().identifier }}</kbq-dt>
             <kbq-dd>INC-2026-125-78253</kbq-dd>
 
-            <kbq-dt>Assignee</kbq-dt>
+            <kbq-dt>{{ t().assignee }}</kbq-dt>
             <kbq-dd>John Smith</kbq-dd>
         </kbq-dl>
 
         <kbq-divider />
 
         <kbq-dl resizable [(dtWidth)]="dtWidth">
-            <kbq-dt>Incident type</kbq-dt>
-            <kbq-dd>Brute-force attack</kbq-dd>
+            <kbq-dt>{{ t().incidentType }}</kbq-dt>
+            <kbq-dd>{{ t().bruteForceAttack }}</kbq-dd>
 
-            <kbq-dt>Identifier</kbq-dt>
+            <kbq-dt>{{ t().identifier }}</kbq-dt>
             <kbq-dd>INC-2026-13-44357</kbq-dd>
 
-            <kbq-dt>Assignee</kbq-dt>
+            <kbq-dt>{{ t().assignee }}</kbq-dt>
             <kbq-dd>Jane Doe</kbq-dd>
         </kbq-dl>
     `,
@@ -44,5 +46,7 @@ import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DlWidthSyncExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly dtWidth = model(160);
 }

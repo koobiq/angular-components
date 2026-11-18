@@ -5,7 +5,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSidepanelModule, KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqSkeletonDl, KbqSkeletonGroup, KbqSkeletonTable } from '@koobiq/components/skeleton';
 import { KbqTableModule } from '@koobiq/components/table';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { merge, Subscription, tap, timer } from 'rxjs';
+import { TRANSLATIONS } from './l10n';
 
 type Detail = { term: string; value: string };
 
@@ -40,7 +42,7 @@ const SERVERS: Server[] = Array.from({ length: 6 }, (_, index) => ({
         KbqTableModule
     ],
     template: `
-        <button kbq-button (click)="open(template)">Open sidepanel</button>
+        <button kbq-button (click)="open(template)">{{ t().openSidepanel }}</button>
 
         <ng-template #template>
             <kbq-sidepanel-header [closeable]="true">LDAP-7f7d60de-d36d-46df-80b9-8f272c32ae45</kbq-sidepanel-header>
@@ -120,6 +122,8 @@ const SERVERS: Server[] = Array.from({ length: 6 }, (_, index) => ({
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SkeletonInSidepanelExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly sidepanel = inject(KbqSidepanelService);
     private loading = Subscription.EMPTY;
 

@@ -1,11 +1,13 @@
-import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, DebugElement, inject, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { createKeyboardEvent, dispatchEvent, ENTER, SPACE } from '@koobiq/components/core';
 import {
+    KBQ_FILTER_BAR_NAME_RESOLVER,
     KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
+    KbqFilterBarNameResolver,
     KbqPipe,
     KbqPipeAdd,
     KbqPipeTemplate,
@@ -594,6 +596,137 @@ describe('KbqPipeAdd', () => {
             const pipeAdd = getPipeAdd();
 
             expect(pipeAdd.compareWith({ id: PIPE_TEMPLATE_ID_1 } as KbqPipe, PIPE_TEMPLATE_ID_2)).toBe(false);
+        });
+    });
+
+    describe('name resolution', () => {
+        let translations: ReturnType<typeof signal<Record<string, string>>>;
+        let resolver: ReturnType<typeof vi.fn<KbqFilterBarNameResolver>>;
+
+        beforeEach(() => {
+            translations = signal({ 'filters.pipeA': 'Translated PipeA', 'filters.pipeB': 'PipeB label' });
+            resolver = vi.fn(({ key, fallback }: { key: string; fallback: string }) => translations()[key] ?? fallback);
+
+            TestBed.overrideProvider(KBQ_FILTER_BAR_NAME_RESOLVER, { useValue: resolver });
+            TestBed.compileComponents();
+
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+
+            // Give templates nameKey
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'PipeA',
+                    nameKey: 'filters.pipeA',
+                    id: PIPE_TEMPLATE_ID_1,
+                    type: KbqPipeTypes.Text,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'PipeB',
+                    nameKey: 'filters.pipeB',
+                    id: PIPE_TEMPLATE_ID_2,
+                    type: KbqPipeTypes.Text,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.detectChanges();
+            vi.useFakeTimers();
+        });
+
+        it('should use kind pipe-template for menu options', async () => {
+            const pipeAdd = getPipeAdd();
+
+            pipeAdd.select().open();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const options = document.querySelectorAll('.kbq-option');
+
+            expect(options[0].textContent).toContain('Translated PipeA');
+            expect(options[1].textContent).toContain('PipeB label');
+
+            // Verify the context has kind 'pipe-template' with pipe === source === template
+            expect(resolver).toHaveBeenCalledWith(
+                expect.objectContaining({ kind: 'pipe-template', key: 'filters.pipeA' })
+            );
+        });
+
+        it('should capture resolved name at click time in the live announcement', async () => {
+            const pipeAdd = getPipeAdd();
+
+            pipeAdd.select().open();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const options = document.querySelectorAll('.kbq-option');
+
+            (options[0] as HTMLElement).click();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const liveRegion = fixture.debugElement
+                .query(By.directive(KbqPipeAdd))
+                .query(By.css('[aria-live="polite"]'));
+
+            expect(liveRegion.nativeElement.textContent.trim()).toBe('Фильтр «Translated PipeA» добавлен');
+        });
+
+        it('should not re-announce on a later locale change alone', async () => {
+            const pipeAdd = getPipeAdd();
+
+            pipeAdd.select().open();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            (document.querySelectorAll('.kbq-option')[0] as HTMLElement).click();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            // Clear spies after the initial add
+            const liveRegion = fixture.debugElement
+                .query(By.directive(KbqPipeAdd))
+                .query(By.css('[aria-live="polite"]'));
+            const textAfterAdd = liveRegion.nativeElement.textContent.trim();
+
+            // Now change translation only
+            translations.set({ 'filters.pipeA': 'Новый PipeA', 'filters.pipeB': 'PipeB label' });
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            // The announcement should NOT change because locale changes alone produce no announcement
+            expect(liveRegion.nativeElement.textContent.trim()).toBe(textAfterAdd);
+        });
+
+        it('should fall back to the template name when it has no nameKey', async () => {
+            resolver.mockImplementation(() => 'TRANSLATED');
+
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Plain pipe',
+                    id: PIPE_TEMPLATE_ID_1,
+                    type: KbqPipeTypes.Text,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.detectChanges();
+
+            const pipeAdd = getPipeAdd();
+
+            pipeAdd.select().open();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const options = document.querySelectorAll('.kbq-option');
+
+            expect(options[0].textContent).toContain('Plain pipe');
         });
     });
 });

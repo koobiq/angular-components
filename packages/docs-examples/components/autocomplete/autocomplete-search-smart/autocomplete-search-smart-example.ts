@@ -9,8 +9,10 @@ import {
     tokenizeSearchQuery
 } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Autocomplete smart search
@@ -29,9 +31,9 @@ import { map, startWith } from 'rxjs/operators';
         <div class="kbq-form kbq-form-vertical">
             <div class="kbq-form__row">
                 <label class="kbq-form__label">
-                    Try
+                    {{ t().try }}
                     <strong>republic african</strong>
-                    or
+                    {{ t().or }}
                     <strong>korea south</strong>
                 </label>
                 <kbq-form-field>
@@ -53,6 +55,9 @@ import { map, startWith } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AutocompleteSearchSmartExample implements OnInit {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    // The suggested queries in the label are English, so the options they match stay English in every locale.
     options = [
         'United Kingdom',
         'United Arab Emirates',

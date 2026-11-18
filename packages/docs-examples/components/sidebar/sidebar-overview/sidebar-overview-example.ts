@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidebarModule, SidebarPositions } from '@koobiq/components/sidebar';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Sidebar overview
@@ -15,16 +17,24 @@ import { KbqSidebarModule, SidebarPositions } from '@koobiq/components/sidebar';
             [position]="position.Left"
             (stateChanged)="onStateChanged($event, position.Left)"
         >
-            <div kbq-sidebar-opened width="170px">Left opened content</div>
-            <div kbq-sidebar-closed width="44px">Left closed content</div>
+            <div kbq-sidebar-opened width="170px">{{ t().leftOpenedContent }}</div>
+            <div kbq-sidebar-closed width="44px">{{ t().leftClosedContent }}</div>
         </kbq-sidebar>
 
         <main>
-            <div>Main content</div>
-            <div><button kbq-button (click)="toggleLeft()">Toggle left model</button></div>
-            <div><button kbq-button (click)="leftSidebar.toggle()">Toggle left</button></div>
-            <div><button kbq-button (click)="toggleRight()">Toggle right model</button></div>
-            <div><button kbq-button (click)="rightSidebar.toggle()">Toggle right</button></div>
+            <div>{{ t().mainContent }}</div>
+            <div>
+                <button kbq-button (click)="toggleLeft()">{{ t().toggleLeftModel }}</button>
+            </div>
+            <div>
+                <button kbq-button (click)="leftSidebar.toggle()">{{ t().toggleLeft }}</button>
+            </div>
+            <div>
+                <button kbq-button (click)="toggleRight()">{{ t().toggleRightModel }}</button>
+            </div>
+            <div>
+                <button kbq-button (click)="rightSidebar.toggle()">{{ t().toggleRight }}</button>
+            </div>
         </main>
 
         <kbq-sidebar
@@ -33,8 +43,8 @@ import { KbqSidebarModule, SidebarPositions } from '@koobiq/components/sidebar';
             [position]="position.Right"
             (stateChanged)="onStateChanged($event, position.Right)"
         >
-            <div kbq-sidebar-opened width="170px">Right opened content</div>
-            <div kbq-sidebar-closed width="44px">Right closed content</div>
+            <div kbq-sidebar-opened width="170px">{{ t().rightOpenedContent }}</div>
+            <div kbq-sidebar-closed width="44px">{{ t().rightClosedContent }}</div>
         </kbq-sidebar>
     `,
     styles: `
@@ -69,6 +79,8 @@ import { KbqSidebarModule, SidebarPositions } from '@koobiq/components/sidebar';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidebarOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly position = SidebarPositions;
 
     leftOpened = true;

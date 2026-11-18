@@ -9,7 +9,9 @@ import {
     KbqDatetime
 } from '@koobiq/components/datetime';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Datetime validation
@@ -19,21 +21,21 @@ import { DateTime } from 'luxon';
     imports: [ReactiveFormsModule, LuxonDateModule, KbqFormFieldModule, KbqDatepickerModule, KbqDatetime],
     template: `
         <kbq-form-field>
-            <kbq-label>Maintenance start</kbq-label>
+            <kbq-label>{{ t().label }}</kbq-label>
             <kbq-datetime #datetime [min]="min" [max]="max" [formControl]="control" />
             <kbq-datepicker-toggle-icon kbqSuffix [for]="datetime.datepicker()" />
 
             @if (control.hasError('required')) {
-                <kbq-error>Required</kbq-error>
+                <kbq-error>{{ t().required }}</kbq-error>
             }
             @if (control.hasError(parseError)) {
-                <kbq-error>Enter both the date and the time</kbq-error>
+                <kbq-error>{{ t().incomplete }}</kbq-error>
             }
             @if (control.hasError(minError)) {
-                <kbq-error>Not earlier than {{ min.toFormat(format) }}</kbq-error>
+                <kbq-error>{{ t().notEarlier(min.toFormat(format)) }}</kbq-error>
             }
             @if (control.hasError(maxError)) {
-                <kbq-error>Not later than {{ max.toFormat(format) }}</kbq-error>
+                <kbq-error>{{ t().notLater(max.toFormat(format)) }}</kbq-error>
             }
         </kbq-form-field>
     `,
@@ -43,6 +45,8 @@ import { DateTime } from 'luxon';
     }
 })
 export class DatetimeValidationExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly parseError = KBQ_DATETIME_PARSE_ERROR;
     protected readonly minError = KBQ_DATETIME_MIN_ERROR;
     protected readonly maxError = KBQ_DATETIME_MAX_ERROR;

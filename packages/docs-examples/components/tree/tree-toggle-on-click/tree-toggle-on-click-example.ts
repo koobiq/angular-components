@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqPseudoCheckboxModule } from '@koobiq/components/core';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 export class FileNode {
     children: FileNode[];
@@ -40,9 +42,9 @@ export function buildFileTree(countries: any, level: number): FileNode[] {
 }
 
 export const DATA_OBJECT = [
-    { name: 'Lonely leaf' },
+    { name: 'lonely-leaf' },
     {
-        name: 'Branch 1',
+        name: 'branch-1',
         children: [
             {
                 name: 'Arsenal'
@@ -62,7 +64,7 @@ export const DATA_OBJECT = [
         ]
     },
     {
-        name: 'Branch 2',
+        name: 'branch-2',
         children: [
             {
                 name: 'Atlético de Madrid'
@@ -85,7 +87,7 @@ export const DATA_OBJECT = [
         ]
     },
     {
-        name: 'Disabled Node'
+        name: 'disabled-node'
     }
 ];
 
@@ -117,7 +119,7 @@ export const DATA_OBJECT = [
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>
             </kbq-tree-option>
 
-            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="node.name === 'Disabled Node'">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="node.name === 'disabled-node'">
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>
             </kbq-tree-option>
         </kbq-tree-selection>
@@ -125,6 +127,8 @@ export const DATA_OBJECT = [
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeToggleOnClickExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
 
@@ -178,6 +182,21 @@ export class TreeToggleOnClickExample {
     };
 
     private getViewValue = (node: FileFlatNode): string => {
-        return `${node.name}`;
+        return this.nodeName(node.name);
     };
+
+    private nodeName(name: string): string {
+        switch (name) {
+            case 'lonely-leaf':
+                return this.t().lonelyLeaf;
+            case 'branch-1':
+                return 'Branch 1';
+            case 'branch-2':
+                return 'Branch 2';
+            case 'disabled-node':
+                return this.t().disabledNode;
+            default:
+                return name;
+        }
+    }
 }

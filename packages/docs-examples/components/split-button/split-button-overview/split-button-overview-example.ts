@@ -3,6 +3,8 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title split-button
@@ -17,8 +19,8 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
     ],
     template: `
         <kbq-split-button>
-            <button kbq-button>Split Button</button>
-            <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
+            <button kbq-button>{{ t().splitButton }}</button>
+            <button kbq-button [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </kbq-split-button>
@@ -39,4 +41,6 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SplitButtonOverviewExample {}
+export class SplitButtonOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+}

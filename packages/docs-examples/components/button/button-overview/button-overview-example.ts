@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Button overview
@@ -22,7 +24,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
             [color]="colors.Contrast"
             [disabled]="isDisabled"
         >
-            Кнопка
+            {{ t().button }}
         </button>
         <br />
         <kbq-checkbox [(ngModel)]="isDisabled">disabled</kbq-checkbox>
@@ -32,6 +34,8 @@ import { KbqComponentColors } from '@koobiq/components/core';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     colors = KbqComponentColors;
     isDisabled = false;
     hasProgress = false;

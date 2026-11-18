@@ -5,8 +5,10 @@ import {
     KbqAgGridThemeModule
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, GetRowIdParams, ModuleRegistry } from 'ag-grid-community';
+import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -17,7 +19,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     selector: 'ag-grid-row-focus-state-example',
     imports: [AgGridModule, KbqAgGridThemeModule, KbqButtonModule],
     template: `
-        <button type="button" kbq-button (click)="rowFocusState.reset()">Reset focus state</button>
+        <button type="button" kbq-button (click)="rowFocusState.reset()">{{ t().resetFocusState }}</button>
 
         <ag-grid-angular
             #rowFocusState="kbqAgGridRowFocusState"
@@ -45,19 +47,15 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridRowFocusStateExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly getRowId = (params: GetRowIdParams): string => params.data.column0;
-    protected readonly columnDefs: ColDef[] = [
-        { field: 'column0', headerName: 'Column 0', width: 130 },
-        { field: 'column1', headerName: 'Column 1', width: 130 },
-        { field: 'column2', headerName: 'Column 2', width: 130 },
-        { field: 'column3', headerName: 'Column 3', width: 130 },
-        { field: 'column4', headerName: 'Column 4', width: 130 }
-    ];
-    protected readonly rowData = Array.from({ length: 100 }, (_, index) => ({
-        column0: 'Text ' + index,
-        column1: 'Text ' + index,
-        column2: 'Text ' + index,
-        column3: 'Text ' + index,
-        column4: 'Text ' + index
+    protected readonly columnDefs: ColDef[] = Array.from({ length: 5 }, (_, i) => ({
+        field: 'column' + i,
+        headerName: 'Column ' + i,
+        width: 130
     }));
+    protected readonly rowData = Array.from({ length: 100 }, (_, index) =>
+        Object.fromEntries(Array.from({ length: 5 }, (_, i) => ['column' + i, 'Text ' + index]))
+    );
 }

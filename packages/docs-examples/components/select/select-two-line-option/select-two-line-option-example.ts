@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title select two line option
@@ -9,8 +11,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [KbqSelectModule],
     template: `
         <kbq-form-field>
-            <kbq-select multiple multilineOptions [value]="selected">
-                @for (option of options; track option) {
+            <kbq-select multiple multilineOptions [value]="selected()">
+                @for (option of options(); track option) {
                     <kbq-option [value]="option" [viewValue]="option">
                         <div>{{ option }}</div>
                         <div class="kbq-option-caption">caption</div>
@@ -34,12 +36,14 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectTwoLineOptionExample {
-    readonly options = [
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    readonly options = computed(() => [
         'Option #0',
         'Option #1',
-        'Option #2 with a very long label that does not fit on a single line of the panel',
+        this.t().twoLong1,
         'Option #3',
-        'Option #4 with another quite long label that also has to wrap onto the next line'
-    ];
-    readonly selected = [this.options[0]];
+        this.t().twoLong2
+    ]);
+    readonly selected = computed(() => [this.options()[0]]);
 }

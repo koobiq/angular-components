@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqTabGroup, KbqTabsModule } from '@koobiq/components/tabs';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Tabs state saving
@@ -13,16 +15,16 @@ import { KbqTabGroup, KbqTabsModule } from '@koobiq/components/tabs';
             <kbq-tab-group stateSavingKey="tabs-state-saving-example" style="width: 100%">
                 <!-- A tabId is what makes the selection survive the tabs being reordered. -->
                 <kbq-tab tabId="delivery">
-                    <ng-template kbq-tab-label>Доставка</ng-template>
-                    Данный текст используется для иллюстрации содержимого вкладки
+                    <ng-template kbq-tab-label>{{ t().delivery }}</ng-template>
+                    {{ t().tabContent }}
                 </kbq-tab>
                 <kbq-tab tabId="payment">
-                    <ng-template kbq-tab-label>Оплата</ng-template>
-                    Данный текст используется для иллюстрации содержимого вкладки
+                    <ng-template kbq-tab-label>{{ t().payment }}</ng-template>
+                    {{ t().tabContent }}
                 </kbq-tab>
                 <kbq-tab tabId="refund">
-                    <ng-template kbq-tab-label>Возврат</ng-template>
-                    Данный текст используется для иллюстрации содержимого вкладки
+                    <ng-template kbq-tab-label>{{ t().refund }}</ng-template>
+                    {{ t().tabContent }}
                 </kbq-tab>
             </kbq-tab-group>
 
@@ -34,5 +36,7 @@ import { KbqTabGroup, KbqTabsModule } from '@koobiq/components/tabs';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabsStateSavingExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly group = viewChild.required(KbqTabGroup);
 }

@@ -10,7 +10,6 @@ import {
     input,
     InputSignal,
     numberAttribute,
-    OnDestroy,
     Signal,
     TemplateRef,
     untracked,
@@ -97,7 +96,7 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
     ],
     exportAs: 'kbqPasswordToggle'
 })
-export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
+export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit {
     protected readonly nativeElement = kbqInjectNativeElement();
     protected readonly focusMonitor = inject(FocusMonitor);
 
@@ -202,11 +201,9 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     }
 
     ngAfterViewInit(): void {
-        this.focusMonitor.monitor(this.nativeElement, true);
-    }
+        super.ngAfterViewInit();
 
-    ngOnDestroy() {
-        this.focusMonitor.stopMonitoring(this.nativeElement);
+        this.focusMonitor.monitor(this.nativeElement, true);
     }
 
     /**

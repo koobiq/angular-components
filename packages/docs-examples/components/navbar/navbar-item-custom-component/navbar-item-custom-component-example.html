@@ -5,10 +5,10 @@
                 <example-navbar-notifications
                     kbqNavbarItemContent
                     kbqPopoverContent="Body of the notifications center"
-                    [kbqPopoverHeader]="text().notifications"
+                    [kbqPopoverHeader]="t().notifications"
                     [kbqPopoverPlacement]="popUpPlacements.Right"
                 />
-                <kbq-navbar-title>{{ text().notifications }}</kbq-navbar-title>
+                <kbq-navbar-title>{{ t().notifications }}</kbq-navbar-title>
                 <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
             </kbq-navbar-item>
 
@@ -16,13 +16,13 @@
                 <span kbqNavbarItemContent class="example-navbar-item-leading">
                     <i kbq-icon="kbq-bell_16" color="contrast"></i>
                 </span>
-                <kbq-navbar-title>{{ text().notifications }}</kbq-navbar-title>
+                <kbq-navbar-title>{{ t().notifications }}</kbq-navbar-title>
                 <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
             </kbq-navbar-item>
 
             <a href="#" kbq-navbar-item>
                 <i kbq-icon="kbq-folder_16" color="contrast"></i>
-                <kbq-navbar-title>{{ text().dashboards }}</kbq-navbar-title>
+                <kbq-navbar-title>{{ t().dashboards }}</kbq-navbar-title>
             </a>
         </kbq-navbar-container>
 

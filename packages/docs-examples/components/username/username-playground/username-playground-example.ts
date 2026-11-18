@@ -4,6 +4,8 @@ import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqUserInfo, KbqUsername, KbqUsernameMode, KbqUsernameStyle } from '@koobiq/components/username';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Username playground
@@ -29,7 +31,7 @@ import { KbqUserInfo, KbqUsername, KbqUsernameMode, KbqUsernameStyle } from '@ko
         </div>
         <div class="layout-row layout-gap-l">
             <kbq-form-field style="width: 100px">
-                <kbq-label>Name format</kbq-label>
+                <kbq-label>{{ t().nameFormat }}</kbq-label>
                 <textarea kbqTextarea rows="1" [maxRows]="1" [(ngModel)]="fullNameFormat"></textarea>
             </kbq-form-field>
 
@@ -61,6 +63,8 @@ import { KbqUserInfo, KbqUsername, KbqUsernameMode, KbqUsernameStyle } from '@ko
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsernamePlaygroundExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     userInfo: KbqUserInfo = {
         firstName: 'Maxwell',
         middleName: 'Alan',

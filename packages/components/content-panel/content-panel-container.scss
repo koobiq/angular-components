@@ -7,6 +7,9 @@
     position: relative;
     box-sizing: border-box;
     height: 100%;
+    // Focusable only to keep the focus of a click inside: a pop-up that gives the focus back after a key press
+    // would otherwise frame the whole layout with the focus ring.
+    outline: none;
 
     .kbq-content-panel-container__content {
         flex-grow: 1;

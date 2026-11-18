@@ -1,20 +1,13 @@
 import { TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, InjectionToken } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
+import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTimeRangeModule } from '@koobiq/components/time-range';
-import { of } from 'rxjs';
-
-const ExampleLocalizedData = new InjectionToken<Record<string | 'default', string>>('ExampleLocalizedData', {
-    factory: () => ({
-        'ru-RU': 'Период',
-        default: 'Period'
-    })
-});
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Time range as form field
@@ -54,8 +47,7 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', strin
     }
 })
 export class TimeRangeAsFormFieldExample {
-    private readonly data = inject(ExampleLocalizedData);
-    private readonly localeId = toSignal(inject(KBQ_LOCALE_SERVICE, { optional: true })?.changes || of(''));
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    protected readonly placeholder = computed(() => this.data[this.localeId() || 'default'] ?? this.data.default);
+    protected readonly placeholder = computed(() => this.t().placeholder);
 }

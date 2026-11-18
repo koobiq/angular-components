@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Empty-state icon
@@ -17,10 +19,12 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 <i kbq-icon-item="kbq-circle-info_16" [big]="true" [color]="'contrast'" [fade]="true"></i>
             </div>
             <div kbq-empty-state-text>
-                This should detail the actions you can take on this screen, as well as why it’s valuable.
+                {{ t().iconText }}
             </div>
         </kbq-empty-state>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EmptyStateIconExample {}
+export class EmptyStateIconExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+}

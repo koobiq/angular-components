@@ -13,7 +13,9 @@ import {
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToastComponent, KbqToastModule, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { Observable, of, switchMap, throwError, timer } from 'rxjs';
+import { TRANSLATIONS } from './l10n';
 
 const TAKEN_NAMES = ['Admins', 'Support'];
 
@@ -45,14 +47,13 @@ class ExampleSaveError extends Error {
     ],
     template: `
         <p class="example-intro layout-margin-top-none layout-margin-bottom-l">
-            Save
+            {{ t().saveErrorIntro1 }}
             <span class="kbq-text-normal-strong">{{ takenNames }}</span>
-            as the name to have the value rejected. Saving the description fails on the first attempt and succeeds on
-            retry.
+            {{ t().saveErrorIntro2 }}
         </p>
 
         <kbq-inline-edit #nameEdit showActions [saveHandler]="saveName" (modeChange)="onModeChange($event, nameEdit)">
-            <kbq-label>Name</kbq-label>
+            <kbq-label>{{ t().name }}</kbq-label>
 
             <div class="example-inline-text" kbqInlineEditViewMode>{{ nameControl.value }}</div>
             <kbq-form-field kbqInlineEditEditMode>
@@ -66,7 +67,7 @@ class ExampleSaveError extends Error {
             [saveHandler]="saveDescription"
             (modeChange)="onModeChange($event, descriptionEdit)"
         >
-            <kbq-label>Description</kbq-label>
+            <kbq-label>{{ t().description }}</kbq-label>
 
             <div class="example-inline-text" kbqInlineEditViewMode>{{ descriptionControl.value }}</div>
             <kbq-form-field kbqInlineEditEditMode>
@@ -75,24 +76,27 @@ class ExampleSaveError extends Error {
         </kbq-inline-edit>
 
         <ng-template #nameTitle>
-            Couldn’t update the field
+            {{ t().couldntUpdate }}
             <span class="kbq-text-normal-strong">Name</span>
         </ng-template>
 
         <ng-template #descriptionTitle>
-            Couldn’t update the field
+            {{ t().couldntUpdate }}
             <span class="kbq-text-normal-strong">Description</span>
         </ng-template>
 
         <!-- The failure is not about the value, so the same value is worth sending again. -->
         <ng-template #retryActions let-toast>
-            <a kbqLink pseudo (click)="retry(toast)">Retry</a>
+            <a kbqLink pseudo (click)="retry(toast)">{{ t().retry }}</a>
+            /a>
         </ng-template>
 
         <!-- The server rejected the value, so the user either fixes it or drops it. -->
         <ng-template #rejectedActions let-toast>
-            <a kbqLink pseudo class="layout-margin-right-m" (click)="edit(toast)">Edit</a>
-            <a kbqLink pseudo (click)="discard(toast)">Discard changes</a>
+            <a kbqLink pseudo class="layout-margin-right-m" (click)="edit(toast)">{{ t().edit }}</a>
+            /a>
+            <a kbqLink pseudo (click)="discard(toast)">{{ t().discardChanges }}</a>
+            /a>
         </ng-template>
 
         <!-- Closing the notification without reacting discards the unsaved value as well. -->
@@ -101,7 +105,7 @@ class ExampleSaveError extends Error {
                 type="button"
                 kbq-toast-close-button
                 kbq-icon-button="kbq-xmark-s_16"
-                aria-label="Close"
+                [attr.aria-label]="t().close"
                 (click)="discard(toast)"
             ></button>
         </ng-template>
@@ -135,6 +139,8 @@ class ExampleSaveError extends Error {
     }
 })
 export class InlineEditSaveErrorExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly takenNames = TAKEN_NAMES.join(', ');
 
     protected readonly nameControl = new FormControl('Security team', {

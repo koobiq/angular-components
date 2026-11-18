@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqFormsModule, KbqNormalizeWhitespace } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Input number
@@ -19,7 +21,7 @@ import { KbqInputModule } from '@koobiq/components/input';
             <div class="kbq-form-horizontal">
                 <div class="kbq-form__row">
                     <label class="kbq-form__label flex-40" for="number-with-bounds">
-                        С разделением групп разрядов, с мин. и макс. ограничением
+                        {{ t().numberWithBounds }}
                     </label>
                     <kbq-form-field class="kbq-form__control flex-60">
                         <input
@@ -32,13 +34,13 @@ import { KbqInputModule } from '@koobiq/components/input';
                         />
                         <kbq-stepper />
 
-                        <kbq-hint>От −12 000 до 12 000</kbq-hint>
+                        <kbq-hint>{{ t().hintBounds }}</kbq-hint>
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
                     <label class="kbq-form__label flex-40" for="number-with-separator">
-                        С разделителем групп разрядов
+                        {{ t().numberWithSeparator }}
                     </label>
                     <kbq-form-field class="kbq-form__control flex-60">
                         <input id="number-with-separator" kbqNumberInput kbqNormalizeWhitespace [(ngModel)]="value" />
@@ -48,7 +50,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 
                 <div class="kbq-form__row">
                     <label class="kbq-form__label flex-40" for="number-without-separator">
-                        Без разделителя групп разрядов
+                        {{ t().numberWithoutSeparator }}
                     </label>
                     <kbq-form-field class="kbq-form__control flex-60">
                         <input
@@ -63,7 +65,7 @@ import { KbqInputModule } from '@koobiq/components/input';
                 </div>
 
                 <div class="kbq-form__row">
-                    <label class="kbq-form__label flex-40" for="number-integer">Целочисленное значение</label>
+                    <label class="kbq-form__label flex-40" for="number-integer">{{ t().integer }}</label>
                     <kbq-form-field class="kbq-form__control flex-60">
                         <input
                             id="number-integer"
@@ -81,6 +83,8 @@ import { KbqInputModule } from '@koobiq/components/input';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputNumberOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     value = '';
     integerValue = '';
 }

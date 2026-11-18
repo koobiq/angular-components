@@ -5,6 +5,8 @@ import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit custom handler
@@ -26,7 +28,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
             [setValueHandler]="setValueHandler"
             (saved)="update()"
         >
-            <kbq-label>Label</kbq-label>
+            <kbq-label>{{ t().label }}</kbq-label>
 
             <div class="layout-row layout-gap-xxs" style="flex-wrap: wrap;" kbqInlineEditViewMode>
                 @let value = displayValue();
@@ -46,8 +48,12 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditCustomHandlerExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly control = new FormControl<KbqFileItem | null>(null);
-    protected readonly placeholder = 'Placeholder';
+    protected get placeholder(): string {
+        return this.t().placeholder;
+    }
     protected readonly displayValue = signal(this.control.value);
 
     protected getValueHandler = () => this.control.value;

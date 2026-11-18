@@ -4,6 +4,8 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
 import { KbqError, KbqHint } from '@koobiq/components/form-field';
 import { KbqRadioModule } from '@koobiq/components/radio';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Radio validation
@@ -22,15 +24,15 @@ import { KbqRadioModule } from '@koobiq/components/radio';
                     formControlName="secondFactor"
                     [errorStateMatcher]="errorStateMatcher"
                 >
-                    <kbq-radio-button value="authenticator">Authenticator app</kbq-radio-button>
-                    <kbq-radio-button value="security-key">Hardware security key</kbq-radio-button>
-                    <kbq-radio-button value="sms">Code in a text message</kbq-radio-button>
-                    <kbq-hint>Save without choosing to see the error</kbq-hint>
-                    <kbq-error>Choose a second factor to protect the account</kbq-error>
+                    <kbq-radio-button value="authenticator">{{ t().authenticatorApp }}</kbq-radio-button>
+                    <kbq-radio-button value="security-key">{{ t().hardwareKey }}</kbq-radio-button>
+                    <kbq-radio-button value="sms">{{ t().smsCode }}</kbq-radio-button>
+                    <kbq-hint>{{ t().saveWithoutChoosing }}</kbq-hint>
+                    <kbq-error>{{ t().chooseSecondFactor }}</kbq-error>
                 </kbq-radio-group>
             </div>
 
-            <button color="contrast" kbq-button type="submit">Save</button>
+            <button color="contrast" kbq-button type="submit">{{ t().save }}</button>
         </form>
     `,
     // A fixed width keeps the centered example in place when the error, wider than the options, appears.
@@ -45,6 +47,8 @@ import { KbqRadioModule } from '@koobiq/components/radio';
     }
 })
 export class RadioValidationExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly form = new FormGroup({
         secondFactor: new FormControl<string | null>(null, Validators.required)
     });

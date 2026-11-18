@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpSizes } from '@koobiq/components/core';
 import { KbqPopoverModule } from '@koobiq/components/popover';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Popover width
@@ -29,6 +31,8 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverWidthExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     popUpSizes = PopUpSizes;
     selectedSize = PopUpSizes.Small;
 }

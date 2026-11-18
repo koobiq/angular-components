@@ -8,7 +8,7 @@ import {
     KbqPipeTemplate,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
-import { injectLocalizedPeriods } from '../localized-data';
+import { injectLocalizedPeriods } from '../localized-periods';
 
 const DATA_OBJECT = {
     'No roles': 'value 0',

@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { KbqLink } from '@koobiq/components/link';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule, ICellRendererAngularComp } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -11,6 +12,7 @@ import {
     RowSelectionOptions,
     SelectionColumnDef
 } from 'ag-grid-community';
+import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -58,15 +60,17 @@ export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
             [rowSelection]="rowSelection"
             [selectionColumnDef]="selectionColumnDef"
             [style.height.px]="300"
-            [columnDefs]="columnDefs"
+            [columnDefs]="columnDefs()"
             [defaultColDef]="defaultColDef"
-            [rowData]="rowData"
+            [rowData]="rowData()"
             (firstDataRendered)="onFirstDataRendered($event)"
         />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,
@@ -84,63 +88,25 @@ export class AgGridOverviewExample {
         hideDisabledCheckboxes: false
     };
 
-    protected readonly columnDefs: ColDef[] = [
+    protected readonly columnDefs = computed<ColDef[]>(() => [
         {
             field: 'column0',
-            headerName: 'Link',
+            headerName: this.t().link,
             cellRenderer: ExampleLinkCellRenderer,
             pinned: true
         },
-        {
-            field: 'column1',
-            headerName: 'Text'
-        },
-        {
-            field: 'column2',
-            headerName: 'Text'
-        },
-        {
-            field: 'column3',
-            headerName: 'Text'
-        },
-        {
-            field: 'column4',
-            headerName: 'Text'
-        },
-        {
-            field: 'column5',
-            headerName: 'Text'
-        },
-        {
-            field: 'column6',
-            headerName: 'Text'
-        },
-        {
-            field: 'column7',
-            headerName: 'Text'
-        },
-        {
-            field: 'column8',
-            headerName: 'Text'
-        },
-        {
-            field: 'column9',
-            headerName: 'Text'
-        }
-    ];
+        ...Array.from({ length: 9 }, (_, i) => ({
+            field: 'column' + (i + 1),
+            headerName: this.t().headerText
+        }))
+    ]);
 
-    protected readonly rowData = Array.from({ length: 100 }, (_, index) => ({
-        column0: 'Link ' + index,
-        column1: 'Text ' + index,
-        column2: 'Text ' + index,
-        column3: 'Text ' + index,
-        column4: 'Text ' + index,
-        column5: 'Text ' + index,
-        column6: 'Text ' + index,
-        column7: 'Text ' + index,
-        column8: 'Text ' + index,
-        column9: 'Text ' + index
-    }));
+    protected readonly rowData = computed(() =>
+        Array.from({ length: 100 }, (_, index) => ({
+            column0: this.t().linkN(index),
+            ...Object.fromEntries(Array.from({ length: 9 }, (_, i) => ['column' + (i + 1), 'Text ' + index]))
+        }))
+    );
 
     protected onFirstDataRendered({ api }: FirstDataRenderedEvent): void {
         api.forEachNode((node) => {

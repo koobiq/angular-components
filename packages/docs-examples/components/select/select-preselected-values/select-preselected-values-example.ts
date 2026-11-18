@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Selected preselected values
@@ -10,7 +12,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [KbqSelectModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
-            <kbq-select placeholder="Placeholder" multiple [showPreselectedValues]="true" [formControl]="control">
+            <kbq-select multiple [placeholder]="t().placeholder" [showPreselectedValues]="true" [formControl]="control">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
@@ -33,6 +35,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectPreselectedValuesExample {
-    options = Array.from({ length: 15 }).map((_, i) => `Option #${i}`);
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    readonly options = Array.from({ length: 15 }, (_, i) => 'Option #' + i);
     control = new FormControl(['Option #101', 'Option #102']);
 }

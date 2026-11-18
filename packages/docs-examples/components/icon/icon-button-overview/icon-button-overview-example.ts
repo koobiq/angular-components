@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { KbqCheckbox } from '@koobiq/components/checkbox';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Icon-button
@@ -14,7 +16,7 @@ import { KbqIconButton } from '@koobiq/components/icon';
         <div class="layout-margin-bottom-l">
             <i
                 kbq-icon-button="kbq-magnifying-glass_16"
-                aria-label="Search"
+                [attr.aria-label]="t().search"
                 [color]="colors.Theme"
                 [disabled]="disabled()"
             ></i>
@@ -25,6 +27,8 @@ import { KbqIconButton } from '@koobiq/components/icon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IconButtonOverviewExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly disabled = model(false);
     colors = KbqComponentColors;
 }

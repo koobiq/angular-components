@@ -122,7 +122,6 @@ export const DATA_OBJECT = {
                 <div kbq-select-matcher style="width: 100%" [useDefaultHandlers]="false">
                     <input
                         #input="kbqInput"
-                        autocomplete="off"
                         kbqInput
                         type="text"
                         [(ngModel)]="selected"

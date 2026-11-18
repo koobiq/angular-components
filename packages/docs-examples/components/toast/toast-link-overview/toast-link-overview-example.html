@@ -1,15 +1,15 @@
 <ng-template #toastWithInlineLinkTemplate let-toast>
     <p>
-        Запрос
+        {{ t().request }}
         <a kbqLink pseudo>REQ-20180101-02</a>
-        назначен на вас
+        {{ t().assignedToYou }}
     </p>
 </ng-template>
 
 <ng-template #toastActionsTemplate let-toast>
-    <a kbqLink pseudo (click)="toast.close()">Восстановить</a>
+    <a kbqLink pseudo (click)="toast.close()">{{ t().restore }}</a>
 </ng-template>
 
 <button kbq-button (click)="showToastWithInlineLink(toastWithInlineLinkTemplate, toastActionsTemplate)">
-    Тост с гиперссылкой в заголовке
+    {{ t().withInlineLink }}
 </button>

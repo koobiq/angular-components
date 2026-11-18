@@ -5,7 +5,8 @@ import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KBQ_NAVBAR_ITEM_TRIGGER, KbqNavbarItemTrigger, KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
-import { injectExampleText } from '../localized-data';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * A custom interactive component: the host element itself is the trigger — it owns the popover and the item's
@@ -79,7 +80,7 @@ export class ExampleNavbarNotifications implements KbqNavbarItemTrigger {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarItemCustomComponentExample {
-    protected readonly text = injectExampleText();
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     protected readonly popUpPlacements = PopUpPlacements;
 }

@@ -10,18 +10,12 @@ import {
     kbqAgGridSettingsMenuSortItem,
     KbqAgGridThemeModule
 } from '@koobiq/ag-grid-angular-theme';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community';
+import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
-
-// Row heights of --kbq-size-3xl and --kbq-size-4xl, the default row height of the theme.
-const EXAMPLE_COMPACT_DENSITY = { id: 'compact', label: 'Compact', rowHeight: 32 };
-const EXAMPLE_NORMAL_DENSITY = { id: 'normal', label: 'Normal', rowHeight: 40 };
-
-const EXAMPLE_SEVERITIES = ['Critical', 'High', 'Medium', 'Low'];
-const EXAMPLE_STATUSES = ['New', 'In progress', 'Resolved'];
-const EXAMPLE_ATTACK_TYPES = ['Brute force', 'Phishing', 'Port scan', 'Malware', 'DNS tunneling'];
 
 /**
  * @title AG Grid with `KbqAgGridSettingsMenu` directive
@@ -36,11 +30,11 @@ const EXAMPLE_ATTACK_TYPES = ['Brute force', 'Phishing', 'Port scan', 'Malware',
             kbqAgGridToNextRowByTab
             kbqAgGridSettingsMenu
             [alwaysMultiSort]="true"
-            [kbqAgGridSettingsMenuItems]="settingsMenuItems"
+            [kbqAgGridSettingsMenuItems]="settingsMenuItems()"
             [rowHeight]="density().rowHeight"
             [style.height.px]="400"
-            [columnDefs]="columnDefs"
-            [rowData]="rowData"
+            [columnDefs]="columnDefs()"
+            [rowData]="rowData()"
         />
     `,
     providers: [
@@ -51,20 +45,28 @@ const EXAMPLE_ATTACK_TYPES = ['Brute force', 'Phishing', 'Port scan', 'Malware',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridSettingsMenuExample {
-    protected readonly density = signal(EXAMPLE_NORMAL_DENSITY);
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    protected readonly settingsMenuItems: KbqAgGridSettingsMenuItems = [
+    // Row heights of --kbq-size-3xl and --kbq-size-4xl, the default row height of the theme.
+    private readonly densities = computed(() => [
+        { id: 'compact', label: this.t().compact, rowHeight: 32 },
+        { id: 'normal', label: this.t().normal, rowHeight: 40 }
+    ]);
+
+    protected readonly density = signal(this.densities()[1]);
+
+    protected readonly settingsMenuItems = computed<KbqAgGridSettingsMenuItems>(() => [
         kbqAgGridSettingsMenuColumnsItem(),
         kbqAgGridSettingsMenuSortItem(),
         kbqAgGridSettingsMenuSeparator(),
         // A custom item: the menu has no built-in density setting.
         {
             id: 'density',
-            label: 'Density',
+            label: this.t().density,
             icon: 'kbq-bars-sort-center_16',
             mode: 'single',
             value: computed(() => this.density().label),
-            items: [EXAMPLE_COMPACT_DENSITY, EXAMPLE_NORMAL_DENSITY].map((density) => ({
+            items: this.densities().map((density) => ({
                 id: density.id,
                 label: density.label,
                 checked: computed(() => this.density() === density),
@@ -72,30 +74,32 @@ export class AgGridSettingsMenuExample {
                 action: () => this.density.set(density)
             }))
         }
-    ];
+    ]);
 
-    protected readonly columnDefs: ColDef[] = [
+    protected readonly columnDefs = computed<ColDef[]>(() => [
         {
             field: 'incidentId',
-            headerName: 'Incident ID',
+            headerName: this.t().incidentId,
             pinned: 'left',
             lockVisible: true,
             lockPinned: true,
             width: 120
         },
-        { field: 'severity', headerName: 'Severity', width: 110 },
-        { field: 'status', headerName: 'Status', width: 120 },
-        { field: 'attackType', headerName: 'Attack type', width: 170 },
-        { field: 'sourceIp', headerName: 'Source IP', hide: true, width: 150 },
-        { field: 'affectedHost', headerName: 'Affected host', hide: true, width: 150 }
-    ];
+        { field: 'severity', headerName: this.t().severity, width: 110 },
+        { field: 'status', headerName: this.t().status, width: 120 },
+        { field: 'attackType', headerName: this.t().attackType, width: 170 },
+        { field: 'sourceIp', headerName: this.t().sourceIp, hide: true, width: 150 },
+        { field: 'affectedHost', headerName: this.t().affectedHost, hide: true, width: 150 }
+    ]);
 
-    protected readonly rowData = Array.from({ length: 30 }, (_, index) => ({
-        incidentId: `INC-${1001 + index}`,
-        severity: EXAMPLE_SEVERITIES[index % EXAMPLE_SEVERITIES.length],
-        status: EXAMPLE_STATUSES[index % EXAMPLE_STATUSES.length],
-        attackType: EXAMPLE_ATTACK_TYPES[index % EXAMPLE_ATTACK_TYPES.length],
-        sourceIp: `192.0.2.${index + 1}`,
-        affectedHost: `srv-0${(index % 9) + 1}`
-    }));
+    protected readonly rowData = computed(() =>
+        Array.from({ length: 30 }, (_, index) => ({
+            incidentId: `INC-${1001 + index}`,
+            severity: this.t().severities[index % this.t().severities.length],
+            status: this.t().statuses[index % this.t().statuses.length],
+            attackType: this.t().attackTypes[index % this.t().attackTypes.length],
+            sourceIp: `192.0.2.${index + 1}`,
+            affectedHost: `srv-0${(index % 9) + 1}`
+        }))
+    );
 }

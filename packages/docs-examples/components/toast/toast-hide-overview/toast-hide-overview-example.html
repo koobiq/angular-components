@@ -5,12 +5,12 @@
 </ng-template>
 
 <ng-template #toastActionInfo let-toast>
-    <ng-container [ngTemplateOutlet]="action" [ngTemplateOutletContext]="{ $implicit: toast, text: 'Обновить' }" />
+    <ng-container [ngTemplateOutlet]="action" [ngTemplateOutletContext]="{ $implicit: toast, text: t().refresh }" />
 </ng-template>
 <ng-template #toastActionWarning let-toast>
     <ng-container
         [ngTemplateOutlet]="action"
-        [ngTemplateOutletContext]="{ $implicit: toast, text: 'Сменить пароль' }"
+        [ngTemplateOutletContext]="{ $implicit: toast, text: t().changePassword }"
     />
 </ng-template>
 
@@ -19,20 +19,20 @@
         <kbq-progress-bar class="layout-margin-top-m layout-margin-bottom-m" [mode]="'indeterminate'" />
     } @else {
         <div>
-            <span>Импорт файлов завершен</span>
+            <span>{{ t().importComplete }}</span>
             <i kbq-icon="kbq-circle-check_16" class="kbq-success"></i>
         </div>
     }
 </ng-template>
 
 <ng-template #toastPermanentActionsTemplate let-toast>
-    <a kbqLink pseudo (click)="toast.close()">Отмена</a>
+    <a kbqLink pseudo (click)="toast.close()">{{ t().cancel }}</a>
 </ng-template>
 
 <div style="gap: 16px" class="layout-row">
-    <button kbq-button (click)="showDefaultToast(toastActionInfo)">По таймеру</button>
+    <button kbq-button (click)="showDefaultToast(toastActionInfo)">{{ t().byTimer }}</button>
     <button kbq-button (click)="showPermanentToast(toastPermanentContentTemplate, toastPermanentActionsTemplate)">
-        По команде
+        {{ t().onCommand }}
     </button>
-    <button kbq-button (click)="showWarningToast(toastActionWarning)">Ховер или фокус</button>
+    <button kbq-button (click)="showWarningToast(toastActionWarning)">{{ t().hoverOrFocus }}</button>
 </div>

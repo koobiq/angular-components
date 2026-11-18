@@ -6,8 +6,12 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 export class FileNode {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     children: FileNode[];
     name: string;
     type: any;
@@ -127,7 +131,7 @@ export const DATA_OBJECT = {
 
                 <div class="layout-row layout-align-space-between-center">
                     <span [innerHTML]="treeControl.getViewValue(node)"></span>
-                    <kbq-badge badgeColor="theme" [compact]="true">badge</kbq-badge>
+                    <kbq-badge badgeColor="theme" [compact]="true">{{ t().badge }}</kbq-badge>
                 </div>
 
                 <kbq-option-action
@@ -164,6 +168,8 @@ export const DATA_OBJECT = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeActionButtonExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     popUpPlacements = PopUpPlacements;
 
     treeControl: FlatTreeControl<FileFlatNode>;

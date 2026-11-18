@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, model, signal, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DestroyRef,
+    effect,
+    inject,
+    model,
+    signal,
+    viewChild
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqContentPanelModule } from '@koobiq/components/content-panel';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
@@ -9,6 +18,8 @@ import {
 } from '@koobiq/components/file-upload';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqToggleChange, KbqToggleComponent } from '@koobiq/components/toggle';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title File-upload Dropzone
@@ -36,7 +47,7 @@ import { KbqToggleChange, KbqToggleComponent } from '@koobiq/components/toggle';
             </kbq-file-upload>
         } @else {
             <kbq-empty-state>
-                <div kbq-empty-state-text>Drop files here</div>
+                <div kbq-empty-state-text>{{ t().dropFilesHere }}</div>
             </kbq-empty-state>
         }
     `,
@@ -55,6 +66,8 @@ import { KbqToggleChange, KbqToggleComponent } from '@koobiq/components/toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadDropzoneExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly isActive = signal(false);
     protected readonly files = model<KbqFileItem[]>([]);
 
@@ -68,7 +81,7 @@ export class FileUploadDropzoneExample {
             this.files.set(files.map((file) => ({ file })));
         });
 
-        this.dropzoneService.init({ title: 'Drop files here' });
+        effect(() => this.dropzoneService.init({ title: this.t().dropFilesHere }));
 
         this.destroyRef.onDestroy(() => {
             sub.unsubscribe();

@@ -1,6 +1,8 @@
 import { afterNextRender, ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Textarea error state
@@ -10,10 +12,10 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     imports: [KbqTextareaModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
-            <kbq-label>Label</kbq-label>
-            <textarea kbqTextarea placeholder="Placeholder" [formControl]="control"></textarea>
-            <kbq-hint>Please enter at least 10 characters</kbq-hint>
-            <kbq-error>Minimum 10 characters</kbq-error>
+            <kbq-label>{{ t().label }}</kbq-label>
+            <textarea kbqTextarea [placeholder]="t().placeholder" [formControl]="control"></textarea>
+            <kbq-hint>{{ t().hint10 }}</kbq-hint>
+            <kbq-error>{{ t().min10 }}</kbq-error>
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,6 +24,8 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     }
 })
 export class TextareaErrorStateExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly control = new FormControl('', [Validators.minLength(10), Validators.required]);
 
     constructor() {

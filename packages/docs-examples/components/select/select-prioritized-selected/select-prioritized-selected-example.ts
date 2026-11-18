@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Selected prioritized selected
@@ -9,8 +11,13 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [KbqSelectModule],
     template: `
         <kbq-form-field>
-            <kbq-select placeholder="Placeholder" multiple [(value)]="selected" (openedChange)="openedChange($event)">
-                @for (option of options; track option) {
+            <kbq-select
+                multiple
+                [placeholder]="t().placeholder"
+                [(value)]="selected"
+                (openedChange)="openedChange($event)"
+            >
+                @for (option of options(); track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
 
@@ -32,11 +39,19 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectPrioritizedSelectedExample {
-    options = Array.from({ length: 15 }).map((_, i) => `Option #${i}`);
-    selected = [this.options.at(-1)!, this.options.at(-2)!];
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    readonly options = signal<string[]>([]);
+    selected: string[] = [];
 
     constructor() {
-        this.groupSelectedOptions();
+        const all = Array.from({ length: 15 }, (_, i) => 'Option #' + i);
+
+        if (!this.selected.length) {
+            this.selected = [all.at(-1)!, all.at(-2)!];
+        }
+
+        this.options.set(this.selected.concat(all.filter((option) => !this.selected.includes(option))));
     }
 
     openedChange(isOpened: boolean): void {
@@ -44,8 +59,8 @@ export class SelectPrioritizedSelectedExample {
     }
 
     private groupSelectedOptions(): void {
-        const unselected = this.options.filter((option) => !this.selected.includes(option));
+        const unselected = this.options().filter((option) => !this.selected.includes(option));
 
-        this.options = this.selected.concat(unselected);
+        this.options.set(this.selected.concat(unselected));
     }
 }

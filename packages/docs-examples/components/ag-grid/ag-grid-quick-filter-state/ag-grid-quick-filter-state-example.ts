@@ -7,8 +7,10 @@ import {
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community';
+import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -20,7 +22,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     imports: [AgGridModule, KbqAgGridThemeModule, FormsModule, KbqFormFieldModule, KbqInputModule],
     template: `
         <kbq-form-field [style.width.px]="300">
-            <input kbqInput placeholder="Quick filter" [(ngModel)]="filter" />
+            <input kbqInput [placeholder]="t().quickFilter" [(ngModel)]="filter" />
             <kbq-cleaner (click)="quickFilterState.reset()" />
         </kbq-form-field>
 
@@ -51,21 +53,15 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridQuickFilterStateExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly filter = model('');
-    readonly columnDefs: ColDef[] = [
-        { field: 'column0', headerName: 'Column 0', width: 130 },
-        { field: 'column1', headerName: 'Column 1', width: 130 },
-        { field: 'column2', headerName: 'Column 2', width: 130 },
-        { field: 'column3', headerName: 'Column 3', width: 130 },
-        { field: 'column4', headerName: 'Column 4', width: 130 },
-        { field: 'column5', headerName: 'Column 5', width: 130 }
-    ];
-    readonly rowData = Array.from({ length: 100 }, (_, index) => ({
-        column0: 'Text ' + index,
-        column1: 'Text ' + index,
-        column2: 'Text ' + index,
-        column3: 'Text ' + index,
-        column4: 'Text ' + index,
-        column5: 'Text ' + index
+    readonly columnDefs: ColDef[] = Array.from({ length: 6 }, (_, i) => ({
+        field: 'column' + i,
+        headerName: 'Column ' + i,
+        width: 130
     }));
+    readonly rowData = Array.from({ length: 100 }, (_, index) =>
+        Object.fromEntries(Array.from({ length: 6 }, (_, i) => ['column' + i, 'Text ' + index]))
+    );
 }

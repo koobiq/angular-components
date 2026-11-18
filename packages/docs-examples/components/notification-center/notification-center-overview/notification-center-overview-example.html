@@ -1,26 +1,26 @@
 <kbq-dropdown #issuesDropdown="kbqDropdown">
-    <a href="#" kbq-dropdown-item (click)="selected = items.Issues">{{ text().issueStatuses.open }}</a>
-    <a href="#" kbq-dropdown-item (click)="selected = items.Issues">{{ text().issueStatuses.inProgress }}</a>
-    <a href="#" kbq-dropdown-item (click)="selected = items.Issues">{{ text().issueStatuses.complete }}</a>
-    <a href="#" kbq-dropdown-item (click)="selected = items.Issues">{{ text().issueStatuses.closed }}</a>
+    <a href="#" kbq-dropdown-item (click)="selected = items.Issues">{{ t().issueStatuses.open }}</a>
+    <a href="#" kbq-dropdown-item (click)="selected = items.Issues">{{ t().issueStatuses.inProgress }}</a>
+    <a href="#" kbq-dropdown-item (click)="selected = items.Issues">{{ t().issueStatuses.complete }}</a>
+    <a href="#" kbq-dropdown-item (click)="selected = items.Issues">{{ t().issueStatuses.closed }}</a>
 </kbq-dropdown>
 
 <kbq-dropdown #securityDropdown="kbqDropdown">
-    <a href="#" kbq-dropdown-item (click)="selected = items.Security">{{ text().securitySections.identity }}</a>
-    <a href="#" kbq-dropdown-item (click)="selected = items.Security">{{ text().securitySections.membersAndGuests }}</a>
-    <a href="#" kbq-dropdown-item (click)="selected = items.Security">{{ text().securitySections.dataRetention }}</a>
+    <a href="#" kbq-dropdown-item (click)="selected = items.Security">{{ t().securitySections.identity }}</a>
+    <a href="#" kbq-dropdown-item (click)="selected = items.Security">{{ t().securitySections.membersAndGuests }}</a>
+    <a href="#" kbq-dropdown-item (click)="selected = items.Security">{{ t().securitySections.dataRetention }}</a>
 </kbq-dropdown>
 
 <ng-template #captionTemplate>
     <span>
-        {{ text().richCaption }}
+        {{ t().richCaption }}
         <a kbqLink href="">Server-CRIT-01</a>
     </span>
 </ng-template>
 
 <ng-template #actionsTemplate>
-    <a kbqLink pseudo>{{ text().action1 }}</a>
-    <a kbqLink pseudo>{{ text().action2 }}</a>
+    <a kbqLink pseudo>{{ t().action1 }}</a>
+    <a kbqLink pseudo>{{ t().action2 }}</a>
 </ng-template>
 
 <div class="layout-row" style="margin: -20px; height: 498px">
@@ -36,7 +36,7 @@
                     <svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M0 25.6C0 28.4045 0 29.9635 1.01826 30.9817C2.03651 32 3.59554 32 6.4 32H25.6C28.4045 32 29.9635 32 30.9817 30.9817C32 29.9635 32 28.4045 32 25.6V6.4C32 3.59554 32 2.03651 30.9817 1.01826C29.9635 0 28.4045 0 25.6 0H6.4C3.59554 0 2.03651 0 1.01826 1.01826C0 2.03651 0 3.59554 0 6.4V25.6Z" fill="#FF0000" fill-rule="evenodd"/><path d="M14.9774 16L11.1933 19.7841L7.40918 16L11.1933 12.267L14.9774 16ZM19.7842 20.858L16.0512 24.5909L12.2671 20.858L16.0512 17.0739L19.7842 20.858ZM19.7842 11.1932L16.0512 14.9261L12.2671 11.1932L16.0512 7.40909L19.7842 11.1932ZM24.591 16L20.858 19.7841L17.1251 16L20.858 12.267L24.591 16Z" fill="white"/></svg>
                 </div>
 
-                <div kbq-navbar-title>{{ text().appName }}</div>
+                <div kbq-navbar-title>{{ t().appName }}</div>
             </a>
 
             <a
@@ -46,7 +46,7 @@
                 (click)="selected = items.Assets"
             >
                 <i kbq-icon="kbq-diamond_16" color="contrast"></i>
-                <div kbq-navbar-title>{{ text().assets }}</div>
+                <div kbq-navbar-title>{{ t().assets }}</div>
             </a>
 
             <kbq-navbar-item
@@ -55,7 +55,7 @@
                 [kbqDropdownTriggerFor]="issuesDropdown"
             >
                 <i kbq-icon="kbq-diamond_16" color="contrast"></i>
-                <div kbq-navbar-title>{{ text().issues }}</div>
+                <div kbq-navbar-title>{{ t().issues }}</div>
             </kbq-navbar-item>
 
             <a
@@ -65,7 +65,7 @@
                 (click)="selected = items.Incidents"
             >
                 <i kbq-icon="kbq-diamond_16" color="contrast"></i>
-                <div kbq-navbar-title>{{ text().incidents }}</div>
+                <div kbq-navbar-title>{{ t().incidents }}</div>
             </a>
 
             <a
@@ -75,7 +75,7 @@
                 (click)="selected = items.Policies"
             >
                 <i kbq-icon="kbq-diamond_16" color="contrast"></i>
-                <div kbq-navbar-title>{{ text().policies }}</div>
+                <div kbq-navbar-title>{{ t().policies }}</div>
             </a>
 
             <kbq-navbar-item
@@ -84,7 +84,7 @@
                 [kbqDropdownTriggerFor]="securityDropdown"
             >
                 <i kbq-icon="kbq-diamond_16" color="contrast"></i>
-                <div kbq-navbar-title>{{ text().security }}</div>
+                <div kbq-navbar-title>{{ t().security }}</div>
             </kbq-navbar-item>
         </kbq-navbar-container>
 
@@ -100,7 +100,7 @@
                     kbq-icon="{{ notificationService.silentMode() ? 'kbq-bell-slash_16' : 'kbq-bell_16' }}"
                     color="contrast"
                 ></i>
-                <div kbq-navbar-title>{{ text().notifications }}</div>
+                <div kbq-navbar-title>{{ t().notifications }}</div>
                 @if (trigger.unreadItemsCounter(); as unreadItems) {
                     <kbq-badge
                         [badgeColor]="notificationService.silentMode() ? 'fade-contrast' : 'error'"
@@ -113,12 +113,12 @@
 
             <a href="#" kbq-navbar-item>
                 <i kbq-icon="kbq-circle_16" color="success"></i>
-                <div kbq-navbar-title>{{ text().systemMonitor }}</div>
+                <div kbq-navbar-title>{{ t().systemMonitor }}</div>
             </a>
 
             <a href="#" kbq-navbar-item>
                 <i kbq-icon="kbq-user_16" color="contrast"></i>
-                <span kbq-navbar-title>{{ text().administrator }}</span>
+                <span kbq-navbar-title>{{ t().administrator }}</span>
             </a>
         </kbq-navbar-container>
 
@@ -128,7 +128,7 @@
     <div class="layout-fill">
         <kbq-top-bar>
             <div class="layout-row layout-align-center-center" kbqTopBarContainer placement="start">
-                <div class="kbq-truncate-line" kbqTopBarTitle>{{ text().pageTitle }}</div>
+                <div class="kbq-truncate-line" kbqTopBarTitle>{{ t().pageTitle }}</div>
             </div>
 
             <div kbqTopBarSpacer></div>
@@ -153,12 +153,12 @@
                     src="https://koobiq.io/assets/images/{{ currentTheme() }}/empty_192.webp"
                     height="80"
                     width="80"
-                    [alt]="text().emptyState.image"
+                    [alt]="t().emptyState.image"
                     [srcset]="srcSet()"
                 />
             </div>
-            <div kbq-empty-state-title>{{ text().emptyState.title }}</div>
-            <div kbq-empty-state-text>{{ text().emptyState.text }}</div>
+            <div kbq-empty-state-title>{{ t().emptyState.title }}</div>
+            <div kbq-empty-state-text>{{ t().emptyState.text }}</div>
         </kbq-empty-state>
     </div>
 </div>

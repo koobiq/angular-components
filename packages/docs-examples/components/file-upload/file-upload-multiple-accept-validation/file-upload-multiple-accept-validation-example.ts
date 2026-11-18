@@ -4,6 +4,8 @@ import { FileValidators, KbqFileTypeSpecifier } from '@koobiq/components/core';
 import { KbqFileItem, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title File upload multiple accept validation
@@ -26,7 +28,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 }
             </ng-template>
 
-            <kbq-hint>Files with TXT extension are allowed</kbq-hint>
+            <kbq-hint>{{ t().filesTxtAllowed }}</kbq-hint>
 
             @for (control of fileList.controls; track $index) {
                 <kbq-hint color="error">
@@ -40,8 +42,12 @@ import { KbqIconModule } from '@koobiq/components/icon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadMultipleAcceptValidationExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected accept: KbqFileTypeSpecifier = ['.txt'];
-    protected fileExtensionMismatchErrorMessage = 'Provide valid extension';
+    protected get fileExtensionMismatchErrorMessage(): string {
+        return this.t().provideValidExtension;
+    }
 
     protected readonly fileList = new FormArray<FormControl<KbqFileItem | null>>([]);
 

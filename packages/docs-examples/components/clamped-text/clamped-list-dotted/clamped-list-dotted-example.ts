@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
 import { KbqClampedList, KbqClampedListTrigger } from '@koobiq/components/clamped-text';
 import { KbqLink } from '@koobiq/components/link';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Clamped-list dotted
@@ -14,7 +16,7 @@ import { KbqLink } from '@koobiq/components/link';
                 #clampedList="kbqClampedList"
                 kbqClampedList
                 class="layout-row layout-wrap"
-                [items]="countries"
+                [items]="countries()"
                 [(isCollapsed)]="collapsed"
             >
                 @for (item of clampedList.visibleItems(); track item) {
@@ -66,32 +68,9 @@ import { KbqLink } from '@koobiq/components/link';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClampedListDottedExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly collapsed = model(true);
-    protected countries = [
-        'Australia',
-        'Austria',
-        'Argentina',
-        'Belgium',
-        'Brazil',
-        'United Kingdom',
-        'Germany',
-        'Greece',
-        'Denmark',
-        'Egypt',
-        'India',
-        'Spain',
-        'Italy',
-        'Canada',
-        'Mexico',
-        'Netherlands',
-        'Norway',
-        'Poland',
-        'Portugal',
-        'Russia',
-        'United States',
-        'Thailand',
-        'Turkey',
-        'France',
-        'Japan'
-    ];
+
+    protected readonly countries = computed(() => this.t().countries);
 }

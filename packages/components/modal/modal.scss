@@ -106,6 +106,7 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     overflow: hidden;
+    overflow-wrap: break-word;
 
     padding-top: var(--kbq-size-3xs);
     padding-bottom: var(--kbq-size-3xs);
@@ -123,6 +124,7 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     overflow: hidden;
+    overflow-wrap: break-word;
     text-overflow: ellipsis;
 }
 

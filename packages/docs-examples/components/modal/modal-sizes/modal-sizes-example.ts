@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalService, ModalSize } from '@koobiq/components/modal';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Modal sizes
@@ -28,17 +30,19 @@ import { KbqModalService, ModalSize } from '@koobiq/components/modal';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalSizesExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     private readonly modalService = inject(KbqModalService);
 
     readonly modalSize = ModalSize;
 
     showModal(kbqSize: ModalSize): void {
         this.modalService.confirm({
-            kbqAriaLabel: 'Save changes',
+            kbqAriaLabel: this.t().saveChangesAria,
             kbqSize,
-            kbqContent: 'Save changes?',
-            kbqOkText: 'Save',
-            kbqCancelText: 'Cancel',
+            kbqContent: this.t().saveChangesContent,
+            kbqOkText: this.t().save,
+            kbqCancelText: this.t().cancel,
             kbqOkClick: () => console.log('Save'),
             kbqCancelClick: () => console.log('Cancel')
         });
@@ -46,11 +50,11 @@ export class ModalSizesExample {
 
     showCustomModal(): void {
         this.modalService.confirm({
-            kbqAriaLabel: 'Save changes',
+            kbqAriaLabel: this.t().saveChangesAria,
             kbqWidth: '600px',
-            kbqContent: 'Save changes?',
-            kbqOkText: 'Save',
-            kbqCancelText: 'Cancel',
+            kbqContent: this.t().saveChangesContent,
+            kbqOkText: this.t().save,
+            kbqCancelText: this.t().cancel,
             kbqOkClick: () => console.log('Save'),
             kbqCancelClick: () => console.log('Cancel')
         });
