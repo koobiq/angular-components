@@ -24,6 +24,7 @@ import { TRANSLATIONS } from './l10n';
         <kbq-form-field>
             <kbq-label>{{ t().label }}</kbq-label>
             <kbq-datetime #datetime [min]="min" [max]="max" [formControl]="control" />
+            <kbq-cleaner />
             <kbq-datepicker-toggle-icon kbqSuffix [for]="datetime.datepicker()" />
 
             @if (control.hasError('required')) {
