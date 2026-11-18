@@ -55,12 +55,10 @@ const config: Config = {
     reportInvalidScopeDisables: true,
     reportDescriptionlessDisables: true,
     reportUnscopedDisables: true,
-    plugins: [
-        './tools/stylelint/no-unused-use.mts',
-        './tools/stylelint/use-block.mts'
-    ],
+    plugins: ['./tools/stylelint/no-unused-use.mts'],
     extends: [
         'stylelint-config-standard-scss',
+        './tools/stylelint/order.mts',
         // should be last
         'stylelint-prettier/recommended'
     ],
@@ -87,12 +85,34 @@ const config: Config = {
         // The packages add their prefixes below
         'selector-class-pattern': makeSelectorClassPatternOptions(),
         'keyframes-name-pattern': makeKeyframesNamePattern(),
-        // The layout of a block is up to its author, a blank line separates groups of declarations, and prettier
-        // formats the rest
-        'declaration-empty-line-before': null,
-        'at-rule-empty-line-before': null,
+        // The `@use` and `@forward` statements of a file and the `@include` and `@extend` calls of a block read as lists:
+        // an empty line before them, none between two of the same kind. Sass itself keeps `@use` and `@forward` at the
+        // top of a file
+        'at-rule-empty-line-before': [
+            'always',
+            {
+                except: ['blockless-after-same-name-blockless', 'first-nested'],
+                ignore: ['after-comment'],
+                ignoreAtRules: ['/^(?!include$|extend$|use$|forward$)/']
+            }
+        ],
+        // An empty line before a declaration that follows anything but a declaration, such as the calls; the empty lines
+        // between the declarations are `order/properties-order`'s
+        'declaration-empty-line-before': [
+            'always',
+            { except: ['first-nested'], ignore: ['after-declaration', 'after-comment', 'inside-single-line-block'] }
+        ],
+        // The custom properties and the `$` variables of a block are lists of their own as well: an empty line before
+        // each list, the empty lines inside it are up to its author
+        'custom-property-empty-line-before': [
+            'always',
+            {
+                except: ['first-nested'],
+                ignore: ['after-comment', 'after-custom-property', 'inside-single-line-block']
+            }
+        ],
+        // A comment goes where its author puts it, and prettier formats the rest
         'comment-empty-line-before': null,
-        'custom-property-empty-line-before': null,
         // A pair of longhands reads clearer than the `inset` or `flex-flow` it would be folded into
         'declaration-block-no-redundant-longhand-properties': null,
         // `:not(.a):not(.b)` weighs two classes and `:not(.a, .b)` one, so the fix would change which rule wins
@@ -113,15 +133,21 @@ const config: Config = {
         'scss/selector-no-union-class-name': true,
         'scss/no-unused-private-members': true,
         'scss/double-slash-comment-empty-line-before': null,
-        'scss/dollar-variable-empty-line-before': null,
+        // As `custom-property-empty-line-before` above
+        'scss/dollar-variable-empty-line-before': [
+            'always',
+            {
+                except: ['first-nested'],
+                ignore: ['after-comment', 'after-dollar-variable', 'inside-single-line-block']
+            }
+        ],
         // `@include name()` and `@include name` are the same call
         'scss/at-mixin-argumentless-call-parentheses': null,
         // A namespace says where a name comes from, and only with one `koobiq/no-unused-use` can tell what is read
         'scss/at-use-no-unnamespaced': true,
 
         // plugin:koobiq
-        'koobiq/no-unused-use': true,
-        'koobiq/use-block': true
+        'koobiq/no-unused-use': true
     },
     overrides: [
         // packages/components

@@ -1,11 +1,11 @@
 .example-title-vertical-overflow {
     display: -webkit-box;
+    -webkit-box-orient: vertical;
 
     max-width: 280px;
     overflow: hidden;
-    overflow-wrap: break-word;
-    text-overflow: ellipsis;
 
-    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    overflow-wrap: break-word;
     -webkit-line-clamp: 2;
 }

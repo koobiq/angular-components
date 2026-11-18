@@ -12,8 +12,8 @@
     }
 
     .kbq-accordion-item {
-        background: var(--kbq-accordion-item-default-background);
         color: var(--kbq-accordion-item-default-text-color);
+        background: var(--kbq-accordion-item-default-background);
 
         & .kbq-accordion-trigger__icon {
             color: var(--kbq-accordion-item-default-icon-color);
@@ -22,11 +22,11 @@
 
     .kbq-accordion-trigger {
         width: 100%;
+
+        color: var(--kbq-accordion-item-default-text-color);
         background: transparent;
         border: none;
         outline: none;
-
-        color: var(--kbq-accordion-item-default-text-color);
 
         &:hover:not([data-disabled='true']) {
             cursor: pointer;

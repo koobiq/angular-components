@@ -2,20 +2,22 @@
 @use '../core/styles/common/squircle';
 
 .kbq-code-block {
-    display: flex;
-    flex-direction: column;
+    @include squircle.kbq-squircle(var(--kbq-code-block-size-container-border-radius));
+
     position: relative;
 
-    border-width: var(--kbq-code-block-size-container-border-width);
-    border-style: solid;
-    @include squircle.kbq-squircle(var(--kbq-code-block-size-container-border-radius));
+    display: flex;
+    flex-direction: column;
 
     box-sizing: border-box;
 
-    hyphens: none;
     -ms-hyphens: none;
     -moz-hyphens: none;
     -webkit-hyphens: none;
+    hyphens: none;
+
+    border-width: var(--kbq-code-block-size-container-border-width);
+    border-style: solid;
 
     .kbq-code-block__header {
         display: flex;
@@ -23,17 +25,16 @@
         padding: var(--kbq-size-s) var(--kbq-size-m);
 
         .kbq-code-block__header-tabs {
-            overflow: hidden;
             flex-grow: 1;
+            overflow: hidden;
         }
     }
 
     .kbq-code-block__actionbar {
-        display: flex;
-        justify-content: right;
-        align-items: center;
-
         z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: right;
 
         .kbq-code-block__actionbar__button-stack {
             display: flex;
@@ -54,30 +55,30 @@
     }
 
     .kbq-code-block__main {
+        @include squircle.kbq-squircle(var(--kbq-code-block-size-container-border-radius));
+
         flex-grow: 1;
         flex-direction: column;
 
-        @include squircle.kbq-squircle(var(--kbq-code-block-size-container-border-radius));
-
         &.cdk-keyboard-focused {
-            outline-style: solid;
             outline-width: var(--kbq-code-block-size-container-border-width-focused);
+            outline-style: solid;
             outline-offset: -1px;
         }
 
         .kbq-code-block__pre {
-            margin: 0;
             flex-grow: 1;
+            margin: 0;
         }
 
         .kbq-code-block__code {
             --kbq-code-block-line-numbers-gap: var(--kbq-code-block-size-with-header-content-content-gap-horizontal);
 
-            tab-size: var(--kbq-code-block-tab-size);
             padding: var(--kbq-code-block-size-with-header-content-padding-top)
                 var(--kbq-code-block-size-with-header-content-padding-horizontal)
                 var(--kbq-code-block-size-with-header-content-padding-bottom)
                 var(--kbq-code-block-size-with-header-content-padding-horizontal);
+            tab-size: var(--kbq-code-block-tab-size);
 
             &:focus-visible {
                 outline: none;
@@ -113,9 +114,12 @@
             &::before {
                 // The empty alternative text keeps the numbers from assistive technology.
                 content: counter(kbq-code-block-line) / '';
+
                 display: inline-block;
+
                 width: var(--kbq-code-block-line-numbers-width);
                 margin-inline-end: var(--kbq-code-block-line-numbers-gap);
+
                 text-align: end;
                 // Otherwise the number would take the outdent of its line.
                 text-indent: 0;
@@ -165,17 +169,21 @@
         }
 
         .kbq-code-block__actionbar {
-            display: none;
+            @include squircle.kbq-squircle(var(--kbq-code-block-size-container-border-radius), border-top-right-radius);
+
             position: absolute;
             top: 0;
             right: 0;
+
+            display: none;
+
             padding: var(--kbq-size-s) var(--kbq-size-s) 0 0;
-            @include squircle.kbq-squircle(var(--kbq-code-block-size-container-border-radius), border-top-right-radius);
 
             .kbq-code-block__actionbar__button-stack {
+                @include squircle.kbq-squircle(calc(var(--kbq-size-border-radius) + 1px));
+
                 border-width: 1px;
                 border-style: solid;
-                @include squircle.kbq-squircle(calc(var(--kbq-size-border-radius) + 1px));
             }
         }
 
@@ -215,14 +223,15 @@
     }
 
     .kbq-code-block__view-all {
-        display: flex;
-        justify-content: center;
-        width: 100%;
+        @include squircle.kbq-squircle(var(--kbq-code-block-size-container-border-radius));
 
         position: absolute;
         bottom: calc(var(--kbq-code-block-size-container-border-width) * -1);
 
-        @include squircle.kbq-squircle(var(--kbq-code-block-size-container-border-radius));
+        display: flex;
+        justify-content: center;
+
+        width: 100%;
 
         .kbq-code-block__view-all__wrapper {
             @include squircle.kbq-squircle(var(--kbq-size-border-radius));
@@ -234,8 +243,8 @@
         }
 
         &.kbq-code-block__view-all_expanded {
-            padding-top: var(--kbq-code-block-size-collapse-expanded-padding-top);
             margin-bottom: var(--kbq-code-block-size-collapse-expanded-padding-bottom);
+            padding-top: var(--kbq-code-block-size-collapse-expanded-padding-top);
         }
     }
 }

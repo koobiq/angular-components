@@ -1,25 +1,23 @@
 @use './navbar-theme';
 
 .kbq-navbar {
+    position: relative;
     z-index: var(--kbq-navbar-z-index);
 
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     align-items: center;
-
-    position: relative;
+    justify-content: space-between;
 }
 
 .kbq-navbar-container {
-    display: flex;
+    position: relative;
 
+    display: flex;
     flex-shrink: 0;
     flex-direction: row;
-    justify-content: space-between;
     align-items: center;
-
-    position: relative;
+    justify-content: space-between;
 }
 
 .kbq-navbar .kbq-navbar-container + .kbq-navbar-container {

@@ -4,17 +4,18 @@
 // components whose `::before`/`::after` pseudo-elements are already spoken for (e.g. kbq-dropdown-item's
 // hit-area extension) can apply the same overlay to a real element instead.
 @mixin kbq-progress-overlay() {
-    content: '';
-    position: absolute;
+    $lighter: rgb(255 255 255 / 10%);
+    $darker: rgb(0 0 0 / 4%);
+
     @include squircle.kbq-squircle-inherit();
 
+    content: '';
+
+    position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-
-    $lighter: rgb(255 255 255 / 10%);
-    $darker: rgb(0 0 0 / 4%);
 
     background: linear-gradient(
             135deg,
@@ -27,6 +28,7 @@
         )
         repeat;
     background-size: 32px 32px;
+
     animation: kbq-progress 1s linear infinite;
 }
 
@@ -65,15 +67,17 @@
 
 /// Takes the motion off an element a component animates: while the component has animations disabled
 /// (`kbqAnimationsDisabled()`, bound as `.kbq-animations-disabled`) and while the user asks for reduced
-/// motion. A component that waits for the animation to end then finds none and goes on at once.
+/// motion. A component that waits for the animation to end then finds none and goes on at once. It works wherever
+/// it stands in a block: the class adds to the specificity of the element, and the reduced motion is `!important`,
+/// as a user preference outranks the motion of the component.
 @mixin kbq-animations-off() {
     &.kbq-animations-disabled {
-        animation: none;
         transition: none;
+        animation: none;
     }
 
     @media (prefers-reduced-motion: reduce) {
-        animation: none;
-        transition: none;
+        transition: none !important;
+        animation: none !important;
     }
 }

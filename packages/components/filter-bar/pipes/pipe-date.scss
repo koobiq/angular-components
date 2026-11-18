@@ -26,8 +26,8 @@
             }
 
             & .kbq-icon {
-                margin-inline-start: var(--kbq-size-s);
                 align-self: center;
+                margin-inline-start: var(--kbq-size-s);
 
                 // The design token is the fallback because `--kbq-icon-fade-contrast-color` is no longer
                 // declared on `.kbq-icon`; this selector outranks the themed one, so it has to carry it.
@@ -43,8 +43,8 @@
             padding: var(--kbq-size-xs) var(--kbq-size-xxs) var(--kbq-size-s);
 
             & .kbq-button {
-                width: 100%;
                 justify-content: flex-start;
+                width: 100%;
             }
         }
 
@@ -54,12 +54,11 @@
 
         & .kbq-date-period__content {
             display: grid;
-            grid-auto-columns: minmax(min-content, 1fr);
             grid-template-columns: min-content minmax(min-content, 1fr);
+            grid-auto-columns: minmax(min-content, 1fr);
+            gap: var(--kbq-size-s);
 
             padding: 0;
-
-            gap: var(--kbq-size-s);
 
             // No header: the pipe template has no presets to go back to.
             &:first-child {
@@ -95,8 +94,8 @@
 
                 & .kbq-date-period__time.kbq-form-field-type-timepicker {
                     flex: 1;
-                    margin-inline-start: -1px;
                     width: unset;
+                    margin-inline-start: -1px;
 
                     & .kbq-form-field__container {
                         // Square off the seam (inline-start) — logical counterpart of the date field above
@@ -120,7 +119,6 @@
 
             & .kbq-hint {
                 grid-column: 2 span;
-
                 padding-inline: var(--kbq-size-m);
             }
         }
@@ -129,8 +127,8 @@
             padding: var(--kbq-size-xxs);
 
             & .kbq-button {
-                width: 100%;
                 justify-content: flex-start;
+                width: 100%;
 
                 &:not(.kbq-disabled) .kbq-button_hot-key {
                     color: var(--kbq-foreground-contrast-secondary);

@@ -1,9 +1,8 @@
 @use '../core/styles/common/tokens';
 
 @mixin kbq-toast($style-name) {
-    box-shadow: var(--kbq-toast-#{$style-name}-container-shadow);
-
     background: var(--kbq-toast-#{$style-name}-container-background);
+    box-shadow: var(--kbq-toast-#{$style-name}-container-shadow);
 
     .kbq-toast__title {
         color: var(--kbq-toast-#{$style-name}-container-title);

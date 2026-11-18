@@ -2,12 +2,17 @@
 paths:
     - 'packages/components/**/*.scss'
     - 'packages/components-experimental/**/*.scss'
+    - 'packages/components-dev/**/*.scss'
+    - 'packages/docs-examples/**/*.{scss,css}'
+    - 'packages/e2e/**/*.scss'
+    - 'apps/docs/**/*.scss'
 ---
 
 # Styles and theming
 
 - Components use `ViewEncapsulation.None`, so every class is global: that is why they carry the `kbq-` prefix (`dev-`, `e2e-`, `example-`, `docs-` in the other packages; `cdk-` and `ng-` are always allowed) and why stylelint checks it and the kebab-case mixin names.
 - `<name>-tokens.scss` declares the component's `--kbq-<name>-*` custom properties in terms of the global `--kbq-*` tokens from `@koobiq/design-tokens`; `_<name>-theme.scss` consumes them. A component-specific look is expressed by redefining that component's tokens, not by editing the shared theme mixins.
+- `stylelint --fix` puts the `@include` calls of a block before its declarations, which override what the mixins set, as the rows over `kbq-list-item-base()` do. A mixin that has to win over the block wins wherever it stands, as `kbq-animations-off()` does with a class and `!important` and `kbq-squircle()` with a custom property only its `@supports` branch sets.
 - `packages/components/_index.scss` forwards `core`, the theming API and `_koobiq-theme.scss`, whose `koobiq-theme()` and `koobiq-typography()` mixins aggregate the global (directive-level) themes. `styles:build-all` compiles every SCSS file to `dist/scss-compiled` and copies the prebuilt theme (`theme.css`, light and dark in one file) into `dist/components/prebuilt-themes`, which is what the package `exports` expose.
 - Read token values from `@koobiq/design-tokens/web/new/` or from computed styles, not from the legacy top-level `css-tokens*.css`: the page resolves the new set, and the two disagree (a token that is a light translucent surface in the legacy set is a near-black scrim in the live one).
 - `kbq-form-field` alone owns the 12px left inset, and the controls zero their own padding. To change a control inside a form field, redefine `--kbq-form-field-*` tokens in the control's own stylesheet under its host type class — `.kbq-form-field-type-select` (select, tree-select, time-range), `.kbq-form-field-type-tag-list`, `.kbq-form-field-type-input:has(.kbq-autocomplete-trigger)` — never in the shared `_form-field-theme.scss`, which every control uses.

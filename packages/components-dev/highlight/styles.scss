@@ -5,14 +5,14 @@ dev-app {
 
 .dev-container {
     max-width: 760px;
-    padding: var(--kbq-size-xxl);
     margin-bottom: var(--kbq-size-xl);
+    padding: var(--kbq-size-xxl);
 }
 
 .dev-list {
-    list-style: none;
-    padding: 0;
     margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 .dev-list li {

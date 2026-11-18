@@ -4,14 +4,12 @@
 @use '../core/styles/common/squircle';
 
 .kbq-navbar-item {
-    box-sizing: border-box;
+    @include squircle.kbq-squircle(var(--kbq-navbar-item-size-content-border-radius));
 
     position: relative;
-
     display: flex;
     align-items: center;
-
-    @include squircle.kbq-squircle(var(--kbq-navbar-item-size-content-border-radius));
+    box-sizing: border-box;
 
     & .kbq-icon {
         min-width: var(--kbq-size-l);
@@ -22,7 +20,6 @@
     // positions itself inside it.
     & > .kbq-navbar-item-content {
         flex-shrink: 0;
-
         width: var(--kbq-navbar-item-size-custom-content-width);
         height: var(--kbq-navbar-item-size-custom-content-height);
     }
@@ -31,7 +28,6 @@
     // has to sit above the overlay to stay clickable, and must not draw the browser's own outline inside it.
     &.kbq-navbar-item_has-custom-trigger > :first-child {
         z-index: 1;
-
         outline: none;
     }
 
@@ -46,58 +42,53 @@
 
     & .kbq-button-icon {
         position: absolute;
-        padding-left: var(--kbq-size-xs);
-        padding-right: var(--kbq-size-xs);
         top: 50%;
+
+        padding-right: var(--kbq-size-xs);
+        padding-left: var(--kbq-size-xs);
+
         transform: translateY(-50%);
     }
 
     &::before {
-        position: absolute;
         content: '';
+        position: absolute;
     }
 
     &::after {
-        position: absolute;
-        content: '';
-
-        display: none;
-
         @include squircle.kbq-squircle(var(--kbq-navbar-item-size-content-border-radius));
+
+        content: '';
+        position: absolute;
+        display: none;
     }
 
     // The badge sits in the same corner in both orientations; only the offsets differ, and each partial
     // supplies its own.
     & .kbq-badge {
         position: absolute;
-
         z-index: 1;
     }
 }
 
 .kbq-navbar-title {
     display: inline-block;
-
+    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    overflow: hidden;
 }
 
 .kbq-navbar-item__title {
     display: flex;
-
     flex-direction: column;
-
     align-self: center;
-
     min-width: 0;
 }
 
 .kbq-navbar-item__container {
     display: flex;
-    flex-direction: row;
-
     flex: 1 1 auto;
+    flex-direction: row;
     justify-content: space-between;
 
     min-width: 0;

@@ -12,12 +12,11 @@
 
 .kbq-search-expandable__search {
     & .kbq-icon-button.kbq-suffix {
+        @include squircle.kbq-squircle(var(--kbq-search-expandable-close-button-border-radius));
+
         display: flex;
         align-items: center;
         justify-content: center;
-
-        @include squircle.kbq-squircle(var(--kbq-search-expandable-close-button-border-radius));
-
         height: var(--kbq-search-expandable-close-button-size);
     }
 }

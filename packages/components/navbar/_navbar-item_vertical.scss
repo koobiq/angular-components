@@ -2,6 +2,8 @@
 
 .kbq-navbar-item.kbq-vertical {
     height: var(--kbq-navbar-item-vertical-size-height);
+    padding-right: var(--kbq-size-xl);
+    padding-left: var(--kbq-size-xl);
 
     & .kbq-navbar-item__container {
         gap: var(--kbq-size-m);
@@ -12,9 +14,6 @@
         margin-left: auto;
     }
 
-    padding-right: var(--kbq-size-xl);
-    padding-left: var(--kbq-size-xl);
-
     &::after {
         top: 0;
         right: var(--kbq-size-s);
@@ -24,12 +23,10 @@
 
     &.kbq-navbar-bento {
         display: flex;
-
-        justify-content: start;
         align-items: center;
+        justify-content: start;
 
         height: var(--kbq-size-5xl);
-
         padding-top: var(--kbq-size-s);
 
         &::after {
@@ -47,9 +44,8 @@
     }
 
     &.kbq-expanded {
-        align-items: center;
-
         gap: var(--kbq-size-m);
+        align-items: center;
 
         // The shared `.kbq-navbar-item .kbq-badge` rule takes the badge out of flow for the icon-corner
         // overlay used when collapsed; expanded, a badge that is a direct child stays a normal flex child
@@ -70,19 +66,17 @@
 
         &.kbq-navbar-item_has-nested {
             align-items: center;
-
             padding: 0 var(--kbq-size-m);
         }
 
         &.kbq-navbar-bento .kbq-navbar-item__title {
+            @include animation.kbq-animations-off();
+
             margin-left: calc(-1 * var(--kbq-size-s));
             opacity: 0;
-
             transition:
                 opacity 150ms ease-out,
                 margin-left 150ms ease-out;
-
-            @include animation.kbq-animations-off();
         }
 
         &.kbq-navbar-bento:hover,
@@ -99,11 +93,9 @@
     &.kbq-navbar-item_has-custom-trigger {
         & > :first-child {
             display: flex;
-
+            flex-shrink: 0;
             align-items: center;
             justify-content: center;
-
-            flex-shrink: 0;
 
             width: var(--kbq-navbar-item-size-custom-content-width);
             height: var(--kbq-navbar-item-size-custom-content-height);
@@ -132,9 +124,8 @@
     }
 
     &.kbq-collapsed {
-        width: var(--kbq-size-6xl);
-
         justify-content: center;
+        width: var(--kbq-size-6xl);
 
         // Position and stacking come from the shared `.kbq-navbar-item .kbq-badge` rule; only the offsets are
         // orientation-specific.
@@ -150,8 +141,8 @@
 
     & > .kbq-icon {
         display: flex;
-        justify-content: center;
         align-items: center;
+        justify-content: center;
     }
 }
 

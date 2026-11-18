@@ -1,10 +1,13 @@
 @use '../core/styles/common/squircle';
 
 .kbq-content-panel-aside {
+    @include squircle.kbq-squircle-inherit(border-top-left-radius border-bottom-left-radius);
+
     display: flex;
     flex-direction: column;
     gap: var(--kbq-size-s);
+
     padding: var(--kbq-size-l) var(--kbq-size-m);
-    @include squircle.kbq-squircle-inherit(border-top-left-radius border-bottom-left-radius);
+
     border-right: inherit;
 }

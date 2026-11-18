@@ -4,6 +4,13 @@
 
 @mixin kbq-markdown-theme() {
     .kbq-markdown {
+        // h1, h2, h3, h4, h5, h6
+        @for $i from 1 through 6 {
+            .kbq-markdown__h#{$i} {
+                color: var(--kbq-markdown-h#{$i}-color);
+            }
+        }
+
         color: var(--kbq-foreground-contrast);
         background: var(--kbq-markdown-bg);
 
@@ -19,13 +26,6 @@
 
             &:focus-visible {
                 @include link.kbq-link-keyboard-focus-outline();
-            }
-        }
-
-        // h1, h2, h3, h4, h5, h6
-        @for $i from 1 through 6 {
-            .kbq-markdown__h#{$i} {
-                color: var(--kbq-markdown-h#{$i}-color);
             }
         }
 

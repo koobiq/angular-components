@@ -2,17 +2,16 @@
 @use '../core/styles/common/squircle';
 
 .kbq-notification-item {
-    display: flex;
-    box-sizing: border-box;
+    @include squircle.kbq-squircle(var(--kbq-size-s));
 
     position: relative;
 
-    @include squircle.kbq-squircle(var(--kbq-size-s));
+    display: flex;
 
+    box-sizing: border-box;
     height: auto;
-
-    margin-left: var(--kbq-size-m);
     margin-right: var(--kbq-size-m);
+    margin-left: var(--kbq-size-m);
 
     &:hover,
     &:focus-within {
@@ -35,39 +34,33 @@
     // subtracted from the icon instead of added around it, and `max-width`/`max-height` would clamp
     // what is left — a 16px icon squeezed into 4px wide and 2px tall.
     box-sizing: content-box;
-
     width: var(--kbq-size-l);
     max-width: var(--kbq-size-l);
-
     height: var(--kbq-size-l);
     max-height: var(--kbq-size-l);
-
     margin-right: var(--kbq-size-s);
-    padding-left: var(--kbq-size-m);
-
     padding-top: var(--kbq-notification-center-size-item-icon-padding-top);
+    padding-left: var(--kbq-size-m);
 }
 
 .kbq-notification-item__container {
     display: flex;
-    flex-direction: column;
-
     flex: 1;
+    flex-direction: column;
 
     padding-top: var(--kbq-size-m);
     padding-right: var(--kbq-size-s);
     padding-bottom: var(--kbq-size-m);
-
     overflow: hidden;
 }
 
 .kbq-notification-item__title {
     display: flex;
     flex-direction: row;
-
     justify-content: space-between;
 
     overflow: hidden;
+
     text-overflow: ellipsis;
 
     & > p {
@@ -84,11 +77,9 @@
 .kbq-notification-item-time {
     display: flex;
     flex-direction: row;
-
-    height: var(--kbq-size-xl);
-
     align-items: center;
 
+    height: var(--kbq-size-xl);
     padding-left: var(--kbq-notification-center-size-item-time-padding-left);
 
     & .kbq-notification-item-time__value {
@@ -98,8 +89,8 @@
     // The dot keeps its width once read, or the title gains that width and rewraps under the pointer.
     // Placed before the time, so the time keeps the position it had before the dot was hidden.
     &.kbq-notification-item-time_read .kbq-notification-item-time__state {
-        visibility: hidden;
         order: -1;
+        visibility: hidden;
     }
 }
 
@@ -112,21 +103,17 @@
 .kbq-notification-item__content {
     display: flex;
     flex-direction: column;
-
     white-space: pre-wrap;
 }
 
 .kbq-notification-item__actions {
     display: flex;
-
-    padding-top: var(--kbq-size-s);
-
     gap: var(--kbq-size-m);
+    padding-top: var(--kbq-size-s);
 }
 
 .kbq-notification-item__remove-button {
     position: absolute;
-
     top: var(--kbq-size-xs);
     right: var(--kbq-size-s);
 
@@ -135,6 +122,7 @@
     // Hidden but still focusable: `display: none` kept the button out of the tab order, so a keyboard
     // user could never reach the row's `:focus-within` state that reveals it.
     opacity: 0;
+
     pointer-events: none;
 }
 

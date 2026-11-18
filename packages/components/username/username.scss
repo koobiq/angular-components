@@ -38,10 +38,9 @@
         @include -kbq-username-content-wrapper {
             display: flex;
             flex-flow: column nowrap;
-            justify-content: flex-start;
-            align-items: normal;
-
             gap: var(--kbq-username-vertical-gap);
+            align-items: normal;
+            justify-content: flex-start;
         }
     }
 
@@ -49,8 +48,8 @@
         @include -kbq-username-content-wrapper {
             display: flex;
             flex-flow: row nowrap;
-            justify-content: flex-start;
             align-items: baseline;
+            justify-content: flex-start;
 
             .kbq-username__primary + .kbq-username__secondary {
                 @include common.rtl-prop(margin-left, margin-right, var(--kbq-username-horizontal-gap), 0);
@@ -76,8 +75,8 @@
 
     &.kbq-username_inherit {
         @include -kbq-username-content-wrapper {
-            font: inherit;
             display: inherit;
+            font: inherit;
         }
     }
 }

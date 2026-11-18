@@ -3,7 +3,7 @@
 @use '../core/styles/common/squircle';
 
 .kbq-autocomplete-panel {
-    visibility: hidden;
+    @include squircle.kbq-squircle(var(--kbq-autocomplete-size-panel-border-radius, var(--kbq-size-border-radius)));
 
     position: relative;
 
@@ -11,16 +11,17 @@
     flex-direction: column;
 
     box-sizing: border-box;
-    min-width: 100%;
     width: 100%;
+    min-width: 100%;
     // See `%kbq-select-panel` — same soft cap, same token.
     max-width: var(--kbq-panel-size-width-max, 640px);
-
-    @include squircle.kbq-squircle(var(--kbq-autocomplete-size-panel-border-radius, var(--kbq-size-border-radius)));
     max-height: var(--kbq-autocomplete-size-panel-max-height);
+
+    visibility: hidden;
 
     .kbq-autocomplete-panel__content {
         flex: 1;
+
         padding: var(--kbq-size-xxs);
         overflow-x: hidden;
         overflow-y: auto;
@@ -29,6 +30,7 @@
 
     .kbq-autocomplete-footer {
         @extend %kbq-select-footer;
+
         border-color: var(--kbq-line-contrast-less);
     }
 

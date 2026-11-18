@@ -1,10 +1,9 @@
 .docs-app {
     display: flex;
     flex-direction: row;
-    height: 100vh;
 
     min-width: 0;
-
+    height: 100vh;
     overflow-y: auto;
 
     scroll-behavior: smooth;
@@ -15,14 +14,13 @@
 }
 
 .docs-overlay {
-    display: none;
-
     position: absolute;
-
     top: 0;
+    right: 0;
     bottom: 0;
     left: 0;
-    right: 0;
+
+    display: none;
 
     background: var(--kbq-background-overlay);
 }
@@ -51,9 +49,11 @@
     .docs-sidenav {
         position: absolute !important;
         right: 0;
+        z-index: 10;
+
         width: 100%;
         height: calc(100% - 64px);
-        z-index: 10;
+
         transition: right 300ms ease-out;
     }
 

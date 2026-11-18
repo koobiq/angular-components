@@ -21,11 +21,6 @@
 }
 
 @mixin -kbq-scrollbar() {
-    // For Firefox compatibility
-    @supports not selector(::-webkit-scrollbar) {
-        scrollbar-width: auto;
-    }
-
     // webkit
     &::-webkit-scrollbar,
     ::-webkit-scrollbar {
@@ -43,9 +38,8 @@
     &::-webkit-scrollbar-thumb,
     ::-webkit-scrollbar-thumb {
         width: var(--kbq-scrollbar-size-thumb-width);
-        border-style: solid;
         border-width: tokens.kbq-css-half-difference(scrollbar-size-track-dimension, scrollbar-size-thumb-width);
-
+        border-style: solid;
         border-radius: var(--kbq-scrollbar-size-thumb-border-radius);
 
         // these props are used to set the user-friendly thumb for long content.
@@ -62,16 +56,18 @@
     ::-webkit-scrollbar-button {
         display: none;
     }
+    // For Firefox compatibility
+    @supports not selector(::-webkit-scrollbar) {
+        scrollbar-width: auto;
+    }
 }
 
 @mixin kbq-scrollbar-theme() {
     .kbq-scrollbar {
         @include -kbq-scrollbar();
-
-        // For Firefox compatibility
-        @supports not selector(::-webkit-scrollbar) {
-            scrollbar-color: var(--kbq-scrollbar-thumb-default-background) transparent;
-        }
+        @include -scrollbar-state(hover, var(--kbq-scrollbar-thumb-hover-background));
+        @include -scrollbar-state(disabled, var(--kbq-scrollbar-thumb-disabled-background));
+        @include -scrollbar-state(active, var(--kbq-scrollbar-thumb-active-background));
 
         &::-webkit-scrollbar-track,
         &::-webkit-scrollbar-corner,
@@ -86,14 +82,15 @@
 
         &::-webkit-scrollbar-thumb,
         ::-webkit-scrollbar-thumb {
+            background-color: var(--kbq-scrollbar-thumb-default-background);
             border-color: transparent;
             // https://stackoverflow.com/a/16829330/6386666
             background-clip: content-box;
-            background-color: var(--kbq-scrollbar-thumb-default-background);
         }
 
-        @include -scrollbar-state(hover, var(--kbq-scrollbar-thumb-hover-background));
-        @include -scrollbar-state(disabled, var(--kbq-scrollbar-thumb-disabled-background));
-        @include -scrollbar-state(active, var(--kbq-scrollbar-thumb-active-background));
+        // For Firefox compatibility
+        @supports not selector(::-webkit-scrollbar) {
+            scrollbar-color: var(--kbq-scrollbar-thumb-default-background) transparent;
+        }
     }
 }

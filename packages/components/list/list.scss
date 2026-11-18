@@ -10,8 +10,8 @@
     $selectors: '.kbq-selected';
 
     &:is(#{$selectors}):has(+ :is(#{$selectors})) {
-        border-bottom-left-radius: unset;
         border-bottom-right-radius: unset;
+        border-bottom-left-radius: unset;
     }
 
     &:is(#{$selectors}) + :is(#{$selectors}) {
@@ -46,15 +46,10 @@
 .kbq-list-option {
     @include vendor-prefixes.user-select(none);
     @include list.kbq-list-item-base();
-
-    // Re-declared on top of the shared base so the `--kbq-list-size-*` tokens become real override
-    // points. `.kbq-list-option` is guaranteed to be inside `.kbq-list-selection` (it injects it),
-    // but `.kbq-list-item`/`a[kbq-list-item]` has no such enforcement, so every token here falls back
-    // to the shared base mixin's own value in case it's ever rendered outside `.kbq-list`.
-    // The horizontal padding subtracts the transparent focus border so the total stays on the grid.
-    border-width: var(--kbq-list-size-container-focus-outline-width, var(--kbq-size-3xs));
     @include squircle.kbq-squircle(var(--kbq-size-border-radius));
+
     gap: var(--kbq-list-size-container-content-gap-horizontal, var(--kbq-size-s));
+
     padding-top: var(--kbq-list-size-container-padding-vertical, var(--kbq-size-xxs));
     padding-right: calc(
         var(--kbq-list-size-container-padding-right, var(--kbq-size-m)) - var(
@@ -69,6 +64,13 @@
                 var(--kbq-size-3xs)
             )
     );
+
+    // Re-declared on top of the shared base so the `--kbq-list-size-*` tokens become real override
+    // points. `.kbq-list-option` is guaranteed to be inside `.kbq-list-selection` (it injects it),
+    // but `.kbq-list-item`/`a[kbq-list-item]` has no such enforcement, so every token here falls back
+    // to the shared base mixin's own value in case it's ever rendered outside `.kbq-list`.
+    // The horizontal padding subtracts the transparent focus border so the total stays on the grid.
+    border-width: var(--kbq-list-size-container-focus-outline-width, var(--kbq-size-3xs));
 
     .kbq-list-option-caption {
         padding-top: var(--kbq-list-size-container-content-gap-vertical, var(--kbq-size-3xs));
@@ -167,10 +169,10 @@ body:has(.kbq-list-drag-preview) {
 }
 
 .kbq-list-selection:not(.kbq-list-selection_horizontal) .kbq-list-selection__drop-indicator {
-    left: 0;
-    right: 0;
     // The line straddles the gap instead of sitting below it, so it reads as "between these two rows".
     top: calc(var(--kbq-list-drop-indicator-offset, 0px) - var(--kbq-list-size-dragged-indicator-thickness) / 2);
+    right: 0;
+    left: 0;
     block-size: var(--kbq-list-size-dragged-indicator-thickness);
 }
 
@@ -198,15 +200,16 @@ body:has(.kbq-list-drag-preview) {
 // shrinks the box to its content, so only the maximum is worth stating. No `transition` either, for the
 // same reason as the clone above — a zero duration lets CDK drop the preview instead of flying it back.
 .kbq-list-drag-preview_text {
+    @include squircle.kbq-squircle(var(--kbq-size-border-radius));
     // The cap is on the plate, not on the text inside it, and the page default here is `content-box`.
     box-sizing: border-box;
     max-inline-size: var(--kbq-list-size-drag-preview-max-width);
-    @include squircle.kbq-squircle(var(--kbq-size-border-radius));
     padding: var(--kbq-list-size-container-padding-vertical) var(--kbq-list-size-container-padding-right)
         var(--kbq-list-size-container-padding-vertical) var(--kbq-list-size-container-padding-left);
+
+    color: var(--kbq-list-default-text-color);
     background: var(--kbq-list-states-drag-preview-background);
     box-shadow: var(--kbq-list-states-dragged-container-shadow);
-    color: var(--kbq-list-default-text-color);
 
     // Clamped line by line, not on the plate: a long label must not push the caption out of the box.
     .kbq-list-drag-preview__label,
@@ -217,7 +220,7 @@ body:has(.kbq-list-drag-preview) {
     }
 
     .kbq-list-drag-preview__caption {
-        color: var(--kbq-list-default-caption-color);
         padding-top: var(--kbq-list-size-container-content-gap-vertical);
+        color: var(--kbq-list-default-caption-color);
     }
 }

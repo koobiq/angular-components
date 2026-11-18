@@ -3,6 +3,10 @@
 @use '../tree/tree-theme' as tree-theme;
 
 @mixin kbq-tree-select-theme() {
+    // Placeholder, search container and empty-result message: styled identically wherever a
+    // select-shaped panel is rendered, so the rules live next to the structure they belong to.
+    @include select.kbq-select-shared-theme();
+
     .kbq-tree-select {
         color: var(--kbq-foreground-contrast);
 
@@ -24,13 +28,9 @@
         }
     }
 
-    // Placeholder, search container and empty-result message: styled identically wherever a
-    // select-shaped panel is rendered, so the rules live next to the structure they belong to.
-    @include select.kbq-select-shared-theme();
-
     .kbq-tree-select__panel {
-        box-shadow: var(--kbq-select-panel-dropdown-shadow);
         background: var(--kbq-select-panel-dropdown-background);
+        box-shadow: var(--kbq-select-panel-dropdown-shadow);
 
         .kbq-tree-selection .kbq-tree-option:not(.kbq-disabled) {
             &:hover:not(.kbq-focused),

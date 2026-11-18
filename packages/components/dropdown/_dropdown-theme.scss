@@ -1,8 +1,8 @@
 @use '../core/styles/common/tokens';
 
 @mixin -kbq-dropdown-item-state($style-name) {
-    background: var(--kbq-list-#{$style-name}-container-background);
     color: var(--kbq-list-#{$style-name}-text-color);
+    background: var(--kbq-list-#{$style-name}-container-background);
 
     .kbq-icon.kbq-empty:not(.kbq-icon-button, .kbq-icon-item) {
         color: var(--kbq-list-#{$style-name}-text-color);
@@ -11,8 +11,8 @@
 
 @mixin kbq-dropdown-theme() {
     .kbq-dropdown__panel {
-        box-shadow: var(--kbq-dropdown-container-shadow);
         background: var(--kbq-dropdown-container-background);
+        box-shadow: var(--kbq-dropdown-container-shadow);
     }
 
     .kbq-dropdown-item {
@@ -65,8 +65,8 @@
         &:is(.kbq-selected, .cdk-focused, .kbq-dropdown-item_active):has(
                 + :is(.kbq-selected, .cdk-focused, .kbq-dropdown-item_active)
             ) {
-            border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
         }
 
         &:is(.kbq-selected, .cdk-focused, .kbq-dropdown-item_active)

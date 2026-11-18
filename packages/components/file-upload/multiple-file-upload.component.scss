@@ -171,15 +171,17 @@
 
 // TODO: needs a refactor — the nesting and specificity below are hard to follow.
 .kbq-multiple-file-upload .kbq-file-upload {
+    @include -kbq-multiple-file-upload-theme();
     @include squircle.kbq-squircle(var(--kbq-file-upload-size-multiple-big-container-border-radius));
+
     border-width: var(--kbq-file-upload-size-multiple-big-container-border-width);
     border-style: dashed;
 
     &:not(.kbq-selected) {
         &.kbq-file-upload_default {
             justify-content: center;
-            min-height: var(--kbq-file-upload-size-multiple-big-container-min-height);
             min-width: var(--kbq-file-upload-size-multiple-big-container-min-width);
+            min-height: var(--kbq-file-upload-size-multiple-big-container-min-height);
 
             .kbq-multiple-file-upload__empty-state {
                 --kbq-empty-state-size-normal-padding-top: 0;
@@ -214,18 +216,16 @@
         // `core/styles/common/_select.scss`. A global `border-box` reset in a consuming application
         // would otherwise shorten the scroll viewport by that padding.
         box-sizing: content-box;
-
         min-height: var(--kbq-file-upload-size-multiple-min-height);
         max-height: var(--kbq-file-upload-size-multiple-max-height);
-
         padding-top: calc(var(--kbq-size-xxs) - var(--kbq-size-border-width));
         padding-bottom: var(--kbq-size-xxl);
     }
 
     .kbq-file-upload__row {
         display: flex;
-        align-items: center;
         flex: 1;
+        align-items: center;
 
         // The file name is rendered into `white-space: pre` spans by `kbqEllipsisCenter`, and the tail span
         // is `flex-shrink: 0`. Under the default `min-width: auto` that intrinsic width propagates up
@@ -240,11 +240,12 @@
 
         .kbq-file-upload__file {
             display: flex;
-            align-items: center;
             flex-grow: 1;
             gap: var(--kbq-file-upload-size-multiple-big-grid-cell-content-gap-horizontal);
-            padding-left: var(--kbq-size-m);
+            align-items: center;
+
             min-width: 0;
+            padding-left: var(--kbq-size-m);
 
             .kbq-file-item__text {
                 // Takes whatever is left between the icon and the size column. The `min-width: 0` and
@@ -255,6 +256,9 @@
         }
 
         .kbq-file-upload__size {
+            // The three widths above already pin the column, so growing and shrinking were both inert.
+            // Stated outright now that the file-name cell beside it actually shrinks.
+            flex: none;
             // Pinned to the box model the column width was measured against: the cell inherits
             // horizontal padding from `.kbq-file-upload__grid-cell` above, and under a global
             // `border-box` reset that padding would come out of the column instead of sitting beside
@@ -262,13 +266,10 @@
             // Whether the token means the column or its content is a design question — see the
             // audit; this only makes the answer stop depending on the consuming application.
             box-sizing: content-box;
-
             width: var(--kbq-file-upload-size-multiple-big-grid-cell-file-size-width);
             min-width: var(--kbq-file-upload-size-multiple-big-grid-cell-file-size-width);
             max-width: var(--kbq-file-upload-size-multiple-big-grid-cell-file-size-width);
-            // The three widths above already pin the column, so growing and shrinking were both inert.
-            // Stated outright now that the file-name cell beside it actually shrinks.
-            flex: none;
+
             text-align: left;
         }
 
@@ -280,9 +281,8 @@
     .kbq-file-upload__list-footer {
         margin: -1px;
         padding: var(--kbq-size-m) var(--kbq-size-l);
-
-        border-top-width: var(--kbq-file-upload-size-multiple-big-container-border-width);
         border-top-style: dashed;
+        border-top-width: var(--kbq-file-upload-size-multiple-big-container-border-width);
     }
 
     .kbq-file-upload__wrapper {
@@ -291,14 +291,12 @@
     }
 
     .kbq-file-upload__item {
-        border-radius: 0;
-        border: 0;
         padding: 0 calc(var(--kbq-size-xxs) - var(--kbq-size-border-width));
+        border: 0;
+        border-radius: 0;
 
         .kbq-file-upload__row {
             @include squircle.kbq-squircle(var(--kbq-size-xs));
         }
     }
-
-    @include -kbq-multiple-file-upload-theme();
 }

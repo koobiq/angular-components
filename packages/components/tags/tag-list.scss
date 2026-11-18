@@ -5,9 +5,8 @@
 .kbq-tag-list {
     display: flex;
     flex-direction: row;
-    min-height: var(--kbq-size-xxl);
-
     box-sizing: border-box;
+    min-height: var(--kbq-size-xxl);
 
     &:focus-visible {
         outline: none;
@@ -15,44 +14,42 @@
 
     // The tags carry `kbq-animations-disabled`, see `KbqTag`.
     &.cdk-drop-list-dragging .cdk-drag {
-        transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-
         @include animation.kbq-animations-off();
+
+        transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
     }
 }
 
 .kbq-tag-input {
     @include input.kbq-reset-input();
 
-    padding-top: var(--kbq-tag-size-padding-vertical);
-    padding-bottom: var(--kbq-tag-size-padding-vertical);
-    padding-left: var(--kbq-size-xxs);
-    padding-right: unset;
+    flex-grow: 1;
 
     min-width: var(--kbq-size-3xl);
     max-width: 100%;
-    flex-grow: 1;
+    padding-top: var(--kbq-tag-size-padding-vertical);
+    padding-right: unset;
+    padding-bottom: var(--kbq-tag-size-padding-vertical);
+    padding-left: var(--kbq-size-xxs);
 
     &.kbq-input {
         --kbq-input-size-padding-vertical: 0;
         --kbq-form-field-size-border-radius: 0;
 
-        padding-left: var(--kbq-size-xxs);
-        min-height: unset !important;
         width: auto;
+        min-height: unset !important;
+        padding-left: var(--kbq-size-xxs);
     }
 }
 
 .kbq-tags-list__list-container {
     display: flex;
-    flex-wrap: wrap;
     flex: 1 1 100%;
+    flex-wrap: wrap;
+    gap: var(--kbq-tag-list-size-content-gap);
 
     box-sizing: border-box;
-
     min-width: 0;
-
-    gap: var(--kbq-tag-list-size-content-gap);
 
     .kbq-tag-input {
         // indicating tag list is empty

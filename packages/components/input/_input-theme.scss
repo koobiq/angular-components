@@ -9,11 +9,12 @@
     .kbq-input.kbq-input-password,
     .kbq-input.kbq-input_monospace {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-normal);
-        // disable font-specific symbols replacements
-        font-variant-ligatures: none;
+
         font-feature-settings:
             'liga' 0,
             'clig' 0,
             'calt' 0;
+        // disable font-specific symbols replacements
+        font-variant-ligatures: none;
     }
 }

@@ -1,14 +1,11 @@
 .kbq-calendar {
     display: block;
-
     box-sizing: initial;
 }
 
 .kbq-calendar__content {
     padding-right: var(--kbq-datepicker-size-grid-padding-horizontal);
-
     padding-left: var(--kbq-datepicker-size-grid-padding-horizontal);
-
     outline: none;
 }
 
@@ -19,12 +16,11 @@
 }
 
 .kbq-calendar__table-header th {
-    text-align: center;
     height: 30px;
+    text-align: center;
 
     &.kbq-calendar__table-header-divider {
         position: relative;
-
         box-sizing: border-box;
         height: var(--kbq-datepicker-size-grid-content-gap-vertical);
 
@@ -35,8 +31,8 @@
 
             position: absolute;
             top: 0;
-            left: calc(-1 * #{var(--kbq-datepicker-size-grid-padding-horizontal)});
             right: calc(-1 * #{var(--kbq-datepicker-size-grid-padding-horizontal)});
+            left: calc(-1 * #{var(--kbq-datepicker-size-grid-padding-horizontal)});
 
             height: var(--kbq-datepicker-size-grid-divider-height);
         }

@@ -3,9 +3,9 @@
 // This mixin will ensure that lines that overflow the container will hide the overflow and
 // truncate neatly with an ellipsis.
 @mixin kbq-truncate-line() {
-    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 // This mixin normalizes default element styles, e.g. font weight for heading text.
@@ -13,8 +13,8 @@
     & > * {
         margin: 0;
         padding: 0;
-        font-weight: normal;
         font-size: inherit;
+        font-weight: normal;
     }
 }
 
@@ -24,8 +24,9 @@
 
     display: flex;
     flex-direction: column;
-    width: 100%;
+
     box-sizing: content-box;
+    width: 100%;
     overflow: hidden;
 
     // Must remove wrapper when lines are empty or it takes up horizontal
@@ -37,26 +38,28 @@
 
 @mixin kbq-list-text() {
     @include kbq-line-wrapper-base();
-    display: inline-block;
-
     @include kbq-truncate-line();
+
+    display: inline-block;
 }
 
 // This mixin provides all list-item styles, changing font size and height based on whether the list is in dense mode.
 @mixin kbq-list-item-base() {
     position: relative;
+
     display: flex;
     flex-direction: row;
-    align-items: center;
-    box-sizing: border-box;
-    outline: none;
-    -webkit-tap-highlight-color: transparent;
-    min-height: 32px;
     gap: var(--kbq-size-s);
+    align-items: center;
+
+    box-sizing: border-box;
+    min-height: 32px;
+    padding: var(--kbq-size-xxs) tokens.kbq-difference-series-css-variables([size-m, size-3xs]);
 
     border: var(--kbq-size-3xs) solid transparent;
+    outline: none;
 
-    padding: var(--kbq-size-xxs) tokens.kbq-difference-series-css-variables([size-m, size-3xs]);
+    -webkit-tap-highlight-color: transparent;
 
     .kbq-list-text {
         @include kbq-list-text();
@@ -71,16 +74,16 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+
     box-sizing: border-box;
     min-height: 32px;
-
-    border-left: var(--kbq-size-3xs) solid transparent;
-    border-right: var(--kbq-size-3xs) solid transparent;
-
     padding-top: var(--kbq-size-xs);
-    padding-left: tokens.kbq-difference-series-css-variables([size-m, size-3xs]);
     padding-right: tokens.kbq-difference-series-css-variables([size-m, size-3xs]);
     padding-bottom: var(--kbq-size-3xs);
+    padding-left: tokens.kbq-difference-series-css-variables([size-m, size-3xs]);
+
+    border-right: var(--kbq-size-3xs) solid transparent;
+    border-left: var(--kbq-size-3xs) solid transparent;
 
     .kbq-list-text {
         @include kbq-list-text();

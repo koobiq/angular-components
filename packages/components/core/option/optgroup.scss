@@ -2,12 +2,14 @@
 @use './optgroup-theme';
 
 .kbq-optgroup-label {
+    @include vendor-prefixes.user-select(none);
+
     display: flex;
     align-items: center;
+
     box-sizing: border-box;
     padding: var(--kbq-size-s) var(--kbq-size-l) var(--kbq-size-s) var(--kbq-size-m);
 
-    @include vendor-prefixes.user-select(none);
     cursor: default;
 }
 

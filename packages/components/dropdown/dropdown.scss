@@ -4,8 +4,8 @@
 
 .kbq-dropdown-trigger {
     &.kbq-button {
-        padding-left: calc(var(--kbq-dropdown-trigger-horizontal-padding, 10px) - var(--kbq-size-border-width));
         padding-right: calc(var(--kbq-dropdown-trigger-horizontal-padding, 10px) - var(--kbq-size-border-width));
+        padding-left: calc(var(--kbq-dropdown-trigger-horizontal-padding, 10px) - var(--kbq-size-border-width));
 
         & .kbq-icon_left {
             margin-right: var(--kbq-size-xs);
@@ -28,24 +28,21 @@
 }
 
 .kbq-dropdown-trigger__icon {
-    margin-left: auto;
     align-self: center;
+    margin-left: auto;
 }
 
 .kbq-dropdown__panel {
-    // The panel receives programmatic focus when the dropdown is opened by mouse or touch,
-    // so the focus outline should never be rendered on it.
-    outline: none;
-
-    overflow-x: hidden;
-    overflow-y: auto;
-
-    min-width: max(var(--kbq-dropdown-size-container-width-min), 100%);
-    max-width: var(--kbq-dropdown-size-container-width-max);
-
     @include squircle.kbq-squircle(var(--kbq-dropdown-size-container-border-radius));
 
     box-sizing: border-box;
+    min-width: max(var(--kbq-dropdown-size-container-width-min), 100%);
+    max-width: var(--kbq-dropdown-size-container-width-max);
+    overflow-x: hidden;
+    overflow-y: auto;
+    // The panel receives programmatic focus when the dropdown is opened by mouse or touch,
+    // so the focus outline should never be rendered on it.
+    outline: none;
 
     // Prevent users from interacting with the panel while it's animating. Note that
     // people won't be able to click through it, because the overlay pane will catch the click.
@@ -78,20 +75,20 @@
     }
 
     .kbq-divider {
-        margin-left: calc(var(--kbq-size-xxs) * -1);
         margin-right: calc(var(--kbq-size-xxs) * -1);
+        margin-left: calc(var(--kbq-size-xxs) * -1);
     }
 }
 
 .kbq-dropdown__content {
     display: flex;
     flex-direction: column;
-
     padding: var(--kbq-size-xxs);
 }
 
 .kbq-dropdown-footer {
     @extend %kbq-select-footer;
+
     border-color: var(--kbq-line-contrast-less);
 }
 

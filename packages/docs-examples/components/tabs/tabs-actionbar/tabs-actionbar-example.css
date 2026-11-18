@@ -7,20 +7,24 @@
 }
 
 .example-tabs-actionbar .example-tabs-actionbar_controls {
+    position: relative;
+
     display: flex;
     flex-grow: 1;
     align-items: center;
     justify-content: end;
-    position: relative;
 }
 
 .example-tabs-actionbar .example-tabs-actionbar_controls::before {
     content: '';
+
     position: absolute;
-    left: 0;
-    bottom: 0;
     right: 0;
+    bottom: 0;
+    left: 0;
+
     height: 1px;
+
     background: var(--kbq-line-contrast-less);
 }
 

@@ -5,9 +5,9 @@
     // exactly that plus the option's 8px `gap` for a node that has none. Widening the toggle pushes
     // every branch row out of line with its leaf siblings.
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
 
     height: 100%;
 

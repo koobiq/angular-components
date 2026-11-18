@@ -2,7 +2,6 @@
 
 .kbq-icon-item {
     box-sizing: border-box;
-
     border-radius: 50%;
 
     &.kbq-icon-item_normal {
@@ -14,8 +13,8 @@
     }
 
     > svg {
-        fill: currentcolor;
         vertical-align: middle;
+        fill: currentcolor;
     }
 }
 

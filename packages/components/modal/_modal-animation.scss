@@ -10,11 +10,13 @@ $animation-duration-base: 0.3s;
 @mixin -make-motion($className, $keyframeName, $duration: $animation-duration-base) {
     .#{$className}-enter {
         @include -motion-common($duration);
+
         animation-play-state: paused;
     }
 
     .#{$className}-leave {
         @include -motion-common($duration);
+
         animation-play-state: paused;
     }
 
@@ -24,9 +26,9 @@ $animation-duration-base: 0.3s;
     }
 
     .#{$className}-leave.#{$className}-leave-active {
+        pointer-events: none;
         animation-name: #{$keyframeName}Out;
         animation-play-state: running;
-        pointer-events: none;
     }
 }
 
@@ -110,15 +112,14 @@ $animation-duration-base: 0.3s;
     @media (prefers-reduced-motion: reduce) {
         .#{$className}-enter,
         .#{$className}-leave {
-            animation: none;
             opacity: 1;
             transform: none;
+            animation: none;
         }
     }
 }
 
 @include fade-motion(fade, mcFade);
 @include zoom-motion(zoom, mcZoom);
-
 @include reduced-motion(fade);
 @include reduced-motion(zoom);

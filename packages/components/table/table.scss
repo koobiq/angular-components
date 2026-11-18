@@ -12,17 +12,16 @@
             & > td {
                 padding-block: var(--kbq-table-size-row-padding-vertical);
                 padding-inline: var(--kbq-table-size-row-padding-horizontal);
-
-                vertical-align: baseline;
                 text-align: var(--kbq-table-cell-text-align);
+                vertical-align: baseline;
             }
         }
     }
 
     & > thead {
         & > tr > th {
-            border-bottom-width: var(--kbq-table-size-border-width);
             border-bottom-style: solid;
+            border-bottom-width: var(--kbq-table-size-border-width);
         }
     }
 
@@ -55,8 +54,8 @@
 .kbq-table.kbq-table_bordered {
     & > tbody > tr {
         & > :is(td, th) {
-            border-bottom-width: var(--kbq-table-size-border-width);
             border-bottom-style: solid;
+            border-bottom-width: var(--kbq-table-size-border-width);
         }
     }
 }

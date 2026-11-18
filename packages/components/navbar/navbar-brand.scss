@@ -7,19 +7,17 @@
 }
 
 .kbq-navbar-brand {
-    position: relative;
-
-    display: flex;
-
     @include squircle.kbq-squircle(var(--kbq-size-s));
 
+    position: relative;
+    display: flex;
+
     &::after {
-        position: absolute;
-        content: '';
-
-        display: none;
-
         @include squircle.kbq-squircle(var(--kbq-navbar-item-size-content-border-radius));
+
+        content: '';
+        position: absolute;
+        display: none;
     }
 
     &:not(.kbq-disabled) .kbq-navbar-title {
@@ -32,11 +30,9 @@ a.kbq-navbar-brand {
 }
 
 .kbq-navbar-brand.kbq-horizontal {
-    padding: var(--kbq-size-s) var(--kbq-size-xs) var(--kbq-size-s) var(--kbq-size-xxs);
-
-    align-items: center;
-
     gap: var(--kbq-size-s);
+    align-items: center;
+    padding: var(--kbq-size-s) var(--kbq-size-xs) var(--kbq-size-s) var(--kbq-size-xxs);
 
     &::after {
         top: var(--kbq-size-xxs);
@@ -51,9 +47,7 @@ a.kbq-navbar-brand {
         // reset in a consuming application the cap would absorb the padding and a long brand title
         // would start truncating 12px earlier.
         box-sizing: content-box;
-
         max-width: 154px;
-
         padding-right: var(--kbq-size-m);
     }
 }
@@ -61,7 +55,6 @@ a.kbq-navbar-brand {
 .kbq-navbar-brand.kbq-vertical {
     flex-direction: row;
     align-items: center;
-
     padding: var(--kbq-size-m);
 
     &::after {
@@ -78,7 +71,6 @@ a.kbq-navbar-brand {
     & .kbq-navbar-title {
         display: block;
         align-items: center;
-
         padding-left: var(--kbq-size-s);
     }
 
@@ -103,11 +95,11 @@ a.kbq-navbar-brand {
 // `.kbq-collapsed` still wins over it, on specificity.
 .kbq-navbar-brand.kbq-navbar-brand_long-title .kbq-navbar-title {
     display: -webkit-box;
-
     -webkit-box-orient: vertical;
+
+    white-space: normal;
     -webkit-line-clamp: 2;
     line-clamp: 2;
-    white-space: normal;
 }
 
 @mixin kbq-navbar-brand-theme() {
@@ -171,6 +163,7 @@ a.kbq-navbar-brand {
         // horizontally), which is what the compact type exists to prevent.
         &.kbq-navbar-brand_long-title .kbq-navbar-title {
             @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-strong);
+
             line-height: 16px;
         }
     }

@@ -7,23 +7,16 @@
 .kbq-tree-option {
     @include vendor-prefixes.user-select(none);
     @include action-container.kbq-option-action-visibility('.kbq-tree-selection.cdk-keyboard-focused');
+    @include squircle.kbq-squircle(var(--kbq-tree-option-border-radius));
 
     position: relative;
 
-    box-sizing: border-box;
-
     display: flex;
+    gap: var(--kbq-tree-size-container-content-gap-horizontal);
     align-items: center;
 
+    box-sizing: border-box;
     min-height: 32px;
-
-    overflow-wrap: break-word;
-
-    border-width: var(--kbq-tree-size-container-focus-outline-width);
-    border-style: solid;
-    border-color: transparent;
-    @include squircle.kbq-squircle(var(--kbq-tree-option-border-radius));
-
     padding-top: tokens.kbq-difference-series-css-variables(
         [tree-size-container-padding-vertical,
         tree-size-container-focus-outline-width]
@@ -37,13 +30,17 @@
         tree-size-container-focus-outline-width]
     );
 
-    gap: var(--kbq-tree-size-container-content-gap-horizontal);
+    overflow-wrap: break-word;
+
+    border-width: var(--kbq-tree-size-container-focus-outline-width);
+    border-style: solid;
+    border-color: transparent;
 
     & .kbq-option-text {
         @include common.kbq-line-wrapper-base();
-        display: inline-block;
-
         @include common.kbq-truncate-line();
+
+        display: inline-block;
     }
 
     // Two-line options only: align leading content to the center of the FIRST line.
@@ -75,8 +72,8 @@
     }
 
     &:is(.kbq-checked, .kbq-selected, .kbq-focused):has(+ :is(.kbq-checked, .kbq-selected, .kbq-focused)) {
-        border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
     }
 
     &:is(.kbq-checked, .kbq-selected, .kbq-focused) + :is(.kbq-checked, .kbq-selected, .kbq-focused) {

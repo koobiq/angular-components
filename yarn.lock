@@ -11027,6 +11027,7 @@ __metadata:
     spdx-satisfies: "npm:^6.0.0"
     stylelint: "npm:^18.0.0"
     stylelint-config-standard-scss: "npm:^18.0.0"
+    stylelint-order: "npm:^8.1.3"
     stylelint-prettier: "npm:^5.1.0"
     ts-node: "npm:^10.9.1"
     tslib: "npm:^2.9.1"
@@ -13419,6 +13420,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"postcss-sorting@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "postcss-sorting@npm:10.0.0"
+  peerDependencies:
+    postcss: ^8.4.20
+  checksum: 10c0/2e53560ccfaefb6ccfaa44cd258735f815de7a06ff6c79e6fb0fe789422f10242266044902c716e2eec9680879d7e0872b4ecd5d89e9bd8670f6d9f6c3ce5adc
+  languageName: node
+  linkType: hard
+
 "postcss-value-parser@npm:^4.2.0":
   version: 4.2.0
   resolution: "postcss-value-parser@npm:4.2.0"
@@ -14974,6 +14984,18 @@ __metadata:
   peerDependencies:
     stylelint: ^18.0.0
   checksum: 10c0/6f6038d1bdb87637bf8800b56ae26e193f61a04fcf49eb4fa22a92afbf1f2376eaab5623687a4008a5c9abdfa18d78dd5da095ff54ca2c52a99d1da72396bc4f
+  languageName: node
+  linkType: hard
+
+"stylelint-order@npm:^8.1.3":
+  version: 8.1.3
+  resolution: "stylelint-order@npm:8.1.3"
+  dependencies:
+    postcss: "npm:^8.5.28"
+    postcss-sorting: "npm:^10.0.0"
+  peerDependencies:
+    stylelint: ^16.18.0 || ^17.0.0 || ^18.0.0
+  checksum: 10c0/af3ff0bd44393fa2164114772d2adf057293c6092a74d6cd6e825a910cd355dcf62d9c8c6cbffb49dbd65000583aac0179bb60ee069d66a5884eed643a24df2f
   languageName: node
   linkType: hard
 

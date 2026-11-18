@@ -11,7 +11,6 @@
 
 @mixin koobiq-theme() {
     @include theming.kbq-core-theme();
-
     @include forms-theme.kbq-forms-theme();
     @include highlight-theme.kbq-highlight-theme();
     @include highlight-theme.kbq-highlight-background-theme();
@@ -28,7 +27,6 @@
     @include typography.kbq-base-typography();
     @include typography.kbq-markdown-base-typography();
     @include markdown-theme.kbq-markdown-typography();
-
     @include link-theme.kbq-link-typography();
     @include forms-theme.kbq-forms-typography();
     @include tabs-theme.kbq-tabs-typography();

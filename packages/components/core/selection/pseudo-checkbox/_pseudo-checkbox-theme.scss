@@ -1,8 +1,8 @@
 @mixin kbq-pseudo-checkbox-color($style-name) {
     $base: checkbox-#{$style-name};
 
-    border-color: var(--kbq-#{$base}-default-border);
     background: var(--kbq-#{$base}-default-background);
+    border-color: var(--kbq-#{$base}-default-border);
 
     & .kbq-checkbox-checkmark,
     & .kbq-checkbox-mixedmark {
@@ -11,18 +11,18 @@
 
     &.kbq-checked,
     &.kbq-indeterminate {
-        border-color: var(--kbq-#{$base}-states-checked-border);
         background: var(--kbq-#{$base}-states-checked-background);
+        border-color: var(--kbq-#{$base}-states-checked-border);
     }
 
     &.kbq-disabled {
+        background: var(--kbq-#{$base}-states-disabled-background);
+        border-color: var(--kbq-#{$base}-states-disabled-border);
+
         & .kbq-checkbox-checkmark,
         & .kbq-checkbox-mixedmark {
             color: var(--kbq-#{$base}-states-disabled-color);
         }
-
-        border-color: var(--kbq-#{$base}-states-disabled-border);
-        background: var(--kbq-#{$base}-states-disabled-background);
     }
 }
 

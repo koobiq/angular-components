@@ -3,8 +3,8 @@
 // Mixin that renders all of the core styles that depend on the theme.
 @mixin kbq-core-theme() {
     .kbq-app-background {
-        background: var(--kbq-background-bg);
         color: var(--kbq-foreground-contrast);
+        background: var(--kbq-background-bg);
     }
 
     // Which palette the browser paints *its own* surfaces with — scrollbars, native controls, the
@@ -191,9 +191,9 @@
 // @deprecated Nothing in the library reads the theme map since `koobiq-theme()` takes no argument. Will be
 // removed in 22.0.0: use the CSS variables of the theme.
 @function kbq-light-theme($tokens) {
-    @warn '`kbq-light-theme()` is deprecated and will be removed in 22.0.0: nothing in the library reads the theme map. Use the CSS variables of the theme instead, for example `var(--kbq-foreground-contrast)`.';
-
     $scheme: 'light';
+
+    @warn '`kbq-light-theme()` is deprecated and will be removed in 22.0.0: nothing in the library reads the theme map. Use the CSS variables of the theme instead, for example `var(--kbq-foreground-contrast)`.';
 
     @return (
         is-dark: false,
@@ -218,9 +218,9 @@
 // @deprecated Nothing in the library reads the theme map since `koobiq-theme()` takes no argument. Will be
 // removed in 22.0.0: use the CSS variables of the theme.
 @function kbq-dark-theme($tokens) {
-    @warn '`kbq-dark-theme()` is deprecated and will be removed in 22.0.0: nothing in the library reads the theme map. Use the CSS variables of the theme instead, for example `var(--kbq-foreground-contrast)`.';
-
     $scheme: 'dark';
+
+    @warn '`kbq-dark-theme()` is deprecated and will be removed in 22.0.0: nothing in the library reads the theme map. Use the CSS variables of the theme instead, for example `var(--kbq-foreground-contrast)`.';
 
     @return (
         is-dark: true,

@@ -6,14 +6,13 @@
     @include input.kbq-reset-input();
 
     display: inline-block;
+
     box-sizing: border-box;
-
-    text-overflow: ellipsis;
-
     width: 100%;
     min-height: tokens.kbq-difference-series-css-variables([size-3xl, calc(var(--kbq-size-border-width) * 2)]);
-
     padding: var(--kbq-input-size-padding-vertical) var(--kbq-input-size-padding-horizontal);
+
+    text-overflow: ellipsis;
 }
 
 /*

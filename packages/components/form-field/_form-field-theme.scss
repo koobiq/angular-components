@@ -2,8 +2,8 @@
 
 @mixin -kbq-form-field-state($state-name) {
     .kbq-form-field__container {
-        border-color: var(--kbq-form-field-#{$state-name}-border-color);
         background-color: var(--kbq-form-field-#{$state-name}-background);
+        border-color: var(--kbq-form-field-#{$state-name}-border-color);
     }
 
     .kbq-input,
@@ -65,6 +65,12 @@
             // spellings it knows. A plain comma list would not: one unknown pseudo-class
             // invalidates the whole list.
             &:is(:autofill, :-webkit-autofill) {
+                // Repaints what the state cascade resolved above, so an autofilled control that is
+                // also invalid or disabled still gets that state's text colour. The fallback covers
+                // a control outside any state block, which cannot happen today because `default`
+                // always runs.
+                -webkit-text-fill-color: var(--kbq-form-field-resolved-text, var(--kbq-form-field-default-text));
+                caret-color: var(--kbq-form-field-resolved-text, var(--kbq-form-field-default-text));
                 // Longhands rather than the shorthand, which would also reset `transition-delay`
                 // and `transition-timing-function`. Nothing transitions on these controls today,
                 // but the next thing that does should not break here.
@@ -74,13 +80,6 @@
                 // minutes — a dashboard left open over lunch.
                 transition-property: background-color;
                 transition-duration: 600000s;
-
-                // Repaints what the state cascade resolved above, so an autofilled control that is
-                // also invalid or disabled still gets that state's text colour. The fallback covers
-                // a control outside any state block, which cannot happen today because `default`
-                // always runs.
-                -webkit-text-fill-color: var(--kbq-form-field-resolved-text, var(--kbq-form-field-default-text));
-                caret-color: var(--kbq-form-field-resolved-text, var(--kbq-form-field-default-text));
             }
         }
 
@@ -119,8 +118,8 @@
                     // The container holds the prefix and the suffix, while the hints sit below it and keep the color
                     // they set themselves: `-webkit-text-fill-color` would win over it.
                     & .kbq-form-field__container .kbq-icon.kbq-empty {
-                        color: var(--kbq-form-field-states-error-text);
                         -webkit-text-fill-color: var(--kbq-form-field-states-error-text);
+                        color: var(--kbq-form-field-states-error-text);
                     }
                 }
             }
@@ -164,8 +163,8 @@
 
             // Leaves the hints out, as in the invalid state: they follow the disabled state through `KBQ_HINT_PARENT`.
             .kbq-form-field__container .kbq-icon.kbq-empty {
-                color: var(--kbq-form-field-states-disabled-text);
                 -webkit-text-fill-color: var(--kbq-form-field-states-disabled-text);
+                color: var(--kbq-form-field-states-disabled-text);
             }
         }
 

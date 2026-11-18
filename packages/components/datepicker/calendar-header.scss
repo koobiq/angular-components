@@ -3,11 +3,9 @@
     flex-direction: row;
     justify-content: space-between;
 
-    padding-right: var(--kbq-datepicker-size-header-padding-horizontal);
-
-    padding-left: var(--kbq-datepicker-size-header-padding-horizontal);
-
     margin-bottom: var(--kbq-datepicker-size-header-margin-bottom);
+    padding-right: var(--kbq-datepicker-size-header-padding-horizontal);
+    padding-left: var(--kbq-datepicker-size-header-padding-horizontal);
 }
 
 .kbq-calendar-header__select {
@@ -21,9 +19,8 @@
 }
 
 .kbq-calendar-select-panel {
-    margin-top: 2px;
-
     min-width: 98% !important;
+    margin-top: 2px;
 
     & .kbq-select__content {
         max-height: 12 * 32px;

@@ -33,7 +33,6 @@
 
     & .kbq-filter-bar__separator {
         align-self: center;
-
         height: var(--kbq-size-m) !important;
 
         // `!important` is load-bearing: it overrides the divider's own higher-specificity
@@ -44,26 +43,26 @@
 
     & .kbq-filter-bar__arrow {
         align-self: center;
-
         margin-inline-start: var(--kbq-size-s);
     }
 
     .kbq-button.kbq-button_changed-filter {
-        border-end-end-radius: unset;
         border-start-end-radius: unset;
+        border-end-end-radius: unset;
     }
 
     // The action button butts against the trigger — no negative margin to collapse borders (as the date pipe
     // does), because `changed-filter` paints a translucent background under a transparent border: a 1px
     // overlap would composite that fill twice and read as a darker hairline beside the separator below.
     .kbq-button-icon {
-        border-end-start-radius: unset;
         border-start-start-radius: unset;
+        border-end-start-radius: unset;
     }
 
     .kbq-button_changed-saved-filter {
         &::before {
             content: '';
+
             position: absolute;
             inset-inline-end: -4px;
             top: -4px;
@@ -79,6 +78,7 @@
 
     .kbq-button:not(:hover, .kbq-active) + .kbq-button_action:not(:hover, .kbq-active)::after {
         content: '';
+
         position: absolute;
         inset-inline-start: 0;
         top: 10px;

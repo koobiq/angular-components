@@ -15,12 +15,12 @@
     }
 
     .kbq-calendar__body-cell-content {
-        background: var(--kbq-datepicker-grid-cell-default-background);
         color: var(--kbq-datepicker-grid-cell-default-text);
+        background: var(--kbq-datepicker-grid-cell-default-background);
 
         &.kbq-calendar__body-today {
-            background: var(--kbq-datepicker-grid-cell-today-background);
             color: var(--kbq-datepicker-grid-cell-today-text);
+            background: var(--kbq-datepicker-grid-cell-today-background);
         }
 
         &:hover:not(.kbq-disabled) {
@@ -32,8 +32,8 @@
         }
 
         &.kbq-selected:not(.kbq-disabled) {
-            background: var(--kbq-datepicker-grid-cell-states-selected-background);
             color: var(--kbq-datepicker-grid-cell-states-selected-text);
+            background: var(--kbq-datepicker-grid-cell-states-selected-background);
 
             &:hover {
                 background: var(--kbq-datepicker-grid-cell-states-selected-hover-background);

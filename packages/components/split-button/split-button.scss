@@ -2,40 +2,37 @@
 @use '../core/styles/common/squircle';
 
 .kbq-split-button {
+    @include squircle.kbq-squircle(var(--kbq-size-border-radius));
+
     display: flex;
     flex-direction: row;
-
     min-width: 0;
-
-    @include squircle.kbq-squircle(var(--kbq-size-border-radius));
 
     &.kbq-split-button_styles-for-nested {
         & .kbq-split-button_first {
+            min-width: 0;
+            border-right: none;
+            border-top-right-radius: unset;
+            border-bottom-right-radius: unset;
+
             &.kbq-button {
                 padding-right: 10px;
             }
-
-            min-width: 0;
-
-            border-right: none;
-
-            border-top-right-radius: unset;
-            border-bottom-right-radius: unset;
         }
 
         & .kbq-split-button_second {
             border-left: none;
-
             border-top-left-radius: unset;
             border-bottom-left-radius: unset;
 
             &::before {
-                display: block;
-
                 content: '';
+
                 position: absolute;
-                left: 0;
                 top: calc(var(--kbq-size-s) - var(--kbq-button-size-border-width));
+                left: 0;
+
+                display: block;
 
                 width: 1px;
                 height: var(--kbq-size-l);
@@ -59,8 +56,8 @@
         }
 
         & .kbq-button-icon + .kbq-button-icon {
-            padding-left: var(--kbq-size-xxs);
             padding-right: var(--kbq-size-xxs);
+            padding-left: var(--kbq-size-xxs);
         }
     }
 }

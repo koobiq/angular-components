@@ -18,12 +18,13 @@
     @extend %kbq-button-base;
     @extend %kbq-button-clamped-to-container;
 
-    // base padding - border-width
-    padding-left: tokens.kbq-difference-series-css-variables(
+    padding-right: tokens.kbq-difference-series-css-variables(
         [button-size-horizontal-padding,
         button-size-border-width]
     );
-    padding-right: tokens.kbq-difference-series-css-variables(
+
+    // base padding - border-width
+    padding-left: tokens.kbq-difference-series-css-variables(
         [button-size-horizontal-padding,
         button-size-border-width]
     );
@@ -37,11 +38,11 @@
 .kbq-button-icon {
     @extend %kbq-button-base;
 
-    padding-left: tokens.kbq-difference-series-css-variables(
+    padding-right: tokens.kbq-difference-series-css-variables(
         [button-icon-size-horizontal-padding,
         button-size-border-width]
     );
-    padding-right: tokens.kbq-difference-series-css-variables(
+    padding-left: tokens.kbq-difference-series-css-variables(
         [button-icon-size-horizontal-padding,
         button-size-border-width]
     );

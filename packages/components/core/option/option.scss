@@ -6,13 +6,12 @@
 .kbq-option {
     @include list.kbq-list-item-base();
     @include vendor-prefixes.user-select(none);
+    @include squircle.kbq-squircle(var(--kbq-option-border-radius));
 
     & > .kbq-pseudo-checkbox {
-        margin-top: var(--kbq-size-3xs);
         align-self: baseline;
+        margin-top: var(--kbq-size-3xs);
     }
-
-    @include squircle.kbq-squircle(var(--kbq-option-border-radius));
 
     &:not(.kbq-disabled) {
         cursor: pointer;

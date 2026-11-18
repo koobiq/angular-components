@@ -4,18 +4,16 @@
     position: relative;
 
     flex-direction: row;
+    justify-content: center;
 
     box-sizing: border-box;
-
-    outline: none;
-    -webkit-tap-highlight-color: transparent;
-
-    min-height: var(--kbq-size-3xl);
     min-width: var(--kbq-size-3xl);
-
+    min-height: var(--kbq-size-3xl);
     margin: var(--kbq-size-s);
 
-    justify-content: center;
+    outline: none;
+
+    -webkit-tap-highlight-color: transparent;
 
     // Hit area over the margin this item is spaced with, so the highlight does not drop out between
     // items (DS-2558) — the transparent pseudo-element is hit-tested as part of the item, so hover and
@@ -24,9 +22,9 @@
     // `--kbq-button-toggle-size-item-hit-area-*` for a group whose `gap` two neighbours have to tile.
     &::before {
         top: calc(-1 * #{var(--kbq-size-s)});
-        left: calc(-1 * #{var(--kbq-size-s)});
         right: calc(-1 * #{var(--kbq-size-s)});
         bottom: calc(-1 * #{var(--kbq-size-s)});
+        left: calc(-1 * #{var(--kbq-size-s)});
     }
 
     &::after {
@@ -37,8 +35,8 @@
     }
 
     & .kbq-navbar-item__title {
-        padding-left: var(--kbq-size-xxs);
         padding-right: var(--kbq-size-xxs);
+        padding-left: var(--kbq-size-xxs);
     }
 
     & .kbq-navbar-item__arrow-icon {
@@ -50,26 +48,24 @@
     }
 
     &.kbq-navbar-item_with-title:not(.kbq-navbar-item_collapsed) {
-        margin-left: 0;
         margin-right: 0;
+        margin-left: 0;
         padding-right: var(--kbq-size-m);
         padding-left: var(--kbq-size-m);
 
         &::before {
-            left: 0;
             right: 0;
+            left: 0;
         }
 
         & > .kbq-icon {
             align-self: center;
-
             padding-right: var(--kbq-size-xxs);
         }
     }
 
     &.kbq-navbar-bento {
         justify-content: center;
-
         margin-right: var(--kbq-size-xxs);
 
         &::before {
@@ -79,7 +75,6 @@
 
     &.kbq-navbar-item_collapsed {
         justify-content: center;
-
         padding: var(--kbq-size-s);
 
         & .kbq-navbar-item__container {
@@ -95,12 +90,12 @@
     }
 
     &.kbq-navbar-item_has-nested {
-        margin-left: var(--kbq-size-m);
         margin-right: var(--kbq-size-m);
+        margin-left: var(--kbq-size-m);
 
         &::before {
-            left: calc(-1 * #{var(--kbq-size-m)});
             right: calc(-1 * #{var(--kbq-size-m)});
+            left: calc(-1 * #{var(--kbq-size-m)});
         }
     }
 }

@@ -3,22 +3,20 @@
 .kbq-textarea {
     display: inline-block;
 
-    background: transparent;
+    box-sizing: border-box;
+    width: 100%;
     margin: 0;
+    padding: var(--kbq-textarea-size-padding-vertical) var(--kbq-textarea-size-padding-horizontal);
+    overflow: auto;
+
+    vertical-align: bottom; // Chrome textarea height sizing fix
+
+    -webkit-appearance: none; // Chrome textarea height sizing fix
+    background: transparent;
     border: none;
     outline: none;
 
     resize: none;
-    overflow: auto;
-
-    width: 100%;
-
-    box-sizing: border-box;
-
-    padding: var(--kbq-textarea-size-padding-vertical) var(--kbq-textarea-size-padding-horizontal);
-
-    -webkit-appearance: none; // Chrome textarea height sizing fix
-    vertical-align: bottom; // Chrome textarea height sizing fix
 
     &:not(.kbq-textarea-resizable) {
         box-sizing: border-box;
@@ -26,8 +24,8 @@
     }
 
     &.kbq-textarea-resizable {
-        resize: vertical;
         min-height: var(--kbq-textarea-size-min-height);
+        resize: vertical;
 
         &::-webkit-resizer {
             background: var(--kbq-textarea-resizer-icon) center no-repeat;

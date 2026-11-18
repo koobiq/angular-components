@@ -3,19 +3,21 @@
     align-items: center;
 
     .dev-percent {
-        margin-right: 8px;
-        width: 60px;
-        text-align: center;
         flex-shrink: 0;
+        width: 60px;
+        margin-right: 8px;
+        text-align: center;
     }
 
     .dev-spinners {
         display: flex;
-        flex-direction: column;
         flex-grow: 1;
+        flex-direction: column;
+
         margin-top: 8px;
-        list-style: none;
         padding: 0;
+
+        list-style: none;
     }
 
     .dev-spinner-container {

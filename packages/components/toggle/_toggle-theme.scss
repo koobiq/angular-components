@@ -4,8 +4,8 @@
     $base: toggle-#{$type}-#{$state-name};
 
     .kbq-toggle-bar {
-        border-color: var(--kbq-#{$base}-border);
         background: var(--kbq-#{$base}-background);
+        border-color: var(--kbq-#{$base}-border);
     }
 
     .kbq-toggle__circle {

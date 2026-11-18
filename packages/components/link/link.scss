@@ -30,13 +30,13 @@ $-kbq-link-word-joiner: string.unquote('"\\2060"');
 // out without adding to the specificity of a rule.
 // @TODO: drop `:where([kbqlink])` together with `link/deprecated`: the plain `.kbq-link` is enough then.
 .kbq-link:where([kbqlink]) {
-    display: inline;
-
-    text-decoration: none;
-
     @include link.kbq-link-root();
     @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     @include link.kbq-link-states('.kbq-link__text');
+    @include -kbq-link-gaps(var(--kbq-link-size-normal-content-padding), 1px);
+
+    display: inline;
+    text-decoration: none;
 
     &.kbq-link_use-visited:visited:not(.kbq-disabled),
     &.kbq-link_use-visited.kbq-visited:not(.kbq-disabled) {
@@ -51,9 +51,9 @@ $-kbq-link-word-joiner: string.unquote('"\\2060"');
     // line to the next stays on the link. It changes neither the line height nor the focus ring, drawn around
     // the link itself, so a link that fits on one line keeps it too.
     .kbq-link__text {
-        padding-block: var(--kbq-link-size-multiline-hit-area-gap);
-
         @include link.kbq-link-text();
+
+        padding-block: var(--kbq-link-size-multiline-hit-area-gap);
     }
 
     // The states color the underline whatever the mode: a link underlined on hover only, or never, has no line
@@ -69,8 +69,8 @@ $-kbq-link-word-joiner: string.unquote('"\\2060"');
         vertical-align: baseline;
 
         &:has(> svg) {
-            vertical-align: middle;
             line-height: 0;
+            vertical-align: middle;
         }
     }
 
@@ -92,10 +92,9 @@ $-kbq-link-word-joiner: string.unquote('"\\2060"');
         }
     }
 
-    @include -kbq-link-gaps(var(--kbq-link-size-normal-content-padding), 1px);
-
     &.kbq-link_size_compact {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
+        @include -kbq-link-gaps(var(--kbq-link-size-compact-content-padding), 0px);
 
         .kbq-link__prefix.kbq-icon {
             vertical-align: text-top;
@@ -108,8 +107,6 @@ $-kbq-link-word-joiner: string.unquote('"\\2060"');
         .kbq-link__external-icon {
             margin-bottom: 1px;
         }
-
-        @include -kbq-link-gaps(var(--kbq-link-size-compact-content-padding), 0px);
     }
 
     &.kbq-link_size_big {

@@ -3,35 +3,30 @@
 @use '../core/styles/common/squircle';
 
 .kbq-app-switcher-dropdown-site {
+    @include common.user-select(none);
+    @include common.kbq-list-item-base();
+    @include squircle.kbq-squircle(var(--kbq-size-xs));
+
     display: flex;
     flex-direction: row;
-
     justify-content: space-between;
 
     width: 100%;
-    min-height: var(--kbq-size-3xl);
+    padding: var(--kbq-size-xxs) var(--kbq-size-m);
 
     text-decoration: none;
 
-    @include squircle.kbq-squircle(var(--kbq-size-xs));
-
-    @include common.user-select(none);
-    @include common.kbq-list-item-base();
-
-    padding: var(--kbq-size-xxs) var(--kbq-size-m);
-
     & .kbq-app-switcher-dropdown-item-trigger__icon,
     & .kbq-badge {
-        margin-top: var(--kbq-size-3xs);
-
         align-self: flex-start;
+        margin-top: var(--kbq-size-3xs);
     }
 }
 
 @mixin -kbq-app-switcher-dropdown-site-theme() {
     .kbq-app-switcher-dropdown-site {
-        background: var(--kbq-list-default-container-background);
         color: var(--kbq-list-default-text-color);
+        background: var(--kbq-list-default-container-background);
 
         &.kbq-dropdown-item_highlighted,
         &:hover,

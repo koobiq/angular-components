@@ -4,14 +4,12 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-
     width: 100%;
 
     .kbq-filter-bar__left {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-
         gap: var(--kbq-size-s);
 
         .kbq-button > .kbq-icon {
@@ -26,7 +24,6 @@
     .kbq-filter-bar__right {
         display: flex;
         flex-direction: row;
-
         margin-inline-start: var(--kbq-size-3xl);
     }
 }
@@ -53,8 +50,8 @@
         & .kbq-button:not(.kbq-disabled) {
             display: flex;
             flex-direction: row;
-            width: 100%;
             justify-content: flex-start;
+            width: 100%;
 
             & .kbq-button_hot-key {
                 color: var(--kbq-foreground-contrast-secondary);

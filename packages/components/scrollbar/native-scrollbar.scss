@@ -34,9 +34,10 @@
 .kbq-native-scrollbar::-webkit-scrollbar-thumb,
 .kbq-native-scrollbar_descendants ::-webkit-scrollbar-thumb {
     box-sizing: border-box;
+
+    background-color: var(--kbq-scrollbar-thumb-default-background);
     border: var(--kbq-scrollbar-thumb-gap) solid transparent;
     border-radius: var(--kbq-size-border-radius);
-    background-color: var(--kbq-scrollbar-thumb-default-background);
     background-clip: content-box;
 }
 

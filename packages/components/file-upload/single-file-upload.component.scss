@@ -106,9 +106,10 @@
     }
 
     .kbq-file-upload {
-        min-height: var(--kbq-file-upload-single-min-height);
-
+        @include -kbq-single-file-upload-theme();
         @include squircle.kbq-squircle(var(--kbq-file-upload-size-single-container-border-radius));
+
+        min-height: var(--kbq-file-upload-single-min-height);
         border-width: var(--kbq-file-upload-size-single-container-border-width);
         border-style: dashed;
 
@@ -122,11 +123,11 @@
 
             .kbq-file-item__text-wrapper {
                 display: flex;
+                gap: var(--kbq-file-upload-size-single-container-content-gap-horizontal);
                 align-items: center;
+
                 width: 100%;
                 min-width: 0;
-
-                gap: var(--kbq-file-upload-size-single-container-content-gap-horizontal);
 
                 .kbq-file-item__text {
                     // Takes whatever is left beside the icon and the size column. The `min-width: 0` and
@@ -144,7 +145,5 @@
         .kbq-file-upload__action {
             padding: var(--kbq-file-upload-size-single-action-padding);
         }
-
-        @include -kbq-single-file-upload-theme();
     }
 }

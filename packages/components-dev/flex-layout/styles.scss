@@ -1,9 +1,11 @@
 .dev-colorNested > div div {
+    height: 80px;
+
+    text-align: center;
+
+    color: white;
     box-shadow: 0 2px 5px 0 rgb(0 0 0 / 26%);
     opacity: 0.9;
-    color: white;
-    text-align: center;
-    height: 80px;
 }
 
 .dev-colorNested > div div:nth-child(1) {

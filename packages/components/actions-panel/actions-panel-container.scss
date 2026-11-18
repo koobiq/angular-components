@@ -13,41 +13,43 @@ $easing: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .kbq-actions-panel-container {
-    background: var(--kbq-actions-panel-background-color);
-    color: var(--kbq-actions-panel-text-color);
-    box-shadow: var(--kbq-actions-panel-box-shadow);
-    height: var(--kbq-actions-panel-height);
-    padding: var(--kbq-actions-panel-padding);
     @include squircle.kbq-squircle(var(--kbq-actions-panel-border-radius));
+    @include animation.kbq-animations-off();
+
     display: flex;
     flex-grow: 1;
     align-items: center;
-    overflow: hidden;
+
     box-sizing: border-box;
+    height: var(--kbq-actions-panel-height);
+    padding: var(--kbq-actions-panel-padding);
+    overflow: hidden;
+
+    color: var(--kbq-actions-panel-text-color);
+    background: var(--kbq-actions-panel-background-color);
+    box-shadow: var(--kbq-actions-panel-box-shadow);
 
     transform: translateY(100%);
     transition: transform 150ms $easing;
 
-    @include animation.kbq-animations-off();
-
     &.kbq-actions-panel-container_visible {
+        @include animation.kbq-animations-off();
+
         transform: none;
         animation: kbq-actions-panel-enter 125ms $easing;
-
-        @include animation.kbq-animations-off();
     }
 
     .kbq-actions-panel-container__content {
         display: flex;
-        align-items: center;
         flex-grow: 1;
+        align-items: center;
         overflow: hidden;
     }
 
     .kbq-actions-panel-container__vertical-divider {
-        background-color: var(--kbq-actions-panel-vertical-divider-background-color);
         height: var(--kbq-actions-panel-vertical-divider-height) !important;
         margin: var(--kbq-actions-panel-vertical-divider-margin);
+        background-color: var(--kbq-actions-panel-vertical-divider-background-color);
     }
 
     .kbq-button,

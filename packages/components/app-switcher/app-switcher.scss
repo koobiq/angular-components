@@ -2,25 +2,23 @@
 @use '../core/styles/common/squircle';
 
 .kbq-app-switcher {
-    position: relative;
-
-    display: flex;
-    flex-direction: column;
-
-    margin-top: var(--kbq-size-xxs);
-    margin-bottom: var(--kbq-size-xxs);
-
-    width: var(--kbq-app-switcher-size-container-width, 320px);
-
     @include squircle.kbq-squircle(var(--kbq-size-xs));
 
-    box-shadow: var(--kbq-shadow-popup);
-
-    box-sizing: border-box;
+    position: relative;
 
     // Keeps the panel above adjacent content when the component is rendered inline (as the docs and e2e
     // fixtures do) rather than inside a CDK overlay, which stacks on its own.
     z-index: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    box-sizing: border-box;
+    width: var(--kbq-app-switcher-size-container-width, 320px);
+    margin-top: var(--kbq-size-xxs);
+    margin-bottom: var(--kbq-size-xxs);
+
+    box-shadow: var(--kbq-shadow-popup);
 }
 
 .kbq-app-switcher__search-container {
@@ -29,17 +27,14 @@
 
 .kbq-app-switcher__search-result {
     max-width: var(--kbq-app-switcher-size-container-width, 320px);
-
     min-height: 0;
-
     padding: var(--kbq-size-s) var(--kbq-size-xxs);
 }
 
 .kbq-app-switcher__empty-search-result {
     display: flex;
-    justify-content: center;
     align-items: center;
-
+    justify-content: center;
     height: var(--kbq-app-switcher-size-empty-search-result-height, 96px);
 }
 
@@ -54,16 +49,14 @@
     display: flex;
     flex-direction: column;
     min-height: 0;
-
     padding: var(--kbq-size-s) var(--kbq-size-xxs);
 }
 
 .kbq-app-switcher-group-header {
-    padding: var(--kbq-size-s) var(--kbq-size-m);
-
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    padding: var(--kbq-size-s) var(--kbq-size-m);
 }
 
 .kbq-app-switcher__sites-container {

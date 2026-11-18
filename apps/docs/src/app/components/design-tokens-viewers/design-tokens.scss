@@ -1,8 +1,8 @@
 .docs-design-token-example__shadows {
     width: 44px;
     height: 44px;
-    border-radius: var(--kbq-size-xxs);
     background-color: var(--kbq-background-card);
+    border-radius: var(--kbq-size-xxs);
 }
 
 .docs-design-token-example__sizes {
@@ -17,8 +17,8 @@
 
 .docs-design-token-example__var {
     display: inline-flex;
-    height: 100%;
     flex-direction: column;
+    height: 100%;
 }
 
 .docs-design-token-example__var > .docs-design-token-example__value {
@@ -77,9 +77,10 @@
 .docs-design-token-example__dimensions {
     width: 96px;
     height: var(--kbq-size-5xl);
-    border-radius: var(--kbq-size-xs);
+
     background-color: var(--kbq-background-bg-secondary);
     border: var(--kbq-size-border-width) solid var(--kbq-line-contrast-less);
+    border-radius: var(--kbq-size-xs);
 
     @media (width <= 768px) {
         & {
@@ -100,9 +101,9 @@
     tr {
         td {
             &:first-child > div {
-                white-space: nowrap;
-                text-overflow: ellipsis;
                 overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
 
             &:last-child {

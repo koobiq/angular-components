@@ -2,6 +2,10 @@
 @use '../core/styles/common/tokens';
 
 @mixin kbq-select-theme() {
+    // Placeholder, search container and empty-result message: styled identically wherever a select-shaped
+    // panel is rendered, so the rules live next to the structure they belong to.
+    @include select.kbq-select-shared-theme();
+
     .kbq-select {
         color: var(--kbq-foreground-contrast);
 
@@ -23,19 +27,15 @@
         }
     }
 
-    // Placeholder, search container and empty-result message: styled identically wherever a select-shaped
-    // panel is rendered, so the rules live next to the structure they belong to.
-    @include select.kbq-select-shared-theme();
-
     .kbq-select__panel {
-        box-shadow: var(--kbq-select-panel-dropdown-shadow);
+        @include select.kbq-select-footer-item-theme();
+
         background: var(--kbq-select-panel-dropdown-background);
+        box-shadow: var(--kbq-select-panel-dropdown-shadow);
 
         & .kbq-select__footer {
             border-color: var(--kbq-divider-color, var(--kbq-line-contrast-less));
         }
-
-        @include select.kbq-select-footer-item-theme();
     }
 }
 

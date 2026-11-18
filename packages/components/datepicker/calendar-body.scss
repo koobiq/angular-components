@@ -2,13 +2,16 @@
 
 .kbq-calendar__body-cell {
     position: relative;
+
     height: 0;
+    padding: 0;
+
     line-height: 0;
     text-align: center;
-    outline: none;
-    cursor: pointer;
 
-    padding: 0;
+    outline: none;
+
+    cursor: pointer;
 }
 
 .kbq-disabled {
@@ -16,17 +19,16 @@
 }
 
 .kbq-calendar__body-cell-content {
+    @include squircle.kbq-squircle(var(--kbq-datepicker-size-grid-cell-border-radius));
+
     display: flex;
     align-items: center;
     justify-content: center;
 
     box-sizing: border-box;
     height: 32px;
+    margin-bottom: var(--kbq-datepicker-size-grid-content-gap-vertical);
 
     // Prevents text being off-center on Android.
     line-height: 1;
-
-    @include squircle.kbq-squircle(var(--kbq-datepicker-size-grid-cell-border-radius));
-
-    margin-bottom: var(--kbq-datepicker-size-grid-content-gap-vertical);
 }

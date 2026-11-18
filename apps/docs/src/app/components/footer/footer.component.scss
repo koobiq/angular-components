@@ -1,13 +1,15 @@
 @use '../dist/components/core/styles/common/tokens';
 
 .docs-footer {
-    box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    will-change: transform;
-    padding: var(--kbq-size-l) var(--kbq-size-xxl);
     gap: var(--kbq-size-l);
+
+    box-sizing: border-box;
     min-height: 112px;
+    padding: var(--kbq-size-l) var(--kbq-size-xxl);
+
+    will-change: transform;
 
     .docs-footer__item {
         display: flex;
@@ -15,17 +17,15 @@
 
         .docs-footer__control {
             display: inline-flex;
-            align-items: baseline;
-
             gap: var(--kbq-size-3xs);
-
+            align-items: baseline;
             cursor: pointer;
         }
     }
 
     @media (width <= 768px) {
-        padding: var(--kbq-size-xxl) var(--kbq-size-l);
         min-height: 140px;
+        padding: var(--kbq-size-xxl) var(--kbq-size-l);
 
         .docs-footer__label {
             margin-bottom: var(--kbq-size-3xs);

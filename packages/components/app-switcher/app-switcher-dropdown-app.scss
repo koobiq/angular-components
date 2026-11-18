@@ -3,25 +3,24 @@
 @use '../core/styles/common/squircle';
 
 .kbq-app-switcher-dropdown-app {
+    @include common.user-select(none);
+    @include squircle.kbq-squircle(var(--kbq-size-xs));
+
     display: flex;
     flex-direction: row;
 
+    box-sizing: border-box;
     width: 100%;
     min-height: var(--kbq-app-switcher-size-dropdown-app-height-min, 50px);
-
-    @include squircle.kbq-squircle(var(--kbq-size-xs));
-    // transparent border to keep the box model aligned with the other list rows (matches kbq-list-item-base)
-    border: var(--kbq-size-3xs) solid transparent;
-
-    @include common.user-select(none);
+    padding: var(--kbq-size-xxs) var(--kbq-size-m);
 
     text-decoration: none;
-    box-sizing: border-box;
+    // transparent border to keep the box model aligned with the other list rows (matches kbq-list-item-base)
+    border: var(--kbq-size-3xs) solid transparent;
     outline: none;
-    -webkit-tap-highlight-color: transparent;
-    cursor: pointer;
 
-    padding: var(--kbq-size-xxs) var(--kbq-size-m);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
 
     & .kbq-app-switcher-dropdown-app__icon {
         padding-top: var(--kbq-size-s);
@@ -29,14 +28,12 @@
     }
 
     & .kbq-app-switcher-dropdown-app__container {
-        width: 100%;
-
         align-self: center;
+        width: 100%;
 
         & .kbq-app-switcher-dropdown-app__name {
             display: flex;
             flex-direction: row;
-
             justify-content: space-between;
         }
 
@@ -56,8 +53,8 @@
 
 @mixin -kbq-app-switcher-dropdown-app-theme() {
     .kbq-app-switcher-dropdown-app {
-        background: var(--kbq-list-default-container-background);
         color: var(--kbq-list-default-text-color);
+        background: var(--kbq-list-default-container-background);
 
         &.kbq-dropdown-item_highlighted,
         &:hover,

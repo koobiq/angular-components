@@ -17,9 +17,9 @@
     .kbq-popover__content
     .kbq-popover__close-container
     .kbq-popover__close {
-    transform: none;
     top: 8px;
     right: 8px;
+    transform: none;
 }
 
 .example-popover-content-custom__image {
@@ -28,10 +28,10 @@
 }
 
 .example-popover-content-custom__container {
-    padding: 24px 32px 40px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 24px 32px 40px;
 }
 
 ::ng-deep .kbq-popover.example-popover-content-share .kbq-form__label {
@@ -54,9 +54,9 @@
 }
 
 .example-popover-content-share__text {
-    color: #6c7393;
     margin-top: 4px;
     margin-bottom: 12px;
+    color: #6c7393;
 }
 
 .example-popover-content-share__list {
@@ -78,6 +78,6 @@
 .example-popover-content-share__list-item-image {
     width: 32px;
     height: 32px;
-    border-radius: 100%;
     margin-right: 12px;
+    border-radius: 100%;
 }

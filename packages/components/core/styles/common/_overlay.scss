@@ -18,14 +18,14 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
 @mixin overlay() {
     .cdk-overlay-container,
     .cdk-global-overlay-wrapper {
-        // Disable events from being captured on the overlay container.
-        pointer-events: none;
-
         // The container should be the size of the viewport.
         top: 0;
         left: 0;
-        height: 100%;
+
         width: 100%;
+        height: 100%;
+        // Disable events from being captured on the overlay container.
+        pointer-events: none;
     }
 
     // The overlay-container is an invisible element which contains all individual overlays.
@@ -54,9 +54,9 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
     // problems tied to using `transform` and without interfering with the other position
     // strategies.
     .cdk-global-overlay-wrapper {
-        display: flex;
         position: absolute;
         z-index: $overlay-z-index;
+        display: flex;
     }
 
     // A single overlay pane.
@@ -64,19 +64,21 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
         // Note: it's important for this one to start off `absolute`,
         // in order for us to be able to measure it correctly.
         position: absolute;
-        pointer-events: auto;
-        box-sizing: border-box;
         z-index: $overlay-z-index;
 
         // For connected-position overlays, we set `display: flex` in
         // order to force `max-width` and `max-height` to take effect.
         display: flex;
+
+        box-sizing: border-box;
         max-width: 100%;
         max-height: 100%;
 
         // Keeps the global element styles of a page off the overlay structure.
         margin: 0;
         padding: 0;
+
+        pointer-events: auto;
 
         &.cdk-overlay-pane_ignore-pointer-events {
             pointer-events: none !important;
@@ -86,20 +88,22 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
     .cdk-overlay-backdrop {
         position: absolute;
         top: 0;
+        right: 0;
         bottom: 0;
         left: 0;
-        right: 0;
-
         z-index: $overlay-backdrop-z-index;
-        pointer-events: auto;
-        -webkit-tap-highlight-color: transparent;
-        transition: opacity $backdrop-animation-duration $backdrop-animation-timing-function;
-        opacity: 0;
 
         // Keeps the global element styles of a page off the overlay structure.
         box-sizing: border-box;
         margin: 0;
         padding: 0;
+
+        opacity: 0;
+
+        pointer-events: auto;
+        -webkit-tap-highlight-color: transparent;
+
+        transition: opacity $backdrop-animation-duration $backdrop-animation-timing-function;
 
         &.cdk-overlay-backdrop-showing {
             opacity: 1;
@@ -117,12 +121,12 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
     }
 
     .cdk-overlay-transparent-backdrop {
+        opacity: 1;
+        visibility: hidden;
         // Define a transition on the visibility so that the `transitionend` event can fire immediately.
         transition:
             visibility 1ms linear,
             opacity 1ms linear;
-        visibility: hidden;
-        opacity: 1;
 
         // Note: as of Firefox 57, having the backdrop be `background: none` will prevent it from
         // capturing the user's mouse scroll events. Since we also can't use something like
@@ -153,12 +157,12 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
         // when using the "grow after open" options.
         flex-direction: column;
 
+        // Keeps the global element styles of a page off the overlay structure.
+        box-sizing: border-box;
+
         // Add some dimensions so the element has an `innerText` which some people depend on in tests.
         min-width: 1px;
         min-height: 1px;
-
-        // Keeps the global element styles of a page off the overlay structure.
-        box-sizing: border-box;
         margin: 0;
         padding: 0;
     }

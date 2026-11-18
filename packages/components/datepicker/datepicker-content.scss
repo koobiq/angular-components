@@ -13,25 +13,23 @@ $kbq-datepicker-non-touch-calendar-width: calc(
 $kbq-datepicker-non-touch-calendar-height: 270px;
 
 .kbq-datepicker__content {
-    display: block;
-
     @include squircle.kbq-squircle(var(--kbq-datepicker-size-container-border-radius));
+
+    display: block;
 
     .kbq-calendar {
         width: $kbq-datepicker-non-touch-calendar-width;
         height: $kbq-datepicker-non-touch-calendar-height;
-
         padding-top: var(--kbq-datepicker-size-container-padding-vertical);
-
         padding-bottom: var(--kbq-datepicker-size-container-padding-vertical);
 
         animation: kbq-datepicker-calendar-enter 120ms 100ms cubic-bezier(0.55, 0, 0.55, 0.2) backwards;
     }
 
     &.kbq-datepicker__content_leave {
-        animation: kbq-datepicker-content-leave 100ms linear forwards;
-
         @include animation.kbq-animations-off();
+
+        animation: kbq-datepicker-content-leave 100ms linear forwards;
     }
 
     &.kbq-animations-disabled .kbq-calendar {

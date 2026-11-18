@@ -5,14 +5,12 @@
 @use '../dist/components/core/styles/koobiq-theme';
 
 @include components.kbq-core();
-
 @include visual.body-html();
 @include visual.layouts-for-breakpoint();
 
 // Include all typography for the components.
 @mixin docs-typography() {
     @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
-
     @include koobiq-theme.koobiq-typography();
 }
 
@@ -20,7 +18,7 @@
     @include koobiq-theme.koobiq-theme();
 
     & {
-        background: var(--kbq-background-bg);
         color: var(--kbq-foreground-contrast);
+        background: var(--kbq-background-bg);
     }
 }

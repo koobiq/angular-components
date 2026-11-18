@@ -46,20 +46,20 @@
 @mixin kbq-table-typography() {
     .kbq-table {
         & > thead {
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+
             & > tr > th {
                 font-weight: normal;
             }
-
-            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
         }
 
         & > tbody,
         & > tfoot {
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, tabular-normal);
+
             & > tr > th {
                 font-weight: normal;
             }
-
-            @include tokens.kbq-typography-level-to-styles-css-variables(typography, tabular-normal);
         }
     }
 }
