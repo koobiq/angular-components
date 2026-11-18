@@ -137,3 +137,18 @@ When choosing the sidepanel size, consider the following:
 - Page grid. It looks good when the sidepanel appears proportional on the page and aligns with other blocks. Ideal sidepanel proportions: 1/4, 1/3, 1/2, 2/3, or 3/4 of the main window.
 - Usage scenarios. If a non-modal panel is used to view an item from a list, it should ideally not cover the entire list — this preserves the ability to quickly switch between items. If a non-modal panel is used to organize parallel workspaces, verify that the areas do not interfere with each other or with the primary workflow.
 - Consistency. The product will look cleaner and more cohesive if it does not use many sidepanels with different widths. Ideally, use one size, two at most.
+
+## Close interception (canClose)
+
+The `canClose` config option is a guard modeled after the router's `CanDeactivate`: it runs on every close attempt and returns `boolean | Promise<boolean> | Observable<boolean>`. `true` closes the panel, `false` keeps it open. While an async decision is pending, repeated close attempts are ignored. The guard can be assigned or replaced after opening via `sidepanelRef.canClose`, which takes precedence over the config.
+
+The guard receives the close reason:
+
+| Reason           | Triggered by                                                                |
+| ---------------- | --------------------------------------------------------------------------- |
+| `'backdrop'`     | Backdrop click                                                              |
+| `'escape'`       | Escape key                                                                  |
+| `'close'`        | Header close icon, `kbq-sidepanel-close` button, stacked-panel indent click |
+| `'programmatic'` | `close()` call from code                                                    |
+
+Programmatic closing goes through the guard too: a typical guard returns `true` for `'programmatic'` right away, so closing after a successful save asks no confirmation. With `disableClose: true`, the guard is skipped for every user-initiated trigger.

@@ -176,3 +176,18 @@ A toast notification will briefly report the result of an operation or show a co
 **A new page** replaces a modal window when a lot of content, a long form, or a list needs to be shown. This approach allows content to be presented fully, with focus and without loss of functionality (for example, navigation).
 
 **The "Undo changes" pattern.** Instead of a "Are you sure?" modal dialog, it is often better to immediately perform the operation — and give the ability to undo it.
+
+## Close interception (canClose)
+
+The `canClose` config option is a guard modeled after the router's `CanDeactivate`: it runs on every close attempt and returns `boolean | Promise<boolean> | Observable<boolean>`. `true` closes the dialog, `false` keeps it open. While an async decision is pending, repeated close attempts are ignored. The guard can be assigned or replaced after opening via `modalRef.canClose`, which takes precedence over the config.
+
+The guard receives the close reason:
+
+| Reason           | Triggered by                    |
+| ---------------- | ------------------------------- |
+| `'backdrop'`     | Backdrop click                  |
+| `'escape'`       | Escape key                      |
+| `'close'`        | X button, Cancel and OK buttons |
+| `'programmatic'` | `close()` call from code        |
+
+The guard works alongside the existing `kbqOkClick`/`kbqCancelClick` veto — either mechanism can keep the dialog open. Programmatic closing goes through the guard too: a typical guard returns `true` for `'programmatic'` right away, so closing after a successful save asks no confirmation. When `kbqMaskClosable` or `kbqCloseByESC` is disabled, the matching trigger never reaches the guard.

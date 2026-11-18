@@ -5123,6 +5123,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "modal-full-custom-example.ts",
     "importPath": "components/modal"
   },
+  "modal-keep-open-on-error": {
+    "packagePath": "components/modal/modal-keep-open-on-error",
+    "title": "Modal that stays open on a form error",
+    "componentName": "ModalKeepOpenOnErrorExample",
+    "files": [
+      "modal-keep-open-on-error-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "modal-keep-open-on-error-example",
+    "primaryFile": "modal-keep-open-on-error-example.ts",
+    "importPath": "components/modal"
+  },
   "modal-multiple": {
     "packagePath": "components/modal/modal-multiple",
     "title": "Modal multiple",
@@ -6621,6 +6636,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "sidebar-with-splitter-example",
     "primaryFile": "sidebar-with-splitter-example.ts",
     "importPath": "components/sidebar"
+  },
+  "sidepanel-can-close": {
+    "packagePath": "components/sidepanel/sidepanel-can-close",
+    "title": "Sidepanel with a close guard",
+    "componentName": "SidepanelCanCloseExample",
+    "files": [
+      "sidepanel-can-close-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "sidepanel-can-close-example",
+    "primaryFile": "sidepanel-can-close-example.ts",
+    "importPath": "components/sidepanel"
   },
   "sidepanel-disable-close": {
     "packagePath": "components/sidepanel/sidepanel-disable-close",
@@ -9925,6 +9955,7 @@ export type LiveExampleId =
   | 'modal-component-with-injector'
   | 'modal-component'
   | 'modal-full-custom'
+  | 'modal-keep-open-on-error'
   | 'modal-multiple'
   | 'modal-overview'
   | 'modal-scroll'
@@ -10028,6 +10059,7 @@ export type LiveExampleId =
   | 'sidebar-overview'
   | 'sidebar-state-saving'
   | 'sidebar-with-splitter'
+  | 'sidepanel-can-close'
   | 'sidepanel-disable-close'
   | 'sidepanel-normal-mode'
   | 'sidepanel-overlayed'
