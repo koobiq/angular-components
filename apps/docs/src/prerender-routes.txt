@@ -55,6 +55,8 @@
 /en/components/core/api
 /en/components/datepicker/overview
 /en/components/datepicker/api
+/en/components/datetime/overview
+/en/components/datetime/api
 /en/components/dl/overview
 /en/components/dl/api
 /en/components/divider/overview
@@ -253,6 +255,8 @@
 /ru/components/core/api
 /ru/components/datepicker/overview
 /ru/components/datepicker/api
+/ru/components/datetime/overview
+/ru/components/datetime/api
 /ru/components/dl/overview
 /ru/components/dl/api
 /ru/components/divider/overview

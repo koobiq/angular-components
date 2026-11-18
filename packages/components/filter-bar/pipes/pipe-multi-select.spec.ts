@@ -317,6 +317,54 @@ describe('KbqPipeMultiSelectComponent', () => {
         });
     });
 
+    describe('select all row semantics', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+        });
+
+        const openWith = async (value: KbqSelectValue[]) => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value, selectAll: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+        };
+
+        const getPanel = () => document.querySelector<HTMLElement>('.kbq-pipe-multiselect__panel')!;
+
+        const getSelectAllRow = () => getPanel().querySelector<HTMLElement>('kbq-option')!;
+
+        it.each([
+            { state: 'unchecked', value: [], ariaChecked: 'false' },
+            { state: 'indeterminate', value: [SELECT_VALUES[0]], ariaChecked: 'mixed' },
+            { state: 'checked', value: ALL_VALUES, ariaChecked: 'true' }
+        ])('should report the $state state through aria-checked', async ({ value, ariaChecked }) => {
+            await openWith(value);
+
+            expect(getSelectAllRow().getAttribute('aria-checked')).toBe(ariaChecked);
+        });
+
+        it('should hide its checkbox from assistive tech', async () => {
+            await openWith([]);
+
+            expect(getSelectAllRow().querySelector('kbq-pseudo-checkbox')!.getAttribute('aria-hidden')).toBe('true');
+        });
+
+        it('should have no axe violations in the open panel', async () => {
+            await openWith([SELECT_VALUES[0]]);
+            // axe-core runs its checks on timers.
+            vi.useRealTimers();
+
+            await expect(getPanel()).toHaveNoViolations();
+        }, 15_000);
+    });
+
     describe('selectAllCounter', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(TestComponent);

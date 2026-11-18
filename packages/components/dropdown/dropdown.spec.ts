@@ -48,6 +48,7 @@ import {
     LEFT_ARROW,
     patchElementFocus,
     RIGHT_ARROW,
+    ruRULocaleData,
     SPACE,
     TAB,
     UP_ARROW
@@ -3759,6 +3760,94 @@ describe('KbqDropdown', () => {
 
             expect(search.value()).toBe('');
         });
+
+        describe('described to assistive technology', () => {
+            const arrowDown = () => {
+                dispatchKeyboardEvent(getInput(), 'keydown', DOWN_ARROW);
+                fixture.detectChanges();
+            };
+
+            it('should keep the search field a text field that controls the panel', async () => {
+                vi.useFakeTimers();
+
+                await open();
+
+                const input = getInput();
+
+                expect(input.hasAttribute('role')).toBe(false);
+                expect(input.hasAttribute('aria-expanded')).toBe(false);
+                expect(input.getAttribute('aria-autocomplete')).toBe('list');
+                expect(input.getAttribute('aria-controls')).toBe(getPanel().id);
+                expect(getPanel().id).toBeTruthy();
+            });
+
+            it('should point aria-activedescendant at the item the arrow keys highlight', async () => {
+                vi.useFakeTimers();
+
+                await open();
+
+                expect(getInput().hasAttribute('aria-activedescendant')).toBe(false);
+
+                arrowDown();
+                arrowDown();
+
+                const highlighted = overlayContainerElement.querySelector<HTMLElement>('.kbq-dropdown-item_active')!;
+
+                expect(highlighted.textContent!.trim()).toBe('Two');
+                expect(highlighted.id).toBeTruthy();
+                expect(getInput().getAttribute('aria-activedescendant')).toBe(highlighted.id);
+            });
+
+            it('should keep an id the highlighted item already has', async () => {
+                vi.useFakeTimers();
+
+                await open();
+
+                getItems()[0].id = 'own-item-id';
+                arrowDown();
+
+                expect(getInput().getAttribute('aria-activedescendant')).toBe('own-item-id');
+            });
+
+            it('should drop aria-activedescendant once the search leaves nothing to highlight', async () => {
+                vi.useFakeTimers();
+
+                await open();
+                arrowDown();
+
+                expect(getInput().hasAttribute('aria-activedescendant')).toBe(true);
+
+                fixture.componentInstance.filter('No such item');
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+
+                expect(getItems()).toHaveLength(0);
+                expect(getInput().hasAttribute('aria-activedescendant')).toBe(false);
+            });
+
+            it('should leave the name of the search field to its placeholder', async () => {
+                vi.useFakeTimers();
+
+                await open();
+
+                expect(getInput().hasAttribute('aria-label')).toBe(false);
+            });
+
+            it('should name a search field that has no name of its own', async () => {
+                vi.useFakeTimers();
+
+                const unnamed = createComponent(UnnamedSearchDropdown);
+
+                unnamed.detectChanges();
+                unnamed.componentInstance.trigger().open();
+                unnamed.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                unnamed.detectChanges();
+
+                expect(getInput().getAttribute('aria-label')).toBe(ruRULocaleData.a11y.search);
+            });
+        });
     });
 
     describe('keyboard activation', () => {
@@ -4167,6 +4256,28 @@ describe('KbqDropdown', () => {
                 await fixture.whenStable();
                 fixture.detectChanges();
 
+                await expect(overlayContainerElement).toHaveNoViolations();
+            },
+            axeTimeout
+        );
+
+        it(
+            'should have no axe violations while the search field points at a highlighted item',
+            async () => {
+                const fixture = createComponent(UnnamedSearchDropdown);
+
+                fixture.detectChanges();
+                fixture.componentInstance.trigger().open();
+                fixture.detectChanges();
+                await fixture.whenStable();
+                fixture.detectChanges();
+
+                const input = overlayContainerElement.querySelector('input')!;
+
+                dispatchKeyboardEvent(input, 'keydown', DOWN_ARROW);
+                fixture.detectChanges();
+
+                expect(input.getAttribute('aria-activedescendant')).toBeTruthy();
                 await expect(overlayContainerElement).toHaveNoViolations();
             },
             axeTimeout
@@ -5319,6 +5430,23 @@ class SharedPanelDropdown {
     `
 })
 class AccessibleSearchDropdown {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+    readonly control = new FormControl('');
+}
+
+@Component({
+    imports: [KbqDropdownModule, KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    template: `
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <kbq-form-field kbqDropdownSearch>
+                <input kbqInput [formControl]="control" />
+            </kbq-form-field>
+            <button kbq-dropdown-item>Item</button>
+        </kbq-dropdown>
+    `
+})
+class UnnamedSearchDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
     readonly control = new FormControl('');
 }

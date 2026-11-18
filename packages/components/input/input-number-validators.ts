@@ -31,11 +31,12 @@ export const KBQ_MIN_VALIDATOR: Provider = {
 };
 
 /**
- * A directive which installs the `KbqMinValidator` for any `formControlName`,
- * `formControl`, or control with `ngModel` that also has a `min` attribute.
+ * A directive which installs the `KbqMinValidator` for a `kbqNumberInput` with
+ * `formControlName`, `formControl`, or `ngModel` that also has a `min` attribute.
  */
 @Directive({
-    selector: '[min][formControlName],[min][formControl],[min][ngModel]',
+    selector:
+        'input[kbqNumberInput][min][formControlName],input[kbqNumberInput][min][formControl],input[kbqNumberInput][min][ngModel]',
     providers: [KBQ_MIN_VALIDATOR],
     host: {
         // Coerced rather than the raw `min()`, so a non-numeric bound (e.g. `"5px"`) is dropped from the
@@ -87,11 +88,12 @@ export const KBQ_MAX_VALIDATOR: Provider = {
 };
 
 /**
- * A directive which installs the `KbqMaxValidator` for any `formControlName`,
- * `formControl`, or control with `ngModel` that also has a `max` attribute.
+ * A directive which installs the `KbqMaxValidator` for a `kbqNumberInput` with
+ * `formControlName`, `formControl`, or `ngModel` that also has a `max` attribute.
  */
 @Directive({
-    selector: '[max][formControlName],[max][formControl],[max][ngModel]',
+    selector:
+        'input[kbqNumberInput][max][formControlName],input[kbqNumberInput][max][formControl],input[kbqNumberInput][max][ngModel]',
     providers: [KBQ_MAX_VALIDATOR],
     host: {
         // See `KbqMinValidator`'s `[attr.min]` for why this is coerced rather than the raw `max()`.

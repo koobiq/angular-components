@@ -47,6 +47,7 @@ import { KbqPanelMinWidth } from '@koobiq/components/core';
 import { KbqPanelWidth } from '@koobiq/components/core';
 import { KbqPseudoCheckboxState } from '@koobiq/components/core';
 import { KbqScrollbarMode } from '@koobiq/components/scrollbar';
+import { KbqSearchFieldPopup } from '@koobiq/components/core';
 import { KbqSelectAllEvent } from '@koobiq/components/core';
 import { KbqSelectMatcher } from '@koobiq/components/core';
 import { KbqSelectSearch } from '@koobiq/components/core';
@@ -252,6 +253,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterViewChecked, Af
     scrollStrategy: ScrollStrategy;
     readonly search: _angular_core.Signal<KbqSelectSearch | undefined>;
     readonly searchEmpty: _angular_core.Signal<KbqSelectSearchEmptyResult | undefined>;
+    readonly searchFieldPopup: KbqSearchFieldPopup;
     readonly searchMinOptionsThreshold: _angular_core.Signal<number | undefined>;
     readonly searchMinOptionsThresholdInput: _angular_core.InputSignal<number | "auto" | undefined>;
     readonly selectAll: _angular_core.InputSignalWithTransform<boolean, unknown>;

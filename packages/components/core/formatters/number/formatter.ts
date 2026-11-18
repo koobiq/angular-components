@@ -133,7 +133,7 @@ const ROUNDING_UNITS = {
 type RoundingUnit = keyof RoundDecimalOptions & keyof typeof ROUNDING_UNITS;
 
 const intervalsConfig = {
-    supportedLanguages: ['ru-RU', 'en-US', 'es-LA', 'pt-BR'],
+    supportedLanguages: ['ru-RU', 'en-US', 'es-LA', 'pt-BR', 'tk-TM'],
     intervals: [
         { startRange: 1, endRange: ROUNDING_UNITS.thousand },
         { startRange: ROUNDING_UNITS.thousand, endRange: ROUNDING_UNITS.tenThousand, precision: 1 },

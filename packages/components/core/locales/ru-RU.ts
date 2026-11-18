@@ -15,6 +15,8 @@ export const ruRULocaleData = {
         previousMonth: 'Предыдущий месяц',
         currentDate: 'Текущая дата',
         nextMonth: 'Следующий месяц',
+        month: 'Месяц',
+        year: 'Год',
         clear: 'Очистить',
         showPassword: 'Показать пароль',
         hidePassword: 'Скрыть пароль',
@@ -22,7 +24,10 @@ export const ruRULocaleData = {
         resizePanels: 'Изменить размер панелей',
         toastRegion: 'Уведомления',
         optionActions: 'Действия',
-        progressBar: 'Прогресс'
+        progressBar: 'Прогресс',
+        date: 'Дата',
+        time: 'Время',
+        search: 'Поиск'
     },
     select: { hiddenItemsText: '+{{ number }}', selectAll: 'Выбрать все' },
     datepicker: {

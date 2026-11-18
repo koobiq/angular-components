@@ -2,3 +2,4 @@ export * from './key-manager/activedescendant-key-manager';
 export * from './key-manager/focus-key-manager';
 export * from './key-manager/list-key-manager';
 export * from './leave-tab-order';
+export * from './search-field';

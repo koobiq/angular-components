@@ -62,6 +62,7 @@ import {
     type KbqPanelMinWidth,
     type KbqPanelWidth,
     type KbqPoint,
+    type KbqSearchFieldPopup,
     LEFT_ARROW,
     type ListKeyManager,
     RIGHT_ARROW
@@ -168,6 +169,18 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
 
     /** Whether the panel highlights the active item instead of focusing it. @docs-private */
     readonly inSearchMode: Signal<boolean> = computed(() => !!this.search() || this.activeDescendantNavigation());
+
+    /**
+     * Panel that its search field filters, as the field describes it to assistive technology. The items are actions
+     * rather than options, so the field keeps its native role and is not a combobox.
+     *
+     * @docs-private
+     */
+    readonly searchFieldPopup: KbqSearchFieldPopup = {
+        comboboxPopupRole: null,
+        popup: () => this.panelElement()?.nativeElement,
+        activeDescendant: () => (this.inSearchMode() ? this.keyManager?.activeItem?.getHostElement() : null)
+    };
 
     readonly navigationWithWrap = input<boolean>(false);
 
@@ -283,6 +296,9 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     readonly templateRef = viewChild.required(TemplateRef);
 
     private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
+
+    /** Element of the open panel, the one that scrolls. */
+    private readonly panelElement = viewChild(KbqScrollbarViewport, { read: ElementRef });
 
     private readonly queriedItems = contentChildren(KbqDropdownItem, { descendants: true });
 

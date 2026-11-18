@@ -7,6 +7,7 @@ import {
     type ElementRef,
     EventEmitter,
     inject,
+    InjectionToken,
     input,
     isWritableSignal,
     type Signal,
@@ -14,8 +15,10 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, fromEvent, Subscription } from 'rxjs';
+import { type KbqSearchFieldPopup, kbqSyncSearchFieldA11y } from '../a11y';
 import { KBQ_FORM_FIELD_REF, type KbqFormFieldRef } from '../form-field';
 import { END, ESCAPE, HOME, SPACE } from '../keycodes';
+import { kbqInjectA11yLocaleConfiguration } from '../locales';
 import {
     KBQ_PANEL_DEFAULT_MAX_HEIGHT,
     type KbqPanelSpaceContext,
@@ -31,6 +34,7 @@ import {
 } from '../overlay/panel-width';
 import { KBQ_CONNECTED_OVERLAY_OVERLAP_CLASS } from '../pop-up/constants';
 import { KBQ_WINDOW } from '../tokens';
+import { kbqInjectNativeElement } from '../utils';
 import { KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD, SELECT_PANEL_VIEWPORT_PADDING } from './constants';
 
 @Directive({
@@ -70,6 +74,13 @@ export class KbqSelectFooter {}
 })
 export class KbqSelectFooterItem {}
 
+/**
+ * Option list or tree that a `kbqSelectSearch` field filters, provided by the select the field is projected into.
+ *
+ * @docs-private
+ */
+export const KBQ_SELECT_SEARCH_POPUP = new InjectionToken<KbqSearchFieldPopup>('KBQ_SELECT_SEARCH_POPUP');
+
 @Directive({
     selector: '[kbqSelectSearch]',
     host: {
@@ -97,6 +108,15 @@ export class KbqSelectSearch implements AfterContentInit {
 
     constructor() {
         this.formField.inOverlay.set(true);
+
+        const popup = inject(KBQ_SELECT_SEARCH_POPUP, { optional: true });
+        const localeConfiguration = kbqInjectA11yLocaleConfiguration();
+
+        kbqSyncSearchFieldA11y(
+            kbqInjectNativeElement(),
+            () => popup,
+            () => localeConfiguration().search
+        );
     }
 
     setPlaceholder(value: string): void {

@@ -87,6 +87,7 @@ import {
     KBQ_PARENT_POPUP,
     KBQ_SELECT_LOCALE_CONFIGURATION,
     KBQ_SELECT_SCROLL_STRATEGY,
+    KBQ_SELECT_SEARCH_POPUP,
     KbqAbstractSelect,
     KbqComponentColors,
     KbqErrorStateTracker,
@@ -97,6 +98,7 @@ import {
     type KbqPanelWidth,
     kbqQueryListFrom,
     kbqResolvePanelMaxHeightToken,
+    type KbqSearchFieldPopup,
     KbqSelectAllEvent,
     kbqSelectAllHandlerTransform,
     KbqSelectMatcher,
@@ -241,6 +243,7 @@ export class KbqTreeSelectChange<T = any> {
                 canClear: () => treeSelect.canClear
             };
         }),
+        { provide: KBQ_SELECT_SEARCH_POPUP, useFactory: () => inject(KbqTreeSelect).searchFieldPopup },
         { provide: KBQ_PARENT_POPUP, useExisting: KbqTreeSelect },
         kbqSiblingPopupProvider(KbqTreeSelect)
     ],
@@ -439,6 +442,24 @@ export class KbqTreeSelect<T = any, K = T>
     readonly tree = contentChild<KbqTreeSelection<T, K>>(KbqTreeSelection);
 
     readonly search = contentChild(KbqSelectSearch);
+
+    /**
+     * Tree that the search field filters, as the field describes it to assistive technology.
+     *
+     * @docs-private
+     */
+    readonly searchFieldPopup: KbqSearchFieldPopup = {
+        comboboxPopupRole: 'tree',
+        popup: () => this.treeElement()?.nativeElement,
+        activeDescendant: () => {
+            const option = this.panelOpen ? this.tree()?.keyManager?.activeItem : null;
+
+            // The tree paints its highlight from `hasFocus`, which an option keeps while the search takes the caret back.
+            return option?.hasFocus ? option.getHostElement() : null;
+        }
+    };
+
+    private readonly treeElement = contentChild(KbqTreeSelection, { read: ElementRef });
 
     /** Message projected for an empty tree — the only thing the panel opens onto without options. */
     private readonly noOptionsMessage = contentChild(KbqSelectNoOptions);

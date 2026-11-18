@@ -1,7 +1,12 @@
+import type { NumberInput } from '@angular/cdk/coercion';
 import { Component, type Provider, type Type, viewChild } from '@angular/core';
 import { type ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { DateTime } from 'luxon';
+import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import { DateAdapter } from '@koobiq/components/core';
+import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqInputModule, KbqMaxValidator, KbqMinValidator } from './index';
 
 function createComponent<T>(component: Type<T>, imports: any[] = [], providers: Provider[] = []): ComponentFixture<T> {
@@ -37,8 +42,41 @@ class NumberInputWithBounds {
     readonly maxValidator = viewChild.required(KbqMaxValidator);
 
     control = new FormControl<number | null>(null);
-    min: number | undefined = 0.5;
-    max: number | undefined = 9.5;
+    min: NumberInput = 0.5;
+    max: NumberInput = 9.5;
+}
+
+@Component({
+    imports: [
+        KbqInputModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <input kbqNumberInput min="0.5" max="9.5" [formControl]="control" />
+        </kbq-form-field>
+    `
+})
+class NumberInputWithStaticBounds {
+    control = new FormControl<number | null>(null);
+}
+
+@Component({
+    imports: [
+        KbqDatepickerModule,
+        KbqInputModule,
+        ReactiveFormsModule,
+        KbqLuxonDateModule
+    ],
+    template: `
+        <input [kbqDatepicker]="datepicker" [formControl]="control" [min]="min" [max]="max" />
+        <kbq-datepicker #datepicker />
+    `
+})
+class DatepickerWithBounds {
+    control = new FormControl<DateTime | null>(DateTime.fromISO('2024-06-02'));
+    min: DateTime | string = DateTime.fromISO('2024-06-01');
+    max: DateTime | string = DateTime.fromISO('2024-08-31');
 }
 
 describe('KbqMinValidator/KbqMaxValidator', () => {
@@ -84,6 +122,74 @@ describe('KbqMinValidator/KbqMaxValidator', () => {
         });
     });
 
+    describe('numeric string bounds', () => {
+        it('should validate the string form of a static attribute', async () => {
+            const fixture = createComponent(NumberInputWithStaticBounds);
+
+            fixture.componentInstance.control.setValue(0.2);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(fixture.componentInstance.control.errors).toEqual({ min: { min: 0.5, actual: 0.2 } });
+
+            fixture.componentInstance.control.setValue(9.7);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(fixture.componentInstance.control.errors).toEqual({ max: { max: 9.5, actual: 9.7 } });
+
+            const inputElement: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+
+            expect(inputElement.getAttribute('min')).toBe('0.5');
+            expect(inputElement.getAttribute('max')).toBe('9.5');
+        });
+    });
+
+    describe('coercible object bounds', () => {
+        it('should preserve object coercion for an untyped template', async () => {
+            const fixture = createComponent(NumberInputWithBounds);
+
+            fixture.componentInstance.min = {
+                valueOf: () => 5,
+                toString: () => '5'
+            } as unknown as NumberInput;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            fixture.componentInstance.control.setValue(4);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(fixture.componentInstance.control.errors).toEqual({ min: { min: 5, actual: 4 } });
+
+            const inputElement: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+
+            expect(inputElement.getAttribute('min')).toBe('5');
+        });
+    });
+
+    describe('datepicker bounds', () => {
+        it.each([
+            ['DateTime', DateTime.fromISO('2024-06-01'), DateTime.fromISO('2024-08-31')],
+            ['basic ISO string', '20240601', '20240831']
+        ])('should leave %s bounds to the datepicker', async (_name, min, max) => {
+            const fixture = createComponent(DatepickerWithBounds);
+
+            fixture.componentInstance.min = min;
+            fixture.componentInstance.max = max;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(fixture.componentInstance.control.errors).toBeNull();
+
+            const adapter = TestBed.inject<DateAdapter<DateTime>>(DateAdapter);
+            const inputElement: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+
+            expect(inputElement.getAttribute('min')).toBe(adapter.toIso8601(adapter.deserialize(min)!));
+            expect(inputElement.getAttribute('max')).toBe(adapter.toIso8601(adapter.deserialize(max)!));
+        });
+    });
+
     describe('DOM attributes', () => {
         it('should keep a bound zero bound in the DOM', async () => {
             const fixture = createComponent(NumberInputWithBounds);
@@ -116,10 +222,8 @@ describe('KbqMinValidator/KbqMaxValidator', () => {
         it('should drop a non-numeric bound instead of writing it raw to the DOM', async () => {
             const fixture = createComponent(NumberInputWithBounds);
 
-            // Not assignable under the `number` typing, but reachable at runtime through a static
-            // attribute or an untyped template, same as the coercion in `createValidator` guards against.
-            fixture.componentInstance.min = '5px' as unknown as number;
-            fixture.componentInstance.max = '5px' as unknown as number;
+            fixture.componentInstance.min = '5px';
+            fixture.componentInstance.max = '5px';
             fixture.detectChanges();
             await fixture.whenStable();
 

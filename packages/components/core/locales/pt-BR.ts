@@ -15,6 +15,8 @@ export const ptBRLocaleData = {
         previousMonth: 'Mês anterior',
         currentDate: 'Data atual',
         nextMonth: 'Próximo mês',
+        month: 'Mês',
+        year: 'Ano',
         clear: 'Apagar',
         showPassword: 'Mostrar a senha',
         hidePassword: 'Ocultar a senha',
@@ -22,7 +24,10 @@ export const ptBRLocaleData = {
         resizePanels: 'Redimensionar painéis',
         toastRegion: 'Notificações',
         optionActions: 'Ações',
-        progressBar: 'Progresso'
+        progressBar: 'Progresso',
+        date: 'Data',
+        time: 'Hora',
+        search: 'Buscar'
     },
     select: {
         hiddenItemsText: '+{{ number }}',

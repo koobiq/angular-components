@@ -4182,6 +4182,57 @@ describe('KbqTreeSelect', () => {
             expect(keyManager.activeItemIndex).toBe(lastIndex);
             expect(focusSpy).toHaveBeenCalledWith('keyboard');
         });
+
+        describe('described to assistive technology', () => {
+            const open = async () => {
+                trigger.click();
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+            };
+
+            const getSearchInput = () => overlayContainerElement.querySelector<HTMLInputElement>('.search-input')!;
+
+            it('should make the search field a combobox of the tree', async () => {
+                await open();
+
+                const input = getSearchInput();
+                const tree = overlayContainerElement.querySelector('[role="tree"]')!;
+
+                expect(input.getAttribute('role')).toBe('combobox');
+                expect(input.getAttribute('aria-expanded')).toBe('true');
+                expect(input.getAttribute('aria-haspopup')).toBe('tree');
+                expect(input.getAttribute('aria-autocomplete')).toBe('list');
+                expect(tree.id).toBeTruthy();
+                expect(input.getAttribute('aria-controls')).toBe(tree.id);
+            });
+
+            it('should point aria-activedescendant at the node the arrow keys highlight', async () => {
+                await open();
+
+                const select = fixture.componentInstance.select();
+
+                select.panelKeydownHandler(createKeyboardEvent('keydown', DOWN_ARROW));
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                select.panelKeydownHandler(createKeyboardEvent('keydown', DOWN_ARROW));
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+
+                const highlighted = overlayContainerElement.querySelector('kbq-tree-option.kbq-focused')!;
+
+                expect(highlighted).toBe(select.tree()!.keyManager.activeItem!.getHostElement());
+                expect(getSearchInput().getAttribute('aria-activedescendant')).toBe(highlighted.id);
+                expect(document.activeElement).toBe(getSearchInput());
+            });
+
+            it('should name a search field that has no name of its own', async () => {
+                await open();
+
+                expect(getSearchInput().getAttribute('aria-label')).toBe(ruRULocaleData.a11y.search);
+            });
+        });
     });
 
     describe('with multiple kbq-select elements in one view', () => {

@@ -745,6 +745,16 @@ describe('KbqTimezoneSelect', () => {
             expect(overlayContainerElement.textContent).toContain('city17');
         });
 
+        it('should have no axe violations in the open panel', async () => {
+            trigger.click();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            // axe-core runs its checks on timers.
+            vi.useRealTimers();
+
+            await expect(overlayContainerElement).toHaveNoViolations();
+        }, 15_000);
+
         it('should close the panel when an item is clicked', async () => {
             trigger.click();
             fixture.detectChanges();
@@ -1078,6 +1088,22 @@ describe('KbqTimezoneSelect', () => {
             await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
+        });
+
+        it('should make the search field a combobox of the option list', async () => {
+            trigger.click();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const input: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+            const highlighted = overlayContainerElement.querySelector('kbq-timezone-option.kbq-active')!;
+
+            expect(input.getAttribute('role')).toBe('combobox');
+            expect(input.getAttribute('aria-controls')).toBe(
+                overlayContainerElement.querySelector('[role="listbox"]')!.id
+            );
+            expect(input.getAttribute('aria-activedescendant')).toBe(highlighted.id);
         });
     });
 

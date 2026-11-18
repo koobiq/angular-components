@@ -15,6 +15,8 @@ export const esLALocaleData = {
         previousMonth: 'Mes anterior',
         currentDate: 'Fecha actual',
         nextMonth: 'Mes siguiente',
+        month: 'Mes',
+        year: 'Año',
         clear: 'Borrar',
         showPassword: 'Mostrar la contraseña',
         hidePassword: 'Ocultar la contraseña',
@@ -22,7 +24,10 @@ export const esLALocaleData = {
         resizePanels: 'Redimensionar paneles',
         toastRegion: 'Notificaciones',
         optionActions: 'Acciones',
-        progressBar: 'Progreso'
+        progressBar: 'Progreso',
+        date: 'Fecha',
+        time: 'Hora',
+        search: 'Búsqueda'
     },
     select: {
         hiddenItemsText: '+{{ number }}',

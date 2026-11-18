@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import {
     KBQ_OPTION_PARENT_COMPONENT,
+    KBQ_SELECT_SEARCH_POPUP,
     type KbqDeepPartial,
     kbqLocaleConfigurationOverrideProvider,
     KbqLocaleOverridesDirective,
@@ -100,6 +101,7 @@ export const kbqTimezoneLocaleConfigurationProvider = (
         // Declared again rather than inherited from `KbqSelect`: Angular copies `providers` to a subclass only
         // when that subclass has no decorator of its own.
         kbqSiblingPopupProvider(KbqTimezoneSelect),
+        { provide: KBQ_SELECT_SEARCH_POPUP, useFactory: () => inject(KbqTimezoneSelect).searchFieldPopup },
         // Same reason: the field that injects it is declared on `KbqSelect`, but the injector consulted is
         // this component's own. The measurer cannot move to the root injector — it needs `Renderer2`.
         KbqSelectHiddenItemsMeasurer
