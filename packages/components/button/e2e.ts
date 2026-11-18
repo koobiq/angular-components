@@ -385,6 +385,10 @@ export class E2eButtonGroup {
             flex-direction: column;
             gap: var(--kbq-size-m);
             padding: var(--kbq-size-m);
+
+            /* hug the widest row: as a plain block the target stretches to the page width, and the
+               baseline would capture ~940px of empty space beside the 260px rows */
+            width: fit-content;
         }
 
         .narrow {
