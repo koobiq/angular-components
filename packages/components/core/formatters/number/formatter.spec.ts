@@ -9,6 +9,30 @@ import {
 } from '@koobiq/components/core';
 import fc from 'fast-check';
 
+// A value from every rounding interval, then billions and trillions, which no interval covers.
+const ROUNDING_CASES = [
+    152,
+    1000,
+    1234,
+    2015,
+    152_352,
+    1_034_000,
+    1_234_000,
+    10_434_000,
+    1_500_000_000,
+    1_500_000_000_000
+];
+
+// Literal strings rather than ones built from the locale data: a wrong fraction mark or unit label in that
+// data still yields a well-formed number that reads wrong. In ru-RU `К`, `М` and `Т` are Cyrillic, `B` is Latin.
+const ROUNDED_BY_LOCALE: Record<string, string[]> = {
+    'ru-RU': ['152', '1,0 К', '1 К', '2,0 К', '152 К', '1,0 М', '1,2 М', '10 М', '1,5 B', '1,5 Т'],
+    'en-US': ['152', '1.0K', '1K', '2.0K', '152K', '1.0M', '1.2M', '10M', '1.5B', '1.5T'],
+    'es-LA': ['152', '1,0K', '1K', '2,0K', '152K', '1,0M', '1,2M', '10M', '1,5MRD', '1,5B'],
+    'pt-BR': ['152', '1,0 mil', '1 mil', '2,0 mil', '152 mil', '1,0 mi', '1,2 mi', '10 mi', '1,5 bi', '1,5 tri'],
+    'tk-TM': ['152', '1,0 M', '1 M', '2,0 M', '152 M', '1,0 Mn', '1,2 Mn', '10 Mn', '1,5 Mr', '1,5 Tn']
+};
+
 describe('KbqRoundDecimalPipe', () => {
     let pipe: KbqRoundDecimalPipe;
     let localeService: KbqLocaleService;
@@ -43,47 +67,22 @@ describe('KbqRoundDecimalPipe', () => {
         expect(pipe.transform(tenThousand)).toBe('10K');
     });
 
-    it('should handle intervals in latin numbers', () => {
-        localeService.setLocale('en-US');
+    it('should have rounding expectations for every shipped locale', () => {
+        expect(Object.keys(ROUNDED_BY_LOCALE).sort()).toEqual(
+            localeService
+                .items()
+                .map(({ id }) => id)
+                .sort()
+        );
+    });
 
-        const betweenOneAndThousand = 152;
-        const betweenThousandAndTenThousand = 1515;
-        const betweenThousandAndTenThousandRounded = 2049;
-        const betweenTenThousandAndMillion = 152352;
-        const betweenMillionAndAndTenMillion = 1.034 * 1e6;
-        const betweenTenMillionsAndBillion = 10.434 * 1e6;
+    it.each(Object.entries(ROUNDED_BY_LOCALE))('should round numbers in %s', (locale, expected) => {
+        // A locale passed to the pipe reads its data from the registry, the active one from the locale configuration.
+        expect(ROUNDING_CASES.map((value) => pipe.transform(value, locale))).toEqual(expected);
 
-        expect(pipe.transform(betweenOneAndThousand)).toEqual('152');
-        expect(pipe.transform(betweenThousandAndTenThousand)).toEqual('2K');
-        expect(pipe.transform(betweenTenThousandAndMillion)).toEqual('152K');
-        expect(pipe.transform(betweenMillionAndAndTenMillion)).toEqual('1.0M');
-        expect(pipe.transform(betweenTenMillionsAndBillion)).toEqual('10M');
+        localeService.setLocale(locale);
 
-        ['ru-RU', 'en-US', 'es-LA', 'pt-BR'].forEach((locale) => {
-            localeService.setLocale(locale);
-
-            const units = [
-                localeService.current.formatters.number.rounding.separator,
-                localeService.current.formatters.number.rounding.thousand,
-                localeService.current.formatters.number.rounding.million,
-                localeService.current.formatters.number.rounding.billion,
-                localeService.current.formatters.number.rounding.trillion
-            ];
-
-            expect(pipe.transform(betweenOneAndThousand)).toEqual(betweenOneAndThousand.toLocaleString(locale));
-
-            const isNumberWithFraction =
-                !units.includes(pipe.transform(betweenThousandAndTenThousandRounded)[1]) &&
-                Number.isNaN(+pipe.transform(betweenThousandAndTenThousandRounded)[1]);
-
-            expect(isNumberWithFraction).toBeTruthy();
-
-            expect(units.includes(pipe.transform(betweenTenThousandAndMillion)[3])).toBeTruthy();
-
-            expect(!units.includes(pipe.transform(betweenMillionAndAndTenMillion)[1])).toBeTruthy();
-
-            expect(units.includes(pipe.transform(betweenTenMillionsAndBillion)[2])).toBeTruthy();
-        });
+        expect(ROUNDING_CASES.map((value) => pipe.transform(value))).toEqual(expected);
     });
 
     /*
