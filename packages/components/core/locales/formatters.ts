@@ -165,7 +165,7 @@ export const tkTMFormattersData = {
         number: {
             rounding: {
                 separator: ' ',
-                groupSeparator: '',
+                groupSeparator: ',',
                 thousand: 'M',
                 million: 'Mn',
                 billion: 'Mr',
