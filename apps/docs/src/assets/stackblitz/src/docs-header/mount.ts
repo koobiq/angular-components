@@ -1,4 +1,3 @@
-// Шапка сайта документации, не часть примера
 import { DOCUMENT } from '@angular/common';
 import { ApplicationRef, createComponent } from '@angular/core';
 import { DocsHeader } from './docs-header';

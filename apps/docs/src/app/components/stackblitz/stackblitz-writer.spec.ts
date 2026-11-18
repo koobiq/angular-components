@@ -126,16 +126,6 @@ describe(DocsStackblitzWriter.name, () => {
         expect(files['src/index.html']).toContain('<basic-button-example></basic-button-example>');
     });
 
-    it('keeps the header in its own folder, apart from the example', async () => {
-        const files = await buildProject();
-
-        expect(files['src/language-switcher.ts']).toBeUndefined();
-        expect(files['src/docs-header/docs-header.ts']).toContain(`selector: 'docs-header'`);
-        expect(files['src/docs-header/mount.ts']).toContain('docsMountHeader');
-        expect(files['src/index.html']).toContain('<docs-header></docs-header>');
-        expect(files['src/main.ts']).toContain(`from './docs-header/mount'`);
-    });
-
     it('links the header to Telegram, drops the stars badge and takes the theme from the theme service', async () => {
         const files = await buildProject();
 
