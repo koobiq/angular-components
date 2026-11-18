@@ -15,6 +15,8 @@ export const ruRULocaleData = {
         previousMonth: 'Предыдущий месяц',
         currentDate: 'Текущая дата',
         nextMonth: 'Следующий месяц',
+        month: 'Месяц',
+        year: 'Год',
         clear: 'Очистить',
         showPassword: 'Показать пароль',
         hidePassword: 'Скрыть пароль',

@@ -62,13 +62,20 @@
     }
 
     @if (data.selectAll && !noOptions && !select.isEmptySearchResult) {
+        <!-- Each read of checkboxState tallies the options again. -->
+        @let selectAllCheckboxState = checkboxState;
+
+        <!-- The row is never selected itself, so its state reaches assistive tech through `aria-checked`. -->
         <kbq-option
             [class.kbq-selected]="allVisibleOptionsSelected"
             [selectable]="false"
+            [attr.aria-checked]="
+                selectAllCheckboxState === 'indeterminate' ? 'mixed' : selectAllCheckboxState === 'checked'
+            "
             (click)="toggleSelectionAll()"
             (keydown.enter)="toggleSelectionAll()"
         >
-            <kbq-pseudo-checkbox [state]="checkboxState" />
+            <kbq-pseudo-checkbox aria-hidden="true" [state]="selectAllCheckboxState" />
             <!-- A span, not a bare interpolation: the compiler strips the whitespace-only text node
                  between elements, so the counter's margin is the only gap, same as in the tree pipe. -->
             <span>{{ localeConfiguration().pipe.selectAll }}</span>

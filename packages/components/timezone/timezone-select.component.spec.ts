@@ -737,6 +737,16 @@ describe('KbqTimezoneSelect', () => {
             expect(overlayContainerElement.textContent).toContain('city17');
         });
 
+        it('should have no axe violations in the open panel', async () => {
+            trigger.click();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            // axe-core runs its checks on timers.
+            vi.useRealTimers();
+
+            await expect(overlayContainerElement).toHaveNoViolations();
+        }, 15_000);
+
         it('should close the panel when an item is clicked', async () => {
             trigger.click();
             fixture.detectChanges();
