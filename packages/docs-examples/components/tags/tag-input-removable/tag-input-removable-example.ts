@@ -24,7 +24,6 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Removable t
                 }
 
                 <input
-                    autocomplete="off"
                     kbqInput
                     placeholder="New tag"
                     [kbqTagInputSeparatorKeyCodes]="separators"
