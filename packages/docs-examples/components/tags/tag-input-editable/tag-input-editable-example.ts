@@ -43,7 +43,6 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Editable ta
                 }
 
                 <input
-                    autocomplete="off"
                     kbqInput
                     placeholder="New tag"
                     [kbqTagInputSeparatorKeyCodes]="separators"

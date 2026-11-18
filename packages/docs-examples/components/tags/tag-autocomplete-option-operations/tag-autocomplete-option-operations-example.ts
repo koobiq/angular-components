@@ -51,7 +51,6 @@ const getAutocompleteOptions = () => [
                 }
                 <input
                     #tagInput
-                    autocomplete="off"
                     placeholder="New tag"
                     kbqInput
                     [distinct]="true"

@@ -296,6 +296,28 @@ class InputWithoutForm {
 }
 
 @Component({
+    imports: [KbqInputModule],
+    template: `
+        <kbq-form-field>
+            <input kbqInput autocomplete="on" />
+        </kbq-form-field>
+    `
+})
+class InputWithBrowserAutocomplete {}
+
+@Component({
+    imports: [KbqInputModule],
+    template: `
+        <kbq-form-field>
+            <input kbqInput [attr.autocomplete]="autocomplete" />
+        </kbq-form-field>
+    `
+})
+class InputWithBoundAutocomplete {
+    autocomplete = 'email';
+}
+
+@Component({
     imports: [
         KbqInputModule,
         ReactiveFormsModule
@@ -455,6 +477,34 @@ describe('KbqInput', () => {
             fixture.detectChanges();
 
             expect(inputElement.getAttribute('placeholder')).toBe('');
+        });
+
+        describe('browser autocomplete', () => {
+            it('should be off by default', () => {
+                const fixture = createComponent(InputWithoutForm);
+                const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+
+                expect(inputElement.getAttribute('autocomplete')).toBe('off');
+            });
+
+            it('should keep the autocomplete the consumer set statically', () => {
+                const fixture = createComponent(InputWithBrowserAutocomplete);
+                const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+
+                expect(inputElement.getAttribute('autocomplete')).toBe('on');
+            });
+
+            it('should let a bound autocomplete replace the default', () => {
+                const fixture = createComponent(InputWithBoundAutocomplete);
+                const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+
+                expect(inputElement.getAttribute('autocomplete')).toBe('email');
+
+                fixture.componentInstance.autocomplete = 'username';
+                fixture.detectChanges();
+
+                expect(inputElement.getAttribute('autocomplete')).toBe('username');
+            });
         });
 
         describe('readonly', () => {

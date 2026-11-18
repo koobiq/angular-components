@@ -45,7 +45,7 @@ function normalizeOffsetDash(value: string): string {
                 <!-- No [placeholder] here: the select fills it in from the active locale. -->
                 <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-                    <input autocomplete="off" kbqInput type="text" [formControl]="searchControl" />
+                    <input kbqInput type="text" [formControl]="searchControl" />
                     <kbq-cleaner />
                 </kbq-form-field>
 

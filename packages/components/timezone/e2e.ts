@@ -202,7 +202,7 @@ export class E2eTimezonePanelStates extends BaseTimezoneStates {}
                 <!-- No [placeholder]: the select fills it in from the active locale. -->
                 <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-                    <input autocomplete="off" kbqInput type="text" [(ngModel)]="control" />
+                    <input kbqInput type="text" [(ngModel)]="control" />
                     <kbq-cleaner />
                 </kbq-form-field>
 

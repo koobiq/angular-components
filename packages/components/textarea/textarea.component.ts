@@ -243,6 +243,13 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
         this.syncedValue = initialValue;
         this.syncedText = this.elementRef.nativeElement.value;
 
+        // Browser autocomplete is off by default. Written only when the markup has not set the attribute —
+        // which a static value has, by the time any directive runs — so a consumer's `autocomplete` wins;
+        // a bound one lands after this and overwrites it anyway.
+        if (!this.elementRef.nativeElement.hasAttribute('autocomplete')) {
+            this.elementRef.nativeElement.setAttribute('autocomplete', 'off');
+        }
+
         if (this.parent) {
             outputToObservable(this.parent.animationDone)
                 .pipe(takeUntilDestroyed())

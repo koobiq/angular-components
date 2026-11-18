@@ -50,7 +50,6 @@ const latinValidator = (): ValidatorFn => {
 
                 <input
                     #input
-                    autocomplete="off"
                     kbqInput
                     placeholder="New tag"
                     [kbqAutocomplete]="autocomplete"

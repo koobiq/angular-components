@@ -4880,6 +4880,16 @@ describe('KbqSelect', () => {
             expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
         });
 
+        it('should turn browser autocomplete off on the search input', async () => {
+            trigger.click();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            const input: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+
+            expect(input.getAttribute('autocomplete')).toBe('off');
+        });
+
         it('should focus search field after open', async () => {
             trigger.click();
             fixture.detectChanges();

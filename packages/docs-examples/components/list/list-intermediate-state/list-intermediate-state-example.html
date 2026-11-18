@@ -23,7 +23,7 @@
     <div style="border-bottom: 1px solid var(--kbq-line-contrast-less)" [style.width.px]="400">
         <kbq-form-field class="layout-padding-vertical-xxs" noBorders>
             <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-            <input kbqInput autocomplete="off" [placeholder]="t().user" [formControl]="searchControl" />
+            <input kbqInput [placeholder]="t().user" [formControl]="searchControl" />
         </kbq-form-field>
     </div>
 </ng-template>

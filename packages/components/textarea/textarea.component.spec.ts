@@ -242,6 +242,26 @@ class TextareaInIf {
 }
 
 @Component({
+    imports: [KbqTextareaModule],
+    template: `
+        <kbq-form-field>
+            <textarea kbqTextarea></textarea>
+        </kbq-form-field>
+    `
+})
+class TextareaWithoutForm {}
+
+@Component({
+    imports: [KbqTextareaModule],
+    template: `
+        <kbq-form-field>
+            <textarea kbqTextarea autocomplete="on"></textarea>
+        </kbq-form-field>
+    `
+})
+class TextareaWithBrowserAutocomplete {}
+
+@Component({
     imports: [KbqTextareaModule, FormsModule],
     template: `
         <kbq-form-field>
@@ -333,6 +353,20 @@ describe('KbqTextarea', () => {
     afterEach(() => vi.useRealTimers());
 
     describe('basic behaviors', () => {
+        describe('browser autocomplete', () => {
+            it('should be off by default', () => {
+                const fixture = createComponent(TextareaWithoutForm);
+
+                expect(getTextareaElement(fixture).getAttribute('autocomplete')).toBe('off');
+            });
+
+            it('should keep the autocomplete the consumer set statically', () => {
+                const fixture = createComponent(TextareaWithBrowserAutocomplete);
+
+                expect(getTextareaElement(fixture).getAttribute('autocomplete')).toBe('on');
+            });
+        });
+
         it('should change "disabled" state', async () => {
             vi.useFakeTimers();
 

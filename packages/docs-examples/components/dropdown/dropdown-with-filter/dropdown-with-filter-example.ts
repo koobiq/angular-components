@@ -44,7 +44,7 @@ import { TRANSLATIONS } from './l10n';
         <kbq-dropdown #dropdown="kbqDropdown">
             <kbq-form-field kbqDropdownSearch>
                 <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
-                <input autocomplete="off" kbqInput [placeholder]="t().search" [formControl]="control" />
+                <input kbqInput [placeholder]="t().search" [formControl]="control" />
                 <kbq-cleaner />
             </kbq-form-field>
 

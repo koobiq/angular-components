@@ -24,7 +24,6 @@ const lockedTags = ['Beta'];
                 }
 
                 <input
-                    autocomplete="off"
                     kbqInput
                     placeholder="Kept"
                     [kbqTagInputFor]="keptList"
@@ -46,7 +45,6 @@ const lockedTags = ['Beta'];
                 }
 
                 <input
-                    autocomplete="off"
                     kbqInput
                     placeholder="Cleared"
                     [kbqTagInputFor]="clearedList"
