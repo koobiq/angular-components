@@ -95,7 +95,10 @@ export const kbqCodeBlockFallbackFileLanguageProvider = (language: string): Prov
  */
 const HIGHLIGHTED_MARKUP_ATTRIBUTE = 'data-highlighted-markup';
 
-const LINE_BREAK = /\r\n|\r|\n/;
+const LINE_BREAK = /\r\n|\r|\n/g;
+
+/** Indices of the lines to mark, and the columns of each line between which its text is marked. */
+type CodeBlockMarks = { lines: Set<number>; text: Map<number, [from: number, to: number][]> };
 
 /**
  * Directive which applies syntax highlighting to the code block content.
@@ -241,7 +244,11 @@ export class KbqCodeBlockHighlight {
             this.warn('[KbqCodeBlock] File content does not match the specified programming language.', file);
         }
 
-        const safeHTML = this.domSanitizer.sanitize(SecurityContext.HTML, this.splitIntoLines(highlightedHTML)) ?? '';
+        const safeHTML =
+            this.domSanitizer.sanitize(
+                SecurityContext.HTML,
+                this.splitIntoLines(highlightedHTML, this.findMarks(file))
+            ) ?? '';
 
         this.renderer.setAttribute(this.nativeElement, 'data-language', highlightedLanguage!);
         this.renderer.setProperty(this.nativeElement, 'innerHTML', safeHTML);
@@ -254,39 +261,218 @@ export class KbqCodeBlockHighlight {
      * Wraps every line of the highlighted markup in an element of its own, for the line numbers to count. The spans a
      * line break crosses are closed at the end of its line and opened again on the next one. The line break stays
      * inside its line, so that an empty line keeps its height and the text of the code is the text of the file.
+     *
+     * Marked text is wrapped in marks that hold text only, so that a mark never crosses a tag: text marked across a
+     * span or a line break is marked piece by piece.
      */
-    private splitIntoLines(html: string): string {
+    private splitIntoLines(html: string, marks: CodeBlockMarks): string {
         const lines: string[] = [];
         const openSpans: string[] = [];
         let line = '';
         let lineHasText = false;
+        let markedColumns = marks.text.get(0);
+        let column = 0;
+        let markOpen = false;
+
+        const closeMark = () => {
+            if (markOpen) line += '</mark>';
+
+            markOpen = false;
+        };
 
         // highlight.js emits spans and escaped text. A tag of another kind, which a plugin of highlight.js may add,
         // passes through as it is.
         for (const [token, lineBreak] of html.matchAll(/(\r\n|\r|\n)|<span[^>]*>|<\/span>|<[^>]*>|[^<\r\n]+/g)) {
             if (lineBreak) {
+                closeMark();
                 lines.push(`${line}${'</span>'.repeat(openSpans.length)}\n`);
                 line = openSpans.join('');
                 lineHasText = false;
+                markedColumns = marks.text.get(lines.length);
+                column = 0;
 
                 continue;
             }
 
-            if (token === '</span>') {
-                openSpans.pop();
-            } else if (token.startsWith('<span')) {
-                openSpans.push(token);
-            } else if (!token.startsWith('<')) {
-                lineHasText = true;
+            if (token.startsWith('<')) {
+                closeMark();
+
+                if (token === '</span>') {
+                    openSpans.pop();
+                } else if (token.startsWith('<span')) {
+                    openSpans.push(token);
+                }
+
+                line += token;
+
+                continue;
             }
 
-            line += token;
+            lineHasText = true;
+
+            if (!markedColumns) {
+                line += token;
+
+                continue;
+            }
+
+            // The text is escaped, so a character of the file is an entity or itself.
+            for (const [character] of token.matchAll(/&[^;]+;|[^&]/g)) {
+                const marked = markedColumns.some(([from, to]) => from <= column && column < to);
+
+                if (marked !== markOpen) {
+                    line += marked ? '<mark class="kbq-code-block__mark">' : '</mark>';
+                    markOpen = marked;
+                }
+
+                line += character;
+                column++;
+            }
         }
+
+        closeMark();
 
         // A line break at the end of the file starts no line, though the spans it crosses close after it.
         if (lineHasText) lines.push(line);
 
-        return lines.map((content) => `<span class="kbq-code-block__line">${content}</span>`).join('');
+        return lines
+            .map((content, index) => {
+                const className = marks.lines.has(index)
+                    ? 'kbq-code-block__line kbq-code-block__line_marked'
+                    : 'kbq-code-block__line';
+
+                return `<span class="${className}">${content}</span>`;
+            })
+            .join('');
+    }
+
+    /**
+     * Finds what the marks of the file mark. Text is found in the content and marked by columns of its lines: the
+     * highlighted markup escapes characters and may write a line break differently, so its offsets are not the
+     * content's.
+     */
+    private findMarks(file: KbqCodeBlockFile): CodeBlockMarks {
+        // A file that comes as JSON may hold `null` for a mark field it does not set.
+        const { content } = file;
+        const markedLines = file.markedLines ?? [];
+        const markedText = file.markedText ?? [];
+        const marks: CodeBlockMarks = { lines: new Set(), text: new Map() };
+
+        if (!markedLines.length && !markedText.length) return marks;
+
+        // Where every line starts and where it ends, before its line break.
+        const lines: [start: number, end: number][] = [];
+        let start = 0;
+
+        for (const { index, 0: lineBreak } of content.matchAll(LINE_BREAK)) {
+            lines.push([start, index]);
+            start = index + lineBreak.length;
+        }
+
+        // A line break at the end of the file starts no line.
+        if (start < content.length || !lines.length) lines.push([start, content.length]);
+
+        const lineAt = (offset: number): number => {
+            let low = 0;
+            let high = lines.length - 1;
+
+            while (low < high) {
+                const middle = Math.ceil((low + high) / 2);
+
+                if (lines[middle][0] <= offset) {
+                    low = middle;
+                } else {
+                    high = middle - 1;
+                }
+            }
+
+            return low;
+        };
+
+        for (const mark of markedLines) {
+            let ranges: [first: number, last: number][];
+
+            if (typeof mark === 'number') {
+                ranges = [[mark, mark]];
+            } else if (Array.isArray(mark)) {
+                ranges = [mark];
+            } else {
+                ranges = this.findMatches(content, mark).map(([from, to]) => [
+                    lineAt(from) + 1,
+                    lineAt(Math.max(from, to - 1)) + 1
+                ]);
+            }
+
+            let marksLine = false;
+
+            for (const [first, last] of ranges) {
+                if (!Number.isInteger(first) || !Number.isInteger(last)) continue;
+
+                for (let line = Math.max(first, 1); line <= Math.min(last, lines.length); line++) {
+                    marks.lines.add(line - 1);
+                    marksLine = true;
+                }
+            }
+
+            if (!marksLine) {
+                this.warn('[KbqCodeBlock] Line mark does not mark any line of the file.', mark, file);
+            }
+        }
+
+        for (const mark of markedText) {
+            const matches = this.findMatches(content, mark).filter(([from, to]) => from < to);
+
+            if (!matches.length) {
+                this.warn('[KbqCodeBlock] Text mark does not mark any text of the file.', mark, file);
+            }
+
+            for (const [from, to] of matches) {
+                for (let line = lineAt(from); line < lines.length && lines[line][0] < to; line++) {
+                    const [lineStart, lineEnd] = lines[line];
+                    const columns: [number, number] = [
+                        Math.max(from, lineStart) - lineStart,
+                        Math.min(to, lineEnd) - lineStart
+                    ];
+
+                    if (columns[0] >= columns[1]) continue;
+
+                    const lineColumns = marks.text.get(line);
+
+                    if (lineColumns) {
+                        lineColumns.push(columns);
+                    } else {
+                        marks.text.set(line, [columns]);
+                    }
+                }
+            }
+        }
+
+        return marks;
+    }
+
+    /**
+     * Every match of a string or a regular expression in the content, from the offset where it starts to the one
+     * where it ends. A regular expression with capturing groups matches what they capture.
+     */
+    private findMatches(content: string, pattern: string | RegExp): [from: number, to: number][] {
+        if (typeof pattern === 'string') {
+            const matches: [number, number][] = [];
+            let from = pattern ? content.indexOf(pattern) : -1;
+
+            while (from !== -1) {
+                matches.push([from, from + pattern.length]);
+                from = content.indexOf(pattern, from + pattern.length);
+            }
+
+            return matches;
+        }
+
+        // A copy that finds every match and the indices of its groups, whatever the flags of the original.
+        const regExp = new RegExp(pattern.source, `${pattern.flags.replace(/[dg]/g, '')}dg`);
+
+        return Array.from(content.matchAll(regExp), ({ indices }) => indices!).flatMap(([match, ...groups]) =>
+            groups.length ? groups.filter(Boolean) : [match]
+        );
     }
 
     /** The fallback language, or plain text, which the loader registers on every instance, if it is unknown too. */

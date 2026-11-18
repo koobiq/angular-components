@@ -56,6 +56,21 @@ test.describe('KbqCodeBlockModule', () => {
         });
     });
 
+    test.describe('E2eCodeBlockMarks', () => {
+        test('marked lines and text', async ({ page }) => {
+            await page.goto('/E2eCodeBlockMarks');
+
+            const target = getScreenshotTarget(page, 'e2eCodeBlockMarks');
+
+            await expectHighlighted(target, 2);
+            await e2eWaitForSettledScrollbars(target, 2);
+
+            await expect(target).toHaveScreenshot('07-marks-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(target).toHaveScreenshot('07-marks-dark.png');
+        });
+    });
+
     test.describe('E2eCodeBlockSoftWrap', () => {
         test('wrapped lines', async ({ page }) => {
             await page.goto('/E2eCodeBlockSoftWrap');

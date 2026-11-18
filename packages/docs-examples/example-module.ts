@@ -1614,6 +1614,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "code-block-with-link-example.ts",
     "importPath": "components/code-block"
   },
+  "code-block-with-marks": {
+    "packagePath": "components/code-block/code-block-with-marks",
+    "title": "Code-block with marks",
+    "componentName": "CodeBlockWithMarksExample",
+    "files": [
+      "code-block-with-marks-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "code-block-with-marks-example",
+    "primaryFile": "code-block-with-marks-example.ts",
+    "importPath": "components/code-block"
+  },
   "code-block-with-max-height": {
     "packagePath": "components/code-block/code-block-with-max-height",
     "title": "Code-block with maxHeight attribute",
@@ -9681,6 +9693,7 @@ export type LiveExampleId =
   | 'code-block-with-custom-locale-configuration'
   | 'code-block-with-filled'
   | 'code-block-with-link'
+  | 'code-block-with-marks'
   | 'code-block-with-max-height'
   | 'code-block-with-no-border'
   | 'code-block-with-soft-wrap'

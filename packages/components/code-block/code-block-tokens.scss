@@ -15,6 +15,7 @@
     --kbq-code-block-size-collapse-expanded-padding-bottom: var(--kbq-size-l);
     --kbq-code-block-size-collapse-collapsed-padding-top: var(--kbq-size-3xl);
     --kbq-code-block-size-collapse-collapsed-padding-bottom: var(--kbq-size-l);
+    --kbq-code-block-size-marked-line-border-width: 2px;
     /* THEME TOKENS */
     --kbq-code-block-filled-container-background: var(--kbq-background-contrast-less);
     --kbq-code-block-filled-container-border-color: transparent;
@@ -44,5 +45,8 @@
         var(--kbq-code-block-outline-container-background) 100%
     );
     --kbq-code-block-outline-collapse-button-expand-background: var(--kbq-background-bg);
+    --kbq-code-block-marked-line-background: var(--kbq-background-theme-less);
+    --kbq-code-block-marked-line-border-color: var(--kbq-line-theme-fade);
+    --kbq-code-block-marked-text-background: var(--kbq-background-theme-fade);
     --kbq-code-block-tab-size: 4;
 }

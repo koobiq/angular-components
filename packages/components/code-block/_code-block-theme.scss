@@ -305,6 +305,22 @@
             color: kbq-code-block-hljs-attr(line-numbers-color);
         }
 
+        .kbq-code-block__line_marked {
+            background: var(--kbq-code-block-marked-line-background);
+            box-shadow: inset var(--kbq-code-block-size-marked-line-border-width) 0 0
+                var(--kbq-code-block-marked-line-border-color);
+
+            // A shadow has no logical sides: the bar follows the start of the line by hand.
+            &:dir(rtl) {
+                box-shadow: inset calc(var(--kbq-code-block-size-marked-line-border-width) * -1) 0 0
+                    var(--kbq-code-block-marked-line-border-color);
+            }
+        }
+
+        .kbq-code-block__mark {
+            background: var(--kbq-code-block-marked-text-background);
+        }
+
         &.kbq-code-block_outline {
             @include kbq-code-block-style(outline);
         }

@@ -49,6 +49,12 @@ Numbering lines is useful for referencing a specific location in the document. L
 
 <Example id="code-block-line-numbers" />
 
+### Marking lines and text
+
+To mark lines, pass their numbers, `[start, end]` ranges or text from those lines, a string or a regular expression, in the `markedLines` field of a file. To mark a piece of text, pass a string or a regular expression in the `markedText` field. If the expression has groups, only what they capture is marked.
+
+<Example id="code-block-with-marks" />
+
 ### Header with title
 
 In the header, you can specify the document name or define the syntax. A shadow appears in the header when scrolling.

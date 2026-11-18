@@ -219,6 +219,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/code-block').then((m) => m.CodeBlockWithFilledExample);
         case 'code-block-with-link':
             return import('@koobiq/docs-examples/components/code-block').then((m) => m.CodeBlockWithLinkExample);
+        case 'code-block-with-marks':
+            return import('@koobiq/docs-examples/components/code-block').then((m) => m.CodeBlockWithMarksExample);
         case 'code-block-with-max-height':
             return import('@koobiq/docs-examples/components/code-block').then((m) => m.CodeBlockWithMaxHeightExample);
         case 'code-block-with-no-border':

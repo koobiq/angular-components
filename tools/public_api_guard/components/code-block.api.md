@@ -117,6 +117,8 @@ export type KbqCodeBlockFile = {
     filename?: string;
     language?: string;
     link?: string;
+    markedLines?: KbqCodeBlockLineMark[];
+    markedText?: KbqCodeBlockTextMark[];
 };
 
 // @public
@@ -148,6 +150,9 @@ export type KbqCodeBlockHighlightJsConfig = Partial<{
 export const kbqCodeBlockHighlightJsConfigProvider: (options: KbqCodeBlockHighlightJsConfig) => Provider;
 
 // @public
+export type KbqCodeBlockLineMark = number | [start: number, end: number] | string | RegExp;
+
+// @public
 export const kbqCodeBlockLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqCodeBlockLocaleConfiguration>) => Provider;
 
 // @public (undocumented)
@@ -167,6 +172,9 @@ export class KbqCodeBlockTabLinkContent {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqCodeBlockTabLinkContent, never>;
 }
+
+// @public
+export type KbqCodeBlockTextMark = string | RegExp;
 
 // @public
 export type KbqTabLinkTemplateContext = {

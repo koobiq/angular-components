@@ -5,6 +5,7 @@ import { CodeBlockOverviewExample } from './code-block-overview/code-block-overv
 import { CodeBlockWithCustomLocaleConfigurationExample } from './code-block-with-custom-locale-configuration/code-block-with-custom-locale-configuration-example';
 import { CodeBlockWithFilledExample } from './code-block-with-filled/code-block-with-filled-example';
 import { CodeBlockWithLinkExample } from './code-block-with-link/code-block-with-link-example';
+import { CodeBlockWithMarksExample } from './code-block-with-marks/code-block-with-marks-example';
 import { CodeBlockWithMaxHeightExample } from './code-block-with-max-height/code-block-with-max-height-example';
 import { CodeBlockWithNoBorderExample } from './code-block-with-no-border/code-block-with-no-border-example';
 import { CodeBlockWithSoftWrapExample } from './code-block-with-soft-wrap/code-block-with-soft-wrap-example';
@@ -18,6 +19,7 @@ export {
     CodeBlockWithCustomLocaleConfigurationExample,
     CodeBlockWithFilledExample,
     CodeBlockWithLinkExample,
+    CodeBlockWithMarksExample,
     CodeBlockWithMaxHeightExample,
     CodeBlockWithNoBorderExample,
     CodeBlockWithSoftWrapExample,
@@ -33,6 +35,7 @@ const EXAMPLES = [
     CodeBlockWithNoBorderExample,
     CodeBlockOverviewExample,
     CodeBlockLineNumbersExample,
+    CodeBlockWithMarksExample,
     CodeBlockWithCustomLocaleConfigurationExample,
     CodeBlockWithTabsAndShadowExample,
     CodeBlockWithLinkExample,
