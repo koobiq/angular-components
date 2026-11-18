@@ -26,7 +26,8 @@ export const tkTMLocaleData = {
         optionActions: 'Hereketler',
         progressBar: 'Ösüş',
         date: 'Sene',
-        time: 'Wagt'
+        time: 'Wagt',
+        search: 'Gözleg'
     },
     select: {
         hiddenItemsText: '+{{ number }}',

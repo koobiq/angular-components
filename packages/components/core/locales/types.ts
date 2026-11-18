@@ -65,6 +65,8 @@ export type KbqA11yLocaleConfiguration = {
     date: string;
     /** Time part of a date and time field. */
     time: string;
+    /** Search field in a select or a dropdown that has no label, `aria-label` or placeholder of its own. */
+    search: string;
 };
 
 /** Locale configuration for `KbqCodeBlockModule`. */

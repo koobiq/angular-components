@@ -26,7 +26,8 @@ export const ruRULocaleData = {
         optionActions: 'Действия',
         progressBar: 'Прогресс',
         date: 'Дата',
-        time: 'Время'
+        time: 'Время',
+        search: 'Поиск'
     },
     select: { hiddenItemsText: '+{{ number }}', selectAll: 'Выбрать все' },
     datepicker: {

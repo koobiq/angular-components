@@ -26,7 +26,8 @@ export const esLALocaleData = {
         optionActions: 'Acciones',
         progressBar: 'Progreso',
         date: 'Fecha',
-        time: 'Hora'
+        time: 'Hora',
+        search: 'Búsqueda'
     },
     select: {
         hiddenItemsText: '+{{ number }}',

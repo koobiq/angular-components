@@ -5108,6 +5108,88 @@ describe('KbqSelect', () => {
 
             expect(focusSpy).toHaveBeenCalled();
         });
+
+        describe('described to assistive technology', () => {
+            const open = async () => {
+                trigger.click();
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+            };
+
+            const filter = async (query: string) => {
+                fixture.componentInstance.searchCtrl.setValue(query);
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                await vi.advanceTimersByTimeAsync(1);
+                fixture.detectChanges();
+            };
+
+            const getSearchInput = (): HTMLInputElement => fixture.debugElement.query(By.css('input')).nativeElement;
+            const getHighlightedOption = () => overlayContainerElement.querySelector('kbq-option.kbq-active')!;
+
+            it('should make the search field a combobox of the option list', async () => {
+                await open();
+
+                const input = getSearchInput();
+
+                expect(input.getAttribute('role')).toBe('combobox');
+                expect(input.getAttribute('aria-expanded')).toBe('true');
+                expect(input.getAttribute('aria-haspopup')).toBe('listbox');
+                expect(input.getAttribute('aria-autocomplete')).toBe('list');
+                expect(input.getAttribute('aria-controls')).toBe(
+                    overlayContainerElement.querySelector('[role="listbox"]')!.id
+                );
+            });
+
+            it('should point aria-activedescendant at the option the arrow keys highlight', async () => {
+                await open();
+
+                const input = getSearchInput();
+
+                expect(input.getAttribute('aria-activedescendant')).toBe(getHighlightedOption().id);
+
+                dispatchKeyboardEvent(input, 'keydown', DOWN_ARROW);
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+
+                expect(getHighlightedOption().textContent!.trim()).toBe('Almetyevsk');
+                expect(input.getAttribute('aria-activedescendant')).toBe(getHighlightedOption().id);
+                expect(document.activeElement).toBe(input);
+            });
+
+            it('should move aria-activedescendant to the option the search highlights', async () => {
+                await open();
+                await filter('Anapa');
+
+                expect(getHighlightedOption().textContent!.trim()).toBe('Anapa');
+                expect(getSearchInput().getAttribute('aria-activedescendant')).toBe(getHighlightedOption().id);
+            });
+
+            it('should drop aria-activedescendant when the search leaves no options', async () => {
+                await open();
+                await filter('No such city');
+
+                expect(overlayContainerElement.querySelector('kbq-option')).toBeNull();
+                expect(getSearchInput().hasAttribute('aria-activedescendant')).toBe(false);
+            });
+
+            it('should name a search field that has no name of its own', async () => {
+                await open();
+
+                expect(getSearchInput().getAttribute('aria-label')).toBe(ruRULocaleData.a11y.search);
+            });
+
+            it('should leave the name of the search field to its placeholder', async () => {
+                await open();
+
+                fixture.componentInstance.select().search()!.setPlaceholder('City');
+                fixture.detectChanges();
+
+                expect(getSearchInput().hasAttribute('aria-label')).toBe(false);
+            });
+        });
     });
 
     describe('with a selectionChange event handler', () => {
@@ -9925,6 +10007,29 @@ describe('KbqSelect', () => {
 
                     await expect(overlayContainerElement).toHaveNoViolations();
                 });
+            });
+
+            // The search field keeps the caret and points at the option the arrow keys highlight.
+            describe('with a search field', () => {
+                it('should have no violations while an option is highlighted', async () => {
+                    configureKbqSelectTestingModule([SelectWithSearch]);
+
+                    const fixture = TestBed.createComponent(SelectWithSearch);
+
+                    fixture.detectChanges();
+                    fixture.componentInstance.select().open();
+                    fixture.detectChanges();
+                    await fixture.whenStable();
+                    fixture.detectChanges();
+
+                    const input = overlayContainerElement.querySelector('input')!;
+
+                    dispatchKeyboardEvent(input, 'keydown', DOWN_ARROW);
+                    fixture.detectChanges();
+
+                    expect(input.getAttribute('aria-activedescendant')).toBeTruthy();
+                    await expect(overlayContainerElement).toHaveNoViolations();
+                }, 15_000);
             });
         });
     });

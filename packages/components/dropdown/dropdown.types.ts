@@ -5,7 +5,8 @@ import {
     KBQ_PANEL_DEFAULT_MIN_WIDTH,
     KbqPanelMaxWidth,
     KbqPanelMinWidth,
-    KbqPanelWidth
+    KbqPanelWidth,
+    KbqSearchFieldPopup
 } from '@koobiq/components/core';
 import { KbqDropdownContent } from './dropdown-content.directive';
 import { KbqDropdownItem } from './dropdown-item.component';
@@ -43,6 +44,8 @@ export interface KbqDropdownPanel {
     items: Signal<readonly KbqDropdownItem[]>;
     /** Whether the panel highlights the active item instead of focusing it, see `KbqDropdownSearch`. */
     readonly inSearchMode?: Signal<boolean>;
+    /** Panel that a projected `KbqDropdownSearch` filters, as the field describes it to assistive technology. */
+    readonly searchFieldPopup?: KbqSearchFieldPopup;
     focusFirstItem(origin?: FocusOrigin): void;
     resetActiveItem(): void;
     setPositionClasses?(x: KbqDropdownPositionX, y: KbqDropdownPositionY): void;

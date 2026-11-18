@@ -26,7 +26,8 @@ export const enUSLocaleData = {
         optionActions: 'Actions',
         progressBar: 'Progress',
         date: 'Date',
-        time: 'Time'
+        time: 'Time',
+        search: 'Search'
     },
     select: { hiddenItemsText: '+{{ number }}', selectAll: 'Select all' },
     datepicker: {

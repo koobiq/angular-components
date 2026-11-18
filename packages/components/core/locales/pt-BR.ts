@@ -26,7 +26,8 @@ export const ptBRLocaleData = {
         optionActions: 'Ações',
         progressBar: 'Progresso',
         date: 'Data',
-        time: 'Hora'
+        time: 'Hora',
+        search: 'Buscar'
     },
     select: {
         hiddenItemsText: '+{{ number }}',

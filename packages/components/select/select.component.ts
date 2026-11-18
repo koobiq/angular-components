@@ -70,6 +70,7 @@ import {
     KBQ_PARENT_POPUP,
     KBQ_SELECT_LOCALE_CONFIGURATION,
     KBQ_SELECT_SCROLL_STRATEGY,
+    KBQ_SELECT_SEARCH_POPUP,
     KbqAbstractSelect,
     KbqComponentColors,
     KbqErrorStateTracker,
@@ -85,6 +86,7 @@ import {
     KbqPanelWidth,
     KbqPseudoCheckbox,
     KbqPseudoCheckboxState,
+    KbqSearchFieldPopup,
     KbqSelectAllAdapter,
     KbqSelectAllEvent,
     KbqSelectFooter,
@@ -252,6 +254,7 @@ export const minimumTimeToDisplayLoading = 300;
             };
         }),
         { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqSelect },
+        { provide: KBQ_SELECT_SEARCH_POPUP, useFactory: () => inject(KbqSelect).searchFieldPopup },
         { provide: KBQ_PARENT_POPUP, useExisting: KbqSelect },
         kbqSiblingPopupProvider(KbqSelect),
         KbqSelectHiddenItemsMeasurer
@@ -521,6 +524,18 @@ export class KbqSelect
 
     /** Reference to the optional empty search result component. */
     readonly searchEmpty = contentChild(KbqSelectSearchEmptyResult);
+
+    /**
+     * Option list that the search field filters, as the field describes it to assistive technology.
+     *
+     * @docs-private
+     */
+    readonly searchFieldPopup: KbqSearchFieldPopup = {
+        comboboxPopupRole: 'listbox',
+        // The list is rendered together with the panel, and its required query cannot be read before then.
+        popup: () => (this.panel() ? this.optionsContainer().nativeElement : null),
+        activeDescendant: () => (this.panelOpen ? this.keyManager?.activeItem?.getHostElement() : null)
+    };
 
     /**
      * Template string for the hidden items counter. Supports the `{{ number }}` placeholder.
