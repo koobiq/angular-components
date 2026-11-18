@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import { DateAdapter } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqDatetime } from '@koobiq/components/datetime';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -29,6 +30,7 @@ import { TRANSLATIONS } from './l10n';
 })
 export class DatetimeWithSecondsExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
+    private readonly adapter = inject<DateAdapter<DateTime>>(DateAdapter);
     protected readonly format = TimeFormats.HHmmss;
-    protected readonly value = model<DateTime | null>(DateTime.fromISO('2026-11-11T20:20:35'));
+    protected readonly value = model<DateTime | null>(this.adapter.createDateTime(2026, 10, 11, 20, 20, 35, 0));
 }
