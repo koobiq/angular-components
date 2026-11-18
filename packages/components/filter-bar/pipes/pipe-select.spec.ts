@@ -2,26 +2,26 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import {
     ChangeDetectorRef,
     Component,
-    DebugElement,
+    type DebugElement,
     effect,
     inject,
     signal,
-    TemplateRef,
+    type TemplateRef,
     viewChild
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { dispatchKeyboardEvent, ENTER, ESCAPE } from '@koobiq/components/core';
 import {
-    KbqFilter,
+    type KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
-    KbqFilterBarNameResolver,
+    type KbqFilterBarNameResolver,
     kbqFilterBarNameResolverProvider,
-    KbqPipe,
-    KbqPipeTemplate,
+    type KbqPipe,
+    type KbqPipeTemplate,
     KbqPipeTypes,
-    KbqSelectValue
+    type KbqSelectValue
 } from '@koobiq/components/filter-bar';
 import { KbqBasePipe } from './base-pipe';
 import { registerNoOptionsTests } from './pipe-no-options.spec-helper';

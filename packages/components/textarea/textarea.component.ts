@@ -6,7 +6,7 @@ import {
     computed,
     DestroyRef,
     Directive,
-    DoCheck,
+    type DoCheck,
     effect,
     ElementRef,
     inject,
@@ -14,16 +14,17 @@ import {
     input,
     linkedSignal,
     NgZone,
-    OnInit,
+    type OnInit,
     Renderer2,
     signal,
     untracked,
-    WritableSignal
+    type WritableSignal
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import { asapScheduler } from 'rxjs';
 import {
-    CanUpdateErrorState,
+    type CanUpdateErrorState,
     ErrorStateMatcher,
     KBQ_PARENT_ANIMATION_COMPONENT,
     KBQ_WINDOW,
@@ -33,7 +34,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
-import { asapScheduler } from 'rxjs';
 
 export const KBQ_TEXTAREA_VALUE_ACCESSOR = new InjectionToken<{ value: any }>('KBQ_TEXTAREA_VALUE_ACCESSOR');
 
@@ -243,6 +243,13 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
         this.syncedValue = initialValue;
         this.syncedText = this.elementRef.nativeElement.value;
 
+        // Browser autocomplete is off by default. Written only when the markup has not set the attribute —
+        // which a static value has, by the time any directive runs — so a consumer's `autocomplete` wins;
+        // a bound one lands after this and overwrites it anyway.
+        if (!this.elementRef.nativeElement.hasAttribute('autocomplete')) {
+            this.elementRef.nativeElement.setAttribute('autocomplete', 'off');
+        }
+
         if (this.parent) {
             outputToObservable(this.parent.animationDone)
                 .pipe(takeUntilDestroyed())
@@ -301,7 +308,7 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
     ngOnInit() {
         if (!this.isBrowser) return;
 
-        Promise.resolve().then(() => {
+        void Promise.resolve().then(() => {
             const styles = this.window.getComputedStyle(this.elementRef.nativeElement);
 
             this.lineHeight.set(parseInt(styles.lineHeight!, 10));

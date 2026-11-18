@@ -1,7 +1,7 @@
-import { Path } from '@angular-devkit/core';
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Path } from '@angular-devkit/core';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
-import { getSimpleAttributeName, visitAll, Visitor } from '../../utils/ast';
+import { getSimpleAttributeName, visitAll, type Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
@@ -18,9 +18,9 @@ import {
     UNSUPPORTED_COLORS,
     UNSUPPORTED_MEMBERS,
     unsupportedMemberMessage,
-    WarnPattern
+    type WarnPattern
 } from './data';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 const TS_EXT = '.ts';
 const HTML_EXT = '.html';
@@ -70,15 +70,15 @@ function literalColor(attr: any): string | null {
 
     const quoted = /^'([^']*)'$|^"([^"]*)"$/.exec(raw);
 
-    return quoted ? (quoted[1] ?? quoted[2]) : null;
+    return quoted?.[1] ?? quoted?.[2] ?? null;
 }
 
 /** The trailing enum member of a property access, e.g. `colors.Error` → `Error`. */
 function memberName(attr: any): string | null {
     const raw = typeof attr.value === 'string' ? attr.value.trim() : '';
-    const match = /^[\w$.]*\.(\w+)$/.exec(raw);
+    const member = /^[\w$.]*\.(\w+)$/.exec(raw)?.[1];
 
-    return match && UNSUPPORTED_MEMBERS.includes(match[1]) ? raw : null;
+    return member && UNSUPPORTED_MEMBERS.includes(member) ? raw : null;
 }
 
 interface RemovedColor extends Span {

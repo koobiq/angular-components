@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
+import { AgGridModule } from 'ag-grid-angular';
+import { AllCommunityModule, type ColDef, ModuleRegistry, type RowSelectionOptions } from 'ag-grid-community';
 import {
-    KbqAgGridRowGroup,
+    type KbqAgGridRowGroup,
     KbqAgGridRowGroupCollapsedStateLocalStorageStore,
     kbqAgGridRowGroupCollapsedStateStoreProvider,
     kbqAgGridRowGroupColOptionsProvider,
@@ -10,8 +12,6 @@ import {
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { AgGridModule } from 'ag-grid-angular';
-import { AllCommunityModule, ColDef, ModuleRegistry, RowSelectionOptions } from 'ag-grid-community';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -71,7 +71,7 @@ export class AgGridRowGroupExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
 
     protected readonly groupCols = model(['category', 'severity']);
-    protected readonly rowId = (row: Record<string, unknown>): string => row.id as string;
+    protected readonly rowId = (row: Record<string, unknown>): string => row['id'] as string;
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,

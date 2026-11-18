@@ -1,5 +1,12 @@
-import { Component, DebugElement, EnvironmentProviders, Provider, Type, viewChildren } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+    Component,
+    type DebugElement,
+    type EnvironmentProviders,
+    type Provider,
+    type Type,
+    viewChildren
+} from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter, RouterLink } from '@angular/router';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -7,7 +14,7 @@ import {
     dispatchEvent,
     DOWN_ARROW,
     kbqA11yLocaleConfigurationProvider,
-    KbqDefaultSizes
+    type KbqDefaultSizes
 } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqOverflowItem, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
@@ -20,7 +27,7 @@ import {
 import { KbqBreadcrumbsModule } from './breadcrumbs.module';
 import { RdxRovingFocusGroupDirective } from './roving-focus-group.directive';
 import { RdxRovingFocusItemDirective } from './roving-focus-item.directive';
-import { KbqRovingFocusOrientation } from './utils';
+import type { KbqRovingFocusOrientation } from './utils';
 
 const AXE_TIMEOUT = 15000;
 

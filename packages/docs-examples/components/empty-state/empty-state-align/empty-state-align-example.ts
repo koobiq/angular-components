@@ -22,8 +22,8 @@ import { TRANSLATIONS } from './l10n';
                 <h2 kbq-empty-state-title>{{ t().noGroups }}</h2>
                 <div kbq-empty-state-text>{{ t().agentsGroupText }}</div>
                 <div kbq-empty-state-actions>
-                    <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">
-                        <i kbq-icon="kbq-plus_16" [color]="'theme'"></i>
+                    <button kbq-button type="button" [color]="colors.Theme" [kbqStyle]="styles.Transparent">
+                        <i kbq-icon="kbq-plus_16" color="theme"></i>
                         {{ t().createGroup }}
                     </button>
                 </div>
@@ -33,8 +33,8 @@ import { TRANSLATIONS } from './l10n';
                 <h2 kbq-empty-state-title>{{ t().noGroups }}</h2>
                 <div kbq-empty-state-text>{{ t().agentsGroupText }}</div>
                 <div kbq-empty-state-actions>
-                    <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">
-                        <i kbq-icon="kbq-plus_16" [color]="'theme'"></i>
+                    <button kbq-button type="button" [color]="colors.Theme" [kbqStyle]="styles.Transparent">
+                        <i kbq-icon="kbq-plus_16" color="theme"></i>
                         {{ t().createGroup }}
                     </button>
                 </div>

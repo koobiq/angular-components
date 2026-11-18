@@ -1,61 +1,61 @@
 import { FocusTrap } from '@angular/cdk/a11y';
 import { coerceElement } from '@angular/cdk/coercion';
 import {
-    ConnectedOverlayPositionChange,
-    ConnectionPositionPair,
-    FlexibleConnectedPositionStrategy,
+    type ConnectedOverlayPositionChange,
+    type ConnectionPositionPair,
+    type FlexibleConnectedPositionStrategy,
     OverlayContainer,
     OverlayPositionBuilder
 } from '@angular/cdk/overlay';
-import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
+import { type CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
 import {
     Component,
-    DebugElement,
-    ElementRef,
-    Provider,
-    TemplateRef,
-    Type,
+    type DebugElement,
     effect,
+    ElementRef,
+    type Provider,
     signal,
+    type TemplateRef,
+    type Type,
     viewChild
 } from '@angular/core';
-import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { type ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { filter, Subject } from 'rxjs';
+import type { Mock } from 'vitest';
 import {
-    ENTER,
-    ESCAPE,
-    KBQ_LOCALE_SERVICE,
-    KbqLocaleService,
-    KbqOverlayLayer,
-    KbqOverlayOrigin,
-    KbqPopUpPlacementValues,
-    KbqStickToWindowPlacementValues,
-    POSITION_TO_CSS_MAP,
-    SPACE,
     createKeyboardEvent,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
+    ENTER,
     enUSLocaleData,
-    ruRULocaleData
+    ESCAPE,
+    KBQ_LOCALE_SERVICE,
+    KbqLocaleService,
+    KbqOverlayLayer,
+    type KbqOverlayOrigin,
+    type KbqPopUpPlacementValues,
+    type KbqStickToWindowPlacementValues,
+    POSITION_TO_CSS_MAP,
+    ruRULocaleData,
+    SPACE
 } from '@koobiq/components/core';
 import { KbqModalService } from '@koobiq/components/modal';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { Subject, filter } from 'rxjs';
-import type { Mock } from 'vitest';
+import {
+    defaultHoverLeaveDelay,
+    defaultOffsetYWithArrow,
+    KbqPopoverComponent,
+    KbqPopoverTrigger
+} from './popover.component';
+import { KbqPopoverModule } from './popover.module';
 import {
     KBQ_POPOVER_CONFIRM_BUTTON_TEXT,
     KBQ_POPOVER_CONFIRM_TEXT,
     KbqPopoverConfirmTrigger
 } from './popover-confirm.component';
-import {
-    KbqPopoverComponent,
-    KbqPopoverTrigger,
-    defaultHoverLeaveDelay,
-    defaultOffsetYWithArrow
-} from './popover.component';
-import { KbqPopoverModule } from './popover.module';
 
 /** `KbqTooltipTrigger` default enter delay (400 ms) plus a buffer for the deferred show. */
 const tooltipEnterDelay = 410;
@@ -2743,7 +2743,7 @@ class PopoverStaticLeaveDelay {
     selector: 'popover-simple',
     imports: [KbqPopoverModule],
     template: `
-        <button kbqPopover [kbqPopoverContent]="'test'">Popover Trigger</button>
+        <button kbqPopover kbqPopoverContent="test">Popover Trigger</button>
     `
 })
 class PopoverSimple {
@@ -2819,7 +2819,7 @@ class PopoverContentFromEffect {
     selector: 'popover-close-on-scroll',
     imports: [KbqPopoverModule],
     template: `
-        <button kbqPopover [kbqPopoverCloseOnScroll]="true" [kbqTrigger]="'manual'" [kbqPopoverContent]="'CONTENT'">
+        <button kbqPopover kbqTrigger="manual" kbqPopoverContent="CONTENT" [kbqPopoverCloseOnScroll]="true">
             trigger
         </button>
     `
@@ -2832,25 +2832,25 @@ class PopoverCloseOnScroll {
     selector: 'popover-test-component',
     imports: [KbqPopoverModule],
     template: `
-        <button #test1 kbqPopover [kbqTrigger]="'hover'" [kbqPopoverContent]="'_TEST1'">_TEST1asdasd</button>
+        <button #test1 kbqPopover kbqTrigger="hover" kbqPopoverContent="_TEST1">_TEST1asdasd</button>
         <button
             #test2
             kbqPopover
             kbqPopoverContent="_TEST2"
-            [kbqTrigger]="'manual'"
+            kbqTrigger="manual"
             [kbqPopoverVisible]="popoverVisibility"
         >
             _TEST2
         </button>
-        <button #test3 kbqPopover [kbqTrigger]="'focus'" [kbqPopoverContent]="'_TEST3'">_TEST3</button>
+        <button #test3 kbqPopover kbqTrigger="focus" kbqPopoverContent="_TEST3">_TEST3</button>
 
-        <button #test4 kbqPopover [kbqTrigger]="'hover'" [kbqPopoverHeader]="'_TEST4'">_TEST4</button>
-        <button #test5 kbqPopover [kbqTrigger]="'hover'" [kbqPopoverContent]="'_TEST5'">_TEST5</button>
-        <button #test6 kbqPopover [kbqTrigger]="'hover'" [kbqPopoverFooter]="'_TEST6'">_TEST6</button>
+        <button #test4 kbqPopover kbqTrigger="hover" kbqPopoverHeader="_TEST4">_TEST4</button>
+        <button #test5 kbqPopover kbqTrigger="hover" kbqPopoverContent="_TEST5">_TEST5</button>
+        <button #test6 kbqPopover kbqTrigger="hover" kbqPopoverFooter="_TEST6">_TEST6</button>
 
-        <button #test7 kbqPopover [kbqPopoverClass]="'_TEST7'" [kbqPopoverContent]="'_TEST7'">_TEST7</button>
+        <button #test7 kbqPopover kbqPopoverClass="_TEST7" kbqPopoverContent="_TEST7">_TEST7</button>
         <!-- Not a button on purpose: the keyboard trigger has to work on any focusable host. -->
-        <div #test8 tabindex="0" kbqPopover [kbqPopoverClass]="'_TEST8'" [kbqPopoverContent]="'_TEST8'">_TEST8</div>
+        <div #test8 tabindex="0" kbqPopover kbqPopoverClass="_TEST8" kbqPopoverContent="_TEST8">_TEST8</div>
     `
 })
 class PopoverTestComponent {
@@ -2874,7 +2874,7 @@ class PopoverTestComponent {
         <button #test9 kbqPopoverConfirm kbqPopoverConfirmText="new confirm text">_TEST9</button>
         <button #test10 kbqPopoverConfirm kbqPopoverConfirmButtonText="new button text">_TEST10</button>
         <button #test11 kbqPopoverConfirm [kbqPopoverConfirmText]="confirmText" (confirm)="onConfirm()">_TEST11</button>
-        <button #test13 kbqPopoverConfirm [kbqTrigger]="'hover'">_TEST13</button>
+        <button #test13 kbqPopoverConfirm kbqTrigger="hover">_TEST13</button>
     `
 })
 class PopoverConfirmTestComponent {
@@ -2916,7 +2916,7 @@ class PopoverConfirmWithProvidersTestComponent {
         <button
             #trigger
             kbqPopover
-            [kbqTrigger]="'hover'"
+            kbqTrigger="hover"
             [kbqPopoverHeader]="popoverHeaderTemplate"
             [kbqPopoverContent]="popoverContentTemplate"
             [kbqPopoverFooter]="popoverFooterTemplate"
@@ -3114,7 +3114,7 @@ class PopoverFallbacks {
     selector: 'popover-with-tooltip',
     imports: [KbqPopoverModule, KbqToolTipModule],
     template: `
-        <button #trigger kbqPopover kbqPopoverHasCloseButton [kbqPopoverContent]="'POPOVER'" [kbqTooltip]="'TOOLTIP'">
+        <button #trigger kbqPopover kbqPopoverHasCloseButton kbqPopoverContent="POPOVER" kbqTooltip="TOOLTIP">
             Button
         </button>
     `
@@ -3185,13 +3185,13 @@ class PopoverOrigin {
             #focusTrigger
             kbqPopover
             kbqTrigger="focus"
-            [kbqPopoverContent]="'Focus'"
+            kbqPopoverContent="Focus"
             [kbqPopoverPreventClose]="preventClose()"
         >
             Focus
         </button>
         <div kbqOverlayLayer>
-            <button #layerTrigger kbqPopover [kbqPopoverContent]="'Layer'">Layer</button>
+            <button #layerTrigger kbqPopover kbqPopoverContent="Layer">Layer</button>
         </div>
     `
 })
@@ -3207,10 +3207,10 @@ class PopoverInModal {
     imports: [KbqPopoverModule, KbqToolTipModule, KbqOverlayLayer],
     template: `
         <div kbqOverlayLayer>
-            <button #popover kbqPopover [kbqPopoverContent]="'POPOVER'" [kbqPopoverStickToWindow]="stickToWindow">
+            <button #popover kbqPopover kbqPopoverContent="POPOVER" [kbqPopoverStickToWindow]="stickToWindow">
                 Popover
             </button>
-            <button #tooltip [kbqTooltip]="'TOOLTIP'">Tooltip</button>
+            <button #tooltip kbqTooltip="TOOLTIP">Tooltip</button>
         </div>
     `
 })

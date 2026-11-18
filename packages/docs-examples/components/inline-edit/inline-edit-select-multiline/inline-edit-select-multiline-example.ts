@@ -43,7 +43,7 @@ const COMMENTS: string[] = [
                 <kbq-form-field kbqInlineEditEditMode [noBorders]="true">
                     <kbq-select
                         panelWidth="auto"
-                        [panelClass]="'example-inline-select-multiline__options'"
+                        panelClass="example-inline-select-multiline__options"
                         [placeholder]="notSetLabel"
                         [formControl]="control"
                         (selectionChange)="inlineEdit.commit()"
@@ -77,5 +77,5 @@ export class InlineEditSelectMultilineExample {
 
     protected readonly comments = COMMENTS;
 
-    protected readonly control = new FormControl<string | null>(COMMENTS[0]);
+    protected readonly control = new FormControl<string | null>(COMMENTS[0] ?? null);
 }

@@ -1,34 +1,34 @@
 import { JsonPipe } from '@angular/common';
 import {
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
     inject,
-    TemplateRef,
+    type TemplateRef,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import type { DateTime } from 'luxon';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import {
     kbqBuildTree,
-    KbqFilter,
-    KbqFilterBar,
+    type KbqFilter,
+    type KbqFilterBar,
     KbqFilterBarModule,
-    KbqPipe,
-    KbqPipeTemplate,
+    type KbqPipe,
+    type KbqPipeTemplate,
     KbqPipeTypes,
-    KbqSaveFilterEvent,
+    type KbqSaveFilterEvent,
     KbqSaveFilterStatuses
 } from '@koobiq/components/filter-bar';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
-import { DateTime } from 'luxon';
 import { FilterBarExamplesModule } from '../../docs-examples/components/filter-bar';
 import { DevLocaleSelector } from '../locale-selector';
 
@@ -191,7 +191,7 @@ export class DevDatePipesWithoutValues {
         ReactiveFormsModule
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -883,8 +883,8 @@ export class DevApp implements AfterViewInit {
             ]
         }
     ];
-    pipeTemplates: KbqPipeTemplate[];
-    defaultFilter: KbqFilter | null = this.filters[2];
+    pipeTemplates: KbqPipeTemplate[] = [];
+    defaultFilter: KbqFilter | null = this.filters[2] ?? null;
     activeFilter: KbqFilter | null = this.defaultFilter;
 
     ngAfterViewInit(): void {
@@ -1138,7 +1138,7 @@ export class DevApp implements AfterViewInit {
             }
 
             // Renaming writes the name only, leaving the stored pipes as they were saved.
-            this.filters.splice(index, 1, { ...this.filters[index], name: filter.name });
+            this.filters.splice(index, 1, { ...this.filters[index]!, name: filter.name });
 
             this.activeFilter = filter;
         } else {
@@ -1153,7 +1153,7 @@ export class DevApp implements AfterViewInit {
         // filterBar.filters.filterSavedUnsuccessfully({ nameAlreadyExists: true, text: 'custom error text' });
     }
 
-    onChangeFilter({ filter, filterBar }) {
+    onChangeFilter({ filter, filterBar }: KbqSaveFilterEvent) {
         console.log('filter to save: ', filter);
 
         this.filters.splice(

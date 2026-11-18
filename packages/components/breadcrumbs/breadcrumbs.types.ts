@@ -1,4 +1,4 @@
-import { KbqDefaultSizes } from '@koobiq/components/core';
+import type { KbqDefaultSizes } from '@koobiq/components/core';
 
 export type KbqBreadcrumbsWrapMode = 'auto' | 'wrap' | 'none';
 

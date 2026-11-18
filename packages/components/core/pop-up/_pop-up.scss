@@ -37,35 +37,35 @@
     }
 
     .#{$name}_placement-top-right .#{$name}__arrow {
-        bottom: $arrow-offset;
         right: $arrow-padding;
+        bottom: $arrow-offset;
     }
 
     .#{$name}_placement-right .#{$name}__arrow {
-        left: $arrow-offset;
         top: 50%;
+        left: $arrow-offset;
         margin-top: $arrow-offset;
     }
 
     .#{$name}_placement-right-top .#{$name}__arrow {
-        left: $arrow-offset;
         top: $arrow-padding;
+        left: $arrow-offset;
     }
 
     .#{$name}_placement-right-bottom .#{$name}__arrow {
-        left: $arrow-offset;
         bottom: $arrow-padding;
+        left: $arrow-offset;
     }
 
     .#{$name}_placement-left .#{$name}__arrow {
-        right: $arrow-offset;
         top: 50%;
+        right: $arrow-offset;
         margin-top: $arrow-offset;
     }
 
     .#{$name}_placement-left-top .#{$name}__arrow {
-        right: $arrow-offset;
         top: $arrow-padding;
+        right: $arrow-offset;
     }
 
     .#{$name}_placement-left-bottom .#{$name}__arrow {

@@ -1,6 +1,6 @@
-import { AfterContentInit, Directive, inject, Injector, input, ViewContainerRef } from '@angular/core';
+import { type AfterContentInit, Directive, inject, Injector, input, ViewContainerRef } from '@angular/core';
+import type { KbqPipe } from './filter-bar.types';
 import { KBQ_FILTER_BAR_PIPES } from './filter-bar-pipes';
-import { KbqPipe } from './filter-bar.types';
 import { KBQ_PIPE_DATA } from './pipes/base-pipe';
 
 @Directive({

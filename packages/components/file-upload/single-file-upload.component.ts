@@ -1,33 +1,34 @@
-import { CdkMonitorFocus, FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { CdkMonitorFocus, FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
 import { isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
 import {
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     computed,
     contentChildren,
-    DoCheck,
+    type DoCheck,
     effect,
-    ElementRef,
+    type ElementRef,
     inject,
     Injector,
     input,
-    OnChanges,
+    type OnChanges,
     output,
     PLATFORM_ID,
-    SimpleChanges,
+    type SimpleChanges,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, FormControlStatus } from '@angular/forms';
+import type { ControlValueAccessor, FormControlStatus } from '@angular/forms';
+import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
 import {
-    ErrorStateMatcher,
+    type ErrorStateMatcher,
     KbqDataSizePipe,
-    KbqFileUploadLocaleConfiguration,
+    type KbqFileUploadLocaleConfiguration,
     KbqLocaleOverridesDirective,
     ruRULocaleData
 } from '@koobiq/components/core';
@@ -35,17 +36,15 @@ import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
 import { KbqHint } from '@koobiq/components/form-field';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
-import { KbqProgressSpinner, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
-import { BehaviorSubject } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
-import { KbqDropzoneData, KbqFullScreenDropzoneService } from './dropzone';
+import { KbqProgressSpinner, type ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
+import { type KbqDropzoneData, KbqFullScreenDropzoneService } from './dropzone';
 import {
-    KbqFile,
-    KbqFileItem,
+    type KbqFile,
+    type KbqFileItem,
     KbqFileUploadAllowedType,
-    KbqFileUploadAllowedTypeValues,
+    type KbqFileUploadAllowedTypeValues,
     KbqFileUploadBase,
-    KbqFileUploadCaptionContext,
+    type KbqFileUploadCaptionContext,
     kbqFileUploadHintParentProvider
 } from './file-upload';
 import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext } from './primitives';
@@ -104,8 +103,8 @@ export class KbqSingleFileUploadComponent
     readonly accept = input<string[]>();
     readonly inputId = input<string>(`kbq-single-file-upload-${nextSingleFileUploadUniqueId++}`);
 
-    /** An object used to control the error state of the component. */
-    errorStateMatcher: ErrorStateMatcher;
+    /** An object used to control the error state of the component. Defaults to the injected `ErrorStateMatcher`. */
+    errorStateMatcher: ErrorStateMatcher = this.defaultErrorStateMatcher;
 
     /**
      * The selected file, or `null`.
@@ -120,7 +119,7 @@ export class KbqSingleFileUploadComponent
     get file(): KbqFileItem | null {
         const files = this.fileList.list();
 
-        return files.length === 0 ? null : files[0];
+        return files[0] ?? null;
     }
 
     set file(currentFile: KbqFileItem | null) {
@@ -211,7 +210,7 @@ export class KbqSingleFileUploadComponent
 
         switch (this.allowed()) {
             case KbqFileUploadAllowedType.Mixed: {
-                const [before, after] = config.captionTextWithFolder.split('{{ browseLink }}');
+                const [before = '', after = ''] = config.captionTextWithFolder.split('{{ browseLink }}');
 
                 const [captionTextSeparator] = after.split('{{ browseLinkFolderMixed }}');
 
@@ -223,13 +222,13 @@ export class KbqSingleFileUploadComponent
                 };
             }
             case KbqFileUploadAllowedType.Folder: {
-                const [before] = config.captionTextOnlyFolder.split('{{ browseLinkFolder }}');
+                const [before = ''] = config.captionTextOnlyFolder.split('{{ browseLinkFolder }}');
 
                 return { captionText: before, browseLinkFolder: config.browseLinkFolder };
             }
             case KbqFileUploadAllowedType.File:
             default: {
-                const [before] = config.captionTextWithFolder.split('{{ browseLink }}');
+                const [before = ''] = config.captionTextWithFolder.split('{{ browseLink }}');
 
                 return { captionText: before, browseLink: config.browseLink };
             }
@@ -442,18 +441,21 @@ export class KbqSingleFileUploadComponent
 
     /** Keeps the first file — the component holds one — and reports the rest as rejected. */
     private addFile(files: File[]): void {
-        this.file = this.mapToFileItem(files[0]);
+        const [file, ...discarded] = files;
+
+        if (!file) return;
+
+        this.file = this.mapToFileItem(file);
         this.cvaOnChange(this.file);
         this.fileChange.emit(this.file);
 
         const config = this.localeConfiguration().a11y;
-        const discarded = files.slice(1);
 
         if (discarded.length) {
             this.rejected.emit(discarded);
         }
 
-        this.announce(this.withFileName(config.fileAdded, files[0].name), discarded.length ? config.filesNotAdded : '');
+        this.announce(this.withFileName(config.fileAdded, file.name), discarded.length ? config.filesNotAdded : '');
     }
 
     private mapToFileItem(file: File): KbqFileItem {

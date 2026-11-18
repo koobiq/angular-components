@@ -1,6 +1,6 @@
+import './fail-on-console';
 import { resolve } from 'node:path';
 import { register } from 'ts-node';
-import './fail-on-console';
 
 const registered = Symbol.for('koobiq.ts-node');
 

@@ -1,4 +1,4 @@
-import { KbqPseudoCheckboxState } from './pseudo-checkbox/pseudo-checkbox';
+import type { KbqPseudoCheckboxState } from './pseudo-checkbox/pseudo-checkbox';
 
 /**
  * Adapter describing how a component reads and writes selection state for a set of items,

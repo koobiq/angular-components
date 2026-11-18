@@ -1,10 +1,10 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
 import { ContentObserver } from '@angular/cdk/observers';
 import { _getFocusedElementPierceShadowDom, Platform } from '@angular/cdk/platform';
 import {
-    AfterContentInit,
+    type AfterContentInit,
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -20,19 +20,20 @@ import {
     InjectionToken,
     Injector,
     input,
-    OnChanges,
-    OnDestroy,
-    Signal,
+    type OnChanges,
+    type OnDestroy,
+    type Signal,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subject } from 'rxjs';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import {
     DOWN_ARROW,
     ENTER,
-    IFocusableOption,
+    type IFocusableOption,
     KBQ_WINDOW,
     kbqAnimationsDisabled,
     kbqInjectNativeElement,
@@ -45,7 +46,6 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { Subject } from 'rxjs';
 import { getOuterWidth } from './outer-width';
 
 /** Orientation of the navbar an element belongs to. */
@@ -254,12 +254,12 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
         return this.button() || this.formField() || this.customTrigger() || undefined;
     }
 
-    /** @docs-private */
-    get tooltip(): KbqTooltipTrigger {
+    /** Tooltip of a `kbq-navbar-item`; a brand and a toggle have none. @docs-private */
+    get tooltip(): KbqTooltipTrigger | undefined {
         return this._tooltip;
     }
 
-    private _tooltip: KbqTooltipTrigger;
+    private _tooltip?: KbqTooltipTrigger;
 
     /** @docs-private */
     readonly onFocus = new Subject<KbqNavbarFocusableItemEvent>();
@@ -340,7 +340,7 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
 
     /** @docs-private */
     ngAfterViewInit(): void {
-        this.focusMonitor.monitor(this.elementRef);
+        void this.focusMonitor.monitor(this.elementRef);
     }
 
     /** @docs-private */

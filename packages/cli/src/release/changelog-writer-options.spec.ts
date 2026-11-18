@@ -1,4 +1,4 @@
-import { IReleaseTaskConfig } from './base-release-task';
+import type { IReleaseTaskConfig } from './base-release-task';
 import { createChangelogWriterOptions } from './changelog-writer-options';
 
 const TYPE_LABELS: Record<string, string> = {

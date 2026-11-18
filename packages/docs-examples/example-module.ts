@@ -1381,7 +1381,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Custom checkbox block",
     "componentName": "BlockCheckboxExample",
     "files": [
-      "block-checkbox-example.ts"
+      "block-checkbox-example.ts",
+      "block-checkbox-example.css"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -1936,6 +1937,51 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "datepicker-required-example",
     "primaryFile": "datepicker-required-example.ts",
     "importPath": "components/datepicker"
+  },
+  "datetime-overview": {
+    "packagePath": "components/datetime/datetime-overview",
+    "title": "Datetime",
+    "componentName": "DatetimeOverviewExample",
+    "files": [
+      "datetime-overview-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "datetime-overview-example",
+    "primaryFile": "datetime-overview-example.ts",
+    "importPath": "components/datetime"
+  },
+  "datetime-validation": {
+    "packagePath": "components/datetime/datetime-validation",
+    "title": "Datetime validation",
+    "componentName": "DatetimeValidationExample",
+    "files": [
+      "datetime-validation-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "datetime-validation-example",
+    "primaryFile": "datetime-validation-example.ts",
+    "importPath": "components/datetime"
+  },
+  "datetime-with-seconds": {
+    "packagePath": "components/datetime/datetime-with-seconds",
+    "title": "Datetime with seconds",
+    "componentName": "DatetimeWithSecondsExample",
+    "files": [
+      "datetime-with-seconds-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "datetime-with-seconds-example",
+    "primaryFile": "datetime-with-seconds-example.ts",
+    "importPath": "components/datetime"
   },
   "divider-overview": {
     "packagePath": "components/divider/divider-overview",
@@ -3047,7 +3093,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "filter-bar-localization-example.ts"
     ],
     "localImportFiles": [
-      "../../../i18n/index.ts"
+      "../../../i18n/index.ts",
+      "l10n.ts"
     ],
     "selector": "filter-bar-localization-example",
     "primaryFile": "filter-bar-localization-example.ts",
@@ -4603,7 +4650,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "ListIntermediateStateExample",
     "files": [
       "list-intermediate-state-example.ts",
-      "./list-intermediate-state-example.html"
+      "list-intermediate-state-example.html"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -4796,7 +4843,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownArticleExample",
     "files": [
       "markdown-article-example.ts",
-      "./markdown-article-example.html"
+      "markdown-article-example.html"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -4812,7 +4859,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownCodeBlockExample",
     "files": [
       "markdown-code-block-example.ts",
-      "./markdown-code-block-example.html"
+      "markdown-code-block-example.html"
     ],
     "localImportFiles": [],
     "selector": "markdown-code-block-example",
@@ -4825,7 +4872,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownCodeExample",
     "files": [
       "markdown-code-example.ts",
-      "./markdown-code-example.html"
+      "markdown-code-example.html"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -4841,7 +4888,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownDividerExample",
     "files": [
       "markdown-divider-example.ts",
-      "./markdown-divider-example.html"
+      "markdown-divider-example.html"
     ],
     "localImportFiles": [],
     "selector": "markdown-divider-example",
@@ -4854,7 +4901,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownHeadersCombinationsExample",
     "files": [
       "markdown-headers-combinations-example.ts",
-      "./markdown-headers-combinations-example.html"
+      "markdown-headers-combinations-example.html"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -4870,7 +4917,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownImageExample",
     "files": [
       "markdown-image-example.ts",
-      "./markdown-image-example.html"
+      "markdown-image-example.html"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -4901,7 +4948,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownLineBreakExample",
     "files": [
       "markdown-line-break-example.ts",
-      "./markdown-line-break-example.html"
+      "markdown-line-break-example.html"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -4917,7 +4964,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownLinkExample",
     "files": [
       "markdown-link-example.ts",
-      "./markdown-link-example.html"
+      "markdown-link-example.html"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -4933,7 +4980,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownListExample",
     "files": [
       "markdown-list-example.ts",
-      "./markdown-list-example.html"
+      "markdown-list-example.html"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -4949,7 +4996,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownOverviewExample",
     "files": [
       "markdown-overview-example.ts",
-      "./markdown-overview-example.html"
+      "markdown-overview-example.html"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -4965,7 +5012,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownParagraphExample",
     "files": [
       "markdown-paragraph-example.ts",
-      "./markdown-paragraph-example.html"
+      "markdown-paragraph-example.html"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -4981,7 +5028,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownQuoteExample",
     "files": [
       "markdown-quote-example.ts",
-      "./markdown-quote-example.html"
+      "markdown-quote-example.html"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -5010,7 +5057,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownTableExample",
     "files": [
       "markdown-table-example.ts",
-      "./markdown-table-example.html"
+      "markdown-table-example.html"
     ],
     "localImportFiles": [],
     "selector": "markdown-table-example",
@@ -6613,7 +6660,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "SidepanelOverlayedExample",
     "files": [
       "sidepanel-overlayed-example.ts",
-      "./sidepanel-overlayed-example.html"
+      "sidepanel-overlayed-example.html"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -7233,7 +7280,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TabsAddTabVerticalExample",
     "files": [
       "tabs-add-tab-vertical-example.ts",
-      "./tabs-add-tab-vertical-example.css"
+      "tabs-add-tab-vertical-example.css"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -7249,7 +7296,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TabsAddTabExample",
     "files": [
       "tabs-add-tab-example.ts",
-      "./tabs-add-tab-example.css"
+      "tabs-add-tab-example.css"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -8095,7 +8142,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TitleCustomContentExample",
     "files": [
       "title-custom-content-example.ts",
-      "./title-custom-content-example.css"
+      "title-custom-content-example.css"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -8111,7 +8158,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TitleListOptionExample",
     "files": [
       "title-list-option-example.ts",
-      "./title-list-option-example.css"
+      "title-list-option-example.css"
     ],
     "localImportFiles": [],
     "selector": "title-list-option-example",
@@ -8124,7 +8171,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TitleMultipleTextExample",
     "files": [
       "title-multiple-text-example.ts",
-      "./title-multiple-text-example.css"
+      "title-multiple-text-example.css"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -8140,7 +8187,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TitleOverviewExample",
     "files": [
       "title-overview-example.ts",
-      "./title-overview-example.css"
+      "title-overview-example.css"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -8156,7 +8203,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TitleVerticalOverflowExample",
     "files": [
       "title-vertical-overflow-example.ts",
-      "./title-vertical-overflow-example.css"
+      "title-vertical-overflow-example.css"
     ],
     "localImportFiles": [],
     "selector": "title-vertical-overflow-example",
@@ -9658,6 +9705,9 @@ export type LiveExampleId =
   | 'datepicker-overview'
   | 'datepicker-range'
   | 'datepicker-required'
+  | 'datetime-overview'
+  | 'datetime-validation'
+  | 'datetime-with-seconds'
   | 'divider-overview'
   | 'divider-vertical'
   | 'dl-alignment'

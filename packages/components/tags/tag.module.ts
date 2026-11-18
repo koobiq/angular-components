@@ -1,8 +1,6 @@
 ﻿import { PlatformModule } from '@angular/cdk/platform';
 import { NgModule } from '@angular/core';
 import { ENTER } from '@koobiq/components/core';
-import { KbqTagInput, kbqTagsDefaultOptionsProvider } from './tag-input';
-import { KbqTagList } from './tag-list.component';
 import {
     KbqTag,
     KbqTagAvatar,
@@ -13,6 +11,8 @@ import {
     KbqTagSuffix,
     KbqTagTrailingIcon
 } from './tag.component';
+import { KbqTagInput, kbqTagsDefaultOptionsProvider } from './tag-input';
+import { KbqTagList } from './tag-list.component';
 
 const COMPONENTS = [
     KbqTagEditSubmit,

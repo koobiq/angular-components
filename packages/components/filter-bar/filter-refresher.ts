@@ -12,22 +12,24 @@ import { KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION, KBQ_FILTER_BAR_HOST } from
     template: `
         <button
             kbq-button
-            [color]="'contrast'"
-            [kbqStyle]="'transparent'"
+            type="button"
+            color="contrast"
+            kbqStyle="transparent"
             [attr.aria-label]="localeConfiguration().refresher.refresh"
         >
             <i kbq-icon="kbq-arrow-rotate-right_16" aria-hidden="true"></i>
         </button>
         <button
             kbq-button
-            [color]="'contrast'"
-            [kbqStyle]="'transparent'"
+            type="button"
+            color="contrast"
+            kbqStyle="transparent"
             [attr.aria-label]="localeConfiguration().refresher.settings"
         >
             <i kbq-icon="kbq-chevron-down_16" aria-hidden="true"></i>
         </button>
     `,
-    styleUrls: ['filter-refresher.scss'],
+    styleUrl: 'filter-refresher.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

@@ -13,7 +13,7 @@ import { TRANSLATIONS } from './l10n';
     imports: [KbqToolTipModule, KbqButtonModule, KbqIconModule],
     template: `
         <div [kbqTooltip]="t().itemLocked" [forDisabledComponent]="button">
-            <button #button kbq-button [disabled]="true">
+            <button #button kbq-button type="button" [disabled]="true">
                 <i kbq-icon="kbq-trash_16"></i>
                 Delete
             </button>

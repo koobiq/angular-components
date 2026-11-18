@@ -1,11 +1,11 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-checkbox-color($style-name) {
     $base: checkbox-#{$style-name};
 
     .kbq-checkbox__frame {
-        border-color: var(--kbq-#{$base}-default-border);
         background-color: var(--kbq-#{$base}-default-background);
+        border-color: var(--kbq-#{$base}-default-border);
 
         & .kbq-checkbox-checkmark,
         & .kbq-checkbox-mixedmark {
@@ -20,16 +20,16 @@
     &:hover,
     &.kbq-hover {
         .kbq-checkbox__frame {
-            border-color: var(--kbq-#{$base}-states-hover-border);
             background-color: var(--kbq-#{$base}-states-hover-background);
+            border-color: var(--kbq-#{$base}-states-hover-border);
         }
     }
 
     &.kbq-checked,
     &.kbq-indeterminate {
         .kbq-checkbox__frame {
-            border-color: var(--kbq-#{$base}-states-checked-border);
             background-color: var(--kbq-#{$base}-states-checked-background);
+            border-color: var(--kbq-#{$base}-states-checked-border);
         }
     }
 
@@ -38,15 +38,15 @@
         &:hover,
         &.kbq-hover {
             .kbq-checkbox__frame {
-                border-color: var(--kbq-#{$base}-states-checked-hover-border);
                 background-color: var(--kbq-#{$base}-states-checked-hover-background);
+                border-color: var(--kbq-#{$base}-states-checked-hover-border);
             }
         }
 
         & .kbq-checkbox-input.cdk-keyboard-focused {
             + .kbq-checkbox__frame {
-                border-color: var(--kbq-#{$base}-states-checked-focused-border);
                 background-color: var(--kbq-#{$base}-states-checked-focused-background);
+                border-color: var(--kbq-#{$base}-states-checked-focused-border);
                 outline: var(--kbq-#{$base}-states-checked-focused-outline);
             }
         }
@@ -54,16 +54,16 @@
 
     & .kbq-checkbox-input.cdk-keyboard-focused {
         + .kbq-checkbox__frame {
-            border-color: var(--kbq-#{$base}-states-focused-border);
             background-color: var(--kbq-#{$base}-states-focused-background);
+            border-color: var(--kbq-#{$base}-states-focused-border);
             outline: var(--kbq-#{$base}-states-focused-outline);
         }
     }
 
     &.kbq-disabled {
         .kbq-checkbox__frame {
-            border-color: var(--kbq-#{$base}-states-disabled-border);
             background-color: var(--kbq-#{$base}-states-disabled-background);
+            border-color: var(--kbq-#{$base}-states-disabled-border);
 
             & .kbq-checkbox-checkmark,
             & .kbq-checkbox-mixedmark {
@@ -90,10 +90,10 @@
 
 @mixin kbq-checkbox-typography() {
     .kbq-checkbox {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
     .kbq-checkbox.kbq-checkbox_big {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-big);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
     }
 }

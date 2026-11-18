@@ -1,23 +1,22 @@
-import { Path } from '@angular-devkit/core';
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Path } from '@angular-devkit/core';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import * as path from 'path';
-
 import { migrateTemplateWithTransform } from '../../utils/angular-parsing';
-import { IconPair, readCustomIconMapping, readCustomJson } from '../../utils/custom-data';
+import { type IconPair, readCustomIconMapping, readCustomJson } from '../../utils/custom-data';
 import {
     buildIconTokenMap,
     buildIconTokenPatterns,
     createIconTemplateTransform,
-    IconMigrationData,
+    type IconMigrationData,
     migrateIconsInTsFiles,
     replaceKnownIconTokens,
-    TokenReplacement
+    type TokenReplacement
 } from '../../utils/icon-migration';
 import { logMessage } from '../../utils/messages';
 import { resolveTargetDir } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
-import { newIconsPackData, ReplaceData, scope } from './data';
-import { Schema } from './schema';
+import { newIconsPackData, type ReplaceData, scope } from './data';
+import type { Schema } from './schema';
 
 // A bare word: no leading/trailing hyphen, no empty hyphen-separated segment (rejects e.g. `mc-`,
 // which is otherwise the most natural — and wrong, per the new engine's key-building — way to

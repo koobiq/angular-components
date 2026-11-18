@@ -1,17 +1,18 @@
 .kbq-timezone-option.kbq-option {
     display: flex;
     flex-direction: row;
+    column-gap: var(--kbq-timezone-option-size-column-gap);
     align-items: flex-start;
 
     padding: var(--kbq-timezone-option-size-padding);
-    column-gap: var(--kbq-timezone-option-size-column-gap);
 }
 
 .kbq-timezone-option__label {
     display: flex;
+    flex: 1;
     flex-direction: column;
     justify-content: stretch;
-    flex: 1;
+
     min-width: 0;
 }
 
@@ -22,19 +23,20 @@
 .kbq-timezone-option__cities {
     display: -webkit-box;
     -webkit-box-orient: vertical;
+
+    max-height: var(--kbq-timezone-option-size-max-height);
+    overflow: hidden;
     /* Kept in the stylesheet rather than written by KbqTimezoneOptionTooltip, so the clamp survives an
        option imported without that directive. Mirrors TOOLTIP_VISIBLE_ROWS_COUNT, which decides from the
        same number whether the overflow tooltip is needed. */
     -webkit-line-clamp: 3;
-    max-height: var(--kbq-timezone-option-size-max-height);
-    overflow: hidden;
 }
 
 .kbq-select__panel .kbq-timezone-option {
     height: var(--kbq-timezone-option-size-height);
 
-    &:before,
-    &:after {
+    &::before,
+    &::after {
         top: calc(-1 * var(--kbq-size-3xs));
         bottom: calc(-1 * var(--kbq-size-3xs));
     }

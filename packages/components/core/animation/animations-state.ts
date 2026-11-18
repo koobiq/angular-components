@@ -5,7 +5,7 @@ import {
     DestroyRef,
     inject,
     InjectionToken,
-    Injector,
+    type Injector,
     MAX_ANIMATION_TIMEOUT,
     PLATFORM_ID
 } from '@angular/core';
@@ -56,7 +56,7 @@ export function kbqAnimationsSettled(element: Element | null | undefined, timeou
 
     if (!animations.length) return null;
 
-    const finished = Promise.allSettled(animations.map(({ finished }) => finished)).then(() => {});
+    const finished = Promise.allSettled(animations.map(({ finished }) => finished)).then(() => undefined);
 
     if (timeout === undefined) return finished;
 
@@ -91,7 +91,7 @@ export function kbqAfterAnimations(
 
         if (!settled) return finish();
 
-        settled.then(finish);
+        void settled.then(finish);
     };
 
     // `afterNextRender` does nothing on the server.
@@ -119,7 +119,7 @@ export function kbqAfterAnimations(
         callback();
     };
 
-    if (server) Promise.resolve().then(finish);
+    if (server) void Promise.resolve().then(finish);
 
     return { destroy };
 }

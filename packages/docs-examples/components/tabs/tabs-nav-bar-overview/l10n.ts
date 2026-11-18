@@ -1,4 +1,4 @@
-import { Translations } from '@koobiq/docs-examples/i18n';
+import type { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text shown by the tabs examples. OS names (macOS, Windows) stay as proper names. */
 export interface ExampleTranslation {

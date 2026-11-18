@@ -1,15 +1,15 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { ChangeDetectionStrategy, Component, Injectable, Signal, signal, SimpleChange } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, Injectable, type Signal, signal, SimpleChange } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By, DomSanitizer } from '@angular/platform-browser';
+import { type Observable, of } from 'rxjs';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { Observable, of } from 'rxjs';
+import { KbqIcon } from './icon.component';
 import { KbqIconButton } from './icon-button.component';
 import { KBQ_ICON_ERROR_STATE_CONTEXT } from './icon-error-state-context';
 import { KbqIconRegistry } from './icon-registry';
 import { kbqIconsResolverProvider } from './icon-registry-providers';
-import { KbqIcon } from './icon.component';
 
 const svgOf = (path: string) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="${path}"/></svg>`;
 

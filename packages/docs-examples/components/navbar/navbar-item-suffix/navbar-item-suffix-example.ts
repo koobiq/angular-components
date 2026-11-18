@@ -10,7 +10,7 @@ import { TRANSLATIONS } from './l10n';
 @Component({
     selector: 'navbar-item-suffix-example',
     imports: [KbqNavbarModule, KbqIconModule],
-    templateUrl: 'navbar-item-suffix-example.html',
+    templateUrl: './navbar-item-suffix-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarItemSuffixExample {

@@ -4,7 +4,6 @@
 @use '@koobiq/design-tokens/web/css-tokens';
 @use '@koobiq/design-tokens/web/css-tokens-light';
 @use '@koobiq/design-tokens/web/css-tokens-dark';
-
 @use '../components/core/styles/theming/prebuilt/theme';
 @use '../components/core/styles/visual/layout';
 @use '../components/core/styles/common/list';
@@ -16,9 +15,9 @@
 body {
     @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
-    background: var(--kbq-background-bg);
-    color: var(--kbq-foreground-contrast);
     margin: 0;
+    color: var(--kbq-foreground-contrast);
+    background: var(--kbq-background-bg);
 }
 
 hr {

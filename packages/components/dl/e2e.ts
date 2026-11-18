@@ -113,7 +113,7 @@ export class E2eDlResizerStates {
         afterNextRender(() => {
             for (const list of this.nativeElement.querySelectorAll<HTMLElement>('[data-e2e-resizer-state]')) {
                 const separator = list.querySelector('.kbq-dl__resize-handle');
-                const state = list.dataset.e2eResizerState as DlResizerState;
+                const state = list.dataset['e2eResizerState'] as DlResizerState;
 
                 // Throws rather than dropping the state quietly, which would rewrite the baseline without it.
                 if (!separator) throw new Error(`[e2eDlResizerStates] no separator to put into the ${state} state`);

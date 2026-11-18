@@ -1,5 +1,5 @@
-import { expect, Page, test } from '@playwright/test';
 import { join } from 'node:path';
+import { expect, type Page, test } from '@playwright/test';
 import { docsCompareVersions, docsParseVersion } from './src/app/components/migration-guide/migration-versions';
 import { DocsLocale } from './src/app/constants/locale';
 import { DOCS_SEO_DESCRIPTIONS } from './src/app/seo-descriptions';

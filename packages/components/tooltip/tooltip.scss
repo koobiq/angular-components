@@ -1,13 +1,10 @@
 @use '../core/pop-up/pop-up';
 @use '../core/styles/common/animation';
-
-@use '../core/styles/common/tokens' as *;
-
-@use './tooltip-theme' as *;
-@use '../core/styles/common/squircle' as *;
+@use './tooltip-theme';
+@use '../core/styles/common/squircle';
 
 $trigger-margin: 8px;
-$trigger-margin_without-arrow: 4px;
+$trigger-margin-without-arrow: 4px;
 
 // `KbqNavbarItem` puts this class on the overlay pane — the parent of `.kbq-tooltip` — so the shared
 // `pop-up.popup-margins` mixin, which matches the placement class on the tooltip itself, cannot express it.
@@ -47,25 +44,26 @@ $navbar-trigger-margin: $trigger-margin + 1px;
 }
 
 .kbq-tooltip__inner {
-    @include kbq-squircle(var(--kbq-tooltip-size-border-radius));
+    @include squircle.kbq-squircle(var(--kbq-tooltip-size-border-radius));
+
     overflow-wrap: break-word;
 }
 
 .kbq-tooltip {
-    box-sizing: border-box;
+    @include pop-up.popup-margins(kbq-tooltip, $trigger-margin);
 
     // Kept alongside the radius of `.kbq-tooltip__inner`: this element is the one carrying `box-shadow`
     // (see `_tooltip-theme.scss`), and without a radius here the shadow is cast with square corners.
-    @include kbq-squircle(var(--kbq-tooltip-size-border-radius));
+    @include squircle.kbq-squircle(var(--kbq-tooltip-size-border-radius));
+
+    box-sizing: border-box;
+    max-width: var(--kbq-tooltip-size-max-width);
 
     white-space: pre-line;
 
-    @include pop-up.popup-margins(kbq-tooltip, $trigger-margin);
-
-    max-width: var(--kbq-tooltip-size-max-width);
-
     // Shown once `KbqPopUp.show()` has made it visible.
     opacity: 0;
+
     transform: scale(0);
 
     .kbq-tooltip__inner {
@@ -73,23 +71,23 @@ $navbar-trigger-margin: $trigger-margin + 1px;
     }
 
     &.kbq-tooltip_arrowless {
-        @include pop-up.popup-margins(kbq-tooltip, $trigger-margin_without-arrow);
+        @include pop-up.popup-margins(kbq-tooltip, $trigger-margin-without-arrow);
     }
 
     &.kbq-tooltip_visible {
+        @include animation.kbq-animations-off();
+
         opacity: 1;
         // Rests at exactly 1: a fractional scale leaves the tooltip permanently resampled, which softens its
         // text for as long as it is on screen. A transform rather than `none`: it makes the tooltip the
         // stacking context the arrow's negative `z-index` is drawn in, behind the panel but not behind the page.
         transform: scale(1);
         animation: kbq-tooltip-enter 200ms cubic-bezier(0, 0, 0.2, 1);
-
-        @include animation.kbq-animations-off();
     }
 }
 
 @keyframes kbq-tooltip-enter {
-    from {
+    0% {
         opacity: 0;
         transform: scale(0);
     }
@@ -100,18 +98,17 @@ $navbar-trigger-margin: $trigger-margin + 1px;
     }
 }
 
-@include kbq-tooltip-theme();
-@include kbq-tooltip-typography();
+@include tooltip-theme.kbq-tooltip-theme();
+@include tooltip-theme.kbq-tooltip-typography();
 
 .kbq-tooltip__arrow {
     position: absolute;
+    z-index: -1;
 
     width: var(--kbq-tooltip-size-arrow-size);
     height: var(--kbq-tooltip-size-arrow-size);
 
     transform: translate(var(--kbq-tooltip-arrow-shift-x, 0px), var(--kbq-tooltip-arrow-shift-y, 0px)) rotate(45deg);
-
-    z-index: -1;
 }
 
 $arrow-offset: calc((#{var(--kbq-tooltip-size-arrow-size)} - 1px) / -2);

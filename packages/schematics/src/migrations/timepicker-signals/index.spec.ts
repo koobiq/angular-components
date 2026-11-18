@@ -1,12 +1,12 @@
-import { workspaces } from '@angular-devkit/core';
-import { Tree } from '@angular-devkit/schematics';
+import type { workspaces } from '@angular-devkit/core';
+import type { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
 import { lastValueFrom } from 'rxjs';
 import { createTestApp } from '../../utils/testing';
 import timepickerSignals from './index';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
 const SCHEMATIC_NAME = 'timepicker-signals';

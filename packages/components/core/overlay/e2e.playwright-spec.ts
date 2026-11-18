@@ -1,4 +1,4 @@
-import { expect, Locator, Page, test } from '@playwright/test';
+import { expect, type Locator, type Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme, e2eWaitForFonts, e2eWaitForSettledScrollbars } from '../../../e2e/utils';
 
 /** Distance kept from the bar's bottom edge, so a hit test lands clearly on one side of it. */

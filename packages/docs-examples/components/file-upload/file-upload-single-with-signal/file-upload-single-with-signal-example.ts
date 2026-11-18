@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import {
-    KbqFileItem,
+    type KbqFileItem,
     KbqMultipleFileUploadComponent,
     KbqSingleFileUploadComponent
 } from '@koobiq/components/file-upload';

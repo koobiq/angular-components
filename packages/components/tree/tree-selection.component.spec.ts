@@ -1,23 +1,27 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { DataSource, SelectionModel } from '@angular/cdk/collections';
+import { type DataSource, SelectionModel } from '@angular/cdk/collections';
 import {
     Component,
-    DebugElement,
+    type DebugElement,
     Directive,
-    DoCheck,
+    type DoCheck,
     effect,
-    EventEmitter,
-    InputSignal,
+    type EventEmitter,
+    type InputSignal,
     NgZone,
     signal,
-    Type,
+    type Type,
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { BehaviorSubject, type Observable, of } from 'rxjs';
+// eslint-disable-next-line rxjs-x/no-internal -- the published tree module provides the scheduler under this token
+import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
+import { TestScheduler } from 'rxjs/testing';
 import {
     A,
     C,
@@ -32,12 +36,12 @@ import {
     ENTER,
     HOME,
     KBQ_STATE_STORE,
-    KbqMultipleInput,
+    type KbqMultipleInput,
     KbqOptionActionComponent,
     KbqOptionModule,
     KbqPseudoCheckbox,
     KbqStateSavingService,
-    KbqStateStore,
+    type KbqStateStore,
     LEFT_ARROW,
     MultipleMode,
     RIGHT_ARROW,
@@ -49,9 +53,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqTitleDirective, KbqTitleModule } from '@koobiq/components/title';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
-import { TestScheduler } from 'rxjs/testing';
 import {
     FilterByValues,
     FilterByViewValue,
@@ -64,11 +65,11 @@ import {
     KbqTreeNestedDataSource,
     KbqTreeNodePadding,
     KbqTreeOption,
-    KbqTreeSelectAllEvent,
+    type KbqTreeSelectAllEvent,
     KbqTreeSelection,
-    KbqTreeSelectionChange,
+    type KbqTreeSelectionChange,
     NestedTreeControl,
-    TreeControl
+    type TreeControl
 } from './index';
 import { getKbqTreeSelectionOwnedMultipleError } from './tree-errors';
 
@@ -117,7 +118,7 @@ describe('KbqTreeSelection', () => {
                             const originalClipboard = new Clipboard(document);
 
                             return {
-                                copy: (value) => {
+                                copy: (value: string) => {
                                     originalClipboard.copy(value);
                                     clipboardContent = value;
                                 }
@@ -163,7 +164,7 @@ describe('KbqTreeSelection', () => {
                 const treeOption = fixture.debugElement.queryAll(By.directive(KbqTreeNodePadding))[0];
                 const paddingDirective = treeOption.injector.get(KbqTreeNodePadding);
 
-                expect(treeOption.styles.paddingLeft).toBe(paddingDirective.paddingIndent());
+                expect(treeOption.styles['paddingLeft']).toBe(paddingDirective.paddingIndent());
             });
 
             it('should prefer an explicit view value over multiline option content', () => {
@@ -266,6 +267,32 @@ describe('KbqTreeSelection', () => {
                 expect(option.classList).not.toContain('kbq-focused');
 
                 dispatchFakeEvent(tree.nativeElement, 'focus');
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+
+                expect(option.classList).toContain('kbq-focused');
+            });
+
+            it('should add focus class on first element when focus() is called without an event', async () => {
+                vi.useFakeTimers();
+
+                options = fixture.debugElement.queryAll(By.directive(KbqTreeOption));
+                const option = options[0].nativeElement;
+
+                tree.injector.get(KbqTreeSelection).focus();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+
+                expect(option.classList).toContain('kbq-focused');
+            });
+
+            it('should add focus class on first element when focus() is called with a keyboard event', async () => {
+                vi.useFakeTimers();
+
+                options = fixture.debugElement.queryAll(By.directive(KbqTreeOption));
+                const option = options[0].nativeElement;
+
+                tree.injector.get(KbqTreeSelection).focus(new KeyboardEvent('keydown'));
                 await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
@@ -1084,6 +1111,31 @@ describe('KbqTreeSelection', () => {
 
                 expect(getActiveValue()).toBe('src');
                 expect(getNodes(treeElement).length).toBe(6);
+            });
+
+            // A collapse from code removes the active option, and the key manager keeps an index past the rendered ones
+            it('should not throw when the active option was removed under the focus', async () => {
+                vi.useFakeTimers();
+
+                await expandNode(1);
+                await expandNode(3);
+
+                for (let i = 0; i < 6; i++) await pressKey(DOWN_ARROW);
+
+                expect(getActiveValue()).toBe('keycodes');
+
+                const src = component.treeControl.dataNodes.find((node) => node.name === 'src')!;
+
+                component.treeControl.collapse(src);
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                // docs, src, tests
+                expect(getNodes(treeElement).length).toBe(3);
+
+                await pressKey(LEFT_ARROW);
+
+                expect(component.tree().renderedOptions.toArray()).toContain(component.tree().keyManager.activeItem);
             });
 
             it('should collapse the whole tree with repeated presses', async () => {
@@ -3928,7 +3980,7 @@ class KbqTreeAppMultipleCheckbox extends TreeParams {
         );
     }
 
-    onModelValueChange(values) {
+    onModelValueChange(values: string[]) {
         this.modelValue = values;
         this.filterByValues.setValues(values);
     }
@@ -5196,7 +5248,7 @@ describe('KbqTreeSelection inputs', () => {
         >();
         expectTypeOf<KbqTreeSelection['selectionModel']>().toEqualTypeOf<SelectionModel<any>>();
         expectTypeOf(tree().selectionModel).toEqualTypeOf<SelectionModel<FileFlatNode>>();
-        expectTypeOf(tree().unorderedOptions.first.data).toEqualTypeOf<FileFlatNode>();
+        expectTypeOf(tree().unorderedOptions.first.data).toEqualTypeOf<FileFlatNode | undefined>();
         expectTypeOf(tree().selectionChange).toEqualTypeOf<
             EventEmitter<KbqTreeSelectionChange<KbqTreeOption<FileFlatNode>, FileFlatNode>>
         >();

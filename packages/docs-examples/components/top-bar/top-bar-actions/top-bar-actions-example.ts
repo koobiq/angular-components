@@ -1,7 +1,13 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { KbqButtonColor, KbqButtonModule, KbqButtonStyleInput, KbqButtonStyles } from '@koobiq/components/button';
+import { map } from 'rxjs';
+import {
+    type KbqButtonColor,
+    KbqButtonModule,
+    type KbqButtonStyleInput,
+    KbqButtonStyles
+} from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -9,7 +15,6 @@ import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { map } from 'rxjs/operators';
 import { TRANSLATIONS } from './l10n';
 
 type ExampleAction = {
@@ -48,6 +53,7 @@ type ExampleAction = {
                     @for (action of actions; track action.id) {
                         <button
                             kbq-button
+                            type="button"
                             [kbqOverflowItem]="action.id"
                             [alwaysVisible]="action?.alwaysVisible"
                             [kbqStyle]="action.style"
@@ -69,6 +75,7 @@ type ExampleAction = {
                     <div kbqOverflowItemsResult>
                         <button
                             kbq-button
+                            type="button"
                             aria-label="More"
                             [kbqStyle]="KbqButtonStyles.Transparent"
                             [color]="KbqComponentColors.Contrast"
@@ -80,7 +87,7 @@ type ExampleAction = {
                         <kbq-dropdown #appDropdown="kbqDropdown">
                             @for (action of actions; track action.id) {
                                 @if (kbqOverflowItems.hiddenItemIDs().has(action.id)) {
-                                    <button kbq-dropdown-item>
+                                    <button kbq-dropdown-item type="button">
                                         {{ action.text || action.id }}
                                     </button>
                                 }

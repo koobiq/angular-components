@@ -14,13 +14,20 @@ import { TRANSLATIONS } from './l10n';
         KbqToolTipModule
     ],
     template: `
-        <button kbq-button [kbqTooltip]="t().tooltipWithoutArrow">{{ t().noArrow }}</button>
-        <button kbq-button kbqPlacement="bottomRight" [kbqTooltip]="t().tooltipWithArrow" [kbqTooltipArrow]="true">
+        <button kbq-button type="button" [kbqTooltip]="t().tooltipWithoutArrow">{{ t().noArrow }}</button>
+        <button
+            kbq-button
+            kbqPlacement="bottomRight"
+            type="button"
+            [kbqTooltip]="t().tooltipWithArrow"
+            [kbqTooltipArrow]="true"
+        >
             {{ t().withArrow }}
         </button>
         <button
             kbq-button
             kbqPlacement="bottomRight"
+            type="button"
             [kbqTooltip]="t().tooltipWithCenteredArrow"
             [kbqTooltipArrow]="true"
             [kbqTooltipArrowCentered]="true"

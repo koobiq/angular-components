@@ -1,10 +1,10 @@
-import { Direction, Directionality } from '@angular/cdk/bidi';
+import { type Direction, Directionality } from '@angular/cdk/bidi';
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { Subject } from 'rxjs';
 import { KBQ_ANIMATIONS_CONFIG } from '@koobiq/components/core';
 import { KBQ_SCROLLBAR_OPTIONS, KbqScrollbarViewport } from '@koobiq/components/scrollbar';
-import { Subject } from 'rxjs';
 import { KbqTabLink, KbqTabNavBar } from './tab-nav-bar';
 import { KbqTabsModule } from './tabs.module';
 

@@ -1,9 +1,9 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import { Type } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import type { Type } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { KbqToastService } from '@koobiq/components/toast';
 import { BehaviorSubject, map } from 'rxjs';
+import { KbqToastService } from '@koobiq/components/toast';
 import { DocsCopyButtonComponent } from '../components/copy-button/copy-button';
 import { DocsTokensTable } from '../components/design-tokens-viewers/tokens-overview';
 import { DocsPageNotFoundComponent } from '../components/page-not-found/page-not-found.component';

@@ -1,23 +1,23 @@
 .kbq-navbar-toggle {
     position: absolute;
-
     top: var(--kbq-size-3xl);
     right: calc(-1 * var(--kbq-size-l));
     z-index: var(--kbq-navbar-toggle-z-index);
 
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 
     padding: var(--kbq-size-3xs);
+
     border-width: 0;
 
     cursor: pointer;
 
     & .kbq-navbar-toggle__circle {
         display: flex;
-        justify-content: center;
         align-items: center;
+        justify-content: center;
 
         width: var(--kbq-navbar-toggle-size-circle);
         height: var(--kbq-navbar-toggle-size-circle);
@@ -28,14 +28,12 @@
 
 @mixin kbq-navbar-toggle-theme() {
     .kbq-navbar-toggle {
-        outline: none;
-        border-color: transparent;
-
         background: transparent;
+        border-color: transparent;
+        outline: none;
 
         & .kbq-navbar-toggle__circle {
             background: var(--kbq-background-card);
-
             box-shadow:
                 0 3px 8px 0 var(--kbq-shadow-ambient),
                 0 2px 8px 0 var(--kbq-shadow-key),

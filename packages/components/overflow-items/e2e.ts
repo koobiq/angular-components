@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { KbqFlexWrap } from '@koobiq/components/core';
+import type { KbqFlexWrap } from '@koobiq/components/core';
 import { KbqOverflowItemsModule } from './module';
 
 type HorizontalScenario = {

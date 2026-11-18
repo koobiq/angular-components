@@ -13,7 +13,7 @@ import { TRANSLATIONS } from './l10n';
     selector: 'dropdown-item-action-example',
     imports: [KbqDropdownModule, KbqButtonModule, KbqIconModule, KbqTitleDirective],
     template: `
-        <button kbq-button [kbqDropdownTriggerFor]="checkDropdown">
+        <button kbq-button type="button" [kbqDropdownTriggerFor]="checkDropdown">
             Check
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
@@ -27,8 +27,8 @@ import { TRANSLATIONS } from './l10n';
                     size="compact"
                     target="_blank"
                     href="en/components/button"
+                    color="contrast-fade"
                     [attr.aria-label]="t().rulesSettings"
-                    [color]="'contrast-fade'"
                 ></a>
             </div>
 
@@ -40,8 +40,8 @@ import { TRANSLATIONS } from './l10n';
                     size="compact"
                     target="_blank"
                     href="en/components/icon"
+                    color="contrast-fade"
                     [attr.aria-label]="t().hashSumSettings"
-                    [color]="'contrast-fade'"
                 ></a>
             </div>
 
@@ -54,7 +54,7 @@ import { TRANSLATIONS } from './l10n';
                     aria-label="Hash sum settings (unavailable)"
                     target="_blank"
                     href="en/components/icon"
-                    [color]="'contrast-fade'"
+                    color="contrast-fade"
                     [disabled]="true"
                 ></a>
             </div>
@@ -67,14 +67,14 @@ import { TRANSLATIONS } from './l10n';
                     size="compact"
                     target="_blank"
                     href="en/components/tag"
+                    color="contrast-fade"
                     [attr.aria-label]="t().moreActions"
-                    [color]="'contrast-fade'"
                 ></a>
             </div>
 
             <kbq-dropdown #appDropdownNested="kbqDropdown">
-                <button kbq-dropdown-item>Edit</button>
-                <button kbq-dropdown-item>Delete</button>
+                <button kbq-dropdown-item type="button">Edit</button>
+                <button kbq-dropdown-item type="button">Delete</button>
             </kbq-dropdown>
         </kbq-dropdown>
     `,

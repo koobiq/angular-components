@@ -1,74 +1,72 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { CdkScrollable, Overlay, OverlayConfig, ScrollStrategy } from '@angular/cdk/overlay';
-
+import { CdkScrollable, Overlay, type OverlayConfig, type ScrollStrategy } from '@angular/cdk/overlay';
 import {
-    AfterContentInit,
-    AfterViewChecked,
-    AfterViewInit,
+    type AfterContentInit,
+    type AfterViewChecked,
+    type AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
+    computed,
     Directive,
     EventEmitter,
-    InjectionToken,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    Provider,
-    QueryList,
-    SimpleChanges,
-    TemplateRef,
-    Type,
-    ViewEncapsulation,
-    booleanAttribute,
-    computed,
     inject,
+    InjectionToken,
     input,
     model,
+    type OnChanges,
+    type OnDestroy,
+    type OnInit,
+    type Provider,
+    QueryList,
     signal,
+    type SimpleChanges,
+    type TemplateRef,
+    type Type,
     viewChild,
-    viewChildren
+    viewChildren,
+    ViewEncapsulation
 } from '@angular/core';
 import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { auditTime, distinctUntilChanged, filter, merge, startWith } from 'rxjs';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import {
+    applyPopupMargins,
     DOWN_ARROW,
     ENTER,
     ESCAPE,
     FocusKeyManager,
-    KbqAppSwitcherLocaleConfiguration,
-    KbqDeepPartial,
+    type KbqAppSwitcherLocaleConfiguration,
+    type KbqDeepPartial,
+    kbqLocaleConfigurationOverrideProvider,
     KbqLocaleOverridesDirective,
+    kbqOptionalNumberAttribute,
     KbqOptionModule,
     KbqPopUp,
-    KbqPopUpPlacementValues,
-    KbqPopUpSizeValues,
+    type KbqPopUpPlacementValues,
+    type KbqPopUpSizeValues,
     KbqPopUpTrigger,
+    kbqQueryListFrom,
+    kbqSiblingPopupProvider,
     LEFT_ARROW,
-    POSITION_TO_CSS_MAP,
     PopUpPlacements,
     PopUpSizes,
     PopUpTriggers,
+    POSITION_TO_CSS_MAP,
     RIGHT_ARROW,
+    ruRULocaleData,
     SPACE,
     TAB,
-    UP_ARROW,
-    applyPopupMargins,
-    kbqLocaleConfigurationOverrideProvider,
-    kbqOptionalNumberAttribute,
-    kbqQueryListFrom,
-    kbqSiblingPopupProvider,
-    ruRULocaleData
+    UP_ARROW
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqDropdown, KbqDropdownItem, KbqDropdownModule } from '@koobiq/components/dropdown';
+import { type KbqDropdown, KbqDropdownItem, KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { defaultOffsetYWithArrow } from '@koobiq/components/popover';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
-import { merge } from 'rxjs';
-import { auditTime, distinctUntilChanged, filter, startWith } from 'rxjs/operators';
 import { KbqAppSwitcherDropdownApp } from './app-switcher-dropdown-app';
 import { KbqAppSwitcherDropdownSite } from './app-switcher-dropdown-site';
 import { KbqAppSwitcherListItem } from './app-switcher-list-item';
@@ -304,10 +302,10 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
     filteredSites: KbqAppSwitcherSite[] = [];
 
     /** @docs-private */
-    prefix = 'kbq-app-switcher';
+    override prefix = 'kbq-app-switcher';
 
     /** @docs-private */
-    trigger: KbqAppSwitcherTrigger;
+    override trigger: KbqAppSwitcherTrigger | undefined;
 
     /** @docs-private */
     readonly input = viewChild(KbqInput);
@@ -331,7 +329,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
     }
 
     /** Roving-focus manager over the inline menu items (flat app rows and other-site rows). */
-    protected keyManager: FocusKeyManager<KbqDropdownItem>;
+    protected keyManager: FocusKeyManager<KbqDropdownItem> | undefined;
 
     private readonly menuItems = new QueryList<KbqDropdownItem>();
 
@@ -356,17 +354,15 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
         }
     }
 
-    constructor() {
-        super();
-    }
-
     ngAfterViewInit() {
         const input = this.input();
 
-        this.keyManager = new FocusKeyManager<KbqDropdownItem>(this.menuItems)
+        const keyManager = new FocusKeyManager<KbqDropdownItem>(this.menuItems)
             .withVerticalOrientation()
             .withHomeAndEnd()
             .withTypeAhead();
+
+        this.keyManager = keyManager;
 
         // Focus the first item only once, and only after it is actually rendered (see below).
         let initialItemFocused = false;
@@ -389,7 +385,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
             // the items to appear in the query instead.
             if (!input && !initialItemFocused && this.menuItems.length) {
                 initialItemFocused = true;
-                this.keyManager.setFirstItemActive();
+                keyManager.setFirstItemActive();
             }
         });
 
@@ -421,14 +417,14 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
     }
 
     /** Releases the internal roving-focus menu QueryList. */
-    ngOnDestroy(): void {
+    override ngOnDestroy(): void {
         this.menuItems.destroy();
 
         super.ngOnDestroy();
     }
 
     /** @docs-private */
-    updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues) {
+    override updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues) {
         super.updateClassMap(placement, customClass, { [`${this.prefix}_${size}`]: !!size });
     }
 
@@ -480,7 +476,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
         if (keyCode === TAB) {
             event.preventDefault();
             this.hide(0);
-            this.trigger.focus();
+            this.trigger?.focus();
 
             return;
         }
@@ -526,7 +522,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
      * honouring the current text direction. Returns whether the key was consumed.
      */
     private handleGroupHorizontal(keyCode: number, activeItem: KbqDropdownItem | null): boolean {
-        if (!(activeItem instanceof KbqAppSwitcherListItem)) {
+        if (!(activeItem instanceof KbqAppSwitcherListItem) || !this.keyManager) {
             return false;
         }
 
@@ -603,7 +599,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
             this.hide(0);
             // Return focus to the trigger (the same landing spot as Shift+Tab), instead of
             // leaving it wherever it was heading.
-            this.trigger.focus();
+            this.trigger?.focus();
         }
     }
 
@@ -613,14 +609,14 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
      * @docs-private
      */
     selectAppInSite(site: KbqAppSwitcherSite | undefined, app: KbqAppSwitcherApp) {
-        if (!site) return;
+        if (!site || !this.trigger) return;
 
         this.trigger.selectedSite.set(site);
         this.trigger.selectedApp.set(app);
     }
 
     private filterSites(query: string | null): KbqAppSwitcherSite[] {
-        const sites = this.trigger.originalSites;
+        const sites = this.trigger?.originalSites ?? [];
 
         if (!query) return sites;
 
@@ -666,11 +662,11 @@ export class KbqAppSwitcherTrigger
     /** @docs-private */
     arrow: boolean = false;
     /** @docs-private */
-    customClass: string;
+    customClass: string = '';
     private hasBackdrop: boolean = false;
     private size: KbqPopUpSizeValues = PopUpSizes.Medium;
     /** @docs-private */
-    content: string | TemplateRef<any>;
+    content: string | TemplateRef<any> = '';
 
     /** Whether search is used or not */
     get withSearch(): boolean {
@@ -708,7 +704,7 @@ export class KbqAppSwitcherTrigger
     readonly selectedApp = model<KbqAppSwitcherApp | undefined>(undefined);
 
     /** Placement of popUp */
-    placement: KbqPopUpPlacementValues = defaultPlacement;
+    override placement: KbqPopUpPlacementValues = defaultPlacement;
 
     /** Class that will be used in the background */
     backdropClass: string = defaultBackdropClass;
@@ -914,7 +910,7 @@ export class KbqAppSwitcherTrigger
         }
     }
 
-    ngOnInit(): void {
+    override ngOnInit(): void {
         super.ngOnInit();
 
         this.scrollable

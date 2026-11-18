@@ -1,10 +1,10 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { CdkObserveContent } from '@angular/cdk/observers';
 import {
-    AfterContentInit,
+    type AfterContentInit,
     afterNextRender,
-    AfterViewChecked,
-    AfterViewInit,
+    type AfterViewChecked,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -18,11 +18,11 @@ import {
     Injector,
     input,
     isDevMode,
-    OnChanges,
-    OnDestroy,
+    type OnChanges,
+    type OnDestroy,
     Renderer2,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     untracked,
     viewChild,
     ViewEncapsulation
@@ -34,9 +34,9 @@ import {
     KBQ_TITLE_TEXT_REF,
     KbqColorDirective,
     KbqComponentColors,
-    KbqEnumValues,
+    type KbqEnumValues,
     kbqOptionalNumberAttribute,
-    KbqTitleTextRef,
+    type KbqTitleTextRef,
     LEFT_ARROW,
     leftIconClassName,
     RIGHT_ARROW,
@@ -638,7 +638,7 @@ export class KbqButton
     }
 
     private runFocusMonitor() {
-        this.focusMonitor.monitor(this.elementRef.nativeElement, true);
+        void this.focusMonitor.monitor(this.elementRef.nativeElement, true);
     }
 
     private stopFocusMonitor() {

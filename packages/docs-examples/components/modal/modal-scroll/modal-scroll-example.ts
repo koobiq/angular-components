@@ -26,7 +26,7 @@ export class CustomModalComponent {
     selector: 'modal-scroll-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="createLongModal()">{{ t().openModal }}</button>
+        <button kbq-button type="button" (click)="createLongModal()">{{ t().openModal }}</button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

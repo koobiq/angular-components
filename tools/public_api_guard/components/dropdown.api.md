@@ -23,6 +23,7 @@ import { KbqPanelMinWidth } from '@koobiq/components/core';
 import { KbqPanelWidth } from '@koobiq/components/core';
 import { KbqPanelWidthOrigin } from '@koobiq/components/core';
 import { KbqPoint } from '@koobiq/components/core';
+import { KbqSearchFieldPopup } from '@koobiq/components/core';
 import { KbqSiblingPopup } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
 import * as _koobiq_components_dropdown from '@koobiq/components/dropdown';
@@ -75,10 +76,10 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     // (undocumented)
     close(): void;
     closeChain(reason: DropdownCloseReason): void;
-    readonly closed: _angular_core.OutputEmitterRef<void | "click" | "keydown" | "tab">;
+    readonly closed: _angular_core.OutputEmitterRef<DropdownCloseReason>;
     closingChain: boolean;
     deactivateSafeArea(): void;
-    direction: Direction;
+    direction: Direction | undefined;
     focusFirstItem(origin?: FocusOrigin): void;
     handleKeydown(event: KeyboardEvent): void;
     readonly hasBackdrop: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -107,6 +108,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     resetActiveItem(): void;
     restoreFocus(): boolean;
     readonly safeArea: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly searchFieldPopup: KbqSearchFieldPopup;
     setOpened(opened: boolean): void;
     setPositionClasses(posX?: KbqDropdownPositionX, posY?: KbqDropdownPositionY): void;
     readonly templateRef: Signal<TemplateRef<any>>;
@@ -274,6 +276,7 @@ export interface KbqDropdownPanel {
     parent?: KbqDropdownPanel | undefined;
     // (undocumented)
     resetActiveItem(): void;
+    readonly searchFieldPopup?: KbqSearchFieldPopup;
     // (undocumented)
     setPositionClasses?(x: KbqDropdownPositionX, y: KbqDropdownPositionY): void;
     // (undocumented)
@@ -292,6 +295,7 @@ export type KbqDropdownPositionY = 'above' | 'below';
 
 // @public
 export class KbqDropdownSearch implements AfterContentInit {
+    constructor();
     focus(): void;
     protected handleClick(event: MouseEvent): void;
     protected handleKeydown(event: KeyboardEvent): void;

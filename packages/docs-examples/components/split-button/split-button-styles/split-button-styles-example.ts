@@ -22,11 +22,11 @@ import { TRANSLATIONS } from './l10n';
         <div>
             <div class="example-split-button-styles__header">Filled Contrast</div>
             <kbq-split-button [color]="componentColors.Contrast">
-                <button kbq-button>
+                <button kbq-button type="button">
                     <i kbq-icon="kbq-plus_16"></i>
                     {{ t().splitButton }}
                 </button>
-                <button kbq-button [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
+                <button kbq-button type="button" [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
             </kbq-split-button>
@@ -35,11 +35,11 @@ import { TRANSLATIONS } from './l10n';
         <div>
             <div class="example-split-button-styles__header">Filled Fade Contrast</div>
             <kbq-split-button>
-                <button kbq-button>
+                <button kbq-button type="button">
                     <i kbq-icon="kbq-plus_16"></i>
                     {{ t().splitButton }}
                 </button>
-                <button kbq-button [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
+                <button kbq-button type="button" [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
             </kbq-split-button>
@@ -48,11 +48,11 @@ import { TRANSLATIONS } from './l10n';
         <div>
             <div class="example-split-button-styles__header">Outline Fade Theme</div>
             <kbq-split-button [color]="componentColors.ThemeFade" [kbqStyle]="buttonStyles.Outline">
-                <button kbq-button>
+                <button kbq-button type="button">
                     <i kbq-icon="kbq-plus_16"></i>
                     {{ t().splitButton }}
                 </button>
-                <button kbq-button [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
+                <button kbq-button type="button" [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
             </kbq-split-button>
@@ -61,11 +61,11 @@ import { TRANSLATIONS } from './l10n';
         <div>
             <div class="example-split-button-styles__header">Outline Fade Contrast</div>
             <kbq-split-button [color]="componentColors.ContrastFade" [kbqStyle]="buttonStyles.Outline">
-                <button kbq-button>
+                <button kbq-button type="button">
                     <i kbq-icon="kbq-plus_16"></i>
                     {{ t().splitButton }}
                 </button>
-                <button kbq-button [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
+                <button kbq-button type="button" [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
             </kbq-split-button>
@@ -74,11 +74,11 @@ import { TRANSLATIONS } from './l10n';
         <div>
             <div class="example-split-button-styles__header">Transparent Theme</div>
             <kbq-split-button [color]="componentColors.Theme" [kbqStyle]="buttonStyles.Transparent">
-                <button kbq-button>
+                <button kbq-button type="button">
                     <i kbq-icon="kbq-plus_16"></i>
                     {{ t().splitButton }}
                 </button>
-                <button kbq-button [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
+                <button kbq-button type="button" [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
             </kbq-split-button>
@@ -87,20 +87,20 @@ import { TRANSLATIONS } from './l10n';
         <div>
             <div class="example-split-button-styles__header">Transparent Contrast</div>
             <kbq-split-button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent">
-                <button kbq-button>
+                <button kbq-button type="button">
                     <i kbq-icon="kbq-plus_16"></i>
                     {{ t().splitButton }}
                 </button>
-                <button kbq-button [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
+                <button kbq-button type="button" [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
             </kbq-split-button>
         </div>
 
         <kbq-dropdown #dropdown="kbqDropdown">
-            <button kbq-dropdown-item>Extra Action 1</button>
-            <button kbq-dropdown-item>Extra Action 2</button>
-            <button kbq-dropdown-item>Extra Action 3</button>
+            <button kbq-dropdown-item type="button">Extra Action 1</button>
+            <button kbq-dropdown-item type="button">Extra Action 2</button>
+            <button kbq-dropdown-item type="button">Extra Action 3</button>
         </kbq-dropdown>
     `,
     styles: `

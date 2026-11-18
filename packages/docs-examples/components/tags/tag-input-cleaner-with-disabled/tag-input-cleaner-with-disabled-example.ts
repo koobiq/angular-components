@@ -2,7 +2,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTag, KbqTagEvent, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { type KbqTag, type KbqTagEvent, type KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 
 /** Tags the user is not allowed to take off. */
 const lockedTags = ['Beta'];
@@ -24,7 +24,6 @@ const lockedTags = ['Beta'];
                 }
 
                 <input
-                    autocomplete="off"
                     kbqInput
                     placeholder="Kept"
                     [kbqTagInputFor]="keptList"
@@ -46,7 +45,6 @@ const lockedTags = ['Beta'];
                 }
 
                 <input
-                    autocomplete="off"
                     kbqInput
                     placeholder="Cleared"
                     [kbqTagInputFor]="clearedList"

@@ -30,7 +30,7 @@ const findLinkProblem = (
 
     if (!url.startsWith(`${LLMS_SITE_ORIGIN}/`)) return null;
 
-    const path = url.slice(LLMS_SITE_ORIGIN.length).split(/[?#]/)[0];
+    const [path = ''] = url.slice(LLMS_SITE_ORIGIN.length).split(/[?#]/);
 
     if (/\.(md|txt)$/.test(path)) {
         return served.has(path.slice(1)) || path.slice(1) === LLMS_TXT

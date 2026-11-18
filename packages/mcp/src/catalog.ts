@@ -1,10 +1,10 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { readComponentsApi, type ComponentsApi } from './sources/components.js';
+import { type ComponentsApi, readComponentsApi } from './sources/components.js';
 import type { ApiHistory } from './sources/history.js';
 import { readIcons } from './sources/icons.js';
-import { resolveProject, type ProjectContext } from './sources/project.js';
+import { type ProjectContext, resolveProject } from './sources/project.js';
 import { readTokens, type ThemedToken } from './sources/tokens.js';
 import type { ComponentIndex, Guide, Icon, SourceResult } from './types.js';
 

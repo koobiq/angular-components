@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { FileValidators, KbqFileTypeSpecifier, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
-import { KbqFileItem, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
+import { FileValidators, type KbqFileTypeSpecifier, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
+import { type KbqFileItem, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
@@ -28,8 +28,8 @@ import { TRANSLATIONS } from './l10n';
                 class="layout-margin-bottom-s"
                 multiple
                 formControlName="fileUpload"
+                progressMode="indeterminate"
                 [errorStateMatcher]="customErrorStateMatcher"
-                [progressMode]="'indeterminate'"
                 (fileRemoved)="onFileRemoved($event)"
                 (filesAdded)="onFilesAdded($event)"
             >

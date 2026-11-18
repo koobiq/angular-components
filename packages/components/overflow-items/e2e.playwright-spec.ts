@@ -1,4 +1,4 @@
-import { expect, Locator, Page, test } from '@playwright/test';
+import { expect, type Locator, type Page, test } from '@playwright/test';
 
 const visibleItems = (block: Locator) => block.locator('.kbq-overflow-item:not(.kbq-overflow-item-hidden)');
 const hiddenItems = (block: Locator) => block.locator('.kbq-overflow-item.kbq-overflow-item-hidden');

@@ -1,10 +1,9 @@
-@use '../styles/common/tokens' as *;
-
-@use './forms' as *;
+@use '../styles/common/tokens';
+@use './forms';
 @use './forms-tokens';
 
 @mixin kbq-forms-theme() {
-    @include kbq-form-geometry();
+    @include forms.kbq-form-geometry();
 
     .kbq-form__label {
         color: var(--kbq-forms-label);
@@ -17,6 +16,6 @@
 
 @mixin kbq-forms-typography() {
     .kbq-form__label {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }

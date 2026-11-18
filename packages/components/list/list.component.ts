@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, ViewEncapsulation, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, ViewEncapsulation } from '@angular/core';
 
 /**
  * A plain, non-selectable list container.
@@ -10,7 +10,7 @@ import { ChangeDetectionStrategy, Component, ElementRef, ViewEncapsulation, inje
 @Component({
     selector: 'kbq-list',
     template: '<ng-content />',
-    styleUrls: ['./list.scss', 'list-tokens.scss'],
+    styleUrls: ['./list.scss', './list-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: { class: 'kbq-list' }

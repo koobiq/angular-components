@@ -1,21 +1,21 @@
 import {
-    ClassEntry,
-    ConstantEntry,
-    DirectiveEntry,
-    DocEntry,
+    type ClassEntry,
+    type ConstantEntry,
+    type DirectiveEntry,
+    type DocEntry,
     EntryType,
-    EnumMemberEntry,
-    FunctionEntry,
-    FunctionWithOverloads,
-    GenericEntry,
-    MemberEntry,
+    type EnumMemberEntry,
+    type FunctionEntry,
+    type FunctionWithOverloads,
+    type GenericEntry,
+    type MemberEntry,
     MemberTags,
     MemberType,
-    ParameterEntry,
-    PipeEntry,
-    PropertyEntry,
-    SignalApi,
-    TypeAliasEntry
+    type ParameterEntry,
+    type PipeEntry,
+    type PropertyEntry,
+    type SignalApi,
+    type TypeAliasEntry
 } from './entities';
 import { isDeprecatedEntry } from './entities/categorization';
 import { normalizeFunctionFields } from './transforms/normalize-function-fields';
@@ -168,7 +168,7 @@ function findClosingBracket(text: string, start: number): number {
     let quote: string | null = null;
 
     for (let index = start; index < text.length; index++) {
-        const char = text[index];
+        const char = text.charAt(index);
 
         if (quote) {
             if (char === quote && text[index - 1] !== '\\') quote = null;
@@ -197,7 +197,7 @@ function splitTopLevel(text: string): string[] {
     let index = 0;
 
     while (index < text.length) {
-        const char = text[index];
+        const char = text.charAt(index);
 
         if ('<([{'.includes(char) || char === '"' || char === "'" || char === '`') {
             const close = '<([{'.includes(char) ? findClosingBracket(text, index) : text.indexOf(char, index + 1);
@@ -660,7 +660,9 @@ function renderClassDecorator(entry: ClassEntry): string[] {
 function renderClassLike(entry: ClassEntry): string {
     const isInterface = entry.entryType === EntryType.Interface;
     const bases = ([] as string[]).concat(entry.extends ?? []);
-    const implemented = (entry.implements ?? []).filter((name) => !LIFECYCLE_INTERFACES.has(name.split('<')[0]));
+    const implemented = (entry.implements ?? []).filter(
+        (name) => !LIFECYCLE_INTERFACES.has(name.split('<')[0] ?? name)
+    );
     const heritage = [
         bases.length ? ` extends ${bases.join(', ')}` : '',
         !isInterface && implemented.length ? ` implements ${implemented.join(', ')}` : ''

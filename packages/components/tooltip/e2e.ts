@@ -1,38 +1,33 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, TemplateRef, viewChild } from '@angular/core';
+import { type AfterViewInit, ChangeDetectionStrategy, Component, type TemplateRef, viewChild } from '@angular/core';
 import { KBQ_ANIMATIONS_CONFIG } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-import { KbqTooltipComponent, KbqTooltipTrigger } from './tooltip.component';
+import { type KbqTooltipComponent, KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
 
 @Component({
     selector: 'e2e-tooltip-arrow-offset',
     imports: [KbqToolTipModule],
     template: `
-        <div
-            data-testid="tooltipWithArrow"
-            [kbqTooltip]="'with-arrow'"
-            [kbqTooltipArrow]="true"
-            [kbqPlacement]="'bottom'"
-        >
+        <div data-testid="tooltipWithArrow" kbqTooltip="with-arrow" kbqPlacement="bottom" [kbqTooltipArrow]="true">
             trigger-with-arrow
         </div>
         <div
             data-testid="tooltipWithoutArrow"
-            [kbqTooltip]="'without-arrow'"
+            kbqTooltip="without-arrow"
+            kbqPlacement="bottom"
             [kbqTooltipArrow]="false"
-            [kbqPlacement]="'bottom'"
         >
             trigger-without-arrow
         </div>
         <div
             data-testid="tooltipCentered"
             style="width: 160px"
-            [kbqTooltip]="'centered-arrow'"
+            kbqTooltip="centered-arrow"
+            kbqPlacement="bottomRight"
             [kbqTooltipArrow]="true"
             [kbqTooltipArrowCentered]="true"
-            [kbqPlacement]="'bottomRight'"
         >
             trigger-with-centered-arrow
         </div>
@@ -68,10 +63,10 @@ export class E2eTooltipArrowOffset {}
                     #inputTooltip="kbqTooltip"
                     data-testid="e2eTooltipCaretInput"
                     kbqInput
-                    [kbqPlacement]="'top'"
+                    kbqPlacement="top"
+                    kbqTooltip="caret"
+                    kbqTrigger="manual"
                     [kbqRelativeToCaret]="true"
-                    [kbqTooltip]="'caret'"
-                    [kbqTrigger]="'manual'"
                     (input)="inputTooltip.show(0)"
                 />
             </kbq-form-field>
@@ -81,11 +76,11 @@ export class E2eTooltipArrowOffset {}
                     #textareaTooltip="kbqTooltip"
                     data-testid="e2eTooltipCaretTextarea"
                     kbqTextarea
+                    kbqPlacement="top"
+                    kbqTooltip="caret"
+                    kbqTrigger="manual"
                     [canGrow]="false"
-                    [kbqPlacement]="'top'"
                     [kbqRelativeToCaret]="true"
-                    [kbqTooltip]="'caret'"
-                    [kbqTrigger]="'manual'"
                     (input)="textareaTooltip.show(0)"
                 ></textarea>
             </kbq-form-field>

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import * as flags1x1 from 'country-flag-icons/string/1x1';
 import { KbqFlag } from '@koobiq/components/flag';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import * as flags1x1 from 'country-flag-icons/string/1x1';
 import { TRANSLATIONS } from './l10n';
 
 /**
@@ -31,7 +31,7 @@ export class FlagCircleExample {
 
     private readonly sanitizer = inject(DomSanitizer);
 
-    private readonly countryCodes = ['AO', 'MY', 'UY'];
+    private readonly countryCodes = ['AO', 'MY', 'UY'] as const;
 
     protected readonly countries = computed(() =>
         this.countryCodes.map((code, index) => ({

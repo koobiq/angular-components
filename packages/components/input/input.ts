@@ -4,7 +4,7 @@ import {
     booleanAttribute,
     computed,
     Directive,
-    DoCheck,
+    type DoCheck,
     effect,
     ElementRef,
     inject,
@@ -13,11 +13,11 @@ import {
     linkedSignal,
     signal,
     untracked,
-    WritableSignal
+    type WritableSignal
 } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import {
-    CanUpdateErrorState,
+    type CanUpdateErrorState,
     ErrorStateMatcher,
     KbqErrorStateTracker,
     kbqInjectAutofilled
@@ -222,6 +222,13 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
         // form has written its value from `ngOnChanges`: a number field would sanitize that value away by then.
         if (this.numberInput && this.elementRef.nativeElement.type === 'number') {
             this.elementRef.nativeElement.type = 'text';
+        }
+
+        // Browser autocomplete is off by default. Written only when the markup has not set the attribute —
+        // which a static value has, by the time any directive runs — so a consumer's `autocomplete` wins;
+        // a bound one lands after this and overwrites it anyway.
+        if (!this.elementRef.nativeElement.hasAttribute('autocomplete')) {
+            this.elementRef.nativeElement.setAttribute('autocomplete', 'off');
         }
 
         // Read once: a custom accessor may build a new value on every read.

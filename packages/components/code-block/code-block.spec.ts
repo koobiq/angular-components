@@ -1,26 +1,33 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
-import { afterNextRender, ChangeDetectionStrategy, Component, DebugElement, Provider, Type } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    type DebugElement,
+    type Provider,
+    type Type
+} from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import type { HLJSApi } from 'highlight.js';
+import { type Observable, Subject } from 'rxjs';
+import type { Mock } from 'vitest';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTabNavBar } from '@koobiq/components/tabs';
-import { HLJSApi } from 'highlight.js';
-import { Observable, Subject } from 'rxjs';
-import type { Mock } from 'vitest';
 import {
     KBQ_CODE_BLOCK_FALLBACK_FILE_NAME,
     KbqCodeBlock,
     kbqCodeBlockDefaultOptionsProvider,
     kbqCodeBlockLocaleConfigurationProvider
 } from './code-block';
+import { KbqCodeBlockModule } from './code-block.module';
 import {
     KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE,
     KbqCodeBlockHighlight,
     kbqCodeBlockHighlightJsConfigProvider
 } from './code-block-highlight';
-import { KbqCodeBlockModule } from './code-block.module';
-import { KbqCodeBlockFile } from './types';
+import type { KbqCodeBlockFile } from './types';
 
 const HOVER_DEBOUNCE_TIME = 100;
 

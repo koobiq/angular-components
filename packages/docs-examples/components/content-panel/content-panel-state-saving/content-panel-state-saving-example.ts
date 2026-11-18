@@ -20,7 +20,7 @@ import { TRANSLATIONS } from './l10n';
         >
             <div class="example-content-panel-container__content">
                 <div class="example-content-panel-container__actions">
-                    <button kbq-button (click)="panel.toggle()">{{ t().toggle }}</button>
+                    <button kbq-button type="button" (click)="panel.toggle()">{{ t().toggle }}</button>
                     <button kbq-button type="button" (click)="container().clearSavedState()">
                         {{ t().resetSavedState }}
                     </button>

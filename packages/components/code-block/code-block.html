@@ -28,6 +28,7 @@
             @if (canToggleSoftWrap()) {
                 <button
                     kbq-button
+                    type="button"
                     class="kbq-code-block__actionbar__soft-wrap-button"
                     [attr.aria-label]="
                         softWrap() ? localeConfiguration().softWrapOffTooltip : localeConfiguration().softWrapOnTooltip
@@ -50,6 +51,7 @@
             @if (canDownload()) {
                 <button
                     kbq-button
+                    type="button"
                     class="kbq-code-block__actionbar__download-button"
                     [attr.aria-label]="localeConfiguration().downloadTooltip"
                     [color]="componentColor.Contrast"
@@ -65,6 +67,7 @@
                 <div #copyButtonTooltip="kbqTooltip" [kbqTooltip]="localeConfiguration().copyTooltip">
                     <button
                         kbq-button
+                        type="button"
                         class="kbq-code-block__actionbar__copy-button"
                         [attr.aria-label]="localeConfiguration().copyTooltip"
                         [color]="componentColor.Contrast"
@@ -79,6 +82,7 @@
             @if (activeFile()?.link) {
                 <button
                     kbq-button
+                    type="button"
                     class="kbq-code-block__actionbar__link-button"
                     [attr.aria-label]="localeConfiguration().openExternalSystemTooltip"
                     [color]="componentColor.Contrast"
@@ -120,6 +124,7 @@
             <div class="kbq-code-block__view-all__wrapper">
                 <button
                     kbq-button
+                    type="button"
                     class="kbq-code-block__view-all__button"
                     [color]="componentColor.Theme"
                     [kbqStyle]="buttonStyle.Transparent"

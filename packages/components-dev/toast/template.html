@@ -57,7 +57,7 @@
         </ng-template>
 
         <ng-template #toastSingleActonActionsTemplate let-toast>
-            <button kbq-button [color]="'contrast'">Восстановить</button>
+            <button kbq-button color="contrast">Восстановить</button>
         </ng-template>
 
         <ng-template #toastTwoActonActionsTemplate let-toast>
@@ -97,14 +97,12 @@
 
         <!-- DS-5407: open a pop-up, then fire a toast — the pop-up must stay open. -->
         <div class="dev-block">
-            <button kbq-button class="dev-button" [kbqTooltip]="'Must survive a toast'">
-                Tooltip (close-on-scroll)
-            </button>
+            <button kbq-button class="dev-button" kbqTooltip="Must survive a toast">Tooltip (close-on-scroll)</button>
             <button
                 kbq-button
                 kbqPopover
                 class="dev-button"
-                [kbqPopoverContent]="'Must survive a toast'"
+                kbqPopoverContent="Must survive a toast"
                 [kbqPopoverCloseOnScroll]="true"
             >
                 Popover (closeOnScroll)
@@ -220,7 +218,7 @@
                 <button
                     kbq-button
                     kbq-modal-main-action
-                    [color]="'contrast'"
+                    color="contrast"
                     (click)="showManyActonToast(toastManyActonActionsTemplate)"
                 >
                     Show toast
@@ -243,7 +241,7 @@
 
             <kbq-sidepanel-footer>
                 <kbq-sidepanel-actions align="left">
-                    <button cdkFocusInitial kbq-button [color]="'contrast'" (click)="openTemplateSidepanel()">
+                    <button cdkFocusInitial kbq-button color="contrast" (click)="openTemplateSidepanel()">
                         <span>Open another sidepanel</span>
                     </button>
                 </kbq-sidepanel-actions>

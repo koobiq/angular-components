@@ -7,7 +7,7 @@ import {
     TemplateRef,
     viewChild
 } from '@angular/core';
-import { KbqActionsPanel, KbqActionsPanelRef } from '@koobiq/components/actions-panel';
+import { KbqActionsPanel, type KbqActionsPanelRef } from '@koobiq/components/actions-panel';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
@@ -19,14 +19,26 @@ import { TRANSLATIONS } from './l10n';
     selector: 'actions-panel-overview-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="open()">{{ t().open }}</button>
+        <button kbq-button type="button" (click)="open()">{{ t().open }}</button>
 
         <ng-template>
-            <button color="contrast" kbq-button (click)="action('Action1')">{{ t().action1 }}</button>
-            <button color="contrast" kbq-button class="layout-margin-left-xxs" (click)="action('Action2')">
+            <button color="contrast" kbq-button type="button" (click)="action('Action1')">{{ t().action1 }}</button>
+            <button
+                color="contrast"
+                kbq-button
+                class="layout-margin-left-xxs"
+                type="button"
+                (click)="action('Action2')"
+            >
                 {{ t().action2 }}
             </button>
-            <button color="contrast" kbq-button class="layout-margin-left-xxs" (click)="action('Action3')">
+            <button
+                color="contrast"
+                kbq-button
+                class="layout-margin-left-xxs"
+                type="button"
+                (click)="action('Action3')"
+            >
                 {{ t().action3 }}
             </button>
         </ng-template>

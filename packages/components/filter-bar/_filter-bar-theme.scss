@@ -70,9 +70,8 @@
 @mixin kbq-filter-bar-filters-theme() {
     .kbq-filters {
         .kbq-button_changed-saved-filter::before {
-            border-color: var(--kbq-background-bg);
-
             background: var(--kbq-icon-warning);
+            border-color: var(--kbq-background-bg);
         }
 
         .kbq-button:not(:hover, .kbq-active) + .kbq-button_action:not(:hover, .kbq-active)::after {
@@ -81,7 +80,7 @@
     }
 }
 
-@mixin _icon($left-icon, $right-icon) {
+@mixin -icon($left-icon, $right-icon) {
     .kbq-icon.kbq-empty {
         color: $left-icon;
 
@@ -101,10 +100,10 @@
         -webkit-font-smoothing: antialiased;
 
         &.kbq-button_changed-filter {
+            @include -icon(var(--kbq-icon-theme), var(--kbq-icon-theme));
+
             color: var(--kbq-foreground-theme);
             background: var(--kbq-states-background-theme-less-active);
-
-            @include _icon(var(--kbq-icon-theme), var(--kbq-icon-theme));
 
             &:hover:not(.kbq-disabled),
             &.kbq-hover:not(.kbq-disabled) {
@@ -117,15 +116,15 @@
             }
 
             &.cdk-keyboard-focused {
-                outline: 1px solid var(--kbq-states-line-focus-theme);
                 border-color: var(--kbq-states-line-focus-theme);
+                outline: 1px solid var(--kbq-states-line-focus-theme);
             }
 
             &.kbq-disabled {
+                @include -icon(var(--kbq-states-icon-disabled), var(--kbq-states-icon-disabled));
+
                 color: var(--kbq-states-foreground-disabled);
                 background: var(--kbq-states-background-disabled);
-
-                @include _icon(var(--kbq-states-icon-disabled), var(--kbq-states-icon-disabled));
             }
         }
     }

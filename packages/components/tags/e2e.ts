@@ -4,7 +4,7 @@ import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { ENTER, KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTagInputEvent, KbqTagsModule, kbqTagsDefaultOptionsProvider } from '@koobiq/components/tags';
+import { type KbqTagInputEvent, kbqTagsDefaultOptionsProvider, KbqTagsModule } from '@koobiq/components/tags';
 
 @Component({
     selector: 'e2e-tag-state-and-style',
@@ -196,13 +196,7 @@ export class E2eTagListStates {}
                     </kbq-tag>
                 }
 
-                <input
-                    data-testid="e2eTagInput"
-                    autocomplete="off"
-                    kbqInput
-                    placeholder="New tag"
-                    [kbqTagInputFor]="tagList"
-                />
+                <input data-testid="e2eTagInput" kbqInput placeholder="New tag" [kbqTagInputFor]="tagList" />
 
                 <kbq-cleaner />
             </kbq-tag-list>
@@ -220,7 +214,7 @@ export class E2eTagListStates {}
                     </kbq-tag>
                 }
 
-                <input autocomplete="off" kbqInput placeholder="New tag" [kbqTagInputFor]="tagList2" />
+                <input kbqInput placeholder="New tag" [kbqTagInputFor]="tagList2" />
 
                 <kbq-cleaner />
             </kbq-tag-list>
@@ -237,7 +231,7 @@ export class E2eTagListStates {}
                     <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
                 </kbq-tag>
 
-                <input autocomplete="off" kbqInput placeholder="New tag" [kbqTagInputFor]="tagList3" />
+                <input kbqInput placeholder="New tag" [kbqTagInputFor]="tagList3" />
 
                 <kbq-cleaner />
             </kbq-tag-list>
@@ -254,7 +248,7 @@ export class E2eTagListStates {}
                     <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
                 </kbq-tag>
 
-                <input autocomplete="off" kbqInput placeholder="New tag" [kbqTagInputFor]="tagList4" />
+                <input kbqInput placeholder="New tag" [kbqTagInputFor]="tagList4" />
 
                 <kbq-cleaner />
             </kbq-tag-list>
@@ -426,7 +420,6 @@ export class E2eTagAutocompleteRelativeToCaret {
 
                 <input
                     data-testid="e2eTagInputSeparatorsInput"
-                    autocomplete="off"
                     kbqInput
                     placeholder="New tag"
                     [kbqTagInputFor]="tagList"

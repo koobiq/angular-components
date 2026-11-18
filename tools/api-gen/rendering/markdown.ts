@@ -1,4 +1,4 @@
-import { ClassEntry, DocEntry, EntryType, FunctionEntry, MemberType } from './entities';
+import { type ClassEntry, type DocEntry, EntryType, type FunctionEntry, MemberType } from './entities';
 import {
     flattenMembers,
     getEntryKind,

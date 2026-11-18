@@ -1,4 +1,4 @@
-import { expect, Locator, Page, test } from '@playwright/test';
+import { expect, type Locator, type Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme } from '../../../e2e/utils';
 
 // `launchOptions` drops the project's Chromium switches, which WebKit refuses (see `e2eChromiumArgs`).

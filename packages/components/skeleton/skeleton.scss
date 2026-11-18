@@ -31,14 +31,15 @@
 }
 
 .kbq-skeleton:not(.kbq-skeleton_disabled) {
+    @include animation.kbq-animations-off();
     // A solid background and the filter turn the host, children included, into one shape of the host's own
     // outline; any opaque color works, the filter flattens it with the rest. No pseudo-elements, so the host's own
     // ones and replaced elements such as `<img>` keep working, and each line of an inline host gets a bar.
     color: transparent !important;
     background: var(--kbq-background-bg) !important;
     box-shadow: none !important;
-    box-decoration-break: clone;
     filter: var(--kbq-skeleton-filter);
+    box-decoration-break: clone;
     mask-image:
         linear-gradient(
             90deg,
@@ -47,22 +48,22 @@
             var(--kbq-skeleton-animation-wave-end)
         ),
         linear-gradient(var(--kbq-skeleton-fill), var(--kbq-skeleton-fill));
-    mask-size:
-        var(--kbq-skeleton-wave-width) 100%,
-        100% 100%;
+    mask-repeat: no-repeat;
     // Parks the band just outside the host whenever the wave does not run.
     mask-position:
         calc(var(--kbq-skeleton-wave-width) * -1) 0,
         0 0;
-    mask-repeat: no-repeat;
-    animation: kbq-skeleton-wave var(--kbq-skeleton-animation-duration) ease-in infinite;
-    user-select: none;
+    mask-size:
+        var(--kbq-skeleton-wave-width) 100%,
+        100% 100%;
+
     pointer-events: none;
+    user-select: none;
+
+    animation: kbq-skeleton-wave var(--kbq-skeleton-animation-duration) ease-in infinite;
 
     // A host outside the viewport keeps the fill and skips the per-frame work of the wave.
     &.kbq-skeleton_offscreen {
         animation: none;
     }
-
-    @include animation.kbq-animations-off();
 }

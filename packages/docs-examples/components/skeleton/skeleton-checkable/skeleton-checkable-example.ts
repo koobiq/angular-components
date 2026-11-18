@@ -34,9 +34,9 @@ import { TRANSLATIONS } from './l10n';
                 <kbq-hint>{{ t().syncHint }}</kbq-hint>
             </kbq-checkbox>
             <kbq-radio-group name="protocol">
-                <kbq-radio-button [checked]="true" [value]="'ldaps'">LDAPS</kbq-radio-button>
-                <kbq-radio-button [value]="'ldap'">LDAP</kbq-radio-button>
-                <kbq-radio-button [value]="'starttls'">LDAP with StartTLS</kbq-radio-button>
+                <kbq-radio-button value="ldaps" [checked]="true">LDAPS</kbq-radio-button>
+                <kbq-radio-button value="ldap">LDAP</kbq-radio-button>
+                <kbq-radio-button value="starttls">LDAP with StartTLS</kbq-radio-button>
             </kbq-radio-group>
             <kbq-toggle>
                 Notify the administrators

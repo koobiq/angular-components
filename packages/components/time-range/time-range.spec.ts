@@ -2,15 +2,15 @@ import { TitleCasePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
-    DebugElement,
+    type DebugElement,
     effect,
     inject,
-    Provider,
+    type Provider,
     signal,
-    Type
+    type Type
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormControl, type FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KbqLuxonDateModule, LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
@@ -34,11 +34,11 @@ import {
     KbqTimeRange,
     kbqTimeRangeLocaleConfigurationProvider
 } from './time-range';
+import { KbqTimeRangeModule } from './time-range.module';
 import { KbqTimeRangeEditor } from './time-range-editor';
 import { KbqTimeRangeTitle } from './time-range-title';
 import { KbqTimeRangeTitleAsControl } from './time-range-title-as-form-field';
-import { KbqTimeRangeModule } from './time-range.module';
-import { KbqCustomTimeRangeType, KbqTimeRangeRange, KbqTimeRangeType } from './types';
+import type { KbqCustomTimeRangeType, KbqTimeRangeRange, KbqTimeRangeType } from './types';
 
 /** An axe pass over an overlay is far slower than the 2s default this repo runs specs with. */
 const axeTimeout = 15000;
@@ -76,8 +76,9 @@ const getEditorControl = (debugElement: DebugElement): FormControl => {
     ).rangeEditorControl;
 };
 
-const getEditorForm = (debugElement: DebugElement): FormGroup => {
-    return (getEditorInstance(debugElement) as unknown as { form: FormGroup }).form;
+/** The editor's protected form. */
+const getEditorForm = (debugElement: DebugElement): KbqTimeRangeEditor<unknown>['form'] => {
+    return getEditorInstance(debugElement)['form'];
 };
 
 const getRangeElement = (debugElement: DebugElement): HTMLElement => {
@@ -1234,10 +1235,10 @@ describe('KbqTimeRange', () => {
 
             const form = getEditorForm(debugElement);
 
-            expect(form.controls['type'].enabled).toBe(true);
+            expect(form.controls.type.enabled).toBe(true);
             // `lastHour` is selected, so the from/to pair must stay disabled after a blanket enable().
-            expect(form.controls['fromDate'].disabled).toBe(true);
-            expect(form.controls['toDate'].disabled).toBe(true);
+            expect(form.controls.fromDate.disabled).toBe(true);
+            expect(form.controls.toDate.disabled).toBe(true);
         });
 
         it('should not mark the editor touched while focus moves between its own fields', async () => {

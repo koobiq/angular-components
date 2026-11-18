@@ -1,6 +1,9 @@
 @use '../core/option/option-tokens';
 
 .kbq-timezone-select__panel {
+    /* LIST THEME TOKENS */
+    @extend %kbq-option-geometry-tokens;
+
     --kbq-timezone-option-size-padding: var(--kbq-size-xxs) 10px;
     --kbq-timezone-option-size-column-gap: 16px;
     --kbq-timezone-option-size-height: auto;
@@ -10,6 +13,4 @@
     --kbq-timezone-option-text: var(--kbq-foreground-contrast);
     --kbq-timezone-option-caption: var(--kbq-foreground-contrast-secondary);
     --kbq-timezone-option-optgroup-label: var(--kbq-foreground-contrast-secondary);
-    /* LIST THEME TOKENS */
-    @extend %kbq-option-geometry-tokens;
 }

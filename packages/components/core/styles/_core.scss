@@ -1,13 +1,13 @@
-@use 'common/animation' as *;
-@use 'common/overlay' as *;
-@use 'common/connected-overlay' as *;
-@use 'common/visually-hidden' as *;
+@use 'common/animation';
+@use 'common/overlay';
+@use 'common/connected-overlay';
+@use 'common/visually-hidden';
 
 // Mixin that renders all of the core styles that are not theme-dependent.
 @mixin kbq-core() {
-    @include a11y-visually-hidden();
-    @include overlay();
-    @include kbq-connected-overlay-gap();
+    @include visually-hidden.a11y-visually-hidden();
+    @include overlay.overlay();
+    @include connected-overlay.kbq-connected-overlay-gap();
     // Shared `.kbq-progress` utility; depended on by `button` and `toggle`.
-    @include kbq-progress();
+    @include animation.kbq-progress();
 }

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqButtonColor, KbqButtonModule, KbqButtonStyle, KbqButtonStyles } from '@koobiq/components/button';
+import { type KbqButtonColor, KbqButtonModule, type KbqButtonStyle, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
@@ -17,11 +17,11 @@ import { TRANSLATIONS } from './l10n';
     template: `
         @for (style of buttonStyles; track style) {
             <div class="layout-row layout-gap-xl">
-                <div kbq-button-group [orientation]="'vertical'" [color]="style.color" [kbqStyle]="style.appearance">
-                    <button kbq-button [attr.aria-label]="t().plus">
+                <div kbq-button-group orientation="vertical" [color]="style.color" [kbqStyle]="style.appearance">
+                    <button kbq-button type="button" [attr.aria-label]="t().plus">
                         <i kbq-icon="kbq-plus_16"></i>
                     </button>
-                    <button kbq-button [attr.aria-label]="t().minus">
+                    <button kbq-button type="button" [attr.aria-label]="t().minus">
                         <i kbq-icon="kbq-minus_16"></i>
                     </button>
                 </div>

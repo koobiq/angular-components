@@ -19,7 +19,7 @@ import { TRANSLATIONS } from './l10n';
             text text text text text text text text text text text text text text text text text text text text text
             text text text text text text text text text text text text text text text
             <kbq-loader-overlay fixed-top>
-                <kbq-progress-spinner kbq-loader-overlay-indicator size="big" [mode]="'indeterminate'" />
+                <kbq-progress-spinner kbq-loader-overlay-indicator size="big" mode="indeterminate" />
 
                 <div kbq-loader-overlay-text>{{ t().creatingReport }}</div>
                 <div kbq-loader-overlay-caption>{{ t().reportProgress }}</div>

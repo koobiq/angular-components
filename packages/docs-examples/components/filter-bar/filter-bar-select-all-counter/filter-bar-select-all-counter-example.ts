@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
     kbqBuildTree,
-    KbqFilter,
+    type KbqFilter,
     KbqFilterBarModule,
-    KbqPipeTemplate,
+    type KbqPipe,
+    type KbqPipeTemplate,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
 
@@ -105,11 +106,11 @@ export class FilterBarSelectAllCounterExample {
         }
     ];
 
-    onFilterChange($event) {
-        console.log('onFilterChange: ', $event);
+    onFilterChange(event: KbqFilter | null) {
+        console.log('onFilterChange: ', event);
     }
 
-    onChangePipe($event) {
-        console.log('onChangePipe: ', $event);
+    onChangePipe(event: KbqPipe) {
+        console.log('onChangePipe: ', event);
     }
 }

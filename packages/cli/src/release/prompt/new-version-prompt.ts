@@ -1,6 +1,6 @@
 import inquirer from 'inquirer';
-import { ReleaseType, createNewVersion } from '../version-name/create-version';
-import { Version, parseVersionName } from '../version-name/parse-version';
+import { createNewVersion, type ReleaseType } from '../version-name/create-version';
+import { parseVersionName, type Version } from '../version-name/parse-version';
 import { determineAllowedPrereleaseLabels } from './prerelease-labels';
 
 /** Answers that will be prompted for. */

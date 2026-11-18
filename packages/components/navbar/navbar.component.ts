@@ -1,10 +1,10 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
 import { Platform } from '@angular/cdk/platform';
 import {
-    AfterContentChecked,
-    AfterContentInit,
+    type AfterContentChecked,
+    type AfterContentInit,
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -19,12 +19,13 @@ import {
     input,
     model,
     NgZone,
-    OnDestroy,
-    QueryList,
+    type OnDestroy,
+    type QueryList,
     untracked,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { debounceTime, fromEvent, merge, type Observable, startWith, Subject, type Subscription } from 'rxjs';
 import {
     FocusKeyManager,
     isHorizontalMovement,
@@ -37,11 +38,9 @@ import {
     RIGHT_ARROW,
     TAB
 } from '@koobiq/components/core';
-import { fromEvent, merge, Observable, Subject, Subscription } from 'rxjs';
-import { debounceTime, startWith } from 'rxjs/operators';
 import {
     KbqNavbarFocusableItem,
-    KbqNavbarFocusableItemEvent,
+    type KbqNavbarFocusableItemEvent,
     KbqNavbarItem,
     KbqNavbarRectangleElement
 } from './navbar-item.component';
@@ -71,7 +70,9 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
     }
 
     /** @docs-private */
-    keyManager: FocusKeyManager<KbqNavbarFocusableItem>;
+    keyManager: FocusKeyManager<KbqNavbarFocusableItem> = new FocusKeyManager<KbqNavbarFocusableItem>(
+        this.focusableItemsList()
+    ).withTypeAhead();
 
     /**
      * Tab index of the navbar host. The navbar owns the single tab stop of the whole widget and moves focus
@@ -112,8 +113,6 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
 
     /** @docs-private */
     ngAfterContentInit(): void {
-        this.keyManager = new FocusKeyManager<KbqNavbarFocusableItem>(this.focusableItems).withTypeAhead();
-
         kbqLeaveTabOrderOnTabOut(
             this.keyManager.tabOut,
             this.elementRef.nativeElement,
@@ -340,7 +339,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     }
 
     /** @docs-private */
-    ngAfterContentInit(): void {
+    override ngAfterContentInit(): void {
         super.ngAfterContentInit();
 
         this.keyManager.withVerticalOrientation(false).withHorizontalOrientation('ltr');

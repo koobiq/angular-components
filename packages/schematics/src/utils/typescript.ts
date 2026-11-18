@@ -1,6 +1,6 @@
-import { Tree } from '@angular-devkit/schematics';
+import type { Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
-import { Attribute, Block, Element, getSimpleAttributeName, Visitor } from './ast';
+import { type Attribute, type Block, type Element, getSimpleAttributeName, type Visitor } from './ast';
 
 export const LEADING_TRIVIA_CHARS = [' ', '\n', '\r', '\t'];
 
@@ -148,7 +148,7 @@ export function updateDecoratorProperty(decorator: ts.Decorator, propertyName: s
     if (ts.isCallExpression(decorator.expression)) {
         const [arg] = decorator.expression.arguments;
 
-        if (ts.isObjectLiteralExpression(arg)) {
+        if (arg && ts.isObjectLiteralExpression(arg)) {
             const newProperties = arg.properties.map((prop) => {
                 if (ts.isPropertyAssignment(prop) && ts.isIdentifier(prop.name) && prop.name.text === propertyName) {
                     return ts.factory.updatePropertyAssignment(

@@ -1,5 +1,3 @@
-@use '../core/styles/common/tokens' as *;
-
 // The `--kbq-icon-*-color` tokens are consumed with their design token as the `var()` fallback rather
 // than declared on `.kbq-icon` — see the note in `icon-tokens.scss`. An ancestor that sets one of them
 // wins here, and an icon left alone resolves exactly the value it always did.

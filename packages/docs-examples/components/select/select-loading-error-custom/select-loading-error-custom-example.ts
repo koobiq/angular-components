@@ -39,13 +39,13 @@ const delayBeforeShowError = 3000;
                                 <i
                                     kbq-empty-state-icon
                                     kbq-icon-item="kbq-triangle-exclamation_16"
+                                    color="contrast"
                                     [big]="true"
-                                    [color]="'contrast'"
                                     [fade]="true"
                                 ></i>
                                 <div kbq-empty-state-text>{{ t().failedToLoadLocations }}</div>
                                 <div kbq-empty-state-actions>
-                                    <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'">
+                                    <button kbq-button type="button" color="theme" kbqStyle="transparent">
                                         {{ t().tryAgain }}
                                     </button>
                                 </div>

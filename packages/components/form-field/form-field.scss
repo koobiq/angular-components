@@ -1,5 +1,5 @@
 @use './form-field-theme' as theme;
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
 // `:has()` is used across this file. It is Baseline Widely available (Chrome/Edge 105+, Safari 15.4+,
 // Firefox 121+); browsers without it simply keep the default spacing, so the layout degrades gracefully.
@@ -42,17 +42,17 @@
     }
 
     .kbq-form-field__label {
-        box-sizing: border-box;
         display: flex;
+        box-sizing: border-box;
         margin-bottom: var(--kbq-form-field-label-margin-bottom);
 
         // Drawn inside `kbq-label`, so that it follows the last word of a label that wraps.
         &.kbq-form-field__label_required .kbq-label::after {
-            margin-left: var(--kbq-size-3xs);
             // The marker only repeats the `required` state of the control, so it is kept out of the accessible name of
             // the control. The plain `content` is the fallback for browsers without the alternative text syntax.
             content: '*';
             content: '*' / '';
+            margin-left: var(--kbq-size-3xs);
         }
     }
 
@@ -62,19 +62,19 @@
     }
 
     .kbq-form-field__container {
-        box-sizing: border-box;
+        @include squircle.kbq-squircle(var(--kbq-form-field-size-border-radius));
 
         display: flex;
-        justify-content: space-between;
         align-items: center;
+        justify-content: space-between;
+
+        box-sizing: border-box;
+        padding-right: var(--kbq-form-field-size-container-right-padding);
+        padding-left: var(--kbq-form-field-size-container-left-padding);
 
         border-width: var(--kbq-form-field-size-border-width);
         border-style: solid;
         border-color: transparent;
-        @include kbq-squircle(var(--kbq-form-field-size-border-radius));
-
-        padding-left: var(--kbq-form-field-size-container-left-padding);
-        padding-right: var(--kbq-form-field-size-container-right-padding);
 
         &:has(.kbq-textarea) {
             --kbq-form-field-size-container-left-padding: 0;
@@ -83,19 +83,16 @@
     }
 
     .kbq-form-field__infix {
-        box-sizing: border-box;
-
-        width: 100%;
         flex-grow: 1;
-
+        box-sizing: border-box;
+        width: 100%;
         padding-left: var(--kbq-form-field-size-infix-left-padding);
 
         &:has(.kbq-select_multiple, .kbq-select_multiline):not(:has(.kbq-select__trigger_empty)),
         &:has(.kbq-tag-list),
         &:has(.kbq-textarea) {
-            padding-left: 0;
-
             max-width: 100%;
+            padding-left: 0;
         }
 
         // The rule above drops the indent because the tags carry one of their own. A custom trigger
@@ -114,7 +111,7 @@
 
     &,
     .kbq-textarea {
-        @include kbq-squircle(var(--kbq-form-field-size-border-radius));
+        @include squircle.kbq-squircle(var(--kbq-form-field-size-border-radius));
     }
 
     &:hover {
@@ -157,8 +154,8 @@
     .kbq-form-field__prefix,
     .kbq-form-field__suffix {
         display: flex;
-        justify-content: center;
         align-items: center;
+        justify-content: center;
 
         & .kbq-prefix,
         & .kbq-suffix {

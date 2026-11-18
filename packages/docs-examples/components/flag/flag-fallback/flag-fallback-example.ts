@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { KbqFlag, KbqFlagShadow } from '@koobiq/components/flag';
-import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { hasFlag } from 'country-flag-icons';
 import * as flags3x2 from 'country-flag-icons/string/3x2';
+import { KbqFlag, type KbqFlagShadow } from '@koobiq/components/flag';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
+
+const flags: Record<string, string> = flags3x2;
 
 /**
  * @title Fallback for a missing flag
@@ -57,7 +59,7 @@ export class FlagFallbackExample {
         this.countriesMeta.map((meta, index) => ({
             ...meta,
             name: this.t().fallbackCountries[index],
-            svg: hasFlag(meta.code) ? this.sanitizer.bypassSecurityTrustHtml(flags3x2[meta.code]) : null
+            svg: hasFlag(meta.code) ? this.sanitizer.bypassSecurityTrustHtml(flags[meta.code]!) : null
         }))
     );
 }

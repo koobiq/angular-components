@@ -19,8 +19,8 @@ import { TRANSLATIONS } from './l10n';
         KbqIcon,
         KbqIconItem
     ],
-    templateUrl: 'alert-overview-example.html',
-    styleUrls: ['alert-overview-example.css'],
+    templateUrl: './alert-overview-example.html',
+    styleUrl: './alert-overview-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AlertOverviewExample {

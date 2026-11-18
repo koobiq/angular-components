@@ -1,6 +1,6 @@
 import semver from 'semver';
-import { Version } from '../version-name/parse-version';
-import { NpmViewError, npmViewDistTag } from './npm-client';
+import type { Version } from '../version-name/parse-version';
+import { npmViewDistTag, NpmViewError } from './npm-client';
 
 /**
  * Resolves which npm dist-tag a version should publish under. `npm publish` always moves

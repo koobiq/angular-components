@@ -20,7 +20,7 @@ import { TRANSLATIONS } from './l10n';
         KbqToolTipModule,
         KbqIconModule
     ],
-    templateUrl: 'navbar-vertical-open-over-example.html',
+    templateUrl: './navbar-vertical-open-over-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarVerticalOpenOverExample {

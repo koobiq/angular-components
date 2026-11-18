@@ -1,4 +1,5 @@
 {
+    "extends": "../../tsconfig.strict.json",
     "compilerOptions": {
         "lib": ["es2015"],
         "module": "commonjs",

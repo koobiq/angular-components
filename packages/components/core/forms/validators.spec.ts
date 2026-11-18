@@ -1,6 +1,6 @@
 import { FormControl } from '@angular/forms';
-import { FileValidators, KbqFileTypeSpecifier } from '@koobiq/components/core';
-import { KbqFileItem } from '@koobiq/components/file-upload';
+import { FileValidators, type KbqFileTypeSpecifier } from '@koobiq/components/core';
+import type { KbqFileItem } from '@koobiq/components/file-upload';
 import { PasswordValidators } from './validators';
 
 describe('Validators', () => {

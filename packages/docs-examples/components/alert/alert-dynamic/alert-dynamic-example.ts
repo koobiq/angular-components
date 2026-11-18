@@ -21,15 +21,15 @@ import { TRANSLATIONS } from './l10n';
         KbqIconButton
     ],
     template: `
-        <button #trigger kbq-button (click)="visible.set(true)">{{ t().showAlert }}</button>
+        <button #trigger kbq-button type="button" (click)="visible.set(true)">{{ t().showAlert }}</button>
 
         @if (visible()) {
             <!-- role="alert" makes assistive technology announce the alert when it is inserted. -->
             <kbq-alert
                 class="layout-margin-top-m"
                 role="alert"
-                [alertColor]="'error'"
-                [alertStyle]="'colored'"
+                alertColor="error"
+                alertStyle="colored"
                 [compact]="true"
                 (closed)="dismiss()"
             >
@@ -37,6 +37,7 @@ import { TRANSLATIONS } from './l10n';
                 {{ t().saveFailed }}
                 <button
                     kbq-alert-close-button
+                    type="button"
                     kbq-icon-button="kbq-xmark-s_16"
                     [attr.aria-label]="t().close"
                     [color]="colors.ContrastFade"

@@ -1,6 +1,24 @@
-/* stylelint-disable selector-class-pattern */
+/* stylelint-disable selector-class-pattern -- a copy of the layout utilities, public class names without the prefix */
 
 @use '@koobiq/components/core/styles/common/rtl';
+
+// A suffix of a class name: the value alone, or the size and the value
+@function -layout-suffix($size, $value) {
+    @if $size != '' {
+        @return '#{$size}-#{$value}';
+    }
+
+    @return '#{$value}';
+}
+
+// A name of a breakpoint: the prefix alone, or the prefix and the breakpoint
+@function -layout-name($prefix, $name) {
+    @if $name {
+        @return '#{$prefix}-#{$name}';
+    }
+
+    @return $prefix;
+}
 
 /*
 *  Responsive attributes
@@ -14,10 +32,10 @@
 */
 @-moz-document url-prefix() {
     .layout-fill {
-        margin: 0;
         width: 100%;
-        min-height: 100%;
         height: 100%;
+        min-height: 100%;
+        margin: 0;
     }
 }
 
@@ -35,11 +53,7 @@
         $suffix: '';
 
         @each $s in $sizes {
-            @if $s != '' {
-                $suffix: '#{$s}-#{$i}';
-            } @else {
-                $suffix: '#{$i}';
-            }
+            $suffix: -layout-suffix($s, $i);
 
             $order: '.flex-order-#{$suffix}';
         }
@@ -60,11 +74,7 @@
         $suffix: '';
 
         @each $s in $sizes {
-            @if $s != '' {
-                $suffix: '#{$s}-#{$i * 5}';
-            } @else {
-                $suffix: '#{$i * 5}';
-            }
+            $suffix: -layout-suffix($s, $i * 5);
 
             $offsets: '.offset-#{$suffix}, ' +
                 '.flex-offset-#{$suffix}, ' +
@@ -86,11 +96,7 @@
         $suffix: '';
 
         @each $s in $sizes {
-            @if $s != '' {
-                $suffix: '#{$s}-#{$i}';
-            } @else {
-                $suffix: '#{$i}';
-            }
+            $suffix: -layout-suffix($s, $i);
 
             $offsets: '.offset-#{$suffix}, ' +
                 '.flex-offset-#{$suffix}, ' +
@@ -108,11 +114,7 @@
         $suffix: '';
 
         @each $s in $sizes {
-            @if $s != '' {
-                $suffix: '#{$s}-#{$i}';
-            } @else {
-                $suffix: '#{$i}';
-            }
+            $suffix: -layout-suffix($s, $i);
 
             $offsets: '.offset-#{$suffix}, ' +
                 '.flex-offset-#{$suffix}, ' +
@@ -157,90 +159,89 @@
     }
 }
 
-@mixin flex-properties-for-name($name: null) {
-    $flexName: 'flex';
-
-    @if $name {
-        $flexName: 'flex-#{$name}';
-        $name: '-#{$name}';
-    } @else {
-        $name: '';
-    }
-
-    // === flex: 1 1 0%;
-    .#{$flexName} {
+// `flex: 1 1 0%` and its presets. A mixin keeps them before the percentage classes, which override them: stylelint
+// puts a loop before the rules of a block, and a mixin call before a loop
+@mixin -flex-presets($flex-name) {
+    .#{$flex-name} {
         flex: 1;
     }
-    .#{$flexName}-grow {
+    .#{$flex-name}-grow {
         flex: 1 1 100%;
     }
-    .#{$flexName}-initial {
+    .#{$flex-name}-initial {
         flex: 0 1 auto;
     }
-    .#{$flexName}-auto {
+    .#{$flex-name}-auto {
         flex: 1 1 auto;
     }
-    .#{$flexName}-none {
+    .#{$flex-name}-none {
         flex: 0 0 auto;
     }
-    .#{$flexName}-no-shrink {
+    .#{$flex-name}-no-shrink {
         flex: 1 0 auto;
     }
-    .#{$flexName}-no-grow {
+    .#{$flex-name}-no-grow {
         flex: 0 1 auto;
     }
+}
+
+@mixin flex-properties-for-name($name: null) {
+    $flex-name: -layout-name('flex', $name);
+    $name: -layout-name('', $name);
+
+    @include -flex-presets($flex-name);
 
     // (1-20) * 5 = 0-100%
     @for $i from 0 through 20 {
         $value: #{$i * 5 + '%'};
 
-        .#{$flexName}-#{$i * 5} {
+        .#{$flex-name}-#{$i * 5} {
             flex: 1 1 100%;
             max-width: #{$value};
             max-height: 100%;
         }
 
-        .layout-row > .#{$flexName}-#{$i * 5} {
-            flex: 1 1 100%;
-            max-width: #{$value};
-            max-height: 100%;
-
+        .layout-row > .#{$flex-name}-#{$i * 5} {
             // Required by Chrome M48+ due to http://crbug.com/546034
             @if $i == 0 {
                 min-width: 0;
             }
+
+            flex: 1 1 100%;
+            max-width: #{$value};
+            max-height: 100%;
         }
 
-        .layout-column > .#{$flexName}-#{$i * 5} {
+        .layout-column > .#{$flex-name}-#{$i * 5} {
             flex: 1 1 100%;
             max-width: 100%;
             max-height: #{$value};
         }
 
-        .layout#{$name}-row > .#{$flexName}-#{$i * 5} {
-            flex: 1 1 100%;
-            max-width: #{$value};
-            max-height: 100%;
-
+        .layout#{$name}-row > .#{$flex-name}-#{$i * 5} {
             // Required by Chrome M48+ due to http://crbug.com/546034
             @if $i == 0 {
                 min-width: 0;
             }
+
+            flex: 1 1 100%;
+            max-width: #{$value};
+            max-height: 100%;
         }
 
-        .layout#{$name}-column > .#{$flexName}-#{$i * 5} {
-            flex: 1 1 100%;
-            max-width: 100%;
-            max-height: #{$value};
-
+        .layout#{$name}-column > .#{$flex-name}-#{$i * 5} {
             // Required by Chrome M48+ due to http://crbug.com/546034
             @if $i == 0 {
                 min-height: 0;
             }
+
+            flex: 1 1 100%;
+            max-width: 100%;
+            max-height: #{$value};
         }
     }
 
-    @if ($name == '') {
+    @if $name == '' {
         .flex-33 {
             flex: 1 1 100%;
             max-width: 33.33%;
@@ -255,13 +256,13 @@
     }
 
     .layout-row {
-        > .#{$flexName}-33 {
+        > .#{$flex-name}-33 {
             flex: 1 1 33.33%;
             max-width: 33.33%;
             max-height: 100%;
         }
 
-        > .#{$flexName}-66 {
+        > .#{$flex-name}-66 {
             flex: 1 1 66.66%;
             max-width: 66.66%;
             max-height: 100%;
@@ -269,13 +270,13 @@
     }
 
     .layout-column {
-        > .#{$flexName}-33 {
+        > .#{$flex-name}-33 {
             flex: 1 1 33.33%;
             max-width: 100%;
             max-height: 33.33%;
         }
 
-        > .#{$flexName}-66 {
+        > .#{$flex-name}-66 {
             flex: 1 1 66.66%;
             max-width: 100%;
             max-height: 66.66%;
@@ -283,13 +284,13 @@
     }
 
     .layout#{$name}-row {
-        > .#{$flexName}-33 {
+        > .#{$flex-name}-33 {
             flex: 1 1 100%;
             max-width: 33.33%;
             max-height: 100%;
         }
 
-        > .#{$flexName}-66 {
+        > .#{$flex-name}-66 {
             flex: 1 1 100%;
             max-width: 66.66%;
             max-height: 100%;
@@ -302,13 +303,13 @@
     }
 
     .layout#{$name}-column {
-        > .#{$flexName}-33 {
+        > .#{$flex-name}-33 {
             flex: 1 1 100%;
             max-width: 100%;
             max-height: 33.33%;
         }
 
-        > .#{$flexName}-66 {
+        > .#{$flex-name}-66 {
             flex: 1 1 100%;
             max-width: 100%;
             max-height: 66.66%;
@@ -329,12 +330,10 @@
     }
 
     .layout-fill {
-        margin: 0;
-
         width: 100%;
-
-        min-height: 100%;
         height: 100%;
+        min-height: 100%;
+        margin: 0;
     }
 }
 
@@ -352,9 +351,9 @@
 
     .#{$name},
     .#{$name}-start-stretch {
-        justify-content: flex-start;
         align-content: stretch;
         align-items: stretch;
+        justify-content: flex-start;
     }
 
     // Main Axis Center
@@ -413,8 +412,8 @@
     .#{$name}-end-start,
     .#{$name}-space-between-start,
     .#{$name}-space-around-start {
-        align-items: flex-start;
         align-content: flex-start;
+        align-items: flex-start;
     }
 
     // Cross Axis Center
@@ -423,8 +422,8 @@
     .#{$name}-end-center,
     .#{$name}-space-between-center,
     .#{$name}-space-around-center {
-        align-items: center;
         align-content: center;
+        align-items: center;
         max-width: 100%;
     }
 
@@ -443,8 +442,8 @@
     .#{$name}-end-end,
     .#{$name}-space-between-end,
     .#{$name}-space-around-end {
-        align-items: flex-end;
         align-content: flex-end;
+        align-items: flex-end;
     }
 
     // Cross Axis Start
@@ -453,8 +452,8 @@
     .#{$name}-end-stretch,
     .#{$name}-space-between-stretch,
     .#{$name}-space-around-stretch {
-        align-items: stretch;
         align-content: stretch;
+        align-items: stretch;
     }
 }
 
@@ -532,9 +531,7 @@
     @include flex-order-for-name($name);
     @include offset-for-name($name);
     @include layout-align-for-name($name);
-
     @include flex-properties-for-name($name);
     @include layout-for-name($name);
-
     @include layout-indents();
 }

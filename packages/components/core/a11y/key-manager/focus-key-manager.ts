@@ -1,5 +1,5 @@
-import { FocusOrigin } from '@angular/cdk/a11y';
-import { ListKeyManager, ListKeyManagerOption } from './list-key-manager';
+import type { FocusOrigin } from '@angular/cdk/a11y';
+import { ListKeyManager, type ListKeyManagerOption } from './list-key-manager';
 
 /**
  * This is the interface for focusable items (used by the FocusKeyManager).
@@ -19,9 +19,9 @@ export class FocusKeyManager<T> extends ListKeyManager<IFocusableOption & T> {
      *
      * @param item Item to be set as active.
      */
-    setActiveItem(item: number | T): void;
+    override setActiveItem(item: number | T): void;
 
-    setActiveItem(item: any): void {
+    override setActiveItem(item: any): void {
         super.setActiveItem(item);
 
         if (this.activeItem) {

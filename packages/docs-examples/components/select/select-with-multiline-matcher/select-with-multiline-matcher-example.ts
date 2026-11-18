@@ -23,28 +23,26 @@ import { TRANSLATIONS } from './l10n';
             </kbq-form-field>
         </div>
     `,
-    styles: [
-        `
-            :host {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-            .kbq-form-field {
-                width: 320px;
-            }
+        .kbq-form-field {
+            width: 320px;
+        }
 
-            div:not(:last-child) {
-                margin-bottom: var(--kbq-size-xl);
-            }
-        `
-    ],
+        div:not(:last-child) {
+            margin-bottom: var(--kbq-size-xl);
+        }
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectWithMultilineMatcherExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
 
     readonly options = Array.from({ length: 10 }, (_, i) => 'Option #' + i);
-    selected: string[] = [this.options[0], this.options[1], this.options[2], this.options[3]];
+    selected: string[] = this.options.slice(0, 4);
 }

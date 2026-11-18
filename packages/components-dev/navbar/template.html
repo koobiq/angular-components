@@ -56,11 +56,11 @@
         <kbq-navbar-item
             #horizontalNavbarDropdownAppsDropdownTrigger="kbqDropdownTrigger"
             bento
+            tooltipText="Приложения"
+            kbqTrigger="hover"
             [class.kbq-active]="horizontalNavbarDropdownAppsDropdownTrigger.opened"
             [kbqDropdownTriggerFor]="horizontalNavbarDropdownApps"
             [kbqPlacement]="popUpPlacements.BottomLeft"
-            [tooltipText]="'Приложения'"
-            [kbqTrigger]="'hover'"
         >
             <i kbq-icon="kbq-bento-menu_16" color="contrast"></i>
         </kbq-navbar-item>
@@ -73,7 +73,7 @@
             <kbq-navbar-title>App name</kbq-navbar-title>
         </a>
 
-        <button kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [tooltipText]="'Панели мониторинга'">
+        <button kbq-navbar-item tooltipText="Панели мониторинга" [kbqPlacement]="popUpPlacements.Bottom">
             <i kbq-icon="kbq-folder_16" color="contrast"></i>
         </button>
 
@@ -96,7 +96,7 @@
         </kbq-navbar-item>
 
         <kbq-navbar-item>
-            <button kbq-button [color]="'contrast'">
+            <button kbq-button color="contrast">
                 <span>Новая задача</span>
             </button>
         </kbq-navbar-item>
@@ -117,28 +117,28 @@
     </kbq-navbar-container>
 
     <kbq-navbar-container>
-        <kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [tooltipText]="'Уведомления'">
+        <kbq-navbar-item tooltipText="Уведомления" [kbqPlacement]="popUpPlacements.Bottom">
             <i kbq-icon="kbq-bell_16" color="contrast"></i>
-            <kbq-badge [badgeColor]="'error'" [compact]="true">5</kbq-badge>
+            <kbq-badge badgeColor="error" [compact]="true">5</kbq-badge>
         </kbq-navbar-item>
 
-        <kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [tooltipText]="'Администрирование'">
+        <kbq-navbar-item tooltipText="Администрирование" [kbqPlacement]="popUpPlacements.Bottom">
             <i kbq-icon="kbq-gear_16" color="contrast"></i>
         </kbq-navbar-item>
 
         <kbq-navbar-divider />
 
-        <kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [tooltipText]="'Справка'">
+        <kbq-navbar-item tooltipText="Справка" [kbqPlacement]="popUpPlacements.Bottom">
             <i kbq-icon="kbq-magnifying-glass_16" color="contrast"></i>
         </kbq-navbar-item>
 
         <kbq-navbar-item
             #horizontalNavbarProfileDropdownTrigger="kbqDropdownTrigger"
+            tooltipText="Профиль"
+            kbqTrigger="hover"
             [class.kbq-active]="horizontalNavbarProfileDropdownTrigger.opened"
             [kbqDropdownTriggerFor]="horizontalNavbarProfile"
             [kbqPlacement]="popUpPlacements.BottomRight"
-            [tooltipText]="'Профиль'"
-            [kbqTrigger]="'hover'"
         >
             <i kbq-icon="kbq-user_16" color="contrast"></i>
         </kbq-navbar-item>
@@ -211,15 +211,15 @@
             <kbq-navbar-item>
                 <button
                     kbq-button
+                    color="contrast"
+                    kbqStyle="filled"
+                    kbqTooltip="Новый инцидент"
                     [class.kbq-button-icon]="!verticalNavbar.expanded()"
-                    [color]="'contrast'"
                     [kbqPlacement]="popUpPlacements.Right"
-                    [kbqStyle]="'filled'"
-                    [kbqTooltip]="'Новый инцидент'"
                     [kbqTooltipArrow]="false"
                     [kbqTooltipDisabled]="verticalNavbar.expanded()"
                 >
-                    <i kbq-icon="kbq-circle-info_16" [color]="'empty'"></i>
+                    <i kbq-icon="kbq-circle-info_16" color="empty"></i>
                     @if (verticalNavbar.expanded()) {
                         <span>Новый инцидент</span>
                     }
@@ -261,14 +261,14 @@
             <kbq-navbar-item
                 #verticalPopover="kbqPopover"
                 kbqPopover
+                kbqPopoverContent="Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover "
+                kbqPopoverHeader="Центр уведомлений"
                 [class.kbq-active]="verticalPopover.isOpen"
-                [kbqPopoverContent]="'Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover '"
-                [kbqPopoverHeader]="'Центр уведомлений'"
                 [kbqPopoverPlacement]="popUpPlacements.Right"
             >
                 <i kbq-icon="kbq-bell_16" color="contrast"></i>
                 <kbq-navbar-title>Уведомления</kbq-navbar-title>
-                <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
+                <kbq-badge badgeColor="error" [compact]="true">2</kbq-badge>
             </kbq-navbar-item>
 
             <kbq-navbar-divider />

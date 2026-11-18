@@ -23,8 +23,9 @@ import { TRANSLATIONS } from './l10n';
         </kbq-modal-body>
 
         <div kbq-modal-footer>
-            <button kbq-button [color]="'contrast'" (click)="modalRef.close()">{{ t().save }}</button>
-            <button kbq-button autofocus (click)="modalRef.close()">{{ t().close }}</button>
+            <button kbq-button type="button" color="contrast" (click)="modalRef.close()">{{ t().save }}</button>
+            <!-- eslint-disable-next-line @angular-eslint/template/no-autofocus -- the dialog moves the focus to the element marked autofocus when it opens -->
+            <button kbq-button autofocus type="button" (click)="modalRef.close()">{{ t().close }}</button>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -44,7 +45,7 @@ export class CustomModalComponent {
     selector: 'modal-full-custom-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="openModal()">{{ t().openModal }}</button>
+        <button kbq-button type="button" (click)="openModal()">{{ t().openModal }}</button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

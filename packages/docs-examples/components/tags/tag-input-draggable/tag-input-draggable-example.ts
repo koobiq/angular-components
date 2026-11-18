@@ -4,10 +4,10 @@ import { ChangeDetectionStrategy, Component, ElementRef, model, viewChild } from
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import {
-    KbqTagEvent,
+    type KbqTagEvent,
     KbqTagInput,
-    KbqTagInputEvent,
-    KbqTagListDroppedEvent,
+    type KbqTagInputEvent,
+    type KbqTagListDroppedEvent,
     KbqTagsModule
 } from '@koobiq/components/tags';
 
@@ -30,7 +30,6 @@ const getTags = () => Array.from({ length: 3 }, (_, id) => ({ id, value: `Dragga
                 }
 
                 <input
-                    autocomplete="off"
                     kbqInput
                     placeholder="New tag"
                     [kbqTagInputFor]="tagList"

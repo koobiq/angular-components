@@ -1,44 +1,36 @@
 @use '../dist/components/core/styles/common/tokens';
 
 .docs-icons-viewer {
-    overflow-y: auto;
+    --icon-accent-color: var(--kbq-foreground-error);
 
     display: flex;
     flex-direction: column;
 
+    width: 100%;
     min-width: 0;
     height: 100%;
+    overflow-y: auto;
 
     scroll-behavior: smooth;
-
-    width: 100%;
-
-    --icon-accent-color: var(--kbq-foreground-error);
 }
 
 .docs-icons-viewer__header {
     display: flex;
     flex-direction: column;
-
     max-height: 140px;
-
     padding: 0 24px;
 
     & .docs-icons-viewer__header-text {
-        height: 44px;
-
         flex-grow: 0;
-
+        height: 44px;
         margin-bottom: 16px;
-
         text-align: left;
     }
 
     & .docs-icons-viewer__header-controls {
         display: flex;
-        align-items: center;
-
         column-gap: var(--kbq-size-l);
+        align-items: center;
     }
 
     & .kbq-form-field {
@@ -49,7 +41,6 @@
 .docs-icons-viewer__table {
     display: flex;
     flex-direction: column;
-
     padding: 0 24px;
     object-fit: contain;
 }
@@ -61,27 +52,27 @@
 .docs-icons-viewer__table-row-header {
     display: flex;
     align-items: flex-end;
-    opacity: 0.7;
 
     width: 100%;
     height: 44px;
 
     font-family: var(--kbq-font-family-base);
     font-size: 20px;
-    line-height: 28px;
-    letter-spacing: normal;
     font-weight: 600;
-    text-transform: none;
     font-feature-settings:
         'ss01' on,
         'ss04' on;
+    line-height: 28px;
+    letter-spacing: normal;
+    text-transform: none;
+
+    opacity: 0.7;
 }
 
 .docs-icons-viewer__table-row {
     display: grid;
-    column-gap: var(--kbq-size-l);
     row-gap: var(--kbq-size-l);
-
+    column-gap: var(--kbq-size-l);
     margin-top: var(--kbq-size-s);
 }
 
@@ -117,14 +108,15 @@
     display: flex;
     flex-grow: 1;
     flex-direction: column;
-    text-align: center;
-
-    border-radius: var(--kbq-size-border-radius);
-    border-style: solid;
-    border-width: 1px;
 
     min-width: 86px;
     height: 116px;
+
+    text-align: center;
+
+    border-width: 1px;
+    border-style: solid;
+    border-radius: var(--kbq-size-border-radius);
 
     cursor: pointer;
 
@@ -150,30 +142,29 @@
 }
 
 .docs-icons-viewer__table-cell_64 {
-    height: 132px;
     min-width: 120px;
     max-width: 144px;
+    height: 132px;
 }
 
 .docs-icons-viewer__table-cell_128 {
-    height: 176px;
     min-width: 136px;
     max-width: 176px;
+    height: 176px;
 }
 
 .docs-icons-viewer__table-cell_256 {
-    height: 304px;
     min-width: 304px;
+    height: 304px;
 }
 
 .docs-icons-viewer__table-cell-name {
-    text-align: center;
-
-    margin: 0 16px 16px 16px;
-
-    white-space: nowrap;
+    margin: 0 16px 16px;
     overflow: hidden;
+
+    text-align: center;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .docs-icons-viewer__header {
@@ -181,11 +172,11 @@
 }
 
 .docs-icons-viewer__header-text {
-    color: var(--kbq-foreground-contrast);
-
     // Duplicated from `component-viewer.scss`: the icons page is its own lazy route and never loads that
     // component's stylesheet.
     @include tokens.kbq-typography-level-to-styles-css-variables(typography, display-compact-strong);
+
+    color: var(--kbq-foreground-contrast);
 }
 
 .docs-icons-viewer__table-cell {

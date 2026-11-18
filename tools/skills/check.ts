@@ -8,7 +8,7 @@ import { globSync } from 'glob';
 import { posix } from 'path';
 import { generateLlms } from '../llms/generate';
 import { KOOBIQ_SITE_ORIGIN, LLMS_SITE_ORIGIN } from '../llms/sources';
-import { findSkillProblems, Skill } from './skill-problems';
+import { findSkillProblems, type Skill } from './skill-problems';
 
 /** Every skill is a directory with a `SKILL.md`, grouped by the library it serves: `angular/koobiq-angular`. */
 const SKILLS_GLOB = 'packages/skills/*/*/SKILL.md';

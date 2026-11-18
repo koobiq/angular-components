@@ -32,7 +32,7 @@ import { TRANSLATIONS } from './l10n';
                         {{ context.formattedDate[0] | titlecase }}{{ context.formattedDate.slice(1) }}
                     }
                 </kbq-time-range-title-as-control>
-                <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix [color]="'contrast-fade'"></i>
+                <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix color="contrast-fade"></i>
             </kbq-form-field>
         </ng-template>
 

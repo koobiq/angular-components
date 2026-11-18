@@ -1,7 +1,7 @@
 ﻿import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
 import {
-    AfterContentInit,
+    type AfterContentInit,
     afterNextRender,
     ChangeDetectionStrategy,
     Component,
@@ -12,12 +12,12 @@ import {
     Injector,
     input,
     NgZone,
-    OnChanges,
-    OnDestroy,
+    type OnChanges,
+    type OnDestroy,
     output,
     Renderer2,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     untracked,
     ViewEncapsulation
 } from '@angular/core';
@@ -93,8 +93,8 @@ const normalizeSidebarState = (parsed: unknown): KbqSidebarState | null => {
 
 @Component({
     selector: 'kbq-sidebar',
-    templateUrl: 'sidebar.component.html',
-    styleUrls: ['./sidebar.scss'],
+    templateUrl: './sidebar.component.html',
+    styleUrl: './sidebar.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

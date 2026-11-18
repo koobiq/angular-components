@@ -2,8 +2,8 @@ import { AsyncPipe, Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { filter, map, type Observable } from 'rxjs';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { filter, map, Observable } from 'rxjs';
 import { DocsNavbarComponent } from './components/navbar/navbar.component';
 import { DocsSidenav } from './components/sidenav/sidenav';
 import { docsIsExamplePageUrl } from './constants/example-page';
@@ -18,8 +18,8 @@ import { DocsDocStates, DocsNavbarState } from './services/doc-states';
         DocsSidenav,
         AsyncPipe
     ],
-    templateUrl: 'app.component.html',
-    styleUrl: 'app.component.scss',
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

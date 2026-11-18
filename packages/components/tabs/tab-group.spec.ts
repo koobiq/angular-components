@@ -1,34 +1,34 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { AsyncPipe } from '@angular/common';
 import {
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectorRef,
     Component,
-    DebugElement,
-    OnInit,
-    Type,
+    type DebugElement,
     effect,
     inject,
+    type OnInit,
     signal,
+    type Type,
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { Observable, Subject } from 'rxjs';
 import {
+    dispatchKeyboardEvent,
+    dispatchMouseEvent,
     KBQ_PARENT_ANIMATION_COMPONENT,
     KBQ_STATE_STORE,
     KbqStateSavingService,
-    KbqStateStore,
-    LEFT_ARROW,
-    dispatchKeyboardEvent,
-    dispatchMouseEvent
+    type KbqStateStore,
+    LEFT_ARROW
 } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { Observable, Subject } from 'rxjs';
-import { KBQ_TABS_CONFIG, KbqTabGroup, KbqTabHeaderPosition, KbqTabSelectBy } from './tab-group.component';
-import { KbqTabHeader } from './tab-header.component';
 import { KbqTab } from './tab.component';
+import { KBQ_TABS_CONFIG, KbqTabGroup, type KbqTabHeaderPosition, type KbqTabSelectBy } from './tab-group.component';
+import { KbqTabHeader } from './tab-header.component';
 import { KbqTabsModule } from './tabs.module';
 
 /** Debounce the group applies to header resizes. See `RESIZE_DEBOUNCE_INTERVAL`. */

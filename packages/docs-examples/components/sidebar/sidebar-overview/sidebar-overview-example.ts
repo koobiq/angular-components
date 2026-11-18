@@ -24,16 +24,16 @@ import { TRANSLATIONS } from './l10n';
         <main>
             <div>{{ t().mainContent }}</div>
             <div>
-                <button kbq-button (click)="toggleLeft()">{{ t().toggleLeftModel }}</button>
+                <button kbq-button type="button" (click)="toggleLeft()">{{ t().toggleLeftModel }}</button>
             </div>
             <div>
-                <button kbq-button (click)="leftSidebar.toggle()">{{ t().toggleLeft }}</button>
+                <button kbq-button type="button" (click)="leftSidebar.toggle()">{{ t().toggleLeft }}</button>
             </div>
             <div>
-                <button kbq-button (click)="toggleRight()">{{ t().toggleRightModel }}</button>
+                <button kbq-button type="button" (click)="toggleRight()">{{ t().toggleRightModel }}</button>
             </div>
             <div>
-                <button kbq-button (click)="rightSidebar.toggle()">{{ t().toggleRight }}</button>
+                <button kbq-button type="button" (click)="rightSidebar.toggle()">{{ t().toggleRight }}</button>
             </div>
         </main>
 

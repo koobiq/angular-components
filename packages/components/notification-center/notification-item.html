@@ -1,127 +1,130 @@
-@if (icon) {
-    <div class="kbq-notification-item__icon-container layout-row layout-align-start-start">
-        @if (icon === true) {
-            @switch (style) {
-                @case ('contrast') {
-                    <i
-                        kbq-icon="kbq-circle-info_16"
-                        class="kbq-notification-item__icon"
-                        [color]="'contrast'"
-                        [class]="data.iconClass"
-                    ></i>
+@if (data) {
+    @if (icon) {
+        <div class="kbq-notification-item__icon-container layout-row layout-align-start-start">
+            @if (icon === true) {
+                @switch (style) {
+                    @case ('contrast') {
+                        <i
+                            kbq-icon="kbq-circle-info_16"
+                            class="kbq-notification-item__icon"
+                            color="contrast"
+                            [class]="data.iconClass"
+                        ></i>
+                    }
+                    @case ('success') {
+                        <i
+                            kbq-icon="kbq-circle-check_16"
+                            class="kbq-notification-item__icon"
+                            color="success"
+                            [class]="data.iconClass"
+                        ></i>
+                    }
+                    @case ('warning') {
+                        <i
+                            kbq-icon="kbq-triangle-exclamation_16"
+                            class="kbq-notification-item__icon"
+                            color="warning"
+                            [class]="data.iconClass"
+                        ></i>
+                    }
+                    @case ('error') {
+                        <i
+                            kbq-icon="kbq-triangle-exclamation_16"
+                            class="kbq-notification-item__icon"
+                            color="error"
+                            [class]="data.iconClass"
+                        ></i>
+                    }
                 }
-                @case ('success') {
-                    <i
-                        kbq-icon="kbq-circle-check_16"
-                        class="kbq-notification-item__icon"
-                        [color]="'success'"
-                        [class]="data.iconClass"
-                    ></i>
-                }
-                @case ('warning') {
-                    <i
-                        kbq-icon="kbq-triangle-exclamation_16"
-                        class="kbq-notification-item__icon"
-                        [color]="'warning'"
-                        [class]="data.iconClass"
-                    ></i>
-                }
-                @case ('error') {
-                    <i
-                        kbq-icon="kbq-triangle-exclamation_16"
-                        class="kbq-notification-item__icon"
-                        [color]="'error'"
-                        [class]="data.iconClass"
-                    ></i>
-                }
+            } @else if (isTemplateRef(icon)) {
+                <ng-container [ngTemplateOutlet]="icon" [ngTemplateOutletContext]="context" />
             }
-        } @else if (isTemplateRef(icon)) {
-            <ng-container [ngTemplateOutlet]="$any(icon)" [ngTemplateOutletContext]="context" />
+        </div>
+    }
+
+    <div class="kbq-notification-item__container">
+        @if (data.title) {
+            <div
+                kbq-title
+                class="kbq-notification-item__title"
+                [class.kbq-notification-item__title_with-content]="data.caption || data.content"
+            >
+                @if (isTemplateRef(data.title)) {
+                    <ng-container [ngTemplateOutlet]="data.title" [ngTemplateOutletContext]="context" />
+                } @else {
+                    <p data-testid="kbq-notification-item-title">{{ data.title }}</p>
+                }
+
+                @if (!read) {
+                    <!-- Unread is otherwise conveyed by the dot below alone. It sits outside the time block
+                    because that block is visually hidden while the row is hovered or focused, which would
+                    take the text out of the accessibility tree with it. -->
+                    <span class="cdk-visually-hidden">{{ panel.localeConfiguration().unread }}</span>
+                }
+
+                <div
+                    class="kbq-notification-item-time"
+                    data-testid="kbq-notification-item-time"
+                    [class.kbq-notification-item-time_read]="read"
+                >
+                    <div class="kbq-notification-item-time__value" data-testid="kbq-notification-item-time-value">
+                        {{ time }}
+                    </div>
+                    <i
+                        class="kbq-notification-item-time__state"
+                        kbq-icon="kbq-circle-xs_16"
+                        aria-hidden="true"
+                        color="theme"
+                    ></i>
+                </div>
+            </div>
+        }
+
+        @if (data.caption) {
+            <div
+                kbq-title
+                [class.kbq-notification-item__text]="data.title"
+                [class.kbq-notification-item__title]="!data.title"
+            >
+                @if (isTemplateRef(data.caption)) {
+                    <ng-container [ngTemplateOutlet]="data.caption" [ngTemplateOutletContext]="context" />
+                } @else {
+                    {{ data.caption }}
+                }
+            </div>
+        }
+
+        @if (data.content) {
+            <div class="kbq-notification-item__content">
+                @if (isTemplateRef(data.content)) {
+                    <ng-container [ngTemplateOutlet]="data.content" [ngTemplateOutletContext]="context" />
+                } @else {
+                    {{ data.content }}
+                }
+            </div>
+        }
+
+        @if (data.actions) {
+            <div class="kbq-notification-item__actions">
+                @if (isTemplateRef(data.actions)) {
+                    <ng-container [ngTemplateOutlet]="data.actions" [ngTemplateOutletContext]="context" />
+                } @else {
+                    {{ data.actions }}
+                }
+            </div>
         }
     </div>
+
+    <button
+        kbq-button
+        type="button"
+        class="kbq-notification-item__remove-button"
+        data-testid="kbq-notification-item-remove-button"
+        kbqStyle="transparent"
+        color="contrast"
+        [attr.aria-label]="panel.localeConfiguration().remove"
+        (click)="remove()"
+    >
+        <i kbq-icon="kbq-trash_16"></i>
+    </button>
 }
-
-<div class="kbq-notification-item__container">
-    @if (data.title) {
-        <div
-            kbq-title
-            class="kbq-notification-item__title"
-            [class.kbq-notification-item__title_with-content]="data.caption || data.content"
-        >
-            @if (isTemplateRef(data.title)) {
-                <ng-container [ngTemplateOutlet]="$any(data.title)" [ngTemplateOutletContext]="context" />
-            } @else {
-                <p data-testid="kbq-notification-item-title">{{ data.title }}</p>
-            }
-
-            @if (!read) {
-                <!-- Unread is otherwise conveyed by the dot below alone. It sits outside the time block
-                because that block is visually hidden while the row is hovered or focused, which would
-                take the text out of the accessibility tree with it. -->
-                <span class="cdk-visually-hidden">{{ panel.localeConfiguration().unread }}</span>
-            }
-
-            <div
-                class="kbq-notification-item-time"
-                data-testid="kbq-notification-item-time"
-                [class.kbq-notification-item-time_read]="read"
-            >
-                <div class="kbq-notification-item-time__value" data-testid="kbq-notification-item-time-value">
-                    {{ time }}
-                </div>
-                <i
-                    class="kbq-notification-item-time__state"
-                    kbq-icon="kbq-circle-xs_16"
-                    aria-hidden="true"
-                    [color]="'theme'"
-                ></i>
-            </div>
-        </div>
-    }
-
-    @if (data.caption) {
-        <div
-            kbq-title
-            [class.kbq-notification-item__text]="data.title"
-            [class.kbq-notification-item__title]="!data.title"
-        >
-            @if (isTemplateRef(data.caption)) {
-                <ng-container [ngTemplateOutlet]="$any(data.caption)" [ngTemplateOutletContext]="context" />
-            } @else {
-                {{ data.caption }}
-            }
-        </div>
-    }
-
-    @if (data.content) {
-        <div class="kbq-notification-item__content">
-            @if (isTemplateRef(data.content)) {
-                <ng-container [ngTemplateOutlet]="$any(data.content)" [ngTemplateOutletContext]="context" />
-            } @else {
-                {{ data.content }}
-            }
-        </div>
-    }
-
-    @if (data.actions) {
-        <div class="kbq-notification-item__actions">
-            @if (isTemplateRef(data.actions)) {
-                <ng-container [ngTemplateOutlet]="$any(data.actions)" [ngTemplateOutletContext]="context" />
-            } @else {
-                {{ data.actions }}
-            }
-        </div>
-    }
-</div>
-
-<button
-    kbq-button
-    class="kbq-notification-item__remove-button"
-    data-testid="kbq-notification-item-remove-button"
-    [attr.aria-label]="panel.localeConfiguration().remove"
-    [kbqStyle]="'transparent'"
-    [color]="'contrast'"
-    (click)="remove()"
->
-    <i kbq-icon="kbq-trash_16"></i>
-</button>

@@ -1,17 +1,25 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ChangeDetectorRef, Component, DebugElement, inject, signal, TemplateRef, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+    ChangeDetectorRef,
+    Component,
+    type DebugElement,
+    inject,
+    signal,
+    type TemplateRef,
+    viewChild
+} from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
-    KbqFilter,
+    type KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
-    KbqFilterBarNameResolver,
+    type KbqFilterBarNameResolver,
     kbqFilterBarNameResolverProvider,
-    KbqPipe,
-    KbqPipeTemplate,
+    type KbqPipe,
+    type KbqPipeTemplate,
     KbqPipeTypes,
-    KbqSelectValue
+    type KbqSelectValue
 } from '@koobiq/components/filter-bar';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeMultiSelectComponent } from './pipe-multi-select';
@@ -303,10 +311,58 @@ describe('KbqPipeMultiSelectComponent', () => {
 
             const component = getPipeComponent();
 
-            expect(component.select().selectionModel.selected.length).toBeGreaterThan(0);
+            expect(component.select().selectionModel!.selected.length).toBeGreaterThan(0);
             expect(component.allOptionsSelected).toBe(false);
             expect(component.checkboxState).toBe('indeterminate');
         });
+    });
+
+    describe('select all row semantics', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+        });
+
+        const openWith = async (value: KbqSelectValue[]) => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value, selectAll: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+        };
+
+        const getPanel = () => document.querySelector<HTMLElement>('.kbq-pipe-multiselect__panel')!;
+
+        const getSelectAllRow = () => getPanel().querySelector<HTMLElement>('kbq-option')!;
+
+        it.each([
+            { state: 'unchecked', value: [], ariaChecked: 'false' },
+            { state: 'indeterminate', value: [SELECT_VALUES[0]], ariaChecked: 'mixed' },
+            { state: 'checked', value: ALL_VALUES, ariaChecked: 'true' }
+        ])('should report the $state state through aria-checked', async ({ value, ariaChecked }) => {
+            await openWith(value);
+
+            expect(getSelectAllRow().getAttribute('aria-checked')).toBe(ariaChecked);
+        });
+
+        it('should hide its checkbox from assistive tech', async () => {
+            await openWith([]);
+
+            expect(getSelectAllRow().querySelector('kbq-pseudo-checkbox')!.getAttribute('aria-hidden')).toBe('true');
+        });
+
+        it('should have no axe violations in the open panel', async () => {
+            await openWith([SELECT_VALUES[0]]);
+            // axe-core runs its checks on timers.
+            vi.useRealTimers();
+
+            await expect(getPanel()).toHaveNoViolations();
+        }, 15_000);
     });
 
     describe('selectAllCounter', () => {
@@ -498,7 +554,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
-            expect(component.select().selectionModel.selected.length).toBeGreaterThan(0);
+            expect(component.select().selectionModel!.selected.length).toBeGreaterThan(0);
         });
 
         it('should deselect all options when all selected', async () => {
@@ -520,7 +576,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
-            expect(component.select().selectionModel.selected.length).toBe(0);
+            expect(component.select().selectionModel!.selected.length).toBe(0);
         });
 
         it('should set data.value to empty when selectedAllEqualsSelectedNothing and all toggled on', async () => {
@@ -1658,7 +1714,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
-            expect(component.select().selectionModel.selected.map(({ value }) => value)).toEqual([LOCKED]);
+            expect(component.select().selectionModel!.selected.map(({ value }) => value)).toEqual([LOCKED]);
             expect(component.data.value).toEqual([LOCKED]);
         });
 

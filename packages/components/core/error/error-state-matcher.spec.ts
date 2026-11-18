@@ -1,13 +1,13 @@
 import {
-    AbstractControl,
+    type AbstractControl,
     FormControl,
     FormGroup,
-    FormGroupDirective,
-    ValidationErrors,
+    type FormGroupDirective,
+    type ValidationErrors,
     Validators
 } from '@angular/forms';
 import {
-    CrossFieldErrorScope,
+    type CrossFieldErrorScope,
     ShowOnCrossFieldErrorStateMatcher,
     ShowRequiredOnSubmitErrorStateMatcher
 } from './error-state-matcher';

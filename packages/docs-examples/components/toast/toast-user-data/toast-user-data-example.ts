@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, type TemplateRef } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLink } from '@koobiq/components/link';
-import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
+import { type KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
 
@@ -14,7 +14,7 @@ import { TRANSLATIONS } from './l10n';
         KbqLink,
         KbqButtonModule
     ],
-    templateUrl: 'toast-user-data-example.html',
+    templateUrl: './toast-user-data-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastUserDataExample {
