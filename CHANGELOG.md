@@ -1,3 +1,13 @@
+## 20.3.6 (2026-11-18)
+
+### Cli
+
+ * bug fix  fallback to minor-specific lts tag when major lts is newer ([#2392](https://github.com/koobiq/angular-components/issues/2392)) ([f947d6a](https://github.com/koobiq/angular-components/commit/f947d6a023d55617d839558abd2959a4015a94a1))
+
+### Koobiq
+
+ * bug fix  **content-panel:** pad the bottom of the body when the panel has no footer ([#DS-5502](https://github.com/koobiq/angular-components/issues/issue/DS-5502)) ([#2386](https://github.com/koobiq/angular-components/issues/2386)) ([c3316b7](https://github.com/koobiq/angular-components/commit/c3316b7df98768834c29afa1a6bc43579e8dfcab))
+
 ## 20.3.5 (2026-11-13)
 
 ### Koobiq
