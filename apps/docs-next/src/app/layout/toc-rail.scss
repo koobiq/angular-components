@@ -1,0 +1,182 @@
+@use '../../../../../packages/components/core/styles/common/tokens';
+
+// The rail stands under the header and stays there; its ticks start level with the title of the article.
+:host {
+    position: sticky;
+    top: var(--docs-next-header-height);
+    display: block;
+    flex: none;
+    width: var(--docs-next-toc-rail-width);
+}
+
+.docs-next-toc-rail {
+    // The height of the button: twelve pixels for a tick, held to what fits under the header, so that the ticks spread
+    // over it, and no less than a press needs.
+    --docs-next-toc-rail-height: max(
+        32px,
+        min(calc(var(--docs-next-toc-rail-count) * 12px + 16px), calc(100dvh - var(--docs-next-header-height) - 96px))
+    );
+    // The room the button leaves above itself, so that its ticks start level with the title of the article.
+    --docs-next-toc-rail-top: 48px;
+
+    padding-top: var(--docs-next-toc-rail-top);
+}
+
+// The button and its panel, so that the panel hangs under the button whatever its height.
+.docs-next-toc-rail__anchor {
+    position: relative;
+}
+
+// The button is the target: 40px wide and as high as its ticks, so each tick needs no target of its own.
+.docs-next-toc-rail__trigger {
+    display: flex;
+    box-sizing: border-box;
+    width: var(--docs-next-toc-rail-width);
+    height: var(--docs-next-toc-rail-height);
+    padding: var(--kbq-size-s) var(--kbq-size-m) var(--kbq-size-s) 0;
+    border: none;
+    border-radius: var(--kbq-size-s);
+    background: none;
+    cursor: pointer;
+    outline: none;
+
+    &:focus-visible {
+        box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
+    }
+}
+
+.docs-next-toc-rail__ticks {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.docs-next-toc-rail__tick {
+    width: 14px;
+    height: 2px;
+    border-radius: 1px;
+    background: var(--kbq-line-contrast-fade);
+    transition: background-color 150ms var(--docs-next-ease-out);
+
+    &.docs-next-toc-rail__tick_nested {
+        width: 8px;
+    }
+
+    &.docs-next-toc-rail__tick_active {
+        background: var(--kbq-icon-contrast);
+    }
+}
+
+// The panel opens over the rail, a little above its first tick, with its right edges on the rail's, and spreads to the
+// left over the text, sliding in from the right. It is part of the rail's own element, so the pointer does not leave the two on its way into it.
+// It stops at the bottom of the window: the list scrolls inside it.
+.docs-next-toc-rail__panel {
+    // The room from the top of the panel down to the bottom of the window.
+    --docs-next-toc-rail-room: calc(
+        100dvh - var(--docs-next-header-height) - var(--docs-next-toc-rail-top) + var(--kbq-size-s)
+    );
+
+    position: absolute;
+    top: calc(-1 * var(--kbq-size-s));
+    right: 0;
+    z-index: 1;
+    box-sizing: border-box;
+    width: min(260px, calc(100vw - var(--docs-next-aside-width) - 96px));
+    // Never less than a few items, however short the window: the list scrolls inside.
+    max-height: max(120px, calc(var(--docs-next-toc-rail-room) - var(--kbq-size-l)));
+    padding: var(--kbq-size-xs);
+    border: 1px solid var(--kbq-line-contrast-less);
+    border-radius: var(--kbq-size-m);
+    background: var(--kbq-background-card);
+    box-shadow: var(--kbq-shadow-popup);
+    overflow-y: auto;
+    // The wheel scrolls the list while it has anything to scroll, and the page when it has not or when the list is at its end.
+    overscroll-behavior: auto;
+    opacity: 0;
+    // It comes out of the right, from the edge of the window, and grows from the middle of its right edge.
+    transform: translateX(var(--kbq-size-xxl)) scale(0.96);
+    transform-origin: right center;
+    visibility: hidden;
+    // Going is quicker than coming, as it answers the pointer leaving or an item chosen: the panel goes out of sight after
+    // it has faded, and comes into it at once.
+    transition:
+        opacity 100ms var(--docs-next-ease-out),
+        transform 100ms var(--docs-next-ease-drawer),
+        visibility 0s linear 100ms;
+
+    &.docs-next-toc-rail__panel_open {
+        opacity: 1;
+        transform: none;
+        visibility: visible;
+        transition:
+            opacity 150ms var(--docs-next-ease-out),
+            transform 150ms var(--docs-next-ease-drawer),
+            visibility 0s;
+    }
+
+    // A key press is answered at once, both ways.
+    &.docs-next-toc-rail__panel_instant {
+        transition: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    // Only the fade, without the slide and the growing.
+    .docs-next-toc-rail__panel {
+        transform: none;
+    }
+}
+
+.docs-next-toc-rail__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.docs-next-toc-rail__item {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+
+    display: block;
+    padding: var(--kbq-size-xs) var(--kbq-size-s);
+    border-radius: var(--kbq-size-s);
+    color: var(--kbq-foreground-contrast);
+    text-decoration: none;
+    outline: none;
+
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background: var(--kbq-states-background-transparent-hover);
+            color: var(--kbq-foreground-contrast);
+        }
+    }
+
+    &:active {
+        background: var(--kbq-states-background-transparent-active);
+    }
+
+    &:focus-visible {
+        box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
+    }
+
+    &.docs-next-toc-rail__item_nested {
+        padding-left: calc(var(--kbq-size-s) + var(--kbq-size-l));
+    }
+
+    // The item the reader is at keeps its own states, as the open item of the side menu does.
+    &[aria-current='location'] {
+        background: var(--kbq-background-contrast-less);
+        color: var(--kbq-foreground-contrast);
+
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                background: var(--kbq-states-background-contrast-fade-hover);
+            }
+        }
+
+        &:active {
+            background: var(--kbq-states-background-contrast-fade-active);
+        }
+    }
+}

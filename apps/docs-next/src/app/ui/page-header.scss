@@ -1,0 +1,72 @@
+@use '../../styles/breakpoints';
+
+:host {
+    display: block;
+    // Figma: the row of tabs ends 8px above the first block of the article, whose own margin comes on top of that.
+    padding-bottom: var(--kbq-size-s);
+
+    @include breakpoints.docs-next-mobile {
+        padding-bottom: 0;
+        margin-bottom: var(--kbq-size-l);
+    }
+}
+
+.docs-next-page-header__title-row {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--kbq-size-l);
+}
+
+.docs-next-page-header__titles {
+    flex: 1;
+    min-width: 0;
+}
+
+// Figma: Frame 112, the button centred on the 44px line of the title.
+.docs-next-page-header__expand {
+    flex: none;
+    margin-top: 6px;
+}
+
+// Figma: Frame 104, 18px under the description (the 6px under its line and the 12px margin of the title): the tabs on
+// the left, the actions on the right.
+.docs-next-page-header__bar {
+    position: relative;
+    // The actions beside the tabs ask how much room the row has (page-actions.ts).
+    container: docs-next-page-bar / inline-size;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--kbq-size-l);
+    height: 48px;
+    margin-top: calc(6px + var(--kbq-size-m));
+
+    // Figma: the 1px line under the row, which the tabs stand on.
+    &::after {
+        position: absolute;
+        inset: auto 0 0;
+        height: 1px;
+        background: var(--kbq-line-contrast-less);
+        content: '';
+    }
+
+    &:empty {
+        display: none;
+    }
+
+    @include breakpoints.docs-next-mobile {
+        margin-top: var(--kbq-size-l);
+    }
+}
+
+.docs-next-page-header__actions {
+    flex: none;
+    margin-left: auto;
+}
+
+// Figma: Frame 136 (126:23395), the row without tabs: the actions across its width.
+.docs-next-page-header__bar_without-tabs {
+    .docs-next-page-header__actions {
+        flex: 1;
+    }
+}

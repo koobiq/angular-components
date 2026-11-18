@@ -1,0 +1,48 @@
+@use '../../../../../packages/components/core/styles/common/tokens';
+
+// Figma: Scrollspy, 240 wide, starting 8px lower than the article so the first item is level with its title. Items
+// are 32 high, as in the side menu, and nested ones 16px further right.
+:host {
+    position: sticky;
+    top: var(--docs-next-header-height);
+    display: block;
+    box-sizing: border-box;
+    width: var(--docs-next-toc-width);
+    max-height: calc(100vh - var(--docs-next-header-height));
+    padding: 48px var(--kbq-size-xxl) var(--kbq-size-xl) 0;
+    overflow-y: auto;
+}
+
+.docs-next-toc__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+// The padding is the hit area: neighbouring items touch, with no gap that does nothing on click.
+.docs-next-toc__item {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+
+    display: block;
+    padding: 6px 0;
+    color: var(--kbq-foreground-contrast-secondary);
+    text-decoration: none;
+    outline: none;
+
+    &:hover {
+        color: var(--kbq-foreground-contrast);
+    }
+
+    &:focus-visible {
+        border-radius: var(--kbq-size-xxs);
+        box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
+    }
+
+    &.docs-next-toc__item_nested {
+        padding-left: var(--kbq-size-l);
+    }
+
+    &.docs-next-toc__item_active {
+        color: var(--kbq-foreground-contrast);
+    }
+}

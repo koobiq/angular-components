@@ -1,0 +1,23 @@
+@use '../../../../packages/components/core/styles/common/tokens';
+
+// Figma: Popup of the language switcher (65:28615). The panel lives in the overlay, so the rules are global and reached
+// through the class the dropdown carries. Rows are 48px, the height of a finger, and the selected one is filled 4px in
+// from the sides. The selected row is neutral (contrast-less), in rest, hover and press alike, not the theme fill the
+// list uses by default.
+.kbq-dropdown__panel.docs-next-menu-dropdown {
+    --kbq-dropdown-size-container-border-radius: var(--kbq-size-s);
+    --kbq-list-states-selected-container-background: var(--kbq-background-contrast-less);
+    --kbq-list-states-selected-hover-container-background: var(--kbq-states-background-contrast-less-hover);
+    --kbq-list-states-selected-active-container-background: var(--kbq-states-background-contrast-less-active);
+
+    .kbq-dropdown-item {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
+
+        // The library aligns the row's content to the top; at this height it has to sit in the middle.
+        align-items: center;
+        min-height: 48px;
+        // The text starts 16px from the panel edge: the panel's 4px, the item's 1px border and this.
+        padding: 0 calc(var(--kbq-size-m) - var(--kbq-size-3xs));
+        border-radius: var(--kbq-size-s);
+    }
+}

@@ -1,0 +1,111 @@
+@use '../../../../packages/components/core/styles/common/tokens';
+@use './breakpoints';
+
+// Article typography from the Figma mockup (New Docs, node 17:4927): body text 16/24, headings in the accent font.
+// The compiled MDX keeps the `kbq-markdown__*` classes, so the article reuses the markdown styles and only
+// scales them up.
+.docs-next-prose.kbq-markdown {
+    --kbq-markdown-h2-size-margin-top: var(--kbq-size-3xl);
+    --kbq-markdown-h2-size-margin-bottom: var(--kbq-size-m);
+    --kbq-markdown-h3-size-margin-top: var(--kbq-size-xxl);
+    --kbq-markdown-h3-size-margin-bottom: var(--kbq-size-m);
+    --kbq-markdown-h4-size-margin-top: var(--kbq-size-xl);
+    --kbq-markdown-h4-size-margin-bottom: var(--kbq-size-s);
+    --kbq-markdown-p-size-margin-bottom: var(--kbq-size-m);
+
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
+
+    color: var(--kbq-foreground-contrast);
+
+    .kbq-markdown__p,
+    .kbq-markdown__li {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
+    }
+
+    .kbq-markdown__h2 {
+        font-family: var(--kbq-font-family-accent);
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 32px;
+    }
+
+    .kbq-markdown__h3 {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, title);
+    }
+
+    .kbq-markdown__h4 {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, subheading);
+    }
+
+    .kbq-markdown__table {
+        width: 100%;
+    }
+
+    // Inline code only: a contrast-less fill with 2px on each side and no vertical padding. The corners take the badge
+    // radius (`--kbq-size-xxs`) through the markdown squircle mixin. Blocks (`pre`) keep the markdown tokens.
+    .kbq-markdown__code:not(.kbq-markdown__pre > .kbq-markdown__code) {
+        --kbq-markdown-code-background: var(--kbq-background-contrast-less);
+        --kbq-markdown-code-size-inline-padding: 0 2px;
+        --kbq-markdown-code-size-border-radius: var(--kbq-size-xxs);
+    }
+
+    // Inline code inside a link sits on the theme fill.
+    .kbq-markdown__a .kbq-markdown__code:not(.kbq-markdown__pre > .kbq-markdown__code) {
+        --kbq-markdown-code-background: var(--kbq-background-theme-less);
+
+        font-weight: 400;
+    }
+
+    // The heading at the very top of an article sits right under the page header.
+    & > :first-child {
+        margin-top: 0;
+    }
+
+    // Figma: Article (66:32982): sections in the title style, 12px under a heading and 16px under a paragraph.
+    @include breakpoints.docs-next-mobile {
+        --kbq-markdown-h2-size-margin-top: var(--kbq-size-xl);
+        --kbq-markdown-h2-size-margin-bottom: var(--kbq-size-m);
+        --kbq-markdown-h3-size-margin-top: var(--kbq-size-l);
+        --kbq-markdown-h3-size-margin-bottom: var(--kbq-size-m);
+        --kbq-markdown-p-size-margin-bottom: var(--kbq-size-l);
+
+        .kbq-markdown__h2 {
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, title);
+        }
+
+        // A wide table scrolls on its own, the page does not move sideways.
+        .kbq-markdown__table {
+            display: block;
+            overflow-x: auto;
+        }
+    }
+}
+
+// The first paragraph of a component overview is its description; it moves under the page title.
+.docs-next-lead {
+    margin: var(--kbq-size-s) 0 0;
+    font-size: 18px;
+    line-height: 24px;
+    color: var(--kbq-foreground-contrast);
+
+    @include breakpoints.docs-next-mobile {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
+
+        margin-top: var(--kbq-size-xxs);
+        color: var(--kbq-foreground-contrast-secondary);
+    }
+}
+
+.docs-next-h1 {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, display-compact-strong);
+
+    margin: 0;
+
+    @include breakpoints.docs-next-mobile {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, headline);
+    }
+}
+
+.kbq-docs-element-last-child-margin-bottom-0 > :last-child {
+    margin-bottom: 0 !important;
+}

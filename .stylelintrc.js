@@ -87,13 +87,13 @@ const componentsExamplesRules = [
 ];
 
 /**
- * Override rules for apps/docs
+ * Override rules for apps/docs and the unified docs prototype in apps/docs-next
  *
  * @type {import('stylelint').Config['overrides']}
  */
 const docsRules = [
     {
-        files: ['apps/docs/**/*.scss', 'apps/docs/**/*.css'],
+        files: ['apps/docs/**/*.scss', 'apps/docs/**/*.css', 'apps/docs-next/**/*.scss'],
         rules: {
             'selector-class-pattern': makeSelectorClassPatternOptions([
                 'docs-',

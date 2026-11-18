@@ -1,0 +1,85 @@
+@use '@koobiq/icons/fonts/kbq-icons';
+
+// Tokens
+@use '@koobiq/design-tokens/web/css-tokens';
+@use '@koobiq/design-tokens/web/css-tokens-light';
+@use '@koobiq/design-tokens/web/css-tokens-dark';
+
+@use '../../../packages/components/core/styles/theming/prebuilt/theme';
+@use '../../../packages/components/core/styles/visual/body';
+@use '../../../packages/components/core/styles/common/tokens';
+@use '../../../packages/components/markdown/markdown';
+@use '../../../packages/components/markdown/markdown-tokens';
+@use './styles/breakpoints';
+@use './styles/callout';
+@use './styles/heading-links';
+@use './styles/icon-swap';
+@use './styles/motion';
+@use './styles/menu-dropdown';
+@use './styles/page-tabs';
+@use './styles/prose';
+
+// Inter
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/inter/400-italic.css';
+@import '@fontsource/inter/500-italic.css';
+
+// JetBrains Mono
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/600.css';
+@import '@fontsource/jetbrains-mono/700.css';
+
+@include body.body-html();
+
+:root {
+    // Layout of the shell, from the Figma mockup (New Docs, node 17:3865).
+    --docs-next-header-height: 48px;
+    --docs-next-aside-width: 240px;
+    --docs-next-toc-width: 240px;
+    // On a tablet the contents are a rail of ticks this wide.
+    --docs-next-toc-rail-width: 40px;
+    // About 80 characters of 16px Inter (spec/text-width.md).
+    --docs-next-text-width: 672px;
+    --docs-next-wide-width: 1120px;
+
+    // Figma: Navbar - Mobile (65:16609), 48px buttons above a 1px line.
+    // Figma: NAvbar on a tablet (159:26981), two lines of 48px and the line under them.
+    @include breakpoints.docs-next-tablet {
+        --docs-next-header-height: 97px;
+        // The text column and the rail of the contents need the room more than the menu does.
+        --docs-next-aside-width: 200px;
+    }
+
+    @include breakpoints.docs-next-mobile {
+        --docs-next-header-height: 49px;
+    }
+}
+
+html {
+    // The root scrollbar is always there, so a short page does not stand wider than a long one. `scrollbar-gutter:
+    // stable` on its own reserved no space on the root in Chrome.
+    overflow-y: scroll;
+    scroll-padding-top: calc(var(--docs-next-header-height) + var(--kbq-size-l));
+}
+
+body {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+
+    background: var(--kbq-background-bg);
+    color: var(--kbq-foreground-contrast);
+    margin: 0;
+}
+
+// An open modal dialog keeps its scroll gestures: the page under it stays put and the root scrollbar stays too. Locking
+// `html` would remove the scrollbar and shift the layout, so the containment is on the dialog and its backdrop.
+dialog:modal {
+    overscroll-behavior: contain;
+}
+
+dialog::backdrop {
+    overflow: hidden;
+    overscroll-behavior: contain;
+}
