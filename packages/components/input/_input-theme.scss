@@ -22,4 +22,10 @@
         // disable font-specific symbols replacements
         font-variant-ligatures: none;
     }
+
+    // tabular digits keep the field width stable when the value changes via stepper or keyboard
+    .kbq-input.kbq-datepicker,
+    .kbq-input.kbq-datepicker::placeholder {
+        @include kbq-typography-level-to-styles-css-variables(typography, tabular-normal);
+    }
 }
