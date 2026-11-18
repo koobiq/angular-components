@@ -1,7 +1,7 @@
 import { OverlayRef } from '@angular/cdk/overlay';
 import { EventEmitter, InjectionToken, Injector, Signal, TemplateRef, Type } from '@angular/core';
 import { KbqButtonColor } from '@koobiq/components/button';
-import { KbqComponentColors, KbqOverflowShadowState } from '@koobiq/components/core';
+import { KbqCanClose, KbqComponentColors, KbqOverflowShadowState } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -81,7 +81,11 @@ export const KBQ_MODAL = new InjectionToken<KbqModal>('KBQ_MODAL');
  */
 export const KBQ_MODAL_OPTIONS = new InjectionToken<ModalOptions>('KBQ_MODAL_OPTIONS');
 
-// Public options for using by service
+/**
+ * Public options for using by service.
+ *
+ * @deprecated Use `KbqModalConfig` instead.
+ */
 export interface ModalOptions<C = any, R = any> {
     /** Layout the dialog renders. Default is `'default'`. */
     kbqModalType?: ModalType;
@@ -176,7 +180,16 @@ export interface ModalOptions<C = any, R = any> {
     data?: unknown;
 }
 
-export interface IModalOptionsForService<T = any> extends ModalOptions<T> {
+/** Service config of a modal: `ModalOptions` plus the close guard. */
+export interface KbqModalConfig<C = any, R = any> extends ModalOptions<C, R> {
+    /**
+     * Guard intercepting every close attempt, including the programmatic `close()`.
+     * Returning `true` closes the dialog, `false` keeps it open; async decisions are awaited.
+     */
+    canClose?: KbqCanClose;
+}
+
+export interface IModalOptionsForService<T = any> extends KbqModalConfig<T> {
     /**
      * The injector used to create the component that will be attached.
      * If specified, it overrides the injector provided by `KbqModalService`.

@@ -1,3 +1,4 @@
+import { KbqCanClose, KbqCloseReason } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { KbqModalComponent } from './modal.component';
 
@@ -6,6 +7,12 @@ import { KbqModalComponent } from './modal.component';
  * KbqModalRef is aim to avoid accessing to the modal instance directly by users.
  */
 export abstract class KbqModalRef<C = any, R = unknown> {
+    /**
+     * Guard intercepting every close attempt. Takes precedence over the config's `canClose` and
+     * can be assigned or replaced after the dialog was opened.
+     */
+    abstract canClose: KbqCanClose | undefined;
+
     abstract afterOpen: Observable<void>;
     abstract beforeClose: Observable<R | undefined>;
     abstract afterClose: Observable<R | undefined>;
@@ -13,6 +20,9 @@ export abstract class KbqModalRef<C = any, R = unknown> {
     abstract open(): void;
 
     abstract close(result?: R): void;
+
+    /** Asks `canClose` and closes with `result` when allowed. */
+    abstract requestClose(reason: KbqCloseReason, result?: R): void;
 
     abstract destroy(result?: R): void;
 

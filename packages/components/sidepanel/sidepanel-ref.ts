@@ -1,7 +1,7 @@
-﻿import { OverlayRef } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
 import { signal, untracked } from '@angular/core';
-import { ESCAPE, isHtmlElement, KbqOverflowShadowState } from '@koobiq/components/core';
-import { merge, Observable, Subject } from 'rxjs';
+import { ESCAPE, isHtmlElement, KbqCanClose, KbqCloseReason, KbqOverflowShadowState } from '@koobiq/components/core';
+import { isObservable, merge, Observable, Subject } from 'rxjs';
 import { filter, take, tap } from 'rxjs/operators';
 import { KbqSidepanelAnimationState } from './sidepanel-animations';
 import { KbqSidepanelConfig } from './sidepanel-config';
@@ -12,6 +12,15 @@ let uniqueId = 0;
 
 export class KbqSidepanelRef<T = any, R = any> {
     readonly id: string;
+
+    /**
+     * Guard intercepting every close attempt. Takes precedence over `config.canClose` and can be
+     * assigned or replaced after the panel was opened.
+     */
+    canClose: KbqCanClose | undefined;
+
+    /** Whether an async `canClose` decision is pending. */
+    private isGuarding = false;
 
     /**
      * Vertical scroll overflow state of the sidepanel body.
@@ -44,6 +53,7 @@ export class KbqSidepanelRef<T = any, R = any> {
     ) {
         this.id = this.config.id || `kbq-sidepanel-${uniqueId++}`;
         this.containerInstance.id = this.id;
+        this.canClose = config.canClose;
         overlayRef.backdropElement?.classList.add(config.backdropClass ?? 'kbq-overlay-dark-backdrop');
 
         const slideBelowStart = containerInstance.animationStateChanged.pipe(
@@ -108,41 +118,72 @@ export class KbqSidepanelRef<T = any, R = any> {
                 this.afterClosed$.complete();
             });
 
+        overlayRef.backdropClick().subscribe(() => this.requestClose('backdrop'));
+
         overlayRef
             .keydownEvents()
-            .pipe(
-                // keyCode is deprecated, but IE11 and Edge don't support code property, which we need use instead
-                filter((event) => event.keyCode === ESCAPE)
-            )
+            // keyCode is deprecated, but IE11 and Edge don't support code property, which we need use instead
+            .pipe(filter((event) => event.keyCode === ESCAPE))
             .subscribe((event) => {
                 // CDK hands the key to this overlay after the layers above it, such as a tooltip, a popover or a
                 // confirm dialog, have handled it: one that closed spent it, and the sidepanel stays open.
                 if (event.defaultPrevented || this.config.disableClose) return;
 
                 event.preventDefault();
-                this.close();
+                this.requestClose('escape');
             });
 
-        merge(
-            overlayRef.backdropClick(),
-            this.containerInstance.indentClick(),
-            overlayRef.outsidePointerEvents().pipe(filter((event) => this.isClickInsideSamePositionStack(event)))
-        ).subscribe(() => {
-            if (this.config.disableClose) return;
+        this.containerInstance.indentClick().subscribe(() => this.requestClose('close'));
 
-            this.close();
-        });
+        overlayRef
+            .outsidePointerEvents()
+            .pipe(filter((event) => this.isClickInsideSamePositionStack(event)))
+            .subscribe(() => this.requestClose('backdrop'));
     }
 
+    /** Programmatic close: goes through `canClose` with the `'programmatic'` reason. */
     close(result?: R): void {
-        // Untracked, as `KbqSidepanelService.open()`: called from a consumer's `effect()`, the state of the sidepanels
-        // stacked under this one, read and written on the way, would make the effect run again as they move.
-        untracked(() => this.startClosing(result));
+        this.requestClose('programmatic', result);
     }
 
-    /** Body of `close()`. */
-    private startClosing(result: R | undefined): void {
-        if (this.closing) return;
+    /**
+     * Asks `canClose` and closes with `result` when allowed. User-initiated reasons are dropped
+     * under `disableClose`; repeated attempts are ignored while an async decision is pending.
+     */
+    requestClose(reason: KbqCloseReason, result?: R): void {
+        if (reason !== 'programmatic' && this.config.disableClose) return;
+        if (this.isGuarding) return;
+
+        const decision = this.canClose?.(reason) ?? true;
+
+        if (decision === true) {
+            // Closing synchronously inside a consumer `effect()` would otherwise read/write the state of
+            // sidepanels stacked under this one and re-trigger that effect. The async settle path runs
+            // outside the reactive context, so only the synchronous decision needs `untracked`.
+            untracked(() => this.doClose(result));
+
+            return;
+        }
+
+        if (decision === false) return;
+
+        this.isGuarding = true;
+
+        const settle = (allow: boolean) => {
+            this.isGuarding = false;
+
+            if (allow) this.doClose(result);
+        };
+
+        if (isObservable(decision)) {
+            decision.pipe(take(1)).subscribe({ next: settle, error: () => settle(false) });
+        } else {
+            decision.then(settle, () => settle(false));
+        }
+    }
+
+    private doClose(result?: R): void {
+        if (this.closing || this.afterClosed$.closed) return;
 
         this.closing = true;
 

@@ -2847,6 +2847,9 @@ export interface KbqBaseFileUploadLocaleConfiguration {
 }
 
 // @public
+export type KbqCanClose = (reason: KbqCloseReason) => boolean | Promise<boolean> | Observable<boolean>;
+
+// @public
 export interface KbqCaretRect {
     height: number;
     width: number;
@@ -2904,6 +2907,9 @@ export type KbqClampedTextLocaleConfiguration = {
     showMoreText: string;
     moreText: string;
 };
+
+// @public
+export type KbqCloseReason = 'backdrop' | 'escape' | 'close' | 'programmatic';
 
 // @public
 export type KbqCodeBlockLocaleConfiguration = {

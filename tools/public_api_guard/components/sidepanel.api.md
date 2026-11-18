@@ -21,6 +21,8 @@ import * as i5 from '@koobiq/components/title';
 import * as i6 from '@angular/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
+import { KbqCanClose } from '@koobiq/components/core';
+import { KbqCloseReason } from '@koobiq/components/core';
 import { KbqOverflowShadowState } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
@@ -74,6 +76,7 @@ export class KbqSidepanelConfig<D = any> {
     ariaLabelledBy?: string;
     // (undocumented)
     backdropClass?: string;
+    canClose?: KbqCanClose;
     data?: D | null;
     disableClose?: boolean;
     hasBackdrop?: boolean;
@@ -179,7 +182,7 @@ export class KbqSidepanelRef<T = any, R = any> {
     afterOpened(): Observable<void>;
     beforeClosed(): Observable<void>;
     readonly bodyOverflow: i0.WritableSignal<KbqOverflowShadowState>;
-    // (undocumented)
+    canClose: KbqCanClose | undefined;
     close(result?: R): void;
     // (undocumented)
     readonly config: KbqSidepanelConfig;
@@ -190,6 +193,7 @@ export class KbqSidepanelRef<T = any, R = any> {
     instance: T;
     // (undocumented)
     readonly overlayRef: OverlayRef;
+    requestClose(reason: KbqCloseReason, result?: R): void;
 }
 
 // @public (undocumented)

@@ -42,6 +42,8 @@ import {
     ESCAPE,
     KBQ_A11Y_LOCALE_CONFIGURATION,
     kbqAnimationsDisabled,
+    KbqCanClose,
+    KbqCloseReason,
     KbqComponentColors,
     KbqLocaleOverridesDirective,
     KbqOverflowShadowBottom,
@@ -52,7 +54,7 @@ import {
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { Observable, Subscription } from 'rxjs';
+import { isObservable, Observable, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { CssUnitPipe } from './css-unit.pipe';
 import { KbqModalControlService } from './modal-control.service';
@@ -63,8 +65,8 @@ import {
     KBQ_MODAL_OPTIONS,
     KbqModal,
     KbqModalAutoFocus,
+    KbqModalConfig,
     MODAL_ANIMATE_DURATION,
-    ModalOptions,
     ModalSize,
     ModalType,
     OnClickCallback
@@ -156,7 +158,7 @@ export class KbqModalComponent<T = any, R = any>
      * takes its initial value from here: a service-created dialog carries no template bindings, so
      * an input it does not bind keeps that initial value for the dialog's whole life.
      */
-    private readonly options = inject(KBQ_MODAL_OPTIONS, { optional: true }) as ModalOptions<T, R> | null;
+    private readonly options = inject(KBQ_MODAL_OPTIONS, { optional: true }) as KbqModalConfig<T, R> | null;
 
     componentColors = KbqComponentColors;
 
@@ -286,6 +288,15 @@ export class KbqModalComponent<T = any, R = any>
     readonly kbqOnCancel = new EventEmitter<T>();
     /** @docs-private */
     readonly kbqOnCancelOutput = outputFromObservable(this.kbqOnCancel, { alias: 'kbqOnCancel' });
+
+    /**
+     * Guard intercepting every close attempt. Seeded from the service config; assignable after
+     * the dialog was opened.
+     */
+    canClose: KbqCanClose | undefined = this.options?.canClose;
+
+    /** Whether an async `canClose` decision is pending. */
+    private isGuarding = false;
 
     readonly modalContainer = viewChild.required<ElementRef>('modalContainer');
     readonly bodyContainer = viewChild.required('bodyContainer', { read: ViewContainerRef });
@@ -563,6 +574,42 @@ export class KbqModalComponent<T = any, R = any>
      * Closing an already closed dialog is a no-op: `afterClose` emits once per actual transition.
      */
     close(result?: R) {
+        this.requestClose('programmatic', result);
+    }
+
+    /**
+     * Asks `canClose` and closes with `result` when allowed. Repeated attempts are ignored while
+     * an async decision is pending.
+     */
+    requestClose(reason: KbqCloseReason, result?: R): void {
+        if (this.isGuarding) return;
+
+        const decision = this.canClose?.(reason) ?? true;
+
+        if (decision === true) {
+            this.doClose(result);
+
+            return;
+        }
+
+        if (decision === false) return;
+
+        this.isGuarding = true;
+
+        const settle = (allow: boolean) => {
+            this.isGuarding = false;
+
+            if (allow) this.doClose(result);
+        };
+
+        if (isObservable(decision)) {
+            decision.pipe(take(1)).subscribe({ next: settle, error: () => settle(false) });
+        } else {
+            decision.then(settle, () => settle(false));
+        }
+    }
+
+    private doClose(result?: R): void {
         untracked(() => this.changeVisibleFromInside(false, result));
     }
 
@@ -664,7 +711,7 @@ export class KbqModalComponent<T = any, R = any>
             ($event.target as HTMLElement).classList.contains('kbq-modal-wrap') &&
             this.kbqVisible()
         ) {
-            this.onClickOkCancel('cancel');
+            this.onClickOkCancel('cancel', 'backdrop');
         }
     }
 
@@ -683,7 +730,7 @@ export class KbqModalComponent<T = any, R = any>
             // the dialog, so it cannot be the keystroke that opened it. Escape is the Cancel
             // button, veto included.
             if (this.kbqCloseByESC() && this.kbqVisible()) {
-                this.onClickOkCancel('cancel');
+                this.onClickOkCancel('cancel', 'escape');
                 event.preventDefault();
             }
 
@@ -702,19 +749,24 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     /** @docs-private */
-    protected onClickOkCancel(type: 'ok' | 'cancel') {
-        this.handleCloseResult(type, (doClose) => doClose !== false);
+    protected onClickOkCancel(type: 'ok' | 'cancel', reason: KbqCloseReason = 'close') {
+        this.handleCloseResult(type, (doClose) => doClose !== false, reason);
     }
 
     /** @docs-private */
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-    protected handleCloseResult(triggerType: 'ok' | 'cancel', canClose: (doClose: boolean | void | {}) => boolean) {
+    protected handleCloseResult(
+        triggerType: 'ok' | 'cancel',
+        // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+        shouldClose: (doClose: boolean | void | {}) => boolean,
+        reason: KbqCloseReason
+    ) {
         const handler = triggerType === 'ok' ? this.kbqOkClick() : this.kbqCancelClick();
         const emitter = triggerType === 'ok' ? this.kbqOnOk : this.kbqOnCancel;
         const loading = triggerType === 'ok' ? this.okLoading : this.cancelLoading;
         // Users can return "false" to prevent closing by default
         // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-        const caseClose = (doClose: boolean | void | {}) => canClose(doClose) && this.close(doClose as R);
+        const caseClose = (doClose: boolean | void | {}) =>
+            shouldClose(doClose) && this.requestClose(reason, doClose as R);
 
         if (!handler) {
             emitter.emit(this.getContentComponent());

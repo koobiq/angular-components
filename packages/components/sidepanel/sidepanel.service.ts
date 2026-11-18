@@ -12,6 +12,7 @@ import {
     untracked
 } from '@angular/core';
 import { KBQ_STATE_STORE, KbqStateSavingRef, KbqStateSavingService, KbqStateStore } from '@koobiq/components/core';
+import { take } from 'rxjs/operators';
 import { KbqSidepanelAnimationState } from './sidepanel-animations';
 import { KBQ_SIDEPANEL_DATA, KbqSidepanelConfig } from './sidepanel-config';
 import { KBQ_SIDEPANEL_WITH_INDENT, KbqSidepanelContainerComponent } from './sidepanel-container.component';
@@ -401,9 +402,12 @@ export class KbqSidepanelService implements OnDestroy {
     private closeSidepanels(sidepanels: KbqSidepanelRef[]) {
         // `reverse()` mutates, and this is called with the live stack.
         [...sidepanels].reverse().forEach((sidepanelRef: KbqSidepanelRef) => {
-            // Marked before closing rather than around the loop: `afterClosed()` only fires once the exit
-            // animation is done, by which time a flag held for the duration of this call would be gone.
-            this.bulkClosed.add(sidepanelRef);
+            // The mark is added when the close actually starts, which is still before `afterClosed()` fires.
+            // Waiting for the real start means a vetoed close does not leave the ref flagged.
+            sidepanelRef
+                .beforeClosed()
+                .pipe(take(1))
+                .subscribe(() => this.bulkClosed.add(sidepanelRef));
 
             sidepanelRef.close();
         });

@@ -15,8 +15,10 @@ class MockModalRef extends KbqModalRef {
     beforeClose = new Subject<void>();
     afterClose = new Subject<void>();
 
+    canClose = undefined;
     open = vi.fn();
     close = vi.fn();
+    requestClose = vi.fn();
     destroy = vi.fn();
     triggerOk = vi.fn();
     triggerCancel = vi.fn();
