@@ -15,6 +15,8 @@ export const tkTMLocaleData = {
         previousMonth: 'Öňki aý',
         currentDate: 'Şu günki sene',
         nextMonth: 'Indiki aý',
+        month: 'Aý',
+        year: 'Ýyl',
         clear: 'Arassala',
         showPassword: 'Paroly görkez',
         hidePassword: 'Paroly gizle',
@@ -23,6 +25,8 @@ export const tkTMLocaleData = {
         toastRegion: 'Bildirişler',
         optionActions: 'Hereketler',
         progressBar: 'Ösüş',
+        date: 'Sene',
+        time: 'Wagt',
         search: 'Gözleg'
     },
     select: {

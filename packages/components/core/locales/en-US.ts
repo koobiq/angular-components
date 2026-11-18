@@ -15,6 +15,8 @@ export const enUSLocaleData = {
         previousMonth: 'Previous month',
         currentDate: 'Current date',
         nextMonth: 'Next month',
+        month: 'Month',
+        year: 'Year',
         clear: 'Clear',
         showPassword: 'Show password',
         hidePassword: 'Hide password',
@@ -23,6 +25,8 @@ export const enUSLocaleData = {
         toastRegion: 'Notifications',
         optionActions: 'Actions',
         progressBar: 'Progress',
+        date: 'Date',
+        time: 'Time',
         search: 'Search'
     },
     select: { hiddenItemsText: '+{{ number }}', selectAll: 'Select all' },

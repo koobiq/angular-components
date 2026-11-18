@@ -2,6 +2,7 @@
     <kbq-select
         #monthSelect="kbqSelect"
         class="kbq-calendar-header__select"
+        [aria-label]="a11yLocaleConfiguration().month"
         [panelClass]="'kbq-calendar-select-panel'"
         [tabIndex]="-1"
         [value]="selectedMonth"
@@ -29,6 +30,7 @@
 
     <kbq-select
         #yearSelect="kbqSelect"
+        [aria-label]="a11yLocaleConfiguration().year"
         [panelClass]="'kbq-calendar-select-panel'"
         [tabIndex]="-1"
         [value]="selectedYear"

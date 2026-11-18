@@ -9,12 +9,19 @@
     display: inline-block;
     box-sizing: border-box;
 
-    text-overflow: ellipsis;
-
     width: 100%;
     min-height: kbq-difference-series-css-variables([size-3xl, calc(var(--kbq-size-border-width) * 2)]);
 
     padding: var(--kbq-input-size-padding-vertical) var(--kbq-input-size-padding-horizontal);
+}
+
+/*
+ * A disabled or read-only field is display-only: a disabled input takes no focus, so the
+ * caret-scroll that reveals a clipped value never happens. Keep the ellipsis as the truncation cue.
+ */
+input.kbq-input:disabled,
+input.kbq-input[readonly] {
+    text-overflow: ellipsis;
 }
 
 /*

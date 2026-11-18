@@ -14,3 +14,13 @@
     --kbq-select-panel-dropdown-background: var(--kbq-background-card);
     --kbq-select-panel-dropdown-shadow: var(--kbq-shadow-popup);
 }
+
+// A selected option of a multiple select keeps the background of an unselected one in every state —
+// the checkbox is the selection mark (#DS-5466). The rules that read these tokens live in the shared
+// option theme, and `.kbq-option` re-declares the list tokens on itself, so the override has to sit
+// on the option under the panel to win the cascade.
+.kbq-select__panel .kbq-option {
+    --kbq-list-multiple-states-selected-container-background: transparent;
+    --kbq-list-multiple-states-selected-hover-container-background: var(--kbq-states-background-transparent-hover);
+    --kbq-list-multiple-states-selected-active-container-background: var(--kbq-states-background-transparent-active);
+}

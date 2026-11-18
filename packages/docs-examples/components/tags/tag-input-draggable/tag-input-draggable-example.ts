@@ -30,7 +30,6 @@ const getTags = () => Array.from({ length: 3 }, (_, id) => ({ id, value: `Dragga
                 }
 
                 <input
-                    autocomplete="off"
                     kbqInput
                     placeholder="New tag"
                     [kbqTagInputFor]="tagList"

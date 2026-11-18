@@ -36,5 +36,9 @@
         "@angular/compiler-cli": "${ngVersion}",
         "@types/luxon": "^3.7.1",
         "typescript": "~5.9.2"
+    },
+    "overrides": {
+        "glob": "^14.0.2",
+        "minimatch": "^11.0.1"
     }
 }

@@ -428,6 +428,8 @@ export const enUSLocaleData: {
         previousMonth: string;
         currentDate: string;
         nextMonth: string;
+        month: string;
+        year: string;
         clear: string;
         showPassword: string;
         hidePassword: string;
@@ -436,6 +438,8 @@ export const enUSLocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        date: string;
+        time: string;
         search: string;
     };
     select: {
@@ -714,6 +718,8 @@ export const esLALocaleData: {
         previousMonth: string;
         currentDate: string;
         nextMonth: string;
+        month: string;
+        year: string;
         clear: string;
         showPassword: string;
         hidePassword: string;
@@ -722,6 +728,8 @@ export const esLALocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        date: string;
+        time: string;
         search: string;
     };
     select: {
@@ -1245,6 +1253,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             previousMonth: string;
             currentDate: string;
             nextMonth: string;
+            month: string;
+            year: string;
             clear: string;
             showPassword: string;
             hidePassword: string;
@@ -1253,6 +1263,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            date: string;
+            time: string;
             search: string;
         };
         select: {
@@ -1506,6 +1518,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             previousMonth: string;
             currentDate: string;
             nextMonth: string;
+            month: string;
+            year: string;
             clear: string;
             showPassword: string;
             hidePassword: string;
@@ -1514,6 +1528,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            date: string;
+            time: string;
             search: string;
         };
         select: {
@@ -1762,6 +1778,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             previousMonth: string;
             currentDate: string;
             nextMonth: string;
+            month: string;
+            year: string;
             clear: string;
             showPassword: string;
             hidePassword: string;
@@ -1770,6 +1788,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            date: string;
+            time: string;
             search: string;
         };
         select: {
@@ -2023,6 +2043,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             previousMonth: string;
             currentDate: string;
             nextMonth: string;
+            month: string;
+            year: string;
             clear: string;
             showPassword: string;
             hidePassword: string;
@@ -2031,6 +2053,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            date: string;
+            time: string;
             search: string;
         };
         select: {
@@ -2281,6 +2305,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             previousMonth: string;
             currentDate: string;
             nextMonth: string;
+            month: string;
+            year: string;
             clear: string;
             showPassword: string;
             hidePassword: string;
@@ -2289,6 +2315,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            date: string;
+            time: string;
             search: string;
         };
         select: {
@@ -2633,6 +2661,8 @@ export type KbqA11yLocaleConfiguration = {
     previousMonth: string;
     currentDate: string;
     nextMonth: string;
+    month: string;
+    year: string;
     clear: string;
     showPassword: string;
     hidePassword: string;
@@ -2641,6 +2671,8 @@ export type KbqA11yLocaleConfiguration = {
     toastRegion: string;
     optionActions: string;
     progressBar: string;
+    date: string;
+    time: string;
     search: string;
 };
 
@@ -5089,6 +5121,8 @@ export const ptBRLocaleData: {
         previousMonth: string;
         currentDate: string;
         nextMonth: string;
+        month: string;
+        year: string;
         clear: string;
         showPassword: string;
         hidePassword: string;
@@ -5097,6 +5131,8 @@ export const ptBRLocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        date: string;
+        time: string;
         search: string;
     };
     select: {
@@ -5560,6 +5596,8 @@ export const ruRULocaleData: {
         previousMonth: string;
         currentDate: string;
         nextMonth: string;
+        month: string;
+        year: string;
         clear: string;
         showPassword: string;
         hidePassword: string;
@@ -5568,6 +5606,8 @@ export const ruRULocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        date: string;
+        time: string;
         search: string;
     };
     select: {
@@ -5907,6 +5947,8 @@ export const tkTMLocaleData: {
         previousMonth: string;
         currentDate: string;
         nextMonth: string;
+        month: string;
+        year: string;
         clear: string;
         showPassword: string;
         hidePassword: string;
@@ -5915,6 +5957,8 @@ export const tkTMLocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        date: string;
+        time: string;
         search: string;
     };
     select: {

@@ -1,0 +1,28 @@
+KbqDatetime is a component for entering a date and a time in one field, with the data stored as one value.
+
+<Example id="datetime-overview" />
+
+### Seconds
+
+The time format with seconds is set with the `format` property.
+
+<Example id="datetime-with-seconds" />
+
+### Validation
+
+The `min` and `max` properties bound the value together with the time and disable the days of the calendar outside the bounds.
+
+<Example id="datetime-validation" />
+
+### Keyboard
+
+After the last digit of the date is typed, the focus moves to the hours by itself.
+
+| <div style="min-width: 170px;">Key</div>                                                  | Action                                                               |
+| ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| <span class="docs-hot-key-button">↓</span> <span class="docs-hot-key-button">↑</span>     | Decrease or increase the selected part of the date or the time by 1  |
+| <span class="docs-hot-key-button">→</span>                                                | Go to the next part, from the last part of the date to the hours     |
+| <span class="docs-hot-key-button">←</span>                                                | Go to the previous part, from the hours to the last part of the date |
+| <span class="docs-hot-key-button">Backspace</span>                                        | Delete a character, in an empty time input go to the date            |
+| <span class="docs-hot-key-button">Alt</span> + <span class="docs-hot-key-button">↓</span> | Open the calendar from the date input                                |
+| <span class="docs-hot-key-button">Esc</span>                                              | Close the calendar                                                   |

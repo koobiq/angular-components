@@ -15,6 +15,8 @@ export const ptBRLocaleData = {
         previousMonth: 'Mês anterior',
         currentDate: 'Data atual',
         nextMonth: 'Próximo mês',
+        month: 'Mês',
+        year: 'Ano',
         clear: 'Apagar',
         showPassword: 'Mostrar a senha',
         hidePassword: 'Ocultar a senha',
@@ -23,6 +25,8 @@ export const ptBRLocaleData = {
         toastRegion: 'Notificações',
         optionActions: 'Ações',
         progressBar: 'Progresso',
+        date: 'Data',
+        time: 'Hora',
         search: 'Buscar'
     },
     select: {

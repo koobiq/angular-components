@@ -37,6 +37,7 @@
             "@koobiq/components/content-panel": ["packages/components/content-panel/index.ts"],
             "@koobiq/components/core": ["packages/components/core/index.ts"],
             "@koobiq/components/datepicker": ["packages/components/datepicker/index.ts"],
+            "@koobiq/components/datetime": ["packages/components/datetime/index.ts"],
             "@koobiq/components/divider": ["packages/components/divider/index.ts"],
             "@koobiq/components/dl": ["packages/components/dl/index.ts"],
             "@koobiq/components/dropdown": ["packages/components/dropdown/index.ts"],
