@@ -4,7 +4,7 @@
     <div class="kbq-navbar-item__container">
         <div class="kbq-navbar-item__title" [class.kbq-animations-disabled]="animationsDisabled">
             <ng-content select="kbq-navbar-title, [kbq-navbar-title]" />
-            @if (!title() && titleText; as panelText) {
+            @if (!title() && morePanelText; as panelText) {
                 {{ panelText }}
             }
         </div>

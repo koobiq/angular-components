@@ -217,6 +217,7 @@ export class KbqNavbarItem implements AfterContentInit {
     readonly inMorePanel: i0.WritableSignal<boolean>;
     readonly isCollapsed: Signal<boolean>;
     measureWidths(): void;
+    protected get morePanelText(): string | null;
     readonly navbarFocusableItem: KbqNavbarFocusableItem;
     ngAfterContentInit(): void;
     protected onKeyDown($event: KeyboardEvent): void;

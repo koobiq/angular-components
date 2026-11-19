@@ -846,7 +846,7 @@ export class E2eNavbarCollapse {}
  */
 @Component({
     selector: 'e2e-navbar-more',
-    imports: [KbqNavbarModule, KbqIconModule, KbqDropdownModule],
+    imports: [KbqNavbarModule, KbqIconModule, KbqBadgeModule, KbqDropdownModule],
     template: `
         <kbq-dropdown #submenu="kbqDropdown">
             <a kbq-dropdown-item href="#">Nested link</a>
@@ -882,6 +882,13 @@ export class E2eNavbarCollapse {}
 
                         <kbq-navbar-item collapsedText="Уведомления" aria-label="Уведомления">
                             <i kbq-icon="kbq-bell_16"></i>
+                        </kbq-navbar-item>
+
+                        <!-- Icon-only with a name carried by its tooltip alone: the panel row takes the label
+                             from there, and the badge rides the row's right corner. -->
+                        <kbq-navbar-item tooltipText="Поиск">
+                            <i kbq-icon="kbq-magnifying-glass_16"></i>
+                            <kbq-badge badgeColor="error" [compact]="true">2</kbq-badge>
                         </kbq-navbar-item>
 
                         <kbq-navbar-item>

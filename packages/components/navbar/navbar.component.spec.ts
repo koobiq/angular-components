@@ -2649,6 +2649,118 @@ describe('KbqNavbar', () => {
             expect(third.navbarFocusableItem.disabled).toBe(true);
         });
 
+        describe('panel row label', () => {
+            const setup = async (): Promise<ComponentFixture<TestMorePanelTextApp>> => {
+                const fixture = TestBed.createComponent(TestMorePanelTextApp);
+
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                return fixture;
+            };
+
+            // A 150px navbar: once the icon-only item hides under «Ещё», the anchor is all that is left.
+            const hideIconOnlyItem = (fixture: ComponentFixture<TestMorePanelTextApp>): KbqNavbarItem => {
+                stubNavbarWidths(fixture.debugElement, { navbar: 150, item: 100, collapsible: 10 });
+
+                const navbar = fixture.debugElement.query(By.directive(KbqNavbar)).componentInstance as KbqNavbar;
+
+                navbar.updateExpandedStateForItems();
+                fixture.detectChanges();
+
+                return queryNavbarItems(fixture.debugElement)[1].componentInstance as KbqNavbarItem;
+            };
+
+            const getMoreTriggerDropdown = (fixture: ComponentFixture<TestMorePanelTextApp>): KbqDropdownTrigger =>
+                fixture.debugElement.query(By.css('.kbq-navbar__more-trigger')).injector.get(KbqDropdownTrigger);
+
+            const openMorePanel = async (fixture: ComponentFixture<TestMorePanelTextApp>): Promise<HTMLElement> => {
+                getMoreTriggerDropdown(fixture).open();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+
+                return document.querySelector('.kbq-navbar__more-content')!;
+            };
+
+            it('should label an icon-only panel row with its tooltip text', async () => {
+                const fixture = await setup();
+
+                fixture.componentInstance.tooltipText = 'Notifications';
+
+                const item = hideIconOnlyItem(fixture);
+
+                expect(item.rectangleElement.hidden()).toBe(true);
+
+                const panelRow = (await openMorePanel(fixture)).querySelector('kbq-navbar-item')!;
+
+                expect(panelRow.textContent).toContain('Notifications');
+                // The row shows its label, so it needs no tooltip of its own over it.
+                expect(item.tooltip.disabled).toBe(true);
+            });
+
+            it('should prefer aria-label over the tooltip text as the row label', async () => {
+                const fixture = await setup();
+
+                fixture.componentInstance.ariaLabel = 'Alerts';
+                fixture.componentInstance.tooltipText = 'Notifications';
+
+                hideIconOnlyItem(fixture);
+
+                const panelRow = (await openMorePanel(fixture)).querySelector('kbq-navbar-item')!;
+
+                expect(panelRow.textContent).toContain('Alerts');
+                expect(panelRow.textContent).not.toContain('Notifications');
+            });
+
+            it('should keep collapsedText first in the label chain', async () => {
+                const fixture = await setup();
+
+                fixture.componentInstance.collapsedText = 'Bell';
+                fixture.componentInstance.ariaLabel = 'Alerts';
+                fixture.componentInstance.tooltipText = 'Notifications';
+
+                hideIconOnlyItem(fixture);
+
+                const panelRow = (await openMorePanel(fixture)).querySelector('kbq-navbar-item')!;
+
+                expect(panelRow.textContent).toContain('Bell');
+                expect(panelRow.textContent).not.toContain('Alerts');
+            });
+
+            it('should leave the row of an item with no text anywhere empty, with its tooltip kept', async () => {
+                const fixture = await setup();
+
+                const item = hideIconOnlyItem(fixture);
+
+                const panelRow = await openMorePanel(fixture);
+
+                expect((panelRow.querySelector('.kbq-navbar-item__title')?.textContent ?? '').trim()).toBe('');
+                // Without a label the hover tooltip stays the only one the row has.
+                expect(item.tooltip.disabled).toBe(false);
+            });
+
+            it('should keep the tooltip text intact through a panel round trip', async () => {
+                const fixture = await setup();
+
+                fixture.componentInstance.tooltipText = 'Notifications';
+
+                const item = hideIconOnlyItem(fixture);
+
+                await openMorePanel(fixture);
+
+                expect(item.tooltip.content).toBe('Notifications');
+
+                getMoreTriggerDropdown(fixture).close();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+
+                expect(item.inMorePanel()).toBe(false);
+                // Back in the navbar, collapsed: the tooltip falls back to the consumer's own binding.
+                expect(item.tooltip.content).toBe('Notifications');
+                expect(item.tooltip.disabled).toBe(false);
+            });
+        });
+
         it('should move focus to «Ещё» when a recalculation hides the focused item', async () => {
             const fixture = await setup();
             const navbar = getNavbar(fixture);
@@ -3206,6 +3318,30 @@ class TestCollapseApp {
     `
 })
 class TestMoreApp {}
+
+/** The label chain of an icon-only item over its row in the «More» panel: collapsedText, aria-label, tooltip. */
+@Component({
+    selector: 'test-more-panel-text-app',
+    imports: [KbqNavbarModule, KbqIconModule],
+    template: `
+        <kbq-navbar>
+            <kbq-navbar-container>
+                <kbq-navbar-item>
+                    <i kbq-icon="kbq-circle-info_16"></i>
+                    <kbq-navbar-title>Anchor</kbq-navbar-title>
+                </kbq-navbar-item>
+                <kbq-navbar-item [collapsedText]="collapsedText" [aria-label]="ariaLabel" [tooltipText]="tooltipText">
+                    <i kbq-icon="kbq-bell_16"></i>
+                </kbq-navbar-item>
+            </kbq-navbar-container>
+        </kbq-navbar>
+    `
+})
+class TestMorePanelTextApp {
+    collapsedText = '';
+    ariaLabel: string | null = null;
+    tooltipText = '';
+}
 
 @Component({
     selector: 'test-two-containers-app',

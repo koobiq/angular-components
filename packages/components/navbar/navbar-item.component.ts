@@ -667,7 +667,11 @@ export class KbqNavbarItem implements AfterContentInit {
         this.icons().find((icon) => !icon.getHostElement().closest('[kbqNavbarItemSuffix]'))
     );
 
-    /** Text shown in the tooltip of a collapsed item. Defaults to the text of the projected `kbq-navbar-title`. */
+    /**
+     * Text shown in the tooltip of a collapsed item, and in the row an icon-only item renders in the «More» panel
+     * (where it wins over `aria-label` and the tooltip text). Defaults to the text of the projected
+     * `kbq-navbar-title`.
+     */
     readonly collapsedText = input<string>('');
 
     /** Whether the item may be collapsed when the horizontal navbar runs out of room. */
@@ -688,7 +692,8 @@ export class KbqNavbarItem implements AfterContentInit {
 
     /**
      * Whether the item is currently moved into the «More» panel of a horizontal navbar: there it renders its title,
-     * an icon-only item the text of `collapsedText`. Written by the ambient `KbqNavbar`.
+     * an icon-only item the first of its `collapsedText`, `aria-label` and tooltip text. Written by the ambient
+     * `KbqNavbar`.
      *
      * @docs-private
      */
@@ -725,6 +730,17 @@ export class KbqNavbarItem implements AfterContentInit {
     /** Text used for the tooltip and for the accessible name of a collapsed item. */
     get titleText(): string | null {
         return this.collapsedText() || this.title()?.text || null;
+    }
+
+    /**
+     * Label an icon-only item renders in its row in the «More» panel: the first of `collapsedText`, `aria-label`
+     * and the tooltip text. Without one the row would stretch to the panel width with nothing between its icon
+     * and its suffix.
+     */
+    protected get morePanelText(): string | null {
+        const tooltipText = this.tooltip.content;
+
+        return this.collapsedText() || this.ariaLabel() || (typeof tooltipText === 'string' ? tooltipText : null);
     }
 
     /** @docs-private */
@@ -814,8 +830,10 @@ export class KbqNavbarItem implements AfterContentInit {
         effect(() => {
             // Re-read the reactive inputs the tooltip content depends on.
             this.collapsedText();
+            this.ariaLabel();
             this.tooltipDisabled();
             this.isCollapsed();
+            this.inMorePanel();
 
             this.updateTooltip();
 
@@ -849,8 +867,11 @@ export class KbqNavbarItem implements AfterContentInit {
         }
 
         // A fully visible title needs no tooltip; for a collapsed, clipped or missing one it is the only label.
+        // A «More» panel row that renders its label is in the same place: the text is read right off the row.
         this.tooltip.disabled =
-            this.tooltipDisabled() ?? (!!this.title() && !this.isCollapsed() && !this.hasCroppedText);
+            this.tooltipDisabled() ??
+            ((!!this.title() && !this.isCollapsed() && !this.hasCroppedText) ||
+                (this.inMorePanel() && !this.title() && !!this.morePanelText));
 
         if (this.rectangleElement.isVertical()) {
             this.tooltip.tooltipPlacement = PopUpPlacements.Right;
