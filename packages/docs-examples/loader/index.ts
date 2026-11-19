@@ -957,6 +957,34 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonTreeExample);
         case 'skeleton-typography':
             return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonTypographyExample);
+        case 'slider-alignment':
+            return import('@koobiq/docs-examples/components/slider').then((m) => m.SliderAlignmentExample);
+        case 'slider-commit':
+            return import('@koobiq/docs-examples/components/slider').then((m) => m.SliderCommitExample);
+        case 'slider-custom':
+            return import('@koobiq/docs-examples/components/slider').then((m) => m.SliderCustomExample);
+        case 'slider-fill':
+            return import('@koobiq/docs-examples/components/slider').then((m) => m.SliderFillExample);
+        case 'slider-forms':
+            return import('@koobiq/docs-examples/components/slider').then((m) => m.SliderFormsExample);
+        case 'slider-input':
+            return import('@koobiq/docs-examples/components/slider').then((m) => m.SliderInputExample);
+        case 'slider-labels':
+            return import('@koobiq/docs-examples/components/slider').then((m) => m.SliderLabelsExample);
+        case 'slider-marks':
+            return import('@koobiq/docs-examples/components/slider').then((m) => m.SliderMarksExample);
+        case 'slider-overview':
+            return import('@koobiq/docs-examples/components/slider').then((m) => m.SliderOverviewExample);
+        case 'slider-range':
+            return import('@koobiq/docs-examples/components/slider').then((m) => m.SliderRangeExample);
+        case 'slider-settings':
+            return import('@koobiq/docs-examples/components/slider').then((m) => m.SliderSettingsExample);
+        case 'slider-states':
+            return import('@koobiq/docs-examples/components/slider').then((m) => m.SliderStatesExample);
+        case 'slider-tooltip':
+            return import('@koobiq/docs-examples/components/slider').then((m) => m.SliderTooltipExample);
+        case 'slider-vertical':
+            return import('@koobiq/docs-examples/components/slider').then((m) => m.SliderVerticalExample);
         case 'split-button-content':
             return import('@koobiq/docs-examples/components/split-button').then((m) => m.SplitButtonContentExample);
         case 'split-button-disabled-state':

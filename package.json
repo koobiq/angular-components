@@ -276,6 +276,7 @@
         "dev:notification-center": "ng serve dev-notification-center --port 3003",
         "dev:overflow-items": "ng serve dev-overflow-items --port 3003",
         "dev:popover": "ng serve dev-popover --port 3003",
+        "dev:slider": "ng serve dev-slider --port 3003",
         "dev:progress-bar": "ng serve dev-progress-bar --port 3003",
         "dev:progress-spinner": "ng serve dev-progress-spinner --port 3003",
         "dev:radio": "ng serve dev-radio --port 3003",

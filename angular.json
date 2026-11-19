@@ -1826,6 +1826,35 @@
                 }
             }
         },
+        "dev-slider": {
+            "projectType": "application",
+            "root": "packages/components-dev/slider",
+            "sourceRoot": "packages/components-dev/slider",
+            "architect": {
+                "build": {
+                    "builder": "@angular/build:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/components-dev/slider"
+                        },
+                        "tsConfig": "packages/components-dev/slider/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "styles": ["packages/components-dev/main.scss"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/slider/main.ts"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular/build:dev-server",
+                    "options": {
+                        "buildTarget": "dev-slider:build"
+                    }
+                }
+            }
+        },
         "dev-progress-spinner": {
             "projectType": "application",
             "root": "packages/components-dev/progress-spinner",

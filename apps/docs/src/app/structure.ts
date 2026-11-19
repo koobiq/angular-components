@@ -71,6 +71,7 @@ export enum DocsStructureItemId {
     Sidepanel = 'sidepanel',
     Skeleton = 'skeleton',
     Splitter = 'splitter',
+    Slider = 'slider',
     SplitButton = 'split-button',
     Table = 'table',
     Tabs = 'tabs',
@@ -994,6 +995,15 @@ const structure: DocsStructure = makeStructure({
                     apiId: 'splitter',
                     hasExamples: false,
                     isUpdated: expiresAt('2026-11-23')
+                },
+                {
+                    id: DocsStructureItemId.Slider,
+                    name: { ru: 'Slider', en: 'Slider' },
+                    path: 'packages/components/slider',
+                    hasApi: true,
+                    apiId: 'slider',
+                    hasExamples: true,
+                    isNew: expiresAt('2026-12-02')
                 },
                 {
                     id: DocsStructureItemId.SplitButton,

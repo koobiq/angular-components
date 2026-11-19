@@ -56,6 +56,7 @@
             "@koobiq/components/notification-center": ["packages/components/notification-center/index.ts"],
             "@koobiq/components/overflow-items": ["packages/components/overflow-items/index.ts"],
             "@koobiq/components/popover": ["packages/components/popover/index.ts"],
+            "@koobiq/components/slider": ["packages/components/slider/index.ts"],
             "@koobiq/components/progress-bar": ["packages/components/progress-bar/index.ts"],
             "@koobiq/components/progress-spinner": ["packages/components/progress-spinner/index.ts"],
             "@koobiq/components/radio": ["packages/components/radio/index.ts"],

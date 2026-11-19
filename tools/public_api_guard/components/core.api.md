@@ -438,6 +438,9 @@ export const enUSLocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        slider: string;
+        sliderStart: string;
+        sliderEnd: string;
         date: string;
         time: string;
         search: string;
@@ -728,6 +731,9 @@ export const esLALocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        slider: string;
+        sliderStart: string;
+        sliderEnd: string;
         date: string;
         time: string;
         search: string;
@@ -1263,6 +1269,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            slider: string;
+            sliderStart: string;
+            sliderEnd: string;
             date: string;
             time: string;
             search: string;
@@ -1528,6 +1537,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            slider: string;
+            sliderStart: string;
+            sliderEnd: string;
             date: string;
             time: string;
             search: string;
@@ -1788,6 +1800,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            slider: string;
+            sliderStart: string;
+            sliderEnd: string;
             date: string;
             time: string;
             search: string;
@@ -2053,6 +2068,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            slider: string;
+            sliderStart: string;
+            sliderEnd: string;
             date: string;
             time: string;
             search: string;
@@ -2315,6 +2333,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            slider: string;
+            sliderStart: string;
+            sliderEnd: string;
             date: string;
             time: string;
             search: string;
@@ -2671,6 +2692,9 @@ export type KbqA11yLocaleConfiguration = {
     toastRegion: string;
     optionActions: string;
     progressBar: string;
+    slider: string;
+    sliderStart: string;
+    sliderEnd: string;
     date: string;
     time: string;
     search: string;
@@ -5131,6 +5155,9 @@ export const ptBRLocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        slider: string;
+        sliderStart: string;
+        sliderEnd: string;
         date: string;
         time: string;
         search: string;
@@ -5606,6 +5633,9 @@ export const ruRULocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        slider: string;
+        sliderStart: string;
+        sliderEnd: string;
         date: string;
         time: string;
         search: string;
@@ -5957,6 +5987,9 @@ export const tkTMLocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        slider: string;
+        sliderStart: string;
+        sliderEnd: string;
         date: string;
         time: string;
         search: string;

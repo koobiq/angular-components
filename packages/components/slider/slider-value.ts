@@ -1,0 +1,133 @@
+import type { KbqSliderCollision, KbqSliderMark, KbqSliderValue } from './slider.types';
+
+/** @internal */
+export interface SliderSettings {
+    min: number;
+    max: number;
+    step: number | null;
+    marks: readonly KbqSliderMark[];
+    minDistance: number;
+}
+
+const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
+
+const fractionDigits = (value: number): number => {
+    const [mantissa = '', exponent = '0'] = String(value).split('e');
+
+    return Math.max(0, (mantissa.split('.')[1]?.length ?? 0) - Number(exponent));
+};
+
+/** @internal */
+export function sliderBounds(settings: SliderSettings): { min: number; max: number; step: number } {
+    const min = Number.isFinite(settings.min) ? settings.min : 0;
+    const max = Number.isFinite(settings.max) ? Math.max(min, settings.max) : Math.max(min, 100);
+    const step = settings.step !== null && Number.isFinite(settings.step) && settings.step > 0 ? settings.step : 1;
+
+    return { min, max, step };
+}
+
+/** @internal */
+export function sliderStops(settings: SliderSettings): number[] {
+    const { min, max } = sliderBounds(settings);
+
+    return [
+        ...new Set(settings.marks.map((mark) => mark.value).filter((v) => Number.isFinite(v) && v >= min && v <= max))
+    ].sort((a, b) => a - b);
+}
+
+/** @internal */
+export function sliderSnap(value: number, settings: SliderSettings, direction: -1 | 0 | 1 = 0): number {
+    const { min, max, step } = sliderBounds(settings);
+    const safeValue = clamp(Number.isFinite(value) ? value : min, min, max);
+
+    if (settings.step === null) {
+        const stops = sliderStops(settings);
+
+        if (!stops.length) return min;
+        // A sum such as 0.1 + 0.2 must still include the 0.3 stop in either direction.
+        const tolerance = Math.abs(safeValue) * Number.EPSILON;
+
+        if (direction < 0) return stops.findLast((stop) => stop <= safeValue + tolerance) ?? stops[0]!;
+        if (direction > 0) return stops.find((stop) => stop >= safeValue - tolerance) ?? stops[stops.length - 1]!;
+
+        return stops.reduce((best, stop) => (Math.abs(stop - safeValue) <= Math.abs(best - safeValue) ? stop : best));
+    }
+
+    const count = (safeValue - min) / step;
+    const index =
+        direction < 0 ? Math.floor(count + 1e-10) : direction > 0 ? Math.ceil(count - 1e-10) : Math.round(count);
+    const lastIndex = Math.floor((max - min) / step + 1e-10);
+
+    const precision = Math.min(100, Math.max(fractionDigits(min), fractionDigits(step)));
+
+    return clamp(Number((min + clamp(index, 0, lastIndex) * step).toFixed(precision)), min, max);
+}
+
+/** @internal */
+export function sliderGap(settings: SliderSettings): number {
+    const lower = sliderSnap(sliderBounds(settings).min, settings);
+    const upper = sliderSnap(sliderBounds(settings).max, settings, -1);
+
+    return clamp(Number.isFinite(settings.minDistance) ? settings.minDistance : 0, 0, upper - lower);
+}
+
+/** @internal */
+export function sliderNormalize(value: KbqSliderValue, settings: SliderSettings): KbqSliderValue {
+    if (typeof value === 'number') return sliderSnap(value, settings);
+
+    const a = sliderSnap(value[0], settings);
+    const b = sliderSnap(value[1], settings);
+    const gap = sliderGap(settings);
+    const max = sliderSnap(sliderBounds(settings).max, settings, -1);
+    const start = sliderSnap(Math.min(a, b, max - gap), settings, -1);
+    const end = sliderSnap(Math.max(a, b, start + gap), settings, 1);
+
+    return [start, end];
+}
+
+/** @internal */
+export function sliderMove(
+    value: KbqSliderValue,
+    index: number,
+    next: number,
+    settings: SliderSettings,
+    collision: KbqSliderCollision
+): { value: KbqSliderValue; index: number } {
+    const normalized = sliderNormalize(value, settings);
+    const snapped = sliderSnap(next, settings);
+
+    if (typeof normalized === 'number') return { value: snapped, index: 0 };
+
+    let [start, end] = normalized;
+    const gap = sliderGap(settings);
+    const { min, max } = sliderBounds(settings);
+
+    if (collision === 'swap' && ((index === 0 && snapped > end) || (index === 1 && snapped < start))) {
+        index = 1 - index;
+        [start, end] = index === 1 ? [end, snapped] : [snapped, start];
+    } else if (collision === 'push') {
+        if (index === 0) {
+            start = sliderSnap(Math.min(snapped, sliderSnap(max, settings, -1) - gap), settings, -1);
+            end = sliderSnap(Math.max(end, start + gap), settings, 1);
+        } else {
+            end = sliderSnap(Math.max(snapped, sliderSnap(min, settings) + gap), settings, 1);
+            start = sliderSnap(Math.min(start, end - gap), settings, -1);
+        }
+    } else if (index === 0) {
+        start = sliderSnap(Math.min(snapped, end - gap), settings, -1);
+    } else {
+        end = sliderSnap(Math.max(snapped, start + gap), settings, 1);
+    }
+
+    if (end - start < gap) {
+        if (index === 0) start = sliderSnap(end - gap, settings, -1);
+        else end = sliderSnap(start + gap, settings, 1);
+    }
+
+    return { value: sliderNormalize([start, end], settings), index };
+}
+
+/** @internal */
+export function sliderEqual(a: KbqSliderValue, b: KbqSliderValue): boolean {
+    return typeof a === 'number' || typeof b === 'number' ? a === b : a[0] === b[0] && a[1] === b[1];
+}

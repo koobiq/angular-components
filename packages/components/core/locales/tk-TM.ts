@@ -25,6 +25,9 @@ export const tkTMLocaleData = {
         toastRegion: 'Bildirişler',
         optionActions: 'Hereketler',
         progressBar: 'Ösüş',
+        slider: 'Baha',
+        sliderStart: 'Aşaky çäk',
+        sliderEnd: 'Ýokarky çäk',
         date: 'Sene',
         time: 'Wagt',
         search: 'Gözleg'

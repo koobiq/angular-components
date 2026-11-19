@@ -143,6 +143,9 @@
 /en/components/sidepanel/examples
 /en/components/skeleton/overview
 /en/components/skeleton/api
+/en/components/slider/overview
+/en/components/slider/api
+/en/components/slider/examples
 /en/components/split-button/overview
 /en/components/split-button/api
 /en/components/splitter/overview
@@ -343,6 +346,9 @@
 /ru/components/sidepanel/examples
 /ru/components/skeleton/overview
 /ru/components/skeleton/api
+/ru/components/slider/overview
+/ru/components/slider/api
+/ru/components/slider/examples
 /ru/components/split-button/overview
 /ru/components/split-button/api
 /ru/components/splitter/overview

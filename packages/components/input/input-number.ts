@@ -360,10 +360,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
             untracked(() => this.setViewValue(this.formatNumber(this.value)));
         });
 
-        this.destroyRef.onDestroy(() => {
-            this.pendingReformats.forEach((_, handle) => clearTimeout(handle));
-            this.pendingReformats.clear();
-        });
+        this.destroyRef.onDestroy(() => this.cancelPendingReformats());
     }
 
     ngOnDestroy(): void {
@@ -383,6 +380,28 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     // Implemented as part of ControlValueAccessor.
     writeValue(value: number | null): void {
         this.setValue(value);
+    }
+
+    /**
+     * Replaces the editor's pending draft with a committed value.
+     *
+     * @docs-private
+     */
+    setCommittedValue(value: number): void {
+        this.cancelPendingReformats();
+
+        if (this.valueState() === value) {
+            this.setViewValue(this.formatNumber(value));
+
+            return;
+        }
+
+        this.setValue(value);
+    }
+
+    private cancelPendingReformats(): void {
+        this.pendingReformats.forEach((_, handle) => clearTimeout(handle));
+        this.pendingReformats.clear();
     }
 
     // Implemented as part of ControlValueAccessor.

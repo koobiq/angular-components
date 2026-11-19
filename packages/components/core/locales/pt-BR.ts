@@ -25,6 +25,9 @@ export const ptBRLocaleData = {
         toastRegion: 'Notificações',
         optionActions: 'Ações',
         progressBar: 'Progresso',
+        slider: 'Valor',
+        sliderStart: 'Limite inferior',
+        sliderEnd: 'Limite superior',
         date: 'Data',
         time: 'Hora',
         search: 'Buscar'

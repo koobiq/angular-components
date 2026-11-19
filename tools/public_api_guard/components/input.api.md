@@ -274,6 +274,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     registerOnChange(fn: (value: any) => void): void;
     // (undocumented)
     registerOnTouched(fn: () => void): void;
+    setCommittedValue(value: number): void;
     // (undocumented)
     setDisabledState(isDisabled: boolean): void;
     readonly startFormattingFrom: _angular_core.InputSignal<number | undefined>;

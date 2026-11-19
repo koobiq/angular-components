@@ -25,6 +25,9 @@ export const enUSLocaleData = {
         toastRegion: 'Notifications',
         optionActions: 'Actions',
         progressBar: 'Progress',
+        slider: 'Value',
+        sliderStart: 'Lower bound',
+        sliderEnd: 'Upper bound',
         date: 'Date',
         time: 'Time',
         search: 'Search'

@@ -1,0 +1,55 @@
+<div class="kbq-input-slider__fields">
+    @for (value of values(); track $index) {
+        <kbq-form-field [class.kbq-invalid]="errorState()">
+            <input
+                kbqNumberInput
+                [min]="thumbMin($index)"
+                [max]="thumbMax($index)"
+                [step]="step() ?? 1"
+                [disabled]="disabled()"
+                [readonly]="readonly()"
+                [errorStateMatcher]="numberErrorMatcher"
+                [ngModel]="drafts()[$index]"
+                [ngModelOptions]="{ standalone: true }"
+                [attr.aria-label]="thumbLabel($index)"
+                [attr.aria-labelledby]="thumbLabelledBy($index)"
+                [attr.aria-describedby]="description()"
+                [attr.aria-invalid]="errorState() || null"
+                (ngModelChange)="edit($event, $index)"
+                (focus)="beginEdit($index)"
+                (blur)="finishEdit($index)"
+                (keydown)="onEditorKey($event, $index)"
+            />
+            <span class="cdk-visually-hidden" [id]="`${id()}-thumb-${$index}-label`">
+                {{ thumbLabel($index) }}
+            </span>
+            @if (unit()) {
+                <span kbqSuffix>{{ unit() }}</span>
+            }
+            @if ($count === 1) {
+                <kbq-stepper />
+            }
+        </kbq-form-field>
+    }
+</div>
+<kbq-slider
+    class="kbq-input-slider__slider"
+    [value]="value()"
+    [min]="min()"
+    [max]="max()"
+    [step]="step()"
+    [marks]="marks()"
+    [minDistance]="minDistance()"
+    [collision]="collision()"
+    [disabled]="disabled()"
+    [readonly]="readonly()"
+    [invalid]="errorState()"
+    [thumbLabels]="thumbLabels()"
+    [aria-label]="ariaLabel()"
+    [aria-labelledby]="labelledBy()"
+    [aria-describedby]="description()"
+    [displayWith]="formatValue"
+    [name]="name()"
+    (valueChange)="onSliderValue($event)"
+    (valueCommit)="onSliderCommit($event)"
+/>
