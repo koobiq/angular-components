@@ -22,6 +22,7 @@ import {
     input,
     type OnChanges,
     type OnDestroy,
+    Renderer2,
     type Signal,
     signal,
     type SimpleChanges,
@@ -37,6 +38,7 @@ import {
     KBQ_WINDOW,
     kbqAnimationsDisabled,
     kbqInjectNativeElement,
+    type KbqOverflowFitItem,
     PopUpPlacements,
     PopUpTriggers,
     RIGHT_ARROW,
@@ -278,11 +280,17 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
 
     private readonly hasFocusState = signal(false);
 
-    /** Whether the item is disabled. Also `true` for a decorative element, which the key manager skips as well. */
+    // Co-located on the same element; a toggle carries no rectangle element.
+    private readonly rectangleElement = inject(KbqNavbarRectangleElement, { optional: true });
+
+    /**
+     * Whether the item is disabled. Also `true` for a decorative element and for one hidden under the «More» panel
+     * of a horizontal navbar, which the key manager skips as well.
+     */
     // An accessor, not a signal: `FocusKeyManager` reads it as a boolean through its default skip predicate, where a
     // signal would always read truthy — the manager would skip every item and arrow navigation would stop working.
     get disabled(): boolean {
-        return this.disabledState() || this.decorative();
+        return this.disabledState() || this.decorative() || !!this.rectangleElement?.hidden();
     }
 
     set disabled(value: boolean) {
@@ -471,16 +479,19 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
         '[class.kbq-horizontal]': 'isHorizontal()',
 
         '[class.kbq-expanded]': 'isVertical() && !collapsed',
-        '[class.kbq-collapsed]': 'isVertical() && collapsed'
+        '[class.kbq-collapsed]': 'isVertical() && collapsed',
+
+        '[attr.aria-hidden]': 'hidden() || null'
     }
 })
-export class KbqNavbarRectangleElement {
+export class KbqNavbarRectangleElement implements KbqOverflowFitItem {
     /** @docs-private */
     protected readonly isBrowser = inject(Platform).isBrowser;
-    /** @docs-private */
-    protected readonly nativeElement = kbqInjectNativeElement();
+    /** Element the rectangle renders in, the handle the ambient navbar hides it by. @docs-private */
+    readonly element = kbqInjectNativeElement();
     private readonly window = inject(KBQ_WINDOW);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly renderer = inject(Renderer2);
 
     /** Emits whenever the orientation or the collapsed state of the element changes. @docs-private */
     readonly state = new Subject<void>();
@@ -501,6 +512,42 @@ export class KbqNavbarRectangleElement {
         this._orientation.set(value);
 
         this.state.next();
+    }
+
+    /**
+     * Element with this attribute is never hidden under the «More» panel of a horizontal navbar, whatever the
+     * overflow. Defaults to `false`.
+     */
+    readonly alwaysVisible = input<boolean, boolean | string | null | undefined>(false, {
+        transform: booleanAttribute
+    });
+
+    /** Whether the element is hidden under the «More» panel of a horizontal navbar. @docs-private */
+    readonly hidden = computed(() => this.hiddenState());
+
+    private readonly hiddenState = signal(false);
+
+    /**
+     * Hides the element, out of the layout flow of its container. Written by the ambient `KbqNavbar`, never by
+     * the element itself.
+     *
+     * @docs-private
+     */
+    hide(): void {
+        this.renderer.setStyle(this.element, 'visibility', 'hidden');
+        this.renderer.setStyle(this.element, 'position', 'absolute');
+        this.hiddenState.set(true);
+    }
+
+    /**
+     * Restores the element into the layout flow of its container.
+     *
+     * @docs-private
+     */
+    show(): void {
+        this.renderer.removeStyle(this.element, 'visibility');
+        this.renderer.removeStyle(this.element, 'position');
+        this.hiddenState.set(false);
     }
 
     /** Whether the ambient navbar is horizontal. @docs-private */
@@ -539,7 +586,7 @@ export class KbqNavbarRectangleElement {
 
     /** Outer width of the element: its border box plus horizontal margins. */
     getOuterElementWidth(): number {
-        return this.isBrowser ? getOuterWidth(this.nativeElement, this.window) : 0;
+        return this.isBrowser ? getOuterWidth(this.element, this.window) : 0;
     }
 }
 
@@ -604,6 +651,7 @@ export class KbqNavbarItem implements AfterContentInit {
     private readonly contentObserver = inject(ContentObserver);
     private readonly injector = inject(Injector);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly renderer = inject(Renderer2);
 
     // Outer widths recorded by `measureWidths()`, 0 while unknown.
     private expandedWidth = 0;
@@ -619,7 +667,11 @@ export class KbqNavbarItem implements AfterContentInit {
         this.icons().find((icon) => !icon.getHostElement().closest('[kbqNavbarItemSuffix]'))
     );
 
-    /** Text shown in the tooltip of a collapsed item. Defaults to the text of the projected `kbq-navbar-title`. */
+    /**
+     * Text shown in the tooltip of a collapsed item, and in the row an icon-only item renders in the «More» panel
+     * (where it wins over `aria-label` and the tooltip text). Defaults to the text of the projected
+     * `kbq-navbar-title`.
+     */
     readonly collapsedText = input<string>('');
 
     /** Whether the item may be collapsed when the horizontal navbar runs out of room. */
@@ -638,9 +690,28 @@ export class KbqNavbarItem implements AfterContentInit {
 
     private readonly ownCollapsed = signal<boolean | undefined>(undefined);
 
-    /** Collapses the item regardless of what the ambient navbar decided. */
+    /**
+     * Whether the item is currently moved into the «More» panel of a horizontal navbar: there it renders its title,
+     * an icon-only item the first of its `collapsedText`, `aria-label` and tooltip text. Written by the ambient
+     * `KbqNavbar`.
+     *
+     * @docs-private
+     */
+    readonly inMorePanel = signal(false);
+
+    /**
+     * Collapses the item regardless of what the ambient navbar decided. The class is written here rather than
+     * only through the host binding: the navbar's fit measures the layout in the same pass it collapses items
+     * in, and a binding reaches the DOM only at the next change detection.
+     */
     set collapsed(value: boolean) {
         this.ownCollapsed.set(value);
+
+        if (value) {
+            this.renderer.addClass(this.nativeElement, COLLAPSED_ITEM_CLASS);
+        } else {
+            this.renderer.removeClass(this.nativeElement, COLLAPSED_ITEM_CLASS);
+        }
     }
 
     /** Whether the item is rendered in its collapsed (icon-only) form. */
@@ -659,6 +730,17 @@ export class KbqNavbarItem implements AfterContentInit {
     /** Text used for the tooltip and for the accessible name of a collapsed item. */
     get titleText(): string | null {
         return this.collapsedText() || this.title()?.text || null;
+    }
+
+    /**
+     * Label an icon-only item renders in its row in the «More» panel: the first of `collapsedText`, `aria-label`
+     * and the tooltip text. Without one the row would stretch to the panel width with nothing between its icon
+     * and its suffix.
+     */
+    protected get morePanelText(): string | null {
+        const tooltipText = this.tooltip.content;
+
+        return this.collapsedText() || this.ariaLabel() || (typeof tooltipText === 'string' ? tooltipText : null);
     }
 
     /** @docs-private */
@@ -748,8 +830,10 @@ export class KbqNavbarItem implements AfterContentInit {
         effect(() => {
             // Re-read the reactive inputs the tooltip content depends on.
             this.collapsedText();
+            this.ariaLabel();
             this.tooltipDisabled();
             this.isCollapsed();
+            this.inMorePanel();
 
             this.updateTooltip();
 
@@ -783,8 +867,11 @@ export class KbqNavbarItem implements AfterContentInit {
         }
 
         // A fully visible title needs no tooltip; for a collapsed, clipped or missing one it is the only label.
+        // A «More» panel row that renders its label is in the same place: the text is read right off the row.
         this.tooltip.disabled =
-            this.tooltipDisabled() ?? (!!this.title() && !this.isCollapsed() && !this.hasCroppedText);
+            this.tooltipDisabled() ??
+            ((!!this.title() && !this.isCollapsed() && !this.hasCroppedText) ||
+                (this.inMorePanel() && !this.title() && !!this.morePanelText));
 
         if (this.rectangleElement.isVertical()) {
             this.tooltip.tooltipPlacement = PopUpPlacements.Right;
@@ -857,6 +944,10 @@ export class KbqNavbarItem implements AfterContentInit {
         if (!this.hasDropDownTrigger) {
             return;
         }
+
+        // In the «More» panel the arrow belongs to the panel: a row with a submenu is a row among others there,
+        // and the arrow moves to the next one instead of opening the submenu a click on the row would.
+        if (this.inMorePanel() && $event.keyCode === DOWN_ARROW) return;
 
         if (
             (this.rectangleElement.isHorizontal() && $event.keyCode === DOWN_ARROW) ||

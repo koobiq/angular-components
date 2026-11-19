@@ -10,6 +10,7 @@ export * from './highlight/index';
 export * from './keycodes/index';
 export * from './locales/index';
 export * from './option/index';
+export * from './overflow-fit-engine/overflow-fit-engine';
 export * from './overflow-shadow/index';
 export * from './overlay/auto-hide-scroll-strategy';
 export * from './overlay/overlay-layer';

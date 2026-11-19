@@ -148,7 +148,8 @@ export const ptBRLocaleData = {
         toggle: {
             expand: 'Expandir',
             collapse: 'Colapso'
-        }
+        },
+        more: 'Mais'
     },
     searchExpandable: {
         tooltip: 'Pesquisar',

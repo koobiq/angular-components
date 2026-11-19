@@ -263,6 +263,120 @@ test.describe('KbqNavbarModule', () => {
         });
     });
 
+    test.describe('E2eNavbarMore', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eNavbarMore');
+        const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
+        const getTrigger = (page: Page) => page.getByTestId('e2eNavbarMore').locator('.kbq-navbar__more-trigger');
+        const getPanelContent = (page: Page) => page.locator('.kbq-navbar__more-content');
+
+        /**
+         * Queued after the navbar's resize debounce, then a frame more — and the debounce restarts once more: the
+         * navbar's own resize observer reports its new width a frame after the window resize, which is a trigger
+         * like any other, so the recompute lands ~a debounce past that.
+         */
+        const waitForNavbarSettled = (page: Page) =>
+            page.evaluate(
+                () =>
+                    new Promise<void>((resolve) =>
+                        setTimeout(() => requestAnimationFrame(() => setTimeout(resolve, 130)), 100)
+                    )
+            );
+
+        test('should hide items under the «Ещё» trigger without overflowing', async ({ page }) => {
+            await page.goto('/E2eNavbarMore');
+
+            await expect(getTrigger(page)).toHaveAttribute('aria-label', 'Ещё');
+            await expect(getTrigger(page)).not.toHaveAttribute('inert');
+
+            const overflow = await page.getByTestId('e2eNavbarMoreFrame').evaluate((frame) => {
+                const navbar = frame.querySelector('.kbq-navbar')!;
+
+                const contentRight = Math.max(
+                    ...Array.from(navbar.children, (container) => container.getBoundingClientRect().right)
+                );
+
+                return contentRight - navbar.getBoundingClientRect().right;
+            });
+
+            expect(overflow).toBeLessThanOrEqual(0.5);
+        });
+
+        test('should move the hidden items into the panel and open a submenu of its own from there', async ({
+            page
+        }) => {
+            await page.goto('/E2eNavbarMore');
+            await waitForNavbarSettled(page);
+
+            await getTrigger(page).click();
+
+            // The original elements, not copies: the panel carries their titles and the collapsedText of an
+            // icon-only item.
+            await expect(getPanelContent(page).locator('kbq-navbar-item')).not.toHaveCount(0);
+            await expect(getPanelContent(page).getByText('Помощь')).toBeVisible();
+            await expect(getPanelContent(page).getByText('Уведомления')).toBeVisible();
+
+            // A click on an item that owns a submenu opens it without closing the panel.
+            await getPanelContent(page).getByText('Помощь').click();
+
+            await expect(page.locator('.kbq-dropdown__panel').getByText('Nested link')).toBeVisible();
+            await expect(getPanelContent(page).getByText('Интеграции')).toBeVisible();
+
+            await page.keyboard.press('Escape');
+            await page.keyboard.press('Escape');
+
+            // Closed: the items are back in their containers, hidden again.
+            await expect(getPanelContent(page)).toHaveCount(0);
+            await expect(getTrigger(page)).not.toHaveAttribute('inert');
+        });
+
+        test('should give the hidden items back once the navbar has room', async ({ page }) => {
+            await page.goto('/E2eNavbarMore');
+            await waitForNavbarSettled(page);
+
+            await expect(getTrigger(page)).not.toHaveAttribute('inert');
+
+            await page.getByTestId('e2eNavbarMoreFrame').evaluate(async (frame) => {
+                (frame as HTMLElement).style.width = '1200px';
+                window.dispatchEvent(new Event('resize'));
+
+                await new Promise((resolve) => setTimeout(resolve, 100));
+                await new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve, 130)));
+            });
+
+            await expect(getTrigger(page)).toHaveAttribute('inert');
+            await expect(getComponent(page).locator('.kbq-navbar-title')).toHaveCount(8);
+        });
+
+        test('states', async ({ page }) => {
+            await page.goto('/E2eNavbarMore');
+            await waitForNavbarSettled(page);
+            const locator = getComponent(page);
+
+            // The shot's whole content is the outcome of the debounced fit: assert it landed before shooting.
+            await expect(getTrigger(page)).not.toHaveAttribute('inert');
+
+            await page.mouse.move(1200, 10);
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('navbar-more-01-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('navbar-more-01-dark.png');
+        });
+
+        test('panel states', async ({ page }) => {
+            await page.goto('/E2eNavbarMore');
+            await waitForNavbarSettled(page);
+
+            await getTrigger(page).click();
+            await expect(getPanelContent(page).getByText('Помощь')).toBeVisible();
+
+            // The panel renders in the overlay, below the navbar and inside the frame's box: the frame is the
+            // target, not the whole 2400px page.
+            await page.mouse.move(1200, 10);
+            await expect(page.getByTestId('e2eNavbarMoreFrame')).toHaveScreenshot('navbar-more-02-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(page.getByTestId('e2eNavbarMoreFrame')).toHaveScreenshot('navbar-more-02-dark.png');
+        });
+    });
+
     test.describe('E2eNavbarCollapse', () => {
         type CollapseStep = { width: number; overflow: number; collapsed: number };
 
@@ -272,6 +386,11 @@ test.describe('KbqNavbarModule', () => {
          */
         test('should collapse and expand items without the content overflowing', async ({ page }) => {
             await page.goto('/E2eNavbarCollapse');
+
+            // The navbar observes its own element with a resize observer besides the window resize: a report of
+            // the new width arrives a frame after the event and restarts the 100ms debounce, so a step settles
+            // ~a debounce past that frame, and the loop needs the room of twice the per-step settle.
+            test.setTimeout(30_000);
 
             const steps = await page.getByTestId('e2eNavbarCollapseFrame').evaluate(async (frame) => {
                 const navbar = frame.querySelector('.kbq-navbar')!;
@@ -288,7 +407,7 @@ test.describe('KbqNavbarModule', () => {
                     // Queued after the navbar's 100ms resize debounce, then a frame more: the update it makes is
                     // rendered by the change detection it schedules, not synchronously.
                     await new Promise((resolve) => setTimeout(resolve, 100));
-                    await new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve)));
+                    await new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve, 130)));
 
                     const contentRight = Math.max(
                         ...Array.from(navbar.children, (container) => container.getBoundingClientRect().right)

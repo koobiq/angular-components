@@ -146,7 +146,8 @@ export const enUSLocaleData = {
         toggle: {
             expand: 'Expand',
             collapse: 'Collapse'
-        }
+        },
+        more: 'More'
     },
     searchExpandable: {
         tooltip: 'Search',
