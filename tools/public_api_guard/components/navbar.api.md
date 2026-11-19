@@ -27,6 +27,7 @@ import { KbqDeepPartial } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqNavbarLocaleConfiguration } from '@koobiq/components/core';
+import { KbqOverflowFitItem } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
@@ -288,7 +289,7 @@ export type KbqNavbarNestedElement = KbqButton | KbqFormField | KbqNavbarItemTri
 export type KbqNavbarOrientation = 'horizontal' | 'vertical';
 
 // @public (undocumented)
-export class KbqNavbarRectangleElement {
+export class KbqNavbarRectangleElement implements KbqOverflowFitItem {
     constructor();
     readonly alwaysVisible: i0.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     readonly button: Signal<KbqButtonCssStyler | undefined>;
