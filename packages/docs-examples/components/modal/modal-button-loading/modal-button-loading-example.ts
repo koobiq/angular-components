@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { IModalButtonOptions, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
+import { type IModalButtonOptions, type KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
 
@@ -11,7 +11,7 @@ import { TRANSLATIONS } from './l10n';
     selector: 'modal-button-loading-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="openModal()">{{ t().open }}</button>
+        <button kbq-button type="button" (click)="openModal()">{{ t().open }}</button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
