@@ -23,6 +23,7 @@ import {
     TAB,
     UP_ARROW
 } from '@koobiq/components/core';
+import { KbqFocusableComponent } from './navbar.component';
 import { KbqNavbarBento, KbqNavbarItem, KbqNavbarRectangleElement } from './navbar-item.component';
 import { KBQ_NAVBAR_LOCALE_CONFIGURATION } from './navbar-locale';
 import { kbqNavbarTooltipOptionsProvider } from './navbar-tooltip-defaults';

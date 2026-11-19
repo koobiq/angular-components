@@ -1,10 +1,10 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
-import { DestroyRef, inject, Signal } from '@angular/core';
+import { DestroyRef, inject, type Signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { debounce, EMPTY, fromEvent, map, merge, Observable, switchMap, timer } from 'rxjs';
-import { KbqFlexWrap, KbqOrientation } from '../common-behaviors';
+import { debounce, EMPTY, fromEvent, map, merge, type Observable, switchMap, timer } from 'rxjs';
+import type { KbqFlexWrap, KbqOrientation } from '../common-behaviors';
 
 /**
  * Overflow, in device pixels, from which an item is hidden. At a fractional `devicePixelRatio` (browser zoom, display
@@ -177,15 +177,17 @@ export class KbqOverflowFitEngine {
             let excess = overflow;
 
             while (hiddenCount < hideable.length && excess >= threshold) {
-                excess -= sizes.get(hideable[hiddenCount].element) ?? 0;
-                hideable[hiddenCount++].hide();
+                const item = hideable[hiddenCount++]!;
+
+                excess -= sizes.get(item.element) ?? 0;
+                item.hide();
             }
 
             if (hiddenCount) result?.show();
         }
 
         while (hiddenCount < hideable.length && subject.hasOverflown()) {
-            hideable[hiddenCount++].hide();
+            hideable[hiddenCount++]!.hide();
             result?.show();
         }
 

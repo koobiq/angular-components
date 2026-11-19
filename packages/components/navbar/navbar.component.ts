@@ -31,25 +31,6 @@ import {
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import {
-    FocusKeyManager,
-    isHorizontalMovement,
-    isVerticalMovement,
-    KBQ_WINDOW,
-    kbqLeaveTabOrderOnTabOut,
-    KbqLocaleOverridesDirective,
-    KbqOverflowFitEngine,
-    KbqOverflowFitResult,
-    KbqOverflowFitSubject,
-    kbqOverflowRecalculationTriggers,
-    KbqOverlayLayerExclude,
-    kbqQueryListFrom,
-    LEFT_ARROW,
-    RIGHT_ARROW,
-    TAB
-} from '@koobiq/components/core';
-import { KbqDropdown, KbqDropdownTrigger } from '@koobiq/components/dropdown';
-import { KbqIcon } from '@koobiq/components/icon';
-import {
     distinctUntilChanged,
     EMPTY,
     fromEvent,
@@ -60,7 +41,26 @@ import {
     type Subscription,
     switchMap
 } from 'rxjs';
-import { startWith } from 'rxjs/operators';
+import { startWith } from 'rxjs';
+import {
+    FocusKeyManager,
+    isHorizontalMovement,
+    isVerticalMovement,
+    KBQ_WINDOW,
+    kbqLeaveTabOrderOnTabOut,
+    KbqLocaleOverridesDirective,
+    KbqOverflowFitEngine,
+    type KbqOverflowFitResult,
+    type KbqOverflowFitSubject,
+    kbqOverflowRecalculationTriggers,
+    KbqOverlayLayerExclude,
+    kbqQueryListFrom,
+    LEFT_ARROW,
+    RIGHT_ARROW,
+    TAB
+} from '@koobiq/components/core';
+import { KbqDropdown, KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { KbqIcon } from '@koobiq/components/icon';
 import {
     KbqNavbarFocusableItem,
     type KbqNavbarFocusableItemEvent,
@@ -456,6 +456,11 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     constructor() {
         super();
 
+        // The base class builds its key manager over the projected items alone, as a field initializer that
+        // runs before this override's `focusableItems` exists. The «Ещё» trigger joins the roving order while
+        // it is shown, so the manager here is rebuilt over this navbar's own list.
+        this.keyManager = new FocusKeyManager<KbqNavbarFocusableItem>(this.focusableItems).withTypeAhead();
+
         this.destroyRef.onDestroy(() => this.resizeStream.complete());
 
         // Raw resize events must not enter the zone: a single drag fires hundreds of them, and only the
@@ -534,7 +539,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     }
 
     /** @docs-private */
-    ngAfterContentChecked(): void {
+    override ngAfterContentChecked(): void {
         super.ngAfterContentChecked();
 
         this.focusableItemsWithTriggerList();
@@ -770,7 +775,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         const anchored = new Map<KbqNavbarRectangleElement, KbqNavbarRectangleElement>();
 
         for (let i = 0; i < rectangles.length; i++) {
-            const rectangle = rectangles[i];
+            const rectangle = rectangles[i]!;
 
             if (!isDivider(rectangle)) continue;
 
@@ -790,7 +795,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         const ridden = new Set<KbqNavbarRectangleElement>();
 
         for (let i = rectangles.length - 1; i >= 0; i--) {
-            const rectangle = rectangles[i];
+            const rectangle = rectangles[i]!;
 
             // An anchored divider rides with its anchor; this is not its place. One that lost its anchor while
             // riding — the anchor went to the panel — still rides, `anchored` no longer holds it.
@@ -876,10 +881,10 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
                     return;
                 }
 
-                const leftHidden = !!rectangles.get(children[index - 1])?.hidden();
+                const leftHidden = !!rectangles.get(children[index - 1]!)?.hidden();
                 // A shown trigger ends the laid-out content as surely as a hidden item does.
                 const rightHidden =
-                    !!rectangles.get(children[index + 1])?.hidden() ||
+                    !!rectangles.get(children[index + 1]!)?.hidden() ||
                     (children[index + 1] === trigger && this.moreTriggerVisible());
 
                 if (leftHidden && rightHidden) {

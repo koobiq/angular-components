@@ -16,15 +16,15 @@ import {
     untracked
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 import {
     KBQ_WINDOW,
     type KbqFlexWrap,
     kbqInjectNativeElement,
     type KbqOrientation,
-    kbqOverflowRecalculationTriggers,
-    KbqOverflowFitEngine
+    KbqOverflowFitEngine,
+    kbqOverflowRecalculationTriggers
 } from '@koobiq/components/core';
-import { map } from 'rxjs';
 
 /**
  * Elements that `KbqOverflowItems` observes for resize changes on top of its own element and
