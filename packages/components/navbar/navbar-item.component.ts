@@ -38,6 +38,7 @@ import {
     KBQ_WINDOW,
     kbqAnimationsDisabled,
     kbqInjectNativeElement,
+    type KbqOverflowFitItem,
     PopUpPlacements,
     PopUpTriggers,
     RIGHT_ARROW,
@@ -483,7 +484,7 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
         '[attr.aria-hidden]': 'hidden() || null'
     }
 })
-export class KbqNavbarRectangleElement {
+export class KbqNavbarRectangleElement implements KbqOverflowFitItem {
     /** @docs-private */
     protected readonly isBrowser = inject(Platform).isBrowser;
     /** Element the rectangle renders in, the handle the ambient navbar hides it by. @docs-private */
