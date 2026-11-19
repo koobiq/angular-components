@@ -4,7 +4,7 @@ import inquirer from 'inquirer';
 import merge2 from 'merge2';
 import { join } from 'path';
 import { Readable } from 'stream';
-import { IReleaseTaskConfig } from './base-release-task';
+import type { IReleaseTaskConfig } from './base-release-task';
 import { createChangelogWriterOptions } from './changelog-writer-options';
 
 const { yellow, bold } = chalk;

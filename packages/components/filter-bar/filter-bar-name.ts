@@ -1,5 +1,5 @@
-import { InjectionToken, Provider } from '@angular/core';
-import {
+import { InjectionToken, type Provider } from '@angular/core';
+import type {
     KbqDateTimeValue,
     KbqPipe,
     KbqPipeTemplate,

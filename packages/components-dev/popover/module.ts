@@ -1,13 +1,14 @@
 import { A11yModule } from '@angular/cdk/a11y';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, viewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChildren, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import {
     KbqFormsModule,
-    KbqPopUpSizeValues,
-    KbqStickToWindowPlacementValues,
+    type KbqPopUpPlacementValues,
+    type KbqPopUpSizeValues,
+    type KbqStickToWindowPlacementValues,
     PopUpPlacements,
     PopUpSizes
 } from '@koobiq/components/core';
@@ -69,7 +70,7 @@ export class DevDocsExamples {}
         DevThemeToggle
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -79,7 +80,7 @@ export class DevApp {
     popUpPlacements = PopUpPlacements;
 
     popoverActiveStage: number;
-    selectedOrder: boolean;
+    selectedOrder = false;
     isClosable: boolean = false;
 
     isPopoverVisibleLeft: boolean = false;
@@ -113,7 +114,7 @@ export class DevApp {
     selectedTrigger: string = this.TRIGGERS.CLICK;
     selectedSize: KbqPopUpSizeValues = PopUpSizes.Medium;
     layoutClass: string = 'layout-row layout-align-center-center';
-    stickToWindow: KbqStickToWindowPlacementValues;
+    stickToWindow?: KbqStickToWindowPlacementValues;
     content: string = 'button text';
     userDefinedPlacementPriority: string[] = ['bottom', 'right'];
     multipleSelected: string[] = [];
@@ -143,13 +144,13 @@ export class DevApp {
         this.popoverActiveStage += direction;
     }
 
-    onPopoverVisibleChange($event) {
-        if (!$event) {
+    onPopoverVisibleChange(event: boolean) {
+        if (!event) {
             this.activatedPosition = '';
         }
     }
 
-    onStrategyPlacementChange(event) {
+    onStrategyPlacementChange(event: KbqPopUpPlacementValues) {
         this.activatedPosition = event;
     }
 

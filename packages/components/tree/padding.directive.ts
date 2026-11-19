@@ -1,6 +1,6 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
-import { AfterViewInit, computed, Directive, effect, ElementRef, inject, input, Renderer2 } from '@angular/core';
+import { type AfterViewInit, computed, Directive, effect, ElementRef, inject, input, Renderer2 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqTreeBase, KbqTreeNode } from './tree-base';
 import { KbqTreeOption } from './tree-option.component';
@@ -28,7 +28,7 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
         this.setLevelInput(value);
     }
 
-    private _level: number;
+    private _level = 0;
 
     /** Indentation added per nesting level. Accepts a bare number (px) or a value with CSS units. */
     readonly indent = input<number | string>(12, { alias: 'kbqTreeNodePaddingIndent' });
@@ -60,7 +60,7 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
         return this.parsedIndent().units;
     }
 
-    withIcon: boolean;
+    withIcon = false;
 
     /**
      * Horizontal room a toggle takes up in a row: its own 16px box plus the option's 8px `gap`. A node

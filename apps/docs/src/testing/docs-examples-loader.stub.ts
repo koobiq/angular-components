@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Type } from '@angular/core';
+import type { Type } from '@angular/core';
 
 /**
  * Test stub for `@koobiq/docs-examples/loader`, whose generated source imports every folder of examples. Wired in

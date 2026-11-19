@@ -165,7 +165,7 @@ const splitSubsections = (blocks: readonly CompiledBlock[]): DocsMigrationSubsec
     };
 };
 
-const headingIdOf = ([heading]: readonly CompiledBlock[]): string => heading.template.match(HEADING_ID)?.[1] ?? '';
+const headingIdOf = ([heading]: readonly CompiledBlock[]): string => heading?.template.match(HEADING_ID)?.[1] ?? '';
 
 /** The argument of the first directive the expression matches, `''` for one that takes none, or `null`. */
 const readArgument = (blocks: readonly CompiledBlock[], directive: RegExp): string | null => {

@@ -1,6 +1,6 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { EMPTY } from 'rxjs';
 import { FlatTreeControl } from './control/flat-tree-control';
 import { KbqTreeFlatDataSource, KbqTreeFlattener } from './data-source/flat-data-source';

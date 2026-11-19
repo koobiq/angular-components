@@ -2,15 +2,15 @@ import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { ChangeDetectionStrategy, Component, computed, ElementRef, model, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
+import { KbqAutocompleteModule, type KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import {
-    KbqTagEvent,
+    type KbqTagEvent,
     KbqTagInput,
-    KbqTagInputEvent,
-    KbqTagListDroppedEvent,
+    type KbqTagInputEvent,
+    type KbqTagListDroppedEvent,
     KbqTagsModule
 } from '@koobiq/components/tags';
 

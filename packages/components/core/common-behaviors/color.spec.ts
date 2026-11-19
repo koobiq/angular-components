@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { KbqColorDirective, KbqComponentColors } from './color';
 
 @Component({

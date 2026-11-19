@@ -13,10 +13,10 @@ import { TRANSLATIONS } from './l10n';
     selector: 'tooltip-disabled-for-component-example',
     imports: [KbqToolTipModule, KbqButtonModule, KbqIconModule, KbqLink],
     template: `
-        <button kbq-button (click)="disableState = !disableState">{{ t().toggle }}</button>
+        <button kbq-button type="button" (click)="disableState = !disableState">{{ t().toggle }}</button>
 
         <div kbqTooltip="kbq-button" [forDisabledComponent]="button">
-            <button #button kbq-button [attr.aria-label]="t().add" [disabled]="disableState">
+            <button #button kbq-button type="button" [attr.aria-label]="t().add" [disabled]="disableState">
                 <i kbq-icon="kbq-plus_16"></i>
             </button>
         </div>

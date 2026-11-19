@@ -1,6 +1,21 @@
-import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { computed, Directive, forwardRef, input, OnChanges, Provider, SimpleChanges } from '@angular/core';
-import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator, ValidatorFn, Validators } from '@angular/forms';
+import { coerceNumberProperty, type NumberInput } from '@angular/cdk/coercion';
+import {
+    computed,
+    Directive,
+    forwardRef,
+    input,
+    type OnChanges,
+    type Provider,
+    type SimpleChanges
+} from '@angular/core';
+import {
+    type AbstractControl,
+    NG_VALIDATORS,
+    type ValidationErrors,
+    type Validator,
+    type ValidatorFn,
+    Validators
+} from '@angular/forms';
 
 /**
  * Transform for the validator bounds. `coerceNumberProperty`, not `parseInt`: the bound value may be a
@@ -16,11 +31,12 @@ export const KBQ_MIN_VALIDATOR: Provider = {
 };
 
 /**
- * A directive which installs the `KbqMinValidator` for any `formControlName`,
- * `formControl`, or control with `ngModel` that also has a `min` attribute.
+ * A directive which installs the `KbqMinValidator` for a `kbqNumberInput` with
+ * `formControlName`, `formControl`, or `ngModel` that also has a `min` attribute.
  */
 @Directive({
-    selector: '[min][formControlName],[min][formControl],[min][ngModel]',
+    selector:
+        'input[kbqNumberInput][min][formControlName],input[kbqNumberInput][min][formControl],input[kbqNumberInput][min][ngModel]',
     providers: [KBQ_MIN_VALIDATOR],
     host: {
         // Coerced rather than the raw `min()`, so a non-numeric bound (e.g. `"5px"`) is dropped from the
@@ -34,8 +50,8 @@ export class KbqMinValidator implements Validator, OnChanges {
     /** Lower bound installed as `Validators.min`. A non-numeric bound reads back as `NaN`. */
     readonly min = input<number, NumberInput>(undefined!, { transform: bound });
 
-    private validator: ValidatorFn;
-    private onChange: () => void;
+    private validator: ValidatorFn = Validators.nullValidator;
+    private onChange?: () => void;
 
     /** `min()` unless it is `NaN`, which has no DOM representation. */
     protected readonly coercedMin = computed(() => (Number.isNaN(this.min()) ? null : this.min()));
@@ -72,11 +88,12 @@ export const KBQ_MAX_VALIDATOR: Provider = {
 };
 
 /**
- * A directive which installs the `KbqMaxValidator` for any `formControlName`,
- * `formControl`, or control with `ngModel` that also has a `max` attribute.
+ * A directive which installs the `KbqMaxValidator` for a `kbqNumberInput` with
+ * `formControlName`, `formControl`, or `ngModel` that also has a `max` attribute.
  */
 @Directive({
-    selector: '[max][formControlName],[max][formControl],[max][ngModel]',
+    selector:
+        'input[kbqNumberInput][max][formControlName],input[kbqNumberInput][max][formControl],input[kbqNumberInput][max][ngModel]',
     providers: [KBQ_MAX_VALIDATOR],
     host: {
         // See `KbqMinValidator`'s `[attr.min]` for why this is coerced rather than the raw `max()`.
@@ -87,8 +104,8 @@ export class KbqMaxValidator implements Validator, OnChanges {
     /** Upper bound installed as `Validators.max`. A non-numeric bound reads back as `NaN`. */
     readonly max = input<number, NumberInput>(undefined!, { transform: bound });
 
-    private validator: ValidatorFn;
-    private onChange: () => void;
+    private validator: ValidatorFn = Validators.nullValidator;
+    private onChange?: () => void;
 
     /** `max()` unless it is `NaN`, which has no DOM representation. */
     protected readonly coercedMax = computed(() => (Number.isNaN(this.max()) ? null : this.max()));

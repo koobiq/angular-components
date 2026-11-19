@@ -16,7 +16,7 @@ import { TRANSLATIONS } from './l10n';
         KbqIconModule
     ],
     template: `
-        <button kbq-button [attr.aria-label]="t().add" [kbqTooltip]="t().create">
+        <button kbq-button type="button" [attr.aria-label]="t().add" [kbqTooltip]="t().create">
             <i kbq-icon="kbq-plus_16"></i>
         </button>
     `,

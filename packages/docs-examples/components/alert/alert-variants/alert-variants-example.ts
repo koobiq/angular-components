@@ -34,7 +34,7 @@ import { TRANSLATIONS } from './l10n';
             </div>
         </div>
     `,
-    styleUrls: ['alert-variants-example.css'],
+    styleUrl: 'alert-variants-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AlertVariantsExample {

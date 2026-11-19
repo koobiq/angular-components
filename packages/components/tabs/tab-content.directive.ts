@@ -1,4 +1,4 @@
-import { Directive, TemplateRef, inject } from '@angular/core';
+import { Directive, inject, TemplateRef } from '@angular/core';
 
 /** Decorates the `ng-template` tags and reads out the template from it. */
 @Directive({

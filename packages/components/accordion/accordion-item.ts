@@ -8,16 +8,19 @@ import {
     inject,
     input,
     linkedSignal,
-    OnChanges,
-    OnDestroy,
-    OnInit,
+    type OnChanges,
+    type OnDestroy,
+    type OnInit,
     output,
-    SimpleChanges,
+    type SimpleChanges,
     untracked
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { KbqAccordion, KbqAccordionOrientation } from './accordion';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
+import { KbqAccordion, type KbqAccordionOrientation } from './accordion';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqAccordionContentDirective } from './accordion-content.directive';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqAccordionTrigger } from './accordion-trigger';
 import { KbqAccordionTriggerDirective } from './accordion-trigger.directive';
 

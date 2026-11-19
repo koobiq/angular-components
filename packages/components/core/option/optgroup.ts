@@ -8,8 +8,8 @@ let uniqueOptgroupIdCounter = 0;
  */
 @Component({
     selector: 'kbq-optgroup',
-    templateUrl: 'optgroup.html',
-    styleUrls: ['./optgroup.scss'],
+    templateUrl: './optgroup.html',
+    styleUrl: './optgroup.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

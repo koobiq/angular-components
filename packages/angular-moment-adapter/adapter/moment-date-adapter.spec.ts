@@ -1,17 +1,16 @@
 import { LOCALE_ID } from '@angular/core';
 import { inject, TestBed } from '@angular/core/testing';
+import moment, { type Moment } from 'moment';
 import {
     DateAdapter,
     KBQ_DATE_LOCALE,
     KBQ_LOCALE_SERVICE,
     kbqDateTimezoneProvider,
     KbqDateTimezoneService,
-    KbqTimezoneLike
+    type KbqTimezoneLike
 } from '@koobiq/components/core';
-import moment, { Moment } from 'moment';
-
 import { KBQ_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateModule } from './index';
-import { IKbqMomentDateAdapterOptions, MomentDateAdapter } from './moment-date-adapter';
+import type { IKbqMomentDateAdapterOptions, MomentDateAdapter } from './moment-date-adapter';
 
 const JAN = 0;
 

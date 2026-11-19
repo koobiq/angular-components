@@ -1,4 +1,4 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-popover-theme() {
     .kbq-popover {
@@ -14,8 +14,8 @@
     }
 
     .kbq-popover__arrow {
-        box-shadow: var(--kbq-popover-container-shadow);
         background: var(--kbq-popover-container-background);
+        box-shadow: var(--kbq-popover-container-shadow);
     }
 
     .kbq-popover__close.kbq-popover__close_background-overlay-inverse {
@@ -33,10 +33,10 @@
 
 @mixin kbq-popover-typography() {
     .kbq-popover__header {
-        @include kbq-typography-level-to-styles-css-variables(typography, subheading);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, subheading);
     }
 
     .kbq-popover__content {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }

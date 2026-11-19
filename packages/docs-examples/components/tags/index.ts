@@ -10,8 +10,8 @@ import { TagAutocompleteRemovableExample } from './tag-autocomplete-removable/ta
 import { TagAutocompleteSearchExample } from './tag-autocomplete-search/tag-autocomplete-search-example';
 import { TagAutocompleteWithFormControlValidatorsExample } from './tag-autocomplete-with-form-control-validators/tag-autocomplete-with-form-control-validators-example';
 import { TagDisabledExample } from './tag-disabled/tag-disabled-example';
-import { TagEditableWithValidationExample } from './tag-editable-with-validation/tag-editable-with-validation-example';
 import { TagEditableExample } from './tag-editable/tag-editable-example';
+import { TagEditableWithValidationExample } from './tag-editable-with-validation/tag-editable-with-validation-example';
 import { TagFillAndStyleExample } from './tag-fill-and-style/tag-fill-and-style-example';
 import { TagInputCleanerWithDisabledExample } from './tag-input-cleaner-with-disabled/tag-input-cleaner-with-disabled-example';
 import { TagInputDraggableExample } from './tag-input-draggable/tag-input-draggable-example';

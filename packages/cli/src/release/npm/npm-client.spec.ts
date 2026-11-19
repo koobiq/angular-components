@@ -1,6 +1,6 @@
 import { spawnSync } from 'child_process';
 import type { MockedFunction } from 'vitest';
-import { NpmViewError, npmViewDistTag } from './npm-client';
+import { npmViewDistTag, NpmViewError } from './npm-client';
 
 vi.mock('child_process');
 

@@ -1,4 +1,4 @@
-import { Translations } from '@koobiq/docs-examples/i18n';
+import type { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Event rows and column headers of the long-cell-content example. */
 export interface ExampleTranslation {

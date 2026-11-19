@@ -17,7 +17,7 @@ import { TRANSLATIONS } from './l10n';
     ],
     template: `
         <div class="layout-column" style="gap: 16px; align-items: flex-start">
-            <button kbq-button [kbqTooltip]="t().tooltip" [hideWithTimeout]="true">
+            <button kbq-button type="button" [kbqTooltip]="t().tooltip" [hideWithTimeout]="true">
                 {{ t().buttonWithTooltip }}
             </button>
         </div>

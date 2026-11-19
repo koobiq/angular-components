@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
-import { KbqSplitter, KbqSplitterAppearance, KbqSplitterPanel } from '@koobiq/components/splitter';
+import { KbqSplitter, type KbqSplitterAppearance, KbqSplitterPanel } from '@koobiq/components/splitter';
 
 /**
  * @title Splitter appearance

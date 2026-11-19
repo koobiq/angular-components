@@ -5,24 +5,31 @@ import { KbqOptionModule, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
+import {
+    FlatTreeControl,
+    KbqTreeFlatDataSource,
+    KbqTreeFlattener,
+    KbqTreeModule,
+    type KbqTreeOption,
+    type KbqTreeSelectAllEvent
+} from '@koobiq/components/tree';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
 
 export class FileNode {
     protected readonly t = injectTranslation(TRANSLATIONS);
 
-    children: FileNode[];
-    name: string;
+    children?: FileNode[];
+    name = '';
     type: any;
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-    name: string;
+    name = '';
     type: any;
-    level: number;
-    expandable: boolean;
+    level = 0;
+    expandable = false;
     parent: any;
 }
 
@@ -135,9 +142,9 @@ export const DATA_OBJECT = {
                 </div>
 
                 <kbq-option-action
+                    kbqTooltip="Tooltip text"
                     [kbqDropdownTriggerFor]="dropdown"
                     [kbqPlacement]="popUpPlacements.Right"
-                    [kbqTooltip]="'Tooltip text'"
                 />
             </kbq-tree-option>
 
@@ -152,17 +159,17 @@ export const DATA_OBJECT = {
                 </div>
 
                 <kbq-option-action
+                    kbqTooltip="Tooltip text"
                     [kbqDropdownTriggerFor]="dropdown"
                     [kbqPlacement]="popUpPlacements.Right"
-                    [kbqTooltip]="'Tooltip text'"
                 />
             </kbq-tree-option>
         </kbq-tree-selection>
 
         <kbq-dropdown #dropdown>
-            <button kbq-dropdown-item>action 1</button>
-            <button kbq-dropdown-item>action 2</button>
-            <button kbq-dropdown-item>action 3</button>
+            <button kbq-dropdown-item type="button">action 1</button>
+            <button kbq-dropdown-item type="button">action 2</button>
+            <button kbq-dropdown-item type="button">action 3</button>
         </kbq-dropdown>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -197,8 +204,8 @@ export class TreeActionButtonExample {
         return nodeData.expandable;
     }
 
-    onSelectAllChange($event) {
-        console.log('All items selected', $event);
+    onSelectAllChange(event: KbqTreeSelectAllEvent<KbqTreeOption>) {
+        console.log('All items selected', event);
     }
 
     private transformer = (node: FileNode, level: number, parent: any) => {
@@ -221,7 +228,7 @@ export class TreeActionButtonExample {
         return node.expandable;
     };
 
-    private getChildren = (node: FileNode): FileNode[] => {
+    private getChildren = (node: FileNode): FileNode[] | undefined => {
         return node.children;
     };
 

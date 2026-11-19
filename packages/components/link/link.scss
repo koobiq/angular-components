@@ -4,11 +4,11 @@
 
 // Sass writes an escape in a quoted string as the character itself, an invisible one here. Unquoted, the
 // joiner reaches the CSS as the `\2060` escape.
-$_kbq-link-word-joiner: string.unquote('"\\2060"');
+$-kbq-link-word-joiner: string.unquote('"\\2060"');
 
 // Only an icon or an image after the text keeps its distance from it: the punctuation ending a sentence
 // follows the last word immediately.
-@mixin _kbq-link-gaps($gap, $external-icon-gap) {
+@mixin -kbq-link-gaps($gap, $external-icon-gap) {
     .kbq-link__prefix + .kbq-link__text {
         margin-inline-start: $gap;
     }
@@ -30,13 +30,13 @@ $_kbq-link-word-joiner: string.unquote('"\\2060"');
 // out without adding to the specificity of a rule.
 // @TODO: drop `:where([kbqlink])` together with `link/deprecated`: the plain `.kbq-link` is enough then.
 .kbq-link:where([kbqlink]) {
-    display: inline;
-
-    text-decoration: none;
-
     @include link.kbq-link-root();
     @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     @include link.kbq-link-states('.kbq-link__text');
+    @include -kbq-link-gaps(var(--kbq-link-size-normal-content-padding), 1px);
+
+    display: inline;
+    text-decoration: none;
 
     &.kbq-link_use-visited:visited:not(.kbq-disabled),
     &.kbq-link_use-visited.kbq-visited:not(.kbq-disabled) {
@@ -51,9 +51,9 @@ $_kbq-link-word-joiner: string.unquote('"\\2060"');
     // line to the next stays on the link. It changes neither the line height nor the focus ring, drawn around
     // the link itself, so a link that fits on one line keeps it too.
     .kbq-link__text {
-        padding-block: var(--kbq-link-size-multiline-hit-area-gap);
-
         @include link.kbq-link-text();
+
+        padding-block: var(--kbq-link-size-multiline-hit-area-gap);
     }
 
     // The states color the underline whatever the mode: a link underlined on hover only, or never, has no line
@@ -69,8 +69,8 @@ $_kbq-link-word-joiner: string.unquote('"\\2060"');
         vertical-align: baseline;
 
         &:has(> svg) {
-            vertical-align: middle;
             line-height: 0;
+            vertical-align: middle;
         }
     }
 
@@ -82,8 +82,8 @@ $_kbq-link-word-joiner: string.unquote('"\\2060"');
 
         &:not(:empty)::before {
             // Firefox before 128 and Safari before 17.4 drop the declaration with the alternative text
-            content: $_kbq-link-word-joiner;
-            content: $_kbq-link-word-joiner / '';
+            content: $-kbq-link-word-joiner;
+            content: $-kbq-link-word-joiner / '';
         }
 
         // Only the joint stays on one line: a suffix, such as a caption, wraps inside like the text
@@ -92,10 +92,9 @@ $_kbq-link-word-joiner: string.unquote('"\\2060"');
         }
     }
 
-    @include _kbq-link-gaps(var(--kbq-link-size-normal-content-padding), 1px);
-
     &.kbq-link_size_compact {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
+        @include -kbq-link-gaps(var(--kbq-link-size-compact-content-padding), 0px);
 
         .kbq-link__prefix.kbq-icon {
             vertical-align: text-top;
@@ -108,13 +107,11 @@ $_kbq-link-word-joiner: string.unquote('"\\2060"');
         .kbq-link__external-icon {
             margin-bottom: 1px;
         }
-
-        @include _kbq-link-gaps(var(--kbq-link-size-compact-content-padding), 0px);
     }
 
     &.kbq-link_size_big {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
-        @include _kbq-link-gaps(var(--kbq-link-size-big-content-padding), 2px);
+        @include -kbq-link-gaps(var(--kbq-link-size-big-content-padding), 2px);
     }
 
     // An icon without a color of its own takes the color of the link in every state

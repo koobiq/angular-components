@@ -1,4 +1,4 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-notification-center-theme() {
     .kbq-notification-center {
@@ -24,10 +24,10 @@
 
 @mixin kbq-notification-center-typography() {
     .kbq-notification-center {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
     }
 
     .kbq-notification-center-title__text {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-big-strong);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big-strong);
     }
 }

@@ -4,18 +4,18 @@
 
 .dev-mfe {
     padding: var(--kbq-size-l);
+
+    color: var(--kbq-foreground-contrast);
+    background: var(--kbq-background-bg);
     border: 1px solid var(--kbq-line-contrast-less, rgb(0 0 0 / 12%));
     border-radius: var(--kbq-size-s);
-
-    background: var(--kbq-background-bg);
-    color: var(--kbq-foreground-contrast);
 }
 
 .dev-mfe__bar {
     display: flex;
+    gap: var(--kbq-size-m);
     align-items: center;
     justify-content: space-between;
-    gap: var(--kbq-size-m);
 
     margin-bottom: var(--kbq-size-m);
 }
@@ -23,8 +23,8 @@
 .dev-mfe__mode {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
     gap: var(--kbq-size-m);
+    align-items: center;
 
     margin-bottom: var(--kbq-size-m);
 }
@@ -38,7 +38,6 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--kbq-size-s);
-
     margin-bottom: var(--kbq-size-m);
 }
 

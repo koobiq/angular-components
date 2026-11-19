@@ -1,8 +1,6 @@
 .example-accordion-image {
     width: 336px;
     height: 110px;
-
-    border-radius: var(--kbq-size-s);
-
     background: var(--kbq-background-bg-secondary);
+    border-radius: var(--kbq-size-s);
 }

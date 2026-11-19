@@ -25,7 +25,7 @@ import { TRANSLATIONS } from './l10n';
                 <input kbqInput />
             </kbq-form-field>
 
-            <button kbq-button kbqFieldsetItem kbqStyle="outline">
+            <button kbq-button kbqFieldsetItem type="button" kbqStyle="outline">
                 <i kbq-icon="kbq-floppy-disk_16"></i>
                 {{ t().save }}
             </button>

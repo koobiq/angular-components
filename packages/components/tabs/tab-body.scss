@@ -3,6 +3,8 @@
 $easing: cubic-bezier(0.35, 0, 0.25, 1);
 
 .kbq-tab-body__content {
+    @include animation.kbq-animations-off();
+
     height: 100%;
     overflow: auto;
 
@@ -16,13 +18,13 @@ $easing: cubic-bezier(0.35, 0, 0.25, 1);
 
     // A side body keeps a height before it moves: Chrome skips the transition of an element without one in RTL.
     &.kbq-tab-body__content_left {
-        transform: translate3d(-100%, 0, 0);
         min-height: 1px;
+        transform: translate3d(-100%, 0, 0);
     }
 
     &.kbq-tab-body__content_right {
-        transform: translate3d(100%, 0, 0);
         min-height: 1px;
+        transform: translate3d(100%, 0, 0);
     }
 
     &.kbq-tab-body__content_left-origin-center {
@@ -39,8 +41,6 @@ $easing: cubic-bezier(0.35, 0, 0.25, 1);
     &.kbq-tab-body__content_right-origin-center {
         @include animation.kbq-animations-off();
     }
-
-    @include animation.kbq-animations-off();
 }
 
 @keyframes kbq-tab-body-from-left {

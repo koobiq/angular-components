@@ -1,8 +1,8 @@
 @use '../core/styles/common/animation';
 @use '../core/styles/common/tokens';
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
-@mixin _overflow-items-margins {
+@mixin -overflow-items-margins {
     padding: var(--kbq-size-border-width);
 
     > .kbq-overflow-item {
@@ -22,25 +22,28 @@
 }
 
 .kbq-top-bar {
-    z-index: var(--kbq-top-bar-z-index);
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-direction: row;
-    box-sizing: border-box;
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+    @include squircle.kbq-squircle(var(--kbq-top-bar-border-radius));
 
     position: var(--kbq-top-bar-position);
     inset-block-start: var(--kbq-top-bar-inset-block-start);
-    background-color: var(--kbq-top-bar-background);
+    z-index: var(--kbq-top-bar-z-index);
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    box-sizing: border-box;
     padding: var(--kbq-top-bar-padding-vertical) var(--kbq-top-bar-padding-horizontal);
-    @include kbq-squircle(var(--kbq-top-bar-border-radius));
+
+    background-color: var(--kbq-top-bar-background);
 
     &.kbq-top-bar_with-shadow {
+        @include animation.kbq-animations-off();
+
         box-shadow: var(--kbq-top-bar-shadow-bottom);
         transition: box-shadow var(--kbq-top-bar-shadow-transition);
-
-        @include animation.kbq-animations-off();
     }
 
     .kbq-top-bar-spacer {
@@ -63,21 +66,22 @@
         &.kbq-overflow-items,
         &:has(> .kbq-overflow-items) {
             gap: unset;
-            overflow: hidden;
             // reduce height added by overflow-items' padding
             margin-block: calc(-1 * var(--kbq-size-border-width));
+            overflow: hidden;
         }
 
         &.kbq-overflow-items,
         > .kbq-overflow-items {
-            @include _overflow-items-margins;
+            @include -overflow-items-margins;
         }
 
         &.kbq-top-bar-container_start {
             display: flex;
-            gap: var(--kbq-top-bar-container-start-gap);
             flex: 1 1 auto;
+            gap: var(--kbq-top-bar-container-start-gap);
             justify-content: flex-start;
+
             min-width: var(--kbq-top-bar-container-start-min-width);
         }
 
@@ -87,6 +91,4 @@
             justify-content: end;
         }
     }
-
-    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
 }

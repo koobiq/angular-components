@@ -13,7 +13,7 @@ import { TRANSLATIONS } from './l10n';
         KbqButtonModule
     ],
     template: `
-        <button class="kbq-progress" kbq-button [color]="colors.Contrast">{{ t().button }}</button>
+        <button class="kbq-progress" kbq-button type="button" [color]="colors.Contrast">{{ t().button }}</button>
         &nbsp;
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

@@ -1,9 +1,9 @@
 import { Platform } from '@angular/cdk/platform';
 import { DestroyRef, Directive, inject, model, NgZone, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { isHtmlElementOrNull, kbqInjectNativeElement } from '@koobiq/components/core';
 import { filter, fromEvent } from 'rxjs';
-import { KbqFile } from '../file-upload';
+import { isHtmlElementOrNull, kbqInjectNativeElement } from '@koobiq/components/core';
+import type { KbqFile } from '../file-upload';
 
 const isFolderCanBeDragged = (): boolean => 'webkitGetAsEntry' in DataTransferItem.prototype;
 const entryIsDirectory = (entry?: FileSystemEntry): entry is FileSystemDirectoryEntry => !!entry && entry.isDirectory;
@@ -38,7 +38,7 @@ export class KbqDrop {
                 .filter((item: DataTransferItem) => item.kind === 'file')
                 .map((item: DataTransferItem) => item.webkitGetAsEntry()!);
 
-            Promise.all(fileEntries.map(unwrapDirectory))
+            void Promise.all(fileEntries.map(unwrapDirectory))
                 .then((fileList) => fileList.reduce((res, next) => res.concat(next), []))
                 .then((entries: KbqFile[]) => this.filesDropped.emit(entries));
         }
@@ -95,7 +95,7 @@ export class KbqFileDropDirective extends KbqDrop {
     }
 
     /** @docs-private */
-    onDrop(event: DragEvent): void {
+    override onDrop(event: DragEvent): void {
         super.onDrop(event);
         this.dragover.set(false);
     }

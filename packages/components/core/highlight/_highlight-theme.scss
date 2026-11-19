@@ -1,19 +1,18 @@
-@use '../styles/common/squircle' as *;
+@use '../styles/common/squircle';
 
 @mixin kbq-highlight-theme() {
     .kbq-highlight {
-        color: inherit;
-
         font-weight: bold;
+        color: inherit;
         background-color: transparent;
     }
 }
 
 @mixin kbq-highlight-background-theme() {
     .kbq-highlight-background {
+        @include squircle.kbq-squircle(var(--kbq-size-xxs));
+
         color: var(--kbq-foreground-contrast);
         background-color: var(--kbq-background-highlight);
-
-        @include kbq-squircle(var(--kbq-size-xxs));
     }
 }

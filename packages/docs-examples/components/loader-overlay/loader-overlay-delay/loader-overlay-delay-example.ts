@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, model, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
+import { switchMap, timer } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { kbqDelayLoadingIndicator } from '@koobiq/components/core';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { switchMap, timer } from 'rxjs';
 import { TRANSLATIONS } from './l10n';
 
 /**
@@ -26,7 +26,7 @@ import { TRANSLATIONS } from './l10n';
                 <kbq-button-toggle [value]="2000">2 s</kbq-button-toggle>
             </kbq-button-toggle-group>
 
-            <button kbq-button [disabled]="loading()" (click)="load()">{{ t().refresh }}</button>
+            <button kbq-button type="button" [disabled]="loading()" (click)="load()">{{ t().refresh }}</button>
         </div>
 
         <div class="example__card">

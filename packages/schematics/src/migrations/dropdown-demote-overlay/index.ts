@@ -1,7 +1,7 @@
-import { Path } from '@angular-devkit/core';
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Path } from '@angular-devkit/core';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
-import { getSimpleAttributeName, visitAll, Visitor } from '../../utils/ast';
+import { getSimpleAttributeName, visitAll, type Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
@@ -15,9 +15,9 @@ import {
     templateWarnPatterns,
     tsWarnPatterns,
     UNPARSEABLE_TEMPLATE_MESSAGE,
-    WarnPattern
+    type WarnPattern
 } from './data';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 const TS_EXT = '.ts';
 const HTML_EXT = '.html';
@@ -241,7 +241,7 @@ function removeImport(content: string, symbol: string, from: string): string {
         if (items.length === 0) return full;
 
         // Handle `<name> as <alias>` — match on the source name, not the alias.
-        const kept = items.filter((spec) => spec.split(/\s+as\s+/)[0].trim() !== symbol);
+        const kept = items.filter((spec) => spec.split(/\s+as\s+/)[0]?.trim() !== symbol);
 
         if (kept.length === items.length) return full;
         if (kept.length === 0) return '';

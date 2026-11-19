@@ -1,5 +1,5 @@
-import { inject, Injectable, InjectionToken, isDevMode, Provider, signal, Signal } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { inject, Injectable, InjectionToken, isDevMode, type Provider, type Signal, signal } from '@angular/core';
+import { type Observable, Subject } from 'rxjs';
 
 /**
  * Time zone the library renders dates in.

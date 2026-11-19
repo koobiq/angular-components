@@ -1,5 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KBQ_SCROLLBAR_CONFIG, KbqScrollbarModule, KbqScrollbarOptions } from '@koobiq/components/scrollbar/deprecated';
+import {
+    KBQ_SCROLLBAR_CONFIG,
+    KbqScrollbarModule,
+    type KbqScrollbarOptions
+} from '@koobiq/components/scrollbar/deprecated';
 
 /**
  * @title Scrollbar with custom KBQ_SCROLLBAR_CONFIG

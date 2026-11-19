@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Provider } from '@angular/core';
+import { ChangeDetectionStrategy, Component, type Provider } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
 import {
@@ -9,17 +9,17 @@ import {
     kbqLocaleServiceProvider
 } from '@koobiq/components/core';
 import {
-    KbqFilter,
+    type KbqFilter,
     KbqFilterBarModule,
-    KbqFilterBarNameResolver,
-    KbqPipeTemplate,
+    type KbqFilterBarNameResolver,
+    type KbqPipeTemplate,
     KbqPipeTypes,
-    KbqSelectValue,
-    KbqTreeSelectNode
+    type KbqSelectValue,
+    type KbqTreeSelectNode
 } from '@koobiq/components/filter-bar';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { TRANSLATIONS } from './l10n';
+import { type ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * The date pipe resolves `DateAdapter` and `DateFormatter` through the element injector, so both must be
@@ -72,7 +72,11 @@ export class LocalizationDemoBar {
     private readonly t = injectTranslation(TRANSLATIONS);
 
     /** One resolver for every pipe, option, preset and node label in this bar. */
-    protected readonly nameResolver: KbqFilterBarNameResolver = ({ key, fallback }) => this.t()[key] ?? fallback;
+    protected readonly nameResolver: KbqFilterBarNameResolver = ({ key }) => {
+        const translation = this.t();
+
+        return key in translation ? translation[key as keyof ExampleTranslation] : undefined;
+    };
 
     /** Periods of the `date` pipe. The `name` is the stable fallback identity; `nameKey` is translated. */
     private readonly datePresets: DemoPeriodValue[] = [

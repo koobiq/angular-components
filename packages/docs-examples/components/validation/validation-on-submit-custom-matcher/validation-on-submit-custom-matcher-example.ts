@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal, viewChildren } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { timer } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     kbqErrorStateMatcherProvider,
@@ -9,7 +10,6 @@ import {
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { timer } from 'rxjs';
 import { TRANSLATIONS } from './l10n';
 
 /**

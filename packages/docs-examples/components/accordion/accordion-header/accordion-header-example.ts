@@ -12,7 +12,7 @@ import { TRANSLATIONS } from './l10n';
 @Component({
     selector: 'accordion-header-example',
     imports: [KbqAccordionModule, KbqBadgeModule, KbqCheckboxModule, KbqIcon, KbqIconButton],
-    templateUrl: 'accordion-header-example.html',
+    templateUrl: './accordion-header-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionHeaderExample {

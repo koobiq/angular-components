@@ -1,4 +1,11 @@
-import { ClassEntry, DocEntry, EntryType, MemberEntry, MemberTags, MemberType } from '../rendering/entities';
+import {
+    type ClassEntry,
+    type DocEntry,
+    EntryType,
+    type MemberEntry,
+    MemberTags,
+    MemberType
+} from '../rendering/entities';
 import { generateManifest } from './';
 
 describe('api manifest generation', () => {

@@ -1,5 +1,5 @@
 import { createSearchPredicate } from '@koobiq/components/core';
-import { KbqSelectValue } from '../filter-bar.types';
+import type { KbqSelectValue } from '../filter-bar.types';
 
 /**
  * Stable translation key of a select option: its own nonempty `nameKey`, or the key borrowed from the
@@ -16,7 +16,7 @@ export const kbqFilterSelectValueNameKey = (
 
     const matches = values.filter((item) => item.id === value.id);
 
-    return matches.length === 1 ? matches[0].nameKey || undefined : undefined;
+    return matches.length === 1 ? matches[0]!.nameKey || undefined : undefined;
 };
 
 /**

@@ -1,15 +1,15 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
-    EnvironmentProviders,
+    type EnvironmentProviders,
     inject,
     makeStateKey,
     PLATFORM_ID,
     provideAppInitializer,
-    Provider,
+    type Provider,
     REQUEST,
     TransferState
 } from '@angular/core';
-import { KBQ_DATE_TIMEZONE, KbqTimezoneLike } from '@koobiq/components/core';
+import { KBQ_DATE_TIMEZONE, type KbqTimezoneLike } from '@koobiq/components/core';
 
 const TIMEZONE_COOKIE = 'kbq-dev-timezone';
 const TIMEZONE_KEY = makeStateKey<KbqTimezoneLike>('kbqDevTimezone');

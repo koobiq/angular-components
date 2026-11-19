@@ -15,8 +15,8 @@
 </ng-template>
 
 <div style="gap: 16px" class="layout-row">
-    <button kbq-button (click)="showContrastToast(toastActionInfo)">{{ t().info }}</button>
-    <button kbq-button (click)="showSuccessToast()">{{ t().success }}</button>
-    <button kbq-button (click)="showWarningToast(toastActionWarning)">{{ t().warning }}</button>
-    <button kbq-button (click)="showErrorToast(toastActionError)">{{ t().error }}</button>
+    <button kbq-button type="button" (click)="showContrastToast(toastActionInfo)">{{ t().info }}</button>
+    <button kbq-button type="button" (click)="showSuccessToast()">{{ t().success }}</button>
+    <button kbq-button type="button" (click)="showWarningToast(toastActionWarning)">{{ t().warning }}</button>
+    <button kbq-button type="button" (click)="showErrorToast(toastActionError)">{{ t().error }}</button>
 </div>

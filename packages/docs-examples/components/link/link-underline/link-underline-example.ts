@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
-import { KbqLink, KbqLinkUnderline } from '@koobiq/components/link';
+import { KbqLink, type KbqLinkUnderline } from '@koobiq/components/link';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
 

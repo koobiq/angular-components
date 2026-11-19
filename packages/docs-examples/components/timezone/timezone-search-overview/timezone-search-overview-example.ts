@@ -1,6 +1,7 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, map, merge, type Observable, of } from 'rxjs';
 import { createSearchPredicate, kbqInjectLocaleConfiguration, tokenizeSearchQuery } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -10,15 +11,13 @@ import {
     getZonesGroupedByCountry,
     KBQ_TIMEZONE_LOCALE_CONFIGURATION,
     kbqResolveHostCountry,
-    KbqTimezoneGroup,
+    type KbqTimezoneGroup,
     KbqTimezoneModule,
-    KbqTimezoneZone,
+    type KbqTimezoneZone,
     offsetFormatter,
     resolveZoneOffset
 } from '@koobiq/components/timezone';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { merge, Observable, of } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { timezones } from '../timezone-data';
 import { TRANSLATIONS } from './l10n';
 
@@ -46,7 +45,7 @@ function normalizeOffsetDash(value: string): string {
                 <!-- No [placeholder] here: the select fills it in from the active locale. -->
                 <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-                    <input autocomplete="off" kbqInput type="text" [formControl]="searchControl" />
+                    <input kbqInput type="text" [formControl]="searchControl" />
                     <kbq-cleaner />
                 </kbq-form-field>
 
@@ -68,7 +67,7 @@ function normalizeOffsetDash(value: string): string {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimezoneSearchOverviewExample implements OnInit {
+export class TimezoneSearchOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
 
     filteredOptions$: Observable<KbqTimezoneGroup[]>;
@@ -92,9 +91,7 @@ export class TimezoneSearchOverviewExample implements OnInit {
         }));
 
         this.priorityCountry = kbqResolveHostCountry(this.data);
-    }
 
-    ngOnInit(): void {
         this.filteredOptions$ = merge(
             of(this.group(this.data)),
             this.searchControl.valueChanges.pipe(

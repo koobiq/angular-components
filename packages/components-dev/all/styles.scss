@@ -3,7 +3,6 @@
 .dev-all-shell {
     display: flex;
     flex-direction: row;
-
     height: 100vh;
 }
 
@@ -15,26 +14,25 @@
 
     min-width: 0;
     padding: var(--kbq-size-s);
+    overflow: hidden;
 
     background-color: var(--kbq-background-bg-secondary);
-
-    overflow: hidden;
 }
 
 .dev-all-nav {
     display: flex;
     flex-direction: column;
-
     overflow-y: auto;
 }
 
 .dev-all-nav__link {
     padding: var(--kbq-size-xxs) var(--kbq-size-xs);
 
-    color: var(--kbq-foreground-contrast);
     text-decoration: none;
 
+    color: var(--kbq-foreground-contrast);
     border-radius: var(--kbq-size-xxs);
+
     cursor: pointer;
 
     &:hover {
@@ -44,21 +42,17 @@
 
 .dev-all-nav__link_active {
     color: var(--kbq-foreground-theme);
-
     background-color: var(--kbq-states-background-contrast-less-active);
 }
 
 .dev-all-nav__empty {
     padding: var(--kbq-size-xs);
-
     color: var(--kbq-foreground-contrast-secondary);
 }
 
 // No padding: `popover` and `tooltip` set `dev-app { height: 100%; width: 100% }`, which would overflow.
 .dev-all-content {
     flex: 1 1 auto;
-
     min-width: 0;
-
     overflow: auto;
 }

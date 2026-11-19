@@ -15,19 +15,25 @@ import { TRANSLATIONS } from './l10n';
         KbqToolTipModule
     ],
     template: `
-        <button kbq-button [kbqTooltip]="t().tooltip" [kbqTooltipColor]="KbqComponentColors.Contrast">
+        <button kbq-button type="button" [kbqTooltip]="t().tooltip" [kbqTooltipColor]="KbqComponentColors.Contrast">
             Contrast (default)
         </button>
 
-        <button kbq-button [kbqTooltip]="t().tooltip" [kbqTooltipColor]="KbqComponentColors.ContrastFade">
+        <button kbq-button type="button" [kbqTooltip]="t().tooltip" [kbqTooltipColor]="KbqComponentColors.ContrastFade">
             Contrast Fade
         </button>
 
-        <button kbq-button [kbqTooltip]="t().tooltip" [kbqTooltipColor]="KbqComponentColors.Error">Error</button>
+        <button kbq-button type="button" [kbqTooltip]="t().tooltip" [kbqTooltipColor]="KbqComponentColors.Error">
+            Error
+        </button>
 
-        <button kbq-button [kbqTooltip]="t().tooltip" [kbqTooltipColor]="KbqComponentColors.Warning">Warning</button>
+        <button kbq-button type="button" [kbqTooltip]="t().tooltip" [kbqTooltipColor]="KbqComponentColors.Warning">
+            Warning
+        </button>
 
-        <button kbq-button [kbqTooltip]="t().tooltip" [kbqTooltipColor]="KbqComponentColors.Theme">Theme</button>
+        <button kbq-button type="button" [kbqTooltip]="t().tooltip" [kbqTooltipColor]="KbqComponentColors.Theme">
+            Theme
+        </button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {

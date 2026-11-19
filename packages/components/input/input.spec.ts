@@ -1,16 +1,17 @@
-﻿import { Component, Directive, ElementRef, inject, Provider, Type, viewChild } from '@angular/core';
-import { ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
+﻿import { Component, Directive, ElementRef, inject, type Provider, type Type, viewChild } from '@angular/core';
+import { type ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import {
-    AsyncValidatorFn,
+    type AsyncValidatorFn,
     FormControl,
-    FormControlStatus,
+    type FormControlStatus,
     FormGroup,
     FormsModule,
     ReactiveFormsModule,
-    ValidationErrors,
+    type ValidationErrors,
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { map, type Observable, timer } from 'rxjs';
 import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
@@ -23,7 +24,6 @@ import {
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KBQ_INPUT_VALUE_ACCESSOR, KbqInput, KbqInputModule } from '@koobiq/components/input';
-import { map, Observable, timer } from 'rxjs';
 
 function createComponent<T>(component: Type<T>, imports: any[] = [], providers: Provider[] = []): ComponentFixture<T> {
     TestBed.resetTestingModule();
@@ -296,6 +296,28 @@ class InputWithoutForm {
 }
 
 @Component({
+    imports: [KbqInputModule],
+    template: `
+        <kbq-form-field>
+            <input kbqInput autocomplete="on" />
+        </kbq-form-field>
+    `
+})
+class InputWithBrowserAutocomplete {}
+
+@Component({
+    imports: [KbqInputModule],
+    template: `
+        <kbq-form-field>
+            <input kbqInput [attr.autocomplete]="autocomplete" />
+        </kbq-form-field>
+    `
+})
+class InputWithBoundAutocomplete {
+    autocomplete = 'email';
+}
+
+@Component({
     imports: [
         KbqInputModule,
         ReactiveFormsModule
@@ -455,6 +477,34 @@ describe('KbqInput', () => {
             fixture.detectChanges();
 
             expect(inputElement.getAttribute('placeholder')).toBe('');
+        });
+
+        describe('browser autocomplete', () => {
+            it('should be off by default', () => {
+                const fixture = createComponent(InputWithoutForm);
+                const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+
+                expect(inputElement.getAttribute('autocomplete')).toBe('off');
+            });
+
+            it('should keep the autocomplete the consumer set statically', () => {
+                const fixture = createComponent(InputWithBrowserAutocomplete);
+                const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+
+                expect(inputElement.getAttribute('autocomplete')).toBe('on');
+            });
+
+            it('should let a bound autocomplete replace the default', () => {
+                const fixture = createComponent(InputWithBoundAutocomplete);
+                const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+
+                expect(inputElement.getAttribute('autocomplete')).toBe('email');
+
+                fixture.componentInstance.autocomplete = 'username';
+                fixture.detectChanges();
+
+                expect(inputElement.getAttribute('autocomplete')).toBe('username');
+            });
         });
 
         describe('readonly', () => {

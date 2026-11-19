@@ -1,6 +1,6 @@
 @use 'sass:map';
 
-@mixin _kbq-icon-button-color($map) {
+@mixin -kbq-icon-button-color($map) {
     color: map.get($map, default);
 
     &:hover,
@@ -25,7 +25,7 @@
         }
 
         &.kbq-theme {
-            @include _kbq-icon-button-color(
+            @include -kbq-icon-button-color(
                 (
                     default: var(--kbq-icon-button-theme-default),
                     hover: var(--kbq-icon-button-theme-states-hover),
@@ -36,7 +36,7 @@
         }
 
         &.kbq-contrast {
-            @include _kbq-icon-button-color(
+            @include -kbq-icon-button-color(
                 (
                     default: var(--kbq-icon-button-contrast-default),
                     hover: var(--kbq-icon-button-contrast-states-hover),
@@ -47,7 +47,7 @@
         }
 
         &.kbq-contrast-fade {
-            @include _kbq-icon-button-color(
+            @include -kbq-icon-button-color(
                 (
                     default: var(--kbq-icon-button-fade-contrast-default),
                     hover: var(--kbq-icon-button-fade-contrast-states-hover),
@@ -58,7 +58,7 @@
         }
 
         &.kbq-error {
-            @include _kbq-icon-button-color(
+            @include -kbq-icon-button-color(
                 (
                     default: var(--kbq-icon-button-error-default),
                     hover: var(--kbq-icon-button-error-states-hover),
@@ -69,7 +69,7 @@
         }
 
         &.kbq-success {
-            @include _kbq-icon-button-color(
+            @include -kbq-icon-button-color(
                 (
                     default: var(--kbq-icon-button-success-default),
                     hover: var(--kbq-icon-button-success-states-hover),
@@ -80,7 +80,7 @@
         }
 
         &.kbq-warning {
-            @include _kbq-icon-button-color(
+            @include -kbq-icon-button-color(
                 (
                     default: var(--kbq-icon-button-warning-default),
                     hover: var(--kbq-icon-button-warning-states-hover),

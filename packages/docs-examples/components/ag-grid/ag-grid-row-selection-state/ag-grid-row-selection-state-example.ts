@@ -1,4 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { AgGridModule } from 'ag-grid-angular';
+import {
+    AllCommunityModule,
+    type ColDef,
+    type GetRowIdParams,
+    ModuleRegistry,
+    type RowSelectionOptions
+} from 'ag-grid-community';
 import {
     KbqAgGridRowSelectionStateLocalStorageStore,
     kbqAgGridRowSelectionStateStoreProvider,
@@ -6,8 +14,6 @@ import {
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { AgGridModule } from 'ag-grid-angular';
-import { AllCommunityModule, ColDef, GetRowIdParams, ModuleRegistry, RowSelectionOptions } from 'ag-grid-community';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);

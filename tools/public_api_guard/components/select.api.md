@@ -47,6 +47,7 @@ import { KbqPanelMinWidth } from '@koobiq/components/core';
 import { KbqPanelWidth } from '@koobiq/components/core';
 import { KbqPseudoCheckboxState } from '@koobiq/components/core';
 import { KbqScrollbarMode } from '@koobiq/components/scrollbar';
+import { KbqSearchFieldPopup } from '@koobiq/components/core';
 import { KbqSelectAllEvent } from '@koobiq/components/core';
 import { KbqSelectMatcher } from '@koobiq/components/core';
 import { KbqSelectSearch } from '@koobiq/components/core';
@@ -87,7 +88,6 @@ export const KBQ_SELECT_OPTIONS: InjectionToken<Partial<{
 
 // @public (undocumented)
 export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
-    constructor();
     protected readonly derivedDisabledWins = true;
     // (undocumented)
     handleElementEnter(): void;
@@ -253,6 +253,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterViewChecked, Af
     scrollStrategy: ScrollStrategy;
     readonly search: _angular_core.Signal<KbqSelectSearch | undefined>;
     readonly searchEmpty: _angular_core.Signal<KbqSelectSearchEmptyResult | undefined>;
+    readonly searchFieldPopup: KbqSearchFieldPopup;
     readonly searchMinOptionsThreshold: _angular_core.Signal<number | undefined>;
     readonly searchMinOptionsThresholdInput: _angular_core.InputSignal<number | "auto" | undefined>;
     readonly selectAll: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -262,9 +263,9 @@ export class KbqSelect extends KbqAbstractSelect implements AfterViewChecked, Af
     get selectAllState(): KbqPseudoCheckboxState;
     protected get selectAllText(): string;
     readonly selectAllToggle: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    get selected(): KbqOptionBase | KbqOptionBase[];
+    get selected(): KbqOptionBase | KbqOptionBase[] | undefined;
     readonly selectionChange: _angular_core.OutputEmitterRef<KbqSelectChange>;
-    selectionModel: SelectionModel<KbqOptionBase>;
+    selectionModel: SelectionModel<KbqOptionBase> | undefined;
     setDisabledState(isDisabled: boolean): void;
     setSelectedOptionsByClick(option: KbqOption): void;
     protected shouldShowSearch(): boolean;
@@ -280,7 +281,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterViewChecked, Af
     transformOrigin: string;
     readonly trigger: _angular_core.Signal<ElementRef<any> | undefined>;
     triggerFontSize: number;
-    protected triggerRect: DOMRect;
+    protected triggerRect: DOMRect | undefined;
     get triggerValue(): string;
     get triggerValues(): KbqOptionBase[];
     readonly triggerValuesLimit: _angular_core.InputSignal<number>;

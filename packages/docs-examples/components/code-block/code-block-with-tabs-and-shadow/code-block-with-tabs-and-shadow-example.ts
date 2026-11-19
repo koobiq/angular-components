@@ -1,7 +1,7 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
+import { type AfterViewInit, ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import {
     KbqCodeBlock,
-    KbqCodeBlockFile,
+    type KbqCodeBlockFile,
     kbqCodeBlockHighlightJsConfigProvider,
     KbqCodeBlockModule
 } from '@koobiq/components/code-block';

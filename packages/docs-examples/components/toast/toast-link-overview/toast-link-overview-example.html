@@ -10,6 +10,6 @@
     <a kbqLink pseudo (click)="toast.close()">{{ t().restore }}</a>
 </ng-template>
 
-<button kbq-button (click)="showToastWithInlineLink(toastWithInlineLinkTemplate, toastActionsTemplate)">
+<button kbq-button type="button" (click)="showToastWithInlineLink(toastWithInlineLinkTemplate, toastActionsTemplate)">
     {{ t().withInlineLink }}
 </button>

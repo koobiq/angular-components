@@ -1,4 +1,4 @@
-import { ESLint, Linter } from 'eslint';
+import { ESLint, type Linter } from 'eslint';
 import tseslint from 'typescript-eslint';
 import { publishedJsDocConfig } from './jsdoc';
 

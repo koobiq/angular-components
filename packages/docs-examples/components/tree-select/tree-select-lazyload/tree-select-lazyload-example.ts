@@ -1,11 +1,11 @@
-import { SelectionChange } from '@angular/cdk/collections';
-import { ChangeDetectionStrategy, Component, Injectable, inject } from '@angular/core';
+import type { SelectionChange } from '@angular/cdk/collections';
+import { ChangeDetectionStrategy, Component, inject, Injectable } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { BehaviorSubject, type Observable, timer } from 'rxjs';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
-import { BehaviorSubject, Observable, timer } from 'rxjs';
 
 interface INodeResponse {
     id: string;
@@ -14,12 +14,12 @@ interface INodeResponse {
 }
 
 class FlatNode {
-    id: string;
-    name: string;
-    expandable: boolean;
-    level: number;
-    parent: FlatNode;
-    loading: boolean;
+    id = '';
+    name = '';
+    expandable = false;
+    level = 0;
+    parent: FlatNode | null = null;
+    loading = false;
 }
 
 class LazyLoadNode {
@@ -152,7 +152,7 @@ export class LazyLoadDataSource<T, F> extends KbqTreeFlatDataSource<T, F> {
         super(treeControl, treeFlattener, []);
     }
 
-    expansionHandler(change: SelectionChange<F>): F[] {
+    override expansionHandler(change: SelectionChange<F>): F[] {
         if (change?.added?.length) {
             this.dataService.loadChildren((change.added[0] as any).id);
         }

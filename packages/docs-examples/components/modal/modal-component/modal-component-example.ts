@@ -30,36 +30,36 @@ interface CustomModalData {
 
         <kbq-modal-body>
             <div class="layout-margin-bottom-l">{{ data.subtitle }}</div>
-            <button kbq-button [kbqDropdownTriggerFor]="appDropdown">
+            <button kbq-button type="button" [kbqDropdownTriggerFor]="appDropdown">
                 dropdown
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
 
             <kbq-dropdown #appDropdown="kbqDropdown">
-                <button kbq-dropdown-item>{{ t().textNormal }}</button>
+                <button kbq-dropdown-item type="button">{{ t().textNormal }}</button>
 
-                <button kbq-dropdown-item>
-                    <i kbq-icon="kbq-circle-info_16" [color]="'contrast'"></i>
+                <button kbq-dropdown-item type="button">
+                    <i kbq-icon="kbq-circle-info_16" color="contrast"></i>
                     {{ t().textNormal }}
                 </button>
 
-                <button kbq-dropdown-item>
+                <button kbq-dropdown-item type="button">
                     {{ t().textNormal }}
                     <div kbqDropdownItemCaption>{{ t().caption }}</div>
                 </button>
 
-                <button kbq-dropdown-item>
-                    <i kbq-icon="kbq-circle-info_16" [color]="'contrast'"></i>
+                <button kbq-dropdown-item type="button">
+                    <i kbq-icon="kbq-circle-info_16" color="contrast"></i>
                     {{ t().textNormal }}
                     <div kbqDropdownItemCaption>Caption</div>
                 </button>
 
-                <button kbq-dropdown-item>
-                    <i kbq-icon="kbq-circle-xs_16" [color]="'contrast'"></i>
+                <button kbq-dropdown-item type="button">
+                    <i kbq-icon="kbq-circle-xs_16" color="contrast"></i>
                     {{ t().textNormal }}
                 </button>
 
-                <button kbq-dropdown-item kbq-title>
+                <button kbq-dropdown-item kbq-title type="button">
                     {{ t().textNormal }} {{ t().textNormal }} {{ t().textNormal }} {{ t().textNormal }}
                     Normal and very long text
                 </button>
@@ -68,30 +68,31 @@ interface CustomModalData {
 
                 <div kbqDropdownGroupHeader>{{ t().header }}</div>
 
-                <button disabled kbq-dropdown-item>{{ t().disabled }}</button>
+                <button disabled kbq-dropdown-item type="button">{{ t().disabled }}</button>
 
                 <kbq-divider />
 
                 <kbq-optgroup label="Subheading" />
 
-                <button disabled kbq-dropdown-item>
-                    <i kbq-icon="kbq-circle-xs_16" [color]="'contrast'"></i>
+                <button disabled kbq-dropdown-item type="button">
+                    <i kbq-icon="kbq-circle-xs_16" color="contrast"></i>
                     Disabled with icon
                 </button>
 
                 <kbq-divider />
 
-                <button kbq-dropdown-item>{{ t().point2 }}</button>
+                <button kbq-dropdown-item type="button">{{ t().point2 }}</button>
 
-                <button kbq-dropdown-item>{{ t().point3 }}</button>
+                <button kbq-dropdown-item type="button">{{ t().point3 }}</button>
 
-                <button kbq-dropdown-item>{{ t().link }}</button>
+                <button kbq-dropdown-item type="button">{{ t().link }}</button>
             </kbq-dropdown>
         </kbq-modal-body>
 
         <div kbq-modal-footer>
-            <button kbq-button [color]="'contrast'" (click)="destroyModal('save')">{{ t().save }}</button>
-            <button kbq-button autofocus (click)="destroyModal('close')">{{ t().close }}</button>
+            <button kbq-button type="button" color="contrast" (click)="destroyModal('save')">{{ t().save }}</button>
+            <!-- eslint-disable-next-line @angular-eslint/template/no-autofocus -- the dialog moves the focus to the element marked autofocus when it opens -->
+            <button kbq-button autofocus type="button" (click)="destroyModal('close')">{{ t().close }}</button>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -115,7 +116,7 @@ export class CustomModalComponent {
     selector: 'modal-component-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="openModal()">{{ t().openModal }}</button>
+        <button kbq-button type="button" (click)="openModal()">{{ t().openModal }}</button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -124,7 +125,7 @@ export class ModalComponentExample {
 
     private readonly modalService = inject(KbqModalService);
 
-    modalRef: KbqModalRef<CustomModalComponent, 'save' | 'close'>;
+    modalRef?: KbqModalRef<CustomModalComponent, 'save' | 'close'>;
 
     openModal(): void {
         this.modalRef = this.modalService.open<CustomModalComponent, 'save' | 'close'>({

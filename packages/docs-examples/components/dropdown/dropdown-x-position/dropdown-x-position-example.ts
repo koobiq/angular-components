@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqDropdownModule, KbqDropdownPositionX } from '@koobiq/components/dropdown';
+import { KbqDropdownModule, type KbqDropdownPositionX } from '@koobiq/components/dropdown';
 
 /**
  * @title Dropdown xPosition
@@ -12,17 +12,17 @@ import { KbqDropdownModule, KbqDropdownPositionX } from '@koobiq/components/drop
     template: `
         <div class="layout-row layout-gap-s">
             @for (pos of positions; track pos) {
-                <button kbq-button (click)="setPosition(pos)">{{ pos }}</button>
+                <button kbq-button type="button" (click)="setPosition(pos)">{{ pos }}</button>
             }
         </div>
 
-        <button kbq-button [kbqDropdownTriggerFor]="appDropdown">Dropdown ({{ xPosition() }})</button>
+        <button kbq-button type="button" [kbqDropdownTriggerFor]="appDropdown">Dropdown ({{ xPosition() }})</button>
 
         <kbq-dropdown #appDropdown="kbqDropdown" [xPosition]="xPosition()">
-            <button kbq-dropdown-item>Dropdown option 1</button>
-            <button kbq-dropdown-item>Dropdown option 2</button>
+            <button kbq-dropdown-item type="button">Dropdown option 1</button>
+            <button kbq-dropdown-item type="button">Dropdown option 2</button>
             <kbq-divider />
-            <button kbq-dropdown-item>Dropdown option 3</button>
+            <button kbq-dropdown-item type="button">Dropdown option 3</button>
         </kbq-dropdown>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

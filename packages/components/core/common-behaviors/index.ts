@@ -1,4 +1,4 @@
-import { InjectionToken, OutputRef } from '@angular/core';
+import { InjectionToken, type OutputRef } from '@angular/core';
 
 export * from './autofill';
 export * from './checkable';

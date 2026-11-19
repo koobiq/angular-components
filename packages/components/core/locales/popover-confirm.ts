@@ -1,8 +1,8 @@
-import { InjectionToken, Provider, Signal } from '@angular/core';
-import { KbqDeepPartial } from '../utils';
+import { InjectionToken, type Provider, type Signal } from '@angular/core';
+import type { KbqDeepPartial } from '../utils';
 import { kbqInjectLocaleConfiguration, kbqLocaleConfigurationOverrideProvider } from './configuration';
 import { ruRULocaleData } from './ru-RU';
-import { KbqPopoverConfirmLocaleConfiguration } from './types';
+import type { KbqPopoverConfirmLocaleConfiguration } from './types';
 
 /** Localization configuration provider for the default strings of a confirmation popover. */
 export const KBQ_POPOVER_CONFIRM_LOCALE_CONFIGURATION = new InjectionToken<KbqPopoverConfirmLocaleConfiguration>(

@@ -16,7 +16,7 @@ import { DocsLocaleState } from 'src/app/services/locale';
             {{ t('goToMainPage') }}
         </a>
     `,
-    styleUrls: ['page-not-found.scss'],
+    styleUrl: 'page-not-found.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

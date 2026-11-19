@@ -1,4 +1,4 @@
-import { FunctionEntry, FunctionWithOverloads, ParameterEntry } from '../entities';
+import type { FunctionEntry, FunctionWithOverloads, ParameterEntry } from '../entities';
 
 /**
  * `@param name - text`, the way TSDoc writes it, leaves the hyphen in the text, where Markdown reads it as a

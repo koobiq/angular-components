@@ -1,19 +1,19 @@
 import { getLocaleFirstDayOfWeek } from '@angular/common';
-import { Injectable, InjectionToken, inject } from '@angular/core';
+import { inject, Injectable, InjectionToken } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { type DateTime, FixedOffsetZone, Info, Settings, type Zone } from 'luxon';
+import { BehaviorSubject, type Observable } from 'rxjs';
 import {
     KBQ_DATE_LOCALE,
     KBQ_DEFAULT_LOCALE_ID,
     KBQ_LOCALE_SERVICE,
     KbqDateTimezoneService,
-    KbqLocaleService,
-    KbqTimezoneLike,
-    kbqResolveTimezoneOffset
+    type KbqLocaleService,
+    kbqResolveTimezoneOffset,
+    type KbqTimezoneLike
 } from '@koobiq/components/core';
-import { DateUnit } from '@koobiq/date-adapter';
-import { LuxonDateAdapter as BaseLuxonDateAdapter, LuxonDateAdapterOptions } from '@koobiq/luxon-date-adapter';
-import { DateTime, FixedOffsetZone, Info, Settings, Zone } from 'luxon';
-import { BehaviorSubject, Observable } from 'rxjs';
+import type { DateUnit } from '@koobiq/date-adapter';
+import { LuxonDateAdapter as BaseLuxonDateAdapter, type LuxonDateAdapterOptions } from '@koobiq/luxon-date-adapter';
 
 /** Configurable options for {@see LuxonDateAdapter}. */
 export type KbqLuxonDateAdapterOptions = LuxonDateAdapterOptions;
@@ -37,7 +37,7 @@ export function KBQ_LUXON_DATE_ADAPTER_OPTIONS_FACTORY(): KbqLuxonDateAdapterOpt
 
 @Injectable()
 export class LuxonDateAdapter extends BaseLuxonDateAdapter {
-    protected readonly options?: LuxonDateAdapterOptions;
+    protected override readonly options?: LuxonDateAdapterOptions;
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     private readonly timezoneService = inject(KbqDateTimezoneService);
 
@@ -65,7 +65,7 @@ export class LuxonDateAdapter extends BaseLuxonDateAdapter {
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.setLocale);
     }
 
-    setLocale = (locale: string): void => {
+    override setLocale = (locale: string): void => {
         super.setLocale(locale);
 
         // try to find locale using angular core utilities

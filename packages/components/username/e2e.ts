@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { KbqUserInfo, KbqUsernameMode, KbqUsernameStyle } from './types';
+import type { KbqUserInfo, KbqUsernameMode, KbqUsernameStyle } from './types';
 import { KbqUsername } from './username';
 
 type UsernameState = {

@@ -8,22 +8,23 @@
 }
 
 dev-app {
-    height: 100%;
+    @keyframes dev-blink-animation {
+        to {
+            visibility: hidden;
+        }
+    }
+    @-webkit-keyframes dev-blink-animation {
+        to {
+            visibility: hidden;
+        }
+    }
+
     width: 100%;
+    height: 100%;
 
     .dev-li-actual {
-        animation: blink-animation 1s steps(5, start) infinite;
-        -webkit-animation: blink-animation 1s steps(5, start) infinite;
-    }
-    @keyframes blink-animation {
-        to {
-            visibility: hidden;
-        }
-    }
-    @-webkit-keyframes blink-animation {
-        to {
-            visibility: hidden;
-        }
+        -webkit-animation: dev-blink-animation 1s steps(5, start) infinite;
+        animation: dev-blink-animation 1s steps(5, start) infinite;
     }
 
     .dev-red {
@@ -37,29 +38,34 @@ dev-app {
     }
 
     .dev-config {
-        height: 50%;
         width: 100%;
+        height: 50%;
     }
 
     .dev-result {
-        border: solid 2px red;
-        height: 50%;
         width: 100%;
+        height: 50%;
+        border: solid 2px red;
     }
 
     .dev-visual-box {
-        height: 100px;
-        width: 100px;
-        border: 1px solid #575757;
         position: relative;
+
+        width: 100px;
+        height: 100px;
         margin-top: 32px;
         margin-bottom: 32px;
 
+        border: 1px solid #575757;
+
         .dev-visual-box_clickable {
-            height: 12px;
-            width: 12px;
             position: absolute;
+
+            width: 12px;
+            height: 12px;
+
             background: #4dc3ff;
+
             cursor: pointer;
         }
 
@@ -99,13 +105,13 @@ dev-app {
     }
 
     .dev-visual-box_placement-bottom-right {
-        bottom: -6px;
         right: 10px;
+        bottom: -6px;
     }
 
     .dev-visual-box_placement-bottom {
-        bottom: -6px;
         right: calc(50% - 6px);
+        bottom: -6px;
     }
 
     .dev-visual-box_placement-bottom-left {
@@ -124,7 +130,7 @@ dev-app {
     }
 
     .dev-visual-box_placement-right-top {
-        right: -6px;
         top: 10px;
+        right: -6px;
     }
 }

@@ -13,7 +13,7 @@ import { TRANSLATIONS } from './l10n';
         KbqButtonToggleModule,
         KbqIconModule
     ],
-    templateUrl: 'button-toggle-disabled-partial-overview-example.html',
+    templateUrl: './button-toggle-disabled-partial-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonToggleDisabledPartialOverviewExample {

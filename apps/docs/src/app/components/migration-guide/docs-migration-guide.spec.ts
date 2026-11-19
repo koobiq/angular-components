@@ -1,11 +1,11 @@
 import { provideLocationMocks } from '@angular/common/testing';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRouteSnapshot, Router, provideRouter } from '@angular/router';
+import { type ActivatedRouteSnapshot, provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
+import { BehaviorSubject, map } from 'rxjs';
 import { kbqCodeBlockHighlightJsConfigProvider } from '@koobiq/components/code-block';
 import { KbqStateSavingService } from '@koobiq/components/core';
-import { BehaviorSubject, map } from 'rxjs';
 import { DOCS_HIGHLIGHT_JS_LANGUAGES } from '../../constants/highlight-js';
 import { DocsLocale } from '../../constants/locale';
 import { DOCS_TRANSLATIONS } from '../../services/i18n';

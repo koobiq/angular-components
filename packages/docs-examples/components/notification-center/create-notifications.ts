@@ -1,5 +1,5 @@
-import { TemplateRef } from '@angular/core';
-import { KbqNotificationItem } from '@koobiq/components/notification-center';
+import type { TemplateRef } from '@angular/core';
+import type { KbqNotificationItem } from '@koobiq/components/notification-center';
 import { KbqToastStyle } from '@koobiq/components/toast';
 
 /** Text of one notification of the example list. */
@@ -60,7 +60,7 @@ export const createNotifications = (
 
     return NOTIFICATIONS.map(({ date, actions, richCaption, ...item }, index) => {
         const id = String(index + 1);
-        const { title, caption } = list[index];
+        const { title, caption } = list[index]!;
 
         return {
             ...item,

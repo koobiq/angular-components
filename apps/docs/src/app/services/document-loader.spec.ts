@@ -35,7 +35,7 @@ describe(DocsDocumentLoader.name, () => {
     it('re-fetches after an error instead of replaying the failure', () => {
         const errors: unknown[] = [];
 
-        loader.get('/doc.html').subscribe({ error: (error) => errors.push(error) });
+        loader.get('/doc.html').subscribe({ error: (error: unknown) => errors.push(error) });
         httpMock.expectOne('/doc.html').flush('boom', { status: 500, statusText: 'Server Error' });
 
         expect(errors.length).toBe(1);

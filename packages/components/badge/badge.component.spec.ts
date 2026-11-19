@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
@@ -239,7 +239,7 @@ class LeadingIconTestApp {}
     selector: 'string-false-test-app',
     imports: [KbqBadgeModule],
     template: `
-        <kbq-badge [compact]="'false'">badge</kbq-badge>
+        <kbq-badge compact="false">badge</kbq-badge>
     `
 })
 class StringFalseTestApp {}

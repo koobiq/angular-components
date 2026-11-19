@@ -19,7 +19,7 @@ import { TRANSLATIONS } from './l10n';
         KbqDividerModule,
         KbqOptionModule
     ],
-    templateUrl: 'dropdown-navigation-wrap-example.html',
+    templateUrl: './dropdown-navigation-wrap-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownNavigationWrapExample {

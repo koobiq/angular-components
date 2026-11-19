@@ -10,7 +10,7 @@ import { TRANSLATIONS } from './l10n';
 @Component({
     selector: 'accordion-sections-example',
     imports: [KbqAccordionModule, KbqButtonToggleModule],
-    templateUrl: 'accordion-sections-example.html',
+    templateUrl: './accordion-sections-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionSectionsExample {

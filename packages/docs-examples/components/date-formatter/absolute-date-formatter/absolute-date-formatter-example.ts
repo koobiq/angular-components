@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import type { DateTime } from 'luxon';
+import { delay, distinctUntilChanged } from 'rxjs';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KBQ_LOCALE_SERVICE, KbqFormattersModule } from '@koobiq/components/core';
-import { DateTime } from 'luxon';
-import { delay } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
 
 /**
  * @title Absolute date-formatter
@@ -11,8 +10,8 @@ import { distinctUntilChanged } from 'rxjs/operators';
 @Component({
     selector: 'absolute-date-formatter-example',
     imports: [LuxonDateModule, KbqFormattersModule],
-    templateUrl: 'absolute-date-formatter-example.html',
-    styleUrls: ['absolute-date-formatter-example.css'],
+    templateUrl: './absolute-date-formatter-example.html',
+    styleUrl: './absolute-date-formatter-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AbsoluteDateFormatterExample {

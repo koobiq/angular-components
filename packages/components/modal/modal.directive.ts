@@ -36,8 +36,8 @@ import { KBQ_MODAL } from './modal.type';
                 class="kbq-modal-close kbq-button_transparent"
                 type="button"
                 kbq-button
+                color="contrast"
                 [attr.aria-label]="a11yLocaleConfiguration().close"
-                [color]="'contrast'"
                 (click)="modal.onClickCloseBtn()"
             >
                 <i kbq-icon="kbq-xmark_16" [color]="modal.componentColors.Contrast"></i>

@@ -29,6 +29,7 @@ import { TRANSLATIONS } from './l10n';
                 {{ t().closeHint }}
                 <button
                     kbq-alert-close-button
+                    type="button"
                     kbq-icon-button="kbq-xmark-s_16"
                     [attr.aria-label]="t().close"
                     [color]="colors.ContrastFade"

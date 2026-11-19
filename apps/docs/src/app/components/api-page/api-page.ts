@@ -7,23 +7,23 @@ import {
     inject,
     InjectionToken,
     input,
-    Signal,
+    type Signal,
     ViewEncapsulation
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Params, RouterLink } from '@angular/router';
+import { type Params, RouterLink } from '@angular/router';
 import { KbqBadge } from '@koobiq/components/badge';
-import { KbqCodeBlock, KbqCodeBlockFile } from '@koobiq/components/code-block';
+import { KbqCodeBlock, type KbqCodeBlockFile } from '@koobiq/components/code-block';
 import { kbqAnimationsDisabled } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { DOCS_API_MEMBER_PARAM, DOCS_API_WITHOUT_MEMBER } from '../../constants/api-page';
-import { DocsLocale } from '../../constants/locale';
+import type { DocsLocale } from '../../constants/locale';
 import { DocsClipboardService } from '../../services/clipboard';
 import { docsTranslateTemplate } from '../../services/i18n';
 import { DocsLocaleState } from '../../services/locale';
-import {
+import type {
     DocsApiBlock,
     DocsApiEntryPoint,
     DocsApiMember,

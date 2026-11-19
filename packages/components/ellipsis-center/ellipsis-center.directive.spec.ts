@@ -1,5 +1,5 @@
-import { Component, DebugElement, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, type DebugElement, type Type, viewChild } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqEllipsisCenterDirective, KbqEllipsisCenterModule } from './ellipsis-center.directive';

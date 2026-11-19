@@ -5,9 +5,9 @@ dev-app {
 
 .dev-container {
     max-width: 400px;
-    border: 1px solid cyan;
-    padding: var(--kbq-size-xxl);
     margin-bottom: var(--kbq-size-xl);
+    padding: var(--kbq-size-xxl);
+    border: 1px solid cyan;
 }
 
 .kbq-select__footer_icon {

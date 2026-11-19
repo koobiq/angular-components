@@ -1,5 +1,14 @@
 import { ChangeDetectionStrategy, Component, computed, model, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AgGridModule } from 'ag-grid-angular';
+import {
+    AllCommunityModule,
+    type ColDef,
+    type ICellRendererParams,
+    type IDatasource,
+    type IGetRowsParams,
+    ModuleRegistry
+} from 'ag-grid-community';
 import {
     kbqAgGridLoadingOverlayConfigProvider,
     KbqAgGridSkeletonCellRenderer,
@@ -7,15 +16,6 @@ import {
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { AgGridModule } from 'ag-grid-angular';
-import {
-    AllCommunityModule,
-    ColDef,
-    ICellRendererParams,
-    IDatasource,
-    IGetRowsParams,
-    ModuleRegistry
-} from 'ag-grid-community';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);

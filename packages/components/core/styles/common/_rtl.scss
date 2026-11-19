@@ -1,8 +1,12 @@
 // mixin definition ; sets LTR and RTL within the same style call
 // @see https://css-tricks.com/almanac/properties/d/direction/
+// The LTR value is a rule of its own, so it stays before the RTL one, which wins over it where both have the same
+// specificity, as when `dir` is set on the element of the including selector
 
 @mixin rtl($prop, $ltr-value, $rtl-value) {
-    #{$prop}: $ltr-value;
+    & {
+        #{$prop}: $ltr-value;
+    }
 
     [dir='rtl'] & {
         #{$prop}: $rtl-value;
@@ -10,7 +14,9 @@
 }
 
 @mixin rtl-prop($ltr-prop, $rtl-prop, $value, $reset-value) {
-    #{$ltr-prop}: $value;
+    & {
+        #{$ltr-prop}: $value;
+    }
 
     [dir='rtl'] & {
         #{$ltr-prop}: $reset-value;

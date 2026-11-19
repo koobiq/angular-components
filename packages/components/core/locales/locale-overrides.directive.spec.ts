@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject, Provider, signal, ViewContainerRef } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, inject, type Provider, signal, ViewContainerRef } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KBQ_A11Y_LOCALE_CONFIGURATION, kbqA11yLocaleConfigurationProvider } from './a11y';
 import { kbqInjectLocaleConfiguration, kbqLocaleConfigurationOverrideProvider } from './configuration';
@@ -8,7 +8,7 @@ import { KbqLocaleOverridesDirective } from './locale-overrides.directive';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from './locale-service';
 import { ruRULocaleData } from './ru-RU';
 import { KBQ_SELECT_LOCALE_CONFIGURATION } from './select';
-import { KbqPartialLocaleData } from './types';
+import type { KbqPartialLocaleData } from './types';
 
 /** Stands in for a leaf that renders an accessible name of its own, the way `KbqCleaner` does. */
 @Component({

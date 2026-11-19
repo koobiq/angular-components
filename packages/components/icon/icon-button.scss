@@ -1,13 +1,11 @@
-@use '../core/styles/common/tokens' as *;
-
-@use './icon-button-theme' as *;
+@use './icon-button-theme';
 
 .kbq-icon-button {
+    padding: var(--kbq-icon-button-size-normal-vertical-padding) var(--kbq-icon-button-size-normal-horizontal-padding);
+
     &:not(.kbq-disabled) {
         cursor: pointer;
     }
-
-    padding: var(--kbq-icon-button-size-normal-vertical-padding) var(--kbq-icon-button-size-normal-horizontal-padding);
 
     &.kbq-icon-button_compact {
         padding: var(--kbq-icon-button-size-small-vertical-padding) var(--kbq-icon-button-size-small-horizontal-padding);
@@ -18,14 +16,14 @@
     }
 
     > svg {
-        fill: currentColor;
         vertical-align: middle;
+        fill: currentcolor;
     }
 }
 
 button.kbq-icon-button {
-    border: none;
     background-color: unset;
+    border: none;
 }
 
-@include kbq-icon-button-theme();
+@include icon-button-theme.kbq-icon-button-theme();

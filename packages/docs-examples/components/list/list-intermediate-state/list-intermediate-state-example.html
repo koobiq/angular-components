@@ -2,6 +2,7 @@
     #kbqPopover="kbqPopover"
     kbq-button
     kbqPopover
+    type="button"
     [kbqPopoverSize]="PopUpSizes.Medium"
     [kbqPopoverHeader]="customHeader"
     [kbqPopoverContent]="customContent"
@@ -22,7 +23,7 @@
     <div style="border-bottom: 1px solid var(--kbq-line-contrast-less)" [style.width.px]="400">
         <kbq-form-field class="layout-padding-vertical-xxs" noBorders>
             <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-            <input kbqInput autocomplete="off" [placeholder]="t().user" [formControl]="searchControl" />
+            <input kbqInput [placeholder]="t().user" [formControl]="searchControl" />
         </kbq-form-field>
     </div>
 </ng-template>
@@ -57,7 +58,7 @@
         class="layout-row layout-gap-l layout-padding-vertical-l layout-padding-horizontal-xxl"
         style="border-top: 1px solid var(--kbq-line-contrast-less)"
     >
-        <button kbq-button [color]="'contrast'" (click)="onApply()">{{ t().apply }}</button>
-        <button kbq-button (click)="popover().hide(0)">{{ t().cancel }}</button>
+        <button kbq-button type="button" color="contrast" (click)="onApply()">{{ t().apply }}</button>
+        <button kbq-button type="button" (click)="popover().hide(0)">{{ t().cancel }}</button>
     </div>
 </ng-template>

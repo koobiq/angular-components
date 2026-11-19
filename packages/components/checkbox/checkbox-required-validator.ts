@@ -1,4 +1,4 @@
-import { booleanAttribute, Directive, forwardRef, Provider } from '@angular/core';
+import { booleanAttribute, Directive, forwardRef, type Provider } from '@angular/core';
 import { CheckboxRequiredValidator, NG_VALIDATORS } from '@angular/forms';
 
 export const KBQ_CHECKBOX_REQUIRED_VALIDATOR: Provider = {

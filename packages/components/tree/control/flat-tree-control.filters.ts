@@ -1,4 +1,4 @@
-import { FlatTreeControl } from './flat-tree-control';
+import type { FlatTreeControl } from './flat-tree-control';
 
 export const kbqTreeSelectAllValue = 'selectAll';
 
@@ -15,7 +15,7 @@ export interface FlatTreeControlFilter<T> {
  * @docs-private
  */
 export class FilterByViewValue<T, K = T> implements FlatTreeControlFilter<T> {
-    result: T[];
+    result: T[] = [];
 
     constructor(
         private control: FlatTreeControl<T, K>,
@@ -26,7 +26,7 @@ export class FilterByViewValue<T, K = T> implements FlatTreeControlFilter<T> {
         const viewValue = value || null;
 
         this.result = this.control.dataNodes.filter((node) => {
-            if (node['value'] === kbqTreeSelectAllValue) return true;
+            if ((node as { value?: unknown }).value === kbqTreeSelectAllValue) return true;
 
             return (
                 this.control.compareViewValues(this.control.getViewValue(node), viewValue) ||
@@ -34,7 +34,7 @@ export class FilterByViewValue<T, K = T> implements FlatTreeControlFilter<T> {
             );
         });
 
-        if (this.result.length === 1 && this.result[0]['value'] === kbqTreeSelectAllValue) {
+        if (this.result.length === 1 && (this.result[0] as { value?: unknown }).value === kbqTreeSelectAllValue) {
             this.result.pop();
         }
 
@@ -49,11 +49,11 @@ export class FilterByViewValue<T, K = T> implements FlatTreeControlFilter<T> {
  * @docs-private
  */
 export class FilterParentsForNodes<T, K = T> implements FlatTreeControlFilter<T> {
-    result: T[];
+    result: T[] = [];
 
     constructor(private control: FlatTreeControl<T, K>) {}
 
-    handle(_, prevFilter: FlatTreeControlFilter<T>): T[] {
+    handle(_: string | null, prevFilter: FlatTreeControlFilter<T>): T[] {
         const result: Set<T> = new Set();
 
         this.control.dataNodes
@@ -71,13 +71,13 @@ export class FilterParentsForNodes<T, K = T> implements FlatTreeControlFilter<T>
 }
 
 export class FilterByValues<T, K = T> implements FlatTreeControlFilter<T> {
-    result: T[];
+    result: T[] = [];
 
     private values: string[] = [];
 
     constructor(private control: FlatTreeControl<T, K>) {}
 
-    handle(_, prevFilter?: FlatTreeControlFilter<T>): T[] {
+    handle(_: string | null, prevFilter?: FlatTreeControlFilter<T>): T[] {
         const found = this.control.dataNodes.filter((node) => this.values.includes(this.control.getValue(node)));
 
         this.result = Array.from(new Set([...(prevFilter?.result || []), ...found]));

@@ -4,11 +4,9 @@
 // when a custom track and thumb, visibility modes, or programmatic scrolling are required.
 // No `@warn`: `koobiq-theme()` includes these styles for every consumer, whether or not the class is used.
 
-/* stylelint-disable selector-pseudo-class-no-unknown */
-
 @use '../common/tokens';
 
-@mixin _scrollbar-state($state, $color) {
+@mixin -scrollbar-state($state, $color) {
     &.kbq-#{$state} {
         &::-webkit-scrollbar-thumb,
         ::-webkit-scrollbar-thumb {
@@ -22,13 +20,7 @@
     }
 }
 
-@mixin _kbq-scrollbar() {
-    // For Firefox compatibility
-    @supports not selector(::-webkit-scrollbar) {
-        /* stylelint-disable-next-line no-invalid-position-declaration */
-        scrollbar-width: auto;
-    }
-
+@mixin -kbq-scrollbar() {
     // webkit
     &::-webkit-scrollbar,
     ::-webkit-scrollbar {
@@ -46,9 +38,8 @@
     &::-webkit-scrollbar-thumb,
     ::-webkit-scrollbar-thumb {
         width: var(--kbq-scrollbar-size-thumb-width);
-        border-style: solid;
         border-width: tokens.kbq-css-half-difference(scrollbar-size-track-dimension, scrollbar-size-thumb-width);
-
+        border-style: solid;
         border-radius: var(--kbq-scrollbar-size-thumb-border-radius);
 
         // these props are used to set the user-friendly thumb for long content.
@@ -65,16 +56,18 @@
     ::-webkit-scrollbar-button {
         display: none;
     }
+    // For Firefox compatibility
+    @supports not selector(::-webkit-scrollbar) {
+        scrollbar-width: auto;
+    }
 }
 
 @mixin kbq-scrollbar-theme() {
     .kbq-scrollbar {
-        @include _kbq-scrollbar();
-
-        // For Firefox compatibility
-        @supports not selector(::-webkit-scrollbar) {
-            scrollbar-color: var(--kbq-scrollbar-thumb-default-background) transparent;
-        }
+        @include -kbq-scrollbar();
+        @include -scrollbar-state(hover, var(--kbq-scrollbar-thumb-hover-background));
+        @include -scrollbar-state(disabled, var(--kbq-scrollbar-thumb-disabled-background));
+        @include -scrollbar-state(active, var(--kbq-scrollbar-thumb-active-background));
 
         &::-webkit-scrollbar-track,
         &::-webkit-scrollbar-corner,
@@ -89,14 +82,15 @@
 
         &::-webkit-scrollbar-thumb,
         ::-webkit-scrollbar-thumb {
+            background-color: var(--kbq-scrollbar-thumb-default-background);
             border-color: transparent;
             // https://stackoverflow.com/a/16829330/6386666
             background-clip: content-box;
-            background-color: var(--kbq-scrollbar-thumb-default-background);
         }
 
-        @include _scrollbar-state(hover, var(--kbq-scrollbar-thumb-hover-background));
-        @include _scrollbar-state(disabled, var(--kbq-scrollbar-thumb-disabled-background));
-        @include _scrollbar-state(active, var(--kbq-scrollbar-thumb-active-background));
+        // For Firefox compatibility
+        @supports not selector(::-webkit-scrollbar) {
+            scrollbar-color: var(--kbq-scrollbar-thumb-default-background) transparent;
+        }
     }
 }

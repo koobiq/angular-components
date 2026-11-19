@@ -1,11 +1,11 @@
-import { inject, Pipe, PipeTransform } from '@angular/core';
+import { inject, Pipe, type PipeTransform } from '@angular/core';
 import { KBQ_DEFAULT_LOCALE_ID, KBQ_LOCALE_SERVICE, kbqInjectLocaleConfiguration } from '../../locales';
 import { KbqDecimalPipe } from '../number/formatter';
 import {
     KBQ_SIZE_UNITS_LOCALE_CONFIGURATION,
-    KbqMeasurementSystem,
-    KbqMeasurementSystemType,
-    KbqUnitSystem
+    type KbqMeasurementSystem,
+    type KbqMeasurementSystemType,
+    type KbqUnitSystem
 } from './config';
 import { getFormattedSizeParts } from './size';
 

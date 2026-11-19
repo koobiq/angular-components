@@ -1,16 +1,12 @@
-@use '../styles/common/tokens' as *;
-
-@use './option-action-theme' as *;
-@use '../styles/common/squircle' as *;
+@use './option-action-theme';
+@use '../styles/common/squircle';
 
 .kbq-option-action {
+    @include squircle.kbq-squircle(var(--kbq-size-xs));
+
     display: flex;
     align-items: center;
     justify-content: center;
-
-    cursor: pointer;
-
-    outline: none;
 
     // The transparent border reserves the focus ring, and the size token below is the icon box
     // without it: 20px + 2 * 2px comes out at the 24px the action actually occupies. Declared so a
@@ -18,12 +14,13 @@
     // icon box at 16px. Note that `.kbq-option` next to it uses the same transparent-border trick
     // the other way round — it is `border-box`, and its 32px is the whole row.
     box-sizing: content-box;
-
-    border: var(--kbq-size-3xs) solid transparent;
-    @include kbq-squircle(var(--kbq-size-xs));
-
     width: var(--kbq-size-xl);
     height: var(--kbq-size-xl);
+
+    border: var(--kbq-size-3xs) solid transparent;
+    outline: none;
+
+    cursor: pointer;
 
     &:not(.kbq-disabled) {
         &:hover,
@@ -39,4 +36,4 @@
     }
 }
 
-@include kbq-option-action-theme();
+@include option-action-theme.kbq-option-action-theme();

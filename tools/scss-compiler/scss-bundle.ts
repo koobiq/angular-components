@@ -3,6 +3,7 @@ import fs from 'fs';
 import { globSync } from 'glob';
 import path from 'path';
 import postcss from 'postcss';
+import discardComments from 'postcss-discard-comments';
 import * as sass from 'sass';
 
 function writeScss({ src, dist }: { src: string; dist: string }) {
@@ -36,7 +37,7 @@ function writeScss({ src, dist }: { src: string; dist: string }) {
 
 async function postProcessCss({ css, from }: { css: string; from: string }) {
     // const autoprefixerFn = autoprefixer({ overrideBrowserslist: ['> 1%', 'last 2 versions', 'ie >= 11'] });
-    const postCssPlugins = [autoprefixer(), require('postcss-discard-comments')];
+    const postCssPlugins = [autoprefixer(), discardComments];
 
     return postcss(postCssPlugins).process(css, { from });
 }

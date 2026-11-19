@@ -1,23 +1,23 @@
 @use '../core/styles/common/tokens';
 @use '../core/styles/common/vendor-prefixes';
 
-@mixin _kbq-breadcrumbs-geometry {
+@mixin -kbq-breadcrumbs-geometry {
     display: flex;
-    align-items: center;
-    gap: var(--kbq-breadcrumbs-gap);
     flex-grow: 1;
+    gap: var(--kbq-breadcrumbs-gap);
+    align-items: center;
 
     kbq-breadcrumb-item {
-        display: none;
         position: absolute;
         top: 0;
         left: 0;
+        display: none;
     }
 
     .kbq-overflow-items {
+        margin: -1px;
         // add space not to cut focus outline
         padding: 1px;
-        margin: -1px;
     }
 
     // `display: contents` would keep the list's items as the host's direct flex children, but it also
@@ -26,8 +26,8 @@
     // branches laid out identically without relying on a box-less element to expose its role.
     .kbq-breadcrumbs__list {
         display: flex;
-        align-items: center;
         gap: var(--kbq-breadcrumbs-gap);
+        align-items: center;
     }
 
     .kbq-breadcrumb-item__container {
@@ -115,7 +115,7 @@
     }
 }
 
-@mixin _kbq-breadcrumbs-theme {
+@mixin -kbq-breadcrumbs-theme {
     .kbq-breadcrumb-item {
         &.kbq-button,
         &.kbq-button-icon {
@@ -202,7 +202,7 @@
     }
 }
 
-@mixin _kbq-breadcrumbs-typography {
+@mixin -kbq-breadcrumbs-typography {
     &.kbq-breadcrumbs_compact {
         .kbq-breadcrumb-item {
             &.kbq-button,
@@ -235,7 +235,7 @@
 }
 
 .kbq-breadcrumbs {
-    @include _kbq-breadcrumbs-geometry();
-    @include _kbq-breadcrumbs-theme();
-    @include _kbq-breadcrumbs-typography();
+    @include -kbq-breadcrumbs-geometry();
+    @include -kbq-breadcrumbs-theme();
+    @include -kbq-breadcrumbs-typography();
 }

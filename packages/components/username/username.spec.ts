@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, Provider, signal, Type } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, type Provider, signal, type Type } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqTitleDirective } from '@koobiq/components/title';
 import {
@@ -9,12 +9,12 @@ import {
 } from './constants';
 import { KbqUsernameModule } from './module';
 import {
-    KbqFormatKeyToProfileMapping,
-    KbqFormatKeyToProfileMappingExtended,
-    KbqUserInfo,
+    type KbqFormatKeyToProfileMapping,
+    type KbqFormatKeyToProfileMappingExtended,
+    type KbqUserInfo,
     KbqUsernameFormatKey,
-    KbqUsernameMode,
-    KbqUsernameStyle
+    type KbqUsernameMode,
+    type KbqUsernameStyle
 } from './types';
 import { KbqUsername, KbqUsernameCustomView } from './username';
 import {

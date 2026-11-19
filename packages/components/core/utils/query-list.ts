@@ -1,4 +1,4 @@
-import { DestroyRef, effect, EnvironmentInjector, inject, QueryList, Signal, untracked } from '@angular/core';
+import { DestroyRef, effect, EnvironmentInjector, inject, QueryList, type Signal, untracked } from '@angular/core';
 
 /**
  * Keeps a `QueryList` in step with a signal query, for a public member that stays typed as `QueryList` while the

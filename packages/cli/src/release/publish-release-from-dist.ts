@@ -1,13 +1,13 @@
 import chalk from 'chalk';
 import { join } from 'path';
-import { BaseReleaseTask, IReleaseTaskConfig } from './base-release-task';
+import { BaseReleaseTask, type IReleaseTaskConfig } from './base-release-task';
 import { CHANGELOG_FILE_NAME } from './constants';
 import { extractReleaseNotes } from './extract-release-notes';
 import { GitClient } from './git/git-client';
 import { notify } from './notify-release';
 import { npmPublish } from './npm/npm-client';
 import { checkReleasePackage } from './release-output/check-packages';
-import { Version, parseVersionName } from './version-name/parse-version';
+import { parseVersionName, type Version } from './version-name/parse-version';
 
 const { bold, cyan, green, italic, red } = chalk;
 

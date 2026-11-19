@@ -41,8 +41,8 @@ import { TRANSLATIONS } from './l10n';
                     <i
                         kbqInlineEditMenu
                         kbq-icon-button="kbq-ellipsis-vertical_16"
+                        color="contrast-fade"
                         [kbqDropdownTriggerFor]="dropdown"
-                        [color]="'contrast-fade'"
                     ></i>
                     <div kbqInlineEditViewMode class="example-inline-text__textarea-view">
                         <ng-container *ngTemplateOutlet="view; context: { $implicit: displayValue() }" />
@@ -66,9 +66,9 @@ import { TRANSLATIONS } from './l10n';
                     <i
                         kbqInlineEditMenu
                         kbq-icon-button="kbq-undo_16"
-                        [kbqTooltip]="'Reset to default value: 1991'"
+                        kbqTooltip="Reset to default value: 1991"
+                        color="contrast-fade"
                         [kbqTooltipArrow]="false"
-                        [color]="'contrast-fade'"
                         (click)="form.controls.foundDate.setValue('1991')"
                     ></i>
                     <kbq-label>{{ t().founded }}</kbq-label>
@@ -92,8 +92,8 @@ import { TRANSLATIONS } from './l10n';
                         <i
                             kbqInlineEditMenu
                             kbq-icon-button="kbq-ellipsis-vertical_16"
+                            color="contrast-fade"
                             [kbqDropdownTriggerFor]="dropdown"
-                            [color]="'contrast-fade'"
                         ></i>
                         <div kbqInlineEditViewMode class="example-inline-text__textarea-view">
                             <ng-container *ngTemplateOutlet="view; context: { $implicit: displayValue() }" />
@@ -119,9 +119,9 @@ import { TRANSLATIONS } from './l10n';
                         <i
                             kbqInlineEditMenu
                             kbq-icon-button="kbq-undo_16"
-                            [kbqTooltip]="'Reset to default value: 1991'"
+                            kbqTooltip="Reset to default value: 1991"
+                            color="contrast-fade"
                             [kbqTooltipArrow]="false"
-                            [color]="'contrast-fade'"
                             (click)="form.controls.foundDate.setValue('1991')"
                         ></i>
                         <div class="example-inline-text" kbqInlineEditViewMode>
@@ -147,8 +147,10 @@ import { TRANSLATIONS } from './l10n';
         </ng-template>
 
         <kbq-dropdown #dropdown="kbqDropdown">
-            <button kbq-dropdown-item (click)="clipboard.copy(form.controls.style.value)">Copy text</button>
-            <button kbq-dropdown-item (click)="clipboard.copy(form.controls.style.value)">Acti</button>
+            <button kbq-dropdown-item type="button" (click)="clipboard.copy(form.controls.style.value)">
+                Copy text
+            </button>
+            <button kbq-dropdown-item type="button" (click)="clipboard.copy(form.controls.style.value)">Acti</button>
         </kbq-dropdown>
     `,
     styles: `

@@ -1,5 +1,3 @@
-@use '../styles/common/tokens' as *;
-
 @mixin kbq-option-action-theme() {
     .kbq-option-action {
         &.cdk-keyboard-focused {
@@ -9,11 +7,11 @@
 
         &:active,
         &.kbq-pressed {
+            background-color: var(--kbq-background-transparent);
+
             & .kbq-icon.kbq-empty {
                 color: var(--kbq-states-icon-contrast-fade-active);
             }
-
-            background-color: var(--kbq-background-transparent);
         }
 
         &:hover .kbq-icon.kbq-empty {
@@ -21,11 +19,11 @@
         }
 
         &.kbq-disabled {
+            background-color: var(--kbq-background-transparent);
+
             & .kbq-icon.kbq-empty {
                 color: var(--kbq-states-icon-disabled);
             }
-
-            background-color: var(--kbq-background-transparent);
         }
     }
 }

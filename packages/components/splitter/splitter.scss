@@ -1,6 +1,10 @@
 .kbq-splitter {
-    display: grid;
     position: relative;
+
+    display: grid;
+    // The panel tracks of the resize axis are written as inline percentages by the component; the cross axis
+    // is a single track here, so panels always fill the splitter across it.
+    grid-template-rows: minmax(0, 1fr);
     // As a flex or grid item the splitter would otherwise be stretched by its own content-based minimum, and
     // that minimum is computed with the `fr` tracks against indefinite space: a track small enough relative to
     // the content it holds — a panel pinned to its collapsed size, say — drives the flex fraction above one and
@@ -15,9 +19,6 @@
     // `hidden`: a scroll container would let any reveal (focus, Tab, find-in-page, `scrollIntoView`) displace
     // the panels. The cost is that such an edge separator is grabbable over the inner half of its hit area.
     overflow: clip;
-    // The panel tracks of the resize axis are written as inline percentages by the component; the cross axis
-    // is a single track here, so panels always fill the splitter across it.
-    grid-template-rows: minmax(0, 1fr);
 
     &.kbq-splitter_vertical {
         grid-template-rows: none;
@@ -55,32 +56,38 @@
 .kbq-splitter-panel__content {
     display: flex;
     flex-direction: column;
-    block-size: 100%;
+
     inline-size: 100%;
+    block-size: 100%;
     overflow: hidden;
 }
 
 .kbq-splitter-panel__separator {
     position: absolute;
-    z-index: 1;
     // Centred on the boundary the panel shares with the next one, so half of the hit area reaches into each.
     inset-block: 0;
     inset-inline-end: calc(var(--kbq-splitter-size-hit-area) / -2);
+    z-index: 1;
+
     inline-size: var(--kbq-splitter-size-hit-area);
-    touch-action: none;
     // Suppress the native ring: the frame is drawn solely by `.cdk-keyboard-focused` below, so a pointer drag
     // (which demotes the focus origin to mouse) leaves no `:focus-visible` outline lingering.
     outline: none;
 
+    touch-action: none;
+
     // The separator line, centred inside the hit area and running the full length of the boundary, edge to edge.
     &::after {
+        content: '';
+
         position: absolute;
         inset-block: 0;
         inset-inline: 0;
+
         inline-size: var(--kbq-splitter-size-line-width);
         margin-inline: auto;
+
         background-color: var(--kbq-splitter-line-color);
-        content: '';
     }
 
     &:is(:hover, .kbq-hover)::after {
@@ -116,18 +123,20 @@
 
 .kbq-splitter_vertical > .kbq-splitter-panel > .kbq-splitter-panel__separator {
     inset-block: auto;
-    inset-inline: 0;
     inset-block-end: calc(var(--kbq-splitter-size-hit-area) / -2);
+    inset-inline: 0;
+
     inline-size: auto;
     block-size: var(--kbq-splitter-size-hit-area);
 
     &::after {
         inset-block: 0;
         inset-inline: 0;
+
         inline-size: auto;
         block-size: var(--kbq-splitter-size-line-width);
-        margin-inline: 0;
         margin-block: auto;
+        margin-inline: 0;
     }
 
     &:is(:active, .kbq-active)::after {
@@ -148,11 +157,13 @@
 .kbq-splitter_handle > .kbq-splitter-panel > .kbq-splitter-panel__separator {
     &::after {
         inset-block: 0;
+
         inline-size: var(--kbq-splitter-size-handle-thickness);
         block-size: var(--kbq-splitter-size-handle-length);
         margin-block: auto;
-        border-radius: var(--kbq-splitter-size-handle-border-radius);
+
         background-color: var(--kbq-splitter-handle-color);
+        border-radius: var(--kbq-splitter-size-handle-border-radius);
     }
 
     &:is(:hover, .kbq-hover)::after,
@@ -164,8 +175,9 @@
 
 .kbq-splitter_handle.kbq-splitter_vertical > .kbq-splitter-panel > .kbq-splitter-panel__separator::after {
     inset-inline: 0;
+
     inline-size: var(--kbq-splitter-size-handle-length);
     block-size: var(--kbq-splitter-size-handle-thickness);
-    margin-inline: auto;
     margin-block: auto;
+    margin-inline: auto;
 }

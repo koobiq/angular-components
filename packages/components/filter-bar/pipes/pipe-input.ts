@@ -1,9 +1,15 @@
-import { ChangeDetectionStrategy, Component, OnInit, untracked, viewChild, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    type OnInit,
+    untracked,
+    viewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { distinctUntilChanged, filter, map, Subject, switchMap, takeUntil, timer } from 'rxjs';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
-import { Subject, timer } from 'rxjs';
-import { distinctUntilChanged, filter, map, switchMap, takeUntil } from 'rxjs/operators';
 import { KbqBasePipe } from './base-pipe';
 
 @Component({
@@ -12,13 +18,7 @@ import { KbqBasePipe } from './base-pipe';
     imports: [KbqInputModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
-            <input
-                autocomplete="off"
-                kbqInput
-                [attr.aria-label]="pipeName"
-                [formControl]="control"
-                [placeholder]="pipeName"
-            />
+            <input kbqInput [attr.aria-label]="pipeName" [formControl]="control" [placeholder]="pipeName" />
 
             <!-- Must stay a single root element: the compiler copies its tag name onto the block's template
                  so it still matches <ng-content select="kbq-cleaner">. A sibling node here (element or text)
@@ -28,7 +28,7 @@ import { KbqBasePipe } from './base-pipe';
             }
         </kbq-form-field>
     `,
-    styleUrls: ['base-pipe.scss', 'pipe-input.scss'],
+    styleUrls: ['./base-pipe.scss', './pipe-input.scss'],
     providers: [
         {
             provide: KbqBasePipe,

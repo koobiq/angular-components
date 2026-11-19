@@ -25,26 +25,23 @@ import { TRANSLATIONS } from './l10n';
                 routerLink="./info-sec"
                 [text]="t().informationSecurity"
                 [queryParams]="{ queryParams: 'queryParams' }"
-                [fragment]="'fragment'"
             />
 
             <kbq-breadcrumb-item
                 routerLink="./access-control"
                 [text]="t().accessControl"
                 [queryParams]="{ queryParams: 'queryParams' }"
-                [fragment]="'fragment'"
             />
 
             <kbq-breadcrumb-item
                 routerLink="./authorization"
                 [text]="t().authorization"
                 [queryParams]="{ queryParams: 'queryParams' }"
-                [fragment]="'fragment'"
             />
 
             <kbq-breadcrumb-item>
                 <div *kbqBreadcrumbView>
-                    <button kbq-button kbqBreadcrumb [kbqDropdownTriggerFor]="siblingsListDropdown">
+                    <button kbq-button kbqBreadcrumb type="button" [kbqDropdownTriggerFor]="siblingsListDropdown">
                         {{ t().accessControl }}
                         <i kbq-icon="kbq-chevron-down-s_16"></i>
                     </button>

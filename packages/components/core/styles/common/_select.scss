@@ -1,24 +1,22 @@
 @use '../common/vendor-prefixes';
-@use './tokens' as *;
-@use './squircle' as *;
+@use './tokens';
+@use './squircle';
 
 %kbq-select-base {
-    box-sizing: border-box;
-
     display: inline-block;
-
+    box-sizing: border-box;
     width: 100%;
-
     outline: none;
 
     .kbq-select__trigger {
-        display: flex;
-        box-sizing: border-box;
         position: relative;
 
-        cursor: pointer;
+        display: flex;
 
+        box-sizing: border-box;
         min-height: calc(var(--kbq-form-field-size-height) - calc(var(--kbq-size-border-width) * 2));
+
+        cursor: pointer;
 
         // An empty multiline trigger has no tags to grow for, so it keeps the single-line height:
         // otherwise the placeholder's padding makes it 2px taller than the first row of tags.
@@ -28,7 +26,6 @@
 
             & .kbq-select__matcher {
                 overflow: hidden;
-
                 white-space: nowrap;
             }
         }
@@ -68,19 +65,16 @@
             .kbq-select__match-list {
                 display: flex;
                 flex-wrap: wrap;
-                overflow: hidden;
+                gap: var(--kbq-select-size-multiple-content-gap, var(--kbq-size-xxs));
 
                 height: calc(
                     var(--kbq-form-field-size-height) - calc(var(--kbq-select-size-multiple-padding-vertical) * 2)
                 );
-
                 max-height: calc(
                     var(--kbq-form-field-size-height) - calc(var(--kbq-select-size-multiple-padding-vertical) * 2)
                 );
-
-                gap: var(--kbq-select-size-multiple-content-gap, var(--kbq-size-xxs));
-
                 margin-right: var(--kbq-select-size-multiple-content-gap, var(--kbq-size-xxs));
+                overflow: hidden;
             }
         }
     }
@@ -92,7 +86,6 @@
 
         & .kbq-select__matcher {
             max-width: 100%;
-
             padding: calc(var(--kbq-select-size-multiple-padding-vertical) - var(--kbq-size-border-width))
                 var(--kbq-select-size-multiple-padding-right)
                 calc(var(--kbq-select-size-multiple-padding-vertical) - var(--kbq-size-border-width))
@@ -101,46 +94,41 @@
 
         & .kbq-select__cleaner,
         & .kbq-select__arrow-wrapper {
-            align-self: flex-start;
             align-items: center;
-
-            height: calc(var(--kbq-form-field-size-height) - var(--kbq-size-s));
+            align-self: flex-start;
             min-width: var(--kbq-form-field-size-addon-width);
+            height: calc(var(--kbq-form-field-size-height) - var(--kbq-size-s));
         }
 
         & .kbq-select__multiline-match-list {
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
+            gap: var(--kbq-size-xxs);
 
             margin-right: var(--kbq-select-size-multiple-content-gap, var(--kbq-size-xxs));
-
-            gap: var(--kbq-size-xxs);
         }
     }
 
     .kbq-select__match-container {
         width: 100%;
-
-        text-overflow: ellipsis;
         overflow: hidden;
+        text-overflow: ellipsis;
 
         & .kbq-select__match-hidden-text {
+            // Only shown once something is actually hidden. The measurement pass reveals it on its
+            // detached clone with the same class, never with an inline style.
+            display: none;
+            flex: 0 0 var(--kbq-form-field-size-addon-width);
+            align-self: center;
             // This is the box the matcher reserves for the "+N" counter, and `flex-basis` obeys
             // `box-sizing` exactly as `width` does. Under a global `border-box` reset in a consuming
             // application the padding would come out of the reserved width, so the counter would get
             // 8px less room than `KbqSelect` measured for it and the tag count would be off by one
             // at the boundary.
             box-sizing: content-box;
-
-            // Only shown once something is actually hidden. The measurement pass reveals it on its
-            // detached clone with the same class, never with an inline style.
-            display: none;
-
-            flex: 0 0 var(--kbq-form-field-size-addon-width);
-            align-self: center;
-            padding-left: var(--kbq-size-xxs);
             padding-right: var(--kbq-select-size-multiple-content-gap, var(--kbq-size-xxs));
+            padding-left: var(--kbq-size-xxs);
 
             text-align: right;
 
@@ -159,7 +147,6 @@
         display: flex;
         align-self: center;
         justify-content: center;
-
         min-width: var(--kbq-form-field-size-addon-width);
     }
 
@@ -173,16 +160,15 @@
 }
 
 %kbq-select-panel {
+    @include squircle.kbq-squircle(var(--kbq-select-panel-size-border-radius, var(--kbq-size-border-radius)));
+
     min-width: 100%; // prevents some animation twitching and test inconsistencies in IE11
 
     // Caps how far the panel grows with its content. `min-width` above intentionally wins over this,
     // so the panel is never narrower than its trigger and an explicit `panelWidth` is never clamped.
     // The token is deliberately left undeclared so that a `:root` override reaches every panel.
     max-width: var(--kbq-panel-size-width-max, 640px);
-
     overflow: hidden;
-
-    @include kbq-squircle(var(--kbq-select-panel-size-border-radius, var(--kbq-size-border-radius)));
 
     // Override option to scale based on font-size of the trigger.
     .kbq-option {
@@ -192,27 +178,25 @@
     .kbq-select__no-options-message {
         @include vendor-prefixes.user-select(none);
 
+        position: relative;
+
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: center;
+
         box-sizing: border-box;
-
-        position: relative;
-
-        margin-bottom: var(--kbq-size-3xl);
-        margin-top: var(--kbq-size-3xl);
-
         max-width: 100%;
         height: var(--kbq-option-size-height, var(--kbq-size-3xl));
-
-        cursor: default;
-        outline: none;
-
-        padding-left: var(--kbq-option-size-horizontal-padding, var(--kbq-size-m));
+        margin-top: var(--kbq-size-3xl);
+        margin-bottom: var(--kbq-size-3xl);
         padding-right: var(--kbq-option-size-horizontal-padding, var(--kbq-size-m));
+        padding-left: var(--kbq-option-size-horizontal-padding, var(--kbq-size-m));
 
         border: var(--kbq-option-size-border-width, var(--kbq-size-3xs)) solid transparent;
+        outline: none;
+
+        cursor: default;
     }
 
     .kbq-select__search-container {
@@ -229,7 +213,6 @@
     // that a global `border-box` reset in a consuming app cannot change what `panelMaxHeight` means.
     // The token is deliberately left undeclared so that a `:root` override reaches every panel.
     box-sizing: initial;
-
     max-height: var(--kbq-select-panel-size-max-height, 256px);
     padding: var(--kbq-size-xxs);
     overflow: hidden auto;
@@ -243,15 +226,14 @@
 
     display: flex;
     align-items: center;
+
     box-sizing: border-box;
-
     min-height: var(--kbq-select-footer-size-min-height, var(--kbq-size-4xl));
-
-    border-top-width: var(--kbq-select-footer-size-border-width, var(--kbq-size-border-width));
-    border-top-style: solid;
-
     padding: var(--kbq-select-footer-size-padding-vertical, var(--kbq-size-xxs))
         var(--kbq-select-footer-size-padding-horizontal, var(--kbq-size-l));
+
+    border-top-style: solid;
+    border-top-width: var(--kbq-select-footer-size-border-width, var(--kbq-size-border-width));
 }
 
 // The footer's action is drawn as a row of the drop-down menu rather than as a form button: full
@@ -259,37 +241,38 @@
 // instead of a control parked underneath it.
 %kbq-select-footer-item {
     @include vendor-prefixes.user-select(none);
-
-    // A native `button`/`a` flashes on tap without this; `kbq-list-item-base()`, which the option rows
-    // above use, is not included because the row zeroes the vertical padding that mixin sets.
-    -webkit-tap-highlight-color: transparent;
+    @include squircle.kbq-squircle(var(--kbq-select-footer-item-size-border-radius, var(--kbq-size-xxs)));
 
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    box-sizing: border-box;
-    outline: none;
 
     // `flex-grow` rather than `width: 100%`: alone in the footer it fills the content box just the same,
     // but it shares the row instead of squeezing a caption or a second action out of it. The basis stays
     // `auto` — `flex: 1` would expand to a `0%` basis and hand two actions the same width whatever they
     // say.
     flex: 1 1 auto;
-    min-height: var(--kbq-select-footer-item-size-height, var(--kbq-size-3xl));
+    flex-direction: row;
     gap: var(--kbq-size-s);
+    align-items: center;
+
+    box-sizing: border-box;
+    min-height: var(--kbq-select-footer-item-size-height, var(--kbq-size-3xl));
+    padding: 0 tokens.kbq-difference-series-css-variables([size-m, size-3xs]);
+
+    text-align: left;
+    text-decoration: none;
+
+    background: transparent;
 
     // Transparent border, as on an option, so the row keeps the same content inset — and so the focus
     // ring below can recolour it without shifting anything.
     border: var(--kbq-size-3xs) solid transparent;
-    @include kbq-squircle(var(--kbq-select-footer-item-size-border-radius, var(--kbq-size-xxs)));
+    outline: none;
 
-    padding: 0 kbq-difference-series-css-variables([size-m, size-3xs]);
-
-    background: transparent;
     cursor: pointer;
 
-    text-align: left;
-    text-decoration: none;
+    // A native `button`/`a` flashes on tap without this; `kbq-list-item-base()`, which the option rows
+    // above use, is not included because the row zeroes the vertical padding that mixin sets.
+    -webkit-tap-highlight-color: transparent;
 }
 
 // Extends an item's hit area past the box it paints, with a transparent pseudo-element on the element
@@ -303,19 +286,19 @@
 @mixin item-active-area($outline) {
     position: relative;
 
-    &:before,
-    &:after {
-        position: absolute;
+    &::before,
+    &::after {
         content: '';
+        position: absolute;
         width: var(--kbq-size-xxs);
         height: calc(100% + $outline * 2); // outline size * 2
     }
 
-    &:before {
+    &::before {
         right: calc(100% + $outline); // outline size
     }
 
-    &:after {
+    &::after {
         left: calc(100% + $outline); // outline size
     }
 }
@@ -326,7 +309,6 @@
 @mixin kbq-select-shared-theme() {
     .kbq-select__placeholder {
         text-overflow: ellipsis;
-
         color: var(--kbq-form-field-default-placeholder);
     }
 

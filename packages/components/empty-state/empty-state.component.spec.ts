@@ -1,11 +1,11 @@
-import { Component, Type, signal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, signal, type Type } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors, KbqDefaultSizes } from '@koobiq/components/core';
-import { KbqIconItem, KbqIconModule } from '@koobiq/components/icon';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
+import { KbqComponentColors, type KbqDefaultSizes } from '@koobiq/components/core';
+import { KbqIconItem, KbqIconModule } from '@koobiq/components/icon';
 import {
     KbqEmptyState,
     KbqEmptyStateActions,
@@ -311,7 +311,7 @@ describe('KbqEmptyState', () => {
     imports: [KbqEmptyStateModule, KbqIconModule, KbqButtonModule],
     template: `
         <kbq-empty-state>
-            <i kbq-icon-item="kbq-bell_16" kbq-empty-state-icon [fade]="true" [big]="true" [color]="'contrast'"></i>
+            <i kbq-icon-item="kbq-bell_16" kbq-empty-state-icon color="contrast" [fade]="true" [big]="true"></i>
             <h2 kbq-empty-state-title>kbq-empty-state-title</h2>
             <div kbq-empty-state-text>kbq-empty-state-text</div>
             <div kbq-empty-state-actions>
@@ -333,7 +333,7 @@ class EmptyStateWithParams {
     template: `
         <kbq-empty-state [alignTop]="alignTop()" [errorColor]="errorColor()" [size]="size()">
             @if (withIcon()) {
-                <i kbq-icon-item="kbq-bell_16" kbq-empty-state-icon [fade]="true" [big]="true" [color]="'contrast'"></i>
+                <i kbq-icon-item="kbq-bell_16" kbq-empty-state-icon color="contrast" [fade]="true" [big]="true"></i>
             }
             <h2 kbq-empty-state-title>Title</h2>
             <div kbq-empty-state-text>Text</div>
@@ -354,7 +354,7 @@ class EmptyStateWithInputs {
         <kbq-empty-state [errorColor]="errorColor()">
             <div kbq-empty-state-icon>
                 @if (iconVisible()) {
-                    <i kbq-icon-item="kbq-bell_16" [fade]="true" [big]="true" [color]="'contrast'"></i>
+                    <i kbq-icon-item="kbq-bell_16" color="contrast" [fade]="true" [big]="true"></i>
                 }
             </div>
             <div kbq-empty-state-text>Text</div>

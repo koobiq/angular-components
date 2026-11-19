@@ -1,5 +1,5 @@
-import { ElementRef, InjectionToken, ModelSignal, Signal } from '@angular/core';
-import { NgControl } from '@angular/forms';
+import { type ElementRef, InjectionToken, type ModelSignal, type Signal } from '@angular/core';
+import type { NgControl } from '@angular/forms';
 
 /**
  * The part of `KbqFormFieldControl` that code outside `@koobiq/components/form-field` relies on.

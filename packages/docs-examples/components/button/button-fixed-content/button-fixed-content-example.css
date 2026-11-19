@@ -1,5 +1,5 @@
 .example-fixed-content__button-group {
-    width: 150px;
     display: flex;
     flex-direction: column;
+    width: 150px;
 }

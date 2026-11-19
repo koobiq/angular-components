@@ -1,6 +1,6 @@
-import { DestroyRef } from '@angular/core';
+import type { DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 
 /**
  * Takes the host of a composite widget out of the tab order whenever `tabOut` emits, and puts it back on the next

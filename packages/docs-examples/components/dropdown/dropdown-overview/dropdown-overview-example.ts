@@ -21,7 +21,7 @@ import { TRANSLATIONS } from './l10n';
         KbqTitleModule,
         KbqOptionModule
     ],
-    templateUrl: 'dropdown-overview-example.html',
+    templateUrl: './dropdown-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownOverviewExample {

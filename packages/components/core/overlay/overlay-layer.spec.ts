@@ -1,8 +1,13 @@
-import { Overlay, OverlayConfig, OverlayContainer, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, type OverlayConfig, OverlayContainer, type OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { ApplicationRef, ChangeDetectionStrategy, Component, PLATFORM_ID, Provider, signal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { KBQ_OVERLAY_LAYERS, KbqOverlayLayer, KbqOverlayLayerExclude, KbqOverlayLayers } from '@koobiq/components/core';
+import { ApplicationRef, ChangeDetectionStrategy, Component, PLATFORM_ID, type Provider, signal } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+    KBQ_OVERLAY_LAYERS,
+    KbqOverlayLayer,
+    KbqOverlayLayerExclude,
+    type KbqOverlayLayers
+} from '@koobiq/components/core';
 
 @Component({
     template: '<button>Panel action</button>',

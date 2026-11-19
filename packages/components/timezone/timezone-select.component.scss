@@ -1,6 +1,4 @@
-@use '../core/styles/common/tokens' as *;
-
-@use './timezone-option-theme' as *;
+@use './timezone-option-theme';
 
 .kbq-timezone-select__panel.kbq-select__panel {
     .kbq-optgroup-label {
@@ -12,5 +10,5 @@
 // Included here and nowhere else. Both components render with `ViewEncapsulation.None`, so a second
 // include would emit every rule below twice into the global stylesheet; the select owns them because
 // every one of them is scoped to the panel it renders, as is `timezone-option-tokens.scss`.
-@include kbq-timezone-option-theme();
-@include kbq-timezone-option-typography();
+@include timezone-option-theme.kbq-timezone-option-theme();
+@include timezone-option-theme.kbq-timezone-option-typography();

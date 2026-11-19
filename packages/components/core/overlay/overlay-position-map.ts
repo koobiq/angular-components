@@ -1,8 +1,8 @@
-import { ConnectionPositionPair, Overlay, ScrollStrategy } from '@angular/cdk/overlay';
-import { InjectionToken } from '@angular/core';
+import { type ConnectionPositionPair, Overlay, type ScrollStrategy } from '@angular/cdk/overlay';
+import type { InjectionToken } from '@angular/core';
 
 /** @internal */
-export const POSITION_MAP: { [key: string]: ConnectionPositionPair } = {
+export const POSITION_MAP = {
     top: {
         originX: 'center',
         originY: 'top',
@@ -87,7 +87,7 @@ export const POSITION_MAP: { [key: string]: ConnectionPositionPair } = {
         overlayX: 'end',
         overlayY: 'bottom'
     }
-};
+} satisfies Record<string, ConnectionPositionPair>;
 
 /** @internal */
 export const EXTENDED_OVERLAY_POSITIONS = [

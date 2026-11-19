@@ -1,6 +1,6 @@
 ﻿import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
-    AfterViewChecked,
+    type AfterViewChecked,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
@@ -10,7 +10,7 @@ import {
     inject,
     InjectionToken,
     input,
-    OnDestroy,
+    type OnDestroy,
     signal,
     untracked,
     viewChild,
@@ -18,10 +18,10 @@ import {
 } from '@angular/core';
 import { outputFromObservable } from '@angular/core/rxjs-interop';
 import { Subject } from 'rxjs';
-import { ActiveDescendantKeyManager } from '../a11y';
+import type { ActiveDescendantKeyManager } from '../a11y';
 import { ENTER, hasModifierKey, SPACE } from '../keycodes';
 import { KbqPseudoCheckboxModule } from '../selection';
-import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef } from '../title';
+import { KBQ_TITLE_TEXT_REF, type KbqTitleTextRef } from '../title';
 import { kbqFocusAndReveal, kbqGetElementHeight } from '../utils';
 import { KbqOptgroup } from './optgroup';
 
@@ -141,9 +141,9 @@ export class KbqVirtualOption extends KbqOptionBase {
     imports: [
         KbqPseudoCheckboxModule
     ],
-    templateUrl: 'option.html',
+    templateUrl: './option.html',
     /* Component inherits styles from `list`, so `list` variables are imported as the single source of truth. */
-    styleUrls: ['option.scss', 'option-tokens.scss'],
+    styleUrls: ['./option.scss', './option-tokens.scss'],
     providers: [
         {
             provide: KBQ_TITLE_TEXT_REF,

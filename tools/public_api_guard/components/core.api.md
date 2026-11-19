@@ -428,6 +428,8 @@ export const enUSLocaleData: {
         previousMonth: string;
         currentDate: string;
         nextMonth: string;
+        month: string;
+        year: string;
         clear: string;
         showPassword: string;
         hidePassword: string;
@@ -436,6 +438,9 @@ export const enUSLocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        date: string;
+        time: string;
+        search: string;
     };
     select: {
         hiddenItemsText: string;
@@ -713,6 +718,8 @@ export const esLALocaleData: {
         previousMonth: string;
         currentDate: string;
         nextMonth: string;
+        month: string;
+        year: string;
         clear: string;
         showPassword: string;
         hidePassword: string;
@@ -721,6 +728,9 @@ export const esLALocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        date: string;
+        time: string;
+        search: string;
     };
     select: {
         hiddenItemsText: string;
@@ -1243,6 +1253,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             previousMonth: string;
             currentDate: string;
             nextMonth: string;
+            month: string;
+            year: string;
             clear: string;
             showPassword: string;
             hidePassword: string;
@@ -1251,6 +1263,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            date: string;
+            time: string;
+            search: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1503,6 +1518,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             previousMonth: string;
             currentDate: string;
             nextMonth: string;
+            month: string;
+            year: string;
             clear: string;
             showPassword: string;
             hidePassword: string;
@@ -1511,6 +1528,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            date: string;
+            time: string;
+            search: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1758,6 +1778,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             previousMonth: string;
             currentDate: string;
             nextMonth: string;
+            month: string;
+            year: string;
             clear: string;
             showPassword: string;
             hidePassword: string;
@@ -1766,6 +1788,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            date: string;
+            time: string;
+            search: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2018,6 +2043,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             previousMonth: string;
             currentDate: string;
             nextMonth: string;
+            month: string;
+            year: string;
             clear: string;
             showPassword: string;
             hidePassword: string;
@@ -2026,6 +2053,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            date: string;
+            time: string;
+            search: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2275,6 +2305,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             previousMonth: string;
             currentDate: string;
             nextMonth: string;
+            month: string;
+            year: string;
             clear: string;
             showPassword: string;
             hidePassword: string;
@@ -2283,6 +2315,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             toastRegion: string;
             optionActions: string;
             progressBar: string;
+            date: string;
+            time: string;
+            search: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2567,6 +2602,9 @@ export const KBQ_SELECT_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 export const KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD = 10;
 
 // @public
+export const KBQ_SELECT_SEARCH_POPUP: InjectionToken<KbqSearchFieldPopup>;
+
+// @public
 export const KBQ_SHADOW_DOM_OVERLAY_HOST: InjectionToken<KbqShadowDomOverlayHost>;
 
 // @public
@@ -2623,6 +2661,8 @@ export type KbqA11yLocaleConfiguration = {
     previousMonth: string;
     currentDate: string;
     nextMonth: string;
+    month: string;
+    year: string;
     clear: string;
     showPassword: string;
     hidePassword: string;
@@ -2631,6 +2671,9 @@ export type KbqA11yLocaleConfiguration = {
     toastRegion: string;
     optionActions: string;
     progressBar: string;
+    date: string;
+    time: string;
+    search: string;
 };
 
 // @public
@@ -2712,7 +2755,7 @@ export abstract class KbqAbstractSelect {
     // (undocumented)
     protected setOverlayPosition(): void;
     protected subscribeToPanelResize(): void;
-    protected abstract triggerRect: DOMRect;
+    protected abstract triggerRect: DOMRect | undefined;
     protected unsubscribeFromPanelResize(): void;
     protected updateOverlayWidth(panelWidth: KbqPanelWidth, panelMinWidth: KbqPanelMinWidth, origin: KbqPanelWidthOrigin): void;
     protected updatePanelAnchor(): boolean;
@@ -3330,6 +3373,9 @@ export type KbqInputNumberLocaleConfiguration = {
 export const kbqIsElementOrigin: (origin: KbqOverlayOrigin) => boolean;
 
 // @public
+export function kbqIsEventPreventHide(event: object): boolean;
+
+// @public
 export const kbqIsTextLaidOutFromStart: (computedStyle: CSSStyleDeclaration) => boolean;
 
 // @public
@@ -3491,6 +3537,9 @@ export class KbqLocalStorageStateStore extends KbqWebStorageStateStore {
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqLocalStorageStateStore>;
 }
+
+// @public
+export function kbqMarkEventPreventHide(event: Event): void;
 
 // @public
 export enum KbqMeasurementSystem {
@@ -3670,9 +3719,9 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
-    onClick($event: any): void;
+    onClick(event: Event): void;
     // (undocumented)
-    onKeyDown($event: any): void;
+    onKeyDown(event: KeyboardEvent): void;
     protected get resolvedAriaLabel(): string;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptionActionComponent, "kbq-option-action", ["kbqOptionAction"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, never, ["[kbq-icon]"], true, [{ directive: typeof KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
@@ -3896,7 +3945,7 @@ export abstract class KbqPopUp implements OnDestroy {
     hide(delay: number): void;
     readonly hovered: Signal<boolean>;
     // (undocumented)
-    isTemplateRef(value: any): boolean;
+    isTemplateRef<C>(value: unknown): value is TemplateRef<C>;
     // (undocumented)
     isVisible(): boolean;
     // (undocumented)
@@ -3905,7 +3954,7 @@ export abstract class KbqPopUp implements OnDestroy {
     offset: number | null;
     protected readonly onHideSubject: Subject<void>;
     // (undocumented)
-    protected prefix: string;
+    protected abstract prefix: string;
     // (undocumented)
     protected readonly renderer: Renderer2;
     protected setHovered(value: boolean): void;
@@ -3914,7 +3963,7 @@ export abstract class KbqPopUp implements OnDestroy {
     // (undocumented)
     show(delay: number): void;
     // (undocumented)
-    trigger: KbqPopUpTrigger<unknown>;
+    trigger: KbqPopUpTrigger<unknown> | undefined;
     updateArrowPosition(): void;
     // (undocumented)
     updateClassMap(placement: string, customClass: string, classMap?: any): void;
@@ -3942,7 +3991,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
         [key: string]: ConnectionPositionPair;
     };
     protected clearListeners(): void;
-    abstract closingActions(): Observable<any>;
+    abstract closingActions(): Observable<unknown>;
     protected closingActionsSubscription: Subscription;
     container: HTMLElement | undefined;
     abstract content: string | TemplateRef<unknown>;
@@ -3957,7 +4006,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected _disabled: boolean;
     protected readonly elementRef: ElementRef<HTMLElement>;
     enterDelay: number;
-    protected externalNativeElement: HTMLElement;
+    protected externalNativeElement: HTMLElement | undefined;
     focus(): void;
     protected getActiveOrigin(): FlexibleConnectedPositionStrategyOrigin;
     protected getAdjustedPositions(): ConnectionPositionPair[];
@@ -4006,7 +4055,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected placement: KbqPopUpPlacementValues;
     abstract placementChange: EventEmitter<KbqPopUpPlacementValues>;
     protected placementPriority: string | string[] | null;
-    protected portal: ComponentPortal<T>;
+    protected portal: ComponentPortal<T> | undefined;
     protected preventClose: boolean;
     resetOrigin(): void;
     protected readonly scrollable: CdkScrollable | null;
@@ -4017,7 +4066,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected setOrigin(origin: FlexibleConnectedPositionStrategyOrigin | null): void;
     show(delay?: number): void;
     stickToWindow: KbqStickToWindowPlacementValues | undefined;
-    protected strategy: FlexibleConnectedPositionStrategy;
+    protected strategy: FlexibleConnectedPositionStrategy | undefined;
     touchendHandler(): void;
     abstract trigger: string;
     triggerName: string;
@@ -4025,7 +4074,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     abstract updateData(): void;
     updateOrigin(origin: KbqOverlayOrigin | null): void;
     updatePlacement(value: KbqPopUpPlacementValues): void;
-    updatePlacementPriority(value: any): void;
+    updatePlacementPriority(value: string | string[] | null | undefined): void;
     updatePosition(reapplyPosition?: boolean): void;
     updateVisible(externalValue: boolean): void;
     protected readonly viewportRuler: ViewportRuler;
@@ -4262,6 +4311,13 @@ export type KbqSearchExpandableLocaleConfiguration = {
 };
 
 // @public
+export interface KbqSearchFieldPopup {
+    activeDescendant(): HTMLElement | null | undefined;
+    readonly comboboxPopupRole: 'listbox' | 'tree' | null;
+    popup(): HTMLElement | null | undefined;
+}
+
+// @public
 export interface KbqSelectAllAdapter<T> {
     isSelectable: (item: T) => boolean;
     isSelected: (item: T) => boolean;
@@ -4489,6 +4545,9 @@ export type KbqStickToWindowPlacementValues = KbqEnumValues<PopUpPlacements.Top 
 
 // @public
 export const kbqStructuralStateSavingKey: KbqStateSavingKeyResolver;
+
+// @public
+export function kbqSyncSearchFieldA11y(host: HTMLElement, popup: () => KbqSearchFieldPopup | null | undefined, fallbackLabel: () => string): void;
 
 // @public (undocumented)
 export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
@@ -5068,6 +5127,8 @@ export const ptBRLocaleData: {
         previousMonth: string;
         currentDate: string;
         nextMonth: string;
+        month: string;
+        year: string;
         clear: string;
         showPassword: string;
         hidePassword: string;
@@ -5076,6 +5137,9 @@ export const ptBRLocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        date: string;
+        time: string;
+        search: string;
     };
     select: {
         hiddenItemsText: string;
@@ -5538,6 +5602,8 @@ export const ruRULocaleData: {
         previousMonth: string;
         currentDate: string;
         nextMonth: string;
+        month: string;
+        year: string;
         clear: string;
         showPassword: string;
         hidePassword: string;
@@ -5546,6 +5612,9 @@ export const ruRULocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        date: string;
+        time: string;
+        search: string;
     };
     select: {
         hiddenItemsText: string;
@@ -5884,6 +5953,8 @@ export const tkTMLocaleData: {
         previousMonth: string;
         currentDate: string;
         nextMonth: string;
+        month: string;
+        year: string;
         clear: string;
         showPassword: string;
         hidePassword: string;
@@ -5892,6 +5963,9 @@ export const tkTMLocaleData: {
         toastRegion: string;
         optionActions: string;
         progressBar: string;
+        date: string;
+        time: string;
+        search: string;
     };
     select: {
         hiddenItemsText: string;

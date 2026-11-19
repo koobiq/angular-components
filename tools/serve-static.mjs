@@ -3,9 +3,9 @@
  * directory a build has already produced and answer anything it does not hold with a single-page
  * shell; what the two disagree on stays in their wrappers.
  */
-import express from 'express';
 import { existsSync, readFileSync } from 'node:fs';
 import { extname } from 'node:path';
+import express from 'express';
 
 // Loopback rather than every interface: the only client is a `webServer` entry in a Playwright
 // config, so on a CI runner this would otherwise be reachable across the network for no reason at

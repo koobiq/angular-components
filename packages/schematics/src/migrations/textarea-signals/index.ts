@@ -1,10 +1,11 @@
-import { Path } from '@angular-devkit/core';
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Path } from '@angular-devkit/core';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
-import { visitAll, Visitor } from '../../utils/ast';
+import { visitAll, type Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
+import { capturedGroups } from '../../utils/regexp';
 import { collectInlineTemplateRanges, parseTemplate } from '../../utils/typescript';
 import {
     SIGNAL_API_METHODS,
@@ -19,7 +20,7 @@ import {
     valueChangedMessage,
     warnPatterns
 } from './data';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 const LABEL = '[textarea-signals]';
 const TS_EXT = '.ts';
@@ -368,8 +369,8 @@ async function migrateTemplate(template: string): Promise<TemplateResult> {
     let changed = false;
 
     for (const ref of refs) {
-        for (const match of template.matchAll(memberAccessPattern(ref, VALUE_CHANGED_MEMBERS))) {
-            manual.add(match[3]);
+        for (const member of capturedGroups(template, memberAccessPattern(ref, VALUE_CHANGED_MEMBERS), 3)) {
+            manual.add(member);
         }
 
         const next = content.replace(memberAccessPattern(ref, SIGNAL_MEMBERS), '$1$2$3()');

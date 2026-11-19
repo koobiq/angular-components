@@ -18,8 +18,8 @@ import { FilterBarReadonlyPipesExample } from './filter-bar-readonly-pipes/filte
 import { FilterBarRemovableExample } from './filter-bar-removable/filter-bar-removable-example';
 import { FilterBarRequiredExample } from './filter-bar-required/filter-bar-required-example';
 import { FilterBarSavedFiltersExample } from './filter-bar-saved-filters/filter-bar-saved-filters-example';
-import { FilterBarSearchInPipesExample } from './filter-bar-search-in-pipes/filter-bar-search-in-pipes-example';
 import { FilterBarSearchExample } from './filter-bar-search/filter-bar-search-example';
+import { FilterBarSearchInPipesExample } from './filter-bar-search-in-pipes/filter-bar-search-in-pipes-example';
 import { FilterBarSelectAllCounterExample } from './filter-bar-select-all-counter/filter-bar-select-all-counter-example';
 import { FilterBarStateSavingExample } from './filter-bar-state-saving/filter-bar-state-saving-example';
 import { FilterBarUniqPipesExample } from './filter-bar-uniq-pipes/filter-bar-uniq-pipes-example';

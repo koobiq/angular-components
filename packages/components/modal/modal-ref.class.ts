@@ -1,5 +1,5 @@
-import { Observable } from 'rxjs';
-import { KbqModalComponent } from './modal.component';
+import type { Observable } from 'rxjs';
+import type { KbqModalComponent } from './modal.component';
 
 /**
  * API class that public to users to handle the modal instance.
@@ -46,5 +46,5 @@ export abstract class KbqModalRef<C = any, R = unknown> {
     /**
      * Call markForCheck for change detector
      */
-    abstract markForCheck();
+    abstract markForCheck(): void;
 }

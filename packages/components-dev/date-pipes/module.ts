@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
+import type { DateTime } from 'luxon';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     DateAdapter,
@@ -6,16 +7,15 @@ import {
     KBQ_LOCALE_SERVICE,
     KbqDateTimezoneService,
     KbqFormattersModule,
-    KbqLocaleService,
-    KbqTimezoneLike
+    type KbqLocaleService,
+    type KbqTimezoneLike
 } from '@koobiq/components/core';
-import { DateTime } from 'luxon';
 
 @Component({
     selector: 'dev-app',
     imports: [KbqLuxonDateModule, KbqFormattersModule],
-    templateUrl: 'template.html',
-    styleUrls: ['styles.scss'],
+    templateUrl: './template.html',
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -149,7 +149,7 @@ export class DevApp {
         const current = this.timezoneService.timezone();
         const next = (this.timezones.indexOf(current) + 1) % this.timezones.length;
 
-        this.timezoneService.setTimezone(this.timezones[next]);
+        this.timezoneService.setTimezone(this.timezones[next]!);
     }
 
     populateDuration() {

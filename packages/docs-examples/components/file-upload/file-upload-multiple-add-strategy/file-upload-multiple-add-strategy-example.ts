@@ -12,7 +12,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
         KbqMultipleFileUploadComponent
     ],
     template: `
-        <kbq-multiple-file-upload [addStrategy]="'replace'">
+        <kbq-multiple-file-upload addStrategy="replace">
             <ng-template #kbqFileIcon>
                 <i kbq-icon="kbq-file-text-o_16"></i>
             </ng-template>

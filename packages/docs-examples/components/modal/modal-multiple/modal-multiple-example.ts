@@ -11,7 +11,7 @@ import { TRANSLATIONS } from './l10n';
     selector: 'modal-multiple-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="showConfirmModal()">{{ t().openTwoModals }}</button>
+        <button kbq-button type="button" (click)="showConfirmModal()">{{ t().openTwoModals }}</button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

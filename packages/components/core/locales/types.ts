@@ -1,7 +1,7 @@
-import { FormatterDurationTemplate } from '@koobiq/date-formatter';
+import type { FormatterDurationTemplate } from '@koobiq/date-formatter';
 // Type-only: `core/formatters` imports the locale data back, and a value import here would close the cycle.
 import type { KbqSizeUnitsLocaleConfiguration } from '../formatters';
-import { KbqDeepPartial } from '../utils';
+import type { KbqDeepPartial } from '../utils';
 
 /**
  * Text the library exposes to assistive tech only: accessible names for the icon-only buttons and the
@@ -41,6 +41,10 @@ export type KbqA11yLocaleConfiguration = {
     currentDate: string;
     /** Calendar button switching to the next month. */
     nextMonth: string;
+    /** Calendar drop-down list that picks the displayed month. */
+    month: string;
+    /** Calendar drop-down list that picks the displayed year. */
+    year: string;
     /** Form field button that clears the control value. */
     clear: string;
     /** Password form field button that reveals the password. */
@@ -57,6 +61,12 @@ export type KbqA11yLocaleConfiguration = {
     optionActions: string;
     /** Progress bar that carries neither an `aria-label` nor a projected `[kbq-progress-bar-text]`. */
     progressBar: string;
+    /** Date part of a date and time field. */
+    date: string;
+    /** Time part of a date and time field. */
+    time: string;
+    /** Search field in a select or a dropdown that has no label, `aria-label` or placeholder of its own. */
+    search: string;
 };
 
 /** Locale configuration for `KbqCodeBlockModule`. */

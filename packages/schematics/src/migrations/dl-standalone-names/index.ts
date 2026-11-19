@@ -1,12 +1,12 @@
-import { Path } from '@angular-devkit/core';
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Path } from '@angular-devkit/core';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
 import { dedupeImportSpecifiers, ensureImport, removeImport } from '../../utils/replacement-driver';
 import { DL_MODULE, DL_PACKAGE, keptModuleMessage, MODULE_COMPONENTS, RENAMES, SUMMARY } from './data';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 const LABEL = '[dl-standalone-names]';
 const TS_EXT = '.ts';
@@ -231,12 +231,13 @@ export function migrateSource(content: string, fileName: string): MigratedSource
         // Everything it re-exports is in the array already: the element goes, with one of its commas.
         const elements = parent.elements;
         const index = elements.indexOf(node);
-        const [start, end] =
-            index < elements.length - 1
-                ? [node.getStart(), elements[index + 1].getStart()]
-                : index > 0
-                  ? [elements[index - 1].getEnd(), node.getEnd()]
-                  : [node.getStart(), node.getEnd()];
+        const next = elements[index + 1];
+        const previous = elements[index - 1];
+        const [start, end] = next
+            ? [node.getStart(), next.getStart()]
+            : previous
+              ? [previous.getEnd(), node.getEnd()]
+              : [node.getStart(), node.getEnd()];
 
         edits.push({ start, end, text: '' });
     };

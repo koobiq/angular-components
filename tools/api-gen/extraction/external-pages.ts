@@ -7,7 +7,7 @@ type DeclarationKind = 'class' | 'interface' | 'type-alias' | 'enum' | 'function
 type DocsUrl = (name: string, kind: DeclarationKind) => string;
 
 type DocsSite = {
-    /** The modules it documents; the group the pattern captures is the entry point. */
+    /** The modules it documents; the group the pattern captures, if any, is the entry point. */
     module: RegExp;
     /** The address of a declaration in the documentation of the major version of its library. */
     url: (major: number, entryPoint: string, name: string, kind: DeclarationKind) => string;
@@ -68,7 +68,7 @@ function getDocsSite(module: string): { site: DocsSite; entryPoint: string } | u
     for (const site of DOCS_SITES) {
         const match = site.module.exec(module);
 
-        if (match) return { site, entryPoint: match[1] };
+        if (match) return { site, entryPoint: match[1] ?? '' };
     }
 
     return undefined;

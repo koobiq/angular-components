@@ -1,4 +1,4 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-loader-overlay-theme() {
     // FIXME: move to unified mixin if necessary
@@ -55,31 +55,31 @@
 @mixin kbq-loader-overlay-typography() {
     .kbq-loader-overlay_big {
         .kbq-loader-overlay-text {
-            @include kbq-typography-level-to-styles-css-variables(typography, headline);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, headline);
         }
 
         .kbq-loader-overlay-caption {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-big);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
         }
     }
 
     .kbq-loader-overlay_normal {
         .kbq-loader-overlay-text {
-            @include kbq-typography-level-to-styles-css-variables(typography, subheading);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, subheading);
         }
 
         .kbq-loader-overlay-caption {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
         }
     }
 
     .kbq-loader-overlay_compact {
         .kbq-loader-overlay-text {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
         }
 
         .kbq-loader-overlay-caption {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
         }
     }
 }
