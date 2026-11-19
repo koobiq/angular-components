@@ -26,6 +26,7 @@ import {
     KBQ_PANEL_DEFAULT_MIN_WIDTH,
     KbqComponentColors,
     KbqLocaleService,
+    KbqOptgroup,
     KbqOptionModule,
     KbqOptionSelectionChange,
     KbqOverlayLayer,
@@ -1517,6 +1518,61 @@ describe('KbqTimezoneSelect', () => {
 
             expect(select.panelOpen).toBe(false);
             expect(fixture.componentInstance.runs).toBe(1);
+        });
+    });
+
+    @Component({
+        selector: 'timezone-select-with-group-counters',
+        imports: [KbqOptionModule, KbqTimezoneModule],
+        template: `
+            <kbq-form-field>
+                <kbq-timezone-select>
+                    @for (group of groups; track group.countryName) {
+                        <kbq-optgroup [label]="group.countryName">
+                            @for (zone of group.zones; track zone) {
+                                <kbq-timezone-option [timezone]="zone" />
+                            }
+                        </kbq-optgroup>
+                    }
+                </kbq-timezone-select>
+            </kbq-form-field>
+        `
+    })
+    class TimezoneSelectWithGroupCounters {
+        readonly groups = groupedZones;
+        readonly select = viewChild.required(KbqTimezoneSelect);
+    }
+
+    // `KbqTimezoneOption` extends `KbqOption` and re-provides it, which is what lets the group's
+    // `contentChildren(KbqOption)` count the options of a timezone select too.
+    describe('KbqOptgroup selectedCount in a timezone select', () => {
+        it('should count the selected timezone options of the group', async () => {
+            configureTestingModule([TimezoneSelectWithGroupCounters]);
+
+            const fixture = TestBed.createComponent(TimezoneSelectWithGroupCounters);
+
+            fixture.detectChanges();
+            fixture.componentInstance.select().open();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const group = getDebugNode(overlayContainerElement.querySelector('kbq-optgroup')!)!.injector.get(
+                KbqOptgroup
+            );
+            const zones = Array.from(overlayContainerElement.querySelectorAll('kbq-timezone-option')).map((node) =>
+                getDebugNode(node)!.injector.get(KbqTimezoneOption)
+            );
+
+            // The timezone select is single-choice, so one selected option of the group is the maximum.
+            zones[0].select();
+            fixture.detectChanges();
+
+            expect(group.selectedCount).toBe(1);
+
+            zones[0].deselect();
+            fixture.detectChanges();
+
+            expect(group.selectedCount).toBe(0);
         });
     });
 });

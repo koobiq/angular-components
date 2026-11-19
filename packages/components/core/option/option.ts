@@ -23,6 +23,7 @@ import { ENTER, hasModifierKey, SPACE } from '../keycodes';
 import { KbqPseudoCheckboxModule } from '../selection';
 import { KBQ_TITLE_TEXT_REF, type KbqTitleTextRef } from '../title';
 import { kbqFocusAndReveal, kbqGetElementHeight } from '../utils';
+import { KBQ_GROUP_OPTION } from './group-option';
 import { KbqOptgroup } from './optgroup';
 
 /**
@@ -147,6 +148,10 @@ export class KbqVirtualOption extends KbqOptionBase {
     providers: [
         {
             provide: KBQ_TITLE_TEXT_REF,
+            useExisting: KbqOption
+        },
+        {
+            provide: KBQ_GROUP_OPTION,
             useExisting: KbqOption
         }
     ],

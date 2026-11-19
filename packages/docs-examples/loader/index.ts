@@ -853,6 +853,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/select').then((m) => m.SelectDisabledExample);
         case 'select-footer':
             return import('@koobiq/docs-examples/components/select').then((m) => m.SelectFooterExample);
+        case 'select-groups-label':
+            return import('@koobiq/docs-examples/components/select').then((m) => m.SelectGroupsLabelExample);
         case 'select-groups':
             return import('@koobiq/docs-examples/components/select').then((m) => m.SelectGroupsExample);
         case 'select-height':

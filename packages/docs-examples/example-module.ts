@@ -6197,6 +6197,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-footer-example.ts",
     "importPath": "components/select"
   },
+  "select-groups-label": {
+    "packagePath": "components/select/select-groups-label",
+    "title": "Select group label",
+    "componentName": "SelectGroupsLabelExample",
+    "files": [
+      "select-groups-label-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "select-groups-label-example",
+    "primaryFile": "select-groups-label-example.ts",
+    "importPath": "components/select"
+  },
   "select-groups": {
     "packagePath": "components/select/select-groups",
     "title": "Select groups",
@@ -9999,6 +10014,7 @@ export type LiveExampleId =
   | 'select-custom-trigger'
   | 'select-disabled'
   | 'select-footer'
+  | 'select-groups-label'
   | 'select-groups'
   | 'select-height'
   | 'select-icon'

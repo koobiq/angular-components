@@ -3,6 +3,7 @@ import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrollin
 import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { EMPTY } from 'rxjs';
+import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -977,4 +978,60 @@ export class E2eSelectFooterAction {
     // scrolling list rather than sitting under a short one.
     protected readonly options = Array.from({ length: 10 }).map((_, i) => `Option ${i}`);
     protected readonly selected = this.options[0];
+}
+
+@Component({
+    selector: 'e2e-select-with-groups-label',
+    imports: [
+        KbqSelectModule,
+        KbqBadgeModule
+    ],
+    template: `
+        <kbq-form-field [attr.data-testid]="'e2eFormField'">
+            <kbq-select data-testid="e2eSelect" multiple placeholder="Pokemon" [value]="selected">
+                @for (group of pokemonTypes; track group.name) {
+                    <kbq-optgroup #optgroup="kbqOptgroup" [label]="group.name">
+                        <div kbq-optgroup-label>
+                            {{ group.name }}
+                            <kbq-badge aria-hidden="true">{{ optgroup.selectedCount }}</kbq-badge>
+                        </div>
+                        @for (pokemon of group.pokemon; track pokemon.value) {
+                            <kbq-option [value]="pokemon.value">{{ pokemon.viewValue }}</kbq-option>
+                        }
+                    </kbq-optgroup>
+                }
+            </kbq-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 16px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eSelectWithGroupsLabel'
+    }
+})
+export class E2eSelectWithGroupsLabel {
+    readonly pokemonTypes = [
+        {
+            name: 'Grass',
+            pokemon: [
+                { value: 'bulbasaur-0', viewValue: 'Bulbasaur' },
+                { value: 'oddish-1', viewValue: 'Oddish' },
+                { value: 'bellsprout-2', viewValue: 'Bellsprout' }
+            ]
+        },
+        {
+            name: 'Water',
+            pokemon: [
+                { value: 'squirtle-3', viewValue: 'Squirtle' },
+                { value: 'psyduck-4', viewValue: 'Psyduck' }
+            ]
+        }
+    ];
+
+    readonly selected = ['bulbasaur-0', 'oddish-1'];
 }

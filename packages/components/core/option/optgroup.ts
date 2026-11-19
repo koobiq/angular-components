@@ -1,6 +1,32 @@
-import { booleanAttribute, ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@angular/core';
+import {
+    type AfterContentInit,
+    booleanAttribute,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    contentChildren,
+    Directive,
+    input,
+    isDevMode,
+    ViewEncapsulation
+} from '@angular/core';
+import { kbqInjectNativeElement } from '../utils';
+import { KBQ_GROUP_OPTION } from './group-option';
 
 let uniqueOptgroupIdCounter = 0;
+
+/**
+ * Marker for custom content of the group heading: the element it sits on is projected into the label
+ * of the enclosing `kbq-optgroup` in place of its `label` input. A `kbq-badge` counter, icons or any
+ * other content can go there.
+ */
+@Directive({
+    selector: 'kbq-optgroup-label, [kbq-optgroup-label]',
+    host: {
+        class: 'kbq-optgroup-label-content'
+    }
+})
+export class KbqOptgroupLabel {}
 
 /**
  * Component that is used to group instances of `kbq-option`.
@@ -20,7 +46,8 @@ let uniqueOptgroupIdCounter = 0;
     },
     exportAs: 'kbqOptgroup'
 })
-export class KbqOptgroup {
+export class KbqOptgroup implements AfterContentInit {
+    /** Plain-text heading of the group; content projected with `kbq-optgroup-label` takes precedence. */
     readonly label = input<string>(undefined!);
 
     /** Whether the group, and every option in it, is disabled. */
@@ -28,4 +55,59 @@ export class KbqOptgroup {
 
     /** Unique id for the underlying label. */
     labelId: string = `kbq-optgroup-label-${uniqueOptgroupIdCounter++}`;
+
+    private readonly projectedLabels = contentChildren(KbqOptgroupLabel);
+
+    private readonly projectedOptions = contentChildren(KBQ_GROUP_OPTION, { descendants: true });
+
+    private readonly selectedCountState = computed(() => this.projectedOptions().filter((o) => o.selected).length);
+
+    /** @docs-private */
+    protected readonly hasProjectedLabel = computed(() => this.projectedLabels().length > 0);
+
+    /**
+     * The number of options in this group that are currently selected. A `kbq-list-option` is not
+     * counted: `core/option` cannot depend on the `list` entry point.
+     */
+    get selectedCount(): number {
+        return this.selectedCountState();
+    }
+
+    ngAfterContentInit(): void {
+        this.warnAboutExtraLabels();
+        this.warnAboutLabelWithoutDirective();
+    }
+
+    // An ng-content selector matches the projected element even without the directive in scope, so the
+    // content would then render next to the `label` input rather than replace it.
+    private warnAboutLabelWithoutDirective(): void {
+        if (!isDevMode() || this.warnedAboutLabelWithoutDirective || !this.label()) return;
+
+        const label = this.nativeElement.querySelector('.kbq-optgroup-label');
+
+        if (!label?.childElementCount || this.projectedLabels().length > 0) return;
+
+        this.warnedAboutLabelWithoutDirective = true;
+
+        // eslint-disable-next-line no-console
+        console.warn(
+            'KbqOptgroup: kbq-optgroup-label content renders together with the label input. ' +
+                'Import KbqOptgroupLabel for it to take over the label.'
+        );
+    }
+
+    private warnAboutExtraLabels(): void {
+        if (!isDevMode() || this.warnedAboutExtraLabels || this.projectedLabels().length <= 1) return;
+
+        this.warnedAboutExtraLabels = true;
+
+        // eslint-disable-next-line no-console
+        console.warn('KbqOptgroup: at most one kbq-optgroup-label is supported; every extra one also renders.');
+    }
+
+    private readonly nativeElement = kbqInjectNativeElement();
+
+    private warnedAboutExtraLabels = false;
+
+    private warnedAboutLabelWithoutDirective = false;
 }
