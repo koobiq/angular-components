@@ -24,13 +24,17 @@ import { TRANSLATIONS } from './l10n';
                     <div>
                         <span>
                             <span>{{ item }}</span>
-                            @if (clampedList.hasToggle() && (clampedList.isCollapsed() || !$last)) {
+                            @if (!$last) {
                                 <span>,&nbsp;</span>
                             }
                         </span>
                     </div>
                 }
                 @if (clampedList.hasToggle()) {
+                    @if (clampedList.isCollapsed()) {
+                        <span>,</span>
+                    }
+                    <span>&nbsp;</span>
                     <a kbqClampedListTrigger kbqLink pseudo>
                         @if (clampedList.isCollapsed()) {
                             {{ clampedList.showMoreCompactCountText() | lowercase }}
