@@ -33,13 +33,11 @@
 .kbq-navbar__more-content {
     display: flex;
     flex-direction: column;
-
     min-width: var(--kbq-navbar-more-panel-size-min-width);
 
     & .kbq-navbar-item.kbq-horizontal {
         // A row keeps the item's own states; only its geometry becomes that of a menu row.
         justify-content: flex-start;
-
         width: 100%;
         margin: 0;
     }
@@ -47,8 +45,8 @@
     // Every row is indented alike, an icon-only one as much as one with a title: the base `_with-title` rule of
     // the same weight as this one loads later, so the weight has to grow past it.
     & .kbq-navbar-item.kbq-horizontal:not(.kbq-navbar-item_collapsed) {
-        padding-left: var(--kbq-size-xs);
         padding-right: var(--kbq-size-xs);
+        padding-left: var(--kbq-size-xs);
     }
 
     // A divider between hidden items runs across the panel; runs of them collapse, and none lead or trail it.
@@ -57,7 +55,6 @@
     & .kbq-navbar-divider.kbq-horizontal {
         width: auto;
         height: 1px;
-
         margin: var(--kbq-size-3xs) 0;
 
         & + .kbq-navbar-divider,
