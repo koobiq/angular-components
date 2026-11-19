@@ -1603,6 +1603,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "code-block-with-filled-example.ts",
     "importPath": "components/code-block"
   },
+  "code-block-with-line-selection": {
+    "packagePath": "components/code-block/code-block-with-line-selection",
+    "title": "Code-block with line selection",
+    "componentName": "CodeBlockWithLineSelectionExample",
+    "files": [
+      "code-block-with-line-selection-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "code-block-with-line-selection-example",
+    "primaryFile": "code-block-with-line-selection-example.ts",
+    "importPath": "components/code-block"
+  },
   "code-block-with-link": {
     "packagePath": "components/code-block/code-block-with-link",
     "title": "Code-block with link",
@@ -9693,6 +9705,7 @@ export type LiveExampleId =
   | 'code-block-overview'
   | 'code-block-with-custom-locale-configuration'
   | 'code-block-with-filled'
+  | 'code-block-with-line-selection'
   | 'code-block-with-link'
   | 'code-block-with-marks'
   | 'code-block-with-max-height'

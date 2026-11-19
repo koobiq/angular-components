@@ -48,8 +48,8 @@ def find_users():
 
 if __name__ == "__main__":
     app.run(debug=True)`,
-            markedLines: [6, [12, 14], /debug=True/],
-            markedText: ["'{name}'", /"SECRET_KEY"\] = "(.*)"/]
+            markedLines: [6, [13, 14], /debug=True/],
+            markedText: ['request.args.get("name")', "'{name}'", /"SECRET_KEY"\] = "(.*)"/]
         }
     ];
 }

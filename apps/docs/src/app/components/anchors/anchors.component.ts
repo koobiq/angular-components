@@ -16,6 +16,7 @@ import { debounceTime, filter, fromEvent, type Subscription } from 'rxjs';
 import { kbqAnimationsDisabled, PopUpPlacements } from '@koobiq/components/core';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { DOCS_API_WITHOUT_MEMBER } from '../../constants/api-page';
+import { DOCS_WITHOUT_CODE_LINES } from '../../constants/code-lines';
 import { DOCS_MARKDOWN_HEADING_CLASSES } from '../live-example/markdown-content';
 
 /**
@@ -64,8 +65,11 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
 
     protected pathName: string;
 
-    /** The query of a link to a heading: the rest of the current one, without the member selected on an API tab. */
-    protected readonly queryParams = DOCS_API_WITHOUT_MEMBER;
+    /**
+     * The query of a link to a heading: the rest of the current one, without the member selected on an API tab and the
+     * lines selected in the source of an example.
+     */
+    protected readonly queryParams = { ...DOCS_API_WITHOUT_MEMBER, ...DOCS_WITHOUT_CODE_LINES };
 
     private readonly headerHeight: number = 64;
 

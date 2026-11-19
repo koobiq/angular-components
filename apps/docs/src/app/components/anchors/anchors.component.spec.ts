@@ -30,15 +30,17 @@ describe('DocsAnchorsComponent', () => {
 
     // Taken as a path, a query in it would be encoded into the last segment and lead nowhere.
     describe('links', () => {
-        // A kept member would take a reload of the page back to it rather than to the heading.
-        it('lead to the heading on the current path, keeping the query but the member it selects', async () => {
+        // A kept member or lines would take a reload of the page back to them rather than to the heading.
+        it('lead to the heading on the current path, keeping the query but what the page selects', async () => {
             TestBed.resetTestingModule();
             TestBed.configureTestingModule({
                 imports: [DocsAnchorsComponent],
                 providers: [provideRouter([{ path: '**', children: [] }])]
             });
 
-            await TestBed.inject(Router).navigateByUrl('/en/components/alert/api?filter=inputs&member=KbqAlert-title');
+            await TestBed.inject(Router).navigateByUrl(
+                '/en/components/alert/api?filter=inputs&member=KbqAlert-title&example=alert-overview&file=ts&lines=2-4'
+            );
 
             const heading = document.createElement('h3');
 

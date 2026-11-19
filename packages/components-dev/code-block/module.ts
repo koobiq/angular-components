@@ -5,6 +5,7 @@ import {
     CodeBlockOverviewExample,
     CodeBlockWithCustomLocaleConfigurationExample,
     CodeBlockWithFilledExample,
+    CodeBlockWithLineSelectionExample,
     CodeBlockWithLinkExample,
     CodeBlockWithMarksExample,
     CodeBlockWithMaxHeightExample,
@@ -27,6 +28,7 @@ import { DevThemeToggle } from '../theme-toggle';
         CodeBlockOverviewExample,
         CodeBlockLineNumbersExample,
         CodeBlockWithMarksExample,
+        CodeBlockWithLineSelectionExample,
         CodeBlockWithCustomLocaleConfigurationExample,
         CodeBlockWithTabsAndShadowExample,
         CodeBlockWithLinkExample,
@@ -42,6 +44,8 @@ import { DevThemeToggle } from '../theme-toggle';
         <code-block-line-numbers-example />
         <hr />
         <code-block-with-marks-example />
+        <hr />
+        <code-block-with-line-selection-example />
         <hr />
         <code-block-with-tabs-example />
         <hr />

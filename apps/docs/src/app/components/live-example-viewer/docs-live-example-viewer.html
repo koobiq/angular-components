@@ -78,6 +78,14 @@
     </div>
 </div>
 
-@if (isSourceShown() && files.length > 0) {
-    <kbq-code-block [files]="files" [filled]="true" [lineNumbers]="true" />
+@if (isSourceShown() && files().length > 0) {
+    <kbq-code-block
+        #sourceCode
+        [canSelectLines]="true"
+        [files]="files()"
+        [filled]="true"
+        [lineNumbers]="true"
+        [(activeFileIndex)]="activeFileIndex"
+        (filesChange)="shareLines($event)"
+    />
 }

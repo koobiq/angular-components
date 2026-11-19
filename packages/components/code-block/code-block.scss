@@ -139,6 +139,14 @@
         }
     }
 
+    // The number takes in the padding before it and the gap after it, so the whole column answers a click.
+    &.kbq-code-block_can-select-lines .kbq-code-block__code_line-numbers .kbq-code-block__line::before {
+        box-sizing: content-box;
+        margin-inline: calc(var(--kbq-code-block-code-padding-horizontal) * -1) 0;
+        padding-inline: var(--kbq-code-block-code-padding-horizontal) var(--kbq-code-block-line-numbers-gap);
+        cursor: pointer;
+    }
+
     &.kbq-code-block_soft-wrap {
         .kbq-code-block__code {
             white-space: pre-wrap;

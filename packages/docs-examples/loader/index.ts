@@ -217,6 +217,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/code-block').then((m) => m.CodeBlockWithCustomLocaleConfigurationExample);
         case 'code-block-with-filled':
             return import('@koobiq/docs-examples/components/code-block').then((m) => m.CodeBlockWithFilledExample);
+        case 'code-block-with-line-selection':
+            return import('@koobiq/docs-examples/components/code-block').then((m) => m.CodeBlockWithLineSelectionExample);
         case 'code-block-with-link':
             return import('@koobiq/docs-examples/components/code-block').then((m) => m.CodeBlockWithLinkExample);
         case 'code-block-with-marks':

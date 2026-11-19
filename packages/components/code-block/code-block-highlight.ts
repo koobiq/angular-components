@@ -18,7 +18,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import type { HLJSApi, LanguageFn } from 'highlight.js';
 import { kbqInjectNativeElement } from '@koobiq/components/core';
 import { KbqCodeBlockHighlightJsLoader, PLAIN_TEXT_LANGUAGE } from './code-block-highlight-js-loader';
-import type { KbqCodeBlockFile } from './types';
+import type { KbqCodeBlockFile, KbqCodeBlockLineMark, KbqCodeBlockTextMark } from './types';
 
 /**
  * Configuration of highlight.js, which highlights the code of a code block: how to load it and which languages to
@@ -97,6 +97,11 @@ const HIGHLIGHTED_MARKUP_ATTRIBUTE = 'data-highlighted-markup';
 
 const LINE_BREAK = /\r\n|\r|\n/g;
 
+const MARKED_LINE_CLASS = 'kbq-code-block__line_marked';
+
+/** Where every line of a content starts and where it ends, before its line break. */
+type CodeBlockLines = [start: number, end: number][];
+
 /** Indices of the lines to mark, and the columns of each line between which its text is marked. */
 type CodeBlockMarks = { lines: Set<number>; text: Map<number, [from: number, to: number][]> };
 
@@ -127,6 +132,8 @@ export class KbqCodeBlockHighlight {
     // Read here and handed to the loader: a component or a route may provide a configuration of its own.
     private readonly config = inject(KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG, { optional: true });
     private readonly _pending = signal(false);
+    /** The file the markup was highlighted for, or `null` while the markup is not the directive's own. */
+    private highlightedFile: KbqCodeBlockFile | null = null;
 
     /**
      * Whether syntax highlighting is pending.
@@ -144,10 +151,18 @@ export class KbqCodeBlockHighlight {
             const hljs = this.loader.loaded(this.config);
 
             if (hljs) {
-                this.highlight(hljs, file);
+                // A click on a line number changes the marked lines alone, and a large file is not highlighted anew
+                // for every click.
+                if (this.differsInMarkedLinesOnly(file)) {
+                    this.markLines(file);
+                } else {
+                    this.highlight(hljs, file);
+                }
 
                 return;
             }
+
+            this.highlightedFile = null;
 
             // The template leaves `<code>` empty, so that hydration does not look for a text node the highlighted
             // markup has replaced. The plain content stands in until highlighting lands, and for good if it fails.
@@ -254,8 +269,52 @@ export class KbqCodeBlockHighlight {
         this.renderer.setAttribute(this.nativeElement, 'data-language', highlightedLanguage!);
         this.renderer.setProperty(this.nativeElement, 'innerHTML', safeHTML);
         this.renderer.setAttribute(this.nativeElement, HIGHLIGHTED_MARKUP_ATTRIBUTE, '');
+        this.highlightedFile = file;
 
         this._pending.set(false);
+    }
+
+    /** Whether the file differs from the one the markup was highlighted for in its marked lines at most. */
+    private differsInMarkedLinesOnly(file: KbqCodeBlockFile): boolean {
+        const highlighted = this.highlightedFile;
+
+        if (!highlighted || highlighted.content !== file.content || highlighted.language !== file.language) {
+            return false;
+        }
+
+        const highlightedMarks = highlighted.markedText ?? [];
+        const marks = file.markedText ?? [];
+
+        return (
+            highlightedMarks.length === marks.length &&
+            highlightedMarks.every((highlightedMark, index) => {
+                const mark = marks[index];
+
+                return typeof highlightedMark === 'string'
+                    ? highlightedMark === mark
+                    : mark instanceof RegExp &&
+                          mark.source === highlightedMark.source &&
+                          mark.flags === highlightedMark.flags;
+            })
+        );
+    }
+
+    /** Marks the lines of the highlighted markup anew. */
+    private markLines(file: KbqCodeBlockFile): void {
+        const markedLines = file.markedLines ?? [];
+        const marked = markedLines.length
+            ? this.findMarkedLines(file, markedLines, this.indexLines(file.content))
+            : new Set<number>();
+
+        Array.from(this.nativeElement.children).forEach((line, index) => {
+            if (marked.has(index)) {
+                this.renderer.addClass(line, MARKED_LINE_CLASS);
+            } else {
+                this.renderer.removeClass(line, MARKED_LINE_CLASS);
+            }
+        });
+
+        this.highlightedFile = file;
     }
 
     /**
@@ -339,7 +398,7 @@ export class KbqCodeBlockHighlight {
         return lines
             .map((content, index) => {
                 const className = marks.lines.has(index)
-                    ? 'kbq-code-block__line kbq-code-block__line_marked'
+                    ? `kbq-code-block__line ${MARKED_LINE_CLASS}`
                     : 'kbq-code-block__line';
 
                 return `<span class="${className}">${content}</span>`;
@@ -354,15 +413,22 @@ export class KbqCodeBlockHighlight {
      */
     private findMarks(file: KbqCodeBlockFile): CodeBlockMarks {
         // A file that comes as JSON may hold `null` for a mark field it does not set.
-        const { content } = file;
         const markedLines = file.markedLines ?? [];
         const markedText = file.markedText ?? [];
-        const marks: CodeBlockMarks = { lines: new Set(), text: new Map() };
 
-        if (!markedLines.length && !markedText.length) return marks;
+        if (!markedLines.length && !markedText.length) return { lines: new Set(), text: new Map() };
 
-        // Where every line starts and where it ends, before its line break.
-        const lines: [start: number, end: number][] = [];
+        const lines = this.indexLines(file.content);
+
+        return {
+            lines: this.findMarkedLines(file, markedLines, lines),
+            text: this.findMarkedText(file, markedText, lines)
+        };
+    }
+
+    /** Where every line of the content starts and where it ends, before its line break. */
+    private indexLines(content: string): CodeBlockLines {
+        const lines: CodeBlockLines = [];
         let start = 0;
 
         for (const { index, 0: lineBreak } of content.matchAll(LINE_BREAK)) {
@@ -373,22 +439,33 @@ export class KbqCodeBlockHighlight {
         // A line break at the end of the file starts no line.
         if (start < content.length || !lines.length) lines.push([start, content.length]);
 
-        const lineAt = (offset: number): number => {
-            let low = 0;
-            let high = lines.length - 1;
+        return lines;
+    }
 
-            while (low < high) {
-                const middle = Math.ceil((low + high) / 2);
+    /** Index of the line that holds an offset of the content. */
+    private lineAt(lines: CodeBlockLines, offset: number): number {
+        let low = 0;
+        let high = lines.length - 1;
 
-                if (lines[middle]![0] <= offset) {
-                    low = middle;
-                } else {
-                    high = middle - 1;
-                }
+        while (low < high) {
+            const middle = Math.ceil((low + high) / 2);
+
+            if (lines[middle]![0] <= offset) {
+                low = middle;
+            } else {
+                high = middle - 1;
             }
+        }
 
-            return low;
-        };
+        return low;
+    }
+
+    private findMarkedLines(
+        file: KbqCodeBlockFile,
+        markedLines: KbqCodeBlockLineMark[],
+        lines: CodeBlockLines
+    ): CodeBlockMarks['lines'] {
+        const marked: CodeBlockMarks['lines'] = new Set();
 
         for (const mark of markedLines) {
             let ranges: [first: number, last: number][];
@@ -398,9 +475,9 @@ export class KbqCodeBlockHighlight {
             } else if (Array.isArray(mark)) {
                 ranges = [mark];
             } else {
-                ranges = this.findMatches(content, mark).map(([from, to]) => [
-                    lineAt(from) + 1,
-                    lineAt(Math.max(from, to - 1)) + 1
+                ranges = this.findMatches(file.content, mark).map(([from, to]) => [
+                    this.lineAt(lines, from) + 1,
+                    this.lineAt(lines, Math.max(from, to - 1)) + 1
                 ]);
             }
 
@@ -410,7 +487,7 @@ export class KbqCodeBlockHighlight {
                 if (!Number.isInteger(first) || !Number.isInteger(last)) continue;
 
                 for (let line = Math.max(first, 1); line <= Math.min(last, lines.length); line++) {
-                    marks.lines.add(line - 1);
+                    marked.add(line - 1);
                     marksLine = true;
                 }
             }
@@ -420,15 +497,25 @@ export class KbqCodeBlockHighlight {
             }
         }
 
+        return marked;
+    }
+
+    private findMarkedText(
+        file: KbqCodeBlockFile,
+        markedText: KbqCodeBlockTextMark[],
+        lines: CodeBlockLines
+    ): CodeBlockMarks['text'] {
+        const marked: CodeBlockMarks['text'] = new Map();
+
         for (const mark of markedText) {
-            const matches = this.findMatches(content, mark).filter(([from, to]) => from < to);
+            const matches = this.findMatches(file.content, mark).filter(([from, to]) => from < to);
 
             if (!matches.length) {
                 this.warn('[KbqCodeBlock] Text mark does not mark any text of the file.', mark, file);
             }
 
             for (const [from, to] of matches) {
-                for (let line = lineAt(from); line < lines.length; line++) {
+                for (let line = this.lineAt(lines, from); line < lines.length; line++) {
                     const [lineStart, lineEnd] = lines[line]!;
 
                     if (lineStart >= to) break;
@@ -440,18 +527,18 @@ export class KbqCodeBlockHighlight {
 
                     if (columns[0] >= columns[1]) continue;
 
-                    const lineColumns = marks.text.get(line);
+                    const lineColumns = marked.get(line);
 
                     if (lineColumns) {
                         lineColumns.push(columns);
                     } else {
-                        marks.text.set(line, [columns]);
+                        marked.set(line, [columns]);
                     }
                 }
             }
         }
 
-        return marks;
+        return marked;
     }
 
     /**

@@ -698,6 +698,52 @@ describe(KbqCodeBlockHighlight.name, () => {
                 warn.mockRestore();
             }
         });
+
+        it('should mark other lines of the same markup when only the marked lines change', async () => {
+            const core = buildMockCore();
+            const fixture = createComponent(SingleBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({ core: coreLoader(core) })
+            ]);
+            const [code] = getCodeElements(fixture);
+            const file: KbqCodeBlockFile = {
+                content: CONTENT,
+                language: 'typescript',
+                markedLines: [1],
+                markedText: [/t(wo)/]
+            };
+
+            fixture.componentInstance.file.set(file);
+            await settle(fixture);
+
+            const [firstLine] = getLines(code);
+
+            vi.mocked(core.highlight).mockClear();
+            // A copy of the text marks, as a parent that builds its files anew passes them.
+            fixture.componentInstance.file.set({ ...file, markedLines: [[3, 4]], markedText: [/t(wo)/] });
+            await settle(fixture);
+
+            expect(getMarkedLines(code)).toEqual([false, false, true, true, false]);
+            expect(getMarks(code).map((mark) => mark.textContent)).toEqual(['wo']);
+            expect(getLines(code)[0]).toBe(firstLine);
+            expect(core.highlight).not.toHaveBeenCalled();
+        });
+
+        it('should highlight the file anew when its text marks change', async () => {
+            const core = buildMockCore();
+            const fixture = createComponent(SingleBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({ core: coreLoader(core) })
+            ]);
+            const file: KbqCodeBlockFile = { content: CONTENT, language: 'typescript', markedText: [/two/] };
+
+            fixture.componentInstance.file.set(file);
+            await settle(fixture);
+
+            vi.mocked(core.highlight).mockClear();
+            fixture.componentInstance.file.set({ ...file, markedText: [/two/i] });
+            await settle(fixture);
+
+            expect(core.highlight).toHaveBeenCalledTimes(1);
+        });
     });
 
     // The mocks above know every language; the core knows none, and throws on a language it has not registered.

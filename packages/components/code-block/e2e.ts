@@ -186,9 +186,9 @@ export class E2eCodeBlockLineNumbers {
     imports: [KbqCodeBlock],
     template: `
         <!-- A marked line spans the code's padding, which differs with and without the header, and its code starts
-        after the numbers when there are any -->
+        after the numbers when there are any. The first block shows the hover of a line under its marked text -->
         <div class="e2e-code-block-grid" data-testid="e2eScreenshotTarget">
-            <kbq-code-block lineNumbers [files]="[markedFile]" />
+            <kbq-code-block canSelectLines lineNumbers [files]="[markedFile]" />
             <kbq-code-block hideTabs [files]="[markedFile]" />
         </div>
     `,
@@ -208,6 +208,32 @@ export class E2eCodeBlockLineNumbers {
     }
 })
 export class E2eCodeBlockMarks {
+    protected readonly markedFile = markedFile;
+}
+
+@Component({
+    selector: 'e2e-code-block-line-selection',
+    imports: [KbqCodeBlock],
+    template: `
+        <!-- Lines selected by the reader replace the marked lines of the file and keep its marked text -->
+        <div class="e2e-code-block-grid" data-testid="e2eScreenshotTarget">
+            <kbq-code-block canSelectLines lineNumbers [files]="[markedFile]" />
+        </div>
+    `,
+    styles: `
+        .e2e-code-block-grid {
+            display: inline-grid;
+            grid-template-columns: 250px;
+            padding: var(--kbq-size-xs);
+        }
+    `,
+    providers: [kbqCodeBlockLocaleConfigurationProvider(enUSLocaleData.codeBlock), HIGHLIGHT_JS_CONFIG],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eCodeBlockLineSelection'
+    }
+})
+export class E2eCodeBlockLineSelection {
     protected readonly markedFile = markedFile;
 }
 
