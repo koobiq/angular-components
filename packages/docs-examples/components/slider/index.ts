@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { SliderAlignmentExample } from './slider-alignment/slider-alignment-example';
 import { SliderCommitExample } from './slider-commit/slider-commit-example';
 import { SliderCustomExample } from './slider-custom/slider-custom-example';
+import { SliderDistanceExample } from './slider-distance/slider-distance-example';
 import { SliderFillExample } from './slider-fill/slider-fill-example';
 import { SliderFormsExample } from './slider-forms/slider-forms-example';
 import { SliderInputExample } from './slider-input/slider-input-example';
@@ -18,6 +19,7 @@ export {
     SliderAlignmentExample,
     SliderCommitExample,
     SliderCustomExample,
+    SliderDistanceExample,
     SliderFillExample,
     SliderFormsExample,
     SliderInputExample,
@@ -36,6 +38,7 @@ const EXAMPLES = [
     SliderStatesExample,
     SliderMarksExample,
     SliderRangeExample,
+    SliderDistanceExample,
     SliderVerticalExample,
     SliderFillExample,
     SliderTooltipExample,

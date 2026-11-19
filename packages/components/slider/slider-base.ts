@@ -1,20 +1,30 @@
 import { _IdGenerator } from '@angular/cdk/a11y';
 import type { BooleanInput, NumberInput } from '@angular/cdk/coercion';
 import {
+    afterNextRender,
     booleanAttribute,
     computed,
+    DestroyRef,
     Directive,
     type DoCheck,
+    ElementRef,
     inject,
     input,
-    linkedSignal,
     numberAttribute,
+    type OnChanges,
     output,
-    signal
+    Renderer2,
+    signal,
+    type SimpleChanges
 } from '@angular/core';
 import { type ControlValueAccessor, FormGroupDirective, NgControl, NgForm, Validators } from '@angular/forms';
-import { ErrorStateMatcher, KbqErrorStateTracker, kbqInjectA11yLocaleConfiguration } from '@koobiq/components/core';
-import { KBQ_FORM_FIELD } from '@koobiq/components/form-field';
+import {
+    ErrorStateMatcher,
+    KbqErrorStateTracker,
+    kbqInjectA11yLocaleConfiguration,
+    ruRULocaleData
+} from '@koobiq/components/core';
+import { KBQ_FORM_FIELD, KbqFormFieldControl } from '@koobiq/components/form-field';
 import type { KbqSliderCollision, KbqSliderCommit, KbqSliderMark, KbqSliderValue } from './slider.types';
 import { sliderBounds, sliderEqual, sliderGap, sliderMove, sliderNormalize, sliderSnap } from './slider-value';
 
@@ -24,10 +34,10 @@ import { sliderBounds, sliderEqual, sliderGap, sliderMove, sliderNormalize, slid
  * @docs-private
  */
 @Directive()
-export abstract class KbqSliderBase implements ControlValueAccessor, DoCheck {
+export abstract class KbqSliderBase implements ControlValueAccessor, DoCheck, OnChanges {
     /** Selected number or ordered range. Defaults to `0`. */
     readonly valueInput = input<KbqSliderValue>(0, { alias: 'value' });
-    private readonly current = linkedSignal(() => this.valueInput());
+    private readonly current = signal<KbqSliderValue>(0);
     /** Current selection on the configured scale. */
     readonly value = computed(() => sliderNormalize(this.current(), this.settings()));
     /** Emits a new selection when the user edits the control. */
@@ -131,6 +141,43 @@ export abstract class KbqSliderBase implements ControlValueAccessor, DoCheck {
 
     constructor() {
         if (this.ngControl) this.ngControl.valueAccessor = this;
+
+        const parent = inject(KbqFormFieldControl, { optional: true, skipSelf: true });
+
+        if (this.ngControl || parent instanceof KbqSliderBase) return;
+
+        const element = inject<ElementRef<HTMLElement>>(ElementRef);
+        const renderer = inject(Renderer2);
+        const destroyRef = inject(DestroyRef);
+
+        afterNextRender(() => {
+            const form = element.nativeElement.closest('form');
+
+            if (!form) return;
+            const initial = this.value();
+            const stop = renderer.listen(form, 'reset', (event: Event) => {
+                // A reset dispatched by the browser can run microtasks before restoring the native inputs.
+                setTimeout(() => {
+                    if (event.defaultPrevented || destroyRef.destroyed) return;
+                    const previous = this.value();
+
+                    this.writeValue(initial);
+                    if (!sliderEqual(previous, this.value())) this.valueChange.emit(this.value());
+                });
+            });
+
+            destroyRef.onDestroy(stop);
+        });
+    }
+
+    /** @docs-private */
+    ngOnChanges(changes: SimpleChanges<KbqSliderBase>): void {
+        if (!changes.valueInput || this.ngControl) return;
+        const value = this.valueInput();
+
+        // A two-way binding can echo a value while a gesture or a draft is still active.
+        if (sliderEqual(this.value(), sliderNormalize(value, this.settings()))) this.current.set(value);
+        else this.writeValue(value);
     }
 
     /** @docs-private */
@@ -203,10 +250,17 @@ export abstract class KbqSliderBase implements ControlValueAccessor, DoCheck {
     protected thumbLabel(index: number): string {
         const label = this.thumbLabels()[index];
 
-        if (this.values().length === 1) return label || this.ariaLabel() || this.locale().slider;
+        const { slider, sliderStart, sliderEnd } = this.locale();
+
+        if (this.values().length === 1) return label || this.ariaLabel() || slider || ruRULocaleData.a11y.slider;
         if (label) return label;
 
-        return [this.ariaLabel(), index === 0 ? this.locale().sliderStart : this.locale().sliderEnd]
+        return [
+            this.ariaLabel(),
+            index === 0
+                ? (sliderStart ?? ruRULocaleData.a11y.sliderStart)
+                : (sliderEnd ?? ruRULocaleData.a11y.sliderEnd)
+        ]
             .filter(Boolean)
             .join(' ');
     }

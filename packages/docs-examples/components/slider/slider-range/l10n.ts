@@ -1,26 +1,17 @@
 import type { Translations } from '@koobiq/docs-examples/i18n';
 
 export interface ExampleTranslation {
-    behavior: string;
-    price: string;
-    currency: string;
-    gap: string;
+    scenarios: Record<'none' | 'swap' | 'push', string>;
     bounds: string[];
 }
 
 export const TRANSLATIONS: Translations<ExampleTranslation> = {
     default: {
-        behavior: 'Поведение при столкновении',
-        price: 'Цена',
-        currency: '₽',
-        gap: 'Между границами остаётся не меньше 100 ₽.',
-        bounds: ['Минимальная цена', 'Максимальная цена']
+        scenarios: { none: 'Ограничение периода', swap: 'Перестановка границ', push: 'Сдвиг окна' },
+        bounds: ['Нижняя граница', 'Верхняя граница']
     },
     'en-US': {
-        behavior: 'Thumb collision behavior',
-        price: 'Price',
-        currency: '$',
-        gap: 'The bounds stay at least $100 apart.',
-        bounds: ['Minimum price', 'Maximum price']
+        scenarios: { none: 'Limit a period', swap: 'Swap boundaries', push: 'Shift a window' },
+        bounds: ['Lower bound', 'Upper bound']
     }
 };

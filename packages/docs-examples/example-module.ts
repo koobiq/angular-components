@@ -6996,6 +6996,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "slider-custom-example.ts",
     "importPath": "components/slider"
   },
+  "slider-distance": {
+    "packagePath": "components/slider/slider-distance",
+    "title": "Minimum distance between thumbs",
+    "componentName": "SliderDistanceExample",
+    "files": [
+      "slider-distance-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "slider-distance-example",
+    "primaryFile": "slider-distance-example.ts",
+    "importPath": "components/slider"
+  },
   "slider-fill": {
     "packagePath": "components/slider/slider-fill",
     "title": "Slider fill",
@@ -10264,6 +10279,7 @@ export type LiveExampleId =
   | 'slider-alignment'
   | 'slider-commit'
   | 'slider-custom'
+  | 'slider-distance'
   | 'slider-fill'
   | 'slider-forms'
   | 'slider-input'

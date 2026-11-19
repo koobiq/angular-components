@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSlider } from '@koobiq/components/slider';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
@@ -6,21 +7,23 @@ import { TRANSLATIONS } from './l10n';
 /** @title Steps and marks */
 @Component({
     selector: 'slider-marks-example',
-    imports: [KbqSlider],
+    imports: [KbqFormFieldModule, KbqSlider],
     template: `
-        <span>{{ t().value }}</span>
-        <kbq-slider showTooltip [value]="50" [step]="25" [marks]="percentMarks" [aria-label]="t().value" />
-        <span>{{ t().interval }}</span>
-        <kbq-slider
-            showTooltip
-            [value]="2"
-            [min]="0"
-            [max]="5"
-            [step]="null"
-            [marks]="timeMarks()"
-            [displayWith]="formatTime"
-            [aria-label]="t().interval"
-        />
+        <kbq-form-field>
+            <kbq-label>{{ t().value }}</kbq-label>
+            <kbq-slider showTooltip [value]="50" [step]="25" [marks]="percentMarks" />
+        </kbq-form-field>
+        <kbq-form-field>
+            <kbq-label>{{ t().interval }}</kbq-label>
+            <kbq-slider
+                showTooltip
+                [value]="2"
+                [max]="5"
+                [step]="null"
+                [marks]="timeMarks()"
+                [displayWith]="formatTime"
+            />
+        </kbq-form-field>
     `,
     styles: `
         :host {
@@ -32,7 +35,6 @@ import { TRANSLATIONS } from './l10n';
             margin: 0 auto;
             justify-content: center;
             min-height: 96px;
-            font-variant-numeric: tabular-nums;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

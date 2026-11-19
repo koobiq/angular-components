@@ -13,6 +13,7 @@
             <div
                 class="kbq-slider__fill"
                 aria-hidden="true"
+                [class.kbq-animations-disabled]="animationsDisabled"
                 [style.left]="vertical() ? null : segment.start"
                 [style.width]="vertical() ? null : segment.size"
                 [style.top]="vertical() ? segment.start : null"
@@ -43,14 +44,7 @@
         @for (value of values(); track $index) {
             <span
                 class="kbq-slider__thumb"
-                kbqTrigger="manual"
-                kbqTooltipClass="kbq-slider__tooltip"
-                [kbqTooltip]="displayWith()(value)"
-                [kbqPlacement]="vertical() ? 'left' : 'top'"
-                [kbqTooltipArrow]="false"
-                [kbqEnterDelay]="0"
-                [kbqLeaveDelay]="0"
-                [kbqVisible]="tooltipIndex() === $index"
+                [class.kbq-animations-disabled]="animationsDisabled"
                 [attr.data-thumb-index]="$index"
                 [class.kbq-slider__thumb_active]="activeIndex() === $index"
                 [style.--kbq-slider-position]="`${position(value)}%`"
@@ -65,6 +59,7 @@
                     [min]="thumbMin($index)"
                     [max]="thumbMax($index)"
                     [value]="value"
+                    [defaultValue]="value"
                     [disabled]="disabled()"
                     [attr.aria-label]="thumbLabel($index)"
                     [attr.aria-labelledby]="thumbLabelledBy($index)"
@@ -82,7 +77,21 @@
                 <span class="cdk-visually-hidden" [id]="`${id()}-thumb-${$index}-label`">
                     {{ thumbLabel($index) }}
                 </span>
-                <span class="kbq-slider__thumb-shape" aria-hidden="true"></span>
+                <span
+                    class="kbq-slider__thumb-shape"
+                    aria-hidden="true"
+                    kbqTrigger="manual"
+                    kbqTooltipClass="kbq-slider__tooltip"
+                    [class.kbq-animations-disabled]="animationsDisabled"
+                    [kbqTooltip]="displayWith()(value)"
+                    [kbqPlacement]="vertical() ? 'left' : 'top'"
+                    [kbqTooltipArrow]="false"
+                    [kbqTooltipOffset]="4"
+                    [kbqTooltipScrollStrategy]="tooltipScrollStrategy"
+                    [kbqEnterDelay]="0"
+                    [kbqLeaveDelay]="0"
+                    [kbqVisible]="tooltipIndex() === $index && (showTooltip() || tooltipOnFocus())"
+                ></span>
             </span>
         }
     </div>

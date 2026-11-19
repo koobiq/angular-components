@@ -1,4 +1,5 @@
 import { Directionality } from '@angular/cdk/bidi';
+import { Overlay } from '@angular/cdk/overlay';
 import { Platform } from '@angular/cdk/platform';
 import {
     afterNextRender,
@@ -21,8 +22,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NgControl } from '@angular/forms';
-import { KBQ_WINDOW } from '@koobiq/components/core';
+import { KBQ_WINDOW, kbqAnimationsDisabled } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import type { KbqSliderFill, KbqSliderScale, KbqSliderValue } from './slider.types';
@@ -69,7 +69,7 @@ export class KbqSlider extends KbqSliderBase {
     readonly scale = input<KbqSliderScale>();
     /** Shows the value on focus, hover and drag. Defaults to `false`. */
     readonly showTooltip = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
-    /** Also shows the value when a read-only thumb receives focus. Defaults to `false`. */
+    /** Shows the value on focus even when `showTooltip` is off. Defaults to `false`. */
     readonly tooltipOnFocus = input<boolean, boolean | string | null | undefined>(false, {
         transform: booleanAttribute
     });
@@ -80,13 +80,15 @@ export class KbqSlider extends KbqSliderBase {
 
     private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly platform = inject(Platform);
+    private readonly overlay = inject(Overlay);
+    protected readonly tooltipScrollStrategy = () => this.overlay.scrollStrategies.reposition();
     private readonly directionality = inject(Directionality, { optional: true });
-    private readonly ancestorControl = inject(NgControl, { optional: true, skipSelf: true });
     private readonly direction = signal(this.directionality?.value ?? 'ltr');
     private readonly renderer = inject(Renderer2);
     private readonly window = inject(KBQ_WINDOW);
     private readonly rail = viewChild<ElementRef<HTMLElement>>('rail');
     private readonly surface = viewChild<ElementRef<HTMLElement>>('surface');
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
     protected readonly animateMark = signal(false);
     protected readonly activeIndex = signal(0);
     protected readonly tooltipIndex = signal<number | null>(null);
@@ -150,6 +152,7 @@ export class KbqSlider extends KbqSliderBase {
             this.vertical();
             this.reversed();
             this.scale();
+            this.thumbAlignment();
             this.direction();
             untracked(() => this.cancelGesture());
         });
@@ -165,21 +168,6 @@ export class KbqSlider extends KbqSliderBase {
             const stopBlur = this.renderer.listen(this.window, 'blur', () => this.cancelGesture());
 
             destroyRef.onDestroy(stopBlur);
-            const form = this.element.nativeElement.closest('form');
-            const initial = this.value();
-
-            if (form && !this.ngControl && !this.ancestorControl) {
-                const stopReset = this.renderer.listen(form, 'reset', (event: Event) => {
-                    queueMicrotask(() => {
-                        if (!event.defaultPrevented && !destroyRef.destroyed) {
-                            this.cancelGesture();
-                            this.writeValue(initial);
-                        }
-                    });
-                });
-
-                destroyRef.onDestroy(stopReset);
-            }
         });
         destroyRef.onDestroy(() => {
             this.clearTooltip();
@@ -254,8 +242,6 @@ export class KbqSlider extends KbqSliderBase {
         const start = this.pointer.start;
 
         this.releasePointer();
-        this.clearTooltip();
-        this.onTouched();
         if (!sliderEqual(start, this.value())) this.valueCommit.emit({ value: this.value(), source: 'pointer' });
     }
 
@@ -292,7 +278,10 @@ export class KbqSlider extends KbqSliderBase {
         if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
             if (!this.vertical() && this.direction() === 'rtl') direction *= -1;
             if (this.reversed()) direction *= -1;
-        } else if (this.reversed() && (event.key === 'ArrowUp' || event.key === 'ArrowDown')) direction *= -1;
+        } else if (this.vertical() && this.reversed() && (event.key === 'ArrowUp' || event.key === 'ArrowDown')) {
+            direction *= -1;
+        }
+
         const page = event.key.startsWith('Page') || event.shiftKey ? Math.max(1, Math.floor(this.pageStep())) : 1;
         let next = this.thumbValue(index) + direction * this.bounds().step * page;
 
@@ -349,12 +338,12 @@ export class KbqSlider extends KbqSliderBase {
         if (!sliderEqual(start, this.value())) {
             this.valueCommit.emit({ value: this.value(), source: 'input' });
             this.revealTooltip(active);
-            this.onTouched();
         }
     }
 
     protected onThumbFocus(index: number): void {
         this.activeIndex.set(index);
+        this.focused.set(true);
         this.revealTooltip(index);
     }
 
@@ -416,7 +405,6 @@ export class KbqSlider extends KbqSliderBase {
         const start = this.keyboardStart;
 
         this.keyboardStart = null;
-        this.onTouched();
         if (!sliderEqual(start, this.value())) this.valueCommit.emit({ value: this.value(), source: 'keyboard' });
     }
 
@@ -439,7 +427,7 @@ export class KbqSlider extends KbqSliderBase {
     }
 
     private revealTooltip(index: number): void {
-        if (this.disabled() || (!this.showTooltip() && !this.tooltipOnFocus())) return;
+        if (this.disabled() || !(this.showTooltip() || (this.tooltipOnFocus() && this.focused()))) return;
         this.clearTooltip();
         this.tooltipIndex.set(index);
     }
@@ -472,7 +460,6 @@ export class KbqSlider extends KbqSliderBase {
 
         if (sliderEqual(start, this.value())) return;
         this.focus({ preventScroll: true }, active);
-        this.onTouched();
         this.valueCommit.emit({ value: this.value(), source: 'pointer' });
     }
 

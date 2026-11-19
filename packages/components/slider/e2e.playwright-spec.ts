@@ -188,4 +188,114 @@ test.describe('Slider', () => {
         await page.getByRole('button', { name: 'Reset', exact: true }).click();
         await expect(reactive).toHaveAttribute('aria-valuenow', '35');
     });
+
+    test('restores native fields and the two-way binding on reset', async ({ page }) => {
+        const slider = page.getByTestId('native-slider').getByRole('slider');
+        const hybrid = page.getByTestId('native-editor');
+        const editor = hybrid.getByRole('spinbutton');
+        const thumb = hybrid.getByRole('slider');
+
+        await thumb.press('End');
+        await expect(editor).toHaveValue('100');
+        await page.getByRole('button', { name: 'Reset native', exact: true }).click();
+
+        await expect(page.getByTestId('native-value')).toHaveText('70');
+        await expect(editor).toHaveValue('70');
+        await expect(thumb).toHaveValue('70');
+        await expect(slider).toHaveValue('70');
+        await expect
+            .poll(() =>
+                page.getByTestId('native-form').evaluate((form) => [
+                    ...new FormData(form as HTMLFormElement)
+                ])
+            )
+            .toEqual([
+                ['amount', '70'],
+                ['limit', '70']
+            ]);
+    });
+
+    test('keeps an external form write when the previous thumb gesture is cancelled', async ({ page }) => {
+        const hybrid = page.getByTestId('hybrid-reactive');
+        const thumb = hybrid.getByRole('slider');
+
+        await thumb.focus();
+        await page.keyboard.down('ArrowRight');
+        await expect(thumb).toHaveValue('71');
+
+        await page
+            .getByRole('button', { name: 'Write 42', exact: true })
+            .evaluate((button) => (button as HTMLButtonElement).click());
+        await expect(thumb).toHaveValue('42');
+        await page.keyboard.press('Escape');
+        await page.keyboard.up('ArrowRight');
+        await expect(thumb).toHaveValue('42');
+        await expect(hybrid.getByRole('spinbutton')).toHaveValue('42');
+    });
+
+    test('releases pointer capture when the slider value is written by its form', async ({ page }) => {
+        const hybrid = page.getByTestId('hybrid-reactive');
+        const thumb = hybrid.getByRole('slider');
+        const editor = hybrid.getByRole('spinbutton');
+
+        await editor.focus();
+        await thumb.scrollIntoViewIfNeeded();
+        const area = await thumb.boundingBox();
+        const x = area!.x + area!.width / 2;
+        const y = area!.y + area!.height / 2;
+
+        await page.mouse.move(x, y);
+        await page.mouse.down();
+        await page.mouse.move(x - 30, y);
+        await expect(hybrid.locator('kbq-slider')).toHaveClass(/kbq-slider_dragging/);
+        await expect(hybrid.locator('.kbq-slider__thumb-shape')).toHaveCSS('outline-style', 'solid');
+        await expect(editor).not.toBeFocused();
+        await page
+            .getByRole('button', { name: 'Write 42', exact: true })
+            .evaluate((button) => (button as HTMLButtonElement).click());
+        await expect(hybrid.locator('kbq-slider')).not.toHaveClass(/kbq-slider_dragging/);
+        await page.mouse.move(x - 60, y);
+        await page.mouse.up();
+        await expect(thumb).toHaveValue('42');
+        await expect(editor).toHaveValue('42');
+    });
+
+    test('uses the same stops in the numeric editor and clickable marks', async ({ page }) => {
+        const hybrid = page.getByTestId('hybrid-marks');
+        const editor = hybrid.getByRole('spinbutton');
+
+        await editor.press('ArrowUp');
+        await expect(editor).toHaveValue('15');
+        await expect(hybrid.getByRole('slider')).toHaveValue('15');
+        await hybrid.getByText('70', { exact: true }).click();
+        await expect(editor).toHaveValue('70');
+        await expect(hybrid.getByRole('slider')).toHaveValue('70');
+    });
+
+    test('keeps the tooltip 4 px from the visible thumb until focus leaves', async ({ page }) => {
+        const range = page.getByTestId('range-tooltip');
+        const thumb = range.getByRole('slider').first();
+        const shape = range.locator('.kbq-slider__thumb-shape').first();
+
+        await shape.scrollIntoViewIfNeeded();
+        const area = await thumb.boundingBox();
+
+        await page.mouse.move(area!.x + area!.width / 2, area!.y + area!.height / 2);
+        await page.mouse.down();
+        await page.mouse.move(area!.x + area!.width / 2 - 25, area!.y + area!.height / 2);
+        await page.mouse.up();
+
+        const tooltip = page.locator('.kbq-slider__tooltip');
+
+        await expect(tooltip).toBeVisible();
+        await expect
+            .poll(async () => {
+                const [body, label] = await Promise.all([shape.boundingBox(), tooltip.boundingBox()]);
+
+                return Math.round(body!.y - label!.y - label!.height);
+            })
+            .toBe(4);
+        await page.getByRole('button', { name: 'Write 42', exact: true }).focus();
+        await expect(tooltip).toBeHidden();
+    });
 });

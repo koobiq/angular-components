@@ -17,7 +17,7 @@ export const TRANSLATIONS: Translations<ExampleTranslation> = {
         balance: 'Баланс звука',
         left: 'Слева',
         right: 'Справа',
-        thermal: 'Температура относительно нормы 20 °C',
+        thermal: 'Относительно нормы 20 градусов',
         bounds: ['Конец тихих часов', 'Начало тихих часов']
     },
     'en-US': {
@@ -26,7 +26,7 @@ export const TRANSLATIONS: Translations<ExampleTranslation> = {
         balance: 'Audio balance',
         left: 'Left',
         right: 'Right',
-        thermal: 'Temperature relative to the 20 °C baseline',
+        thermal: 'Relative to the 20 °C baseline',
         bounds: ['End of quiet hours', 'Start of quiet hours']
     }
 };

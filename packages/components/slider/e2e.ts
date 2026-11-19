@@ -109,6 +109,20 @@ export class E2eSliderStateAndStyle {
                 srcdoc="<button>External content</button>"
                 style="width: 400px; height: 120px"
             ></iframe>
+            <form data-testid="native-form">
+                <kbq-slider data-testid="native-slider" name="amount" aria-label="Amount" [value]="70" />
+                <kbq-input-slider data-testid="native-editor" name="limit" aria-label="Limit" [(value)]="nativeValue" />
+                <button type="reset">Reset native</button>
+                <output data-testid="native-value">{{ nativeValue() }}</output>
+            </form>
+            <kbq-input-slider
+                data-testid="hybrid-reactive"
+                aria-label="Reactive editor"
+                [formControl]="editorControl"
+            />
+            <button type="button" (click)="editorControl.setValue(42)">Write 42</button>
+            <kbq-input-slider data-testid="hybrid-marks" aria-label="Discrete" [step]="null" [marks]="marks" />
+            <kbq-slider data-testid="range-tooltip" showTooltip [value]="[25, 75]" />
         </main>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -120,6 +134,8 @@ export class E2eSliderInteraction {
     protected readonly commits = signal<KbqSliderCommit[]>([]);
     protected readonly collision = signal<KbqSliderCollision>('none');
     protected readonly control = new FormControl<KbqSliderValue>(35, { nonNullable: true });
+    protected readonly nativeValue = signal<KbqSliderValue>(70);
+    protected readonly editorControl = new FormControl<KbqSliderValue>(70, { nonNullable: true });
     protected readonly marks = [
         { value: 0, label: '0' },
         { value: 15, label: '15' },

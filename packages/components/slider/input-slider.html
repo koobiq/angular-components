@@ -1,11 +1,13 @@
-<div class="kbq-input-slider__fields">
+<kbq-fieldset class="kbq-input-slider__fields">
     @for (value of values(); track $index) {
-        <kbq-form-field [class.kbq-invalid]="errorState()">
+        <kbq-form-field kbqFieldsetItem [class.kbq-invalid]="errorState()">
             <input
                 kbqNumberInput
                 [min]="thumbMin($index)"
                 [max]="thumbMax($index)"
-                [step]="step() ?? 1"
+                [step]="bounds().step"
+                [bigStep]="bigStep()"
+                [stepValue]="stepValue"
                 [disabled]="disabled()"
                 [readonly]="readonly()"
                 [errorStateMatcher]="numberErrorMatcher"
@@ -26,12 +28,12 @@
             @if (unit()) {
                 <span kbqSuffix>{{ unit() }}</span>
             }
-            @if ($count === 1) {
+            @if ($count === 1 && showStepper()) {
                 <kbq-stepper />
             }
         </kbq-form-field>
     }
-</div>
+</kbq-fieldset>
 <kbq-slider
     class="kbq-input-slider__slider"
     [value]="value()"

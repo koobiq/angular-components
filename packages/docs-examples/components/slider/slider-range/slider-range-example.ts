@@ -1,35 +1,20 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
-import { KbqSlider, type KbqSliderCollision, type KbqSliderValue } from '@koobiq/components/slider';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqSlider } from '@koobiq/components/slider';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
 
 /** @title Range collision strategies */
 @Component({
     selector: 'slider-range-example',
-    imports: [FormsModule, KbqButtonToggleModule, KbqSlider],
+    imports: [KbqFormFieldModule, KbqSlider],
     template: `
-        <kbq-button-toggle-group stretched [attr.aria-label]="t().behavior" [(ngModel)]="collision">
-            @for (mode of modes; track mode) {
-                <kbq-button-toggle [value]="mode">{{ mode }}</kbq-button-toggle>
-            }
-        </kbq-button-toggle-group>
-        <div class="example-price">
-            <span>{{ t().price }}</span>
-            <output>{{ formatRange(price.value()) }}</output>
-        </div>
-        <kbq-slider
-            #price
-            [value]="[250, 750]"
-            [max]="1000"
-            [step]="10"
-            [minDistance]="100"
-            [collision]="collision"
-            [thumbLabels]="t().bounds"
-            [displayWith]="formatPrice"
-        />
-        <span class="kbq-text-compact">{{ t().gap }}</span>
+        @for (mode of modes; track mode) {
+            <kbq-form-field>
+                <kbq-label class="example-scenario">{{ t().scenarios[mode] }}</kbq-label>
+                <kbq-slider showTooltip [value]="[25, 75]" [collision]="mode" [thumbLabels]="t().bounds" />
+            </kbq-form-field>
+        }
     `,
     styles: `
         :host {
@@ -43,19 +28,13 @@ import { TRANSLATIONS } from './l10n';
             min-height: 96px;
             font-variant-numeric: tabular-nums;
         }
-        .example-price {
-            display: flex;
-            justify-content: space-between;
+        .example-scenario {
+            text-transform: uppercase;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SliderRangeExample {
     protected readonly modes = ['none', 'swap', 'push'] as const;
-    protected collision: KbqSliderCollision = 'none';
-    protected readonly formatPrice = (value: number) => (this.t().currency === '$' ? `$${value}` : `${value} ₽`);
-    protected formatRange(value: KbqSliderValue): string {
-        return typeof value === 'number' ? this.formatPrice(value) : value.map(this.formatPrice).join(' – ');
-    }
     protected readonly t = injectTranslation(TRANSLATIONS);
 }

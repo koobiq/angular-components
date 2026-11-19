@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { KbqSlider, type KbqSliderValue } from '@koobiq/components/slider';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
@@ -8,7 +8,7 @@ import { TRANSLATIONS } from './l10n';
     selector: 'slider-commit-example',
     imports: [KbqSlider],
     template: `
-        <div class="example-map" aria-hidden="true">
+        <div class="example-map" aria-hidden="true" [style.--example-map-hue]="140 + zoom() * 25">
             <div
                 class="example-tiles"
                 [style.scale]="zoom() / renderedZoom()"
@@ -20,10 +20,12 @@ import { TRANSLATIONS } from './l10n';
             </div>
         </div>
         <div class="example-caption">
-            {{ t().zoom }}
-            <output>{{ zoom() }}×</output>
+            {{ zoomCaption() }}
+            <output>{{ formatZoom(zoom()) }}</output>
         </div>
         <kbq-slider
+            showTooltip
+            [displayWith]="formatZoom"
             [aria-label]="t().zoom"
             [min]="1"
             [max]="4"
@@ -32,7 +34,7 @@ import { TRANSLATIONS } from './l10n';
             (valueChange)="preview($event)"
             (valueCommit)="renderedZoom.set(zoom())"
         />
-        <div class="kbq-text-compact">{{ t().tiles }} {{ renderedZoom() }}×</div>
+        <div class="kbq-text-compact">{{ t().tiles }} {{ formatZoom(renderedZoom()) }}</div>
     `,
     styles: `
         :host {
@@ -69,13 +71,13 @@ import { TRANSLATIONS } from './l10n';
             border-radius: 6px;
         }
         .example-tiles span:nth-child(7n) {
-            background: var(--kbq-background-success-fade);
+            background: hsl(var(--example-map-hue) 58% 55% / 0.4);
         }
         .example-tiles {
             background: repeating-linear-gradient(
                 28deg,
                 transparent 0 65px,
-                var(--kbq-background-theme-fade) 65px 80px
+                hsl(var(--example-map-hue) 65% 45% / 0.25) 65px 80px
             );
         }
     `,
@@ -83,8 +85,16 @@ import { TRANSLATIONS } from './l10n';
 })
 export class SliderCommitExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-    protected readonly zoom = signal(2);
-    protected readonly renderedZoom = signal(2);
+    protected readonly zoom = signal(2.5);
+    protected readonly renderedZoom = signal(2.5);
+    private readonly numberFormat = computed(() => new Intl.NumberFormat(this.t().locale));
+    protected readonly formatZoom = (value: number): string => `×\u00a0${this.numberFormat().format(value)}`;
+    protected readonly zoomCaption = computed(() => {
+        const { overview, streets, blocks } = this.t();
+        const zoom = this.zoom();
+
+        return zoom < 2 ? overview : zoom < 3 ? streets : blocks;
+    });
     protected readonly tiles = Array.from({ length: 256 }, (_, index) => index);
 
     protected preview(value: KbqSliderValue): void {

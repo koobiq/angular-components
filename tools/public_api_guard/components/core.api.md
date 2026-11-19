@@ -2692,9 +2692,9 @@ export type KbqA11yLocaleConfiguration = {
     toastRegion: string;
     optionActions: string;
     progressBar: string;
-    slider: string;
-    sliderStart: string;
-    sliderEnd: string;
+    slider?: string;
+    sliderStart?: string;
+    sliderEnd?: string;
     date: string;
     time: string;
     search: string;

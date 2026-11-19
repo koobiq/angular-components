@@ -19,6 +19,8 @@ import { DevThemeToggle } from '../theme-toggle';
             <slider-marks-example />
             <h2>Range</h2>
             <slider-range-example />
+            <h2>Minimum distance</h2>
+            <slider-distance-example />
             <h2>Vertical</h2>
             <slider-vertical-example />
             <h2>Fill</h2>

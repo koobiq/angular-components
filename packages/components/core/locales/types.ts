@@ -62,11 +62,11 @@ export type KbqA11yLocaleConfiguration = {
     /** Progress bar that carries neither an `aria-label` nor a projected `[kbq-progress-bar-text]`. */
     progressBar: string;
     /** Slider with a single value. */
-    slider: string;
+    slider?: string;
     /** Lower bound of a range slider. */
-    sliderStart: string;
+    sliderStart?: string;
     /** Upper bound of a range slider. */
-    sliderEnd: string;
+    sliderEnd?: string;
     /** Date part of a date and time field. */
     date: string;
     /** Time part of a date and time field. */

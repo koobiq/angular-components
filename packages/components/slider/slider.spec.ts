@@ -20,7 +20,11 @@ import type { KbqSliderValue } from './slider.types';
     `
 })
 class TestForms {
-    readonly control = new FormControl<KbqSliderValue>(35, { nonNullable: true, validators: Validators.min(40) });
+    readonly control = new FormControl<KbqSliderValue>(35, {
+        nonNullable: true,
+        validators: Validators.min(40),
+        updateOn: 'blur'
+    });
     value: KbqSliderValue = [20, 80];
 }
 
@@ -173,6 +177,12 @@ describe('Slider forms', () => {
         input.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
         input.dispatchEvent(new KeyboardEvent('keyup', { key: 'End', bubbles: true }));
         fixture.detectChanges();
+        expect(input.value).toBe('100');
+        expect(fixture.componentInstance.control.value).toBe(35);
+        expect(fixture.componentInstance.control.touched).toBe(false);
+
+        input.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+        fixture.detectChanges();
         expect(fixture.componentInstance.control.value).toBe(100);
         expect(fixture.componentInstance.control.dirty).toBe(true);
         expect(fixture.componentInstance.control.touched).toBe(true);
@@ -202,6 +212,51 @@ describe('Slider forms', () => {
         await expect(fixture.nativeElement).toHaveNoViolations();
     });
 
+    it('calculates every push draft from the range at the start of editing', async () => {
+        const fixture = TestBed.createComponent(KbqInputSlider);
+
+        fixture.componentRef.setInput('value', [20, 60]);
+        fixture.componentRef.setInput('collision', 'push');
+        fixture.detectChanges();
+        await fixture.whenStable();
+        const editor: HTMLInputElement = fixture.nativeElement.querySelectorAll('input.kbq-input')[1];
+
+        editor.focus();
+        expect(document.activeElement).toBe(editor);
+
+        for (const digit of ['1', '15']) {
+            editor.value = digit;
+            editor.dispatchEvent(new Event('input', { bubbles: true }));
+            await vi.waitFor(() => expect(fixture.componentInstance.value()).toEqual([Number(digit), Number(digit)]));
+        }
+
+        editor.blur();
+        expect(fixture.componentInstance.value()).toEqual([15, 15]);
+    });
+
+    it('keeps subsequent fractional text while the editor stays focused after a form write', async () => {
+        const fixture = TestBed.createComponent(KbqInputSlider);
+
+        fixture.detectChanges();
+        await fixture.whenStable();
+        const editor: HTMLInputElement = fixture.nativeElement.querySelector('input.kbq-input');
+
+        editor.focus();
+        expect(document.activeElement).toBe(editor);
+        fixture.componentInstance.writeValue(10);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        editor.value = '2,5';
+        editor.dispatchEvent(new Event('input', { bubbles: true }));
+        await vi.waitFor(() => expect(fixture.componentInstance.value()).toBe(3));
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(editor.value).toBe('2,5');
+        editor.blur();
+        expect(editor.value).toBe('3');
+    });
+
     it('keeps an external write silent while a numeric field has an unfinished draft', async () => {
         const fixture = TestBed.createComponent(KbqInputSlider);
         const changes = vi.fn();
@@ -214,6 +269,7 @@ describe('Slider forms', () => {
         const editor: HTMLInputElement = fixture.nativeElement.querySelector('input.kbq-input');
 
         editor.focus();
+        expect(document.activeElement).toBe(editor);
         editor.value = '58';
         editor.dispatchEvent(new Event('input', { bubbles: true }));
         fixture.componentInstance.writeValue(42);
@@ -226,6 +282,31 @@ describe('Slider forms', () => {
         expect(commits).not.toHaveBeenCalled();
     });
 
+    it('keeps the external binding when an old draft loses focus', async () => {
+        const fixture = TestBed.createComponent(KbqInputSlider);
+
+        fixture.componentRef.setInput('value', 70);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        const editor: HTMLInputElement = fixture.nativeElement.querySelector('input.kbq-input');
+        const commits = vi.fn();
+
+        fixture.componentInstance.valueCommit.subscribe(commits);
+        editor.focus();
+        expect(document.activeElement).toBe(editor);
+        editor.value = '58';
+        editor.dispatchEvent(new Event('input', { bubbles: true }));
+        await vi.waitFor(() => expect(fixture.componentInstance.value()).toBe(58));
+
+        fixture.componentRef.setInput('value', 42);
+        fixture.detectChanges();
+        editor.blur();
+
+        expect(editor.value).toBe('42');
+        expect(fixture.componentInstance.value()).toBe(42);
+        expect(commits).not.toHaveBeenCalled();
+    });
+
     it('synchronizes numeric drafts with a range without erasing an empty edit', async () => {
         const fixture = TestBed.createComponent(TestForms);
 
@@ -234,14 +315,17 @@ describe('Slider forms', () => {
         const hybrid = fixture.debugElement.query(By.directive(KbqInputSlider));
         const input: HTMLInputElement = hybrid.nativeElement.querySelector('input.kbq-input');
 
-        input.dispatchEvent(new FocusEvent('focus'));
+        await vi.waitFor(() => expect(input.value).toBe('20'));
+        input.focus();
+        expect(document.activeElement).toBe(input);
         input.value = '';
         input.dispatchEvent(new Event('input', { bubbles: true }));
-        fixture.detectChanges();
-        await fixture.whenStable();
-        expect(input.value).toBe('');
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(input.value).toBe('');
+        });
         expect(fixture.componentInstance.value).toEqual([20, 80]);
-        input.dispatchEvent(new FocusEvent('blur'));
+        input.blur();
         fixture.detectChanges();
         expect(input.value).toBe('20');
     });

@@ -21,12 +21,10 @@ import { TRANSLATIONS } from './l10n';
             position: relative;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 0;
             width: 100%;
             max-width: 320px;
             margin: 0 auto;
-            justify-content: start;
-            min-height: 96px;
             font-variant-numeric: tabular-nums;
         }
         output {

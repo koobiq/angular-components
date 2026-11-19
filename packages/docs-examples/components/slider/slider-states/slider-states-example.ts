@@ -15,7 +15,7 @@ import { TRANSLATIONS } from './l10n';
         <span>{{ t().disabled }}</span>
         <kbq-slider showTooltip disabled [value]="30" [aria-label]="t().disabled" />
         <span>{{ t().readonly }}</span>
-        <kbq-slider showTooltip readonly tooltipOnFocus [value]="30" [aria-label]="t().readonly" />
+        <kbq-slider readonly tooltipOnFocus [value]="30" [aria-label]="t().readonly" />
     `,
     styles: `
         :host {

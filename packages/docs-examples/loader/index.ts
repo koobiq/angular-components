@@ -963,6 +963,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/slider').then((m) => m.SliderCommitExample);
         case 'slider-custom':
             return import('@koobiq/docs-examples/components/slider').then((m) => m.SliderCustomExample);
+        case 'slider-distance':
+            return import('@koobiq/docs-examples/components/slider').then((m) => m.SliderDistanceExample);
         case 'slider-fill':
             return import('@koobiq/docs-examples/components/slider').then((m) => m.SliderFillExample);
         case 'slider-forms':

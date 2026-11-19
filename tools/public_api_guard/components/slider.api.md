@@ -4,6 +4,7 @@
 
 ```ts
 
+import * as _angular_cdk_overlay from '@angular/cdk/overlay';
 import * as _angular_core from '@angular/core';
 import { BooleanInput } from '@angular/cdk/coercion';
 import { ControlValueAccessor } from '@angular/forms';
@@ -13,12 +14,16 @@ import * as _koobiq_components_core from '@koobiq/components/core';
 import * as _koobiq_components_slider from '@koobiq/components/slider';
 import { NgControl } from '@angular/forms';
 import { NumberInput } from '@angular/cdk/coercion';
+import { OnChanges } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 
 // @public
 export class KbqInputSlider extends KbqSliderBase {
     constructor();
     // (undocumented)
     protected beginEdit(index: number): void;
+    // (undocumented)
+    protected readonly bigStep: _angular_core.Signal<number>;
     readonly controlType = "input-slider";
     // (undocumented)
     protected readonly drafts: _angular_core.WritableSignal<(number | null)[]>;
@@ -40,11 +45,14 @@ export class KbqInputSlider extends KbqSliderBase {
     protected onSliderCommit(event: KbqSliderCommit): void;
     // (undocumented)
     protected onSliderValue(value: KbqSliderValue): void;
+    readonly showStepper: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
+    // (undocumented)
+    protected readonly stepValue: (value: number, delta: number) => number;
     readonly unit: _angular_core.InputSignal<string>;
     // (undocumented)
     writeValue(value: KbqSliderValue | null): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqInputSlider, "kbq-input-slider", ["kbqInputSlider"], { "unit": { "alias": "unit"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqInputSlider, "kbq-input-slider", ["kbqInputSlider"], { "unit": { "alias": "unit"; "required": false; "isSignal": true; }; "showStepper": { "alias": "showStepper"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqInputSlider, never>;
 }
@@ -56,6 +64,8 @@ export class KbqSlider extends KbqSliderBase {
     protected readonly activeIndex: _angular_core.WritableSignal<number>;
     // (undocumented)
     protected readonly animateMark: _angular_core.WritableSignal<boolean>;
+    // (undocumented)
+    protected readonly animationsDisabled: boolean;
     readonly controlType = "slider";
     // (undocumented)
     protected readonly dragging: _angular_core.WritableSignal<boolean>;
@@ -106,6 +116,8 @@ export class KbqSlider extends KbqSliderBase {
     // (undocumented)
     protected readonly tooltipIndex: _angular_core.WritableSignal<number | null>;
     readonly tooltipOnFocus: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
+    // (undocumented)
+    protected readonly tooltipScrollStrategy: () => _angular_cdk_overlay.RepositionScrollStrategy;
     readonly vertical: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     // (undocumented)
     protected readonly visibleMarks: _angular_core.Signal<_koobiq_components_slider.KbqSliderMark[]>;
@@ -118,7 +130,7 @@ export class KbqSlider extends KbqSliderBase {
 }
 
 // @public
-export abstract class KbqSliderBase implements ControlValueAccessor, DoCheck {
+export abstract class KbqSliderBase implements ControlValueAccessor, DoCheck, OnChanges {
     constructor();
     readonly ariaDescribedby: _angular_core.InputSignal<string | null>;
     readonly ariaLabel: _angular_core.InputSignal<string>;
@@ -164,6 +176,7 @@ export abstract class KbqSliderBase implements ControlValueAccessor, DoCheck {
     readonly name: _angular_core.InputSignal<string | null>;
     readonly ngControl: NgControl | null;
     ngDoCheck(): void;
+    ngOnChanges(changes: SimpleChanges<KbqSliderBase>): void;
     // (undocumented)
     protected onChange: (value: KbqSliderValue) => void;
     abstract onContainerClick(event: MouseEvent): void;

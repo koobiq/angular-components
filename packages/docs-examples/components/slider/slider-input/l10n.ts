@@ -1,6 +1,7 @@
 import type { Translations } from '@koobiq/docs-examples/i18n';
 
 export interface ExampleTranslation {
+    locale: string;
     volume: string;
     price: string;
     currency: string;
@@ -10,15 +11,17 @@ export interface ExampleTranslation {
 
 export const TRANSLATIONS: Translations<ExampleTranslation> = {
     default: {
-        volume: 'Громкость, %',
-        price: 'Цена',
+        locale: 'ru-RU',
+        volume: 'Громкость',
+        price: 'Цена, ₽',
         currency: '₽',
-        range: 'Ценовой диапазон',
+        range: 'Диапазон цен',
         bounds: ['Минимальная цена', 'Максимальная цена']
     },
     'en-US': {
-        volume: 'Volume, %',
-        price: 'Price',
+        locale: 'en-US',
+        volume: 'Volume',
+        price: 'Price, $',
         currency: '$',
         range: 'Price range',
         bounds: ['Minimum price', 'Maximum price']

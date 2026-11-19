@@ -42,11 +42,15 @@ A range value is a pair `[start, end]`. Each thumb has an individual accessible 
 
 <Example id="slider-range" />
 
-The strategy applies to pointer, keyboard and numeric input. Tab order stays lower bound first, then upper bound. With `swap`, focus follows the moving thumb.
+#### Minimum distance
+
+Set `minDistance` to keep the thumbs apart. In this example, the bounds stay at least 10 minutes apart.
+
+<Example id="slider-distance" />
 
 ### Vertical layout
 
-`vertical` displays a vertical scale. Values increase from bottom to top; `reversed` reverses the scale.
+`vertical` displays a vertical scale. Values increase from bottom to top.
 
 <Example id="slider-vertical" />
 
@@ -62,21 +66,25 @@ The default fill extends from the start of the scale to the value, or between th
 
 The component supports `[(value)]`, reactive forms and `[(ngModel)]`. A `kbq-form-field` wrapper associates labels, hints and errors with the thumbs. For ranges, `thumbLabels` identifies the purpose of each bound.
 
+For Angular Forms, use a `nonNullable` control initialized with a number or a pair. Writing `null` displays the lower bound of the scale or the full range. The form retains `null` until the user changes the value.
+
 <Example id="slider-forms" />
 
 ### Committing a change
 
 `valueChange` reports the live value. `valueCommit` contains `value` and `source`: `pointer`, `keyboard` or `input`. It fires only when the value changed, after pointer release, key release or the end of numeric editing. Holding a key produces one completion event. Use `valueCommit` for expensive external updates while the thumb continues to move immediately.
 
-Esc, pointer cancellation and lost capture restore the value from the start of the gesture without `valueCommit`. Leaving focus completes a keyboard change. Programmatic writes and Angular form resets do not emit `valueCommit`. `name` includes the value in HTML form data; ranges use `name[0]` and `name[1]`.
+**Esc**, pointer cancellation and lost capture restore the value from the start of the gesture without `valueCommit`. Moving focus away completes a keyboard change and hides the tooltip. Programmatic writes and form resets do not emit `valueCommit`.
 
-Dragging scales the map preview. Releasing the thumb redraws the tiles at the selected zoom level.
+Resetting a native HTML form restores the value from the first render and emits `valueChange` if the value changed. `name` includes the value in the form data. Ranges use `name[0]` and `name[1]`.
+
+Dragging updates the zoom, map color and caption together. Completing the change redraws the tiles at the selected zoom level.
 
 <Example id="slider-commit" />
 
 ### Value tooltip
 
-`showTooltip` shows the value immediately on focus and after a short delay on hover. The tooltip stays visible during a drag. Press <kbd>Esc</kbd> or move focus away to dismiss it. Vertical sliders show it beside the thumb. Use `displayWith` to format the value.
+`showTooltip` shows the value immediately on focus and after a short delay on hover. The tooltip stays visible after dragging until focus leaves the slider or you press Esc. Use `tooltipOnFocus` to show it only on focus. Vertical sliders show it beside the thumb. Use `displayWith` to format the value.
 
 <Example id="slider-tooltip" />
 
@@ -110,14 +118,14 @@ Use `kbq-label` inside `kbq-form-field`. Clicking the label focuses the thumb or
 
 Each thumb participates in the normal Tab sequence. Disabled thumbs are skipped; read-only thumbs remain focusable.
 
-| Key                                 | Action                                               |
-| ----------------------------------- | ---------------------------------------------------- |
-| <kbd>Esc</kbd>                      | Cancels the current change and hides the tooltip     |
-| <kbd>→</kbd>, <kbd>↑</kbd>          | Increases the value by one step                      |
-| <kbd>←</kbd>, <kbd>↓</kbd>          | Decreases the value by one step                      |
-| <kbd>Home</kbd>                     | Selects the lowest available value                   |
-| <kbd>End</kbd>                      | Selects the highest available value                  |
-| <kbd>PgUp</kbd>, <kbd>PgDn</kbd>    | Changes the value by `pageStep` steps, 10 by default |
-| <kbd>Shift</kbd> + <kbd>arrow</kbd> | Changes the value by `pageStep` steps                |
+| Key                                                                                             | Action                                               |
+| ----------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| <span class="docs-hot-key-button">Esc</span>                                                    | Cancels the current change and hides the tooltip     |
+| <span class="docs-hot-key-button">→</span>, <span class="docs-hot-key-button">↑</span>          | Increases the value by one step                      |
+| <span class="docs-hot-key-button">←</span>, <span class="docs-hot-key-button">↓</span>          | Decreases the value by one step                      |
+| <span class="docs-hot-key-button">Home</span>                                                   | Selects the lowest available value                   |
+| <span class="docs-hot-key-button">End</span>                                                    | Selects the highest available value                  |
+| <span class="docs-hot-key-button">PgUp</span>, <span class="docs-hot-key-button">PgDn</span>    | Changes the value by `pageStep` steps, 10 by default |
+| <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">arrow</span> | Changes the value by `pageStep` steps                |
 
-`reversed` reverses arrows while retaining the numeric meaning of Home, End, PgUp and PgDn. With `step=null`, arrows move between marks. Standard text editing commands in the numeric field are preserved.
+`reversed` reverses the arrow keys along the scale. Home, End, PgUp and PgDn keep their numeric meaning. With `step=null`, arrows move between marks. Standard text editing commands in the numeric field are preserved.
