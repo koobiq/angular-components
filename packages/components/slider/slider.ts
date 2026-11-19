@@ -98,26 +98,30 @@ export class KbqSlider extends KbqSliderBase {
         )
     );
     protected readonly hasMarkLabels = computed(() => this.visibleMarks().some((mark) => !!mark.label));
-    protected readonly segments = computed(() => {
+    private readonly filledRanges = computed<readonly (readonly [number, number])[]>(() => {
         const values = this.values();
         const { min, max } = this.bounds();
         const fill = this.fill();
-        let segments: [number, number][];
 
         if (fill === 'none') return [];
-        if (values.length === 2)
-            segments =
-                fill === 'outside'
-                    ? [
-                          [min, values[0]],
-                          [values[1], max]
-                      ]
-                    : [[values[0], values[1]]];
-        else if (fill === 'end' || fill === 'outside') segments = [[values[0], max]];
-        else if (fill === 'origin') segments = [[this.fillOrigin(), values[0]]];
-        else segments = [[min, values[0]]];
 
-        return segments.map(([a, b]) => {
+        if (values.length === 2) {
+            return fill === 'outside'
+                ? [
+                      [min, values[0]],
+                      [values[1], max]
+                  ]
+                : [[values[0], values[1]]];
+        }
+
+        if (fill === 'end' || fill === 'outside') return [[values[0], max]];
+        if (fill === 'origin') return [[this.fillOrigin(), values[0]]];
+
+        return [[min, values[0]]];
+    });
+
+    protected readonly segments = computed(() =>
+        this.filledRanges().map(([a, b]) => {
             const first = this.position(a);
             const second = this.position(b);
             const end = Math.max(first, second);
@@ -130,8 +134,8 @@ export class KbqSlider extends KbqSliderBase {
                 start: `calc(${start}% - ${start === 0 && size > 0 ? inset : '0px'})`,
                 size: `calc(${size}% + ${size > 0 && end < 100 ? 'var(--kbq-slider-fill-extension, 0px)' : '0px'} + ${size > 0 && start === 0 ? inset : '0px'} + ${size > 0 && end === 100 ? inset : '0px'})`
             };
-        });
-    });
+        })
+    );
     private pointer: { id: number; start: KbqSliderValue; offset: number; overlapped: boolean } | null = null;
     private keyboardStart: KbqSliderValue | null = null;
     private readonly tooltips = viewChildren(KbqTooltipTrigger);
@@ -183,6 +187,10 @@ export class KbqSlider extends KbqSliderBase {
     /** @docs-private */
     onContainerClick(event: MouseEvent): void {
         if (!this.element.nativeElement.contains(event.target as Node)) this.focus();
+    }
+
+    protected isMarkFilled(value: number): boolean {
+        return this.filledRanges().some(([start, end]) => value > Math.min(start, end) && value < Math.max(start, end));
     }
 
     protected position(value: number): number {

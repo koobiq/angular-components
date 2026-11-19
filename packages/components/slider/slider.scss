@@ -78,6 +78,9 @@
 .kbq-slider__thumb-shape {
     @include squircle.kbq-squircle(var(--kbq-slider-thumb-radius));
 
+    position: relative;
+    isolation: isolate;
+
     box-sizing: border-box;
     width: var(--kbq-slider-thumb-width);
     height: var(--kbq-slider-thumb-height);
@@ -208,14 +211,17 @@
     .kbq-slider.kbq-readonly {
         --kbq-slider-track: GrayText;
         --kbq-slider-fill: Highlight;
+        --kbq-slider-filled-tick: HighlightText;
         --kbq-slider-thumb-background: Canvas;
         --kbq-slider-thumb-border: ButtonText;
         --kbq-slider-focus-color: Highlight;
+        --kbq-slider-focus-gap-color: Canvas;
         --kbq-slider-disabled-color: GrayText;
 
         .kbq-slider__track,
         .kbq-slider__fill,
-        .kbq-slider__thumb-shape {
+        .kbq-slider__thumb-shape,
+        .kbq-slider__tick_filled {
             forced-color-adjust: none;
         }
     }

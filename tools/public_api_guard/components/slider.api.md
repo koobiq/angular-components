@@ -79,6 +79,8 @@ export class KbqSlider extends KbqSliderBase {
     // (undocumented)
     protected hover(index: number): void;
     // (undocumented)
+    protected isMarkFilled(value: number): boolean;
+    // (undocumented)
     protected leave(index: number): void;
     onContainerClick(event: MouseEvent): void;
     // (undocumented)

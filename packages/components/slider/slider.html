@@ -28,7 +28,7 @@
                 [style.--kbq-slider-position]="`${position(mark.value)}%`"
             >
                 @if (mark.value !== bounds().min && mark.value !== bounds().max) {
-                    <span class="kbq-slider__tick"></span>
+                    <span class="kbq-slider__tick" [class.kbq-slider__tick_filled]="isMarkFilled(mark.value)"></span>
                 }
                 @if (mark.label) {
                     <span

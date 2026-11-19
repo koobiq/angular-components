@@ -100,6 +100,28 @@ describe('KbqSlider', () => {
         expect(fixture.componentInstance.value()).toBe(0);
     });
 
+    it.each([
+        { fill: 'start', value: 50, filled: ['20'] },
+        { fill: 'end', value: 50, filled: ['80'] },
+        { fill: 'start', value: [30, 70], filled: ['50'] },
+        { fill: 'outside', value: [30, 70], filled: ['20', '80'] },
+        { fill: 'origin', value: 75, filled: ['50'] },
+        { fill: 'none', value: 50, filled: [] }
+    ])('marks only the ticks inside the $fill fill for $value', ({ fill, value, filled }) => {
+        fixture.componentRef.setInput(
+            'marks',
+            [20, 50, 80].map((value) => ({ value }))
+        );
+        fixture.componentRef.setInput('fill', fill);
+        fixture.componentRef.setInput('fillOrigin', 25);
+        fixture.componentRef.setInput('value', value);
+        fixture.detectChanges();
+
+        const ticks: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll('.kbq-slider__tick_filled');
+
+        expect(Array.from(ticks, (tick) => tick.parentElement?.dataset['markValue'])).toEqual(filled);
+    });
+
     it('keeps read-only thumbs focusable and ignores native input events', () => {
         fixture.componentRef.setInput('readonly', true);
         fixture.detectChanges();

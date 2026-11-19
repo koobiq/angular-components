@@ -10,13 +10,43 @@
 
         .kbq-slider__thumb-shape {
             background: var(--kbq-slider-thumb-background);
-            border: 1px solid var(--kbq-slider-thumb-border);
+            box-shadow: 0 0 0 1px var(--kbq-slider-thumb-border);
+
+            &::before,
+            &::after {
+                content: '';
+
+                position: absolute;
+                inset: 0;
+
+                border-radius: inherit;
+                corner-shape: inherit;
+                opacity: 0;
+
+                scale: 0.98;
+            }
+
+            // Give the translucent focus outline a solid background where it crosses the track.
+            &::before {
+                z-index: -1;
+                outline: 3px solid var(--kbq-slider-focus-gap-color);
+            }
+
+            &::after {
+                border: 1px solid var(--kbq-slider-focus-color);
+                outline: 1px solid var(--kbq-slider-focus-color);
+            }
         }
 
         &.kbq-slider_dragging .kbq-slider__thumb_active .kbq-slider__thumb-shape,
         .kbq-slider__input:focus ~ .kbq-slider__thumb-shape {
-            outline: 2px solid var(--kbq-slider-focus-color);
-            outline-offset: -2px;
+            box-shadow: none;
+
+            &::before,
+            &::after {
+                opacity: 1;
+                scale: 1;
+            }
         }
 
         .kbq-slider__mark {
@@ -25,6 +55,10 @@
 
         .kbq-slider__tick {
             background: var(--kbq-slider-track);
+        }
+
+        &:not(.kbq-invalid, .kbq-disabled, .kbq-readonly) .kbq-slider__tick_filled {
+            background: var(--kbq-slider-filled-tick);
         }
 
         &:not(.kbq-invalid, .kbq-disabled, .kbq-readonly) .kbq-slider__surface:hover {
@@ -39,20 +73,21 @@
 
         &.kbq-invalid {
             --kbq-slider-fill: var(--kbq-slider-error-color);
-            --kbq-slider-thumb-border: var(--kbq-slider-error-color);
+            --kbq-slider-thumb-border: var(--kbq-line-error);
             --kbq-slider-focus-color: var(--kbq-states-line-focus-error);
         }
 
         &.kbq-disabled {
             --kbq-slider-track: var(--kbq-background-contrast-fade);
             --kbq-slider-fill: var(--kbq-slider-disabled-color);
-            --kbq-slider-thumb-background: var(--kbq-background-bg);
             --kbq-slider-thumb-border: var(--kbq-line-contrast-less);
 
             .kbq-slider__thumb-shape {
                 background:
                     linear-gradient(var(--kbq-background-contrast-fade), var(--kbq-background-contrast-fade)),
-                    var(--kbq-background-bg);
+                    var(--kbq-slider-thumb-background);
+                border: 1px solid var(--kbq-slider-thumb-border);
+                box-shadow: none;
             }
         }
 
