@@ -124,7 +124,7 @@ const END_ALIGNED_POSITIONS: KbqSelect['positions'] = [
                 >
                     <i kbq-icon="kbq-globe_16"></i>
                 </button>
-                @for (item of localeService.locales.items; track item.id) {
+                @for (item of languages; track item.id) {
                     <kbq-option [value]="item.id">{{ item.name }}</kbq-option>
                 }
             </kbq-select>
@@ -198,6 +198,9 @@ export class DocsHeader {
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE);
     protected readonly themeService = inject(KbqThemeService);
     protected readonly selects = viewChildren(KbqSelect);
+
+    // The docs site and its examples are translated into English and Russian only.
+    protected readonly languages = this.localeService.locales.items.filter(({ id }) => id in HEADER_TEXT);
 
     constructor() {
         // The header sits at the right edge of the page. The default panel opens from the trigger's start edge
