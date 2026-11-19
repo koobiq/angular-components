@@ -3373,6 +3373,9 @@ export type KbqInputNumberLocaleConfiguration = {
 export const kbqIsElementOrigin: (origin: KbqOverlayOrigin) => boolean;
 
 // @public
+export function kbqIsEventPreventHide(event: object): boolean;
+
+// @public
 export const kbqIsTextLaidOutFromStart: (computedStyle: CSSStyleDeclaration) => boolean;
 
 // @public
@@ -3534,6 +3537,9 @@ export class KbqLocalStorageStateStore extends KbqWebStorageStateStore {
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqLocalStorageStateStore>;
 }
+
+// @public
+export function kbqMarkEventPreventHide(event: Event): void;
 
 // @public
 export enum KbqMeasurementSystem {
@@ -3985,7 +3991,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
         [key: string]: ConnectionPositionPair;
     };
     protected clearListeners(): void;
-    abstract closingActions(): Observable<any>;
+    abstract closingActions(): Observable<unknown>;
     protected closingActionsSubscription: Subscription;
     container: HTMLElement | undefined;
     abstract content: string | TemplateRef<unknown>;

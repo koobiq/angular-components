@@ -48,6 +48,7 @@ import {
     PopUpPlacements,
     PopUpTriggers
 } from './constants';
+import { kbqIsEventPreventHide } from './event-prevent-hide';
 import type { KbqPopUp } from './pop-up';
 
 type KbqPopupTriggerOffset = Pick<ConnectionPositionPair, 'offsetX' | 'offsetY'>;
@@ -473,7 +474,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      *
      * @docs-private
      */
-    abstract closingActions(): Observable<any>;
+    abstract closingActions(): Observable<unknown>;
 
     /**
      * Returns the component type to attach as the pop-up overlay; implemented by the subclass.
@@ -1130,11 +1131,14 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     private subscribeOnClosingActions() {
         this.closingActionsSubscription.unsubscribe();
 
+        // `rxDelay(0)` is load-bearing: the stream emits a click from CDK's capture-phase
+        // document listener, before the bubble-phase handlers that mark the event run, so the
+        // mark is only visible after the dispatch completes.
         this.closingActionsSubscription = this.closingActions()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .pipe(rxDelay(0))
             .subscribe((event) => {
-                if (event?.type === 'click' && event.kbqPopoverPreventHide) {
+                if (event instanceof Event && event.type === PopUpTriggers.Click && kbqIsEventPreventHide(event)) {
                     return;
                 }
 

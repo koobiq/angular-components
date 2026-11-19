@@ -51,6 +51,7 @@ import {
     KbqComponentColors,
     kbqCreateCaretOrigin,
     kbqInjectA11yLocaleConfiguration,
+    kbqMarkEventPreventHide,
     kbqOptionalNumberAttribute,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
@@ -1050,7 +1051,13 @@ export class KbqPopoverTrigger
             const { left, top } = this.getNativeElement().getBoundingClientRect();
 
             this.pointerOffset = { x: pointerEvent.clientX - left, y: pointerEvent.clientY - top };
-            Object.assign(pointerEvent, { kbqPopoverPreventHide: true });
+
+            // The click that opens a closed popover is dropped by CDK's outside-click dispatcher
+            // (the overlay is not attached yet), so only the re-click that repositions an
+            // already-open popover reaches closingActions and needs the mark.
+            if (wasAttached) {
+                kbqMarkEventPreventHide(pointerEvent);
+            }
         } else if (!wasAttached) {
             this.pointerOffset = null;
         }
