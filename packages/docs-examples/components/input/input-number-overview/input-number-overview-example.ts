@@ -85,6 +85,6 @@ import { TRANSLATIONS } from './l10n';
 export class InputNumberOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
 
-    value = '';
-    integerValue = '';
+    protected value = 10000.7;
+    protected integerValue = 10000;
 }

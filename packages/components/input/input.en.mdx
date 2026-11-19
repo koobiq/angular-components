@@ -1,64 +1,93 @@
-Input provides text, numeric, and password fields with formatting, validation, masking, and other data-entry behavior.
-
-### With default parameters
+Input is an interface element that lets users enter textual information.
 
 <Example id="input-overview" />
 
-### Numeric input field
+### Properties
 
-This is a special field for entering numbers only. You can type digits here, and the system will automatically format them in a user-friendly way (for example, adding thousands separators).
+#### Validation
 
-In cases where the thousands separator is a thin space, the input field includes logic to replace them when pasting from the clipboard, using the `kbqNormalizeWhitespace` directive. This behavior is not enabled by default — it is expected to be turned on manually when needed.
+<Example id="input-validation" />
 
-Number formatting depends on your chosen locale. This means the same number may look different depending on your regional settings.
+#### Disabled state
 
-If the typed integer is greater than `Number.MAX_SAFE_INTEGER`, the field clamps the value to that limit when it loses focus: until then the text stays as typed and the form value does not change. For values around 10¹⁴ and above, the fraction may be rounded, because the value is stored as a `number`: the field shows the typed text, but after a step, a value write, or a locale change it rebuilds the text from the value. For exact large values, such as identifiers, use a text field.
+<Example id="input-disabled" />
 
-<Example id="input-number-overview" />
+#### Read-only
 
-#### Numeric input API
-
-`kbqNumberInput` accepts the bounds and the step it applies, plus the formatting switches:
-
-- `min` / `max` — the range the value is clamped to when stepping. Default `-Infinity` / `Infinity`. Both accept a static attribute (`min="3"`) and a binding (`[min]="3"`); the value is coerced to a number either way.
-- `step` — the amount added by `ArrowUp`/`ArrowDown` and by `kbq-stepper`. Default `1`.
-- `bigStep` — the amount added when `Shift` is held. Default `10`.
-- `integer` — rejects the fraction separator on typing and truncates a pasted fraction. Default `false`.
-- `withThousandSeparator` — groups the integer part with the locale's separator. Default `true`.
-- `startFormattingFrom` — grouping only kicks in from this power of ten, so `3` groups `1234` and `4` does not. Defaults to the active locale's own value (`4` for `ru-RU`), which is why a four-digit number stays un-grouped there.
-
-The directive renders into a `type="text"` field. Do not add `type="number"`: the browser's value sanitizer rejects the formatted value and blanks the field, so the type is reset to `text` with a console warning.
-
-`min` and `max` also drive the `KbqMinValidator` / `KbqMaxValidator` directives shipped in `KbqInputModule`, which install `Validators.min` / `Validators.max` on a `kbqNumberInput` control using `formControl`, `formControlName` or `ngModel`, and mirror the bound value into the native `min` / `max` attribute.
-
-`min`, `max`, `step` and `bigStep` are signals, so reading one programmatically is a call — `numberInput.max()`. They are read-only: an `input()` has no `.set()`, so a value that changes at runtime is bound rather than assigned. `valueChange` and `disabledChange` are RxJS `Subject`s; subscribing is unchanged, emitting is `.next()`.
-
-#### Number formatting and locale
-
-Separators come from the active locale, through the `input.number` section of its configuration. Override them for a subtree with `kbqInputLocaleConfigurationProvider({ number: { fractionSeparator: '.' } })`; only the keys you pass are replaced, the rest keep following the locale. `KBQ_INPUT_DEFAULT_LOCALE_CONFIGURATION` holds the `ru-RU` defaults.
-
-### Monospace input
-
-`kbqInputMonospace` switches a `kbqInput` to the monospace type level — useful for identifiers, hashes and keys.
-
-### Password input
-
-<Example id="input-password-overview" />
-
-### Read-only
-
-In `readonly` mode, the value of the field cannot be changed, but the text can be selected and copied to the clipboard, and the field receives focus. Controls that change the value are switched off: the cleaner is hidden and the stepper of a number field is disabled. Icons and buttons that leave the value as it is, such as the icons in the prefix and suffix or the password toggle, stay as they are. The placeholder is hidden.
+In `readonly` mode, the value cannot be changed, but the text can be selected and copied, and the field can receive focus. Controls that change the value are disabled: the cleaner is hidden and the number-field stepper is inactive. Icons and buttons that do not change the value remain available.
 
 <Example id="input-readonly" />
 
-### Using input masks
+#### Clear value
 
-Input masks control the format and validate data in real time.
+The clear button is hidden by default. It can be enabled separately.
 
-The example uses the [Maskito](https://maskito.dev/) library:
+<Example id="input-with-cleaner" />
+
+#### Search field
+
+<Example id="input-search" />
+
+#### Input without background and borders
+
+An input can hide its background and outer borders, leaving only its internal controls visible.
+
+<Example id="input-without-borders" />
+
+#### Number field
+
+A dedicated field for entering numbers. It automatically formats the entered value, for example by adding thousands separators.
+
+<Example id="input-number-overview" />
+
+When the thousands separator is a thin space, the `kbqNormalizeWhitespace` directive replaces it when pasting from the clipboard. This behavior is not enabled by default and can be turned on manually.
+
+#### Password
+
+The password is hidden by default.
+
+<Example id="input-password-overview" />
+
+#### Input mask
+
+Use [Maskito](https://maskito.dev/) to insert separators automatically and restrict entered characters:
 
 ```bash
 npm install @maskito/core @maskito/angular @maskito/kit
 ```
 
 <Example id="input-with-mask" />
+
+#### Autocomplete
+
+Browser autocomplete can be enabled for frequently used fields. On focus, the browser suggests previously entered values, reducing the time needed to fill in the form.
+
+If the browser makes a field autocomplete-enabled by default, disable this with `autocomplete="off"`.
+
+<Example id="input-autocomplete" />
+
+### Usage examples
+
+#### Field label and hint
+
+More examples of inputs with labels are available on the [Form Field](/en/components/form-field#label) page.
+
+<Example id="input-label-and-hint" />
+
+#### Password requirements hint
+
+<Example id="input-password-template-driven" />
+
+#### Monospace text
+
+Input supports monospace text, which is useful for identifiers, hashes, and keys.
+
+<Example id="input-monospace" />
+
+### Recommendations
+
+- Do not use the placeholder as an example of a valid value.
+- Place hints below the input.
+- Use [Textarea](/en/components/textarea) for multiline text.
+- Use [Autocomplete](/en/components/autocomplete) when the system can suggest ready-made values while still allowing the user to enter different text.
+- Use [Datepicker](/en/components/datepicker) to select a date and [Timepicker](/en/components/timepicker) to select a time.

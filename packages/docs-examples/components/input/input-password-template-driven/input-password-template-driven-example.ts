@@ -20,11 +20,11 @@ import { TRANSLATIONS } from './l10n';
 class ExamplePasswordRules implements Validator {
     private readonly rules = Validators.compose([
         PasswordValidators.minLength(8),
-        PasswordValidators.maxLength(15),
+        PasswordValidators.maxLength(128),
         PasswordValidators.minUppercase(1),
         PasswordValidators.minLowercase(1),
         PasswordValidators.minNumber(1),
-        PasswordValidators.minSpecial(1)
+        Validators.pattern(/^[\x20-\x7E]*$/)
     ]);
 
     validate(control: AbstractControl): ValidationErrors | null {
@@ -32,16 +32,10 @@ class ExamplePasswordRules implements Validator {
     }
 }
 
-/**
- * @title Input password with template-driven forms
- */
+/** @title Input password with template-driven forms */
 @Component({
     selector: 'input-password-template-driven-example',
-    imports: [
-        KbqInputModule,
-        FormsModule,
-        ExamplePasswordRules
-    ],
+    imports: [KbqInputModule, FormsModule, ExamplePasswordRules],
     template: `
         <kbq-form-field style="width: 250px">
             <kbq-label>{{ t().password }}</kbq-label>
@@ -53,7 +47,7 @@ class ExamplePasswordRules implements Validator {
             <kbq-reactive-password-hint
                 [hasError]="passwordModel.hasError('minLength') || passwordModel.hasError('maxLength')"
             >
-                {{ t().from8to15 }}
+                {{ t().length }}
             </kbq-reactive-password-hint>
 
             <kbq-reactive-password-hint [hasError]="passwordModel.hasError('minUppercase')">
@@ -68,8 +62,8 @@ class ExamplePasswordRules implements Validator {
                 {{ t().digit }}
             </kbq-reactive-password-hint>
 
-            <kbq-reactive-password-hint [hasError]="passwordModel.hasError('minSpecial')">
-                {{ t().special }}
+            <kbq-reactive-password-hint [hasError]="passwordModel.hasError('pattern')">
+                {{ t().allowedCharacters }}
             </kbq-reactive-password-hint>
         </kbq-form-field>
     `,
@@ -77,6 +71,5 @@ class ExamplePasswordRules implements Validator {
 })
 export class InputPasswordTemplateDrivenExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly password = signal('');
 }

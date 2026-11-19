@@ -679,7 +679,7 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'input',
                     hasExamples: true,
-                    isUpdated: expiresAt('2026-11-19')
+                    isUpdated: expiresAt('2026-12-03')
                 },
                 {
                     id: DocsStructureItemId.FileUpload,
@@ -728,7 +728,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'form-field',
                     hasApi: true,
                     apiId: 'form-field',
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-12-03')
                 },
                 {
                     id: DocsStructureItemId.Highlight,
