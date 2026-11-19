@@ -1,11 +1,11 @@
 // Шапка сайта документации, не часть примера
 import { afterNextRender, ChangeDetectionStrategy, Component, computed, inject, viewChildren } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
+import type { KbqThemeMode } from '@koobiq/components/core';
 import {
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
     KBQ_LOCALE_SERVICE,
-    KbqThemeMode,
     KbqThemeNames,
     KbqThemeService
 } from '@koobiq/components/core';
@@ -113,6 +113,7 @@ const END_ALIGNED_POSITIONS: KbqSelect['positions'] = [
             >
                 <button
                     #languageButton
+                    type="button"
                     kbq-button
                     kbq-select-matcher
                     class="kbq-button-icon"
@@ -139,6 +140,7 @@ const END_ALIGNED_POSITIONS: KbqSelect['positions'] = [
             >
                 <button
                     #themeButton
+                    type="button"
                     kbq-button
                     kbq-select-matcher
                     class="kbq-button-icon"

@@ -1,5 +1,6 @@
 import { DOCUMENT } from '@angular/common';
-import { ApplicationRef, createComponent } from '@angular/core';
+import type { ApplicationRef } from '@angular/core';
+import { createComponent } from '@angular/core';
 import { DocsHeader } from './docs-header';
 
 /** Creates the header and appends it to the `<docs-header>` element of `index.html`. */
