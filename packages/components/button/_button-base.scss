@@ -55,25 +55,47 @@
     & .kbq-button-text {
         @include list.kbq-truncate-line();
 
-        display: flex;
-        align-items: center;
+        // must stay a block container: `text-overflow: ellipsis` is not painted on a flex box
+        display: inline-block;
 
         min-width: 0;
+
+        // legacy `<i kbq-icon> Text` markup projects the icon into the default slot as a direct
+        // child, so it lands here. `vertical-align: middle` aligns it to the x-height, not the line
+        // box centre, which leaves it ~1px low — only a flex context centres it exactly. Truncation
+        // is unavailable in that case; use `kbqButtonPrefix`/`kbqButtonSuffix` to get centred icons
+        // AND an ellipsis. Scoped to a direct child so an icon nested deeper in the label (e.g. inside
+        // a projected badge) doesn't also fall back to flex and lose its ellipsis.
+        &:has(> .kbq-icon) {
+            display: flex;
+            align-items: center;
+        }
     }
 
+    // A label with no text has nothing to truncate, and non-text content is only centred exactly by
+    // a flex context. `:has()` cannot decide this on its own: it would have to tell an icon-only
+    // label from a text label containing an icon, and selectors cannot see text nodes — so the class
+    // is computed by `KbqButtonCssStyler`. Covers content nested in a consumer's own wrapper element,
+    // which no descendant-based selector could match without breaking truncation elsewhere.
+    &.kbq-button_no-label .kbq-button-text {
+        display: flex;
+        align-items: center;
+    }
+
+    /* Logical properties so the leading/trailing icon gap mirrors under `dir="rtl"`. */
     & .kbq-icon_left {
-        margin-right: var(--kbq-button-size-content-padding);
+        margin-inline-end: var(--kbq-button-size-content-padding);
     }
 
     & .kbq-icon_right {
-        margin-left: var(--kbq-button-size-content-padding);
+        margin-inline-start: var(--kbq-button-size-content-padding);
     }
 
     & .kbq-button-prefix {
-        margin-right: var(--kbq-button-size-content-padding);
+        margin-inline-end: var(--kbq-button-size-content-padding);
     }
 
     & .kbq-button-suffix {
-        margin-left: var(--kbq-button-size-content-padding);
+        margin-inline-start: var(--kbq-button-size-content-padding);
     }
 }

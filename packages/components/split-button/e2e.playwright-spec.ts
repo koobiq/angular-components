@@ -36,4 +36,41 @@ test.describe('KbqSplitButtonModule', () => {
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('03-dark.png');
         });
     });
+
+    test.describe('E2eSplitButtonTruncation', () => {
+        const getFirstButtonText = (splitButton: Locator) =>
+            splitButton.locator('.kbq-split-button_first .kbq-button-text');
+
+        for (const testId of ['e2eSplitButtonTruncationNoIcon', 'e2eSplitButtonTruncationPrefixIcon']) {
+            test(`clips the leading button's label of ${testId}`, async ({ page }) => {
+                await page.goto('/E2eSplitButtonTruncation');
+
+                const widths = await getFirstButtonText(page.getByTestId(testId)).evaluate((element) => ({
+                    scroll: element.scrollWidth,
+                    client: element.clientWidth
+                }));
+
+                expect(widths.scroll).toBeGreaterThan(widths.client);
+            });
+
+            test(`keeps the leading button's label a block container in ${testId}`, async ({ page }) => {
+                await page.goto('/E2eSplitButtonTruncation');
+
+                // `.kbq-button-text` is a flex item of `.kbq-button-wrapper`, so its computed display
+                // for the non-icon-in-default-slot case is blockified from `inline-block` to `block`
+                // (never `flex`, which would stop `text-overflow: ellipsis` from painting).
+                await expect(getFirstButtonText(page.getByTestId(testId))).toHaveCSS('display', 'block');
+            });
+        }
+
+        test('renders the ellipsis', async ({ page }) => {
+            await page.goto('/E2eSplitButtonTruncation');
+
+            const screenshotTarget = page.getByTestId('e2eSplitButtonTruncation').getByTestId('e2eScreenshotTarget');
+
+            await expect(screenshotTarget).toHaveScreenshot('04-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('04-dark.png');
+        });
+    });
 });

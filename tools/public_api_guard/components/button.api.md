@@ -80,6 +80,7 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
 // @public
 export class KbqButtonCssStyler implements AfterContentInit {
     constructor(elementRef: ElementRef<HTMLElement>, renderer: Renderer2);
+    get hasNoLabel(): boolean;
     // (undocumented)
     readonly icons: Signal<readonly any[]>;
     get isIconButton(): boolean;
