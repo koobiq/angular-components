@@ -24,7 +24,7 @@ import { TRANSLATIONS } from './l10n';
                     <div>
                         <span>
                             <span>{{ item }}</span>
-                            @if (clampedList.hasToggle()) {
+                            @if (clampedList.hasToggle() && (clampedList.isCollapsed() || !$last)) {
                                 <span>,&nbsp;</span>
                             }
                         </span>
