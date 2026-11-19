@@ -1033,5 +1033,5 @@ export class E2eSelectWithGroupsLabel {
         }
     ];
 
-    readonly selected = this.pokemonTypes[0].pokemon.slice(0, 2).map((pokemon) => pokemon.value);
+    readonly selected = ['bulbasaur-0', 'oddish-1'];
 }
