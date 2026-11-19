@@ -686,7 +686,7 @@ export class KbqNavbarItem implements AfterContentInit {
     private readonly ownCollapsed = signal<boolean | undefined>(undefined);
 
     /**
-     * Whether the item is currently moved into the «Ещё» panel of a horizontal navbar: there it renders its title,
+     * Whether the item is currently moved into the «More» panel of a horizontal navbar: there it renders its title,
      * an icon-only item the text of `collapsedText`. Written by the ambient `KbqNavbar`.
      *
      * @docs-private
