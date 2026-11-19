@@ -2541,6 +2541,9 @@ export const KBQ_FORM_FIELD_REF: InjectionToken<KbqFormFieldRef>;
 // @public
 export const KBQ_FORMATTERS_LOCALE_CONFIGURATION: InjectionToken<KbqFormattersLocaleConfiguration>;
 
+// @public
+export const KBQ_GROUP_OPTION: InjectionToken<KbqGroupOption>;
+
 // @public (undocumented)
 export const KBQ_INVALID_VALUE_ERROR = "Argument \"value\" must be a finite number!";
 
@@ -3299,6 +3302,11 @@ export const kbqGetSelectionRect: (element: KbqTextAnchor) => KbqCaretRect | nul
 
 // @public
 export const kbqGetTextQuery: (value: string, caret: number, input?: KbqTextQueryOptions) => KbqTextQuery | null;
+
+// @public
+export interface KbqGroupOption {
+    readonly selected: boolean;
+}
 
 // @public
 export const kbqHasScrollOverflow: (element: Element, axis?: KbqScrollAxis) => boolean;

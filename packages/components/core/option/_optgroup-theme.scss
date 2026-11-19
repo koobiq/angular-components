@@ -12,3 +12,9 @@
         --kbq-optgroup-label-color: var(--kbq-states-foreground-disabled);
     }
 }
+
+@mixin kbq-optgroup-typography() {
+    .kbq-optgroup-label {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, caps-compact-strong);
+    }
+}

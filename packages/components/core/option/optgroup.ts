@@ -1,5 +1,5 @@
 import {
-    AfterContentInit,
+    type AfterContentInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
@@ -11,11 +11,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { kbqInjectNativeElement } from '../utils';
-
-// Imported for the query locator below, although `./option` imports this file back: that cycle only
-// stays loadable because `index.ts` imports `./optgroup` before `./option`, so `KbqOption` is defined
-// by the time its decorator argument is evaluated here. Keep that order.
-import { KbqOption } from './option';
+import { KBQ_GROUP_OPTION } from './group-option';
 
 let uniqueOptgroupIdCounter = 0;
 
@@ -62,7 +58,7 @@ export class KbqOptgroup implements AfterContentInit {
 
     private readonly projectedLabels = contentChildren(KbqOptgroupLabel);
 
-    private readonly projectedOptions = contentChildren(KbqOption, { descendants: true });
+    private readonly projectedOptions = contentChildren(KBQ_GROUP_OPTION, { descendants: true });
 
     private readonly selectedCountState = computed(() => this.projectedOptions().filter((o) => o.selected).length);
 
