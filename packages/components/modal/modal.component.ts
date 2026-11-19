@@ -879,7 +879,7 @@ export class KbqModalComponent<T = any, R = any>
      * focus never reaches would otherwise stay in the root-provided monitor forever.
      */
     private monitorContainer(): void {
-        if (!this.platform.isBrowser || !this.viewInitialized || this.monitoredContainer) return;
+        if (!this.viewInitialized || this.monitoredContainer) return;
 
         this.monitoredContainer = this.modalContainer();
         this.focusMonitorSubscription = this.focusMonitor
@@ -894,7 +894,7 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     private restoreFocus(): void {
-        if (!this.platform.isBrowser || !this.kbqRestoreFocus() || !this.focusedElementBeforeOpen) return;
+        if (!this.kbqRestoreFocus() || !this.focusedElementBeforeOpen) return;
 
         this.focusMonitor.focusVia(this.focusedElementBeforeOpen, this.previouslyFocusedElementOrigin);
 
@@ -914,7 +914,7 @@ export class KbqModalComponent<T = any, R = any>
      * modal without a single tabbable control still takes focus off the trigger behind it.
      */
     private focusInitialElement(): void {
-        if (!this.platform.isBrowser || this.kbqAutoFocus() === false) return;
+        if (this.kbqAutoFocus() === false) return;
 
         const element = this.getElement();
         const { focusTrap } = this.trapFocus();

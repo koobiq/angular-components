@@ -1,4 +1,4 @@
-import type { FocusOrigin } from '@angular/cdk/a11y';
+import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {
     Component,
@@ -1582,15 +1582,19 @@ describe('KbqModal', () => {
     });
 
     describe('server-side rendering', () => {
-        it('should not throw when opening a visible modal on the server', async () => {
+        it('should not run browser-only focus paths when opening a visible modal on the server', async () => {
             await TestBed.configureTestingModule({
                 imports: [SsrModalComponent],
                 providers: [{ provide: PLATFORM_ID, useValue: 'server' }]
             }).compileComponents();
 
+            const focusMonitor = TestBed.inject(FocusMonitor);
+            const monitorSpy = vi.spyOn(focusMonitor, 'monitor');
+
             const fixture = TestBed.createComponent(SsrModalComponent);
 
             expect(() => fixture.detectChanges()).not.toThrow();
+            expect(monitorSpy).not.toHaveBeenCalled();
         });
     });
 });
