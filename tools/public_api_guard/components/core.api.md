@@ -556,6 +556,7 @@ export const enUSLocaleData: {
         closeText: string;
         showMoreText: string;
         moreText: string;
+        showMoreTextCompact: string;
     };
     navbar: {
         toggle: {
@@ -845,6 +846,7 @@ export const esLALocaleData: {
         closeText: string;
         showMoreText: string;
         moreText: string;
+        showMoreTextCompact: string;
     };
     navbar: {
         toggle: {
@@ -1381,6 +1383,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             closeText: string;
             showMoreText: string;
             moreText: string;
+            showMoreTextCompact: string;
         };
         navbar: {
             toggle: {
@@ -1645,6 +1648,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             closeText: string;
             showMoreText: string;
             moreText: string;
+            showMoreTextCompact: string;
         };
         navbar: {
             toggle: {
@@ -1905,6 +1909,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             closeText: string;
             showMoreText: string;
             moreText: string;
+            showMoreTextCompact: string;
         };
         navbar: {
             toggle: {
@@ -2171,6 +2176,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             closeText: string;
             showMoreText: string;
             moreText: string;
+            showMoreTextCompact: string;
         };
         navbar: {
             toggle: {
@@ -2433,6 +2439,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             closeText: string;
             showMoreText: string;
             moreText: string;
+            showMoreTextCompact: string;
         };
         navbar: {
             toggle: {
@@ -2902,6 +2909,7 @@ export type KbqClampedTextLocaleConfiguration = {
     openText: string;
     closeText: string;
     showMoreText: string;
+    showMoreTextCompact?: string;
     moreText: string;
 };
 
@@ -5254,6 +5262,7 @@ export const ptBRLocaleData: {
         closeText: string;
         showMoreText: string;
         moreText: string;
+        showMoreTextCompact: string;
     };
     navbar: {
         toggle: {
@@ -5730,6 +5739,7 @@ export const ruRULocaleData: {
         closeText: string;
         showMoreText: string;
         moreText: string;
+        showMoreTextCompact: string;
     };
     navbar: {
         toggle: {
@@ -6081,6 +6091,7 @@ export const tkTMLocaleData: {
         closeText: string;
         showMoreText: string;
         moreText: string;
+        showMoreTextCompact: string;
     };
     navbar: {
         toggle: {

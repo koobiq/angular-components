@@ -141,7 +141,8 @@ export const ptBRLocaleData = {
         openText: 'Expandir',
         closeText: 'Recolher',
         showMoreText: 'Mostrar mais {exceededItemCount}',
-        moreText: 'mais'
+        moreText: 'mais',
+        showMoreTextCompact: '{exceededItemCount} mais'
     },
     navbar: {
         toggle: {

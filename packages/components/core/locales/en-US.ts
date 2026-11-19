@@ -139,7 +139,8 @@ export const enUSLocaleData = {
         openText: 'Expand',
         closeText: 'Collapse',
         showMoreText: 'Show {exceededItemCount} more',
-        moreText: 'more'
+        moreText: 'more',
+        showMoreTextCompact: '{exceededItemCount} more'
     },
     navbar: {
         toggle: {

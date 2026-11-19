@@ -128,6 +128,19 @@ test.describe('docs app', () => {
         await expect(page.locator('kbq-code-block').first()).toBeVisible();
     });
 
+    test('separates the expanded clamped list from its collapse trigger without a comma', async ({ page }) => {
+        await page.goto('/ru/components/clamped-list');
+        await waitForHydration(page);
+
+        const example = page.locator('clamped-list-example');
+        const trigger = example.locator('[kbqClampedListTrigger]');
+
+        await trigger.click();
+
+        await expect(trigger).toHaveText('Свернуть');
+        await expect(example.locator('[kbqClampedList] > div').last()).not.toHaveText(/,\s*$/);
+    });
+
     test('opens a live example in fullscreen with its overlays', async ({ page }) => {
         await page.goto('/en/components/select/examples');
         await waitForHydration(page);
