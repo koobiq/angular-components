@@ -191,7 +191,7 @@ export type KbqNavbarLocaleConfiguration = {
 
     /**
      * Accessible name of the horizontal navbar's trigger revealing the items hidden by overflow. Left out by a
-     * full custom configuration, the trigger carries no accessible name of its own.
+     * full custom configuration, the trigger falls back to the default locale's name.
      */
     more?: string;
 };

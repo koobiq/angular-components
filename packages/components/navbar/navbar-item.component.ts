@@ -923,6 +923,10 @@ export class KbqNavbarItem implements AfterContentInit {
             return;
         }
 
+        // In the «Ещё» panel the arrow belongs to the panel: a row with a submenu is a row among others there,
+        // and the arrow moves to the next one instead of opening the submenu a click on the row would.
+        if (this.inMorePanel() && $event.keyCode === DOWN_ARROW) return;
+
         if (
             (this.rectangleElement.isHorizontal() && $event.keyCode === DOWN_ARROW) ||
             (this.rectangleElement.isVertical() && $event.keyCode === RIGHT_ARROW)

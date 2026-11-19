@@ -3808,6 +3808,84 @@ export class KbqOptionSelectionChange<T = KbqOption> {
 export type KbqOrientation = 'horizontal' | 'vertical';
 
 // @public
+export interface KbqOverflowAxisConfig {
+    // (undocumented)
+    borderEnd: 'borderRightWidth' | 'borderBottomWidth';
+    // (undocumented)
+    borderStart: 'borderLeftWidth' | 'borderTopWidth';
+    // (undocumented)
+    flexDirection: 'row' | 'column';
+    // (undocumented)
+    gap: 'columnGap' | 'rowGap';
+    // (undocumented)
+    isCrossAxisExceeded: (element: HTMLElement) => boolean;
+    // (undocumented)
+    marginEnd: 'marginRight' | 'marginBottom';
+    // (undocumented)
+    marginStart: 'marginLeft' | 'marginTop';
+    // (undocumented)
+    paddingEnd: 'paddingRight' | 'paddingBottom';
+    // (undocumented)
+    paddingStart: 'paddingLeft' | 'paddingTop';
+    // (undocumented)
+    size: 'width' | 'height';
+}
+
+// @public
+export class KbqOverflowFitEngine {
+    constructor(window: Window);
+    containerSubject(container: HTMLElement, orientation: KbqOrientation, wrap: KbqFlexWrap): KbqOverflowFitSubject;
+    deviceThreshold(): number;
+    hasContainerOverflown(container: HTMLElement, orientation: KbqOrientation, wrap: KbqFlexWrap): boolean;
+    hideOverflownItems(items: ReadonlyArray<KbqOverflowFitItem>, subject: KbqOverflowFitSubject, result?: KbqOverflowFitResult, wrap?: KbqFlexWrap): ReadonlyArray<KbqOverflowFitItem>;
+    laidOutChildren(element: Element): Array<{
+        element: Element;
+        style: CSSStyleDeclaration;
+    }>;
+    measureContainer(container: HTMLElement, orientation: KbqOrientation): {
+        overflow: number;
+        sizes: ReadonlyMap<Element, number>;
+    };
+    readonly orientationConfig: Record<KbqOrientation, KbqOverflowAxisConfig>;
+    showAll(items: ReadonlyArray<KbqOverflowFitItem>, result?: KbqOverflowFitResult): void;
+}
+
+// @public
+export interface KbqOverflowFitItem {
+    readonly alwaysVisible: () => boolean;
+    readonly element: Element;
+    readonly hidden: () => boolean;
+    hide(): void;
+    show(): void;
+}
+
+// @public
+export interface KbqOverflowFitResult {
+    // (undocumented)
+    hide(): void;
+    // (undocumented)
+    show(): void;
+}
+
+// @public
+export interface KbqOverflowFitSubject {
+    hasOverflown(): boolean;
+    measure(): {
+        overflow: number;
+        sizes: ReadonlyMap<Element, number>;
+    };
+}
+
+// @public
+export function kbqOverflowRecalculationTriggers(options: {
+    element?: Element;
+    targets?: readonly Element[];
+    additionalTargets: Signal<Element | Element[]>;
+    debounceTime: Signal<number>;
+    extra?: Array<Observable<void>>;
+}): Observable<void>;
+
+// @public
 export class KbqOverflowShadowBottom {
     readonly ref: i0.InputSignal<KbqOverflowShadowContainer | undefined>;
     readonly shadow: i0.InputSignal<string>;
@@ -4894,6 +4972,9 @@ export const MAC_WK_CMD_RIGHT = 93;
 
 // @public
 export const META = 91;
+
+// @public
+export const MIN_OVERFLOW_IN_DEVICE_PIXELS = 0.5;
 
 // @public (undocumented)
 export enum MultipleMode {

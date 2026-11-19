@@ -3,8 +3,8 @@ import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
 import { DestroyRef, inject, Signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { KbqFlexWrap, KbqOrientation } from '@koobiq/components/core';
 import { debounce, EMPTY, fromEvent, map, merge, Observable, switchMap, timer } from 'rxjs';
+import { KbqFlexWrap, KbqOrientation } from '../common-behaviors';
 
 /**
  * Overflow, in device pixels, from which an item is hidden. At a fractional `devicePixelRatio` (browser zoom, display

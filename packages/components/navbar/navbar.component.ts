@@ -37,6 +37,10 @@ import {
     KBQ_WINDOW,
     kbqLeaveTabOrderOnTabOut,
     KbqLocaleOverridesDirective,
+    KbqOverflowFitEngine,
+    KbqOverflowFitResult,
+    KbqOverflowFitSubject,
+    kbqOverflowRecalculationTriggers,
     KbqOverlayLayerExclude,
     kbqQueryListFrom,
     LEFT_ARROW,
@@ -45,12 +49,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqDropdown, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
-import {
-    KbqOverflowFitEngine,
-    KbqOverflowFitResult,
-    KbqOverflowFitSubject,
-    kbqOverflowRecalculationTriggers
-} from '@koobiq/components/overflow-items';
 import {
     distinctUntilChanged,
     EMPTY,
@@ -433,9 +431,6 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     /** Reports the navbar host's resizes, the page-level element aside. */
     private readonly hostResizeObserver = inject(SharedResizeObserver);
 
-    /** The page element whose resize recalculates the fit, on top of the navbar itself. */
-    private readonly recalculationTargets = signal<Element | Element[]>(this.document.body);
-
     private readonly resizeDebounceInterval: number = 100;
 
     /** The debounce of a burst of recalculation triggers, the resize one of the past included. */
@@ -443,24 +438,6 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
 
     private get width(): number {
         return this.elementRef.nativeElement.getBoundingClientRect().width;
-    }
-
-    /**
-     * Room the content needs: the outer widths of the containers' laid-out children plus the containers' own margins,
-     * which hold the gap between them. The containers' boxes are not measured whole, so a container styled to grow
-     * still reports what it needs rather than what it was given. Items hidden under «Ещё» are taken out of the flow
-     * and report nothing.
-     */
-    private contentWidth(containers: readonly HTMLElement[]): number {
-        return containers.reduce((total, container) => {
-            const { marginLeft, marginRight } = this.window.getComputedStyle(container);
-            const childrenWidth = this.measuredChildren(container).reduce(
-                (acc, element) => acc + getOuterWidth(element, this.window),
-                0
-            );
-
-            return total + childrenWidth + (parseFloat(marginLeft) || 0) + (parseFloat(marginRight) || 0);
-        }, 0);
     }
 
     private get collapsableItems(): KbqNavbarItem[] {
@@ -484,12 +461,14 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
             });
         }
 
-        // The recalculation triggers: a change of the navbar's actual width, a web font loading, the projected
-        // elements changing, and the resizes of the page, all debounced. The raw window-resize event and the
-        // host's own resize observer report the same width change a frame apart, so they are one trigger
-        // deduplicated on the measured width: the fit runs once per actual width, not once per source.
+        // The recalculation triggers: a change of the navbar's actual width, a web font loading and the projected
+        // elements changing, all debounced. The raw window-resize event and the host's own resize observer report
+        // the same width change a frame apart, so they are one trigger deduplicated on the measured width: the fit
+        // runs once per actual width, not once per source. What fits does not change when the page grows or shrinks
+        // below it, so `body` is not observed the way `KbqOverflowItems` observes it: its resizes — infinite
+        // scroll, an accordion — would re-run a whole fit on every one of them for nothing.
         kbqOverflowRecalculationTriggers({
-            additionalTargets: this.recalculationTargets,
+            additionalTargets: signal<Element | Element[]>([]),
             debounceTime: this.recalculationDebounce,
             extra: [
                 merge(this.resizeStream, this.hostResizeObserver.observe(this.elementRef.nativeElement)).pipe(
@@ -613,7 +592,6 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         // it per stage would re-read the DOM children and the element queries for nothing.
         const containers = this.containerElements();
         const rectangles = this.containerRectangles(containers);
-        const candidates = rectangles.filter((rectangle) => !isDivider(rectangle));
 
         // Stage 0: everything shown, the result hidden — the state to measure in.
         this.engine.showAll(rectangles, this.moreResult);
@@ -622,7 +600,14 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         this.fitItems(containers);
 
         // Stage 2: hide under «Ещё», from the end, the trigger's width joining the budget once it is shown.
-        this.engine.hideOverflownItems([...candidates].reverse(), this.navbarFitSubject(containers), this.moreResult);
+        // Dividers ride along in the order the engine gives things up: each right after the neighbour it
+        // dangles from, so its width leaves the budget with that neighbour's instead of costing an item that
+        // would fit without it.
+        this.engine.hideOverflownItems(
+            this.rectanglesInHideOrder(rectangles),
+            this.navbarFitSubject(containers),
+            this.moreResult
+        );
 
         // Stage 3: dividers, by the state of their neighbours.
         this.fitDividers(containers, rectangles);
@@ -667,7 +652,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         // Before the content is read, because an item seen in one presentation measures the other by toggling a class.
         items.forEach((item) => item.measureWidths());
 
-        const collapseDelta = this.contentWidth(containers) - this.width;
+        const collapseDelta = this.measureContent(containers).overflow;
 
         if (collapseDelta > 0) {
             this.collapseItems(items, collapseDelta);
@@ -762,8 +747,56 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     private navbarFitSubject(containers: readonly HTMLElement[]): KbqOverflowFitSubject {
         return {
             measure: () => this.measureContent(containers),
-            hasOverflown: () => this.contentWidth(containers) - this.width >= this.engine.deviceThreshold()
+            hasOverflown: () => this.measureContent(containers).overflow >= this.engine.deviceThreshold()
         };
+    }
+
+    /**
+     * The rectangles in the order the engine may give them up, from the end of the navbar backwards. A divider
+     * is anchored to the item it hides with — the one after it, the first to go in that order — and leaves the
+     * budget in the same step: counted on its own, a divider that hides with its neighbour would cost the item
+     * before it a place it does not need.
+     */
+    private rectanglesInHideOrder(rectangles: readonly KbqNavbarRectangleElement[]): KbqNavbarRectangleElement[] {
+        const anchored = new Map<KbqNavbarRectangleElement, KbqNavbarRectangleElement>();
+
+        for (let i = 0; i < rectangles.length; i++) {
+            const rectangle = rectangles[i];
+
+            if (!isDivider(rectangle)) continue;
+
+            const after = rectangles[i + 1];
+            const before = rectangles[i - 1];
+            const anchor =
+                after && !after.alwaysVisible() && !isDivider(after)
+                    ? after
+                    : before && !before.alwaysVisible() && !isDivider(before)
+                      ? before
+                      : undefined;
+
+            if (anchor) anchored.set(rectangle, anchor);
+        }
+
+        const order: KbqNavbarRectangleElement[] = [];
+        const ridden = new Set<KbqNavbarRectangleElement>();
+
+        for (let i = rectangles.length - 1; i >= 0; i--) {
+            const rectangle = rectangles[i];
+
+            // An anchored divider rides with its anchor; this is not its place. One that lost its anchor while
+            // riding — the anchor went to the panel — still rides, `anchored` no longer holds it.
+            if (!anchored.has(rectangle) && !ridden.has(rectangle)) order.push(rectangle);
+
+            for (const [divider, anchor] of [...anchored]) {
+                if (anchor === rectangle) {
+                    order.push(divider);
+                    ridden.add(divider);
+                    anchored.delete(divider);
+                }
+            }
+        }
+
+        return order;
     }
 
     /**
@@ -875,10 +908,17 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         // the synchronous focus below.
         this.morePanelItemsList();
 
+        const openedBy = this.moreDropdownTrigger()?.openedBy;
+
         // The dropdown's own key manager drives `KbqDropdownItem`s only; the navbar items carried into the panel
-        // get their arrow navigation from the navbar, vertical as a menu reads.
-        if (this.moreDropdownTrigger()?.openedBy === 'keyboard') {
+        // get their arrow navigation from the navbar, vertical as a menu reads. A panel opened without the
+        // keyboard — a click — leaves the focus on the trigger, and the arrows below it would never reach the
+        // panel: the navbar's key manager does not walk vertically. Focus the first row, as the keyboard open
+        // does, so the panel is reachable either way.
+        if (openedBy === 'keyboard') {
             this.morePanelKeyManager.setFocusOrigin('keyboard').setFirstItemActive();
+        } else if (!openedBy) {
+            this.morePanelKeyManager.setFocusOrigin('program').setFirstItemActive();
         }
     }
 
@@ -965,9 +1005,16 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         // siblings that follow, and those were moved after the items that reference them.
         const panel = this.morePanelContent()?.nativeElement;
 
-        for (const [rectangle, { container, anchor, item, wasCollapsed }] of [...this.movedToMorePanel.entries()]
-            .reverse()
-            .map(([rectangle, state]) => [rectangle, state] as const)) {
+        // A DOM move of the focused node drops the focus to `body`, and the recalculation returns the rows and
+        // moves them right back: remember which row held it, to restore the focus once they are back in place.
+        const focusedEntry = [...this.movedToMorePanel.entries()].find(
+            ([rectangle, { item }]) =>
+                item?.navbarFocusableItem.hasFocus || rectangle.element.contains(this.document.activeElement)
+        );
+
+        for (const [rectangle, { container, anchor, item, wasCollapsed }] of [
+            ...this.movedToMorePanel.entries()
+        ].reverse()) {
             // An item the consumer destroyed while it sat in the panel left the panel with its view: there is
             // nothing to return, and re-attaching the dead node would orphan it in the container. The panel
             // itself may sit detached from the document by the time this runs — its content is still ours.
@@ -992,6 +1039,17 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         this.movedToMorePanel.clear();
 
         this.morePanelItems.set([]);
+
+        if (focusedEntry) this.restoreMorePanelFocus(focusedEntry[1].item);
+    }
+
+    /** Puts the focus back on the panel row a recalculation moved through the containers. */
+    private restoreMorePanelFocus(item: KbqNavbarItem | null): void {
+        if (!item) return;
+
+        this.morePanelKeyManager?.setFocusOrigin('program');
+        this.morePanelItemsList();
+        this.morePanelKeyManager?.setActiveItem(this.morePanelItems().indexOf(item.navbarFocusableItem));
     }
 }
 

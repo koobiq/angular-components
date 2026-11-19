@@ -2501,7 +2501,9 @@ describe('KbqNavbar', () => {
             const navbar = getNavbar(fixture);
 
             // Five 100px elements in a 350px navbar with a collapse that frees 10px each: collapsing cannot
-            // absorb the 200px overflow, so the items hide from the end until what remains fits.
+            // absorb the 200px overflow. The engine gives the items up from the end, a divider leaving the
+            // budget with the neighbour it hides with, so what remains — the pinned item, the clock and the
+            // first item, the 50px trigger included — fits exactly.
             stubNavbarWidths(fixture.debugElement, { navbar: 350, item: 100, collapsible: 10 });
 
             navbar.updateExpandedStateForItems();
@@ -2510,7 +2512,7 @@ describe('KbqNavbar', () => {
             const [first, clock, third, pinned] = getItems(fixture);
 
             expect(third.rectangleElement.hidden()).toBe(true);
-            expect(clock.rectangleElement.hidden()).toBe(true);
+            expect(clock.rectangleElement.hidden()).toBe(false);
             expect(first.rectangleElement.hidden()).toBe(false);
             expect(pinned.rectangleElement.hidden()).toBe(false);
         });
@@ -2600,15 +2602,16 @@ describe('KbqNavbar', () => {
             const panelContent = document.querySelector('.kbq-navbar__more-content');
 
             // The original host elements, not copies: their own routers, listeners and submenus keep working.
+            // Only the last item is hidden, so the divider that dangles from it hides without riding along:
+            // it moves into the panel once the items on both of its sides are under «Ещё».
             expect(panelContent!.contains(itemElements[2])).toBe(true);
-            expect(panelContent!.contains(itemElements[1])).toBe(true);
-            expect(panelContent!.contains(divider)).toBe(true);
+            expect(panelContent!.contains(divider)).toBe(false);
+            expect(panelContent!.contains(itemElements[1])).toBe(false);
             expect(panelContent!.contains(itemElements[0])).toBe(false);
             expect(panelContent!.contains(itemElements[3])).toBe(false);
 
             // An icon-only item renders the text of its `collapsedText` in the panel.
             expect(itemElements[2].textContent).toContain('Third');
-            expect(itemElements[1].textContent).toContain('Clock');
             expect(clock.isCollapsed()).toBe(false);
 
             getTriggerDropdown(fixture).close();
@@ -2620,7 +2623,7 @@ describe('KbqNavbar', () => {
             expect(container.contains(itemElements[1])).toBe(true);
             expect(container.contains(divider)).toBe(true);
             expect(third.rectangleElement.hidden()).toBe(true);
-            expect(clock.rectangleElement.hidden()).toBe(true);
+            expect(clock.rectangleElement.hidden()).toBe(false);
             expect(clock.inMorePanel()).toBe(false);
             expect(third.isCollapsed()).toBe(true);
         });
@@ -2642,7 +2645,7 @@ describe('KbqNavbar', () => {
             const focusables = navbar.focusableItems.toArray();
 
             expect(focusables[focusables.length - 1]).toBe(triggerFocusable);
-            expect(clock.navbarFocusableItem.disabled).toBe(true);
+            expect(clock.navbarFocusableItem.disabled).toBe(false);
             expect(third.navbarFocusableItem.disabled).toBe(true);
         });
 

@@ -20,10 +20,11 @@ import {
     KBQ_WINDOW,
     type KbqFlexWrap,
     kbqInjectNativeElement,
-    type KbqOrientation
+    type KbqOrientation,
+    kbqOverflowRecalculationTriggers,
+    KbqOverflowFitEngine
 } from '@koobiq/components/core';
 import { map } from 'rxjs';
-import { KbqOverflowFitEngine, kbqOverflowRecalculationTriggers } from './overflow-fit-engine';
 
 /**
  * Elements that `KbqOverflowItems` observes for resize changes on top of its own element and
