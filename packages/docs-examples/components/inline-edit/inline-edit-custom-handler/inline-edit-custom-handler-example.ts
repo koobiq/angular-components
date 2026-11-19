@@ -49,14 +49,15 @@ import { TRANSLATIONS } from './l10n';
 })
 export class InlineEditCustomHandlerExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly control = new FormControl<KbqFileItem | null>(null);
+    protected readonly displayValue = signal(this.control.value);
+
     protected get placeholder(): string {
         return this.t().placeholder;
     }
-    protected readonly displayValue = signal(this.control.value);
 
     protected getValueHandler = () => this.control.value;
+
     // The component hands back whatever `getValueHandler` returned, so the cast is the host's own contract.
     protected setValueHandler = (value: unknown) => this.control.setValue(value as KbqFileItem | null);
 

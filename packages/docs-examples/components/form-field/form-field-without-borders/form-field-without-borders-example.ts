@@ -18,6 +18,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class FormFieldWithoutBordersExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly formControl = new FormControl('', [Validators.required]);
 }

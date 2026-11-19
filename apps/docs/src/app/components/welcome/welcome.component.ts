@@ -38,12 +38,11 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
 })
 export class DocsWelcomeComponent extends DocsLocaleState implements OnInit {
     private readonly themeService = inject(KbqThemeService);
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly docStates = inject(DocsDocStates);
 
     protected readonly structureCategories = docsGetCategories().filter((category) => category.isPreviewed);
     readonly currentTheme = computed(() => this.themeService.colorScheme());
-
-    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly docStates = inject(DocsDocStates);
 
     constructor() {
         super();

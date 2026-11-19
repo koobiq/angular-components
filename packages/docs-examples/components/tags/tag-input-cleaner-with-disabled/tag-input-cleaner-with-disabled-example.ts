@@ -71,9 +71,10 @@ const lockedTags = ['Beta'];
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagInputCleanerWithDisabledExample {
-    protected readonly separators = [COMMA, ENTER];
     protected readonly kept = model(['Alpha', 'Beta', 'Gamma']);
     protected readonly cleared = model(['Alpha', 'Beta', 'Gamma']);
+
+    protected readonly separators = [COMMA, ENTER];
 
     /** Opts out of the default, which leaves the disabled tags in place. */
     protected readonly clearEverything = (_tag: KbqTag) => true;

@@ -32,6 +32,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class DropdownOpenByArrowDownExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     openByArrowDown = true;
 }

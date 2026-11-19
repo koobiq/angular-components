@@ -53,8 +53,19 @@ import { kbqFilterSelectValueNameKey, kbqFilterSelectValuesBySearch } from './se
     encapsulation: ViewEncapsulation.None
 })
 export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implements AfterViewInit {
+    /** @docs-private */
+    readonly select = viewChild.required(KbqSelect);
+
+    /** Updates on every pipe-template emission, so the options re-derive even for the same array reference. */
+    private readonly templatesVersion = signal(0);
+
     /** control for search options */
     readonly searchControl = new FormControl<string | null>(null);
+
+    /** Current search query; a signal so the options derivation follows the search control. */
+    private readonly searchQuery = toSignal(this.searchControl.valueChanges, {
+        initialValue: this.searchControl.value
+    });
 
     /** Query tokens for option highlighting: tokenized like the filter, so every matched token is marked. */
     readonly searchTokens = toSignal(
@@ -64,14 +75,6 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
         ),
         { initialValue: [] as string[] }
     );
-
-    /** Updates on every pipe-template emission, so the options re-derive even for the same array reference. */
-    private readonly templatesVersion = signal(0);
-
-    /** Current search query; a signal so the options derivation follows the search control. */
-    private readonly searchQuery = toSignal(this.searchControl.valueChanges, {
-        initialValue: this.searchControl.value
-    });
 
     /**
      * Options of the pipe template that match the search query. Follows the templates and the query,
@@ -89,17 +92,6 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
         );
     });
 
-    /** @docs-private */
-    readonly select = viewChild.required(KbqSelect);
-
-    constructor() {
-        super();
-
-        this.filterBar?.internalTemplatesChanges
-            .pipe(takeUntilDestroyed())
-            .subscribe(() => this.templatesVersion.update((version) => version + 1));
-    }
-
     /** selected value */
     get selected() {
         return this.data.value;
@@ -108,6 +100,14 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
     /** Whether the current pipe is empty. */
     override get isEmpty(): boolean {
         return !this.data.value;
+    }
+
+    constructor() {
+        super();
+
+        this.filterBar?.internalTemplatesChanges
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => this.templatesVersion.update((version) => version + 1));
     }
 
     override ngAfterViewInit() {

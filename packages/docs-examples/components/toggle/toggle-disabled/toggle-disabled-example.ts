@@ -21,6 +21,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class ToggleDisabledExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly value = signal(false);
 }

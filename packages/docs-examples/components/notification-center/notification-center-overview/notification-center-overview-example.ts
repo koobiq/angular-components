@@ -76,16 +76,14 @@ enum NavbarIcItems {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationCenterOverviewExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     notificationService = inject(KbqNotificationCenterService);
+    private readonly themeService = inject(KbqThemeService, { optional: true });
 
     private readonly actionsTemplate = viewChild<TemplateRef<unknown>>('actionsTemplate');
     private readonly captionTemplate = viewChild<TemplateRef<unknown>>('captionTemplate');
 
-    private readonly themeService = inject(KbqThemeService, { optional: true });
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly currentTheme = computed(() => this.themeService?.colorScheme() ?? 'light');
-
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
@@ -95,10 +93,8 @@ export class NotificationCenterOverviewExample {
             ),
         { initialValue: true }
     );
-
     protected items = NavbarIcItems;
     protected selected: NavbarIcItems = NavbarIcItems.Assets;
-
     protected readonly actions = computed<ExampleAction[]>(() => [
         {
             id: '1',
@@ -113,10 +109,10 @@ export class NotificationCenterOverviewExample {
             icon: 'kbq-ellipsis-horizontal_16'
         }
     ]);
-
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
+    protected readonly popUpPlacements = PopUpPlacements;
 
     constructor() {
         // Rebuilt on a locale switch to follow the language; the stable ids keep the read state.
@@ -132,6 +128,4 @@ export class NotificationCenterOverviewExample {
             );
         });
     }
-
-    protected readonly popUpPlacements = PopUpPlacements;
 }

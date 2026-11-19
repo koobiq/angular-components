@@ -54,7 +54,9 @@ const getTags = () => Array.from({ length: 3 }, (_, id) => ({ id, value: `Dragga
 })
 export class TagInputDraggableExample {
     protected readonly tags = model(getTags());
+
     private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
+
     protected readonly separators = [COMMA, SPACE, SEMICOLON, ENTER, TAB];
 
     protected dropped(event: KbqTagListDroppedEvent): void {

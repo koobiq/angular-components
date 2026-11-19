@@ -68,10 +68,9 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridRowGroupExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly groupCols = model(['category', 'severity']);
-    protected readonly rowId = (row: Record<string, unknown>): string => row['id'] as string;
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,
@@ -92,7 +91,6 @@ export class AgGridRowGroupExample {
             width: 130
         }))
     ]);
-
     protected readonly rowData = computed(() =>
         Array.from({ length: 24 }, (_, index) => ({
             id: String(index),
@@ -105,6 +103,8 @@ export class AgGridRowGroupExample {
             column6: 'Text ' + index
         }))
     );
+
+    protected readonly rowId = (row: Record<string, unknown>): string => row['id'] as string;
 
     /** Deselects every data row, including rows hidden inside a collapsed group. */
     protected clearSelectionState(rowGroup: KbqAgGridRowGroup): void {

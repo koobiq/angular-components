@@ -56,8 +56,6 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class AgGridRowSelectionStateExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
-    protected readonly getRowId = (params: GetRowIdParams): string => params.data.column0;
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true
@@ -75,4 +73,6 @@ export class AgGridRowSelectionStateExample {
     protected readonly rowData = Array.from({ length: 100 }, (_, index) =>
         Object.fromEntries(Array.from({ length: 5 }, (_, i) => ['column' + i, 'Text ' + index]))
     );
+
+    protected readonly getRowId = (params: GetRowIdParams): string => params.data.column0;
 }

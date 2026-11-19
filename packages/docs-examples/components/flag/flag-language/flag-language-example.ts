@@ -38,6 +38,5 @@ export class FlagLanguageExample {
     // Languages are picked with a neutral icon, not a flag: one language spans several countries.
     // Language names stay in their own tongue by convention.
     protected readonly languages = ['English (UK)', 'English (US)', 'Español', 'Français', 'Русский', 'हिन्दी', '中文'];
-
     protected readonly control = new FormControl(this.languages[0]);
 }

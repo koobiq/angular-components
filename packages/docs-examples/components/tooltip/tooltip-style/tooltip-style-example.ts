@@ -42,6 +42,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TooltipStyleExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     KbqComponentColors = KbqComponentColors;
 }

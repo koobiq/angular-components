@@ -2613,7 +2613,6 @@ class SelectionListWithCustomComparator {
     // A distinct object that only `compareWith` can match against `options[1]` — a reference (`===`)
     // lookup inside the list would silently select nothing.
     formControl = new UntypedFormControl([{ id: 2, label: 'Two' }]);
-
     compareWith = vi.fn((o1: any, o2: any) => o1 && o2 && o1.id === o2.id);
 }
 
@@ -2945,9 +2944,11 @@ class SelectionListWithPreselectedFormControlOnPush {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 class TestListSelectionWithDynamicList {
-    readonly listSelection = viewChild.required(KbqListSelection);
-    opts = Array.from({ length: 3 }, (_, i) => `opt${i}`);
     changeDetectorRef = inject(ChangeDetectorRef);
+
+    readonly listSelection = viewChild.required(KbqListSelection);
+
+    opts = Array.from({ length: 3 }, (_, i) => `opt${i}`);
 
     remove(index: number) {
         this.opts.splice(index, 1);
@@ -3100,13 +3101,14 @@ class SelectionListWithDragHandle {}
 })
 class SelectionListWithDragAndDrop {
     readonly list = viewChild.required(KbqListSelection);
-    readonly items = signal(Array.from({ length: 4 }, (_, i) => `Item ${i}`));
 
+    readonly items = signal(Array.from({ length: 4 }, (_, i) => `Item ${i}`));
     readonly draggable = signal(true);
     readonly dragCursor = signal<KbqListDragCursor>('auto');
     readonly disabled = signal(false);
     readonly disabledItem = signal<string | null>(null);
     readonly nonDraggableItem = signal<string | null>(null);
+
     /** Lets a test assert what happens when the consumer ignores the event. */
     applyMove = true;
     dropped: KbqListSelectionDroppedEvent | null = null;
@@ -3169,7 +3171,6 @@ class SelectionListWithCaption {}
 class ConnectedSelectionLists {
     readonly leftItems = signal(['left 0', 'left 1']);
     readonly rightItems = signal(['right 0']);
-
     dropped: KbqListSelectionDroppedEvent | null = null;
 
     handleDropped(event: KbqListSelectionDroppedEvent): void {
@@ -3214,7 +3215,6 @@ class ConnectedSelectionLists {
 })
 class IdConnectedSelectionLists {
     readonly sourceItems = signal(['source 0', 'source 1']);
-
     dropped: KbqListSelectionDroppedEvent | null = null;
 }
 
@@ -3287,11 +3287,11 @@ const comparatorItems = (): ComparatorItem[] => [
 })
 class SelectionListWithReplaceableValues {
     readonly optionInstances = viewChildren(KbqListOption);
+
     readonly items = signal(comparatorItems());
 
     // Structurally equal to `items()[1]` but a distinct object, so only `compareById` matches it.
     formControl = new UntypedFormControl([{ id: 2, label: 'Two' }]);
-
     comparator: (o1: any, o2: any) => boolean = this.compareById;
 
     compareById(o1: ComparatorItem | null, o2: ComparatorItem | null): boolean {
@@ -3328,8 +3328,8 @@ class SelectionListWithReplaceableValues {
 })
 class SelectionListWithComparatorAndModel {
     readonly optionInstances = viewChildren(KbqListOption);
-    readonly items = comparatorItems();
 
+    readonly items = comparatorItems();
     selected: ComparatorItem[] = [{ id: 3, label: 'Three' }];
 
     compareById = (o1: ComparatorItem | null, o2: ComparatorItem | null): boolean => !!o1 && !!o2 && o1.id === o2.id;
@@ -3348,8 +3348,8 @@ class SelectionListWithComparatorAndModel {
 })
 class SelectionListWithValuelessOption {
     readonly optionInstances = viewChildren(KbqListOption);
-    readonly items = comparatorItems();
 
+    readonly items = comparatorItems();
     formControl = new UntypedFormControl([{ id: 2, label: 'Two' }]);
 
     // Dereferences both arguments: an option without a value must never reach it.
@@ -3368,6 +3368,7 @@ class SelectionListWithValuelessOption {
 })
 class SingleSelectionListWithComparator {
     readonly optionInstances = viewChildren(KbqListOption);
+
     readonly items = signal(comparatorItems());
 
     // A bare value rather than an array, the way a single-select form control carries it.
@@ -3392,6 +3393,7 @@ class SingleSelectionListWithComparator {
 })
 class SelectionListWithAsymmetricComparator {
     readonly optionInstances = viewChildren(KbqListOption);
+
     readonly items = signal(comparatorItems());
 
     // The model carries bare ids while the options carry objects.
@@ -3431,8 +3433,8 @@ class SelectionListWithNullishValues {
 })
 class SelectionListWithThrowingComparator {
     readonly optionInstances = viewChildren(KbqListOption);
-    readonly items = comparatorItems();
 
+    readonly items = comparatorItems();
     formControl = new UntypedFormControl([{ id: 2, label: 'Two' }]);
 
     compareWith = (): boolean => {
@@ -3452,6 +3454,7 @@ class SelectionListWithThrowingComparator {
 })
 class SingleSelectionListWithMultipleValues {
     readonly optionInstances = viewChildren(KbqListOption);
+
     readonly items = ['a', 'b', 'c'];
 
     // More entries than a single-selection list can hold: the model keeps only the last one, and the
@@ -4684,6 +4687,7 @@ class SelectionListWithSelectAllInVirtualScroll {
 class SelectionListDrivenByEffects {
     readonly list = viewChild.required(KbqListSelection);
     readonly options = viewChildren(KbqListOption);
+
     readonly items = signal(['a', 'b']);
     readonly control = new FormControl<string[]>([], { nonNullable: true });
     readonly command = signal<(() => void) | null>(null);

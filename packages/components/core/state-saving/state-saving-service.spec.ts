@@ -9,7 +9,6 @@ import { KBQ_STATE_STORE, type KbqStateStore } from './state-store';
 class InMemoryStateStore implements KbqStateStore {
     readonly store = new Map<string, unknown>();
     readonly changed = new Subject<void>();
-
     readonly changes = this.changed.asObservable();
 
     getState(key: string): unknown {

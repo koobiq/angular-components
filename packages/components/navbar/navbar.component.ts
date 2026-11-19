@@ -51,34 +51,44 @@ import { getOuterWidth } from './outer-width';
 export class KbqFocusableComponent implements AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy {
     /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+
     /** @docs-private */
     protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
     /** @docs-private */
     protected readonly focusMonitor = inject(FocusMonitor);
+
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
-
-    private readonly focusableItemsQuery = contentChildren<KbqNavbarFocusableItem>(
-        forwardRef(() => KbqNavbarFocusableItem),
-        { descendants: true }
-    );
-    private readonly focusableItemsList = kbqQueryListFrom(this.focusableItemsQuery);
-
-    /** @docs-private */
-    get focusableItems(): QueryList<KbqNavbarFocusableItem> {
-        return this.focusableItemsList();
-    }
-
-    /** @docs-private */
-    keyManager: FocusKeyManager<KbqNavbarFocusableItem> = new FocusKeyManager<KbqNavbarFocusableItem>(
-        this.focusableItemsList()
-    ).withTypeAhead();
 
     /**
      * Tab index of the navbar host. The navbar owns the single tab stop of the whole widget and moves focus
      * between its items with the arrow keys. A navbar without a focusable item stays out of the tab order.
      */
     readonly tabIndex = model<number>(0);
+
+    /**
+     * Accessible name of the navigation landmark. Set it whenever a page renders more than one navbar, so
+     * assistive technology can tell them apart.
+     */
+    readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
+
+    private readonly focusableItemsQuery = contentChildren<KbqNavbarFocusableItem>(
+        forwardRef(() => KbqNavbarFocusableItem),
+        { descendants: true }
+    );
+
+    private readonly focusableItemsList = kbqQueryListFrom(this.focusableItemsQuery);
+    private lastFocusOrigin: FocusOrigin = null;
+    private cachedOptionFocusChanges: Observable<KbqNavbarFocusableItemEvent> | null = null;
+    private cachedOptionBlurChanges: Observable<KbqNavbarFocusableItemEvent> | null = null;
+    private optionFocusSubscription: Subscription | null = null;
+    private optionBlurSubscription: Subscription | null = null;
+
+    /** @docs-private */
+    keyManager: FocusKeyManager<KbqNavbarFocusableItem> = new FocusKeyManager<KbqNavbarFocusableItem>(
+        this.focusableItemsList()
+    ).withTypeAhead();
 
     /**
      * Tab index the host renders: {@link tabIndex}, or `-1` while there is no item to hand the focus to. Derived
@@ -90,16 +100,10 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
         this.focusableItemsQuery().length === 0 ? -1 : this.tabIndex()
     );
 
-    /**
-     * Accessible name of the navigation landmark. Set it whenever a page renders more than one navbar, so
-     * assistive technology can tell them apart.
-     */
-    readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
-
-    private lastFocusOrigin: FocusOrigin = null;
-
-    private cachedOptionFocusChanges: Observable<KbqNavbarFocusableItemEvent> | null = null;
-    private cachedOptionBlurChanges: Observable<KbqNavbarFocusableItemEvent> | null = null;
+    /** @docs-private */
+    get focusableItems(): QueryList<KbqNavbarFocusableItem> {
+        return this.focusableItemsList();
+    }
 
     /** Focus events of every focusable item, merged once per change of the item set. @docs-private */
     get optionFocusChanges(): Observable<KbqNavbarFocusableItemEvent> {
@@ -205,9 +209,6 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
         this.cachedOptionBlurChanges = null;
     }
 
-    private optionFocusSubscription: Subscription | null = null;
-    private optionBlurSubscription: Subscription | null = null;
-
     private listenToOptionsFocus(): void {
         this.optionFocusSubscription = this.optionFocusChanges.subscribe((event) => {
             const index: number = this.focusableItems.toArray().indexOf(event.item);
@@ -280,10 +281,10 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         { descendants: true }
     );
 
+    private readonly resizeDebounceInterval: number = 100;
+
     /** Raw `resize` events of the window, fed from outside the Angular zone. @docs-private */
     readonly resizeStream = new Subject<Event>();
-
-    private readonly resizeDebounceInterval: number = 100;
 
     private get width(): number {
         return this.elementRef.nativeElement.getBoundingClientRect().width;

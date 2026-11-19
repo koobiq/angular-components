@@ -57,41 +57,13 @@ const NATIVELY_ACTIVATED_NODES = ['BUTTON', 'INPUT'];
     }
 })
 export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
-    /** An icon button is interactive and exposes its own name, so it is not decorative by default. */
-    protected override readonly defaultAriaHidden: boolean = false;
-
     protected readonly focusMonitor = inject(FocusMonitor);
+
     /** Size of the icon button. */
     readonly size = input<KbqIconButtonSize>('normal');
 
     /** @docs-private */
     override readonly iconNameInput = input<string | undefined>(undefined, { alias: 'kbq-icon-button' });
-
-    /** Position of the button in the tab order. A disabled button is taken out of it entirely. */
-    get tabindex(): number | null {
-        return this.disabled ? null : this._tabindex;
-    }
-
-    set tabindex(value: number | null) {
-        this._tabindex = value;
-    }
-
-    private _tabindex: number | null = 0;
-
-    /** Whether the button is disabled. */
-    get disabled(): boolean {
-        return this.disabledSignal();
-    }
-
-    set disabled(value: boolean) {
-        this.disabledSignal.set(value);
-    }
-
-    /** @docs-private */
-    readonly disabledSignal = signal(false);
-
-    /** The button sizes itself through its own padding, so it never gets the bare icon's `max-height`. */
-    protected override readonly appliesMaxHeight: boolean = false;
 
     /** @docs-private */
     readonly tabindexInput = input<number | null | undefined, number | string | null | undefined>(undefined, {
@@ -113,6 +85,41 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
         transform: booleanAttribute
     });
 
+    private _tabindex: number | null = 0;
+
+    /** An icon button is interactive and exposes its own name, so it is not decorative by default. */
+    protected override readonly defaultAriaHidden: boolean = false;
+
+    /** @docs-private */
+    readonly disabledSignal = signal(false);
+
+    /** The button sizes itself through its own padding, so it never gets the bare icon's `max-height`. */
+    protected override readonly appliesMaxHeight: boolean = false;
+
+    /** Position of the button in the tab order. A disabled button is taken out of it entirely. */
+    get tabindex(): number | null {
+        return this.disabled ? null : this._tabindex;
+    }
+
+    set tabindex(value: number | null) {
+        this._tabindex = value;
+    }
+
+    /** Whether the button is disabled. */
+    get disabled(): boolean {
+        return this.disabledSignal();
+    }
+
+    set disabled(value: boolean) {
+        this.disabledSignal.set(value);
+    }
+
+    constructor() {
+        super();
+
+        effect(() => (this.disabledSignal() ? this.stopFocusMonitor() : this.runFocusMonitor()));
+    }
+
     override ngOnChanges(changes: SimpleChanges): void {
         super.ngOnChanges(changes);
 
@@ -129,12 +136,6 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
 
             if (disabled !== undefined) this.disabled = disabled;
         }
-    }
-
-    constructor() {
-        super();
-
-        effect(() => (this.disabledSignal() ? this.stopFocusMonitor() : this.runFocusMonitor()));
     }
 
     ngAfterViewInit(): void {

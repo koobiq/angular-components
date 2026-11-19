@@ -30,8 +30,8 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class TextareaReadonlyExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly readonly = model(true);
     protected readonly value = model('Text');
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

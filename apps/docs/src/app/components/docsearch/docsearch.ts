@@ -108,7 +108,6 @@ export class DocsDocsearch extends DocsLocaleState {
     // captured eagerly (in the constructor's injection context), since `toObservable()` can't be
     // called lazily from the `afterNextRender()` callback in `init()`
     private readonly colorScheme$ = toObservable(this.theme.colorScheme);
-
     private instance: DocSearchInstance | null = null;
 
     constructor() {

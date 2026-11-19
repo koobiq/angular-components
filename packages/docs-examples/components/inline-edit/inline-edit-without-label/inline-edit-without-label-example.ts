@@ -40,9 +40,9 @@ import { TRANSLATIONS } from './l10n';
 })
 export class InlineEditWithoutLabelExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly control = new FormControl('Spain');
 
     protected get placeholder(): string {
         return this.t().country;
     }
-    protected readonly control = new FormControl('Spain');
 }

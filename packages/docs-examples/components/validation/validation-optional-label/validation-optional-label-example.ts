@@ -67,14 +67,14 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class ValidationOptionalLabelExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    private readonly formFieldList = viewChildren(KbqFormField);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly form = new FormGroup({
         firstName: new FormControl('', Validators.required),
         lastName: new FormControl('', Validators.required),
         patronymic: new FormControl('')
     });
-    private readonly formFieldList = viewChildren(KbqFormField);
 
     onSubmit(): void {
         this.focusFirstInvalidControl();

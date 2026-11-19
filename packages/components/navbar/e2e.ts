@@ -548,7 +548,6 @@ export class E2eVerticalNavbarBrandAutoLongTitle {
         // The oscillation band: too wide at 18px, but would fit one line at 14px.
         { title: 'Knowledge Hub Portal', testId: 'band' }
     ];
-
     readonly horizontalBrands: readonly { title: string; testId: string }[] = [
         { title: 'Super Long Menu Title with Line Wrap and Ellipsis Truncation', testId: 'horizontal-long' },
         { title: 'Secret Notes', testId: 'horizontal-short' }

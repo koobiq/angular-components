@@ -31,7 +31,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class BadgeTooltipExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     colors = KbqBadgeColors;
     protected readonly PopUpPlacements = PopUpPlacements;
 }

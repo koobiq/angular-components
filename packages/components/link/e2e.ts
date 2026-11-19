@@ -351,7 +351,7 @@ export class E2eLinkRtl {}
     }
 })
 export class E2eLinkMultiline {
-    protected readonly states = states.filter(({ name }) => ['default', 'hovered', 'focused'].includes(name));
+    protected readonly states = states.filter(({ name }) => ['default', 'focused', 'hovered'].includes(name));
 }
 
 @Component({

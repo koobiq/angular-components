@@ -20,9 +20,9 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastTypesOverviewExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly toastService = inject(KbqToastService);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     showContrastToast(actions: TemplateRef<any>) {
         this.toastService.show({

@@ -101,16 +101,17 @@ function buildTree(categories: DocsStructureCategory[]): TreeNode[] {
     }
 })
 export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
-    private readonly scrollbar = viewChild.required(KbqScrollbarViewport);
-    private readonly tree = viewChild.required(KbqTreeSelection);
     private readonly viewportScroller = inject(ViewportScroller);
     private readonly router = inject(Router);
     private readonly location = inject(Location);
     private readonly injector = inject(Injector);
     protected readonly docStates = inject(DocsDocStates);
-    protected readonly treeControl: FlatTreeControl<TreeFlatNode>;
-    protected readonly dataSource: KbqTreeFlatDataSource<TreeNode, TreeFlatNode>;
+    private readonly pagePrefetch = inject(DocsPagePrefetch);
+
     protected readonly selectedNodeId = model(this.getSelectedNodeIdFromUrl());
+
+    private readonly scrollbar = viewChild.required(KbqScrollbarViewport);
+    private readonly tree = viewChild.required(KbqTreeSelection);
 
     /**
      * Last node id derived from the URL. `selectedNodeId` cannot serve as that baseline: it is a
@@ -119,7 +120,8 @@ export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
      */
     private lastUrlNodeId = this.selectedNodeId();
 
-    private readonly pagePrefetch = inject(DocsPagePrefetch);
+    protected readonly treeControl: FlatTreeControl<TreeFlatNode>;
+    protected readonly dataSource: KbqTreeFlatDataSource<TreeNode, TreeFlatNode>;
 
     constructor() {
         super();

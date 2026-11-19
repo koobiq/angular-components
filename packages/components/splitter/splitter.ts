@@ -473,6 +473,9 @@ export class KbqSplitterPanel implements KbqSplitterPanelRef {
     /** The panel's own separator; a subtree search would find a nested splitter's separators first. */
     private readonly separator = viewChild<ElementRef<HTMLElement>>('separator');
 
+    /** Unsupported sizes already reported, so a check that runs again does not repeat itself. */
+    private readonly reportedSizes = new Set<string>();
+
     /** @docs-private */
     protected readonly index = computed(() => this.splitter.panels().indexOf(this));
 
@@ -508,9 +511,6 @@ export class KbqSplitterPanel implements KbqSplitterPanelRef {
     protected readonly resolvedSeparatorAriaLabel = computed(
         () => this.separatorAriaLabel() || this.a11yLocaleConfiguration().resizePanels
     );
-
-    /** Unsupported sizes already reported, so a check that runs again does not repeat itself. */
-    private readonly reportedSizes = new Set<string>();
 
     constructor() {
         // A size in another unit is ignored, which would otherwise leave the panel without the limit its template
@@ -637,7 +637,6 @@ export class KbqSplitter implements KbqSplitterGroup {
 
     // The numeric arrays below hold one entry per panel: each is mapped from `panels()`, and `sizes` drops a layout of
     // another length. An index comes from a panel's place in the group, or has been checked against the group's length.
-
     /** Direction the panels are laid out in. */
     readonly orientation = input<KbqSplitterOrientation>('horizontal');
 
@@ -662,9 +661,6 @@ export class KbqSplitter implements KbqSplitterGroup {
     /** Boundary a drag is moving right now, or `null` when no drag is in progress. */
     private readonly dragBoundary = signal<number | null>(null);
 
-    /** Whether a separator is being dragged right now. @docs-private */
-    protected readonly dragging = computed(() => this.dragBoundary() !== null);
-
     /** Splitter size along the resize axis, in pixels; `0` until the first measurement. */
     private readonly containerSize = signal(0);
 
@@ -680,15 +676,6 @@ export class KbqSplitter implements KbqSplitterGroup {
     // `valueSignal` rather than the plain `value` getter: the getter is not reactive, so a `dir` flipped at
     // runtime would leave every computed below it holding the direction the app booted with.
     private readonly rtl = computed(() => this.directionality?.valueSignal() === 'rtl');
-
-    /** A disabled splitter reports no direction, which is how `KbqResizer` ignores a drag. @docs-private */
-    readonly resizerDirection = computed<KbqResizerDirection>(() => {
-        if (this.disabled()) return [0, 0];
-        if (this.orientation() === 'vertical') return [0, 1];
-
-        // In RTL the first panel sits on the right, so growing it moves the boundary west.
-        return this.rtl() ? [-1, 0] : [1, 0];
-    });
 
     /** Smallest size of each panel while it is not collapsed, in pixels. */
     private readonly expandedMinSizes = computed<number[]>(() =>
@@ -790,6 +777,18 @@ export class KbqSplitter implements KbqSplitterGroup {
             this.maxSizes(),
             total
         );
+    });
+
+    /** Whether a separator is being dragged right now. @docs-private */
+    protected readonly dragging = computed(() => this.dragBoundary() !== null);
+
+    /** A disabled splitter reports no direction, which is how `KbqResizer` ignores a drag. @docs-private */
+    readonly resizerDirection = computed<KbqResizerDirection>(() => {
+        if (this.disabled()) return [0, 0];
+        if (this.orientation() === 'vertical') return [0, 1];
+
+        // In RTL the first panel sits on the right, so growing it moves the boundary west.
+        return this.rtl() ? [-1, 0] : [1, 0];
     });
 
     /**

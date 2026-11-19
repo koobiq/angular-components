@@ -81,7 +81,6 @@ export class E2eTimeRangeStates {
         toDate: this.adapter.createDateTime(2024, 8, 20, 18, 30, 0, 0),
         toTime: this.adapter.createDateTime(2024, 8, 20, 18, 30, 0, 0)
     };
-
     protected readonly control = new FormControl<KbqTimeRangeRange>({ type: 'lastHour' }, { nonNullable: true });
     protected readonly disabledControl = new FormControl<KbqTimeRangeRange>(
         { value: { type: 'last24Hours' }, disabled: true },

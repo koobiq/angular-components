@@ -117,7 +117,6 @@ export class DevDocsExamples {}
 export class DevApp {
     colors = KbqComponentColors;
     styles = KbqButtonStyles;
-
     pools = [
         {
             id: 1,
@@ -144,7 +143,6 @@ export class DevApp {
             ]
         }
     ];
-
     someValue = 'Lazy Value';
 
     selectDomain(id: string): void {

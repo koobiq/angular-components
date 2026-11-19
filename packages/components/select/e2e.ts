@@ -349,7 +349,6 @@ export class E2eMultilineSelectOverflow {
         value: `opt-${index}`,
         viewValue: `Option ${index}`
     }));
-
     readonly control = new UntypedFormControl(this.foods.map(({ value }) => value));
     readonly fieldWidth = signal(180);
 }
@@ -650,6 +649,9 @@ export class E2eMultiSelectNarrow {
     }
 })
 export class E2eVirtualScrollMultiSelectNarrow {
+    readonly select = viewChild.required(KbqSelect);
+    readonly viewport = viewChild.required(CdkVirtualScrollViewport);
+
     readonly itemSize = 32;
     values: string[] = [];
     readonly options = [
@@ -664,9 +666,6 @@ export class E2eVirtualScrollMultiSelectNarrow {
         'Beslan',
         'Biysk'
     ];
-
-    readonly select = viewChild.required(KbqSelect);
-    readonly viewport = viewChild.required(CdkVirtualScrollViewport);
 }
 
 @Component({
@@ -708,6 +707,7 @@ export class E2eVirtualScrollMultiSelectNarrow {
 })
 export class E2eSelectLongOptionText {
     private counter = 0;
+
     readonly changingLabel = signal(
         'Changed Long long long long Long long long long Long long long long Long long long long Long long long long Long long long long text'
     );
@@ -782,6 +782,7 @@ export class E2eSelectPanelMaxHeight {
 })
 export class E2eVirtualScrollSelectPanelMaxHeight {
     readonly itemSize = 32;
+
     // Fewer options than the cap can show, so that the pinned viewport height is observable.
     readonly options = ['Abakan', 'Almetyevsk', 'Anadyr'];
 }
@@ -921,9 +922,9 @@ export class E2eSelectScrollbarNoOverflow {}
     }
 })
 export class E2eVirtualScrollSelectScrollbar {
-    protected readonly options = Array.from({ length: 10000 }).map((_, i) => `Option ${i}`);
     protected readonly viewport = viewChild.required(CdkVirtualScrollViewport);
 
+    protected readonly options = Array.from({ length: 10000 }).map((_, i) => `Option ${i}`);
     protected selected = this.options[0];
 
     protected openedChange(isOpened: boolean): void {

@@ -63,12 +63,14 @@ const TAG = 'Editable tag with validation';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagEditableWithValidationExample {
+    protected readonly tagValue = signal(TAG);
+    protected readonly tagModel = model(this.tagValue());
+
     private readonly tooltip = viewChild.required(KbqTooltipTrigger);
+
     protected readonly popUpPlacements = PopUpPlacements;
     protected readonly color = KbqComponentColors;
-    protected readonly tagValue = signal(TAG);
     protected readonly initialMaxLength = this.tagValue().length;
-    protected readonly tagModel = model(this.tagValue());
     protected readonly trimmedTagModel = computed(() => this.tagModel().trim());
     protected readonly lengthTooltip = computed(
         () => `Maximum ${this.initialMaxLength} characters (actual: ${this.trimmedTagModel().length})`

@@ -9,21 +9,7 @@ export enum DocsNavbarState {
 
 @Injectable({ providedIn: 'root' })
 export class DocsDocStates {
-    readonly viewerTopOverflown = new BehaviorSubject<boolean>(false);
-    readonly navbarTopOverflown = new BehaviorSubject<boolean>(false);
-
-    currentHeader?: HTMLElement;
-    currentHeaderScrollContainer?: HTMLElement;
-    navbarScrollContainer?: HTMLElement;
-
-    isHeaderOverflown: boolean = false;
-
-    get navbarMenu(): Observable<DocsNavbarState> {
-        return this._navbarMenu;
-    }
-
     private _navbarMenu = new BehaviorSubject<DocsNavbarState>(DocsNavbarState.Closed);
-
     private readonly scrollBehavior: ScrollBehavior = kbqAnimationsDisabled() ? 'instant' : 'smooth';
 
     /**
@@ -34,6 +20,17 @@ export class DocsDocStates {
      */
     private headerScrollSubscription?: Subscription;
     private navbarScrollSubscription?: Subscription;
+
+    readonly viewerTopOverflown = new BehaviorSubject<boolean>(false);
+    readonly navbarTopOverflown = new BehaviorSubject<boolean>(false);
+    currentHeader?: HTMLElement;
+    currentHeaderScrollContainer?: HTMLElement;
+    navbarScrollContainer?: HTMLElement;
+    isHeaderOverflown: boolean = false;
+
+    get navbarMenu(): Observable<DocsNavbarState> {
+        return this._navbarMenu;
+    }
 
     openNavbarMenu() {
         this._navbarMenu.next(DocsNavbarState.Opened);

@@ -114,7 +114,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TopBarBreadcrumbsExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
@@ -124,7 +123,6 @@ export class TopBarBreadcrumbsExample {
             ),
         { initialValue: true }
     );
-
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;

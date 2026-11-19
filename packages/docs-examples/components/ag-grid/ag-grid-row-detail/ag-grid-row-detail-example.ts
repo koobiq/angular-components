@@ -88,6 +88,7 @@ type ExampleRowData = {
 })
 export class ExampleRowDetailComponent {
     protected readonly params = inject(KBQ_AG_GRID_ROW_DETAIL_PARAMS);
+
     protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly data = this.params.data as ExampleRowData;
 }
@@ -145,14 +146,9 @@ export class ExampleRowDetailComponent {
 })
 export class AgGridRowDetailExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly multipleExpand = signal(false);
     protected readonly filled = signal(false);
-
     protected readonly rowDetailComponent = ExampleRowDetailComponent;
-
-    protected readonly getRowId: GetRowIdFunc<ExampleRowData> = ({ data }) => data.id;
-
     protected readonly rowSelection: RowSelectionOptions = {
         mode: 'multiRow',
         headerCheckbox: true,
@@ -170,8 +166,9 @@ export class AgGridRowDetailExample {
         { field: 'port', headerName: this.t().port, width: 90 },
         { field: 'technique', headerName: this.t().mitreTechnique, width: 150 }
     ]);
-
     protected readonly rowData = computed<ExampleRowData[]>(() => this.t().incidents);
+
+    protected readonly getRowId: GetRowIdFunc<ExampleRowData> = ({ data }) => data.id;
 
     /**
      * Clicking a cell expands and collapses its row. The expanded part is not a cell, so clicking

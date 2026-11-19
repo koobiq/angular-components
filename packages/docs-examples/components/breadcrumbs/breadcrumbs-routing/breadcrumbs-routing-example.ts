@@ -23,6 +23,7 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 export class BreadcrumbsRoutingExample {
     readonly router = inject(Router);
     readonly activatedRoute = inject(ActivatedRoute);
+
     breadcrumbs: { label: string; url: string }[] = this.buildBreadcrumbs(this.activatedRoute.root);
 
     /* react on dynamic changes on routing events. Cannot possible to show in docs
@@ -34,7 +35,6 @@ export class BreadcrumbsRoutingExample {
             takeUntilDestroyed()
         );
     }*/
-
     private buildBreadcrumbs(
         route: ActivatedRoute,
         url: string = '',

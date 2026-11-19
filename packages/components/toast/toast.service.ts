@@ -124,33 +124,37 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     private readonly toastFactory = inject(KBQ_TOAST_FACTORY);
     private readonly toastConfig = inject(KBQ_TOAST_CONFIG);
 
-    get toasts(): ComponentRef<T>[] {
-        return [...this.toastsDict.values()]
-            .map(({ componentRef }) => componentRef)
-            .filter((componentRef) => !componentRef.hostView.destroyed);
-    }
-
-    get templates(): EmbeddedViewRef<KbqToastTemplateContext>[] {
-        return [...this.templatesDict.values()].map(({ viewRef }) => viewRef).filter((viewRef) => !viewRef.destroyed);
-    }
-
-    readonly read = new BehaviorSubject<KbqToastData | null>(null);
-
     private readonly _hovered = signal(false);
     private readonly _focused = signal(false);
-
-    /** Whether at least one toast is hovered. */
-    readonly hovered: Signal<boolean> = this._hovered.asReadonly();
-
-    /** Whether at least one toast holds the focus. */
-    readonly focused: Signal<boolean> = this._focused.asReadonly();
-
     private readonly stackSize = new BehaviorSubject<number>(0);
 
     /** Subscribed outside Angular so that a tick never runs change detection over the whole application. */
     private readonly heartbeat = new Observable<number>((subscriber) =>
         this.ngZone.runOutsideAngular(() => timer(CHECK_INTERVAL, CHECK_INTERVAL).subscribe(subscriber))
     );
+    private containerInstance?: KbqToastContainerComponent;
+    private overlayRef?: OverlayRef;
+    private portal?: ComponentPortal<KbqToastContainerComponent>;
+    private timerSubscription: Subscription;
+    private currentPosition?: KbqToastPosition;
+
+    /** Toasts taken off the stack that still play their exit animation in the container. */
+    private readonly leaving = new Set<ComponentRef<T>>();
+
+    // Keyed by id, in the order the toasts were created: the oldest first.
+    private readonly toastsDict = new Map<number, KbqToastRecord<T>>();
+    private readonly templatesDict = new Map<number, KbqToastTemplateRecord>();
+    private readonly hoveredToasts = new Set<number>();
+    private readonly focusedToasts = new Map<number, FocusOrigin>();
+    private wasPaused = false;
+
+    readonly read = new BehaviorSubject<KbqToastData | null>(null);
+
+    /** Whether at least one toast is hovered. */
+    readonly hovered: Signal<boolean> = this._hovered.asReadonly();
+
+    /** Whether at least one toast holds the focus. */
+    readonly focused: Signal<boolean> = this._focused.asReadonly();
 
     /**
      * Countdown heartbeat: emits every 500 ms while the stack holds something and is not paused by the pointer
@@ -164,22 +168,15 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         share()
     );
 
-    private containerInstance?: KbqToastContainerComponent;
-    private overlayRef?: OverlayRef;
-    private portal?: ComponentPortal<KbqToastContainerComponent>;
-    private timerSubscription: Subscription;
-    private currentPosition?: KbqToastPosition;
+    get toasts(): ComponentRef<T>[] {
+        return [...this.toastsDict.values()]
+            .map(({ componentRef }) => componentRef)
+            .filter((componentRef) => !componentRef.hostView.destroyed);
+    }
 
-    /** Toasts taken off the stack that still play their exit animation in the container. */
-    private readonly leaving = new Set<ComponentRef<T>>();
-
-    // Keyed by id, in the order the toasts were created: the oldest first.
-    private readonly toastsDict = new Map<number, KbqToastRecord<T>>();
-    private readonly templatesDict = new Map<number, KbqToastTemplateRecord>();
-
-    private readonly hoveredToasts = new Set<number>();
-    private readonly focusedToasts = new Map<number, FocusOrigin>();
-    private wasPaused = false;
+    get templates(): EmbeddedViewRef<KbqToastTemplateContext>[] {
+        return [...this.templatesDict.values()].map(({ viewRef }) => viewRef).filter((viewRef) => !viewRef.destroyed);
+    }
 
     private get isPaused(): boolean {
         return this.hoveredToasts.size > 0 || this.focusedToasts.size > 0;

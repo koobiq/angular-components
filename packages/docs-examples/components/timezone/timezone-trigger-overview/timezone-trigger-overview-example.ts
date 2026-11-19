@@ -40,7 +40,6 @@ import { timezones } from '../timezone-data';
 })
 export class TimezoneTriggerOverviewExample {
     selected = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
     readonly data: KbqTimezoneGroup[] = [];
 
     constructor() {

@@ -62,10 +62,10 @@ function refusesRemoval(element: any): boolean {
 
 /** Collects the click handler of every cleaner projected into a tag list. */
 class CleanerHandlerCollector implements Visitor {
-    readonly findings: Finding[] = [];
-
     /** One entry per enclosing tag list, carrying why its cleaner's handler may or may not go. */
     private readonly tagLists: { keptReason?: string }[] = [];
+
+    readonly findings: Finding[] = [];
 
     visitElement(element: any): void {
         const isTagList = element.name === TAG_LIST_ELEMENT;
@@ -111,11 +111,17 @@ class CleanerHandlerCollector implements Visitor {
     }
 
     visitAttribute(): void {}
+
     visitText(): void {}
+
     visitComment(): void {}
+
     visitExpansion(): void {}
+
     visitExpansionCase(): void {}
+
     visitBlockParameter(): void {}
+
     visitLetDeclaration(): void {}
 }
 

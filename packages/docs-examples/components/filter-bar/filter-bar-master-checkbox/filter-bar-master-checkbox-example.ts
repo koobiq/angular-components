@@ -88,7 +88,6 @@ export class FilterBarMasterCheckboxExample {
             }
         ]
     };
-
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'MultiSelect',

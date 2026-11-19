@@ -294,18 +294,10 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
         'appSwitcher',
         KBQ_APP_SWITCHER_LOCALE_CONFIGURATION
     );
+    private readonly dir = inject(Directionality, { optional: true });
 
     /** @docs-private */
-    readonly searchControl = new FormControl('');
-
-    /** @docs-private */
-    filteredSites: KbqAppSwitcherSite[] = [];
-
-    /** @docs-private */
-    override prefix = 'kbq-app-switcher';
-
-    /** @docs-private */
-    override trigger: KbqAppSwitcherTrigger | undefined;
+    readonly triggerInput = input<KbqAppSwitcherTrigger | undefined>(undefined, { alias: 'trigger' });
 
     /** @docs-private */
     readonly input = viewChild(KbqInput);
@@ -319,21 +311,25 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
      * @docs-private
      */
     readonly otherSites = viewChild<KbqDropdown>('otherSites');
-
     private readonly allItemsQuery = viewChildren(KbqDropdownItem);
+
     private readonly allItemsList = kbqQueryListFrom(this.allItemsQuery);
+    private readonly menuItems = new QueryList<KbqDropdownItem>();
 
     /** @docs-private */
-    protected get allItems(): QueryList<KbqDropdownItem> {
-        return this.allItemsList();
-    }
+    readonly searchControl = new FormControl('');
+
+    /** @docs-private */
+    filteredSites: KbqAppSwitcherSite[] = [];
+
+    /** @docs-private */
+    override prefix = 'kbq-app-switcher';
+
+    /** @docs-private */
+    override trigger: KbqAppSwitcherTrigger | undefined;
 
     /** Roving-focus manager over the inline menu items (flat app rows and other-site rows). */
     protected keyManager: FocusKeyManager<KbqDropdownItem> | undefined;
-
-    private readonly menuItems = new QueryList<KbqDropdownItem>();
-
-    private readonly dir = inject(Directionality, { optional: true });
 
     /**
      * CSS class marking a nested alias row, bound in the template (see app-switcher.html). Kept as a
@@ -343,7 +339,9 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
     protected readonly nestedAliasClass = 'kbq-app-switcher-site_nested';
 
     /** @docs-private */
-    readonly triggerInput = input<KbqAppSwitcherTrigger | undefined>(undefined, { alias: 'trigger' });
+    protected get allItems(): QueryList<KbqDropdownItem> {
+        return this.allItemsList();
+    }
 
     ngOnChanges(changes: SimpleChanges): void {
         // A bound input is handed to its member; unbound, it leaves what code wrote.
@@ -657,16 +655,134 @@ export class KbqAppSwitcherTrigger
         inject(KBQ_APP_SWITCHER_SCROLL_STRATEGY, { optional: true }) ??
         kbqAppSwitcherScrollStrategyFactory(this.overlay);
 
+    /** Selected application */
+    readonly selectedApp = model<KbqAppSwitcherApp | undefined>(undefined);
+
+    /** Selected site */
+    readonly selectedSite = model<KbqAppSwitcherSite | undefined>(undefined);
+
+    /** @docs-private */
+    readonly placementInput = input<KbqPopUpPlacementValues | undefined>(undefined, {
+        alias: 'kbqAppSwitcherPlacement'
+    });
+
+    /** @docs-private */
+    readonly backdropClassInput = input<string | undefined>(undefined, { alias: 'backdropClass' });
+
+    /** @docs-private */
+    readonly offsetInput = input<number | null | undefined, number | string | null | undefined>(undefined, {
+        alias: 'offset',
+        transform: kbqOptionalNumberAttribute
+    });
+
+    /** @docs-private */
+    readonly sitesInput = input<KbqAppSwitcherSite[] | undefined>(undefined, { alias: 'sites' });
+
+    /** @docs-private */
+    readonly groupByInput = input<KbqAppSwitcherGroupBy | undefined>(undefined, { alias: 'groupBy' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** Emits a change event whenever the placement state changes. */
+    readonly placementChange = new EventEmitter<KbqPopUpPlacementValues>();
+
+    /** @docs-private */
+    readonly placementChangeOutput = outputFromObservable(this.placementChange, { alias: 'kbqPlacementChange' });
+
+    /** Emits a change event whenever the visible state changes. */
+    readonly visibleChange = new EventEmitter<boolean>();
+
+    /** @docs-private */
+    readonly visibleChangeOutput = outputFromObservable(this.visibleChange, { alias: 'kbqVisibleChange' });
+
+    private hasBackdrop: boolean = false;
+    private size: KbqPopUpSizeValues = PopUpSizes.Medium;
+    private readonly originalSitesSignal = signal<KbqAppSwitcherSite[]>([]);
+    private readonly groupBySignal = signal<KbqAppSwitcherGroupBy>(defaultGroupBy);
+
+    /**
+     * Sites with their applications grouped, keyed by site id.
+     *
+     * Grouping runs once per `sites`/`groupBy` change instead of once per `selectedSite` assignment, and the
+     * parsed objects keep their identity so `@for` can reuse the rendered rows.
+     */
+    private readonly parsedSitesById = computed(() => {
+        const groupBy = this.groupBySignal();
+
+        return new Map(
+            this.originalSitesSignal().map((site) => [
+                site.id,
+                {
+                    ...site,
+                    apps: makeGroupsForApps(site.apps, KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING, groupBy)
+                } satisfies KbqAppSwitcherSite
+            ])
+        );
+    });
+    private readonly parsedSites = computed(() => [...this.parsedSitesById().values()]);
+    private readonly appsCountComputed = computed(() =>
+        this.originalSitesSignal().reduce((acc, site) => acc + site.apps.length, 0)
+    );
+    private readonly sitesModeComputed = computed(() => this.originalSitesSignal().length > 1);
+
+    /**
+     * `selectedSite` with its applications grouped for rendering.
+     *
+     * Looked up by id among the parsed sites, so re-selecting a site never regroups it again. Falls back to
+     * the raw value when the id is unknown (a stale id, or `selectedSite` set before `sites`) instead of
+     * throwing.
+     *
+     * @docs-private
+     */
+    readonly parsedSelectedSite = computed<KbqAppSwitcherSite | undefined>(() => {
+        const value = this.selectedSite();
+
+        return value && (this.parsedSitesById().get(value.id) ?? value);
+    });
+
+    private readonly currentAppsComputed = computed(() =>
+        this.sitesModeComputed()
+            ? // A multi-site switcher can be opened before a site is selected; render nothing rather than crash.
+              (this.parsedSelectedSite()?.apps ?? [])
+            : (this.parsedSites()[0]?.apps ?? [])
+    );
+
     // Abstract members of `KbqPopUp`/`KbqPopUpTrigger` that the app-switcher has no use for: its content is
     // fixed (the app list), it never draws an arrow and it never renders a backdrop.
     /** @docs-private */
     arrow: boolean = false;
+
     /** @docs-private */
     customClass: string = '';
-    private hasBackdrop: boolean = false;
-    private size: KbqPopUpSizeValues = PopUpSizes.Medium;
+
     /** @docs-private */
     content: string | TemplateRef<any> = '';
+
+    /** Placement of popUp */
+    override placement: KbqPopUpPlacementValues = defaultPlacement;
+
+    /** Class that will be used in the background */
+    backdropClass: string = defaultBackdropClass;
+
+    /** Offset of popUp */
+    offset: number | null = defaultOffsetYWithArrow;
+
+    /**
+     * Space-separated list of DOM events that open the popup (`KbqPopUpTrigger.trigger`).
+     *
+     * Not to be confused with `KbqAppSwitcherComponent.trigger`, which is the back-reference from the popup to
+     * this directive.
+     *
+     * @docs-private
+     */
+    trigger: string = `${PopUpTriggers.Click}, ${PopUpTriggers.Keydown}`;
+
+    /** @docs-private */
+    protected originSelector = '.kbq-app-switcher';
 
     /** Whether search is used or not */
     get withSearch(): boolean {
@@ -700,18 +816,6 @@ export class KbqAppSwitcherTrigger
         return this.currentAppsComputed();
     }
 
-    /** Selected application */
-    readonly selectedApp = model<KbqAppSwitcherApp | undefined>(undefined);
-
-    /** Placement of popUp */
-    override placement: KbqPopUpPlacementValues = defaultPlacement;
-
-    /** Class that will be used in the background */
-    backdropClass: string = defaultBackdropClass;
-
-    /** Offset of popUp */
-    offset: number | null = defaultOffsetYWithArrow;
-
     /** Array of sites, with the applications of each site grouped for rendering. */
     get sites(): KbqAppSwitcherSite[] {
         return this.parsedSites();
@@ -733,24 +837,6 @@ export class KbqAppSwitcherTrigger
         this.groupBySignal.set(fn);
     }
 
-    /** Selected site */
-    readonly selectedSite = model<KbqAppSwitcherSite | undefined>(undefined);
-
-    /**
-     * `selectedSite` with its applications grouped for rendering.
-     *
-     * Looked up by id among the parsed sites, so re-selecting a site never regroups it again. Falls back to
-     * the raw value when the id is unknown (a stale id, or `selectedSite` set before `sites`) instead of
-     * throwing.
-     *
-     * @docs-private
-     */
-    readonly parsedSelectedSite = computed<KbqAppSwitcherSite | undefined>(() => {
-        const value = this.selectedSite();
-
-        return value && (this.parsedSitesById().get(value.id) ?? value);
-    });
-
     /** Whether the trigger is disabled. */
     get disabled(): boolean {
         return this._disabled;
@@ -769,28 +855,6 @@ export class KbqAppSwitcherTrigger
         return this.trigger.includes(PopUpTriggers.Click);
     }
 
-    /** Emits a change event whenever the placement state changes. */
-    readonly placementChange = new EventEmitter<KbqPopUpPlacementValues>();
-
-    /** @docs-private */
-    readonly placementChangeOutput = outputFromObservable(this.placementChange, { alias: 'kbqPlacementChange' });
-
-    /** Emits a change event whenever the visible state changes. */
-    readonly visibleChange = new EventEmitter<boolean>();
-
-    /** @docs-private */
-    readonly visibleChangeOutput = outputFromObservable(this.visibleChange, { alias: 'kbqVisibleChange' });
-
-    /**
-     * Space-separated list of DOM events that open the popup (`KbqPopUpTrigger.trigger`).
-     *
-     * Not to be confused with `KbqAppSwitcherComponent.trigger`, which is the back-reference from the popup to
-     * this directive.
-     *
-     * @docs-private
-     */
-    trigger: string = `${PopUpTriggers.Click}, ${PopUpTriggers.Keydown}`;
-
     /**
      * Sites exactly as supplied through `sites`, without grouping.
      *
@@ -805,9 +869,6 @@ export class KbqAppSwitcherTrigger
     }
 
     /** @docs-private */
-    protected originSelector = '.kbq-app-switcher';
-
-    /** @docs-private */
     protected get overlayConfig(): OverlayConfig {
         return {
             panelClass: 'kbq-app-switcher__panel',
@@ -815,70 +876,6 @@ export class KbqAppSwitcherTrigger
             backdropClass: this.backdropClass
         };
     }
-
-    private readonly originalSitesSignal = signal<KbqAppSwitcherSite[]>([]);
-    private readonly groupBySignal = signal<KbqAppSwitcherGroupBy>(defaultGroupBy);
-
-    /**
-     * Sites with their applications grouped, keyed by site id.
-     *
-     * Grouping runs once per `sites`/`groupBy` change instead of once per `selectedSite` assignment, and the
-     * parsed objects keep their identity so `@for` can reuse the rendered rows.
-     */
-    private readonly parsedSitesById = computed(() => {
-        const groupBy = this.groupBySignal();
-
-        return new Map(
-            this.originalSitesSignal().map((site) => [
-                site.id,
-                {
-                    ...site,
-                    apps: makeGroupsForApps(site.apps, KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING, groupBy)
-                } satisfies KbqAppSwitcherSite
-            ])
-        );
-    });
-
-    private readonly parsedSites = computed(() => [...this.parsedSitesById().values()]);
-
-    private readonly appsCountComputed = computed(() =>
-        this.originalSitesSignal().reduce((acc, site) => acc + site.apps.length, 0)
-    );
-
-    private readonly sitesModeComputed = computed(() => this.originalSitesSignal().length > 1);
-
-    private readonly currentAppsComputed = computed(() =>
-        this.sitesModeComputed()
-            ? // A multi-site switcher can be opened before a site is selected; render nothing rather than crash.
-              (this.parsedSelectedSite()?.apps ?? [])
-            : (this.parsedSites()[0]?.apps ?? [])
-    );
-
-    /** @docs-private */
-    readonly placementInput = input<KbqPopUpPlacementValues | undefined>(undefined, {
-        alias: 'kbqAppSwitcherPlacement'
-    });
-
-    /** @docs-private */
-    readonly backdropClassInput = input<string | undefined>(undefined, { alias: 'backdropClass' });
-
-    /** @docs-private */
-    readonly offsetInput = input<number | null | undefined, number | string | null | undefined>(undefined, {
-        alias: 'offset',
-        transform: kbqOptionalNumberAttribute
-    });
-
-    /** @docs-private */
-    readonly sitesInput = input<KbqAppSwitcherSite[] | undefined>(undefined, { alias: 'sites' });
-
-    /** @docs-private */
-    readonly groupByInput = input<KbqAppSwitcherGroupBy | undefined>(undefined, { alias: 'groupBy' });
-
-    /** @docs-private */
-    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'disabled',
-        transform: booleanAttribute
-    });
 
     ngOnChanges(changes: SimpleChanges): void {
         // A bound input is handed to its member, a bound `undefined` as the member's default; unbound, it leaves

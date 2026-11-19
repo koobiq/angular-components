@@ -1494,6 +1494,7 @@ export class TestComponentWithTimedBounds {
 })
 export class TestComponentWithMillisecondBounds {
     private readonly dateAdapter = inject<DateAdapter<unknown>>(DateAdapter);
+
     private readonly nextYear = this.dateAdapter.getYear(this.dateAdapter.today()) + 1;
 
     // Entirely in the future and carrying milliseconds, the way a `today()`-derived bound does for a
@@ -1551,6 +1552,7 @@ export class TestComponentWithValueCorrection {
         startDateTime: '2024-01-01T00:00:00.000Z'
     });
     readonly valueCorrected = signal<KbqTimeRangeRange | undefined>(undefined);
+
     /** Every emission is counted: "did it fire at all" and "did it fire twice" are different bugs. */
     readonly corrections = signal(0);
 

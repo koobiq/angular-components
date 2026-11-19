@@ -101,10 +101,15 @@ export class KbqUsername {
      */
     private readonly mapping = inject(KBQ_PROFILE_MAPPING) ?? kbqDefaultProfileMapping;
 
+    /** @docs-private */
+    protected readonly localeConfiguration = kbqInjectUsernameLocaleConfiguration();
+
     /** User profile data used for display. */
     readonly userInfo = input<KbqUserInfo>();
+
     /** Enables compact display mode */
     readonly isCompact = input(false, { transform: booleanAttribute });
+
     /** Format string for rendering the user's full name. */
     readonly fullNameFormat = input<string>(kbqDefaultFullNameFormat);
 
@@ -124,9 +129,6 @@ export class KbqUsername {
      * @docs-private
      */
     protected readonly customView = contentChild(KbqUsernameCustomView);
-
-    /** @docs-private */
-    protected readonly localeConfiguration = kbqInjectUsernameLocaleConfiguration();
 
     /**
      * Name as rendered, i.e. abbreviated according to `fullNameFormat`.

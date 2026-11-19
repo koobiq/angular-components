@@ -1212,6 +1212,7 @@ const EFFECT_RUN_LIMIT = 10;
 })
 class CheckboxDrivenByEffect {
     readonly checkbox = viewChild.required(KbqCheckbox);
+
     readonly action = signal<'toggle' | 'indeterminate' | null>(null);
     runs = 0;
 
@@ -1267,6 +1268,7 @@ class SingleCheckbox {
     checkboxValue: string = 'single_checkbox';
 
     onCheckboxClick: (event?: Event) => void = () => {};
+
     onCheckboxChange: (event?: KbqCheckboxChange) => void = () => {};
 }
 

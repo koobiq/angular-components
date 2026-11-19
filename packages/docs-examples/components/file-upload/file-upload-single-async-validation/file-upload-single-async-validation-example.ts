@@ -116,10 +116,8 @@ function maxLinesValidator(maxLines: number): AsyncValidatorFn {
 })
 export class FileUploadSingleAsyncValidationExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly maxLines = MAX_LINE_COUNT;
     protected readonly errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
-
     protected readonly form = new FormGroup({
         fileUpload: new FormControl<KbqFileItem | null>(null, { asyncValidators: maxLinesValidator(MAX_LINE_COUNT) })
     });

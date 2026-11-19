@@ -48,8 +48,6 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class AgGridRowFocusStateExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
-    protected readonly getRowId = (params: GetRowIdParams): string => params.data.column0;
     protected readonly columnDefs: ColDef[] = Array.from({ length: 5 }, (_, i) => ({
         field: 'column' + i,
         headerName: 'Column ' + i,
@@ -58,4 +56,6 @@ export class AgGridRowFocusStateExample {
     protected readonly rowData = Array.from({ length: 100 }, (_, index) =>
         Object.fromEntries(Array.from({ length: 5 }, (_, i) => ['column' + i, 'Text ' + index]))
     );
+
+    protected readonly getRowId = (params: GetRowIdParams): string => params.data.column0;
 }

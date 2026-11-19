@@ -22,7 +22,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class ToggleErrorExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly value = signal(false);
     protected readonly color = KbqComponentColors.Error;
 }

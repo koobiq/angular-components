@@ -50,16 +50,26 @@ const autocompleteValueCoercion = (value: AutocompleteValue): string =>
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagAutocompleteOnpasteOffExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly tagInput = viewChild.required<ElementRef<HTMLInputElement>>('tagInput');
     readonly tagInputDirective = viewChild.required('tagInput', { read: KbqTagInput });
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     control = new FormControl();
-
     suggestions: string[] = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6', 'tag7', 'tag8', 'tag9', 'tag10'];
     selectedTags: string[] = ['tag1'];
 
+    private onControlValueChanges = (value: string | null) => {
+        const typedText: string | undefined = autocompleteValueCoercion(value)?.trim();
+        const filteredTagsByInput = typedText ? this.filter(typedText) : this.suggestions.slice();
+
+        const inputAndSelectionTagsDiff = filteredTagsByInput.filter((tag) => !this.selectedTags.includes(tag));
+
+        // check for scenario where duplicate exists but also can create/select other tags
+        this.hasDuplicates = !inputAndSelectionTagsDiff.length && this.tagInputDirective().hasDuplicates;
+
+        // Return the difference between filtered tags and selected tags
+        return inputAndSelectionTagsDiff;
+    };
     filteredTags: Observable<string[]> = this.control.valueChanges.pipe(
         map((e: string | null) => this.onControlValueChanges(e))
     );
@@ -132,19 +142,6 @@ export class TagAutocompleteOnpasteOffExample {
 
         return uniqueTags.filter((tag) => tag.toLowerCase().indexOf(filterValue) === 0);
     }
-
-    private onControlValueChanges = (value: string | null) => {
-        const typedText: string | undefined = autocompleteValueCoercion(value)?.trim();
-        const filteredTagsByInput = typedText ? this.filter(typedText) : this.suggestions.slice();
-
-        const inputAndSelectionTagsDiff = filteredTagsByInput.filter((tag) => !this.selectedTags.includes(tag));
-
-        // check for scenario where duplicate exists but also can create/select other tags
-        this.hasDuplicates = !inputAndSelectionTagsDiff.length && this.tagInputDirective().hasDuplicates;
-
-        // Return the difference between filtered tags and selected tags
-        return inputAndSelectionTagsDiff;
-    };
 
     protected afterRemove(): void {
         this.tagInput().nativeElement.focus();

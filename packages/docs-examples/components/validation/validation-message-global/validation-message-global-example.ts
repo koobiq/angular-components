@@ -134,22 +134,22 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class ValidationMessageGlobalExample implements AfterViewInit, OnDestroy {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly focusMonitor = inject(FocusMonitor);
+    private readonly injector = inject(Injector);
 
     protected readonly alertContainer = viewChild<ElementRef<HTMLDivElement>>('alertContainer');
+    private readonly formFieldList = viewChildren(KbqFormField);
 
+    private submitTimeout: ReturnType<typeof setTimeout> | undefined;
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly showServerErrors = signal(false);
     protected readonly inProgress = signal(false);
     protected readonly globalErrorForm = new FormGroup({
         firstName: new FormControl('John', [Validators.required]),
         lastName: new FormControl('Smith')
     });
-
-    protected readonly focusMonitor = inject(FocusMonitor);
-    private readonly injector = inject(Injector);
     protected submitOrigin: FocusOrigin | null = null;
-    private readonly formFieldList = viewChildren(KbqFormField);
-    private submitTimeout: ReturnType<typeof setTimeout> | undefined;
 
     ngAfterViewInit() {
         const alert = this.alertContainer();

@@ -25,6 +25,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
 })
 export class DevLocaleSelector {
     readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+
     readonly locale = model(this.localeService?.localeId());
 
     constructor() {

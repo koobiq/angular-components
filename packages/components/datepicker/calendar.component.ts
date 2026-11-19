@@ -40,59 +40,7 @@ import { KbqMonthView } from './month-view.component';
     exportAs: 'kbqCalendar'
 })
 export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
-    private readonly adapter = injectRequiredDateAdapter<D>();
     private changeDetectorRef = inject(ChangeDetectorRef);
-
-    /** A date representing the period (month or year) to start the calendar in. */
-    get startAt(): D | null {
-        return this._startAt;
-    }
-
-    set startAt(value: D | null) {
-        const deserializedValue = this.getValidDateOrNull(this.adapter.deserialize(value));
-
-        this._startAt =
-            deserializedValue !== null ? this.adapter.clampDate(deserializedValue, this.minDate, this.maxDate) : null;
-    }
-
-    private _startAt: D | null = null;
-
-    /** The currently selected date. */
-    get selected(): D | null {
-        return this._selected;
-    }
-
-    set selected(value: D | null) {
-        this._selected = this.adapter.deserialize(value);
-    }
-
-    private _selected: D | null = null;
-
-    /** The minimum selectable date. */
-    get minDate(): D | null {
-        return this._minDate;
-    }
-
-    set minDate(value: D | null) {
-        this._minDate = this.adapter.deserialize(value);
-
-        this.startAt = this._startAt;
-    }
-
-    private _minDate: D | null = null;
-
-    /** The maximum selectable date. */
-    get maxDate(): D | null {
-        return this._maxDate;
-    }
-
-    set maxDate(value: D | null) {
-        this._maxDate = this.adapter.deserialize(value);
-
-        this.startAt = this._startAt;
-    }
-
-    private _maxDate: D | null = null;
 
     /** @docs-private */
     readonly startAtInput = input<D | null | undefined>(undefined, { alias: 'startAt' });
@@ -105,23 +53,6 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
 
     /** @docs-private */
     readonly maxDateInput = input<D | null | undefined>(undefined, { alias: 'maxDate' });
-
-    /**
-     * The current active date. This determines which time period is shown and which date is
-     * highlighted and used as the anchor on  when using keyboard navigation.
-     */
-    get activeDate(): D {
-        return this._activeDate;
-    }
-
-    set activeDate(value: D | null) {
-        this._activeDate = this.adapter.clampDate(value || this.getActiveDateDefault(), this.minDate, this.maxDate);
-
-        this.stateChanges.next();
-    }
-
-    // What the setter gives before any bound or `startAt` is set; `ngAfterContentInit` resolves it against them.
-    private _activeDate: D = this.adapter.today();
 
     /** Function used to filter which dates are selectable. */
     readonly dateFilter = input<(date: D) => boolean>(undefined!);
@@ -150,6 +81,18 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     /** Reference to the current month view component. */
     readonly monthView = viewChild.required(KbqMonthView);
 
+    private readonly adapter = injectRequiredDateAdapter<D>();
+    private _startAt: D | null = null;
+    private _selected: D | null = null;
+    private _minDate: D | null = null;
+    private _maxDate: D | null = null;
+
+    // What the setter gives before any bound or `startAt` is set; `ngAfterContentInit` resolves it against them.
+    private _activeDate: D = this.adapter.today();
+
+    /** Subscription to value changes in the associated input element. */
+    private inputSubscription = Subscription.EMPTY;
+
     /**
      * Emits whenever there is a state change that the header may need to respond to.
      */
@@ -158,8 +101,62 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     /** The input element this datepicker is associated with. */
     datepickerInput: any;
 
-    /** Subscription to value changes in the associated input element. */
-    private inputSubscription = Subscription.EMPTY;
+    /** A date representing the period (month or year) to start the calendar in. */
+    get startAt(): D | null {
+        return this._startAt;
+    }
+
+    set startAt(value: D | null) {
+        const deserializedValue = this.getValidDateOrNull(this.adapter.deserialize(value));
+
+        this._startAt =
+            deserializedValue !== null ? this.adapter.clampDate(deserializedValue, this.minDate, this.maxDate) : null;
+    }
+
+    /** The currently selected date. */
+    get selected(): D | null {
+        return this._selected;
+    }
+
+    set selected(value: D | null) {
+        this._selected = this.adapter.deserialize(value);
+    }
+
+    /** The minimum selectable date. */
+    get minDate(): D | null {
+        return this._minDate;
+    }
+
+    set minDate(value: D | null) {
+        this._minDate = this.adapter.deserialize(value);
+
+        this.startAt = this._startAt;
+    }
+
+    /** The maximum selectable date. */
+    get maxDate(): D | null {
+        return this._maxDate;
+    }
+
+    set maxDate(value: D | null) {
+        this._maxDate = this.adapter.deserialize(value);
+
+        this.startAt = this._startAt;
+    }
+
+    /**
+     * The current active date. This determines which time period is shown and which date is
+     * highlighted and used as the anchor on  when using keyboard navigation.
+     */
+    get activeDate(): D {
+        return this._activeDate;
+    }
+
+    set activeDate(value: D | null) {
+        this._activeDate = this.adapter.clampDate(value || this.getActiveDateDefault(), this.minDate, this.maxDate);
+
+        this.stateChanges.next();
+    }
 
     ngOnChanges(changes: SimpleChanges) {
         // A bound input is handed to its member; unbound, it leaves what code wrote. A

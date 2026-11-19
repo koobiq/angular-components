@@ -30,9 +30,9 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class ModalCaptionExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly modalService = inject(KbqModalService);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     openWithStringCaption(): void {
         this.modalService.create({

@@ -39,7 +39,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class PopoverRelativeToPointerExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected selectedOwner = 'Ivan Ivanov';
 
     protected selectOwner(event: MouseEvent): void {

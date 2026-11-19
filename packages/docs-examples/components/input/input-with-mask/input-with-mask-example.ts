@@ -92,7 +92,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class InputWithMaskExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly ipAddressControl = new FormControl('192.168.0.1', [this.ipAddressValidator()]);
     readonly macAddressControl = new FormControl('AA:BB:CC:DD:EE:FF', [
         Validators.pattern(/^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$/)
@@ -104,7 +103,6 @@ export class InputWithMaskExample {
     readonly licenseControl = new FormControl('ABCD-1234-EFGH-5678', [
         Validators.pattern(/^[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}$/)
     ]);
-
     readonly ipAddressMask = this.makeIPAddressMaskOptions();
     readonly macAddressMask = this.makeMACAddressMaskOptions();
     readonly ipv6AddressMask = this.makeIPv6AddressMaskOptions();

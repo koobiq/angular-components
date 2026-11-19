@@ -25,21 +25,16 @@ import { KbqButton, type KbqButtonColor, type KbqButtonStyleInput, KbqButtonStyl
     }
 })
 export class KbqButtonGroupRoot extends KbqColorDirective<KbqButtonColor> implements OnChanges {
+    /** @docs-private */
+    readonly kbqStyleInput = input<KbqButtonStyleInput | null | undefined>(undefined, { alias: 'kbqStyle' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
     private readonly buttons = contentChildren(KbqButton);
-
-    /**
-     * Style applied to the group and propagated to every nested button.
-     * A button that sets its own `kbqStyle` keeps it.
-     */
-    get kbqStyle(): string {
-        return this._kbqStyle && `kbq-button-group-root_${this._kbqStyle}`;
-    }
-
-    set kbqStyle(value: KbqButtonStyleInput | null | undefined) {
-        this._kbqStyle = value || KbqButtonStyles.Filled;
-
-        this.updateStyle(this._kbqStyle, this.buttons?.());
-    }
 
     /** Empty until the input is bound, so that an unstyled group emits no root style class. */
     private _kbqStyle: KbqButtonStyleInput | '' = '';
@@ -55,6 +50,23 @@ export class KbqButtonGroupRoot extends KbqColorDirective<KbqButtonColor> implem
         return this.colorInput() || color !== this.defaultColor() ? color : undefined;
     });
 
+    /** @docs-private */
+    protected _disabled: boolean | undefined;
+
+    /**
+     * Style applied to the group and propagated to every nested button.
+     * A button that sets its own `kbqStyle` keeps it.
+     */
+    get kbqStyle(): string {
+        return this._kbqStyle && `kbq-button-group-root_${this._kbqStyle}`;
+    }
+
+    set kbqStyle(value: KbqButtonStyleInput | null | undefined) {
+        this._kbqStyle = value || KbqButtonStyles.Filled;
+
+        this.updateStyle(this._kbqStyle, this.buttons?.());
+    }
+
     /**
      * Whether the root is disabled. Disabling the group disables every nested button; re-enabling it
      * leaves buttons that are disabled through their own input untouched.
@@ -69,31 +81,6 @@ export class KbqButtonGroupRoot extends KbqColorDirective<KbqButtonColor> implem
         this._disabled = value;
 
         this.updateDisabledState(this._disabled, this.buttons?.());
-    }
-
-    /** @docs-private */
-    protected _disabled: boolean | undefined;
-
-    /** @docs-private */
-    readonly kbqStyleInput = input<KbqButtonStyleInput | null | undefined>(undefined, { alias: 'kbqStyle' });
-
-    /** @docs-private */
-    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'disabled',
-        transform: booleanAttribute
-    });
-
-    ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member; unbound, it leaves what code wrote.
-        if (changes['kbqStyleInput']) {
-            this.kbqStyle = this.kbqStyleInput();
-        }
-
-        if (changes['disabledInput']) {
-            const disabled = this.disabledInput();
-
-            if (disabled !== undefined) this.disabled = disabled;
-        }
     }
 
     constructor() {
@@ -115,6 +102,19 @@ export class KbqButtonGroupRoot extends KbqColorDirective<KbqButtonColor> implem
             this.updateStyle(this._kbqStyle, buttons);
             this.updateDisabledState(this._disabled, buttons);
         });
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
+        if (changes['kbqStyleInput']) {
+            this.kbqStyle = this.kbqStyleInput();
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
     }
 
     private updateStyle(style: KbqButtonStyleInput | '', buttons?: readonly KbqButton[]) {

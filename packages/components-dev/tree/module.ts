@@ -151,35 +151,29 @@ export class DevDocsExamples {}
 })
 export class DevApp {
     popUpPlacements = PopUpPlacements;
-
     treeControl: FlatTreeControl<DevFileFlatNode>;
     treeControl2: FlatTreeControl<DevFileFlatNode>;
     filterByValues: FilterByValues<DevFileFlatNode>;
     treeFlattener: KbqTreeFlattener<DevFileNode, DevFileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<any, DevFileFlatNode>;
-
     filterValue: string = '';
     filterValueChanged = new Subject<string>();
-
     readonly switchableModes: { label: string; value: KbqMultipleInput }[] = [
         { label: 'checkbox', value: 'checkbox' },
         { label: 'keyboard', value: 'keyboard' },
         { label: 'single', value: false }
     ];
     switchableMultiple: KbqMultipleInput = 'checkbox';
-
     modelValue: any = ['Pictures'];
     modelValue2: any = ['Pictures'];
+
     // modelValue: any[] = ['rootNode_1', 'Documents', 'Calendar', 'Chrome'];
 
     disableState: boolean = false;
-
     dataSources = {
         small: devBuildFileTree(DEV_DATA_OBJECT, 0),
         big: DEV_TREE_DATA
     };
-
     readonly treeStates = {
         ALL: 0,
         SELECTED: 1,

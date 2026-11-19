@@ -95,9 +95,10 @@ import { injectLocalizedPeriods } from '../localized-periods';
     encapsulation: ViewEncapsulation.None
 })
 export class ColorPipeComponent extends KbqBasePipe<string | null> implements AfterViewInit, OnInit {
-    readonly placements = PopUpPlacements;
-
     readonly popover = viewChild.required(KbqPopoverTrigger);
+
+    readonly placements = PopUpPlacements;
+    control = new FormControl<typeof this.data.value>('');
 
     override get isEmpty(): boolean {
         return this.data.value === null || this.data.value === undefined;
@@ -110,8 +111,6 @@ export class ColorPipeComponent extends KbqBasePipe<string | null> implements Af
     get disabled(): boolean {
         return !this.control.value;
     }
-
-    control = new FormControl<typeof this.data.value>('');
 
     ngOnInit(): void {
         this.control.setValue(this.data.value);
@@ -191,7 +190,6 @@ export class FilterBarCustomPipeExample {
 
     /** Period labels follow the active locale, so the templates are rebuilt whenever it changes. */
     protected readonly periods = injectLocalizedPeriods();
-
     readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
         {
             name: 'colorPipe',

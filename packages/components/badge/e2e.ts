@@ -230,7 +230,7 @@ export class E2eBadgeAlignment {}
     }
 })
 export class E2eBadgeAsyncIcon {
-    protected readonly colors = KbqBadgeColors;
-
     readonly showIcon = model(false);
+
+    protected readonly colors = KbqBadgeColors;
 }

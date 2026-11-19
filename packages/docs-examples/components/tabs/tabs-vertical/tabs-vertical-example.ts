@@ -57,7 +57,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TabsVerticalExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly tabs = computed(() => [
         this.t().complexAttack,
         this.t().hipsAlert,

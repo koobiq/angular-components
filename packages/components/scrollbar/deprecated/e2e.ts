@@ -64,7 +64,6 @@ type ScrollbarState = {
 })
 export class E2eDeprecatedScrollbarStateAndStyle {
     readonly items = Array.from({ length: 25 }).map((_, i) => `Item #${i}`);
-
     readonly states: ScrollbarState[] = [
         { state: 'default' },
         { state: 'hover' },

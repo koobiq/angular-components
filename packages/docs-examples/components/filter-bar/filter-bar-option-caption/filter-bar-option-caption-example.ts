@@ -53,7 +53,6 @@ const TREE_EVENTS: KbqTreeSelectNode[] = [
 })
 export class FilterBarOptionCaptionExample {
     activeFilter: KbqFilter = this.getDefaultFilter();
-
     readonly pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Single line',

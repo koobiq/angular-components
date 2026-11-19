@@ -20,7 +20,6 @@ import { type KbqFilter, KbqFilterBarModule, type KbqPipeTemplate, KbqPipeTypes 
 })
 export class FilterBarNoOptionsExample {
     activeFilter: KbqFilter = this.getDefaultFilter();
-
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Tenant',

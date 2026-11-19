@@ -59,6 +59,7 @@ export class DocsPagePrefetch {
     // Optional: the specs of the components that prefetch provide no pages, and the prefetch is an optimization.
     private readonly pages = inject(DOCS_PAGES, { optional: true });
     private readonly apiPages = inject(DOCS_API_PAGES, { optional: true });
+
     private readonly started = new Set<string>();
 
     prefetch(id: string, tab: DocsStructureItemTab, locale: DocsLocale): void {

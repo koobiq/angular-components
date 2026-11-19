@@ -52,17 +52,6 @@ export class KbqDatepickerToggleIcon {}
     }
 })
 export class KbqDatepickerToggleIconComponent<D> implements OnChanges, KbqSiblingPopup {
-    /** Whether the toggle button is disabled. */
-    get disabled(): boolean {
-        return this.datepicker().disabled || this.disabledState();
-    }
-
-    set disabled(value: boolean) {
-        this.disabledState.set(coerceBooleanProperty(value));
-    }
-
-    private readonly disabledState = signal(false);
-
     /** @docs-private */
     readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
         alias: 'disabled',
@@ -72,10 +61,10 @@ export class KbqDatepickerToggleIconComponent<D> implements OnChanges, KbqSiblin
     /** Datepicker instance that the button will toggle. */
     readonly datepicker = input<KbqDatepicker<D>>(undefined!, { alias: 'for' });
 
-    /** Whether the calendar is currently on screen. Part of the `KbqSiblingPopup` contract. */
-    get isAttached(): boolean {
-        return !!this.datepicker()?.opened;
-    }
+    private readonly disabledState = signal(false);
+
+    /** Whether the calendar was open when the toggle was pressed. */
+    private openedOnPress = false;
 
     /**
      * Emits `true` when the calendar opens and `false` when it closes. Part of the `KbqSiblingPopup`
@@ -95,8 +84,19 @@ export class KbqDatepickerToggleIconComponent<D> implements OnChanges, KbqSiblin
         )
     );
 
-    /** Whether the calendar was open when the toggle was pressed. */
-    private openedOnPress = false;
+    /** Whether the toggle button is disabled. */
+    get disabled(): boolean {
+        return this.datepicker().disabled || this.disabledState();
+    }
+
+    set disabled(value: boolean) {
+        this.disabledState.set(coerceBooleanProperty(value));
+    }
+
+    /** Whether the calendar is currently on screen. Part of the `KbqSiblingPopup` contract. */
+    get isAttached(): boolean {
+        return !!this.datepicker()?.opened;
+    }
 
     ngOnChanges(changes: SimpleChanges) {
         // A bound input is handed to its member; unbound, it leaves what code wrote.

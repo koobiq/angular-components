@@ -80,31 +80,34 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
 export class KbqScrollbar implements AfterViewInit, OnDestroy, KbqOverflowShadowSource {
     private ngZone = inject(NgZone);
     private targetElement = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly injector = inject(Injector);
+
+    /** Elements scrollbar applied on */
+    readonly initializationTarget = input<KbqScrollbarTarget>();
+
+    /** Scrollbar behavior customization object */
+    readonly options = input<KbqScrollbarOptions>(undefined!);
+    readonly events = input<KbqScrollbarEvents>(undefined!);
+
+    /** Whether to defer the initialization to a point in time when the browser is idle. (or to the next frame if `window.requestIdleCallback` is not supported) */
+    readonly defer = input<boolean | IdleRequestOptions>();
+
+    @Output() readonly onInitialize = new EventEmitter<KbqScrollbarEventListenerArgs['initialized']>();
+
+    /** Event triggered when options or event listeners updated */
+    @Output() readonly onUpdate = new EventEmitter<KbqScrollbarEventListenerArgs['updated']>();
+
+    /** Event triggered when scrollbar instance destroyed */
+    @Output() readonly onDestroy = new EventEmitter<KbqScrollbarEventListenerArgs['destroyed']>();
+    @Output() readonly onScroll = new EventEmitter<KbqScrollbarEventListenerArgs['scroll']>();
 
     /** Element that is being overflowed */
     readonly contentElement = viewChild.required<ElementRef<HTMLDivElement>>('content');
     private readonly kbqScrollbarDirective = viewChild.required('content', { read: KbqScrollbarDirective });
 
-    /** Elements scrollbar applied on */
-    readonly initializationTarget = input<KbqScrollbarTarget>();
-    /** Scrollbar behavior customization object */
-    readonly options = input<KbqScrollbarOptions>(undefined!);
-    readonly events = input<KbqScrollbarEvents>(undefined!);
-    /** Whether to defer the initialization to a point in time when the browser is idle. (or to the next frame if `window.requestIdleCallback` is not supported) */
-    readonly defer = input<boolean | IdleRequestOptions>();
-
-    @Output() readonly onInitialize = new EventEmitter<KbqScrollbarEventListenerArgs['initialized']>();
-    /** Event triggered when options or event listeners updated */
-    @Output() readonly onUpdate = new EventEmitter<KbqScrollbarEventListenerArgs['updated']>();
-    /** Event triggered when scrollbar instance destroyed */
-    @Output() readonly onDestroy = new EventEmitter<KbqScrollbarEventListenerArgs['destroyed']>();
-    @Output() readonly onScroll = new EventEmitter<KbqScrollbarEventListenerArgs['scroll']>();
-
     get element(): HTMLElement {
         return this.targetElement.nativeElement;
     }
-
-    private readonly injector = inject(Injector);
 
     ngAfterViewInit() {
         afterNextRender(

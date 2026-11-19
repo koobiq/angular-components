@@ -80,18 +80,16 @@ enum NavbarIcItems {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationCenterErrorExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     notificationService = inject(KbqNotificationCenterService);
+    private readonly themeService = inject(KbqThemeService, { optional: true });
 
     private readonly actionsTemplate = viewChild<TemplateRef<unknown>>('actionsTemplate');
 
     /** Whether the list was loaded with the reload button of the error state. */
     private readonly loaded = signal(false);
 
-    private readonly themeService = inject(KbqThemeService, { optional: true });
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly currentTheme = computed(() => this.themeService?.colorScheme() ?? 'light');
-
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
@@ -101,10 +99,8 @@ export class NotificationCenterErrorExample {
             ),
         { initialValue: true }
     );
-
     protected items = NavbarIcItems;
     protected selected: NavbarIcItems = NavbarIcItems.Assets;
-
     protected readonly actions = computed<ExampleAction[]>(() => [
         {
             id: '1',
@@ -119,7 +115,6 @@ export class NotificationCenterErrorExample {
             icon: 'kbq-ellipsis-horizontal_16'
         }
     ]);
-
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;

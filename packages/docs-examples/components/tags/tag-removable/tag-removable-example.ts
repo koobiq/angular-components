@@ -36,8 +36,9 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagRemovableExample {
-    protected readonly colors = KbqComponentColors;
     protected readonly removable = model(true);
+
+    protected readonly colors = KbqComponentColors;
     protected readonly tag = computed(() => (this.removable() ? 'Removable tag' : 'Not removable tag'));
     protected readonly display = signal(true);
 

@@ -1092,6 +1092,7 @@ describe('nested KbqTabGroup with enabled animations', () => {
 })
 class SimpleTabsTestApp {
     readonly tabs = viewChildren(KbqTab);
+
     selectedIndex: number = 1;
     selectEvent: any;
     headerPosition: KbqTabHeaderPosition | undefined = 'above';
@@ -1159,6 +1160,7 @@ class SimpleDynamicTabsTestApp {
 })
 class DisabledTabsTestApp {
     readonly tabs = viewChildren(KbqTab);
+
     isDisabled = false;
 }
 
@@ -1176,11 +1178,12 @@ class DisabledTabsTestApp {
     `
 })
 class AsyncTabsTestApp implements OnInit {
-    tabs: Observable<any>;
     private tabsItems = [
         { label: 'one', content: 'one' },
         { label: 'two', content: 'two' }
     ];
+
+    tabs: Observable<any>;
 
     ngOnInit() {
         // Use ngOnInit because there is some issue with scheduling the async task in the constructor.
@@ -1202,9 +1205,10 @@ class AsyncTabsTestApp implements OnInit {
     `
 })
 class TabGroupWithSimpleApi {
+    readonly legumes = viewChild.required<any>('legumes');
+
     otherLabel = 'Fruit';
     otherContent = 'Apples, grapes';
-    readonly legumes = viewChild.required<any>('legumes');
 }
 
 @Component({
@@ -1292,6 +1296,7 @@ class TabGroupWithSelectedIndexBinding {}
 })
 class TestSelectionByIndexOrTabIdApp {
     readonly tabs = viewChildren(KbqTab);
+
     selectBy: KbqTabSelectBy = 1;
 }
 
@@ -1321,6 +1326,7 @@ class TabsWithDisabledFirstTab {
 })
 class TabsWithDisabledFirstTabAndSelectedIndex {
     readonly tabGroup = viewChild.required(KbqTabGroup);
+
     selectedIndex: number | null | undefined = 2;
 }
 
@@ -1402,6 +1408,7 @@ class UncontrolledTabs {
 
     tabs = ['first', 'second', 'last'];
     useStateSaving = true;
+
     /** An empty key leaves the group on the key derived from its position in the document. */
     stateSavingKey = 'tabs-key';
 }
@@ -1687,6 +1694,7 @@ describe('KbqTabGroup state saving', () => {
 })
 class TabGroupDrivenByEffect {
     readonly group = viewChild.required(KbqTabGroup);
+
     readonly tabs = signal(['first', 'second']);
     readonly select = signal(false);
     runs = 0;

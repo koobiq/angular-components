@@ -138,10 +138,8 @@ export const DATA_OBJECT = {
 })
 export class TreeSelectMultipleOverviewExample {
     selected = '';
-
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {

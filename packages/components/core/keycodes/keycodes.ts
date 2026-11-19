@@ -285,12 +285,12 @@ export function isFunctionKey({ keyCode }: KeyboardEvent): boolean {
 
 /** @docs-private */
 export function isVerticalMovement({ keyCode }: KeyboardEvent): boolean {
-    return [UP_ARROW, DOWN_ARROW, PAGE_DOWN, PAGE_UP, HOME, END].includes(keyCode);
+    return [DOWN_ARROW, END, HOME, PAGE_DOWN, PAGE_UP, UP_ARROW].includes(keyCode);
 }
 
 /** @docs-private */
 export function isHorizontalMovement({ keyCode }: KeyboardEvent): boolean {
-    return [LEFT_ARROW, RIGHT_ARROW, BACKSPACE, DELETE].includes(keyCode);
+    return [BACKSPACE, DELETE, LEFT_ARROW, RIGHT_ARROW].includes(keyCode);
 }
 
 /** @docs-private */
@@ -326,5 +326,5 @@ export function isRightBracket(event: KeyboardEvent): boolean {
  * @docs-private
  */
 export function isDigit({ keyCode }: KeyboardEvent): boolean {
-    return [ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE].includes(keyCode);
+    return [EIGHT, FIVE, FOUR, NINE, ONE, SEVEN, SIX, THREE, TWO, ZERO].includes(keyCode);
 }

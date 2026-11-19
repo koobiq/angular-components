@@ -54,7 +54,6 @@ export class AgGridSettingsMenuExample {
     ]);
 
     protected readonly density = signal(this.densities()[1]!);
-
     protected readonly settingsMenuItems = computed<KbqAgGridSettingsMenuItems>(() => [
         kbqAgGridSettingsMenuColumnsItem(),
         kbqAgGridSettingsMenuSortItem(),
@@ -75,7 +74,6 @@ export class AgGridSettingsMenuExample {
             }))
         }
     ]);
-
     protected readonly columnDefs = computed<ColDef[]>(() => [
         {
             field: 'incidentId',
@@ -91,7 +89,6 @@ export class AgGridSettingsMenuExample {
         { field: 'sourceIp', headerName: this.t().sourceIp, hide: true, width: 150 },
         { field: 'affectedHost', headerName: this.t().affectedHost, hide: true, width: 150 }
     ]);
-
     protected readonly rowData = computed(() =>
         Array.from({ length: 30 }, (_, index) => ({
             incidentId: `INC-${1001 + index}`,

@@ -44,7 +44,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class ScrollbarVirtualScrollExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly items = signal(Array.from({ length: 100 }).map((_, i) => `Item #${i}`));
 
     protected addItems(): void {

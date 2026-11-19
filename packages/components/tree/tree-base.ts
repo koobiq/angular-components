@@ -80,21 +80,10 @@ export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel' | 't
      * Optional because `KbqTreeBase` is exported: a tree without the directive persists nothing.
      */
     private readonly stateSaving = inject(KbqStateSaving, { optional: true });
+    protected readonly destroyRef = inject(DestroyRef);
 
     /** @docs-private */
     readonly treeControlInput = input<C>(undefined!, { alias: 'treeControl' });
-
-    /** Controls the expanded state and holds the data nodes of the tree. */
-    get treeControl(): C {
-        return this.treeControlInput();
-    }
-
-    /** {@link treeControl} as state saving reads it: by node value, which only a `FlatTreeControl` has. */
-    private get flatTreeControl(): FlatTreeControl<T, unknown> {
-        const treeControl: Omit<TreeControl<T>, 'expansionModel' | 'trackBy'> = this.treeControl;
-
-        return treeControl as FlatTreeControl<T, unknown>;
-    }
 
     /**
      * Tracking function that will be used to check the differences in data changes. Used similarly
@@ -109,31 +98,15 @@ export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel' | 't
      */
     readonly trackBy = input<TrackByFunction<T>>(undefined!);
 
-    private readonly nodeOutletQuery = viewChild(KbqTreeNodeOutlet);
+    /** @docs-private */
+    readonly dataSourceInput = input<DataSource<T> | Observable<T[]> | T[] | null | undefined>(undefined, {
+        alias: 'dataSource'
+    });
 
-    /** Outlet within the tree's template where the data nodes are inserted. */
-    get nodeOutlet(): KbqTreeNodeOutlet {
-        return this.nodeOutletQuery()!;
-    }
+    private readonly nodeOutletQuery = viewChild(KbqTreeNodeOutlet);
 
     /** The tree node template for the tree */
     readonly nodeDefs: Signal<readonly KbqTreeNodeDef<T>[]> = contentChildren(KbqTreeNodeDef);
-
-    /**
-     * Stream containing the latest information on what rows are being displayed on screen.
-     * Can be used by the data source to as a heuristic of what data should be provided.
-     *
-     * The tree renders every expanded node eagerly, so the window is the whole data set; a data source
-     * cannot use it to page or virtualize. Windowing would have to emit a real range from a scroll
-     * listener here first.
-     */
-    viewChange = new BehaviorSubject<{ start: number; end: number }>({ start: 0, end: Number.MAX_VALUE });
-
-    /**
-     * Differ used to find the changes in the data provided by the data source. Replaced in `ngOnInit`, once the
-     * `trackBy` it identifies nodes by is bound, and whenever the data source changes.
-     */
-    protected dataDiffer: IterableDiffer<T> = this.differs.find([]).create();
 
     /** Stores the node definition that does not have a when predicate. */
     private defaultNodeDef?: KbqTreeNodeDef<T> | null;
@@ -168,11 +141,43 @@ export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel' | 't
     /** Whether the dev-mode warnings below have already been logged, so each is logged once. */
     private warnedAboutTreeControl = false;
     private warnedAboutValues = false;
+    private _dataSource: DataSource<T> | Observable<T[]> | T[] | null = null;
 
-    /** @docs-private */
-    readonly dataSourceInput = input<DataSource<T> | Observable<T[]> | T[] | null | undefined>(undefined, {
-        alias: 'dataSource'
-    });
+    /** Whether `ngAfterContentChecked` has run, i.e. the node definitions the first render needs are resolved. */
+    private contentChecked = false;
+
+    /**
+     * Stream containing the latest information on what rows are being displayed on screen.
+     * Can be used by the data source to as a heuristic of what data should be provided.
+     *
+     * The tree renders every expanded node eagerly, so the window is the whole data set; a data source
+     * cannot use it to page or virtualize. Windowing would have to emit a real range from a scroll
+     * listener here first.
+     */
+    viewChange = new BehaviorSubject<{ start: number; end: number }>({ start: 0, end: Number.MAX_VALUE });
+
+    /**
+     * Differ used to find the changes in the data provided by the data source. Replaced in `ngOnInit`, once the
+     * `trackBy` it identifies nodes by is bound, and whenever the data source changes.
+     */
+    protected dataDiffer: IterableDiffer<T> = this.differs.find([]).create();
+
+    /** Controls the expanded state and holds the data nodes of the tree. */
+    get treeControl(): C {
+        return this.treeControlInput();
+    }
+
+    /** {@link treeControl} as state saving reads it: by node value, which only a `FlatTreeControl` has. */
+    private get flatTreeControl(): FlatTreeControl<T, unknown> {
+        const treeControl: Omit<TreeControl<T>, 'expansionModel' | 'trackBy'> = this.treeControl;
+
+        return treeControl as FlatTreeControl<T, unknown>;
+    }
+
+    /** Outlet within the tree's template where the data nodes are inserted. */
+    get nodeOutlet(): KbqTreeNodeOutlet {
+        return this.nodeOutletQuery()!;
+    }
 
     /**
      * Provides a stream containing the latest data array to render. Influenced by the tree's
@@ -183,7 +188,42 @@ export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel' | 't
         return this._dataSource;
     }
 
-    private _dataSource: DataSource<T> | Observable<T[]> | T[] | null = null;
+    /**
+     * Whether state is currently persisted for this tree — restored on init, or written since.
+     * Always `false` while `useStateSaving` is unset, and `false` again after `clearSavedState()`.
+     */
+    get hasSavedState(): boolean {
+        return this.stateSaving?.state != null;
+    }
+
+    /** Whether this tree reads and writes its expanded state at all. */
+    private get persists(): boolean {
+        if (!this.stateSaving?.useStateSaving()) return false;
+
+        // A tree that is not in the document has no stable key — the default resolver derives one from
+        // the path to `<body>`. That is the ordinary state of a tree projected into an overlay, such as
+        // the one `kbq-tree-select` renders into its panel, whose expansion is transient UI rather than
+        // a setting worth carrying to the next visit.
+        if (!this.stateSaving.host?.isConnected) return false;
+
+        if (typeof this.flatTreeControl.getValue !== 'function') {
+            if (isDevMode() && !this.warnedAboutTreeControl) {
+                this.warnedAboutTreeControl = true;
+
+                // eslint-disable-next-line no-console
+                console.warn(
+                    'kbq-tree: state saving is enabled, but the tree control has no `getValue`. ' +
+                        'Expansion is persisted by node value, and a node object does not survive a ' +
+                        'reload, so nothing is persisted. Use `FlatTreeControl`, or unset ' +
+                        '`useStateSaving`.'
+                );
+            }
+
+            return false;
+        }
+
+        return true;
+    }
 
     constructor() {
         // Switching the source drops the rendered nodes and resubscribes, which a bound value alone does not do. A
@@ -196,11 +236,6 @@ export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel' | 't
             });
         });
     }
-
-    protected readonly destroyRef = inject(DestroyRef);
-
-    /** Whether `ngAfterContentChecked` has run, i.e. the node definitions the first render needs are resolved. */
-    private contentChecked = false;
 
     ngOnInit() {
         this.dataDiffer = this.createDataDiffer();
@@ -221,21 +256,6 @@ export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel' | 't
         this.stateSaving!.keyChanges.subscribe(() => this.restoreState());
 
         this.restoreState();
-    }
-
-    /** Reads the persisted expansion and applies it. Runs while initializing, and again on a key change. */
-    private restoreState(): void {
-        if (!this.persists) return;
-
-        const savedState = this.stateSaving!.read(normalizeTreeState);
-
-        this.pendingValues = new Set(savedState ?? []);
-
-        // The memo that keeps one batch of nodes from being examined twice. A restore from another key
-        // has new values to match against the same nodes, so it has to be allowed to look again.
-        this.lastRestoredDataNodes = null;
-
-        this.restorePending();
     }
 
     ngOnDestroy() {
@@ -266,6 +286,21 @@ export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel' | 't
         }
     }
 
+    /** Reads the persisted expansion and applies it. Runs while initializing, and again on a key change. */
+    private restoreState(): void {
+        if (!this.persists) return;
+
+        const savedState = this.stateSaving!.read(normalizeTreeState);
+
+        this.pendingValues = new Set(savedState ?? []);
+
+        // The memo that keeps one batch of nodes from being examined twice. A restore from another key
+        // has new values to match against the same nodes, so it has to be allowed to look again.
+        this.lastRestoredDataNodes = null;
+
+        this.restorePending();
+    }
+
     /**
      * Persists the values of the currently expanded nodes.
      *
@@ -291,14 +326,6 @@ export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel' | 't
      */
     clearSavedState(): void {
         untracked(() => this.stateSaving?.clear());
-    }
-
-    /**
-     * Whether state is currently persisted for this tree — restored on init, or written since.
-     * Always `false` while `useStateSaving` is unset, and `false` again after `clearSavedState()`.
-     */
-    get hasSavedState(): boolean {
-        return this.stateSaving?.state != null;
     }
 
     /** Check for changes made in the data and render each change (node added/removed/moved). */
@@ -451,35 +478,6 @@ export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel' | 't
      */
     registerNode(node: KbqTreeNode<T>): void {
         this.recentNode = node;
-    }
-
-    /** Whether this tree reads and writes its expanded state at all. */
-    private get persists(): boolean {
-        if (!this.stateSaving?.useStateSaving()) return false;
-
-        // A tree that is not in the document has no stable key — the default resolver derives one from
-        // the path to `<body>`. That is the ordinary state of a tree projected into an overlay, such as
-        // the one `kbq-tree-select` renders into its panel, whose expansion is transient UI rather than
-        // a setting worth carrying to the next visit.
-        if (!this.stateSaving.host?.isConnected) return false;
-
-        if (typeof this.flatTreeControl.getValue !== 'function') {
-            if (isDevMode() && !this.warnedAboutTreeControl) {
-                this.warnedAboutTreeControl = true;
-
-                // eslint-disable-next-line no-console
-                console.warn(
-                    'kbq-tree: state saving is enabled, but the tree control has no `getValue`. ' +
-                        'Expansion is persisted by node value, and a node object does not survive a ' +
-                        'reload, so nothing is persisted. Use `FlatTreeControl`, or unset ' +
-                        '`useStateSaving`.'
-                );
-            }
-
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -649,9 +647,6 @@ export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel' | 't
     exportAs: 'kbqTreeNode'
 })
 export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
-    protected elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    tree = inject<KbqTreeBase<T>>(KbqTreeBase);
-
     /**
      * The most recently created `KbqTreeNode`, across every tree on the page.
      *
@@ -659,6 +654,11 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
      * `KbqTreeBase.registerNode`, which is scoped to the tree that owns the node. Will be removed in 22.0.0.
      */
     static mostRecentTreeNode: KbqTreeNode<any> | null = null;
+
+    protected elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    tree = inject<KbqTreeBase<T>>(KbqTreeBase);
+
+    private _data?: T;
 
     protected destroyed = new Subject<void>();
 
@@ -681,8 +681,6 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
     set data(value: T) {
         this._data = value;
     }
-
-    private _data?: T;
 
     get isExpanded(): boolean {
         const data = this._data;

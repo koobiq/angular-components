@@ -44,6 +44,7 @@ describe(KbqFlag.name, () => {
         })
         class TestComponent {
             private readonly sanitizer = inject(DomSanitizer);
+
             readonly svg = this.sanitizer.bypassSecurityTrustHtml('<svg data-testid="flag-svg"></svg>');
         }
 
@@ -62,6 +63,7 @@ describe(KbqFlag.name, () => {
         })
         class TestComponent {
             private readonly sanitizer = inject(DomSanitizer);
+
             readonly svg = this.sanitizer.bypassSecurityTrustHtml('<svg data-testid="flag-svg"></svg>');
         }
 

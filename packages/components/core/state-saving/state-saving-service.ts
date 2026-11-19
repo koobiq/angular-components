@@ -54,10 +54,15 @@ export interface KbqStateSavingRef {
 @Injectable({ providedIn: 'root' })
 export class KbqStateSavingService {
     private readonly store = inject(KBQ_STATE_STORE);
+
     private readonly changed = new Subject<void>();
 
     /** Live components, in registration order. A `Set`, so a double registration cannot duplicate one. */
     private readonly registry = new Set<KbqStateSavingRef>();
+    private enabled = true;
+
+    /** How deep the current `batch()` nesting is — a counter for the same reason `applying()` uses one. */
+    private batchDepth = 0;
 
     /**
      * Emits whenever this picture changes: a component registered, persisted, cleared or was destroyed,
@@ -68,11 +73,6 @@ export class KbqStateSavingService {
      * a component that persists on every interaction emits on every interaction.
      */
     readonly changes: Observable<void> = this.store.changes ? merge(this.changed, this.store.changes) : this.changed;
-
-    private enabled = true;
-
-    /** How deep the current `batch()` nesting is — a counter for the same reason `applying()` uses one. */
-    private batchDepth = 0;
 
     /** Whether components are allowed to persist. */
     isEnabled(): boolean {

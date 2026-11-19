@@ -168,19 +168,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     private _dir = inject(Directionality, { optional: true });
     private focusMonitor = inject(FocusMonitor);
     private readonly document = inject(DOCUMENT);
-
     private readonly injector = inject(Injector);
-
     protected readonly isBrowser = inject(Platform).isBrowser;
-    lastDestroyReason: DropdownCloseReason = undefined;
-
-    /**
-     * Element whose width the panel should match. Defaults to the trigger itself.
-     * Useful when the trigger is only a part of a larger control, e.g. `kbq-split-button`.
-     *
-     * @docs-private
-     */
-    widthOrigin?: KbqPanelWidthOrigin;
 
     /** Position offset of the dropdown in the X axis. */
     // `model()` because `kbq-navbar-item` writes it.
@@ -233,6 +222,25 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     /** Event emitted when the associated dropdown is closed. */
     readonly dropdownClosed = output<void>();
 
+    private readonly openedState = signal(false);
+    private portal?: TemplatePortal;
+    private overlayRef: OverlayRef | null = null;
+
+    /** Per-session subscription to `closingActions()`; torn down on every close. */
+    private closingActionsSubscription = Subscription.EMPTY;
+    private hoverSubscription = Subscription.EMPTY;
+    private widthLockRef: AfterRenderRef | null = null;
+
+    lastDestroyReason: DropdownCloseReason = undefined;
+
+    /**
+     * Element whose width the panel should match. Defaults to the trigger itself.
+     * Useful when the trigger is only a part of a larger control, e.g. `kbq-split-button`.
+     *
+     * @docs-private
+     */
+    widthOrigin?: KbqPanelWidthOrigin;
+
     /** Emits `true` when the dropdown opens and `false` when it closes. Part of the `KbqSiblingPopup` contract. */
     readonly openedChange: Observable<boolean> = merge(
         outputToObservable(this.dropdownOpened).pipe(map(() => true)),
@@ -283,18 +291,19 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         return this.openedState();
     }
 
-    private readonly openedState = signal(false);
+    /** Whether the panel is anchored to a rectangle in viewport coordinates rather than to an element. */
+    private get hasPointOrigin(): boolean {
+        const origin = this.origin();
 
-    private portal?: TemplatePortal;
+        return !!origin && !kbqIsElementOrigin(origin);
+    }
 
-    private overlayRef: OverlayRef | null = null;
+    /** Whether the panel should be at least as wide as its trigger. */
+    private get shouldMatchTriggerWidth(): boolean {
+        const isVerticalTrigger = this.dropdown().overlapTriggerY() && !this.dropdown().overlapTriggerX();
 
-    /** Per-session subscription to `closingActions()`; torn down on every close. */
-    private closingActionsSubscription = Subscription.EMPTY;
-
-    private hoverSubscription = Subscription.EMPTY;
-
-    private widthLockRef: AfterRenderRef | null = null;
+        return !this.isNested() && !isVerticalTrigger;
+    }
 
     constructor() {
         const elementRef = this.elementRef;
@@ -313,6 +322,26 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
             onCleanup(KbqDropdownTrigger.bindToPanel(dropdown, this));
         });
+    }
+
+    ngAfterContentInit() {
+        this.check();
+        this.handleHover();
+    }
+
+    ngOnDestroy() {
+        if (this.overlayRef) {
+            this.overlayRef.dispose();
+            this.overlayRef = null;
+        }
+
+        this.elementRef.nativeElement.removeEventListener(
+            'touchstart',
+            this.handleTouchStart,
+            passiveEventListenerOptions
+        );
+
+        this.cleanUpSubscriptions();
     }
 
     /**
@@ -364,26 +393,6 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         if (closesChain && this.parent) {
             untracked(() => this.parent.closeChain(reason));
         }
-    }
-
-    ngAfterContentInit() {
-        this.check();
-        this.handleHover();
-    }
-
-    ngOnDestroy() {
-        if (this.overlayRef) {
-            this.overlayRef.dispose();
-            this.overlayRef = null;
-        }
-
-        this.elementRef.nativeElement.removeEventListener(
-            'touchstart',
-            this.handleTouchStart,
-            passiveEventListenerOptions
-        );
-
-        this.cleanUpSubscriptions();
     }
 
     /** Whether the dropdown triggers a nested dropdown or a top-level one. */
@@ -711,25 +720,11 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         return this.overlayRef;
     }
 
-    /** Whether the panel is anchored to a rectangle in viewport coordinates rather than to an element. */
-    private get hasPointOrigin(): boolean {
-        const origin = this.origin();
-
-        return !!origin && !kbqIsElementOrigin(origin);
-    }
-
     /** The origin the position strategy is connected to. */
     private getResolvedOrigin(): FlexibleConnectedPositionStrategyOrigin {
         const origin = this.origin();
 
         return origin ? kbqResolveOverlayOrigin(origin) : this.elementRef;
-    }
-
-    /** Whether the panel should be at least as wide as its trigger. */
-    private get shouldMatchTriggerWidth(): boolean {
-        const isVerticalTrigger = this.dropdown().overlapTriggerY() && !this.dropdown().overlapTriggerX();
-
-        return !this.isNested() && !isVerticalTrigger;
     }
 
     /**

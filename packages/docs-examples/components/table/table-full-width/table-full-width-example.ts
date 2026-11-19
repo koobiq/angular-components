@@ -16,6 +16,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TableFullWidthExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly rows = computed(() => this.t().rows);
 }

@@ -81,8 +81,8 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SplitterCollapsibleExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly terminalCollapsed = model(false);
     protected readonly sidebarCollapsed = model(false);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

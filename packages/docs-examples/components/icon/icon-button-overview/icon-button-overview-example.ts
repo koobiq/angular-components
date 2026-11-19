@@ -27,8 +27,8 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IconButtonOverviewExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly disabled = model(false);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     colors = KbqComponentColors;
 }

@@ -58,11 +58,19 @@ interface Suggestion {
 })
 export class AutocompleteTriggersExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly control = new FormControl('');
     protected readonly triggers = ['/', '@'];
     protected readonly query = signal<KbqTextQuery | null>(null);
-
+    protected readonly snippets = computed<Suggestion[]>(() => [
+        { label: this.t().closedLabel, insert: this.t().closedInsert },
+        { label: this.t().escalateLabel, insert: this.t().escalateInsert },
+        { label: this.t().signLabel, insert: this.t().signInsert }
+    ]);
+    protected readonly colleagues = computed<Suggestion[]>(() => [
+        { label: this.t().alice, insert: '@alice' },
+        { label: this.t().bob, insert: '@bob' },
+        { label: this.t().carol, insert: '@carol' }
+    ]);
     protected readonly filteredSuggestions = computed(() => {
         const query = this.query();
 
@@ -77,16 +85,4 @@ export class AutocompleteTriggersExample {
     });
 
     protected readonly insertText = (suggestion: Suggestion): string => suggestion.insert;
-
-    protected readonly snippets = computed<Suggestion[]>(() => [
-        { label: this.t().closedLabel, insert: this.t().closedInsert },
-        { label: this.t().escalateLabel, insert: this.t().escalateInsert },
-        { label: this.t().signLabel, insert: this.t().signInsert }
-    ]);
-
-    protected readonly colleagues = computed<Suggestion[]>(() => [
-        { label: this.t().alice, insert: '@alice' },
-        { label: this.t().bob, insert: '@bob' },
-        { label: this.t().carol, insert: '@carol' }
-    ]);
 }

@@ -21,8 +21,9 @@ const MAX_PERCENT: number = 100;
     }
 })
 export class ProgressSpinnerOverviewExample implements OnDestroy {
-    readonly percent = signal(0);
     private intervalId?: ReturnType<typeof setInterval>;
+
+    readonly percent = signal(0);
 
     constructor() {
         afterNextRender(() => {

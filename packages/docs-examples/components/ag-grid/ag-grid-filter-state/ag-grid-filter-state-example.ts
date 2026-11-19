@@ -49,7 +49,6 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class AgGridFilterStateExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly defaultColDef: ColDef = {
         filter: true,
         floatingFilter: true

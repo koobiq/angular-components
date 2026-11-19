@@ -51,13 +51,13 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class AlertDynamicExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly focusMonitor = inject(FocusMonitor);
 
+    protected readonly trigger = viewChild('trigger', { read: ElementRef });
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly colors = KbqComponentColors;
     protected readonly visible = signal(false);
-    protected readonly trigger = viewChild('trigger', { read: ElementRef });
 
     protected dismiss(): void {
         this.visible.set(false);

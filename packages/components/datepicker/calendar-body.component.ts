@@ -82,12 +82,6 @@ export class KbqCalendarBody implements OnChanges {
     /** Width of an individual cell. Defaults to `''`. */
     cellWidth = '';
 
-    cellClicked(cell: KbqCalendarCell): void {
-        if (cell.enabled) {
-            this.selectedValueChange.emit(cell.value);
-        }
-    }
-
     ngOnChanges(changes: SimpleChanges) {
         const columnChanges = changes['numCols'];
         const { rows: rowsInput, numCols: numColsInput } = this;
@@ -108,6 +102,12 @@ export class KbqCalendarBody implements OnChanges {
 
         if (columnChanges || !this.cellWidth) {
             this.cellWidth = `${100 / numCols}%`;
+        }
+    }
+
+    cellClicked(cell: KbqCalendarCell): void {
+        if (cell.enabled) {
+            this.selectedValueChange.emit(cell.value);
         }
     }
 

@@ -37,12 +37,10 @@ import { TRANSLATIONS } from './l10n';
 })
 export class ButtonToggleTooltipOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly group = computed(() => [
         this.t().longToggleText,
         this.t().donkeyExpress,
         this.t().middleEarthPost
     ]);
-
     model = 1;
 }

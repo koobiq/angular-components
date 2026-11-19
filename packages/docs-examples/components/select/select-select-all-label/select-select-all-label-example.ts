@@ -39,7 +39,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class SelectSelectAllLabelExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly options = Array.from({ length: 6 }, (_, i) => 'Option #' + (i + 1));
     readonly selected = [...this.options];
 }

@@ -172,21 +172,18 @@ export class CustomTreeControlFilter<T> implements FlatTreeControlFilter<T> {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeCustomFilteringExample {
+    /** Nodes whose own view value matches the current query (excludes ancestors). Only these can be expanded by the user. */
+    private baseMatches = new Set<FileFlatNode>();
+    private readonly customFilter: CustomTreeControlFilter<FileFlatNode>;
+
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     modelValue: any = '';
     filterValue: string = '';
 
     /** Folders (matches) the user manually expanded while a filter is active. */
     readonly expandedMatches = signal(new Set<FileFlatNode>());
-
-    /** Nodes whose own view value matches the current query (excludes ancestors). Only these can be expanded by the user. */
-    private baseMatches = new Set<FileFlatNode>();
-
-    private readonly customFilter: CustomTreeControlFilter<FileFlatNode>;
 
     constructor() {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);

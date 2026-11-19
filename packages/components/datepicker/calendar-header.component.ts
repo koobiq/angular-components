@@ -45,14 +45,32 @@ export type MonthName = {
     exportAs: 'kbqCalendarHeader'
 })
 export class KbqCalendarHeader<D> implements AfterContentInit, OnChanges {
-    private readonly adapter = injectRequiredDateAdapter<D>();
-
     /** Accessible names for the icon-only month navigation buttons. */
     protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
+    /** @docs-private */
+    readonly activeDateInput = input<D | undefined>(undefined, { alias: 'activeDate' });
+
+    /** @docs-private */
+    readonly maxDateInput = input<D | null | undefined>(undefined, { alias: 'maxDate' });
+
+    /** @docs-private */
+    readonly minDateInput = input<D | null | undefined>(undefined, { alias: 'minDate' });
+
+    /** Emits when any date is activated. */
+    readonly activeDateChange = output<D>();
+    readonly monthSelected = output<D>();
+    readonly yearSelected = output<D>();
+
+    private readonly adapter = injectRequiredDateAdapter<D>();
+
+    // Today until the calendar binds its own active date, as it does before the header renders.
+    private _activeDate: D = this.adapter.today();
+    private _maxDate = this.adapter.createDate(defaultMaxYear, 11);
+    private _minDate = this.adapter.createDate(defaultMinYear, 1);
+
     monthNames: MonthName[];
     selectedMonth: number;
-
     years: number[] = [];
     selectedYear: number;
 
@@ -66,9 +84,6 @@ export class KbqCalendarHeader<D> implements AfterContentInit, OnChanges {
         this.updateSelectedValues();
         this.updateSelectionOptions();
     }
-
-    // Today until the calendar binds its own active date, as it does before the header renders.
-    private _activeDate: D = this.adapter.today();
 
     get maxDate(): D | null {
         return this._maxDate;
@@ -84,8 +99,6 @@ export class KbqCalendarHeader<D> implements AfterContentInit, OnChanges {
         this.updateSelectionOptions();
     }
 
-    private _maxDate = this.adapter.createDate(defaultMaxYear, 11);
-
     get minDate(): D | null {
         return this._minDate;
     }
@@ -100,17 +113,6 @@ export class KbqCalendarHeader<D> implements AfterContentInit, OnChanges {
         this.updateSelectionOptions();
     }
 
-    private _minDate = this.adapter.createDate(defaultMinYear, 1);
-
-    /** @docs-private */
-    readonly activeDateInput = input<D | undefined>(undefined, { alias: 'activeDate' });
-
-    /** @docs-private */
-    readonly maxDateInput = input<D | null | undefined>(undefined, { alias: 'maxDate' });
-
-    /** @docs-private */
-    readonly minDateInput = input<D | null | undefined>(undefined, { alias: 'minDate' });
-
     get previousDisabled(): boolean {
         return this.compareDate(this.activeDate, this.minDate!) <= 0;
     }
@@ -124,11 +126,6 @@ export class KbqCalendarHeader<D> implements AfterContentInit, OnChanges {
     get nextDisabled(): boolean {
         return this.compareDate(this.activeDate, this.maxDate!) >= 0;
     }
-
-    /** Emits when any date is activated. */
-    readonly activeDateChange = output<D>();
-    readonly monthSelected = output<D>();
-    readonly yearSelected = output<D>();
 
     constructor() {
         this.monthNames = this.adapter.getMonthNames('long').map((name, i) => {

@@ -29,9 +29,9 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalOverviewExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly modalService = inject(KbqModalService);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     showConfirmModal(): void {
         this.modalService.confirm({

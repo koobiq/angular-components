@@ -89,12 +89,13 @@ export const isOutsideViewport = ({
     providedIn: 'root'
 })
 export class KbqFullScreenDropzoneService extends KbqDrop implements OnDestroy {
-    /** Completely terminates all subscriptions when emitted */
-    private readonly dropAbort = new Subject<void>();
     private readonly overlay: Overlay = inject(Overlay);
     private readonly window = inject(KBQ_WINDOW);
     private readonly injector = inject(Injector);
     private readonly ngZone = inject(NgZone);
+
+    /** Completely terminates all subscriptions when emitted */
+    private readonly dropAbort = new Subject<void>();
     private readonly animationsDisabled = kbqAnimationsDisabled();
     private overlayRef?: OverlayRef;
 
@@ -248,17 +249,18 @@ export class KbqFullScreenDropzoneService extends KbqDrop implements OnDestroy {
     exportAs: 'kbqLocalDropzone'
 })
 export class KbqLocalDropzone extends KbqDrop {
-    /** File upload component to connect dropped files to */
-    readonly connectedTo = input<KbqSingleFileUploadComponent | KbqMultipleFileUploadComponent>(undefined, {
-        alias: 'kbqConnectedTo'
-    });
-
     private readonly elementRef = kbqInjectNativeElement();
     private readonly overlay: Overlay = inject(Overlay);
     private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
     private readonly injector = inject(Injector);
     private readonly ngZone = inject(NgZone);
     private readonly destroyRef = inject(DestroyRef);
+
+    /** File upload component to connect dropped files to */
+    readonly connectedTo = input<KbqSingleFileUploadComponent | KbqMultipleFileUploadComponent>(undefined, {
+        alias: 'kbqConnectedTo'
+    });
+
     private readonly animationsDisabled = kbqAnimationsDisabled();
     private overlayRef?: OverlayRef;
 
@@ -434,6 +436,7 @@ export class KbqLocalDropzone extends KbqDrop {
 export class KbqFileUploadEmptyState extends KbqEmptyState {
     /** Title text to display below the upload icon */
     readonly title = input<string>();
+
     /** Caption text or template to display below the title */
     readonly caption = input<string | TemplateRef<unknown>>();
 
@@ -475,17 +478,16 @@ export class KbqFileUploadEmptyState extends KbqEmptyState {
 export class KbqDropzoneContent {
     /** @docs-private */
     protected readonly config = inject<KbqDropzoneData>(KBQ_DROPZONE_DATA, { optional: true });
-
     private readonly trapFocus = inject(CdkTrapFocus, { host: true });
     private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'fileUpload',
         KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION
     );
 
+    /** @docs-private */
+    protected readonly title = computed(() => this.localeConfiguration().multiple.title);
+
     constructor() {
         this.trapFocus.autoCapture = this.config?.autoCapture ?? true;
     }
-
-    /** @docs-private */
-    protected readonly title = computed(() => this.localeConfiguration().multiple.title);
 }

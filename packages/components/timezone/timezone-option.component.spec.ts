@@ -22,7 +22,6 @@ class TimezoneOptionHost {
         countryName: 'Russia',
         cities: 'city1, city2'
     });
-
     readonly highlightText = signal<string | readonly string[]>(undefined!);
 }
 

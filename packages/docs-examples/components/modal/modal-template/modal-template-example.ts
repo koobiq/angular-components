@@ -71,10 +71,9 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalTemplateExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly modalService = inject(KbqModalService);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     modalRef?: KbqModalRef;
     sizes = ModalSize;
 

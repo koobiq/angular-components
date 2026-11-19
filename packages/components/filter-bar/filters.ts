@@ -69,49 +69,15 @@ import { KbqFilterSavePopover } from './filter-save-popover';
 export class KbqFilters implements OnInit {
     /** @docs-private */
     protected readonly elementRef = inject(ElementRef);
+
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
+
     /** @docs-private */
     protected readonly focusMonitor = inject(FocusMonitor);
-    /** @docs-private */
-    protected readonly placements = PopUpPlacements;
 
     /** KbqFilterBar instance */
     protected readonly filterBar = inject(KbqFilterBar);
-
-    /** @docs-private */
-    protected readonly mainButton = viewChild.required<KbqButton>('mainButton');
-    /** @docs-private */
-    protected readonly saveNewFilterButton = viewChild.required<KbqButton>('saveNewFilterButton');
-    /** @docs-private */
-    protected readonly filterActionsButton = viewChild.required<KbqButton>('filterActionsButton');
-
-    /** @docs-private */
-    protected readonly popover = viewChild.required(KbqPopoverTrigger);
-    /** @docs-private */
-    protected readonly dropdown = viewChild.required(KbqDropdownTrigger);
-    /** @docs-private */
-    protected readonly filterActionsDropdown = viewChild<KbqDropdownTrigger>('filterActionsButton');
-
-    /** @docs-private */
-    protected readonly savePopover = viewChild.required(KbqFilterSavePopover);
-
-    private readonly search = viewChild.required<ElementRef>('search');
-
-    /** control for search filter */
-    readonly searchControl = new FormControl<string | null>(null);
-
-    private readonly searchQuery = toSignal(this.searchControl.valueChanges, {
-        initialValue: this.searchControl.value
-    });
-
-    /** Saved filters whose name matches the search query. */
-    readonly filteredOptions: Signal<KbqFilter[]> = computed(() => this.getFilteredOptions(this.searchQuery()));
-
-    /** @docs-private */
-    protected readonly popoverSize = PopUpSizes.Medium;
-    /** @docs-private */
-    protected readonly popoverOffset: number = 4;
 
     readonly filters = input.required<KbqFilter[]>();
 
@@ -127,12 +93,58 @@ export class KbqFilters implements OnInit {
      * or a structural copy) — otherwise later in-place pipe edits will mutate the stored reference.
      */
     readonly onSave = output<KbqSaveFilterEvent>();
+
     /** Event that is generated whenever the user change a filter. */
     readonly onChangeFilter = output<KbqSaveFilterEvent>();
+
     /** Event that is generated whenever the user remove a filter. */
     readonly onRemoveFilter = output<KbqFilter>();
+
     /** Event that is generated whenever the user reset a filter changes. */
     readonly onResetFilterChanges = output<KbqFilter | null>();
+
+    /** @docs-private */
+    protected readonly mainButton = viewChild.required<KbqButton>('mainButton');
+
+    /** @docs-private */
+    protected readonly saveNewFilterButton = viewChild.required<KbqButton>('saveNewFilterButton');
+
+    /** @docs-private */
+    protected readonly filterActionsButton = viewChild.required<KbqButton>('filterActionsButton');
+
+    /** @docs-private */
+    protected readonly popover = viewChild.required(KbqPopoverTrigger);
+
+    /** @docs-private */
+    protected readonly dropdown = viewChild.required(KbqDropdownTrigger);
+
+    /** @docs-private */
+    protected readonly filterActionsDropdown = viewChild<KbqDropdownTrigger>('filterActionsButton');
+
+    /** @docs-private */
+    protected readonly savePopover = viewChild.required(KbqFilterSavePopover);
+    private readonly search = viewChild.required<ElementRef>('search');
+
+    /** control for search filter */
+    readonly searchControl = new FormControl<string | null>(null);
+
+    private readonly searchQuery = toSignal(this.searchControl.valueChanges, {
+        initialValue: this.searchControl.value
+    });
+    private _focusOrigin: FocusOrigin = null;
+    private focusedElementBeforeOpen?: KbqButton | null;
+
+    /** @docs-private */
+    protected readonly placements = PopUpPlacements;
+
+    /** Saved filters whose name matches the search query. */
+    readonly filteredOptions: Signal<KbqFilter[]> = computed(() => this.getFilteredOptions(this.searchQuery()));
+
+    /** @docs-private */
+    protected readonly popoverSize = PopUpSizes.Medium;
+
+    /** @docs-private */
+    protected readonly popoverOffset: number = 4;
 
     /** Component state. true if opened dropdown or popup */
     get opened(): boolean {
@@ -163,9 +175,60 @@ export class KbqFilters implements OnInit {
         return this._focusOrigin;
     }
 
-    private _focusOrigin: FocusOrigin = null;
+    /**
+     * Delegating facade to the extracted `KbqFilterSavePopover`: the save-popover state, templates and logic live in
+     * that child; this member and the others that read `savePopover()` keep `KbqFilters`' public surface for callers
+     * and the template.
+     *
+     * @docs-private
+     */
+    get filterName(): FormControl<string | null> {
+        return this.savePopover().filterName;
+    }
 
-    private focusedElementBeforeOpen?: KbqButton | null;
+    /** @docs-private */
+    get saveNewFilter(): boolean {
+        return this.savePopover().saveNewFilter;
+    }
+
+    /** @docs-private */
+    set saveNewFilter(value: boolean) {
+        this.savePopover().saveNewFilter = value;
+    }
+
+    /** @docs-private */
+    get isSaving(): boolean {
+        return this.savePopover().isSaving;
+    }
+
+    /** @docs-private */
+    set isSaving(value: boolean) {
+        this.savePopover().isSaving = value;
+    }
+
+    /** @docs-private */
+    get showFilterSavingError(): boolean {
+        return this.savePopover().showFilterSavingError;
+    }
+
+    /** @docs-private */
+    set showFilterSavingError(value: boolean) {
+        this.savePopover().showFilterSavingError = value;
+    }
+
+    /** @docs-private */
+    get filterSavingErrorText(): string {
+        return this.savePopover().filterSavingErrorText;
+    }
+
+    /**
+     * header of popover. Depends on the mode
+     *
+     * @docs-private
+     */
+    get popoverHeader(): string {
+        return this.savePopover().popoverHeader;
+    }
 
     ngOnInit(): void {
         this.focusMonitor
@@ -292,58 +355,6 @@ export class KbqFilters implements OnInit {
 
             this.showError(error);
         });
-    }
-
-    // Delegating facade to the extracted `KbqFilterSavePopover`: the save-popover state, templates and
-    // logic live in that child; these members keep `KbqFilters`' public surface for callers and the template.
-
-    /** @docs-private */
-    get filterName(): FormControl<string | null> {
-        return this.savePopover().filterName;
-    }
-
-    /** @docs-private */
-    get saveNewFilter(): boolean {
-        return this.savePopover().saveNewFilter;
-    }
-
-    /** @docs-private */
-    set saveNewFilter(value: boolean) {
-        this.savePopover().saveNewFilter = value;
-    }
-
-    /** @docs-private */
-    get isSaving(): boolean {
-        return this.savePopover().isSaving;
-    }
-
-    /** @docs-private */
-    set isSaving(value: boolean) {
-        this.savePopover().isSaving = value;
-    }
-
-    /** @docs-private */
-    get showFilterSavingError(): boolean {
-        return this.savePopover().showFilterSavingError;
-    }
-
-    /** @docs-private */
-    set showFilterSavingError(value: boolean) {
-        this.savePopover().showFilterSavingError = value;
-    }
-
-    /** @docs-private */
-    get filterSavingErrorText(): string {
-        return this.savePopover().filterSavingErrorText;
-    }
-
-    /**
-     * header of popover. Depends on the mode
-     *
-     * @docs-private
-     */
-    get popoverHeader(): string {
-        return this.savePopover().popoverHeader;
     }
 
     /** @docs-private */

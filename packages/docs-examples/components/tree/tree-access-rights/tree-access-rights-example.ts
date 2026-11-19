@@ -217,12 +217,11 @@ abstract class TreeParams {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeAccessRightsExample extends TreeParams implements AfterViewInit, OnDestroy {
+    readonly tree = viewChild.required(KbqTreeSelection);
+
     modelValue: any = [];
     filteredModel: any = [];
-
     selectionChangeSubscription: Subscription = Subscription.EMPTY;
-
-    readonly tree = viewChild.required(KbqTreeSelection);
 
     ngAfterViewInit(): void {
         const handleSingleOption = (items: FileFlatNode[], cb: (item: FileFlatNode) => void) => {

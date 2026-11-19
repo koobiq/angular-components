@@ -1756,17 +1756,17 @@ class ModalWithoutModuleComponent {
     `
 })
 class ModalDrivenByEffectsComponent {
+    private readonly modalService = inject(KbqModalService);
+
     readonly modal = viewChild.required(KbqModalComponent);
+
     readonly wantCreated = signal(false);
     readonly wantOpen = signal(false);
     readonly wantClosed = signal(false);
     readonly wantCancelled = signal(false);
     readonly runs = { create: 0, open: 0, close: 0, cancel: 0 };
-
     visible = false;
     created?: KbqModalRef;
-
-    private readonly modalService = inject(KbqModalService);
 
     constructor() {
         effect(() => {

@@ -68,41 +68,9 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
     private readonly parent = inject(KBQ_PARENT_ANIMATION_COMPONENT, { optional: true, host: true });
     private readonly ngZone = inject(NgZone);
     private readonly destroyRef = inject(DestroyRef);
-
-    private readonly errorStateTracker = new KbqErrorStateTracker(
-        this.defaultErrorStateMatcher,
-        this.ngControl,
-        this.parentFormGroup,
-        this.parentForm
-    );
-
-    /** Whether the component is in an error state. */
-    readonly errorState = this.errorStateTracker.errorState;
-
-    /**
-     * Parameter enables or disables the ability to automatically increase the height.
-     * If set to false, the textarea becomes vertically resizable.
-     */
-    readonly canGrow = input(true, { transform: booleanAttribute });
-
     protected readonly isBrowser = inject(Platform).isBrowser;
     protected readonly renderer = inject(Renderer2);
     private readonly window = inject(KBQ_WINDOW);
-
-    /** Maximum number of lines to which the textarea will grow. Unlimited when unset. */
-    readonly maxRows = input<number | undefined, unknown>(undefined, { transform: kbqOptionalNumberAttribute });
-
-    /** An object used to control when error messages are shown. */
-    readonly errorStateMatcher = input<ErrorStateMatcher>();
-
-    private readonly focusedValue = signal(false);
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     *
-     * @docs-private
-     */
-    readonly focused = this.focusedValue.asReadonly();
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -110,29 +78,25 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
      * @docs-private
      */
     readonly autofilled = kbqInjectAutofilled();
+    protected readonly uid = inject(_IdGenerator).getId('kbq-textarea-');
 
     /**
-     * Implemented as part of KbqFormFieldControl.
-     *
-     * @docs-private
+     * Parameter enables or disables the ability to automatically increase the height.
+     * If set to false, the textarea becomes vertically resizable.
      */
-    controlType: string = 'textarea';
+    readonly canGrow = input(true, { transform: booleanAttribute });
+
+    /** Maximum number of lines to which the textarea will grow. Unlimited when unset. */
+    readonly maxRows = input<number | undefined, unknown>(undefined, { transform: kbqOptionalNumberAttribute });
+
+    /** An object used to control when error messages are shown. */
+    readonly errorStateMatcher = input<ErrorStateMatcher>();
 
     /** @docs-private */
     readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
         alias: 'disabled',
         transform: booleanAttribute
     });
-
-    /** `disabled` of the bound form control, which takes precedence over the input. */
-    private readonly formDisabled = signal<boolean | null>(null);
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     *
-     * @docs-private
-     */
-    readonly disabled = computed(() => this.formDisabled() ?? this.disabledInput());
 
     /**
      * Whether the textarea is read-only: its value can be selected and copied, but not changed. A read-only
@@ -143,22 +107,8 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
     /** @docs-private */
     readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
 
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     *
-     * @docs-private
-     */
-    readonly id = computed(() => this.idInput() || this.uid);
-
     /** @docs-private */
     readonly placeholderInput = input<string | undefined>(undefined, { alias: 'placeholder' });
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     *
-     * @docs-private
-     */
-    readonly placeholder = linkedSignal(() => this.placeholderInput());
 
     /** Distance from the last line to the bottom border. Defaults to a single line height. */
     readonly freeRowsHeight = input<number | undefined, unknown>(undefined, { transform: kbqOptionalNumberAttribute });
@@ -173,6 +123,72 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
     /** @docs-private */
     readonly valueInput = input<string | undefined>(undefined, { alias: 'value' });
 
+    private readonly errorStateTracker = new KbqErrorStateTracker(
+        this.defaultErrorStateMatcher,
+        this.ngControl,
+        this.parentFormGroup,
+        this.parentForm
+    );
+    private readonly focusedValue = signal(false);
+
+    /** `disabled` of the bound form control, which takes precedence over the input. */
+    private readonly formDisabled = signal<boolean | null>(null);
+    private readonly emptyValue = signal(true);
+
+    /** The value the element and `value` last agreed on, and the text the element showed then. */
+    private syncedValue: unknown;
+    private syncedText: string;
+    private readonly rowsCount = signal(0);
+
+    /** Measured once the textarea has been rendered; the growth arithmetic is in terms of these. */
+    private readonly lineHeight = signal(0);
+
+    /** Distance from the last line to the bottom border, falling back to the measured line height. */
+    private readonly resolvedFreeRowsHeight = computed(() => this.freeRowsHeight() ?? this.lineHeight());
+    private valueAccessor: { value: any };
+    private readonly verticalPadding = signal(0);
+
+    /** The `min-height` growth wrote last, so that turning growth off removes it and keeps a consumer's own. */
+    private grownMinHeight = '';
+
+    /** Whether the component is in an error state. */
+    readonly errorState = this.errorStateTracker.errorState;
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     *
+     * @docs-private
+     */
+    readonly focused = this.focusedValue.asReadonly();
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     *
+     * @docs-private
+     */
+    controlType: string = 'textarea';
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     *
+     * @docs-private
+     */
+    readonly disabled = computed(() => this.formDisabled() ?? this.disabledInput());
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     *
+     * @docs-private
+     */
+    readonly id = computed(() => this.idInput() || this.uid);
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     *
+     * @docs-private
+     */
+    readonly placeholder = linkedSignal(() => this.placeholderInput());
+
     /**
      * Implemented as part of KbqFormFieldControl. Follows what the user types; a value bound with `[value]` or set
      * here is written to the element.
@@ -180,12 +196,6 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
      * @docs-private
      */
     readonly value: WritableSignal<string>;
-
-    private readonly emptyValue = signal(true);
-
-    /** The value the element and `value` last agreed on, and the text the element showed then. */
-    private syncedValue: unknown;
-    private syncedText: string;
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -213,21 +223,6 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
      * @docs-private
      */
     protected readonly growing = computed(() => !this.maxRowLimitReached() && this.canGrow());
-
-    /** Distance from the last line to the bottom border, falling back to the measured line height. */
-    private readonly resolvedFreeRowsHeight = computed(() => this.freeRowsHeight() ?? this.lineHeight());
-
-    protected readonly uid = inject(_IdGenerator).getId('kbq-textarea-');
-
-    private valueAccessor: { value: any };
-
-    /** Measured once the textarea has been rendered; the growth arithmetic is in terms of these. */
-    private readonly lineHeight = signal(0);
-    private readonly verticalPadding = signal(0);
-    private readonly rowsCount = signal(0);
-
-    /** The `min-height` growth wrote last, so that turning growth off removes it and keeps a consumer's own. */
-    private grownMinHeight = '';
 
     constructor() {
         const inputValueAccessor = inject(KBQ_TEXTAREA_VALUE_ACCESSOR, { optional: true, self: true });

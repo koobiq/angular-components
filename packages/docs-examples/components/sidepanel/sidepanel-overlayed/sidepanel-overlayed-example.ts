@@ -15,18 +15,15 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelOverlayedExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
-    protected position = KbqSidepanelPosition.Right;
-
-    protected readonly overlaysCount = 2;
+    private sidepanelService = inject(KbqSidepanelService);
 
     readonly template = viewChild.required(TemplateRef);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
+    protected position = KbqSidepanelPosition.Right;
+    protected readonly overlaysCount = 2;
     protected readonly arrayLength = 40;
     protected readonly array = new Array(this.arrayLength);
-
-    private sidepanelService = inject(KbqSidepanelService);
 
     openSidepanel(): void {
         for (let i = 0; i < this.overlaysCount; i++) {

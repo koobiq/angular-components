@@ -130,9 +130,11 @@ class ActionsPanelWithTooltip {
 })
 export class ActionsPanelController {
     readonly actionsPanel = inject(KbqActionsPanel, { self: true });
-    readonly template = viewChild.required('actionsPanel', { read: TemplateRef });
-    readonly component = ActionsPanelComponent;
     readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+    readonly template = viewChild.required('actionsPanel', { read: TemplateRef });
+
+    readonly component = ActionsPanelComponent;
 
     openFromTemplate<D = string>(config?: KbqActionsPanelConfig<D>): KbqActionsPanelRef {
         return this.actionsPanel.open(this.template(), config);
@@ -158,10 +160,11 @@ export class ActionsPanelController {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 class ActionsPanelLiveContent {
-    readonly counter = signal(0);
-
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+
     private readonly template = viewChild.required('actionsPanel', { read: TemplateRef });
+
+    readonly counter = signal(0);
 
     open(): void {
         this.actionsPanel.open(this.template());
@@ -181,8 +184,8 @@ class ActionsPanelLiveContent {
 })
 class ActionsPanelOverflowItems {
     readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+
     private readonly template = viewChild.required('actionsPanel', { read: TemplateRef });
 
     open(config?: KbqActionsPanelConfig): KbqActionsPanelRef {
@@ -210,9 +213,9 @@ class ActionsPanelSelectionCounter {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 class ActionsPanelSelectionHost {
-    readonly selection: ActionsPanelSelection = { selected: [] };
-
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+
+    readonly selection: ActionsPanelSelection = { selected: [] };
 
     open(): void {
         this.actionsPanel.open(ActionsPanelSelectionCounter, { data: this.selection });

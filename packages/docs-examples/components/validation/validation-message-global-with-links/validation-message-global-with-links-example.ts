@@ -50,9 +50,7 @@ const restSymbolsRegex = /[^0-9]+/g;
 })
 export class ValidationMessageGlobalWithLinksExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly popUpPlacements = PopUpPlacements;
-
     protected readonly inProgress = signal(false);
     protected readonly showError = signal(false);
     protected readonly form = new FormGroup({

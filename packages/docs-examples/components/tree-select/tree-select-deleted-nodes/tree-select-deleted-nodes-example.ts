@@ -144,11 +144,13 @@ export const DATA_OBJECT = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectDeletedNodesExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly defaultErrorStateMatcher = inject(ErrorStateMatcher);
 
+    // The explicit list of deleted ids as it would arrive from the backend.
+    private readonly backendDeletedIds = ['Downloads/November', 'Downloads/October'];
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
@@ -173,8 +175,10 @@ export class TreeSelectDeletedNodesExample {
             (Array.isArray(control?.value) && control!.value.some((id: string) => this.deletedIds.has(id)))
     };
 
-    // The explicit list of deleted ids as it would arrive from the backend.
-    private readonly backendDeletedIds = ['Downloads/November', 'Downloads/October'];
+    /** Count of currently-selected values that are deleted — drives the explanatory hint. */
+    get deletedCount(): number {
+        return ((this.control.value as string[]) || []).filter((id) => this.deletedIds.has(id)).length;
+    }
 
     constructor() {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
@@ -202,11 +206,6 @@ export class TreeSelectDeletedNodesExample {
         this.deletedIds = new Set(this.backendDeletedIds);
         this.dataSource.data = raw;
         this.changeDetectorRef.markForCheck();
-    }
-
-    /** Count of currently-selected values that are deleted — drives the explanatory hint. */
-    get deletedCount(): number {
-        return ((this.control.value as string[]) || []).filter((id) => this.deletedIds.has(id)).length;
     }
 
     // Hide a deleted node (and the whole subtree of a deleted parent) from the dropdown.

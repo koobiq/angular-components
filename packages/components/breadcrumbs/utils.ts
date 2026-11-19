@@ -32,7 +32,7 @@ export function getFocusIntent(event: KeyboardEvent, orientation?: KbqRovingFocu
     const key = getDirectionAwareKey(event.key, dir);
 
     if (orientation === 'vertical' && ['ArrowLeft', 'ArrowRight'].includes(key)) return undefined;
-    if (orientation === 'horizontal' && ['ArrowUp', 'ArrowDown'].includes(key)) return undefined;
+    if (orientation === 'horizontal' && ['ArrowDown', 'ArrowUp'].includes(key)) return undefined;
 
     return MAP_KEY_TO_FOCUS_INTENT[key];
 }

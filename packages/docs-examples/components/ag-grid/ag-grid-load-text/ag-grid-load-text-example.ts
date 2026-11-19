@@ -32,7 +32,6 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class AgGridLoadTextExampleLoadingText implements ICellRendererAngularComp {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly label = computed(() => this.t().loading);
 
     agInit(): void {}
@@ -72,18 +71,14 @@ export class AgGridLoadTextExampleLoadingText implements ICellRendererAngularCom
 })
 export class AgGridLoadTextExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly loadingTextRenderer = AgGridLoadTextExampleLoadingText;
-
     protected readonly columnDefs = computed(() =>
         Array.from({ length: 3 }, (_, i) => ({
             field: 'column' + i,
             headerName: this.t().headerText
         }))
     );
-
     protected readonly rowSelection: RowSelectionOptions = { mode: 'multiRow', headerCheckbox: false };
-
     protected readonly datasource = computed<IDatasource>(() => ({
         getRows: ({ startRow, endRow, successCallback }: IGetRowsParams) => {
             setTimeout(

@@ -69,6 +69,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class PopoverScrollExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     activePopover?: KbqPopoverTrigger;
 }

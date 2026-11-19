@@ -114,6 +114,7 @@
         "eslint-import-resolver-typescript": "^4.4.5",
         "eslint-plugin-import-x": "^4.17.1",
         "eslint-plugin-jsdoc": "^65.4.5",
+        "eslint-plugin-perfectionist": "^5.14.0",
         "eslint-plugin-playwright": "^2.12.2",
         "eslint-plugin-prettier": "^5.5.7",
         "eslint-plugin-promise": "^7.3.0",
