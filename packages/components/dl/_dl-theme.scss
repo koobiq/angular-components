@@ -5,6 +5,10 @@
         color: var(--kbq-description-list-term-color);
     }
 
+    .kbq-dt-caption {
+        color: var(--kbq-description-list-caption-color);
+    }
+
     .kbq-dd {
         color: var(--kbq-description-list-description-color);
     }
@@ -14,6 +18,10 @@
     .kbq-dl {
         & .kbq-dt {
             @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        }
+
+        & .kbq-dt-caption {
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
         }
 
         & .kbq-dd {

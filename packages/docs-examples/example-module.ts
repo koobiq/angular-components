@@ -2022,6 +2022,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "dl-alignment-example.ts",
     "importPath": "components/dl"
   },
+  "dl-caption": {
+    "packagePath": "components/dl/dl-caption",
+    "title": "Description list caption",
+    "componentName": "DlCaptionExample",
+    "files": [
+      "dl-caption-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "dl-caption-example",
+    "primaryFile": "dl-caption-example.ts",
+    "importPath": "components/dl"
+  },
   "dl-dt-width": {
     "packagePath": "components/dl/dl-dt-width",
     "title": "Description list term width",
@@ -9711,6 +9726,7 @@ export type LiveExampleId =
   | 'divider-overview'
   | 'divider-vertical'
   | 'dl-alignment'
+  | 'dl-caption'
   | 'dl-dt-width'
   | 'dl-long-text'
   | 'dl-min-width'
