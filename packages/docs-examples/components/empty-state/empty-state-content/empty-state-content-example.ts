@@ -52,15 +52,13 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmptyStateContentExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    private readonly themeService = inject(KbqThemeService, { optional: true });
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     readonly colors = KbqComponentColors;
     readonly styles = KbqButtonStyles;
-    private readonly themeService = inject(KbqThemeService, { optional: true });
     protected readonly currentTheme = computed(() => this.themeService?.colorScheme() ?? 'light');
-
     protected readonly src = computed(() => `https://koobiq.io/assets/images/${this.currentTheme()}/empty_192.webp`);
-
     protected readonly src2x = computed(
         () => `https://koobiq.io/assets/images/${this.currentTheme()}/empty_192@2x.webp`
     );

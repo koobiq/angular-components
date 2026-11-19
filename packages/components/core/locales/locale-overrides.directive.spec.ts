@@ -135,6 +135,7 @@ describe('KbqLocaleOverridesDirective', () => {
         })
         class LocalizedReader {
             readonly carrier = inject(KbqLocaleOverridesDirective, { self: true });
+
             readonly select = this.carrier.read('select', KBQ_SELECT_LOCALE_CONFIGURATION);
 
             readSelect() {

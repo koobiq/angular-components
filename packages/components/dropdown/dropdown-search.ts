@@ -50,6 +50,11 @@ export class KbqDropdownSearch implements AfterContentInit {
      */
     readonly panel = inject(KBQ_DROPDOWN_PANEL, { optional: true });
 
+    /** The form control the query is bound to. */
+    get ngControl() {
+        return this.formField.control().ngControl;
+    }
+
     constructor() {
         const localeConfiguration = kbqInjectA11yLocaleConfiguration();
 
@@ -58,11 +63,6 @@ export class KbqDropdownSearch implements AfterContentInit {
             () => this.panel?.searchFieldPopup,
             () => localeConfiguration().search
         );
-    }
-
-    /** The form control the query is bound to. */
-    get ngControl() {
-        return this.formField.control().ngControl;
     }
 
     ngAfterContentInit(): void {

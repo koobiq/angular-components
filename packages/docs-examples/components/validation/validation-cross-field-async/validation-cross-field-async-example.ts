@@ -115,8 +115,6 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher((_key, va
     }
 })
 export class ValidationCrossFieldAsyncExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly form = new FormGroup(
         {
             currentPassword: new FormControl('', Validators.required),
@@ -132,5 +130,6 @@ export class ValidationCrossFieldAsyncExample {
 
     private readonly status = toSignal(this.form.statusChanges, { initialValue: this.form.status });
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly pending = computed(() => this.status() === 'PENDING');
 }

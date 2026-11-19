@@ -32,9 +32,9 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastReportOverviewExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly toastService = inject(KbqToastService);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     showToast(caption: TemplateRef<any>, actions: TemplateRef<any>) {
         this.toastService.show({ style: KbqToastStyle.Success, caption, actions }, 0);

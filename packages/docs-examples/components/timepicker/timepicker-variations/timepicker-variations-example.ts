@@ -30,12 +30,10 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimepickerVariationsExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     value: DateTime;
-
     timeFormat = TimeFormats.HHmm;
     protected readonly TimeFormats = TimeFormats;
 

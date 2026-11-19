@@ -87,16 +87,16 @@ const ESCAPE_KEY_EVENT = new KeyboardEvent('keydown', { key: 'Escape' });
     `
 })
 export class TestContentPanel {
+    readonly opened = model(false);
+
     readonly container = viewChild.required(KbqContentPanelContainer);
 
-    readonly opened = model(false);
     readonly minWidth = signal(300);
     readonly width = signal(400);
     readonly maxWidth = signal(500);
     readonly disableClose = signal(false);
     readonly disableCloseByEscape = signal(false);
     readonly beforeClose = signal<KbqContentPanelBeforeClose | undefined>(undefined);
-
     readonly paragraphs = Array.from({ length: 100 });
 }
 
@@ -355,6 +355,7 @@ const EFFECT_RUN_LIMIT = 10;
 })
 class ContentPanelDrivenByEffect {
     readonly container = viewChild.required(KbqContentPanelContainer);
+
     readonly action = signal<'open' | 'toggle' | null>(null);
     runs = 0;
 
@@ -417,6 +418,7 @@ class UncontrolledContentPanel {
     readonly minWidth = signal(300);
     readonly maxWidth = signal(500);
     readonly useStateSaving = signal(true);
+
     /** An empty key leaves the panel on the key derived from its position in the document. */
     readonly stateSavingKey = signal('content-panel-key');
 }

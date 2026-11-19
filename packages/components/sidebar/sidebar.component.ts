@@ -125,6 +125,49 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
     private readonly injector = inject(Injector);
 
     /**
+     * Persistence of the opened state and width, applied as a host directive. `useStateSaving` and
+     * `stateSavingKey` are its inputs, forwarded onto the sidebar.
+     */
+    private readonly stateSaving = inject(KbqStateSaving);
+
+    readonly position = input<SidebarPositions>(undefined!);
+
+    /** @docs-private */
+    readonly openedInput = input<boolean | undefined>(undefined, { alias: 'opened' });
+
+    readonly stateChanged = output<boolean>();
+
+    /**
+     * @docs-private
+     */
+    readonly openedContent = contentChild(KbqSidebarOpened);
+
+    /**
+     * @docs-private
+     */
+    readonly closedContent = contentChild(KbqSidebarClosed);
+
+    private stateAnimation?: { destroy(): void };
+    private readonly openedState = signal(true);
+
+    /**
+     * Whether anything has assigned `opened`. Snapshotted while initializing, where only an input binding
+     * can have done so — `toggle()` needs a view query and the bracket shortcut is registered later — so
+     * it reads as "the application drives this sidebar" and suppresses persistence.
+     */
+    private openedWritten = false;
+    private controlled = false;
+    private readonly paramsState = signal<KbqSidebarParams>({
+        openedStateWidth: 'inherit',
+        openedStateMinWidth: 'inherit',
+        openedStateMaxWidth: 'inherit',
+
+        closedStateWidth: '32px'
+    });
+    private readonly internalStateSignal = signal(true);
+    private unbindKeydownListener: ReturnType<Renderer2['listen']> | null = null;
+
+    /**
      * Whether the sidebar opens and closes without motion.
      *
      * @docs-private
@@ -139,14 +182,6 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
      */
     protected readonly toggling = signal(false);
 
-    private stateAnimation?: { destroy(): void };
-
-    /**
-     * Persistence of the opened state and width, applied as a host directive. `useStateSaving` and
-     * `stateSavingKey` are its inputs, forwarded onto the sidebar.
-     */
-    private readonly stateSaving = inject(KbqStateSaving);
-
     get opened(): boolean {
         return this.openedState();
     }
@@ -155,19 +190,6 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
         // Untracked: an `effect` that assigns `opened` must not come to depend on the state it replaces.
         untracked(() => this.setOpened(value));
     }
-
-    private readonly openedState = signal(true);
-
-    /**
-     * Whether anything has assigned `opened`. Snapshotted while initializing, where only an input binding
-     * can have done so — `toggle()` needs a view query and the bracket shortcut is registered later — so
-     * it reads as "the application drives this sidebar" and suppresses persistence.
-     */
-    private openedWritten = false;
-
-    private controlled = false;
-
-    readonly position = input<SidebarPositions>(undefined!);
 
     /**
      * @docs-private
@@ -181,26 +203,6 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
         this.paramsState.set(value);
     }
 
-    private readonly paramsState = signal<KbqSidebarParams>({
-        openedStateWidth: 'inherit',
-        openedStateMinWidth: 'inherit',
-        openedStateMaxWidth: 'inherit',
-
-        closedStateWidth: '32px'
-    });
-
-    readonly stateChanged = output<boolean>();
-
-    /**
-     * @docs-private
-     */
-    readonly openedContent = contentChild(KbqSidebarOpened);
-
-    /**
-     * @docs-private
-     */
-    readonly closedContent = contentChild(KbqSidebarClosed);
-
     /**
      * @docs-private
      */
@@ -213,18 +215,19 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
         this.internalStateSignal.set(value);
     }
 
-    private readonly internalStateSignal = signal(true);
+    /**
+     * Whether state is currently persisted for this sidebar — restored on init, or written since.
+     * Always `false` while `useStateSaving` is unset, and `false` again after `clearSavedState()`.
+     */
+    get hasSavedState(): boolean {
+        return this.stateSaving.state != null;
+    }
 
-    private unbindKeydownListener: ReturnType<Renderer2['listen']> | null = null;
-
-    /** @docs-private */
-    readonly openedInput = input<boolean | undefined>(undefined, { alias: 'opened' });
-
-    ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member, a bound `undefined` as `false`; unbound, it leaves what code wrote.
-        if (changes['openedInput']) {
-            this.opened = this.openedInput() ?? false;
-        }
+    /** Whether this sidebar reads and writes its state at all. */
+    private get persists(): boolean {
+        // A sidebar that is not in the document has no stable key — the default resolver derives one from
+        // the path to `<body>` — which is the ordinary state of one projected into an overlay.
+        return this.stateSaving.useStateSaving() && !this.controlled && !!this.stateSaving.host?.isConnected;
     }
 
     constructor() {
@@ -234,6 +237,13 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
         this.stateSaving.keyChanges.subscribe(() => {
             if (this.restoreState()) this.waitForStateAnimation(true);
         });
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member, a bound `undefined` as `false`; unbound, it leaves what code wrote.
+        if (changes['openedInput']) {
+            this.opened = this.openedInput() ?? false;
+        }
     }
 
     ngAfterContentInit(): void {
@@ -257,6 +267,10 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
         // rendered.
         this.internalState = this.openedState();
         this.waitForStateAnimation(false);
+    }
+
+    ngOnDestroy(): void {
+        this.unRegisterKeydownListener();
     }
 
     /**
@@ -288,10 +302,6 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
         return changed;
     }
 
-    ngOnDestroy(): void {
-        this.unRegisterKeydownListener();
-    }
-
     /**
      * Persists whether the sidebar is open and the width it was last left at.
      *
@@ -315,14 +325,6 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
      */
     clearSavedState(): void {
         untracked(() => this.stateSaving.clear());
-    }
-
-    /**
-     * Whether state is currently persisted for this sidebar — restored on init, or written since.
-     * Always `false` while `useStateSaving` is unset, and `false` again after `clearSavedState()`.
-     */
-    get hasSavedState(): boolean {
-        return this.stateSaving.state != null;
     }
 
     toggle(): void {
@@ -400,13 +402,6 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
         ) {
             this.toggle();
         }
-    }
-
-    /** Whether this sidebar reads and writes its state at all. */
-    private get persists(): boolean {
-        // A sidebar that is not in the document has no stable key — the default resolver derives one from
-        // the path to `<body>` — which is the ordinary state of one projected into an overlay.
-        return this.stateSaving.useStateSaving() && !this.controlled && !!this.stateSaving.host?.isConnected;
     }
 
     /** The whole state, with the width left out while it is the one the content declares. */

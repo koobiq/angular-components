@@ -59,11 +59,11 @@ interface ExampleUser {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListIntermediateStateExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    readonly popover = viewChild.required(KbqPopoverTrigger);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     PopUpSizes = PopUpSizes;
     PopUpPlacements = PopUpPlacements;
-
     users: ExampleUser[] = [
         {
             lastName: '',
@@ -220,18 +220,13 @@ export class ListIntermediateStateExample {
             displayName: 'Яковлев Е.'
         }
     ];
-
     usersSelectedInOtherGroups: ExampleUser[] = this.users.slice(0, 1);
     savedUsersSelectedInOtherGroups: ExampleUser[] = [];
-
     selected: ExampleUser[] = this.users.filter((_, index) => [5, 8, 11].includes(index));
     savedSelection: ExampleUser[] = [];
     needRestore: boolean = true;
-
     searchControl: UntypedFormControl = new UntypedFormControl();
     filteredUsers: Observable<ExampleUser[]>;
-
-    readonly popover = viewChild.required(KbqPopoverTrigger);
 
     constructor() {
         this.filteredUsers = merge(

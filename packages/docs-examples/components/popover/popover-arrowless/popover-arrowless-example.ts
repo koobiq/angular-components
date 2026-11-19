@@ -53,7 +53,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class PopoverArrowlessExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     colors = KbqComponentColors;
     protected readonly popoverSize = PopUpSizes.Large;
 }

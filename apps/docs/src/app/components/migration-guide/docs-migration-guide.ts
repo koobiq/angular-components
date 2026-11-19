@@ -117,18 +117,12 @@ export class DocsMigrationGuide extends DocsLocaleState {
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
     private readonly document = inject<Document>(DOCUMENT);
-
-    /** The page `docsPageResolver` compiled from the guide's MDX for the route. */
-    protected readonly page = toSignal(this.route.data.pipe(map(({ page }): Type<unknown> => page)), {
-        requireSync: true
-    });
-
-    private readonly article = viewChild.required<ElementRef<HTMLElement>>('article');
-
     private readonly host = kbqInjectNativeElement();
     private readonly appRef = inject(ApplicationRef);
     private readonly injector = inject(Injector);
     private readonly progress = inject(DocsMigrationProgress);
+
+    private readonly article = viewChild.required<ElementRef<HTMLElement>>('article');
 
     /** The reader's "done" marks mounted into the rendered guide, released whenever it renders again. */
     private doneMarks: DomPortalOutlet[] = [];
@@ -138,18 +132,16 @@ export class DocsMigrationGuide extends DocsLocaleState {
 
     /** Steps of the rendered guide. Empty until the browser has read the page, i.e. always on the server. */
     private readonly steps = signal<HTMLElement[]>([]);
+
     /** The intro, the upgrade plan and the closing note, which frame whatever steps are shown. */
     private readonly framingSections = signal<HTMLElement[]>([]);
+
     /** The title as the guide spells it, keyed by its text node: a re-render brings a new one. */
     private readonly documentTitles = new WeakMap<Node, string>();
 
-    protected readonly from = signal<string | null>(null);
-    protected readonly to = signal<string | null>(null);
-    /** Docs item ids of the components the reader uses; empty for no narrowing by component. */
-    protected readonly components = signal<string[]>([]);
-
     /** Every component a step of the guide is tagged with, read from the page. */
     private readonly componentIds = signal<string[]>([]);
+
     /** The components as the picker names them: the docs site's own names, in the reader's language. */
     private readonly componentOptions = computed(() => {
         const names = new Map(docsGetItems().map(({ id, name }) => [id as string, name[this.locale()]]));
@@ -160,7 +152,32 @@ export class DocsMigrationGuide extends DocsLocaleState {
     });
 
     protected readonly componentSearch = new FormControl('', { nonNullable: true });
+
     private readonly componentQuery = toSignal(this.componentSearch.valueChanges, { initialValue: '' });
+
+    /**
+     * Tracked as a signal rather than read off `route.snapshot`: following a link to another step
+     * changes only the fragment, and the filter has to re-run for it — both to reveal the step being
+     * linked to and to let go of the one it was pinning before.
+     */
+    private readonly fragment = signal<string | null>(null);
+    private readonly versionOptions = signal<DocsMigrationVersionOption[]>([]);
+
+    /** The releases the guide's steps are filed at, one per step. */
+    private readonly stepReleases = signal<DocsVersion[]>([]);
+
+    /** Heading ids of the steps on screen, or `null` before the page has been filtered at all. */
+    private readonly shownSteps = signal<string[] | null>(null);
+
+    /** The page `docsPageResolver` compiled from the guide's MDX for the route. */
+    protected readonly page = toSignal(this.route.data.pipe(map(({ page }): Type<unknown> => page)), {
+        requireSync: true
+    });
+    protected readonly from = signal<string | null>(null);
+    protected readonly to = signal<string | null>(null);
+
+    /** Docs item ids of the components the reader uses; empty for no narrowing by component. */
+    protected readonly components = signal<string[]>([]);
     protected readonly componentChoices = computed(() => {
         const matches = createSearchPredicate(this.componentQuery());
         const picked = new Set(this.components());
@@ -169,25 +186,11 @@ export class DocsMigrationGuide extends DocsLocaleState {
         // it has an option for, so the next pick would silently drop it.
         return this.componentOptions().filter(({ value, label }) => picked.has(value) || matches(label));
     });
-
-    /**
-     * Tracked as a signal rather than read off `route.snapshot`: following a link to another step
-     * changes only the fragment, and the filter has to re-run for it — both to reveal the step being
-     * linked to and to let go of the one it was pinning before.
-     */
-    private readonly fragment = signal<string | null>(null);
-
-    private readonly versionOptions = signal<DocsMigrationVersionOption[]>([]);
-    /** The releases the guide's steps are filed at, one per step. */
-    private readonly stepReleases = signal<DocsVersion[]>([]);
-
     protected readonly fromChoices = computed(() => docsMigrationFromChoices(this.versionOptions(), this.to()));
     protected readonly toChoices = computed(() => docsMigrationToChoices(this.versionOptions(), this.from()));
 
     /** Hidden until the page has been read, which is what makes the server and client agree. */
     protected readonly ready = computed(() => this.versionOptions().length > 0);
-    /** Heading ids of the steps on screen, or `null` before the page has been filtered at all. */
-    private readonly shownSteps = signal<string[] | null>(null);
     protected readonly nothingToDo = computed(() => !!this.from() && !!this.to() && this.shownSteps()?.length === 0);
 
     /** How many of the steps on screen the reader has marked done. */

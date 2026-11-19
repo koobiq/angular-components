@@ -50,7 +50,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class BreadcrumbsTruncateByAbbrevItemsExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly breadcrumbs = computed(() => [
         { longText: this.t().main, url: '/main' },
         { longText: this.t().reviews, url: '/main/reviews' },

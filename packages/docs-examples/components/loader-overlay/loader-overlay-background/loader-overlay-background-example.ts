@@ -137,10 +137,8 @@ import { TRANSLATIONS } from './l10n';
 })
 export class LoaderOverlayBackgroundExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly content = computed(() => this.t().backgroundContent);
     protected readonly contentFade = computed(() => this.t().backgroundContentFade);
-
     protected readonly surfaces: ReadonlyArray<{
         value: KbqLoaderOverlaySurface;
         surfaceClass: string;

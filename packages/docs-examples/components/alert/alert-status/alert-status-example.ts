@@ -21,7 +21,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class AlertStatusExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     colors = KbqComponentColors;
     alertStyles = KbqAlertStyles;
     alertColors = KbqAlertColors;

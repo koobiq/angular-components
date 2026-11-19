@@ -31,16 +31,13 @@ abstract class TreeParams {
         (node) => node.name,
         (node) => node.name
     );
-
     treeFlattener = new KbqTreeFlattener<Node, FlatNode>(
         (node, level) => ({ name: node.name, level, expandable: !!node.children?.length }),
         (node) => node.level,
         (node) => node.expandable,
         (node) => node.children
     );
-
     dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
     indent: number | string = 12;
 
     constructor() {

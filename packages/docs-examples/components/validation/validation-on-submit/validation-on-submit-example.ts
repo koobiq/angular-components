@@ -141,20 +141,19 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class ValidationOnSubmitExample implements AfterViewInit, OnDestroy {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly focusMonitor = inject(FocusMonitor);
 
     protected readonly alertContainer = viewChild<ElementRef<HTMLDivElement>>('alertContainer');
+    private readonly formFieldList = viewChildren(KbqFormField);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly showServerErrors = signal(false);
     protected readonly inProgress = signal(false);
     protected readonly globalErrorForm = new FormGroup({
         firstName: new FormControl('', [Validators.required]),
         lastName: new FormControl('')
     });
-
-    protected readonly focusMonitor = inject(FocusMonitor);
     protected submitOrigin: FocusOrigin | null = null;
-    private readonly formFieldList = viewChildren(KbqFormField);
 
     ngAfterViewInit() {
         const alert = this.alertContainer();

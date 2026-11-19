@@ -41,7 +41,6 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
 })
 export class FileUploadSingleValidationReactiveFormsOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     formGroup = new FormGroup({
         fileControl: new FormControl(null, FileValidators.maxFileSize(MAX_FILE_SIZE))
     });

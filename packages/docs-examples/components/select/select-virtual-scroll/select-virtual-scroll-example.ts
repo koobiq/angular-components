@@ -42,12 +42,13 @@ type OptionItem = { id: number; label: string };
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectVirtualScrollExample {
-    readonly options: OptionItem[] = Array.from({ length: 10000 }).map((_, i) => ({ id: i, label: `Option #${i}` }));
     readonly virtualScrollViewport = viewChild.required(CdkVirtualScrollViewport);
 
+    readonly options: OptionItem[] = Array.from({ length: 10000 }).map((_, i) => ({ id: i, label: `Option #${i}` }));
     selected: OptionItem | undefined = this.options[0];
 
     readonly compareWith = (a: OptionItem | null, b: OptionItem | null) => a?.id === b?.id;
+
     readonly virtualOptionFactory = (value: OptionItem) => new KbqVirtualOption(value, false, value.label);
 
     openedChange(isOpened: boolean): void {

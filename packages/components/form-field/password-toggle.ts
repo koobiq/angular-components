@@ -99,7 +99,6 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
 export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit {
     protected readonly nativeElement = kbqInjectNativeElement();
     protected override readonly focusMonitor = inject(FocusMonitor);
-
     private readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'a11y',
         KBQ_A11Y_LOCALE_CONFIGURATION
@@ -108,17 +107,26 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
 
     readonly tabindex = input<number, unknown>(0, { transform: numberAttribute });
 
-    /**
-     * @docs-private
-     */
-    readonly icon = viewChild.required(KbqIconButton);
-
     /** @docs-private */
     override readonly contentInput: InputSignal<KbqTooltipTrigger['content'] | undefined> = input<
         KbqTooltipTrigger['content'] | undefined
     >(undefined, {
         alias: 'kbqTooltipNotHidden'
     });
+
+    /** Tooltip shown while the password is hidden. */
+    readonly kbqTooltipHidden = input<string | TemplateRef<any>>(undefined!);
+
+    /**
+     * @docs-private
+     */
+    readonly icon = viewChild.required(KbqIconButton);
+
+    private readonly visibilityState = computed<'hidden' | 'visible'>(() =>
+        this.control.disabled() ? 'hidden' : 'visible'
+    );
+
+    protected readonly hasError = computed(() => !!this.formField?.control().errorState());
 
     /**
      * Tooltip shown while the password is visible. Reading it resolves to the tooltip matching the current
@@ -133,11 +141,6 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
 
         untracked(() => this.updateData());
     }
-
-    /** Tooltip shown while the password is hidden. */
-    readonly kbqTooltipHidden = input<string | TemplateRef<any>>(undefined!);
-
-    protected readonly hasError = computed(() => !!this.formField?.control().errorState());
 
     /** Form field password control. */
     private get control(): KbqPasswordToggleControl {
@@ -170,10 +173,6 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     get visibility(): 'hidden' | 'visible' {
         return this.visibilityState();
     }
-
-    private readonly visibilityState = computed<'hidden' | 'visible'>(() =>
-        this.control.disabled() ? 'hidden' : 'visible'
-    );
 
     /**
      * Accessible name of the icon-only toggle, describing the action it performs.

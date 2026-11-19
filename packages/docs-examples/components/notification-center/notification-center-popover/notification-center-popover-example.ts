@@ -37,11 +37,11 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationCenterPopoverExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     notificationService = inject(KbqNotificationCenterService);
 
     private readonly actionsTemplate = viewChild<TemplateRef<unknown>>('actionsTemplate');
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     constructor() {
         // Rebuilt on a locale switch to follow the language; the stable ids keep the read state.

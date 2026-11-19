@@ -127,7 +127,6 @@ type BreadcrumbState = {
 })
 export class E2eBreadcrumbsStateAndStyle {
     items = Array.from({ length: 5 }, (_, i) => `Item #${i}`);
-
     protected readonly states: BreadcrumbState[][] = [
         ...(['compact', 'normal', 'big'] satisfies KbqDefaultSizes[]).map((size) => [
             {
@@ -255,7 +254,6 @@ export class E2eBreadcrumbsOverflowMax {
 export class E2eBreadcrumbsInForm {
     readonly max = 4;
     readonly items = Array.from({ length: 5 }, (_, i) => `Item #${i}`);
-
     submitCount = 0;
 
     onSubmit(event: Event): void {

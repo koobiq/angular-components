@@ -8,6 +8,8 @@ import { BehaviorSubject, map, merge, type Observable } from 'rxjs';
  * or collapse. The expansion/collapsion will be handled by TreeControl and each non-leaf node.
  */
 export class KbqTreeNestedDataSource<T> extends DataSource<T> {
+    private _data = new BehaviorSubject<T[]>([]);
+
     get data() {
         return this._data.value;
     }
@@ -15,8 +17,6 @@ export class KbqTreeNestedDataSource<T> extends DataSource<T> {
     set data(value: T[]) {
         this._data.next(value);
     }
-
-    private _data = new BehaviorSubject<T[]>([]);
 
     connect(collectionViewer: CollectionViewer): Observable<T[]> {
         return merge(...[collectionViewer.viewChange, this._data as any]).pipe(map(() => this.data));

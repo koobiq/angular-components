@@ -207,9 +207,7 @@ export class TreeSelectLazyloadExample {
     selected = '';
     treeControl: FlatTreeControl<FlatNode>;
     treeFlattener: KbqTreeFlattener<LazyLoadNode, FlatNode>;
-
     dataSource: LazyLoadDataSource<LazyLoadNode, FlatNode>;
-
     nodeMap = new Map<string, FlatNode>();
 
     constructor() {

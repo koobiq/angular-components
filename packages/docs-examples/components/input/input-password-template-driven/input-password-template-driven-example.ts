@@ -77,6 +77,5 @@ class ExamplePasswordRules implements Validator {
 })
 export class InputPasswordTemplateDrivenExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly password = signal('');
 }

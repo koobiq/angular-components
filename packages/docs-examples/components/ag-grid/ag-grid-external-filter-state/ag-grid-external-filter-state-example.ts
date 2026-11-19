@@ -57,12 +57,12 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridExternalFilterStateExample {
+    readonly filter = model<number | null>(null);
+
     protected readonly t = injectTranslation(TRANSLATIONS);
 
     // Option values and the row field are category indexes, so the filter state survives a locale switch.
     readonly options = this.t().categories.map((_, index) => index);
-    readonly filter = model<number | null>(null);
-    readonly filterPass = (node: IRowNode): boolean => node.data.filter === this.filter();
     readonly columnDefs = computed<ColDef[]>(() => [
         { field: 'column0', headerName: 'Column 0', width: 130 },
         { field: 'filter', headerName: this.t().filter, width: 130 },
@@ -79,4 +79,6 @@ export class AgGridExternalFilterStateExample {
         column3: 'Text ' + index,
         column4: 'Text ' + index
     }));
+
+    readonly filterPass = (node: IRowNode): boolean => node.data.filter === this.filter();
 }

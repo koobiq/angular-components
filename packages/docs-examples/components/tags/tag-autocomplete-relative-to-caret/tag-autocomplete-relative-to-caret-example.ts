@@ -64,6 +64,9 @@ import { type KbqTagEvent, type KbqTagInputEvent, KbqTagsModule } from '@koobiq/
     }
 })
 export class TagAutocompleteRelativeToCaretExample {
+    protected readonly tagInputModel = model('');
+    protected readonly tags = model(['TheHacker', 'ClamAV', 'NANO-Antivirus', 'Babable', 'Palo Alto Networks']);
+
     private readonly options = [
         'Acronis',
         'AegisLab',
@@ -78,8 +81,6 @@ export class TagAutocompleteRelativeToCaretExample {
     ];
 
     protected readonly separatorKeysCodes = [ENTER, COMMA];
-    protected readonly tagInputModel = model('');
-    protected readonly tags = model(['TheHacker', 'ClamAV', 'NANO-Antivirus', 'Babable', 'Palo Alto Networks']);
     protected readonly filteredOptions = computed(() => {
         const current = this.tagInputModel().trim().toLowerCase();
         const options = this.options.filter((option) => !this.tags().includes(option));

@@ -33,7 +33,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TableDisableHoverExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly rows = [
         { name: 'document.txt', owner: 'User 1', modified: '27 May 2024' },
         { name: 'report-2023.pdf', owner: 'User 2', modified: '1 Dec 2023' },

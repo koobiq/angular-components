@@ -37,23 +37,12 @@ export class RdxRovingFocusGroupDirective implements OnChanges {
     readonly orientationInput = input<KbqRovingFocusOrientation | undefined>(undefined, { alias: 'orientation' });
 
     /**
-     * Axis the arrow keys navigate along. A plain field the input feeds: the host component also writes it
-     * directly, once, from its own constructor.
-     */
-    orientation: KbqRovingFocusOrientation | undefined;
-
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes['orientationInput']) {
-            this.orientation = this.orientationInput();
-        }
-    }
-
-    /**
      * Reading direction the arrow keys are mapped against, written onto the host as `dir`. Left unset,
      * no attribute is emitted — the element inherits the document direction, and the key mapping follows
      * the ambient CDK `Directionality`.
      */
     readonly dir = input<Direction | null>(null);
+
     /** Whether the arrow keys wrap around, from the last item to the first and back. */
     readonly loop = input<boolean, unknown>(true, { transform: booleanAttribute });
     readonly preventScrollOnEntryFocus = input<boolean, unknown>(false, { transform: booleanAttribute });
@@ -61,16 +50,21 @@ export class RdxRovingFocusGroupDirective implements OnChanges {
     readonly entryFocus = output<Event>();
     readonly currentTabStopIdChange = output<string | null>();
 
+    /** Tab stop id of each registered element, so the current tab stop can be resolved back to its node. */
+    private readonly itemIds = new WeakMap<HTMLElement, string>();
+    private readonly isTabbingBackOut = signal(false);
+
+    /**
+     * Axis the arrow keys navigate along. A plain field the input feeds: the host component also writes it
+     * directly, once, from its own constructor.
+     */
+    orientation: KbqRovingFocusOrientation | undefined;
+
     /** @docs-private */
     readonly currentTabStopId = signal<string | null>(null);
 
     /** @docs-private */
     readonly focusableItems = signal<HTMLElement[]>([]);
-
-    /** Tab stop id of each registered element, so the current tab stop can be resolved back to its node. */
-    private readonly itemIds = new WeakMap<HTMLElement, string>();
-
-    private readonly isTabbingBackOut = signal(false);
 
     /**
      * Reading direction the arrow keys are actually mapped against: the input when it is set, the
@@ -88,6 +82,12 @@ export class RdxRovingFocusGroupDirective implements OnChanges {
     /** @docs-private */
     get tabIndex() {
         return this.isTabbingBackOut() || this.getFocusableItemsCount() === 0 ? -1 : 0;
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['orientationInput']) {
+            this.orientation = this.orientationInput();
+        }
     }
 
     /** @docs-private */

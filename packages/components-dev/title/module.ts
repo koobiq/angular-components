@@ -87,7 +87,6 @@ export class DevApp {
     field = this.defaultValue;
     singleSelected: string = '';
     formControl = new UntypedFormControl('', Validators.required);
-
     filteredOptions: Observable<string[]> = this.formControl.valueChanges.pipe(
         startWith(''),
         map((value) => this.filter(value))

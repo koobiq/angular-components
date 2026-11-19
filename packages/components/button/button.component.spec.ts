@@ -1781,6 +1781,7 @@ class KbqButtonWrappedIconAndTextTestApp {}
 })
 class ButtonDropdownTrigger {
     readonly trigger = viewChild.required('triggerEl', { read: ElementRef });
+
     backdropClass: string;
 }
 
@@ -1846,7 +1847,6 @@ class DynamicChildrenTestComponent {
 })
 class UnboundColorGroupTestComponent {
     readonly transparent = KbqButtonStyles.Transparent;
-
     color: KbqButtonColor | null = null;
 }
 
@@ -1948,10 +1948,8 @@ class OverriddenChildTestComponent {
     groupStyle: KbqButtonStyleInput = KbqButtonStyles.Filled;
     groupColor: KbqButtonColor = KbqComponentColors.ContrastFade;
     groupDisabled = false;
-
     ownStyle: KbqButtonStyleInput | undefined = KbqButtonStyles.Transparent;
     readonly ownColor = KbqComponentColors.Theme;
-
     showExtra = false;
 }
 

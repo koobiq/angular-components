@@ -49,15 +49,12 @@ export class DevDocsExamples {}
 })
 export class DevApp {
     readonly options: string[] = DEV_OPTIONS;
-
     readonly searchCtrl = new UntypedFormControl('');
     readonly selectSearchCtrl = new UntypedFormControl('');
-
     readonly filteredOptions: Observable<string[]> = this.searchCtrl.valueChanges.pipe(
         startWith(''),
         map((value: string | null) => this.filter(value, this.options))
     );
-
     readonly filteredSelectOptions: Observable<string[]> = this.selectSearchCtrl.valueChanges.pipe(
         startWith(''),
         map((value: string | null) => this.filter(value, this.options))

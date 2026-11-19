@@ -54,9 +54,9 @@ const PAGE_SIZE = 20;
 const DELAY = 1000;
 
 export class OptionsApiService {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly data = Array.from({ length: 100 }, (_, i) => ({ id: i, label: 'Option #' + i }));
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     getOptions(
         search: string,
@@ -79,28 +79,14 @@ export class OptionsApiService {
 
 export class SelectFacade {
     private readonly api = inject(OptionsApiService);
-    private readonly search$ = new BehaviorSubject<string | null>(null);
-    readonly loadMore$ = new Subject<void>();
 
+    private readonly search$ = new BehaviorSubject<string | null>(null);
     private accumulated: Option[] = [];
     private currentPage = 0;
     private currentHasMore = false;
     private isLoadingMore = false;
 
-    reset(): void {
-        this.search$.next(null);
-    }
-
-    setSearch(value: string) {
-        this.search$.next(value);
-    }
-
-    loadMore(): void {
-        if (!this.currentHasMore || this.isLoadingMore) return;
-
-        this.loadMore$.next();
-    }
-
+    readonly loadMore$ = new Subject<void>();
     readonly state$: Observable<SelectState> = this.search$.pipe(
         // for use in a real project
         // debounceTime(300),
@@ -187,6 +173,20 @@ export class SelectFacade {
             );
         })
     );
+
+    reset(): void {
+        this.search$.next(null);
+    }
+
+    setSearch(value: string) {
+        this.search$.next(value);
+    }
+
+    loadMore(): void {
+        if (!this.currentHasMore || this.isLoadingMore) return;
+
+        this.loadMore$.next();
+    }
 }
 
 /**
@@ -282,18 +282,27 @@ export class SelectFacade {
     }
 })
 export class SelectPagingExample implements OnDestroy {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly facade = inject(SelectFacade);
 
+    private scrollSub: Subscription | null = null;
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected selectedOption: Option = { id: 0, label: 'Option #0' };
-
-    protected readonly compareWith = (a: Option | null, b: Option | null) => a?.id === b?.id;
-    protected readonly virtualOptionFactory = (value: Option) => new KbqVirtualOption(value, false, value.label);
-
     readonly searchControl = new FormControl('');
 
-    private scrollSub: Subscription | null = null;
+    constructor() {
+        this.searchControl.valueChanges
+            .pipe(takeUntilDestroyed())
+            .subscribe((value) => this.facade.setSearch(value ?? ''));
+    }
+
+    ngOnDestroy() {
+        this.scrollSub?.unsubscribe();
+    }
+
+    protected readonly compareWith = (a: Option | null, b: Option | null) => a?.id === b?.id;
+
+    protected readonly virtualOptionFactory = (value: Option) => new KbqVirtualOption(value, false, value.label);
 
     protected onSelectOpened(select: KbqSelect) {
         const scrollContainer = select.optionsContainer()?.nativeElement;
@@ -318,15 +327,5 @@ export class SelectPagingExample implements OnDestroy {
     // in beforeOpened used as an example to show loading every time the select is opened
     protected reloadOptions() {
         this.searchControl.setValue('');
-    }
-
-    ngOnDestroy() {
-        this.scrollSub?.unsubscribe();
-    }
-
-    constructor() {
-        this.searchControl.valueChanges
-            .pipe(takeUntilDestroyed())
-            .subscribe((value) => this.facade.setSearch(value ?? ''));
     }
 }

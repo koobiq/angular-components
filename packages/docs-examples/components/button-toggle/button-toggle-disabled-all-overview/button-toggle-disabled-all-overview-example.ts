@@ -20,6 +20,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class ButtonToggleDisabledAllOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     model = 1;
 }

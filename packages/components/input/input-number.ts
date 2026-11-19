@@ -194,21 +194,10 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     private readonly ngZone = inject(NgZone);
     private readonly destroyRef = inject(DestroyRef);
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
-    /** Emits when the value changes (either due to user input or programmatic change). */
-    readonly valueChange = new Subject<number | null>();
-
-    /** Emits when the disabled state has changed */
-    readonly disabledChange = new Subject<boolean>();
-
-    /** Emits whenever the focused or disabled state of the directive changes. */
-    readonly stateChanges: Subject<void> = new Subject<void>();
-
-    /**
-     * Discriminator read by `kbq-stepper` to find the control it drives.
-     *
-     * @docs-private
-     */
-    controlType: string = 'input-number';
+    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'input',
+        KBQ_INPUT_LOCALE_CONFIGURATION
+    );
 
     /**
      * Allows input and pasting of integers only.
@@ -226,7 +215,6 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
 
     /** Upper bound the value is clamped to when stepping. */
     readonly max = input<number, NumberInput>(Infinity, { transform: numberAttribute(Infinity) });
-
     readonly withThousandSeparator = input<boolean, unknown>(true, { transform: booleanAttribute });
 
     /**
@@ -238,25 +226,11 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     /** @docs-private */
     readonly valueInput = input<number | null | undefined>(undefined, { alias: 'value' });
 
-    /** The numeric value of the field, bound with `[value]` or written by a form control. */
-    get value(): number | null {
-        return this.valueState() ?? null;
-    }
-
-    private readonly valueState = signal<number | null | undefined>(undefined);
-
     /** @docs-private */
     readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
         alias: 'disabled',
         transform: booleanAttribute
     });
-
-    /** Whether the field is disabled, bound with `[disabled]` or set by a form control. */
-    get disabled(): boolean {
-        return this.disabledState();
-    }
-
-    private readonly disabledState = signal(false);
 
     /**
      * Whether the field is read-only: the arrow keys, `kbq-stepper` and a paste leave the value as it is.
@@ -264,7 +238,49 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
      */
     readonly readonly = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
 
+    private readonly valueState = signal<number | null | undefined>(undefined);
+    private readonly disabledState = signal(false);
+    private valueFromPaste?: number | null;
+
+    /** Pending `onInput` reformats by timer handle: cancelled on destroy, run at once before a step. */
+    private readonly pendingReformats = new Map<ReturnType<typeof setTimeout>, (correctCaret: boolean) => void>();
+
+    /** Emits when the value changes (either due to user input or programmatic change). */
+    readonly valueChange = new Subject<number | null>();
+
+    /** Emits when the disabled state has changed */
+    readonly disabledChange = new Subject<boolean>();
+
+    /** Emits whenever the focused or disabled state of the directive changes. */
+    readonly stateChanges: Subject<void> = new Subject<void>();
+
+    /**
+     * Discriminator read by `kbq-stepper` to find the control it drives.
+     *
+     * @docs-private
+     */
+    controlType: string = 'input-number';
     focused: boolean = false;
+
+    /**
+     * An unbounded end reports no `aria-value*`: `Infinity` is not a valid ARIA attribute value.
+     * A `computed()` rather than a getter so the value is cached between checks — the host binding
+     * itself lives in the declaring view and repaints either way.
+     */
+    protected readonly ariaValueMin = computed(() => (Number.isFinite(this.min()) ? this.min() : null));
+
+    /** The upper bound, reported the way `ariaValueMin` reports the lower one. */
+    protected readonly ariaValueMax = computed(() => (Number.isFinite(this.max()) ? this.max() : null));
+
+    /** The numeric value of the field, bound with `[value]` or written by a form control. */
+    get value(): number | null {
+        return this.valueState() ?? null;
+    }
+
+    /** Whether the field is disabled, bound with `[disabled]` or set by a form control. */
+    get disabled(): boolean {
+        return this.disabledState();
+    }
 
     get nativeElement(): HTMLInputElement {
         return this.elementRef.nativeElement;
@@ -290,16 +306,6 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         return Number.isNaN(parsed) ? null : parsed;
     }
 
-    /**
-     * An unbounded end reports no `aria-value*`: `Infinity` is not a valid ARIA attribute value.
-     * A `computed()` rather than a getter so the value is cached between checks — the host binding
-     * itself lives in the declaring view and repaints either way.
-     */
-    protected readonly ariaValueMin = computed(() => (Number.isFinite(this.min()) ? this.min() : null));
-
-    /** The upper bound, reported the way `ariaValueMin` reports the lower one. */
-    protected readonly ariaValueMax = computed(() => (Number.isFinite(this.max()) ? this.max() : null));
-
     protected get fractionSeparator(): KbqInputNumberLocaleConfiguration['fractionSeparator'] {
         return this.config.fractionSeparator;
     }
@@ -319,16 +325,6 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     private get stepMax(): number {
         return Math.min(this.max(), Number.MAX_SAFE_INTEGER);
     }
-
-    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
-        'input',
-        KBQ_INPUT_LOCALE_CONFIGURATION
-    );
-
-    private valueFromPaste?: number | null;
-
-    /** Pending `onInput` reformats by timer handle: cancelled on destroy, run at once before a step. */
-    private readonly pendingReformats = new Map<ReturnType<typeof setTimeout>, (correctCaret: boolean) => void>();
 
     constructor() {
         // The inputs stay `undefined` until a template binds them, so an unbound one does not override what a
@@ -433,7 +429,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         const shouldBlockMinus = minuses.includes(keyCode) && (this.viewValue.includes(event.key) || this.min() >= 0);
         const isSignAndFractionSepAlreadyExists =
             this.isPeriod(event) &&
-            [this.fractionSeparator, KBQ_DEFAULT_PRECISION_SEPARATOR].includes(event.key) &&
+            [KBQ_DEFAULT_PRECISION_SEPARATOR, this.fractionSeparator].includes(event.key) &&
             viewValueToBeChecked.indexOf(KBQ_DEFAULT_PRECISION_SEPARATOR) !== -1;
 
         if (shouldSkipForIntegerMode || shouldBlockMinus || isSignAndFractionSepAlreadyExists) {
@@ -586,7 +582,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     private isPeriod = (event: KeyboardEvent) => {
         return (
             this.groupSeparator.includes(event.key) ||
-            [this.fractionSeparator, KBQ_DEFAULT_PRECISION_SEPARATOR].includes(event.key)
+            [KBQ_DEFAULT_PRECISION_SEPARATOR, this.fractionSeparator].includes(event.key)
         );
     };
 

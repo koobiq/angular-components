@@ -117,42 +117,6 @@ export class KbqAutocomplete implements AfterContentChecked, AfterContentInit, K
     /** Unique id, rendered as the panel element's `id`. */
     readonly id: string = inject(_IdGenerator).getId('kbq-autocomplete-');
 
-    /**
-     * Id of the option list, which the trigger's `aria-controls` points at while the panel is open.
-     *
-     * @docs-private
-     */
-    readonly listboxId = `${this.id}-listbox`;
-
-    /**
-     * Manages active item in option list based on key events.
-     *
-     * @docs-private
-     */
-    keyManager: ActiveDescendantKeyManager<KbqOption> | undefined;
-
-    /**
-     * Whether the autocomplete panel should be visible, depending on option length.
-     *
-     * @docs-private
-     */
-    readonly showPanel = signal(false);
-
-    readonly template = viewChild.required(TemplateRef);
-
-    readonly panel = viewChild.required<ElementRef>('panel');
-
-    private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
-
-    private readonly optionsQuery = contentChildren(KbqOption, { descendants: true });
-    private readonly optionsList = kbqQueryListFrom(this.optionsQuery);
-
-    get options(): QueryList<KbqOption> {
-        return this.optionsList();
-    }
-
-    readonly optionGroups = contentChildren(KbqOptgroup);
-
     /** Function that maps an option's control value to its display value in the trigger. */
     readonly displayWith = input<((value: any) => string) | null>(null);
 
@@ -177,15 +141,6 @@ export class KbqAutocomplete implements AfterContentChecked, AfterContentInit, K
      */
     readonly panelMaxWidth = input<KbqPanelMaxWidth, unknown>(null, { transform: numberAttribute });
 
-    /** Event that is emitted whenever an option from the list is selected. */
-    readonly optionSelected = output<KbqAutocompleteSelectedEvent>();
-
-    /** Event that is emitted when the autocomplete panel is opened. */
-    readonly opened = output<void>();
-
-    /** Event that is emitted when the autocomplete panel is closed. */
-    readonly closed = output<void>();
-
     /**
      * Classes set on the host `kbq-autocomplete` element. They are applied to the panel inside the
      * overlay container instead, to allow for easy styling.
@@ -206,6 +161,47 @@ export class KbqAutocomplete implements AfterContentChecked, AfterContentInit, K
 
     /** Whether the panel opens as soon as the trigger receives focus. */
     readonly openOnFocus = input(true, { transform: booleanAttribute });
+
+    /** Event that is emitted whenever an option from the list is selected. */
+    readonly optionSelected = output<KbqAutocompleteSelectedEvent>();
+
+    /** Event that is emitted when the autocomplete panel is opened. */
+    readonly opened = output<void>();
+
+    /** Event that is emitted when the autocomplete panel is closed. */
+    readonly closed = output<void>();
+
+    readonly template = viewChild.required(TemplateRef);
+    readonly panel = viewChild.required<ElementRef>('panel');
+    private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
+    private readonly optionsQuery = contentChildren(KbqOption, { descendants: true });
+    readonly optionGroups = contentChildren(KbqOptgroup);
+
+    private readonly optionsList = kbqQueryListFrom(this.optionsQuery);
+
+    /** Whether the trigger's form field currently holds keyboard focus. */
+    private readonly keyboardFocused = signal(false);
+
+    /**
+     * Id of the option list, which the trigger's `aria-controls` points at while the panel is open.
+     *
+     * @docs-private
+     */
+    readonly listboxId = `${this.id}-listbox`;
+
+    /**
+     * Manages active item in option list based on key events.
+     *
+     * @docs-private
+     */
+    keyManager: ActiveDescendantKeyManager<KbqOption> | undefined;
+
+    /**
+     * Whether the autocomplete panel should be visible, depending on option length.
+     *
+     * @docs-private
+     */
+    readonly showPanel = signal(false);
 
     /**
      * Whether the trigger has attached the panel overlay. It is not the same thing as the panel being
@@ -229,9 +225,6 @@ export class KbqAutocomplete implements AfterContentChecked, AfterContentInit, K
     /** Whether the panel is visible: attached by the trigger and holding at least one option. */
     readonly isOpen = computed(() => this.attached() && this.showPanel());
 
-    /** Whether the trigger's form field currently holds keyboard focus. */
-    private readonly keyboardFocused = signal(false);
-
     /** @docs-private */
     protected readonly classList = computed<Record<string, boolean>>(() => ({
         ...Object.fromEntries(
@@ -245,6 +238,10 @@ export class KbqAutocomplete implements AfterContentChecked, AfterContentInit, K
         'kbq-autocomplete_hidden': !this.showPanel(),
         'cdk-keyboard-focused': this.keyboardFocused()
     }));
+
+    get options(): QueryList<KbqOption> {
+        return this.optionsList();
+    }
 
     constructor() {
         // The host is `display: none` and only carries the template portal, so the classes written on it

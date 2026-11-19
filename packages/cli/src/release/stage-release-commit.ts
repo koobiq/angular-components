@@ -22,7 +22,6 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
 
     /** Octokit API instance that can be used to make Github API calls. */
     githubApi: Octokit;
-
     tabSpaces = 4;
 
     constructor(public override config: IReleaseTaskConfig) {

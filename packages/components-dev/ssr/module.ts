@@ -55,6 +55,7 @@ import { devSsrExampleIds } from './routes';
 export class DevHeader {
     private readonly router = inject(Router);
     private readonly location = inject(Location);
+
     protected readonly options = devSsrExampleIds;
     protected readonly selectedExample = signal(this.getExampleFromUrl());
     protected readonly searchQuery = signal<string | null>('');

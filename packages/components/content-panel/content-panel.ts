@@ -115,8 +115,15 @@ export class KbqContentPanelHeader {
      * @docs-private
      */
     protected readonly contentPanelContainer = inject(KbqContentPanelContainer);
+
     /** @docs-private */
     protected readonly contentPanel = inject(KbqContentPanel);
+
+    /** Accessible name for the icon-only close button. */
+    protected readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'a11y',
+        KBQ_A11Y_LOCALE_CONFIGURATION
+    );
 
     /**
      * @docs-private
@@ -127,11 +134,6 @@ export class KbqContentPanelHeader {
      * @docs-private
      */
     protected readonly componentColors = KbqComponentColors;
-    /** Accessible name for the icon-only close button. */
-    protected readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
-        'a11y',
-        KBQ_A11Y_LOCALE_CONFIGURATION
-    );
 }
 
 @Component({
@@ -155,6 +157,7 @@ export class KbqContentPanelHeader {
 export class KbqContentPanelBody {
     /** @docs-private */
     readonly scrollbar = viewChild.required(KbqScrollbar);
+
     /** @docs-private */
     readonly overflowContainer = viewChild.required(KbqOverflowShadowContainer);
 }
@@ -304,6 +307,9 @@ export class KbqContentPanelContainer implements OnInit {
      * `stateSavingKey` are its inputs, surfaced on the container.
      */
     private readonly stateSaving = inject(KbqStateSaving);
+    private readonly injector = inject(Injector);
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly errorHandler = inject(ErrorHandler);
 
     /**
      * Whether the content panel is opened. Defaults to `undefined`.
@@ -316,11 +322,6 @@ export class KbqContentPanelContainer implements OnInit {
         alias: 'opened',
         transform: (value: unknown): boolean | undefined => (value == null ? undefined : booleanAttribute(value))
     });
-
-    /**
-     * Emits event when the content panel opened state is changed.
-     */
-    readonly openedChange = output<boolean>();
 
     /**
      * Whether the content panel can not be closed by clicking on the close button or pressing the ESCAPE key.
@@ -360,6 +361,27 @@ export class KbqContentPanelContainer implements OnInit {
     readonly maxWidth = input(800, { transform: numberAttribute });
 
     /**
+     * Emits event when the content panel opened state is changed.
+     */
+    readonly openedChange = output<boolean>();
+
+    private readonly content = viewChild.required(KbqScrollbar, { read: ElementRef });
+
+    private contentAnimation?: { destroy(): void };
+
+    /** The answer of an asynchronous `beforeClose`, which a repeated request waits for instead of asking again. */
+    private closeRequest?: Promise<void>;
+
+    /** Whether `beforeClose` is being asked: one that closes the panel itself is not asked again. */
+    private askingBeforeClose = false;
+
+    /**
+     * Resizing reports on every pointer move, so the width is written once the drag settles rather than
+     * on each frame. The store's unchanged-payload skip does not help here — every frame is a new number.
+     */
+    private readonly resized = new Subject<void>();
+
+    /**
      * A linked signal rather than a plain one: it follows the input whenever the input changes, and keeps
      * a local write until then — which is what lets a restored state survive the input's initial value.
      *
@@ -397,24 +419,20 @@ export class KbqContentPanelContainer implements OnInit {
     /** @docs-private */
     protected readonly animationsDisabled = kbqAnimationsDisabled();
 
-    private readonly content = viewChild.required(KbqScrollbar, { read: ElementRef });
-    private readonly injector = inject(Injector);
-    private contentAnimation?: { destroy(): void };
-
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly errorHandler = inject(ErrorHandler);
-
-    /** The answer of an asynchronous `beforeClose`, which a repeated request waits for instead of asking again. */
-    private closeRequest?: Promise<void>;
-
-    /** Whether `beforeClose` is being asked: one that closes the panel itself is not asked again. */
-    private askingBeforeClose = false;
-
     /**
-     * Resizing reports on every pointer move, so the width is written once the drag settles rather than
-     * on each frame. The store's unchanged-payload skip does not help here — every frame is a new number.
+     * Whether state is currently persisted for this panel — restored on init, or written since.
+     * Always `false` while `useStateSaving` is unset, and `false` again after `clearSavedState()`.
      */
-    private readonly resized = new Subject<void>();
+    get hasSavedState(): boolean {
+        return this.stateSaving.state != null;
+    }
+
+    /** Whether this panel reads and writes its state at all. */
+    private get persists(): boolean {
+        // A panel that is not in the document has no stable key — the default resolver derives one from
+        // the path to `<body>` — which is the ordinary state of one projected into an overlay.
+        return this.stateSaving.useStateSaving() && !!this.stateSaving.host?.isConnected;
+    }
 
     constructor() {
         this.resized.pipe(debounceTime(resizeWriteDebounce), takeUntilDestroyed()).subscribe(() => {
@@ -493,14 +511,6 @@ export class KbqContentPanelContainer implements OnInit {
      */
     clearSavedState(): void {
         untracked(() => this.stateSaving.clear());
-    }
-
-    /**
-     * Whether state is currently persisted for this panel — restored on init, or written since.
-     * Always `false` while `useStateSaving` is unset, and `false` again after `clearSavedState()`.
-     */
-    get hasSavedState(): boolean {
-        return this.stateSaving.state != null;
     }
 
     /**
@@ -622,13 +632,6 @@ export class KbqContentPanelContainer implements OnInit {
         this.widthState.set(this.clampWidth(width));
 
         this.resized.next();
-    }
-
-    /** Whether this panel reads and writes its state at all. */
-    private get persists(): boolean {
-        // A panel that is not in the document has no stable key — the default resolver derives one from
-        // the path to `<body>` — which is the ordinary state of one projected into an overlay.
-        return this.stateSaving.useStateSaving() && !!this.stateSaving.host?.isConnected;
     }
 
     /** Holds a width inside the configured bounds, which can differ from the ones a state was saved under. */

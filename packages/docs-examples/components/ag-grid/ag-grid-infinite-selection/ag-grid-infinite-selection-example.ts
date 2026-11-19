@@ -96,8 +96,11 @@ type SelectionDto = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridInfiniteSelectionExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    private readonly infiniteSelection = viewChild.required(KbqAgGridInfiniteSelection);
 
+    private readonly includedIds = signal<readonly string[]>([]);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly columnDefs = computed<ColDef[]>(() => [
         { field: 'column0', headerName: this.t().projectName, pinned: 'left', width: 130 },
         ...Array.from({ length: 5 }, (_, i) => ({
@@ -106,6 +109,7 @@ export class AgGridInfiniteSelectionExample {
             width: 130
         }))
     ]);
+
     // The row id is the selection identity: it stays the same in every locale.
     protected readonly datasource: IDatasource = {
         rowCount: 1000,
@@ -129,7 +133,6 @@ export class AgGridInfiniteSelectionExample {
             );
         }
     };
-    protected readonly getRowId: GetRowIdFunc = ({ data }) => data.id;
     protected readonly defaultColDef: ColDef = {
         cellRendererSelector: ({ data }: ICellRendererParams) =>
             data === undefined ? { component: KbqAgGridSkeletonCellRenderer } : undefined
@@ -141,8 +144,6 @@ export class AgGridInfiniteSelectionExample {
     protected readonly selectionColumnDef: SelectionColumnDef = {
         pinned: 'left'
     };
-    private readonly infiniteSelection = viewChild.required(KbqAgGridInfiniteSelection);
-    private readonly includedIds = signal<readonly string[]>([]);
 
     /**
      * The DTO this example would send to the backend for the current selection — combines the
@@ -159,6 +160,8 @@ export class AgGridInfiniteSelectionExample {
             excludedIds: state.selectAll ? state.excludedIds : null
         };
     });
+
+    protected readonly getRowId: GetRowIdFunc = ({ data }) => data.id;
 
     protected onSelectAllChange(state: KbqAgGridInfiniteSelectionState): void {
         console.debug('onSelectAllChange: ', state);

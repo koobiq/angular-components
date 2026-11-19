@@ -55,7 +55,6 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 })
 export class FormFieldWithCustomErrorStateMatcherSetByAttributeExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly formGroup = new FormGroup({
         email: new FormControl('', [Validators.required, Validators.email])
     });

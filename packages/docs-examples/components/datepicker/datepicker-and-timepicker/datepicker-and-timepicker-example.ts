@@ -47,6 +47,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class DatepickerAndTimepickerExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     selectedDateTime?: DateTime;
 }

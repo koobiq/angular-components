@@ -106,7 +106,6 @@ export class KbqNotificationCenterService {
 
     /** Parsed `date` per item. Keyed by the item itself, so no consumer-owned object is written to. */
     private readonly parsedDates = new WeakMap<KbqNotificationItem, KbqParsedNotificationDate>();
-
     private readonly _silentMode = signal(false);
     private readonly _loadingMode = signal(false);
     private readonly _errorMode = signal(false);
@@ -132,8 +131,10 @@ export class KbqNotificationCenterService {
 
     /** @docs-private */
     readonly silentMode: Signal<boolean> = this._silentMode.asReadonly();
+
     /** @docs-private */
     readonly loadingMode: Signal<boolean> = this._loadingMode.asReadonly();
+
     /** @docs-private */
     readonly errorMode: Signal<boolean> = this._errorMode.asReadonly();
 
@@ -168,6 +169,35 @@ export class KbqNotificationCenterService {
 
     /** Triggers an event when an item, a group, or all notifications are removed. */
     readonly onDelete = new Subject<KbqNotificationDeleteEvent>();
+
+    private makeGroup = (item: KbqNotificationItem, groups: KbqNotificationsGroups) => {
+        const { groupId, source, value } = this.getParsedDate(item);
+
+        if (groups[groupId]) {
+            groups[groupId].items.push(item);
+        } else {
+            groups[groupId] = {
+                id: groupId,
+                // Formatted on every recomputation rather than cached with the parsed value: the heading is
+                // localized, and a cached one would leave the group in the locale it was built in while
+                // a group created afterwards renders in the current one.
+                title: value === null ? source : this.formatter.absoluteLongDate(value),
+                items: [item]
+            };
+        }
+    };
+
+    /** Compares two notifications by date so the newest comes first; unparsable dates sort last. */
+    private compareByDateDesc = (a: KbqNotificationItem, b: KbqNotificationItem): number => {
+        const parsedA = this.getParsedDate(a).value;
+        const parsedB = this.getParsedDate(b).value;
+
+        if (parsedA === null || parsedB === null) {
+            return Number(parsedA === null) - Number(parsedB === null);
+        }
+
+        return this.adapter.compareDateTime(parsedB, parsedA);
+    };
 
     /**
      * Grouped notifications, always ordered from newest to oldest: day groups are sorted by date
@@ -220,6 +250,13 @@ export class KbqNotificationCenterService {
     });
 
     /**
+     * Whether there are no notifications, for the center's own view to follow.
+     *
+     * @docs-private
+     */
+    readonly empty: Signal<boolean> = computed(() => this.originalItems().length === 0);
+
+    /**
      * The notifications, as a snapshot: reading them does not make an `effect()` or a `computed()` depend on the
      * list, so an effect can read and reassign it. Follow `changes` to react to updates.
      */
@@ -235,13 +272,6 @@ export class KbqNotificationCenterService {
     get isEmpty() {
         return this.currentItems().length === 0;
     }
-
-    /**
-     * Whether there are no notifications, for the center's own view to follow.
-     *
-     * @docs-private
-     */
-    readonly empty: Signal<boolean> = computed(() => this.originalItems().length === 0);
 
     constructor() {
         this.onRead.pipe(takeUntilDestroyed()).subscribe((item) => {
@@ -423,23 +453,6 @@ export class KbqNotificationCenterService {
         untracked(() => this.stateChanges.next());
     }
 
-    private makeGroup = (item: KbqNotificationItem, groups: KbqNotificationsGroups) => {
-        const { groupId, source, value } = this.getParsedDate(item);
-
-        if (groups[groupId]) {
-            groups[groupId].items.push(item);
-        } else {
-            groups[groupId] = {
-                id: groupId,
-                // Formatted on every recomputation rather than cached with the parsed value: the heading is
-                // localized, and a cached one would leave the group in the locale it was built in while
-                // a group created afterwards renders in the current one.
-                title: value === null ? source : this.formatter.absoluteLongDate(value),
-                items: [item]
-            };
-        }
-    };
-
     /**
      * Parses a notification's `date` once and remembers the result.
      *
@@ -471,18 +484,6 @@ export class KbqNotificationCenterService {
 
         return entry;
     }
-
-    /** Compares two notifications by date so the newest comes first; unparsable dates sort last. */
-    private compareByDateDesc = (a: KbqNotificationItem, b: KbqNotificationItem): number => {
-        const parsedA = this.getParsedDate(a).value;
-        const parsedB = this.getParsedDate(b).value;
-
-        if (parsedA === null || parsedB === null) {
-            return Number(parsedA === null) - Number(parsedB === null);
-        }
-
-        return this.adapter.compareDateTime(parsedB, parsedA);
-    };
 
     /**
      * Fills in the missing ids of `items` and re-keys the ones already taken, so that every ingested

@@ -43,7 +43,7 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmptyStateSizeExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly size = model<KbqDefaultSizes>('compact');
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

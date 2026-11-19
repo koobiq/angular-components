@@ -27,17 +27,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
  */
 class BaseTimezoneStates {
     selected = 'Europe/Kaliningrad';
-
     data: KbqTimezoneGroup[];
-
-    // The panel states show zones the fixture is known to have
-    protected zone(group: KbqTimezoneGroup, index: number): KbqTimezoneZone {
-        const zone = group.zones[index];
-
-        if (!zone) throw new Error(`The fixture has no zone ${index} in ${group.countryName}`);
-
-        return zone;
-    }
 
     constructor() {
         const zones: KbqTimezoneZone[] = timezones.map(({ associatedZones, ...zone }) => ({
@@ -51,6 +41,15 @@ class BaseTimezoneStates {
         }));
 
         this.data = getZonesGroupedByCountry(zones);
+    }
+
+    // The panel states show zones the fixture is known to have
+    protected zone(group: KbqTimezoneGroup, index: number): KbqTimezoneZone {
+        const zone = group.zones[index];
+
+        if (!zone) throw new Error(`The fixture has no zone ${index} in ${group.countryName}`);
+
+        return zone;
     }
 }
 

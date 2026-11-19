@@ -53,32 +53,28 @@ type ExampleRowData = Record<string, string>;
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleGrid {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly cellClicked = output<CellClickedEvent>();
     readonly cellFocused = output<CellFocusedEvent>();
     readonly cellKeyDown = output<CellKeyDownEvent | FullWidthCellKeyDownEvent>();
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,
         width: 140
     };
-
     protected readonly rowSelection: RowSelectionOptions = {
         mode: 'multiRow',
         headerCheckbox: true,
         checkboxes: true,
         hideDisabledCheckboxes: false
     };
-
     protected readonly columnDefs = computed<ColDef[]>(() =>
         Array.from({ length: 20 }, (_, index) => ({
             headerName: this.t().headerText,
             field: 'column' + index
         }))
     );
-
     protected readonly rowData = computed<ExampleRowData[]>(() =>
         Array.from({ length: 100 }, (_, index) => {
             return this.columnDefs().reduce((prev, _cur, i) => {
@@ -283,16 +279,15 @@ export class ExampleGrid {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleContentPanel {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly modalRef = inject(KbqModalRef);
 
+    protected readonly opened = model(false);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly componentColors = KbqComponentColors;
     protected readonly buttonStyles = KbqButtonStyles;
     protected readonly badgeColors = KbqBadgeColors;
-
     protected readonly selectedRowIndex = signal(0);
-    protected readonly opened = model(false);
 
     protected onGridCellClicked({ rowIndex }: CellClickedEvent): void {
         this.selectedRowIndex.set(rowIndex!);
@@ -331,9 +326,9 @@ export class ExampleContentPanel {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridAndContentPanelExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly modal = inject(KbqModalService);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     openModal(): void {
         this.modal.open({

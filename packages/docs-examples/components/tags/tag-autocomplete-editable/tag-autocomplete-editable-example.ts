@@ -98,19 +98,22 @@ const getAutocompleteOptions = () => [
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagAutocompleteEditableExample {
+    protected readonly tagInputModel = model('');
+
     private readonly options = getAutocompleteOptions();
+    protected readonly tags = model(this.options.slice(0, 2));
+    protected readonly editInputModel = model<string>('');
+
+    private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
+
     protected readonly color = KbqComponentColors;
     protected readonly separatorKeysCodes = [ENTER, COMMA];
-    protected readonly tagInputModel = model('');
-    protected readonly tags = model(this.options.slice(0, 2));
     protected readonly filteredOptions = computed(() => {
         const current = this.tagInputModel().trim().toLowerCase();
         const options = this.options.filter((option) => !this.tags().includes(option));
 
         return current ? options.filter((option) => option.toLowerCase().includes(current)) : options;
     });
-    protected readonly editInputModel = model<string>('');
-    private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
 
     protected create({ input, value = '' }: KbqTagInputEvent): void {
         if (value) {

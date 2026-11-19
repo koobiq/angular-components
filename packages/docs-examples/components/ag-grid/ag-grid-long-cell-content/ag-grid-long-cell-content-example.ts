@@ -84,9 +84,10 @@ const onCellEnter = (cell: HTMLElement, destroyRef: DestroyRef, callback: (event
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleOverflowBadgesCellRenderer implements ICellRendererAngularComp {
+    private readonly destroyRef = inject(DestroyRef);
+
     // Only the collapsed cell has the directive, hence the optional query.
     private readonly overflowItems = viewChild(KbqOverflowItems);
-    private readonly destroyRef = inject(DestroyRef);
 
     protected readonly hosts = signal<string[]>([]);
     protected readonly collapsed = signal(true);
@@ -168,12 +169,14 @@ export class ExampleOverflowBadgesCellRenderer implements ICellRendererAngularCo
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleOverflowLinksCellRenderer implements ICellRendererAngularComp {
-    private readonly overflowItems = viewChild.required(KbqOverflowItems);
     private readonly destroyRef = inject(DestroyRef);
+
+    private readonly overflowItems = viewChild.required(KbqOverflowItems);
 
     protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly popUpSizes = PopUpSizes;
     protected readonly popUpPlacements = PopUpPlacements;
+
     // Right edge of the panel follows the trigger: under it, and above when there is no room below.
     protected readonly popoverPlacementPriority = [PopUpPlacements.BottomRight, PopUpPlacements.TopRight];
     protected readonly popoverVisible = signal(false);

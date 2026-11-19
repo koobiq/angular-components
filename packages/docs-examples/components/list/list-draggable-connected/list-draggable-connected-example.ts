@@ -48,7 +48,6 @@ export class ListDraggableConnectedExample {
 
     protected readonly available = signal(this.metricIds.slice(0, -1));
     protected readonly selected = signal(this.metricIds.slice(-1));
-
     protected readonly availableMetrics = computed(() => this.available().map((id) => this.t().metrics[id - 1]!));
     protected readonly selectedMetrics = computed(() => this.selected().map((id) => this.t().metrics[id - 1]!));
 

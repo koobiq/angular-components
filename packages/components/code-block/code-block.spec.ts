@@ -245,7 +245,6 @@ class CodeBlockWithDefaultOptions {
 })
 export class TestCodeBlockWithTemplateTabLink {
     customFileName = 'TEST';
-
     files: KbqCodeBlockFile[] = [
         {
             language: 'html',

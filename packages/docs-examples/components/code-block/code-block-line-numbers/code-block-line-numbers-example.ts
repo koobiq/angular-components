@@ -34,13 +34,11 @@ import { TRANSLATIONS } from './l10n';
 })
 export class CodeBlockLineNumbersExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly files: KbqCodeBlockFile[] = [
         {
             content: `function getVulnerabilities() {\n\treturn ['BruteForce', 'Complex Attack', 'DDoS', 'HIPS alert', 'IDS/IPS Alert', 'Zero-Day Exploit', 'XSS', 'Malware', 'Ransomware', 'Phishing'];\n};`,
             language: 'javascript'
         }
     ];
-
     lineNumbers: boolean = true;
 }

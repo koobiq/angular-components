@@ -153,7 +153,6 @@ export class ExampleTopBarBreadcrumbs {
             ),
         { initialValue: true }
     );
-
     protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;

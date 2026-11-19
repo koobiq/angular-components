@@ -85,10 +85,6 @@ export class KbqProgressBarCaption {
 export class KbqProgressBar extends KbqColorDirective {
     private readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
-    private readonly text = contentChild(KbqProgressBarText);
-
-    protected readonly caption = contentChild(KbqProgressBarCaption);
-
     /** Id of the host element. Generated when not supplied. */
     readonly id = input<string>(`kbq-progress-bar-${idIterator++}`);
 
@@ -103,6 +99,9 @@ export class KbqProgressBar extends KbqColorDirective {
      * neither is given, the bar falls back to the `progressBar` name from the a11y locale.
      */
     readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
+
+    private readonly text = contentChild(KbqProgressBarText);
+    protected readonly caption = contentChild(KbqProgressBarCaption);
 
     /**
      * Whether the fill follows a new value without a transition, and the indeterminate fill pulses in place instead
@@ -121,9 +120,7 @@ export class KbqProgressBar extends KbqColorDirective {
 
         return Number.isFinite(value) ? Math.max(MIN_PERCENT, Math.min(MAX_PERCENT, value)) : MIN_PERCENT;
     });
-
     protected readonly resolvedAriaLabelledby = computed(() => (this.ariaLabel() ? null : (this.text()?.id() ?? null)));
-
     protected readonly resolvedAriaLabel = computed(
         () => this.ariaLabel() ?? (this.text() ? null : this.a11yLocaleConfiguration().progressBar)
     );

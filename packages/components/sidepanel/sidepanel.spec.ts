@@ -1583,9 +1583,9 @@ class SidepanelDeclaringCloseButton {
     providers: [KbqSidepanelService]
 })
 class SidepanelFromDropdownComponent {
-    ss = injectCore(KbqSidepanelService);
-
     readonly trigger = viewChild.required<KbqDropdownTrigger>('trigger');
+
+    ss = injectCore(KbqSidepanelService);
 
     showSidepanel() {
         this.ss.open(ComponentForSidepanel);
@@ -1618,10 +1618,10 @@ class SimpleSidepanelExample {
     `
 })
 class ComponentWithTemplateForSidepanel {
+    readonly templateRef = viewChild.required(TemplateRef);
+
     localValue: string;
     sidepanelRef: KbqSidepanelRef;
-
-    readonly templateRef = viewChild.required(TemplateRef);
 
     setSidepanelRef(sidepanelRef: KbqSidepanelRef): string {
         this.sidepanelRef = sidepanelRef;
@@ -1643,11 +1643,11 @@ class RootComponent {}
     template: ''
 })
 class SidepanelDrivenByEffects {
+    private readonly sidepanelService = injectCore(KbqSidepanelService);
+
     readonly wantOpen = signal(false);
     readonly toClose = signal<KbqSidepanelRef | null>(null);
     readonly runs = { open: 0, close: 0 };
-
-    private readonly sidepanelService = injectCore(KbqSidepanelService);
 
     constructor() {
         effect(() => {

@@ -34,7 +34,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class NumberFormatterLocaleExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly value = 1234567.89;
     protected readonly locales = ['ru-RU', 'en-US', 'es-LA', 'pt-BR'];
 }

@@ -1628,8 +1628,9 @@ class ButtonTogglesInsideButtonToggleGroupMultiple {
     `
 })
 class FalsyButtonTogglesInsideButtonToggleGroupMultiple {
-    value: ('' | number | null | undefined | boolean)[] = [0];
     readonly toggles = viewChildren(KbqButtonToggle);
+
+    value: ('' | number | null | undefined | boolean)[] = [0];
 }
 
 @Component({
@@ -1669,6 +1670,7 @@ class ButtonToggleGroupWithInitialValue {
 })
 class ButtonToggleGroupWithValueReadBeforeIt {
     readonly group = viewChild.required(KbqButtonToggleGroup);
+
     value = 'green';
 }
 
@@ -1685,6 +1687,7 @@ class ButtonToggleGroupWithValueReadBeforeIt {
 })
 class MultipleButtonToggleGroupWithValueReadBeforeIt {
     readonly group = viewChild.required(KbqButtonToggleGroup);
+
     values: string[] | undefined = ['one', 'two'];
 }
 
@@ -1702,6 +1705,7 @@ class MultipleButtonToggleGroupWithValueReadBeforeIt {
 })
 class UnmatchedButtonToggleGroupWithValueReadBeforeIt {
     readonly group = viewChild.required(KbqButtonToggleGroup);
+
     value = 'missing';
     renderLate = false;
 }
@@ -1718,6 +1722,7 @@ class UnmatchedButtonToggleGroupWithValueReadBeforeIt {
 })
 class ButtonToggleGroupWithPrecheckedToggle {
     readonly group = viewChild.required(KbqButtonToggleGroup);
+
     value: string | undefined;
 }
 
@@ -1746,6 +1751,7 @@ class ButtonToggleGroupWithFormControl {
 })
 class ButtonToggleGroupWithChangingToggleValue {
     readonly group = viewChild.required(KbqButtonToggleGroup);
+
     readonly control = new UntypedFormControl();
     readonly valueChange = vi.fn();
     multiple = false;
@@ -1763,6 +1769,7 @@ class ButtonToggleGroupWithChangingToggleValue {
 })
 class TwoWayButtonToggleGroupWithChangingToggleValue {
     readonly toggles = viewChildren(KbqButtonToggle);
+
     value: unknown = 'red';
     first = 'red';
 }
@@ -1782,6 +1789,7 @@ class TwoWayButtonToggleGroupWithChangingToggleValue {
 })
 class RemountedButtonToggleGroupWithFormControl {
     readonly toggles = viewChildren(KbqButtonToggle);
+
     control = new UntypedFormControl('red');
     renderRed = true;
 }
@@ -1951,6 +1959,7 @@ const EFFECT_RUN_LIMIT = 10;
 class ButtonToggleGroupsDrivenByEffect {
     readonly group = viewChild.required<KbqButtonToggleGroup>('group');
     readonly toggles = viewChildren(KbqButtonToggle);
+
     readonly action = signal<'value' | 'checked' | 'click' | null>(null);
     runs = 0;
 

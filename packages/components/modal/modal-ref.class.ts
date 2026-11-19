@@ -23,7 +23,6 @@ export abstract class KbqModalRef<C = any, R = unknown> {
     abstract triggerOk(): void;
 
     /** Runs the cancel flow exactly as the predefined Cancel button does. */
-
     abstract triggerCancel(): void;
 
     /**

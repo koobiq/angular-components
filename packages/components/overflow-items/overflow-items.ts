@@ -62,12 +62,13 @@ export const KBQ_OVERFLOW_ITEMS_RESIZE_OBSERVER_TARGETS = new InjectionToken<rea
 })
 export class ElementVisibilityManager {
     private readonly renderer = inject(Renderer2);
-    private readonly hiddenState = signal(false);
 
     /**
      * @docs-private
      */
     readonly element = kbqInjectNativeElement();
+
+    private readonly hiddenState = signal(false);
 
     /**
      * Whether the element is hidden.
@@ -167,16 +168,6 @@ export class KbqOverflowItems {
     private readonly resizeObserverTargets = inject(KBQ_OVERFLOW_ITEMS_RESIZE_OBSERVER_TARGETS);
 
     /**
-     * `KbqOverflowItem` directive references.
-     */
-    private readonly items = contentChildren(KbqOverflowItem);
-
-    /**
-     * `KbqOverflowItemsResult` directive reference.
-     */
-    private readonly result = contentChild(KbqOverflowItemsResult);
-
-    /**
      * Whether the overflow order should be reversed. Defaults to `false`.
      *
      * @example
@@ -197,19 +188,6 @@ export class KbqOverflowItems {
     readonly additionalResizeObserverTargets = input<Element | Element[]>(this.document.body);
 
     /**
-     * Emits the set of hidden items after every recalculation, also when it has not changed: a recalculation shows every
-     * item before it hides the overflown ones again, so a consumer that hides items itself re-applies that here.
-     */
-    readonly changes = output<ReadonlySet<unknown>>();
-
-    /**
-     * Set of hidden item IDs.
-     */
-    readonly hiddenItemIDs = toSignal(outputToObservable(this.changes), {
-        initialValue: new Set<unknown>([]) as ReadonlySet<unknown>
-    });
-
-    /**
      * Defines the orientation of the overflow items. Defaults to `'horizontal'`.
      */
     readonly orientation = input<KbqOrientation>('horizontal');
@@ -218,6 +196,22 @@ export class KbqOverflowItems {
      * Defines the wrap of the overflow items. Defaults to `'nowrap'`.
      */
     readonly wrap = input<KbqFlexWrap>('nowrap');
+
+    /**
+     * Emits the set of hidden items after every recalculation, also when it has not changed: a recalculation shows every
+     * item before it hides the overflown ones again, so a consumer that hides items itself re-applies that here.
+     */
+    readonly changes = output<ReadonlySet<unknown>>();
+
+    /**
+     * `KbqOverflowItem` directive references.
+     */
+    private readonly items = contentChildren(KbqOverflowItem);
+
+    /**
+     * `KbqOverflowItemsResult` directive reference.
+     */
+    private readonly result = contentChild(KbqOverflowItemsResult);
 
     /** The main axis of each orientation, as the `DOMRect` and `CSSStyleDeclaration` members to read. */
     private readonly orientationConfig: Record<
@@ -260,6 +254,13 @@ export class KbqOverflowItems {
             flexDirection: 'column'
         }
     } as const;
+
+    /**
+     * Set of hidden item IDs.
+     */
+    readonly hiddenItemIDs = toSignal(outputToObservable(this.changes), {
+        initialValue: new Set<unknown>([]) as ReadonlySet<unknown>
+    });
 
     constructor() {
         this.setStyles();

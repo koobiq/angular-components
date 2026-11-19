@@ -107,12 +107,15 @@ type ExampleTableItem = unknown;
     }
 })
 export class ExampleGrid {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
     readonly panelOpened = input(false);
-    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+    readonly selectedItems = output<ExampleTableItem[]>();
+
     private api: GridApi<ExampleTableItem> | null = null;
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,
@@ -138,7 +141,6 @@ export class ExampleGrid {
         column0: 'Project name ' + index,
         ...Object.fromEntries(Array.from({ length: 4 }, (_, i) => ['column' + (i + 1), 'Text ' + index]))
     }));
-    readonly selectedItems = output<ExampleTableItem[]>();
 
     constructor() {
         effect(() => {
@@ -299,17 +301,17 @@ export class ExampleGrid {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleActionsPanel {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly data = inject<Signal<ExampleTableItem[]>>(KBQ_ACTIONS_PANEL_DATA);
+    protected readonly actionsPanelRef = inject(KbqActionsPanelRef);
+    private readonly toast = inject(KbqToastService);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly actions = computed<ExampleAction[]>(() => [
         { id: 'Responsible', icon: 'kbq-user_16', label: this.t().responsible },
         { id: 'Link to incident', icon: 'kbq-link_16', label: this.t().linkToIncident },
         { id: 'Remove', icon: 'kbq-trash_16', label: this.t().remove, divider: true }
     ]);
     protected readonly action = { Counter: 'counter' };
-    protected readonly data = inject<Signal<ExampleTableItem[]>>(KBQ_ACTIONS_PANEL_DATA);
-    protected readonly actionsPanelRef = inject(KbqActionsPanelRef);
-    private readonly toast = inject(KbqToastService);
 
     protected onAction(action: ExampleAction): void {
         this.toast.show({ title: this.t().actionInitiated(action.label) });
@@ -336,11 +338,14 @@ export class ExampleActionsPanel {
 })
 export class AgGridAndActionsPanelExample {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+    private readonly destroyRef = inject(DestroyRef);
+
     private readonly container = viewChild.required(ExampleGrid, { read: ElementRef });
     private readonly grid = viewChild.required(ExampleGrid);
+
     private actionsPanelRef: KbqActionsPanelRef<ExampleActionsPanel> | null = null;
     private readonly data = signal<ExampleTableItem[]>([]);
-    private readonly destroyRef = inject(DestroyRef);
+
     protected readonly panelOpened = signal(false);
 
     protected toggleActionsPanel(selectedItems: ExampleTableItem[]): void {

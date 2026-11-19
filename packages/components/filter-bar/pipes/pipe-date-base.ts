@@ -35,31 +35,22 @@ const kbqDatePresetNameKey = (
  */
 @Directive()
 export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTimeValue> implements AfterViewInit {
+    /** Canonical duration units (largest-first) used to render an interval limit faithfully to its config. */
+    private static readonly INTERVAL_UNITS = [
+        'years',
+        'quarters',
+        'months',
+        'weeks',
+        'days',
+        'hours',
+        'minutes',
+        'seconds'
+    ] as const;
+
     // The concrete date type `D` is unconstrained, so the adapter/formatter are used loosely here,
     // matching the behaviour the `date`/`datetime` pipes had before this base class was extracted.
     protected readonly adapter: DateAdapter<any> = inject(DateAdapter);
     protected readonly formatter: DateFormatter<any> = inject(DateFormatter);
-
-    /** @docs-private */
-    protected readonly placements = PopUpPlacements;
-    /** @docs-private */
-    protected readonly styles = KbqButtonStyles;
-    /** @docs-private */
-    protected readonly colors = KbqComponentColors;
-
-    /** Whether the current state is list of periods. When false will displayed control for set custom period */
-    protected readonly isListMode = signal(true);
-
-    /** The custom period being edited, replaced with a filled one each time the period view opens. @docs-private */
-    protected formGroup: FormGroup<{ start: FormControl<D | null>; end: FormControl<D | null> }> = new FormGroup({
-        start: new FormControl<D | null>(null),
-        end: new FormControl<D | null>(null)
-    });
-
-    /** @docs-private */
-    protected readonly showStartCalendar = signal(false);
-    /** @docs-private */
-    protected readonly showEndCalendar = signal(false);
 
     /**
      * Id of the "From" label, which names the start inputs.
@@ -75,13 +66,54 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
      */
     protected readonly toLabelId = inject(_IdGenerator).getId('kbq-pipe-date-to-');
 
-    // Loosely typed (`any`) so the values bind cleanly to the generic date directives: on a native
-    // `<input>`, `[min]`/`[max]` resolve to the DOM property (`string | number`), which a concrete `D`
-    // could not satisfy inside this generic component (matching the existing `any` date handling here).
-    // The runtime values are adapter-deserialized dates.
+    /** @docs-private */
+    readonly popover = viewChild.required<KbqPopoverTrigger>('popover');
+
+    /** @docs-private */
+    // Optional: the list only exists while the popover is open in list mode, and it is read
+    // in deferred callbacks that may fire after the popover has already closed.
+    readonly listSelection = viewChild('listSelection', { read: KbqListSelection });
+
+    /** @docs-private */
+    // Optional: rendered only when the pipe template provides presets to go back to.
+    readonly returnButton = viewChild('returnButton', { read: KbqButton });
+    private readonly periodStartInput = viewChild('periodStartInput', { read: ElementRef });
+
+    /** Minimum length of the custom period (`end − start`), resolved from the template as a duration-like object. */
+    private minInterval?: unknown;
+
+    /** Maximum length of the custom period (`end − start`), resolved from the template as a duration-like object. */
+    private maxInterval?: unknown;
+
+    /** @docs-private */
+    protected readonly placements = PopUpPlacements;
+
+    /** @docs-private */
+    protected readonly styles = KbqButtonStyles;
+
+    /** @docs-private */
+    protected readonly colors = KbqComponentColors;
+
+    /** Whether the current state is list of periods. When false will displayed control for set custom period */
+    protected readonly isListMode = signal(true);
+
+    /** The custom period being edited, replaced with a filled one each time the period view opens. @docs-private */
+    protected formGroup: FormGroup<{ start: FormControl<D | null>; end: FormControl<D | null> }> = new FormGroup({
+        start: new FormControl<D | null>(null),
+        end: new FormControl<D | null>(null)
+    });
+
+    /** @docs-private */
+    protected readonly showStartCalendar = signal(false);
+
+    /** @docs-private */
+    protected readonly showEndCalendar = signal(false);
 
     /**
-     * Lower bound instant applied to the calendars, date inputs and (datetime) timepickers.
+     * Lower bound instant applied to the calendars, date inputs and (datetime) timepickers. Loosely typed (`any`), as
+     * `max` is, so the values bind cleanly to the generic date directives: on a native `<input>`, `[min]`/`[max]`
+     * resolve to the DOM property (`string | number`), which a concrete `D` could not satisfy inside this generic
+     * component (matching the existing `any` date handling here). The runtime values are adapter-deserialized dates.
      *
      * @docs-private
      */
@@ -94,34 +126,157 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
      */
     protected max: any;
 
-    /** Minimum length of the custom period (`end − start`), resolved from the template as a duration-like object. */
-    private minInterval?: unknown;
-    /** Maximum length of the custom period (`end − start`), resolved from the template as a duration-like object. */
-    private maxInterval?: unknown;
+    /** formatted value for period */
+    get formattedValue(): string {
+        if (this.start && this.end) {
+            return this.formatRange(this.start, this.end);
+        }
 
-    /** Canonical duration units (largest-first) used to render an interval limit faithfully to its config. */
-    private static readonly INTERVAL_UNITS = [
-        'years',
-        'quarters',
-        'months',
-        'weeks',
-        'days',
-        'hours',
-        'minutes',
-        'seconds'
-    ] as const;
+        return this.presetName(this.data.value);
+    }
 
-    /** @docs-private */
-    readonly popover = viewChild.required<KbqPopoverTrigger>('popover');
-    /** @docs-private */
-    // Optional: the list only exists while the popover is open in list mode, and it is read
-    // in deferred callbacks that may fire after the popover has already closed.
-    readonly listSelection = viewChild('listSelection', { read: KbqListSelection });
-    /** @docs-private */
-    // Optional: rendered only when the pipe template provides presets to go back to.
-    readonly returnButton = viewChild('returnButton', { read: KbqButton });
+    /** Whether the current pipe is disabled. */
+    get disabled(): boolean {
+        return (
+            !this.adapter.isDateInstance(this.formGroup.controls.start.value) ||
+            !this.adapter.isDateInstance(this.formGroup.controls.end.value) ||
+            this.formGroup.invalid
+        );
+    }
 
-    private readonly periodStartInput = viewChild('periodStartInput', { read: ElementRef });
+    /** parsed start */
+    get start(): D {
+        return this.adapter.parse(this.data.value?.start, '');
+    }
+
+    /** default object for start */
+    get defaultStart(): D {
+        return this.computeDefaultRange().start;
+    }
+
+    /** parsed end */
+    get end(): D {
+        return this.adapter.parse(this.data.value?.end, '');
+    }
+
+    /** default object for end */
+    get defaultEnd(): D {
+        return this.computeDefaultRange().end;
+    }
+
+    /**
+     * Upper bound for the START date input: the earlier of the END value and the configured `max`.
+     *
+     * @docs-private
+     */
+    get startMax(): any {
+        const end = this.formGroup.controls.end.value;
+
+        if (this.max && this.adapter.isDateInstance(end)) {
+            return this.adapter.compareDateTime(this.max, end) <= 0 ? this.max : end;
+        }
+
+        return this.max ?? end;
+    }
+
+    /**
+     * Whether the period is invalid specifically because it runs backwards (`start` later than `end`) —
+     * the one case `customPeriodErrorHint` actually describes. Deliberately compares the values rather
+     * than keying off the START control's `kbqDatepickerMax` error: `startMax` is `min(max, end)`, so that
+     * error fires both for a backwards period AND for a start beyond the configured `max`, and cannot
+     * tell them apart. Everything else that can invalidate a control here — a value outside
+     * `[min, max]` (`kbqDatepickerMin`/`kbqDatepickerMax`, `kbqTimepickerLowerThenMin`/
+     * `kbqTimepickerHigherThenMax`) or unparseable typed text (`kbqDatepickerParse`/`kbqTimepickerParse`)
+     * — is left to the field's own error styling instead of being mislabelled as an ordering problem.
+     *
+     * @docs-private
+     */
+    protected get isPeriodInverted(): boolean {
+        const start = this.formGroup.controls.start.value;
+        const end = this.formGroup.controls.end.value;
+
+        return (
+            this.adapter.isDateInstance(start) &&
+            this.adapter.isDateInstance(end) &&
+            this.adapter.compareDateTime(start, end) > 0
+        );
+    }
+
+    /**
+     * Localized "period too short" hint with the `minInterval` limit interpolated and locale-formatted.
+     *
+     * @docs-private
+     */
+    get minIntervalErrorHint(): string {
+        return this.localeConfiguration().datePipe.customPeriodMinIntervalErrorHint.replace(
+            '{{ value }}',
+            this.formatInterval(this.minInterval)
+        );
+    }
+
+    /**
+     * Localized "period too long" hint with the `maxInterval` limit interpolated and locale-formatted.
+     *
+     * @docs-private
+     */
+    get maxIntervalErrorHint(): string {
+        return this.localeConfiguration().datePipe.customPeriodMaxIntervalErrorHint.replace(
+            '{{ value }}',
+            this.formatInterval(this.maxInterval)
+        );
+    }
+
+    /** Whether the current pipe is empty. */
+    override get isEmpty(): boolean {
+        if (this.data.value === null) return true;
+
+        // Emptiness is structural: a selected preset counts by its stored name or key, never by what the
+        // resolver returns for them — an empty translation must not empty a pipe that holds a value.
+        if (this.data.value?.name || this.data.value?.nameKey) return false;
+
+        return !this.adapter.isDateInstance(this.start) || !this.adapter.isDateInstance(this.end);
+    }
+
+    override ngAfterViewInit() {
+        // Own subscription — NOT an extension of KbqBasePipe.updateTemplates: bound resolution needs
+        // `usesTime()`, which subclasses implement as an override of an abstract method, so it must be
+        // safe to call regardless of construction order. Subscribing here (rather than in the
+        // constructor) guarantees both this base class's and the leaf subclass's fields are fully
+        // initialized first, since ngAfterViewInit only runs once the whole component tree is built.
+        this.filterBar?.internalTemplatesChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(this.updateDateBounds);
+
+        super.ngAfterViewInit();
+
+        this.popover()
+            .visibleChange.pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((visible) => {
+                if (!visible) {
+                    // Reset on close, so the content the popover renders on its next open starts from the list.
+                    this.isListMode.set(true);
+                    this.filterBar?.onClosePipe.emit(this.data);
+                } else if (this.noOptions) {
+                    // The "custom period" row would be the only one: skip the list.
+                    this.showPeriod();
+                } else {
+                    // Move keyboard focus onto the period list so Enter selects a preset
+                    // instead of the focus trap landing on the "custom period" row.
+                    setTimeout(() => this.listSelection()?.focus());
+                }
+            });
+
+        // Subscribed after `KbqBasePipe.updateTemplates`, so `values` is current. A template that takes the presets
+        // away while the list is shown would leave the popover empty: move on to the period. Untracked, because the
+        // filter bar emits its templates from an effect.
+        this.filterBar?.internalTemplatesChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() =>
+            untracked(() => {
+                if (this.popover().isOpen && this.isListMode() && this.noOptions) {
+                    this.showPeriod();
+                }
+            })
+        );
+    }
 
     /** Resolves the `minDateTime` / `maxDateTime` bounds from the pipe template matching this pipe. */
     private updateDateBounds = (templates: KbqPipeTemplate[] | null) => {
@@ -248,44 +403,6 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
         return this.resolveName(preset, 'date-preset', kbqDatePresetNameKey(preset, this.values));
     }
 
-    /** formatted value for period */
-    get formattedValue(): string {
-        if (this.start && this.end) {
-            return this.formatRange(this.start, this.end);
-        }
-
-        return this.presetName(this.data.value);
-    }
-
-    /** Whether the current pipe is disabled. */
-    get disabled(): boolean {
-        return (
-            !this.adapter.isDateInstance(this.formGroup.controls.start.value) ||
-            !this.adapter.isDateInstance(this.formGroup.controls.end.value) ||
-            this.formGroup.invalid
-        );
-    }
-
-    /** parsed start */
-    get start(): D {
-        return this.adapter.parse(this.data.value?.start, '');
-    }
-
-    /** default object for start */
-    get defaultStart(): D {
-        return this.computeDefaultRange().start;
-    }
-
-    /** parsed end */
-    get end(): D {
-        return this.adapter.parse(this.data.value?.end, '');
-    }
-
-    /** default object for end */
-    get defaultEnd(): D {
-        return this.computeDefaultRange().end;
-    }
-
     /**
      * Computes the default `start`/`end` pair used when the pipe has no stored value, clamped into
      * `[min, max]` and, unlike a plain clamp, also reconciled against `[minInterval, maxInterval]`: `end`
@@ -312,120 +429,6 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
         }
 
         return { start, end };
-    }
-
-    /**
-     * Upper bound for the START date input: the earlier of the END value and the configured `max`.
-     *
-     * @docs-private
-     */
-    get startMax(): any {
-        const end = this.formGroup.controls.end.value;
-
-        if (this.max && this.adapter.isDateInstance(end)) {
-            return this.adapter.compareDateTime(this.max, end) <= 0 ? this.max : end;
-        }
-
-        return this.max ?? end;
-    }
-
-    /**
-     * Whether the period is invalid specifically because it runs backwards (`start` later than `end`) —
-     * the one case `customPeriodErrorHint` actually describes. Deliberately compares the values rather
-     * than keying off the START control's `kbqDatepickerMax` error: `startMax` is `min(max, end)`, so that
-     * error fires both for a backwards period AND for a start beyond the configured `max`, and cannot
-     * tell them apart. Everything else that can invalidate a control here — a value outside
-     * `[min, max]` (`kbqDatepickerMin`/`kbqDatepickerMax`, `kbqTimepickerLowerThenMin`/
-     * `kbqTimepickerHigherThenMax`) or unparseable typed text (`kbqDatepickerParse`/`kbqTimepickerParse`)
-     * — is left to the field's own error styling instead of being mislabelled as an ordering problem.
-     *
-     * @docs-private
-     */
-    protected get isPeriodInverted(): boolean {
-        const start = this.formGroup.controls.start.value;
-        const end = this.formGroup.controls.end.value;
-
-        return (
-            this.adapter.isDateInstance(start) &&
-            this.adapter.isDateInstance(end) &&
-            this.adapter.compareDateTime(start, end) > 0
-        );
-    }
-
-    /**
-     * Localized "period too short" hint with the `minInterval` limit interpolated and locale-formatted.
-     *
-     * @docs-private
-     */
-    get minIntervalErrorHint(): string {
-        return this.localeConfiguration().datePipe.customPeriodMinIntervalErrorHint.replace(
-            '{{ value }}',
-            this.formatInterval(this.minInterval)
-        );
-    }
-
-    /**
-     * Localized "period too long" hint with the `maxInterval` limit interpolated and locale-formatted.
-     *
-     * @docs-private
-     */
-    get maxIntervalErrorHint(): string {
-        return this.localeConfiguration().datePipe.customPeriodMaxIntervalErrorHint.replace(
-            '{{ value }}',
-            this.formatInterval(this.maxInterval)
-        );
-    }
-
-    /** Whether the current pipe is empty. */
-    override get isEmpty(): boolean {
-        if (this.data.value === null) return true;
-
-        // Emptiness is structural: a selected preset counts by its stored name or key, never by what the
-        // resolver returns for them — an empty translation must not empty a pipe that holds a value.
-        if (this.data.value?.name || this.data.value?.nameKey) return false;
-
-        return !this.adapter.isDateInstance(this.start) || !this.adapter.isDateInstance(this.end);
-    }
-
-    override ngAfterViewInit() {
-        // Own subscription — NOT an extension of KbqBasePipe.updateTemplates: bound resolution needs
-        // `usesTime()`, which subclasses implement as an override of an abstract method, so it must be
-        // safe to call regardless of construction order. Subscribing here (rather than in the
-        // constructor) guarantees both this base class's and the leaf subclass's fields are fully
-        // initialized first, since ngAfterViewInit only runs once the whole component tree is built.
-        this.filterBar?.internalTemplatesChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(this.updateDateBounds);
-
-        super.ngAfterViewInit();
-
-        this.popover()
-            .visibleChange.pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((visible) => {
-                if (!visible) {
-                    // Reset on close, so the content the popover renders on its next open starts from the list.
-                    this.isListMode.set(true);
-                    this.filterBar?.onClosePipe.emit(this.data);
-                } else if (this.noOptions) {
-                    // The "custom period" row would be the only one: skip the list.
-                    this.showPeriod();
-                } else {
-                    // Move keyboard focus onto the period list so Enter selects a preset
-                    // instead of the focus trap landing on the "custom period" row.
-                    setTimeout(() => this.listSelection()?.focus());
-                }
-            });
-
-        // Subscribed after `KbqBasePipe.updateTemplates`, so `values` is current. A template that takes the presets
-        // away while the list is shown would leave the popover empty: move on to the period. Untracked, because the
-        // filter bar emits its templates from an effect.
-        this.filterBar?.internalTemplatesChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() =>
-            untracked(() => {
-                if (this.popover().isOpen && this.isListMode() && this.noOptions) {
-                    this.showPeriod();
-                }
-            })
-        );
     }
 
     /**

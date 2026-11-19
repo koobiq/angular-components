@@ -2874,9 +2874,7 @@ class TestItemCustomContentApp {}
 })
 class TestNavbarCustomTriggerComponent implements KbqNavbarItemTrigger {
     hasFocus = false;
-
     readonly focus = vi.fn();
-
     readonly focusViaKeyboard = vi.fn();
 }
 
@@ -3310,6 +3308,7 @@ const EFFECT_RUN_LIMIT = 10;
 class TestVerticalDrivenByEffectApp {
     readonly navbar = viewChild.required(KbqVerticalNavbar);
     readonly toggle = viewChild.required(KbqNavbarToggle);
+
     readonly action = signal<'navbar' | 'toggle' | null>(null);
     runs = 0;
 

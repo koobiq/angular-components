@@ -138,6 +138,17 @@ export class KbqButtonCssStyler implements AfterContentInit {
 
     readonly icons = contentChildren<KbqIcon>(forwardRef(() => KbqIcon));
 
+    private readonly _isIconButton = signal(false);
+    private readonly _hasNoLabel = signal(false);
+    private leftIcon: HTMLElement | null = null;
+    private rightIcon: HTMLElement | null = null;
+
+    /** Memoized `.kbq-button-wrapper`; stable for the lifetime of the host component. */
+    private wrapperElement: HTMLElement | null = null;
+
+    /** Whether the missing-accessible-name warning has already been emitted for this host. */
+    private accessibleNameWarned = false;
+
     readonly nativeElement: HTMLElement;
 
     /** Whether the button contains only icons (at most 2). */
@@ -149,19 +160,6 @@ export class KbqButtonCssStyler implements AfterContentInit {
     get hasNoLabel(): boolean {
         return this._hasNoLabel();
     }
-
-    private readonly _isIconButton = signal(false);
-
-    private readonly _hasNoLabel = signal(false);
-
-    private leftIcon: HTMLElement | null = null;
-    private rightIcon: HTMLElement | null = null;
-
-    /** Memoized `.kbq-button-wrapper`; stable for the lifetime of the host component. */
-    private wrapperElement: HTMLElement | null = null;
-
-    /** Whether the missing-accessible-name warning has already been emitted for this host. */
-    private accessibleNameWarned = false;
 
     constructor() {
         const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -328,20 +326,52 @@ export class KbqButton
 {
     private focusMonitor = inject(FocusMonitor);
     protected styler = inject(KbqButtonCssStyler);
-
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly renderer = inject(Renderer2);
+
+    /** @docs-private */
+    readonly kbqStyleInput = input<KbqButtonStyleInput | null | undefined>(undefined, { alias: 'kbqStyle' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'tabIndex',
+        transform: kbqOptionalNumberAttribute
+    });
+
+    private readonly titleText = viewChild<ElementRef<HTMLElement>>('kbqTitleText');
+    private readonly parentText = viewChild<ElementRef<HTMLElement>>('parentTextElement');
 
     /** Lower-cased tag name of the host element. */
     private readonly hostTagName = this.elementRef.nativeElement.nodeName.toLowerCase();
 
     /** Whether the host element supports the native `disabled` attribute. */
     private readonly hostSupportsNativeDisabled = supportsNativeDisabled(this.elementRef.nativeElement);
+    private _kbqStyle: KbqButtonStyleInput = KbqButtonStyles.Filled;
+    private _kbqStyleClassName = `kbq-button_${KbqButtonStyles.Filled}`;
+
+    /** Color propagated by a surrounding `KbqButtonGroupRoot`. */
+    private groupColor: KbqButtonColor | null | undefined;
+
+    /** Whether `kbqStyle` was set from the outside rather than propagated by a button group. */
+    private kbqStyleSetExplicitly = false;
+
+    /** Disabled state requested through the `disabled` input. */
+    private ownDisabled = false;
+
+    /** Disabled state propagated by a surrounding `KbqButtonGroupRoot`. */
+    private groupDisabled = false;
+    private _tabIndex = 0;
 
     hasFocus: boolean = false;
 
-    private readonly titleText = viewChild<ElementRef<HTMLElement>>('kbqTitleText');
-    private readonly parentText = viewChild<ElementRef<HTMLElement>>('parentTextElement');
+    /** @docs-private */
+    readonly disabledSignal = signal(false);
 
     /** The text box of the button, measured by `kbq-title`. Always rendered by the template. */
     get textElement(): ElementRef<HTMLElement> {
@@ -370,12 +400,6 @@ export class KbqButton
         this.applyKbqStyle(value);
     }
 
-    private _kbqStyle: KbqButtonStyleInput = KbqButtonStyles.Filled;
-    private _kbqStyleClassName = `kbq-button_${KbqButtonStyles.Filled}`;
-
-    /** Color propagated by a surrounding `KbqButtonGroupRoot`. */
-    private groupColor: KbqButtonColor | null | undefined;
-
     /**
      * Whether the button is disabled. A surrounding `KbqButtonGroupRoot` can disable the button in
      * addition to this input, but never re-enables a button disabled through it.
@@ -390,18 +414,6 @@ export class KbqButton
         this.applyDisabledState();
     }
 
-    /** Whether `kbqStyle` was set from the outside rather than propagated by a button group. */
-    private kbqStyleSetExplicitly = false;
-
-    /** Disabled state requested through the `disabled` input. */
-    private ownDisabled = false;
-
-    /** Disabled state propagated by a surrounding `KbqButtonGroupRoot`. */
-    private groupDisabled = false;
-
-    /** @docs-private */
-    readonly disabledSignal = signal(false);
-
     get tabIndex(): number {
         return this.disabled ? -1 : this._tabIndex;
     }
@@ -410,8 +422,6 @@ export class KbqButton
         // Code may write NaN, which would render `tabindex="NaN"`.
         this._tabIndex = Number.isNaN(value) ? 0 : value;
     }
-
-    private _tabIndex = 0;
 
     /** Value rendered into the native `disabled` attribute; invalid HTML on hosts such as `<a>`. */
     protected get nativeDisabledAttribute(): true | null {
@@ -435,20 +445,20 @@ export class KbqButton
         return this.hostSupportsNativeDisabled && this._tabIndex === 0 ? null : this._tabIndex;
     }
 
-    /** @docs-private */
-    readonly kbqStyleInput = input<KbqButtonStyleInput | null | undefined>(undefined, { alias: 'kbqStyle' });
+    constructor() {
+        super();
 
-    /** @docs-private */
-    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'disabled',
-        transform: booleanAttribute
-    });
+        this.applyDefaultColor();
 
-    /** @docs-private */
-    readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
-        alias: 'tabIndex',
-        transform: kbqOptionalNumberAttribute
-    });
+        // Native capture-phase listeners instead of host listeners: Angular coalesces listeners
+        // for the same event on the same element, so stopImmediatePropagation from a host listener
+        // would not stop consumer-bound handlers. Matters for <a kbq-button> hosts only —
+        // a disabled native <button> does not emit these events at all. The keydown guard covers
+        // directives that activate on keydown directly (e.g. KbqDropdownTrigger, which opens on
+        // ENTER/SPACE and on DOWN/LEFT/RIGHT arrows).
+        this.getHostElement().addEventListener('click', this.haltDisabledEvents, true);
+        this.getHostElement().addEventListener('keydown', this.haltDisabledKeydownEvents, true);
+    }
 
     ngOnChanges(changes: SimpleChanges): void {
         // A bound input is handed to its member; unbound, it leaves what code wrote.
@@ -465,19 +475,23 @@ export class KbqButton
         if (changes['tabIndexInput']) this.tabIndex = this.tabIndexInput() ?? 0;
     }
 
-    constructor() {
-        super();
+    ngAfterViewInit(): void {
+        this.runFocusMonitor();
+        this.updateRole();
+    }
 
-        this.applyDefaultColor();
+    ngAfterViewChecked(): void {
+        // `href` can appear or disappear long after the first check — `[attr.href]` bound to a value
+        // that resolves later, or a `RouterLink` whose target becomes `null`. Running on every pass
+        // costs nothing: `updateRole` leaves a host that is not an anchor alone, and writes nothing
+        // while the role it would write is already there.
+        this.updateRole();
+    }
 
-        // Native capture-phase listeners instead of host listeners: Angular coalesces listeners
-        // for the same event on the same element, so stopImmediatePropagation from a host listener
-        // would not stop consumer-bound handlers. Matters for <a kbq-button> hosts only —
-        // a disabled native <button> does not emit these events at all. The keydown guard covers
-        // directives that activate on keydown directly (e.g. KbqDropdownTrigger, which opens on
-        // ENTER/SPACE and on DOWN/LEFT/RIGHT arrows).
-        this.getHostElement().addEventListener('click', this.haltDisabledEvents, true);
-        this.getHostElement().addEventListener('keydown', this.haltDisabledKeydownEvents, true);
+    ngOnDestroy() {
+        this.getHostElement().removeEventListener('click', this.haltDisabledEvents, true);
+        this.getHostElement().removeEventListener('keydown', this.haltDisabledKeydownEvents, true);
+        this.stopFocusMonitor();
     }
 
     /**
@@ -516,19 +530,6 @@ export class KbqButton
         this.applyDisabledState();
     }
 
-    ngAfterViewInit(): void {
-        this.runFocusMonitor();
-        this.updateRole();
-    }
-
-    ngAfterViewChecked(): void {
-        // `href` can appear or disappear long after the first check — `[attr.href]` bound to a value
-        // that resolves later, or a `RouterLink` whose target becomes `null`. Running on every pass
-        // costs nothing: `updateRole` leaves a host that is not an anchor alone, and writes nothing
-        // while the role it would write is already there.
-        this.updateRole();
-    }
-
     /**
      * Re-evaluates the role announced to assistive tech. Only anchors can change role, so the guard
      * lives here rather than at the call sites: this is public, and a `<button>` host must not have
@@ -558,12 +559,6 @@ export class KbqButton
         } else {
             this.renderer.removeAttribute(host, 'role');
         }
-    }
-
-    ngOnDestroy() {
-        this.getHostElement().removeEventListener('click', this.haltDisabledEvents, true);
-        this.getHostElement().removeEventListener('keydown', this.haltDisabledKeydownEvents, true);
-        this.stopFocusMonitor();
     }
 
     onFocus() {
@@ -602,7 +597,7 @@ export class KbqButton
         // Keys that activate sibling host directives on the same host (e.g. KbqDropdownTrigger opens
         // on ENTER/SPACE and on DOWN/LEFT/RIGHT arrows). Tab/Escape are intentionally left untouched
         // so focus can still move away from a disabled — but still focusable — <a kbq-button> host.
-        if ([ENTER, SPACE, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW].includes(event.keyCode)) {
+        if ([DOWN_ARROW, ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE].includes(event.keyCode)) {
             this.haltDisabledEvents(event);
         }
     };

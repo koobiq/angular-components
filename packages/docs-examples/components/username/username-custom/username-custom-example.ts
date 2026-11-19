@@ -90,7 +90,6 @@ const mapping: KbqFormatKeyToProfileMappingExtended = {
 })
 export class UsernameCustomExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     userInfo: KbqUserInfo = {
         firstName: 'Maxwell',
         middleName: 'Alan',
@@ -100,7 +99,6 @@ export class UsernameCustomExample {
     selectedMode: KbqUsernameMode = 'inline';
     selectedType: KbqUsernameStyle = 'default';
     fullNameFormat = 'F m. l.';
-
     modes: KbqUsernameMode[] = ['inline', 'stacked', 'text'];
     types: KbqUsernameStyle[] = ['default', 'error', 'accented', 'inherit'];
 }

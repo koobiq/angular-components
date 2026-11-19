@@ -111,6 +111,5 @@ export function customTypesFactory<D>(adapter: DateAdapter<D>): KbqCustomTimeRan
 })
 export class TimeRangeCustomOptionExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly placeholder = computed(() => this.t().placeholder);
 }

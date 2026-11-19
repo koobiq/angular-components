@@ -54,11 +54,9 @@ import { TRANSLATIONS } from './l10n';
 })
 export class FormFieldsetOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     options = [
         'https://',
         'http://'
     ];
-
     control = new FormControl(this.options[0]);
 }

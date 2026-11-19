@@ -126,9 +126,7 @@ export const DATA_OBJECT = {
 export class TreeMultipleKeyboardExample {
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     modelValue: any = [];
 
     constructor() {

@@ -189,6 +189,16 @@ export class KbqDd {}
 export class KbqDl {
     // Read by the input defaults below, so it is declared first.
     private readonly options = inject(KBQ_DL_OPTIONS);
+    private readonly nativeElement = kbqInjectNativeElement();
+    private readonly window = inject(KBQ_WINDOW);
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly resizeObserver = inject(SharedResizeObserver);
+    private readonly directionality = inject(Directionality, { optional: true });
+    private readonly focusMonitor = inject(FocusMonitor);
+    private readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'a11y',
+        KBQ_A11Y_LOCALE_CONFIGURATION
+    );
 
     /**
      * Host width in pixels at or below which the list auto-switches to the vertical layout.
@@ -215,19 +225,6 @@ export class KbqDl {
         alias: 'dtWidth',
         transform: (value: unknown) => kbqOptionalNumberAttribute(value) ?? null
     });
-
-    /**
-     * Width of the `kbq-dt` area in pixels; `null` restores the default column ratio.
-     * Defaults to the app-wide {@link KBQ_DL_OPTIONS}.
-     *
-     * Writable: a drag or a double-click on the separator sets it, and `dtWidthChange` reports that back.
-     * `model()` would have been the shorter form, but it takes no `transform`, so an uncoerced attribute
-     * reached the layout arithmetic as a string and skipped the clamp against `dtMinWidth`.
-     */
-    readonly dtWidth = linkedSignal(() => this.dtWidthInput());
-
-    /** Emits when the component itself changes `dtWidth`; completes the `[(dtWidth)]` two-way binding. */
-    readonly dtWidthChange = output<number | null>();
 
     /**
      * Minimum width of the `kbq-dt` area in pixels; defaults to the app-wide {@link KBQ_DL_OPTIONS}, then to the
@@ -263,10 +260,12 @@ export class KbqDl {
         transform: (value: unknown) => optionalBooleanAttribute(value) ?? null
     });
 
-    /** @docs-private */
-    protected readonly resizeDirection = computed<KbqResizerDirection>(() =>
-        this.directionality?.valueSignal() === 'rtl' ? [-1, 0] : [1, 0]
-    );
+    /** Emits when the component itself changes `dtWidth`; completes the `[(dtWidth)]` two-way binding. */
+    readonly dtWidthChange = output<number | null>();
+
+    private readonly resizeTrack = viewChild<ElementRef<HTMLElement>>('resizeTrack');
+    private readonly resizeHandle = viewChild<ElementRef<HTMLElement>>('resizeHandle');
+    private readonly terms = contentChildren(KbqDt, { read: ElementRef });
 
     /** Host width as last measured; `null` until the list first has a box to measure. */
     private readonly hostWidth = signal<number | null>(null);
@@ -282,15 +281,6 @@ export class KbqDl {
         return width === null ? null : width <= this.verticalBreakpoint();
     });
 
-    /** Effective vertical layout, combining the explicit `vertical` input and the auto-detection. @docs-private */
-    protected readonly isVertical = computed(() => this.vertical() ?? this.autoVertical() ?? false);
-
-    /** Whether the column resize separator is currently rendered. @docs-private */
-    protected readonly resizerVisible = computed(() => this.resizable() && !this.isVertical());
-
-    /** Whether `dtWidth` overrides the default column ratio. @docs-private */
-    protected readonly resized = computed(() => this.dtWidth() !== null);
-
     /** Rendered term width used as the default minimum for both areas. */
     private readonly measuredDtWidth = signal(0);
 
@@ -300,9 +290,6 @@ export class KbqDl {
     /** Effective minimum width of the `kbq-dd` area. */
     private readonly resolvedDdMinWidth = computed(() => this.ddMinWidth() ?? this.measuredDtWidth());
 
-    /** Minimum `kbq-dt` width, clamped to a non-negative value. @docs-private */
-    protected readonly normalizedDtMinWidth = computed(() => Math.max(0, this.resolvedDtMinWidth()));
-
     /**
      * Host width the two areas share, without the gap between them; `null` until measured. The geometry is read at
      * the moments it can change, so change detection never forces a layout.
@@ -311,6 +298,34 @@ export class KbqDl {
 
     /** Rendered width of the resize track, which spans the `kbq-dt` area. */
     private readonly trackWidth = signal(0);
+    private readonly keyboardResizeStep: number = 8;
+
+    /**
+     * Width of the `kbq-dt` area in pixels; `null` restores the default column ratio.
+     * Defaults to the app-wide {@link KBQ_DL_OPTIONS}.
+     *
+     * Writable: a drag or a double-click on the separator sets it, and `dtWidthChange` reports that back.
+     * `model()` would have been the shorter form, but it takes no `transform`, so an uncoerced attribute
+     * reached the layout arithmetic as a string and skipped the clamp against `dtMinWidth`.
+     */
+    readonly dtWidth = linkedSignal(() => this.dtWidthInput());
+
+    /** @docs-private */
+    protected readonly resizeDirection = computed<KbqResizerDirection>(() =>
+        this.directionality?.valueSignal() === 'rtl' ? [-1, 0] : [1, 0]
+    );
+
+    /** Effective vertical layout, combining the explicit `vertical` input and the auto-detection. @docs-private */
+    protected readonly isVertical = computed(() => this.vertical() ?? this.autoVertical() ?? false);
+
+    /** Whether the column resize separator is currently rendered. @docs-private */
+    protected readonly resizerVisible = computed(() => this.resizable() && !this.isVertical());
+
+    /** Whether `dtWidth` overrides the default column ratio. @docs-private */
+    protected readonly resized = computed(() => this.dtWidth() !== null);
+
+    /** Minimum `kbq-dt` width, clamped to a non-negative value. @docs-private */
+    protected readonly normalizedDtMinWidth = computed(() => Math.max(0, this.resolvedDtMinWidth()));
 
     /** Largest `kbq-dt` width that still leaves the `kbq-dd` area its minimum. @docs-private */
     protected readonly maxDtWidth = computed(() =>
@@ -358,22 +373,6 @@ export class KbqDl {
 
         return 'col-resize';
     });
-
-    private readonly keyboardResizeStep: number = 8;
-
-    private readonly nativeElement = kbqInjectNativeElement();
-    private readonly window = inject(KBQ_WINDOW);
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly resizeObserver = inject(SharedResizeObserver);
-    private readonly directionality = inject(Directionality, { optional: true });
-    private readonly focusMonitor = inject(FocusMonitor);
-    private readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
-        'a11y',
-        KBQ_A11Y_LOCALE_CONFIGURATION
-    );
-    private readonly resizeTrack = viewChild<ElementRef<HTMLElement>>('resizeTrack');
-    private readonly resizeHandle = viewChild<ElementRef<HTMLElement>>('resizeHandle');
-    private readonly terms = contentChildren(KbqDt, { read: ElementRef });
 
     /** Resolved accessible name of the resize separator. @docs-private */
     protected readonly resolvedResizerAriaLabel = computed(

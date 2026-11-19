@@ -32,7 +32,7 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClampedTextExternalStateExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly collapsed = model(false);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

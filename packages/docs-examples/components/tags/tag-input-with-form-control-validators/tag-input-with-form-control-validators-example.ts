@@ -81,6 +81,7 @@ const latinValidator = (): ValidatorFn => {
 })
 export class TagInputWithFormControlValidatorsExample {
     private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
+
     protected readonly maxTagCount = MAX_TAG_COUNT;
     protected readonly formControl = new FormControl<string[]>(
         ['Koobiq', 'Angular', 'Design'],

@@ -37,11 +37,11 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleRowActionsComponent {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly clipboard = inject(Clipboard);
     private readonly toast = inject(KbqToastService);
     private readonly params = inject(KBQ_AG_GRID_ROW_ACTIONS_PARAMS);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     protected copy(): void {
         this.clipboard.copy(JSON.stringify(this.params.data));
@@ -82,22 +82,18 @@ export class ExampleRowActionsComponent {
 })
 export class AgGridRowActionsExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly rowActionsComponent = ExampleRowActionsComponent;
-
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,
         width: 140
     };
-
     protected readonly rowSelection: RowSelectionOptions = {
         mode: 'multiRow',
         headerCheckbox: true,
         checkboxes: true,
         hideDisabledCheckboxes: false
     };
-
     protected readonly columnDefs = computed<ColDef[]>(() => [
         {
             field: 'column0',
@@ -109,7 +105,6 @@ export class AgGridRowActionsExample {
             headerName: this.t().headerText
         }))
     ]);
-
     protected readonly rowData = Array.from({ length: 100 }, (_, index) => ({
         column0: 'Project name ' + index,
         ...Object.fromEntries(Array.from({ length: 9 }, (_, i) => ['column' + (i + 1), 'Text ' + index]))

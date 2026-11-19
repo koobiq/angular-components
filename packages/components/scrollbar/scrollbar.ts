@@ -309,13 +309,6 @@ export class KbqScrollbarViewport {
     private readonly destroyRef = inject(DestroyRef);
     private readonly scrollDispatcher = inject(ScrollDispatcher);
 
-    private readonly generatedId = this.idGenerator.getId('kbq-scrollbar-viewport-');
-
-    // Read live because a bound consumer id is unavailable during construction.
-    protected get id(): string {
-        return this.getNativeElement().id || this.generatedId;
-    }
-
     /** Visibility mode for this viewport's scrollbar. Defaults to the app-wide {@link KBQ_SCROLLBAR_OPTIONS}. */
     readonly mode = input<KbqScrollbarMode>(this.options.mode, { alias: 'kbqScrollbarMode' });
 
@@ -328,8 +321,8 @@ export class KbqScrollbarViewport {
         transform: numberAttribute
     });
 
+    private readonly generatedId = this.idGenerator.getId('kbq-scrollbar-viewport-');
     private trackRef: ComponentRef<KbqScrollbarTrack> | null = null;
-
     private readonly flashSubject = new Subject<void>();
 
     /** Emits when {@link flashScrollIndicators} is called. */
@@ -337,6 +330,11 @@ export class KbqScrollbarViewport {
 
     /** Emits on every native `scroll` event of the viewport. Emits outside Angular's zone — see `CdkScrollable.elementScrolled`. */
     readonly scrollChanges = this.scrollable.elementScrolled();
+
+    // Read live because a bound consumer id is unavailable during construction.
+    protected get id(): string {
+        return this.getNativeElement().id || this.generatedId;
+    }
 
     constructor() {
         this.styleLoader.load(ScrollbarStyleLoader);
@@ -491,10 +489,11 @@ export class KbqScrollbarViewport {
 @Injectable()
 class KbqScrollbarContentObserver {
     private readonly viewport = inject(KbqScrollbarViewport);
-    private readonly viewportElement = this.viewport.getNativeElement();
     private readonly document = inject(DOCUMENT);
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly mutationObserverFactory = inject(MutationObserverFactory);
+
+    private readonly viewportElement = this.viewport.getNativeElement();
     private readonly nextFrame = nextAnimationFrame();
 
     readonly changes: Observable<void> = merge(
@@ -643,12 +642,14 @@ class KbqScrollbarContentObserver {
 class KbqScrollbarThumb {
     private readonly viewport = inject(KbqScrollbarViewport);
     private readonly directionality = inject(Directionality);
-    protected readonly viewportElement = this.viewport.getNativeElement();
     private readonly nativeElement = kbqInjectNativeElement();
-    private readonly style = this.nativeElement.style;
     private readonly contentChanges = inject(KbqScrollbarContentObserver).changes;
 
     readonly orientation = input.required<Orientation>();
+
+    private readonly style = this.nativeElement.style;
+
+    protected readonly viewportElement = this.viewport.getNativeElement();
 
     constructor() {
         merge(
@@ -849,13 +850,17 @@ class KbqScrollbarThumb {
 })
 class KbqScrollbarTrack {
     private readonly viewport = inject(KbqScrollbarViewport);
-    private readonly viewportElement = this.viewport.getNativeElement();
     private readonly window = inject(KBQ_WINDOW);
     private readonly renderer = inject(Renderer2);
     private readonly ngZone = inject(NgZone);
     private readonly destroyRef = inject(DestroyRef);
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly nativeElement = kbqInjectNativeElement();
+
+    readonly mode = input.required<KbqScrollbarMode>();
+    readonly hideDelay = input.required<number>();
+
+    private readonly viewportElement = this.viewport.getNativeElement();
     private readonly scheduler = zoneFreeScheduler();
 
     // Scrolling re-measures too: a viewport that scrolls has something to scroll, whatever the observers
@@ -869,7 +874,6 @@ class KbqScrollbarTrack {
         ),
         { requireSync: true }
     );
-
     protected readonly revealed = toSignal(
         merge(this.viewport.scrollChanges, this.viewport.flashes).pipe(
             // Hoisted rather than injected inside switchMap, which runs outside an injection context.
@@ -887,9 +891,18 @@ class KbqScrollbarTrack {
     /** Whether the bars, the thumbs and the hover-mode track appear and change color without motion. */
     protected readonly animationsDisabled = kbqAnimationsDisabled();
 
-    readonly mode = input.required<KbqScrollbarMode>();
+    private get scrollbars(): ScrollbarVisibility {
+        const { clientHeight, scrollHeight, clientWidth, scrollWidth } = this.viewportElement;
+        // An overflowing axis is not necessarily a scrollable one: `overflow: hidden` still scrolls
+        // programmatically, so the size ratio alone would paint a bar — and hand over a draggable
+        // thumb — for an axis the browser itself refuses to give a scrollbar to.
+        const { overflowX, overflowY } = this.window.getComputedStyle(this.viewportElement);
 
-    readonly hideDelay = input.required<number>();
+        return [
+            !NON_SCROLLABLE_OVERFLOW.includes(overflowY) && Math.ceil((clientHeight / scrollHeight) * 100) < 100,
+            !NON_SCROLLABLE_OVERFLOW.includes(overflowX) && Math.ceil((clientWidth / scrollWidth) * 100) < 100
+        ];
+    }
 
     constructor() {
         this.resizeObserver
@@ -932,19 +945,6 @@ class KbqScrollbarTrack {
                 )
                 .subscribe((click) => click.stopPropagation());
         });
-    }
-
-    private get scrollbars(): ScrollbarVisibility {
-        const { clientHeight, scrollHeight, clientWidth, scrollWidth } = this.viewportElement;
-        // An overflowing axis is not necessarily a scrollable one: `overflow: hidden` still scrolls
-        // programmatically, so the size ratio alone would paint a bar — and hand over a draggable
-        // thumb — for an axis the browser itself refuses to give a scrollbar to.
-        const { overflowX, overflowY } = this.window.getComputedStyle(this.viewportElement);
-
-        return [
-            !NON_SCROLLABLE_OVERFLOW.includes(overflowY) && Math.ceil((clientHeight / scrollHeight) * 100) < 100,
-            !NON_SCROLLABLE_OVERFLOW.includes(overflowX) && Math.ceil((clientWidth / scrollWidth) * 100) < 100
-        ];
     }
 
     private getViewportMetrics(): ViewportMetrics {

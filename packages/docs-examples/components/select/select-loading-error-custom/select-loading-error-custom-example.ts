@@ -68,7 +68,6 @@ const delayBeforeShowError = 3000;
 })
 export class SelectLoadingErrorCustomExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly error = signal(false);
     readonly loading = signal(true);
 

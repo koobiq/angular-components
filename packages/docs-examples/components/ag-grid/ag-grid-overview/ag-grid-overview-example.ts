@@ -70,24 +70,20 @@ export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
 })
 export class AgGridOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,
         width: 140
     };
-
     protected readonly selectionColumnDef: SelectionColumnDef = {
         pinned: 'left'
     };
-
     protected readonly rowSelection: RowSelectionOptions = {
         mode: 'multiRow',
         headerCheckbox: true,
         checkboxes: true,
         hideDisabledCheckboxes: false
     };
-
     protected readonly columnDefs = computed<ColDef[]>(() => [
         {
             field: 'column0',
@@ -100,7 +96,6 @@ export class AgGridOverviewExample {
             headerName: this.t().headerText
         }))
     ]);
-
     protected readonly rowData = computed(() =>
         Array.from({ length: 100 }, (_, index) => ({
             column0: this.t().linkN(index),

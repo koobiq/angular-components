@@ -82,6 +82,21 @@ import {
     exportAs: 'kbqClampedText'
 })
 export class KbqClampedText implements KbqClamped, AfterViewInit {
+    /** Id of the clamped region, published by the toggle as its `aria-controls`. */
+    readonly contentId = inject(_IdGenerator).getId('kbq-clamped-text-content-');
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly resizeObserver = inject(SharedResizeObserver);
+    private readonly platform = inject(Platform);
+    private readonly animateCollapse = kbqInjectCollapseAnimation();
+
+    /**
+     * Clamped text locale configuration.
+     *
+     * @docs-private
+     */
+    readonly localeConfiguration = kbqInjectClampedTextLocaleConfiguration();
+
     /**
      * Max rows before text is clamped. Defaults to `kbqClampedTextDefaultMaxRows`.
      */
@@ -111,20 +126,19 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
      */
     readonly duration = input<number, number | string | null | undefined>(100, { transform: numberAttribute });
 
-    /** Id of the clamped region, published by the toggle as its `aria-controls`. */
-    readonly contentId = inject(_IdGenerator).getId('kbq-clamped-text-content-');
-
     /** @docs-private */
     protected readonly text = viewChild.required<ElementRef<HTMLSpanElement>>('text');
+
     /** @docs-private */
     protected readonly textContainer = viewChild.required<ElementRef<HTMLDivElement>>('textContainer');
 
     private readonly hasToggleState = signal(false);
-    /** Whether the content overflows `rows` lines by enough to be worth a toggle. */
-    readonly hasToggle: Signal<boolean> = this.hasToggleState.asReadonly();
 
     /** Whether the content has been measured at least once. */
     private readonly measured = signal(false);
+
+    /** Whether the content overflows `rows` lines by enough to be worth a toggle. */
+    readonly hasToggle: Signal<boolean> = this.hasToggleState.asReadonly();
 
     /**
      * Rendered collapsed state, which drives the css class and the toggle's `aria-expanded`.
@@ -139,19 +153,6 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
 
         return this.measured() ? this.hasToggle() && collapsed : collapsed;
     });
-
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly resizeObserver = inject(SharedResizeObserver);
-    private readonly platform = inject(Platform);
-    private readonly animateCollapse = kbqInjectCollapseAnimation();
-
-    /**
-     * Clamped text locale configuration.
-     *
-     * @docs-private
-     */
-    readonly localeConfiguration = kbqInjectClampedTextLocaleConfiguration();
 
     ngAfterViewInit(): void {
         if (!this.platform.isBrowser) return;

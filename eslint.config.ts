@@ -13,6 +13,7 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import { importsConfig } from './tools/eslint/imports';
 import { publishedJsDocConfig } from './tools/eslint/jsdoc';
+import { perfectionistConfig } from './tools/eslint/perfectionist';
 
 const capitalizeFirst = (str: string): string => str.charAt(0).toUpperCase() + str.slice(1);
 
@@ -328,6 +329,9 @@ export default defineConfig(
 
     // Order of imports and exports, and cycles between modules
     importsConfig,
+
+    // Order of class members and the empty lines between them
+    perfectionistConfig,
 
     // CommonJS: a `.cjs` file, and a `.js` one, since no package with JavaScript in it is `"type": "module"`.
     // typescript-eslint parses every file as a module, so the source type is set here

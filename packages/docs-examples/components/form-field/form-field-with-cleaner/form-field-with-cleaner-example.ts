@@ -27,7 +27,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class FormFieldWithCleanerExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly inputFormControl = new FormControl(this.t().thisFieldCanBeCleaned);
     readonly selectFormControl = new FormControl('1');
 }

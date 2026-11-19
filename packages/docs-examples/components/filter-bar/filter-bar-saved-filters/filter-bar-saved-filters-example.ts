@@ -84,16 +84,10 @@ const createSearchPipe = (name: string): KbqPipe => ({
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarSavedFiltersExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly toastService = inject(KbqToastService);
 
     readonly errorToastActionsTemplate = viewChild.required<TemplateRef<any>>('errorToastActions');
     readonly toastErrorTitleTemplate = viewChild.required<TemplateRef<any>>('toastErrorTitleTemplate');
-
-    /** Resolves a period `nameKey`; the `name` stays the stable English fallback. */
-    protected readonly nameResolver: KbqFilterBarNameResolver = ({ key, fallback }) =>
-        this.t().periods[key] ?? fallback;
 
     /** Stable periods; the saved-filter data below is never rebuilt for a locale change. */
     private readonly period = (nameKey: string, name: string, start: Record<string, number>): ExamplePeriod => ({
@@ -107,6 +101,8 @@ export class FilterBarSavedFiltersExample {
     private readonly last7days = this.period('filters.last7days', 'Last 7 days', { days: -7 });
     private readonly last30days = this.period('filters.last30days', 'Last 30 days', { days: -30 });
     private readonly lastYear = this.period('filters.lastYear', 'Last year', { years: -1 });
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     /** Built once; nothing is derived from the locale. */
     readonly pipeTemplates: KbqPipeTemplate[] = [
@@ -166,15 +162,17 @@ export class FilterBarSavedFiltersExample {
             disabled: false
         }
     ];
-
     filters: ExampleFilter[] = this.createFilters();
     readonly savedFilters: KbqFilter[] = this.createSavedFilters();
-
     activeFilter: KbqFilter | null = this.createFilters()[0] ?? null;
 
     get defaultFilter(): KbqFilter | null {
         return this.getDefaultFilter();
     }
+
+    /** Resolves a period `nameKey`; the `name` stays the stable English fallback. */
+    protected readonly nameResolver: KbqFilterBarNameResolver = ({ key, fallback }) =>
+        this.t().periods[key] ?? fallback;
 
     onFilterChange(filter: KbqFilter | null) {
         // KbqFilterBar flips `changed` to true on any pipe edit but never back to false.

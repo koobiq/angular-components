@@ -22,7 +22,6 @@ const OPTIONS = Array.from({ length: 12 }, (_, index) => ({ name: `Option ${inde
 })
 export class FilterBarPanelMaxHeightExample {
     activeFilter: KbqFilter = this.getDefaultFilter();
-
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Default height',

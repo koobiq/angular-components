@@ -80,7 +80,6 @@ export class TestResizer {
     readonly direction = signal<KbqResizerDirection>([1, 0]);
     readonly cursor = signal<string | null>(null);
     readonly disableSizeUpdate = signal(false);
-
     readonly resizeStart = vi.fn();
     readonly sizeChange = vi.fn();
 }

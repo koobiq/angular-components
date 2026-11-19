@@ -52,9 +52,7 @@ import { TRANSLATIONS } from './l10n';
 })
 export class FileUploadMultipleRequiredReactiveValidationExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly customErrorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
-
     protected readonly formMultiple = new FormGroup({
         fileUpload: new FormControl<FileList | KbqFileItem[]>([], [Validators.required, Validators.minLength(2)])
     });

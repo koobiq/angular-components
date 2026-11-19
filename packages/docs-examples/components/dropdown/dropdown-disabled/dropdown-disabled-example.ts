@@ -30,6 +30,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class DropdownDisabledExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     disabled = false;
 }

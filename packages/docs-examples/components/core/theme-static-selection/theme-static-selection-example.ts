@@ -33,6 +33,14 @@ interface ExampleThemeConfig extends KbqThemeConfig {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ThemeStaticSelectionExample implements OnDestroy {
+    // Uses the app's single, shared `KbqThemeService` rather than a locally-provided instance — a second
+    // instance would apply its own resolved class to the same `<body>`, fighting the app's real theme for
+    // control of it (see the `Day`/`Night` classes below, which alias `KbqThemeSelector` for this reason).
+    protected readonly theme = inject(KbqThemeService);
+
+    private readonly previousThemes = this.theme.themes();
+    private readonly previousStaticTheme = this.theme.staticTheme();
+
     protected readonly t = injectTranslation(TRANSLATIONS);
 
     /**
@@ -44,20 +52,11 @@ export class ThemeStaticSelectionExample implements OnDestroy {
         { name: 'day', label: this.t().day, className: KbqThemeSelector.Light, colorScheme: 'light' },
         { name: 'night', label: this.t().night, className: KbqThemeSelector.Dark, colorScheme: 'dark' }
     ]);
-
     protected readonly themeLabel = computed(() => {
         const name = this.theme.staticTheme();
 
         return this.customThemes().find((option) => option.name === name)?.label ?? name ?? this.t().pickTheme;
     });
-
-    // Uses the app's single, shared `KbqThemeService` rather than a locally-provided instance — a second
-    // instance would apply its own resolved class to the same `<body>`, fighting the app's real theme for
-    // control of it (see the `Day`/`Night` classes below, which alias `KbqThemeSelector` for this reason).
-    protected readonly theme = inject(KbqThemeService);
-
-    private readonly previousThemes = this.theme.themes();
-    private readonly previousStaticTheme = this.theme.staticTheme();
 
     constructor() {
         this.theme.setThemes([...this.previousThemes, ...this.customThemes()]);

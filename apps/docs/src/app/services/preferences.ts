@@ -48,7 +48,6 @@ export class DocsLanguagePreferences {
         ],
         updateSelected: true
     });
-
     readonly examplesLanguageSwitch = new DocsNavbarProperty({
         property: 'docs_examples-language',
         data: this.localeService.locales.items.map((item) => ({ id: item.id, value: item.name, selected: false })),

@@ -57,7 +57,7 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SkeletonFormFieldExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly loading = model(true);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

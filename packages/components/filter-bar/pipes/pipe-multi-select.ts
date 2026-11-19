@@ -66,8 +66,32 @@ import { kbqFilterSelectValueNameKey, kbqFilterSelectValuesBySearch } from './se
     encapsulation: ViewEncapsulation.None
 })
 export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> implements AfterViewInit, OnInit {
+    /** @docs-private */
+    readonly select = viewChild.required(KbqSelect);
+
+    /** @docs-private */
+    readonly options = viewChildren(KbqOption);
+
+    /** Updates on every pipe-template emission, so the options re-derive even for the same array reference. */
+    private readonly templatesVersion = signal(0);
+
     /** control for search options */
     readonly searchControl = new FormControl<string | null>(null);
+
+    /** Current search query; a signal so the options derivation follows the search control. */
+    private readonly searchQuery = toSignal(this.searchControl.valueChanges, {
+        initialValue: this.searchControl.value
+    });
+    private selectionAllInProgress = false;
+    private readonly multiSelect = new KbqMultiSelectPipeState({
+        data: this.data,
+        filterBar: this.filterBar,
+        allOptionsSelected: () => this.allOptionsSelected,
+        lockedValues: () => this.lockedValues ?? [],
+        isSameValue: (first, second) =>
+            (this.optionCompareWith ?? this.compareByValue)(first as KbqSelectValue, second as KbqSelectValue),
+        emptyValue: () => []
+    });
 
     /** Query tokens for option highlighting: tokenized like the filter, so every matched token is marked. */
     readonly searchTokens = toSignal(
@@ -77,14 +101,6 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         ),
         { initialValue: [] as string[] }
     );
-
-    /** Updates on every pipe-template emission, so the options re-derive even for the same array reference. */
-    private readonly templatesVersion = signal(0);
-
-    /** Current search query; a signal so the options derivation follows the search control. */
-    private readonly searchQuery = toSignal(this.searchControl.valueChanges, {
-        initialValue: this.searchControl.value
-    });
 
     /**
      * Options of the pipe template that match the search query. Follows the templates and the query,
@@ -101,12 +117,6 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
             (value) => this.optionName(value)
         );
     });
-
-    /** @docs-private */
-    readonly select = viewChild.required(KbqSelect);
-
-    /** @docs-private */
-    readonly options = viewChildren(KbqOption);
 
     /** selected value */
     get selected() {
@@ -186,17 +196,6 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         // and `deselect()` do not consult `disabled`, so filtering has to happen here.
         return this.options()?.filter((option) => option.selectable() && !option.disabled);
     }
-
-    private selectionAllInProgress = false;
-    private readonly multiSelect = new KbqMultiSelectPipeState({
-        data: this.data,
-        filterBar: this.filterBar,
-        allOptionsSelected: () => this.allOptionsSelected,
-        lockedValues: () => this.lockedValues ?? [],
-        isSameValue: (first, second) =>
-            (this.optionCompareWith ?? this.compareByValue)(first as KbqSelectValue, second as KbqSelectValue),
-        emptyValue: () => []
-    });
 
     constructor() {
         super();

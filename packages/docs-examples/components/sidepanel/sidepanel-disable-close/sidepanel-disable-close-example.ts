@@ -41,9 +41,9 @@ export class ExampleSidepanelDisableCloseContent {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelDisableCloseExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly sidepanelService = inject(KbqSidepanelService);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     open() {
         this.sidepanelService.open(ExampleSidepanelDisableCloseContent, {

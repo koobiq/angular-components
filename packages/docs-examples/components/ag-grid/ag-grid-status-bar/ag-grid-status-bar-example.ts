@@ -32,11 +32,10 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleAgGridStatusBarComponent {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly params = inject(KBQ_AG_GRID_STATUS_BAR_PARAMS);
     private readonly destroyRef = inject(DestroyRef);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly totalRows = signal(0);
     protected readonly selectedRows = signal(0);
 
@@ -88,22 +87,18 @@ export class ExampleAgGridStatusBarComponent {
 })
 export class AgGridStatusBarExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly statusBarComponent = ExampleAgGridStatusBarComponent;
-
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,
         width: 140
     };
-
     protected readonly rowSelection: RowSelectionOptions = {
         mode: 'multiRow',
         headerCheckbox: true,
         checkboxes: true,
         hideDisabledCheckboxes: false
     };
-
     protected readonly columnDefs = computed<ColDef[]>(() => [
         {
             field: 'column0',
@@ -115,7 +110,6 @@ export class AgGridStatusBarExample {
             headerName: this.t().headerText
         }))
     ]);
-
     protected readonly rowData = Array.from({ length: 100 }, (_, index) => ({
         column0: 'Project name ' + index,
         ...Object.fromEntries(Array.from({ length: 9 }, (_, i) => ['column' + (i + 1), 'Text ' + index]))

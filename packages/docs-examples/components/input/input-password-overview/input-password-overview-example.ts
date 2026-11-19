@@ -52,7 +52,6 @@ const latinAndSpecialSymbols = ({ value }: AbstractControl): ValidationErrors | 
 })
 export class InputPasswordOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly control = new FormControl('', [
         PasswordValidators.minLength(8),
         PasswordValidators.maxLength(15),

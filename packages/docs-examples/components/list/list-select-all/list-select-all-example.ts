@@ -49,8 +49,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class ListSelectAllExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly options = computed(() => this.t().options);
-
     protected selected: string[] = [];
 }

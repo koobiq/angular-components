@@ -92,10 +92,10 @@ export class DevModalLongCustomComponent {
 })
 export class DevModalCustomComponent {
     private modal = inject(KbqModalRef);
+    data = inject<{ title?: string; subtitle?: string; myData?: string }>(KBQ_MODAL_DATA, { optional: true });
 
     componentColors = KbqComponentColors;
 
-    data = inject<{ title?: string; subtitle?: string; myData?: string }>(KBQ_MODAL_DATA, { optional: true });
     constructor() {
         console.log('data: ', this.data);
     }
@@ -141,10 +141,10 @@ export class DevModalCustomComponent {
 export class DevModalFullCustomComponent {
     private modal = inject(KbqModalRef);
 
-    componentColors = KbqComponentColors;
-
     readonly title = input<string>(undefined!);
     readonly subtitle = input<string>(undefined!);
+
+    componentColors = KbqComponentColors;
 
     destroyModal() {
         this.modal.destroy({ data: 'this the result data' });
@@ -170,11 +170,9 @@ export class DevApp {
     private modalService = inject(KbqModalService);
 
     componentColors = KbqComponentColors;
-
     isVisible = false;
     tplModal?: KbqModalRef;
     htmlModalVisible = false;
-
     isLoading = false;
 
     showConfirm() {

@@ -95,6 +95,7 @@ const createPasteEvent = (data: string): ClipboardEvent => {
 class TestTagInputDistinct {
     readonly tagList = viewChild.required(KbqTagList);
     readonly tagInput = viewChild.required(KbqTagInput);
+
     readonly distinct = signal(false);
     separatorKeyCodes: number[] = [ENTER];
     readonly tags: string[] = ['existing-tag'];
@@ -111,8 +112,8 @@ class TestTagInputDistinct {
 })
 class TestTagInputDefaultSeparators {
     readonly tagInput = viewChild.required(KbqTagInput);
-    readonly add = vi.fn();
 
+    readonly add = vi.fn();
     addOnBlur = true;
 }
 
@@ -129,6 +130,7 @@ class TestTagInputDefaultSeparators {
 })
 class TestTagInputStandaloneWithoutModule {
     readonly tagInput = viewChild.required(KbqTagInput);
+
     readonly add = vi.fn();
 }
 
@@ -149,6 +151,7 @@ class TestTagInputStandaloneWithoutModule {
 })
 class TestTagInputWithDashSeparator {
     readonly tagInput = viewChild.required(KbqTagInput);
+
     readonly add = vi.fn();
 }
 
@@ -172,6 +175,7 @@ class TestTagInputWithDashSeparator {
 })
 class TestTagInputWithPasteOnlySpace {
     readonly tagInput = viewChild.required(KbqTagInput);
+
     readonly add = vi.fn();
 }
 
@@ -195,6 +199,7 @@ class TestTagInputWithPasteOnlySpace {
 })
 class TestTagInputWithKeylessWhitespaceSeparator {
     readonly tagInput = viewChild.required(KbqTagInput);
+
     readonly add = vi.fn();
 }
 
@@ -215,6 +220,7 @@ class TestTagInputWithKeylessWhitespaceSeparator {
 })
 class TestTagInputSeparators {
     readonly tagInput = viewChild.required(KbqTagInput);
+
     readonly separatorKeyCodes = signal<number[]>([ENTER]);
     readonly addOnPaste = signal(true);
     readonly add = vi.fn();
@@ -247,8 +253,9 @@ class TestTagInputSeparators {
     `
 })
 class TestTagInputWithAutocomplete {
-    readonly relativeToCaret = signal(false);
     readonly tagInput = viewChild.required(KbqTagInput);
+
+    readonly relativeToCaret = signal(false);
     readonly options = ['HIPS alert', 'Phishing'];
     readonly tags: string[] = [];
 
@@ -1326,6 +1333,7 @@ describe('KbqTagInput', () => {
 })
 class TestTagInputLateTagList {
     readonly tagListInstance = viewChild.required(KbqTagList);
+
     readonly tagList = signal<KbqTagList | undefined>(undefined);
 }
 
@@ -1408,10 +1416,10 @@ const maxTagCount = (max: number): ValidatorFn => {
 class TestTagListValidation {
     readonly tagList = viewChild.required(KbqTagList);
     readonly tagInput = viewChild.required(KbqTagInput);
+
     readonly form = new FormGroup({
         tags: new FormControl<string[]>(['a', 'b'], [Validators.required, maxTagCount(2)])
     });
-
     errorStateMatcher: ErrorStateMatcher = new ErrorStateMatcher();
     separatorKeyCodes: number[] = [ENTER];
 
@@ -1439,6 +1447,7 @@ class TestTagListValidation {
 })
 class TestTagListRejectingValidation {
     readonly tagInput = viewChild.required(KbqTagInput);
+
     readonly control = new FormControl<string[]>(['a']);
 
     /** Filters the value out, as the docs recommend for keeping an invalid tag out of the list. */
@@ -1468,6 +1477,7 @@ class TestTagListRejectingValidation {
 class TestTagInputWithInputControl {
     readonly tagList = viewChild.required(KbqTagList);
     readonly tagInput = viewChild.required(KbqTagInput);
+
     readonly listControl = new FormControl<string[]>(['a', 'b'], [maxTagCount(2)]);
     readonly inputControl = new FormControl('', [Validators.pattern(/^[a-z]*$/)]);
     readonly addOnBlur = signal(false);
@@ -1493,6 +1503,7 @@ class TestTagInputWithInputControl {
 })
 class TagInputDrivenByEffects {
     readonly tagInput = viewChild.required(KbqTagInput);
+
     readonly tags = signal(['existing-tag']);
     readonly endTag = signal(false);
     runs = 0;

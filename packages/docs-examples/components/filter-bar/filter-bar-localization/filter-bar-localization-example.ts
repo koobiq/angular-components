@@ -71,13 +71,6 @@ export class LocalizationDemoBar {
     /** Text the example owns: a pipe or option label has no counterpart in the library's locale data. */
     private readonly t = injectTranslation(TRANSLATIONS);
 
-    /** One resolver for every pipe, option, preset and node label in this bar. */
-    protected readonly nameResolver: KbqFilterBarNameResolver = ({ key }) => {
-        const translation = this.t();
-
-        return key in translation ? translation[key as keyof ExampleTranslation] : undefined;
-    };
-
     /** Periods of the `date` pipe. The `name` is the stable fallback identity; `nameKey` is translated. */
     private readonly datePresets: DemoPeriodValue[] = [
         this.periodPreset('filters.last7days', 'Last 7 days', { days: -7 }),
@@ -89,17 +82,14 @@ export class LocalizationDemoBar {
         this.periodPreset('filters.last24h', 'Last 24 hours', { hours: -24 }),
         this.periodPreset('filters.last7days', 'Last 7 days', { days: -7 })
     ];
-
     private readonly statusValues: KbqSelectValue[] = [
         { name: 'Active', nameKey: 'filters.active', id: 'active', value: 'active' },
         { name: 'Blocked', nameKey: 'filters.blocked', id: 'blocked', value: 'blocked' }
     ];
-
     private readonly tagValues: KbqSelectValue[] = [
         { name: 'Alpha', nameKey: 'filters.alpha', id: 'alpha', value: 'alpha' },
         { name: 'Beta', nameKey: 'filters.beta', id: 'beta', value: 'beta' }
     ];
-
     private readonly treeValues: KbqTreeSelectNode[] = [
         {
             name: 'Platform',
@@ -173,11 +163,17 @@ export class LocalizationDemoBar {
             disabled: false
         }
     ];
-
     protected readonly savedFilters: KbqFilter[] = [];
 
     /** Created once. A reset is a user action, not a translation: it may replace the filter. */
     protected filter: KbqFilter | null = this.createFilter();
+
+    /** One resolver for every pipe, option, preset and node label in this bar. */
+    protected readonly nameResolver: KbqFilterBarNameResolver = ({ key }) => {
+        const translation = this.t();
+
+        return key in translation ? translation[key as keyof ExampleTranslation] : undefined;
+    };
 
     protected onResetFilter(): void {
         this.filter = this.createFilter();

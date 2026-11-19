@@ -38,10 +38,12 @@ const localeData: Record<string, KbqMultipleFileUploadLocaleConfiguration> = {
 })
 export class FileUploadMultipleCustomTextOverviewExample {
     private readonly exampleDefaultLocale = 'en-US';
+
     protected readonly localeId = toSignal(
         inject(KBQ_LOCALE_SERVICE, { optional: true })?.changes.pipe(skip(1)) ?? of(this.exampleDefaultLocale),
         { initialValue: this.exampleDefaultLocale }
     );
+
     // Recomputed from the active locale rather than provided once, so the labels follow `setLocale()`.
     // `KBQ_LOCALE_DATA` would be the other way to say this, but it is read only by `KbqLocaleService`, from
     // the injector that created it — a component-level provider for it never reaches the root service.

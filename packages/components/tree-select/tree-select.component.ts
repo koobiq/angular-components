@@ -314,155 +314,12 @@ export class KbqTreeSelect<T = any, K = T>
     private readonly parentFormField = inject(KBQ_FORM_FIELD, { host: true, optional: true })!;
     ngControl = inject(NgControl, { optional: true, self: true });
     protected readonly isBrowser = inject(Platform).isBrowser;
-
     private readonly defaultOptions = inject(KBQ_TREE_SELECT_OPTIONS, { optional: true });
-    private readonly errorStateTracker = new KbqErrorStateTracker(
-        this.defaultErrorStateMatcher,
-        this.ngControl,
-        this.parentFormGroup,
-        this.parentForm
+    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'select',
+        KBQ_SELECT_LOCALE_CONFIGURATION
     );
-
-    /** Whether the component is in an error state. */
-    readonly errorState = this.errorStateTracker.errorState;
-
-    /** A name for this control that can be used by `kbq-form-field`. */
-    controlType = 'select';
-
-    /**
-     * A `kbq-tree-select` is not a native labelable element, so the form-field's `<label for>` cannot
-     * associate with it. The control is named through `aria-labelledby` instead.
-     */
-    readonly isNativeLabelSupported = false;
-
-    /** Number of the selected items that do not fit into the trigger. */
-    readonly hiddenItems = signal(0);
-
-    /** The last measured value for the trigger's client bounding rect, or `undefined` until the panel first opens. */
-    protected triggerRect: DOMRect | undefined;
-
-    /** The cached font-size of the trigger element. */
-    triggerFontSize = 0;
-
-    /**
-     * Deals with the selection logic. The projected `kbq-tree-selection` shares the same instance.
-     *
-     * `T` is the type of the data nodes, the same as the projected tree's. A template infers it from `[clearPredicate]`
-     * alone, apart from the tree; a query names it: `viewChild.required<KbqTreeSelect<Node>>(KbqTreeSelect)`, and a
-     * select whose tree control has a `trackBy` names the key type too: `KbqTreeSelect<Node, string>`.
-     *
-     * Created once the content is initialized, and only with a projected tree.
-     */
-    selectionModel: SelectionModel<T> | undefined;
-
-    /** Emits once the panel has rendered (`'showing'`) or has been removed (`'void'`). */
-    protected readonly panelDoneAnimatingStream = new Subject<string>();
-
-    private panelRender?: AfterRenderRef;
-
-    /** Strategy that will be used to handle scrolling while the select panel is open. */
-    scrollStrategy: ScrollStrategy = this.scrollStrategyFactory();
-
-    /**
-     * Minimum space to keep between the overlay and the viewport edge.
-     * At least `defaultOffsetY` so CDK's fit check — which runs before the `kbq-connected-overlay_below/_above`
-     * gap padding is applied to the pane — stays conservative enough to absorb that padding instead of
-     * letting the panel overflow the viewport by the size of the gap.
-     */
-    protected readonly viewportMargin = defaultOffsetY;
-
-    /**
-     * Opens the panel below the trigger, falling back to above it when it does not fit.
-     *
-     * A third position is appended at runtime by `updatePanelAnchor`: a multiline trigger that has grown
-     * taller than the panel gets it anchored to its first row and drawn over the rest of it.
-     */
-    positions: ConnectedPosition[] = [
-        {
-            originX: 'start',
-            originY: 'bottom',
-            overlayX: 'start',
-            overlayY: 'top',
-            panelClass: KBQ_CONNECTED_OVERLAY_BELOW_CLASS
-        },
-        {
-            originX: 'start',
-            originY: 'top',
-            overlayX: 'start',
-            overlayY: 'bottom',
-            panelClass: KBQ_CONNECTED_OVERLAY_ABOVE_CLASS
-        }
-    ];
-
-    /** Rendered options of the projected tree, once the content is initialized. */
-    protected options: QueryList<KbqTreeOption<T>> | undefined;
-
-    /**
-     * Trigger - is a clickable field to open select dropdown panel
-     */
-    readonly trigger = viewChild.required<ElementRef>('trigger');
-
-    /** Reference to the overlay panel element. */
-    readonly panel = viewChild<ElementRef>('panel');
-
-    /** Scrollable option list inside the panel. */
-    protected readonly optionsContainer = viewChild<ElementRef<HTMLElement>>('optionsContainer');
-
-    /** The options container's custom scrollbar viewport, flashed when the panel opens. */
-    private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
-
-    private readonly overlayDirQuery = viewChild(CdkConnectedOverlay);
-
-    /** Reference to the CDK connected overlay directive. */
-    protected get overlayDir(): CdkConnectedOverlay {
-        return this.overlayDirQuery()!;
-    }
-
-    private readonly tagsQuery = viewChildren(KbqTag);
-    private readonly tagsList = kbqQueryListFrom(this.tagsQuery);
-
-    protected get tags(): QueryList<KbqTag> {
-        return this.tagsList();
-    }
-
-    /**
-     * Reference to the optional cleaner element for clearing selection.
-     *
-     * @docs-private
-     */
-    readonly cleaner = contentChild(KbqCleaner, { descendants: false });
-
-    /** User-supplied override of the trigger element. */
-    readonly customTrigger = contentChild(KbqSelectTrigger);
-
-    readonly customMatcher = contentChild(KbqSelectMatcher);
-
-    readonly customTagTemplateRef = contentChild('kbqSelectTagContent', { read: TemplateRef });
-
-    readonly tree = contentChild<KbqTreeSelection<T, K>>(KbqTreeSelection);
-
-    readonly search = contentChild(KbqSelectSearch);
-
-    /**
-     * Tree that the search field filters, as the field describes it to assistive technology.
-     *
-     * @docs-private
-     */
-    readonly searchFieldPopup: KbqSearchFieldPopup = {
-        comboboxPopupRole: 'tree',
-        popup: () => this.treeElement()?.nativeElement,
-        activeDescendant: () => {
-            const option = this.panelOpen ? this.tree()?.keyManager?.activeItem : null;
-
-            // The tree paints its highlight from `hasFocus`, which an option keeps while the search takes the caret back.
-            return option?.hasFocus ? option.getHostElement() : null;
-        }
-    };
-
-    private readonly treeElement = contentChild(KbqTreeSelection, { read: ElementRef });
-
-    /** Message projected for an empty tree — the only thing the panel opens onto without options. */
-    private readonly noOptionsMessage = contentChild(KbqSelectNoOptions);
+    private readonly destroyRef = inject(DestroyRef);
 
     /**
      * Text of the counter of the selected items that do not fit into the trigger. `{{ number }}` is
@@ -478,10 +335,172 @@ export class KbqTreeSelect<T = any, K = T>
         (hiddenItemsText, hiddenItems) => hiddenItemsText.replace('{{ number }}', hiddenItems.toString())
     );
 
-    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
-        'select',
-        KBQ_SELECT_LOCALE_CONFIGURATION
+    /** Classes to be passed to the select panel. Supports the same syntax as the `[class]` binding. */
+    readonly panelClass = input<
+        | string
+        | string[]
+        | Set<string>
+        | {
+              [key: string]: any;
+          }
+    >(undefined!);
+    readonly backdropClass = input<string>('cdk-overlay-transparent-backdrop');
+
+    /**
+     * Name of the control, for when no element on the page carries it. Defaults to the placeholder.
+     *
+     * Prefer `aria-labelledby` and point it at visible text: a name that duplicates a visible label is one
+     * more string to keep in sync, and a name with no visible counterpart cannot be spoken back by voice
+     * control (WCAG 2.5.3).
+     */
+    readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
+
+    /**
+     * Id of the element that names the control. Defaults to the `kbq-label` of a wrapping `kbq-form-field`.
+     *
+     * A `role="combobox"` element takes its name from the author only, so neither the placeholder nor the
+     * selected values name it, and the `<label for>` of the form field names labelable elements only, which
+     * a custom control is not. Without a form-field label, point this at whatever visible text names the
+     * control.
+     */
+    readonly ariaLabelledby = input<string | null>(null, { alias: 'aria-labelledby' });
+
+    /** Object used to control when error messages are shown. */
+    readonly errorStateMatcher = input<ErrorStateMatcher>();
+
+    /**
+     * Function used to sort the values in a select in multiple mode, by default their order in the panel.
+     * Follows the same logic as `Array.prototype.sort`. Receives two selected data nodes and every data node of the
+     * tree in panel order, collapsed branches included — a node in a collapsed branch has no option.
+     */
+    readonly sortComparator: InputSignal<KbqTreeSelectSortComparator> = input<KbqTreeSelectSortComparator>(undefined!);
+
+    /**
+     * Decides which selected nodes the projected `KbqCleaner` removes: return `true` to clear the node,
+     * `false` to keep it. Receives the data node, not the option — a node in a collapsed branch has no
+     * option. Disabled nodes are kept by default. Bind a stable reference — a new function on every
+     * change detection re-runs the predicate over the whole selection.
+     *
+     * Not consulted by `writeValue` / `reset()`, which always clear everything. The parameter type becomes the select's
+     * `T` in a template: type it with the tree's node, not with an option.
+     */
+    readonly clearPredicate = input<(node: T) => boolean, (node: T) => boolean>(
+        this.defaultOptions?.clearPredicate ?? ((node) => !this.isNodeDisabled(node)),
+        {
+            transform: (fn) => {
+                if (typeof fn !== 'function') {
+                    throw Error('`clearPredicate` must be a function.');
+                }
+
+                return fn;
+            }
+        }
     );
+
+    /**
+     * Whether to use a multiline matcher or not. Default is false
+     */
+    readonly multiline = input<boolean, unknown>(false, { transform: booleanAttribute });
+
+    /** Placeholder shown in the trigger while nothing is selected. */
+    readonly placeholder = input<string>();
+
+    /** Whether the select is required. */
+    readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
+
+    /** @docs-private */
+    readonly multipleInput = input<boolean, boolean | string | null | undefined>(false, {
+        alias: 'multiple',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly autoSelectInput = input<boolean, boolean | string | null | undefined>(true, {
+        alias: 'autoSelect',
+        transform: booleanAttribute
+    });
+
+    /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
+    readonly selectAllToggle = input(false, { transform: booleanAttribute });
+
+    /**
+     * Whether to render the "select all" master checkbox above the tree. Multiple selection only.
+     *
+     * The row acts on the nodes the user can actually toggle — enabled and selectable. Without a search
+     * query that covers the whole data set, collapsed branches included; while a query is active it
+     * covers only the matches. Enabling it also makes Ctrl/Cmd + A a two-way toggle, so the shortcut and
+     * the checkbox never disagree (`selectAllToggle` is implied).
+     */
+    readonly selectAll = input(false, { transform: booleanAttribute });
+
+    /** @docs-private */
+    readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
+
+    /** Whether the overlay panel is rendered on top of a backdrop. */
+    readonly hasBackdrop = input(false, { transform: booleanAttribute });
+
+    /** @docs-private */
+    readonly tabIndexInput = input<number | null>(0, { alias: 'tabIndex' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly selectAllHandlerInput = input<
+        ((event: KeyboardEvent, select: KbqTreeSelect<T, K>) => void) | undefined,
+        ((event: KeyboardEvent, select: KbqTreeSelect<T, K>) => void) | undefined
+    >(undefined, {
+        alias: 'selectAllHandler',
+        transform: kbqSelectAllHandlerTransform
+    });
+
+    /**
+     * Minimum width of the panel.
+     * If minWidth is larger than window width, it will be ignored.
+     */
+    readonly panelMinWidth = input<KbqPanelMinWidth, unknown>(
+        this.defaultOptions?.panelMinWidth === undefined
+            ? KBQ_PANEL_DEFAULT_MIN_WIDTH
+            : this.defaultOptions.panelMinWidth,
+        { transform: numberAttribute }
+    );
+
+    /**
+     * Width of the panel. If set to `auto`, the panel will match the trigger width, but will never be
+     * narrower than `panelMinWidth`. If set to null or an empty string, the panel will grow to match the
+     * longest option's text. Any other value is used as an exact width, and `panelMinWidth` is not applied.
+     */
+    readonly panelWidth = input<KbqPanelWidth>(this.defaultOptions?.panelWidth ?? null);
+
+    /**
+     * Maximum width of the panel in pixels. Caps how far the panel grows with its content — it never makes
+     * the panel narrower than the trigger, and never clamps an explicit `panelWidth`.
+     * When null, the `--kbq-panel-size-width-max` token applies.
+     */
+    readonly panelMaxWidth = input<KbqPanelMaxWidth, unknown>(
+        this.defaultOptions?.panelMaxWidth === undefined ? null : this.defaultOptions.panelMaxWidth,
+        { transform: numberAttribute }
+    );
+
+    /**
+     * Maximum height of the panel's scrollable option list, in pixels. Applied as the
+     * `--kbq-select-panel-size-max-height` custom property on the panel.
+     *
+     * The search field and the footer sit outside the scrollable area and add to the panel's total height.
+     * When null, the token default (256px) applies.
+     */
+    readonly panelMaxHeight = input<KbqPanelMaxHeight, unknown>(
+        this.defaultOptions?.panelMaxHeight === undefined ? null : this.defaultOptions.panelMaxHeight,
+        { transform: numberAttribute }
+    );
+
+    /** @docs-private */
+    readonly searchMinOptionsThresholdInput = input<'auto' | number | undefined>(undefined, {
+        alias: 'searchMinOptionsThreshold'
+    });
 
     /**
      * Event emitted when the select panel has been toggled.
@@ -521,36 +540,69 @@ export class KbqTreeSelect<T = any, K = T>
      */
     readonly onSelectAll = output<KbqSelectAllEvent<KbqTreeOption<T>, KbqTreeSelect<T, K>>>();
 
-    /** Classes to be passed to the select panel. Supports the same syntax as the `[class]` binding. */
-    readonly panelClass = input<
-        | string
-        | string[]
-        | Set<string>
-        | {
-              [key: string]: any;
-          }
-    >(undefined!);
+    /**
+     * Trigger - is a clickable field to open select dropdown panel
+     */
+    readonly trigger = viewChild.required<ElementRef>('trigger');
 
-    readonly backdropClass = input<string>('cdk-overlay-transparent-backdrop');
+    /** Reference to the overlay panel element. */
+    readonly panel = viewChild<ElementRef>('panel');
+
+    /** Scrollable option list inside the panel. */
+    protected readonly optionsContainer = viewChild<ElementRef<HTMLElement>>('optionsContainer');
+
+    /** The options container's custom scrollbar viewport, flashed when the panel opens. */
+    private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
+    private readonly overlayDirQuery = viewChild(CdkConnectedOverlay);
+    private readonly tagsQuery = viewChildren(KbqTag);
 
     /**
-     * Name of the control, for when no element on the page carries it. Defaults to the placeholder.
+     * Reference to the optional cleaner element for clearing selection.
      *
-     * Prefer `aria-labelledby` and point it at visible text: a name that duplicates a visible label is one
-     * more string to keep in sync, and a name with no visible counterpart cannot be spoken back by voice
-     * control (WCAG 2.5.3).
+     * @docs-private
      */
-    readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
+    readonly cleaner = contentChild(KbqCleaner, { descendants: false });
 
-    /**
-     * Id of the element that names the control. Defaults to the `kbq-label` of a wrapping `kbq-form-field`.
-     *
-     * A `role="combobox"` element takes its name from the author only, so neither the placeholder nor the
-     * selected values name it, and the `<label for>` of the form field names labelable elements only, which
-     * a custom control is not. Without a form-field label, point this at whatever visible text names the
-     * control.
-     */
-    readonly ariaLabelledby = input<string | null>(null, { alias: 'aria-labelledby' });
+    /** User-supplied override of the trigger element. */
+    readonly customTrigger = contentChild(KbqSelectTrigger);
+    readonly customMatcher = contentChild(KbqSelectMatcher);
+    readonly customTagTemplateRef = contentChild('kbqSelectTagContent', { read: TemplateRef });
+    readonly tree = contentChild<KbqTreeSelection<T, K>>(KbqTreeSelection);
+    readonly search = contentChild(KbqSelectSearch);
+    private readonly treeElement = contentChild(KbqTreeSelection, { read: ElementRef });
+
+    /** Message projected for an empty tree — the only thing the panel opens onto without options. */
+    private readonly noOptionsMessage = contentChild(KbqSelectNoOptions);
+
+    private readonly errorStateTracker = new KbqErrorStateTracker(
+        this.defaultErrorStateMatcher,
+        this.ngControl,
+        this.parentFormGroup,
+        this.parentForm
+    );
+    private panelRender?: AfterRenderRef;
+    private readonly tagsList = kbqQueryListFrom(this.tagsQuery);
+
+    /** Emits once `options` is assigned, for subscribers that arrive before the content is resolved. */
+    private readonly optionsInitialized = new Subject<void>();
+
+    /** The multiplicity the selection model was created with; a later binding change is refused. */
+    private multipleValue: boolean | undefined;
+    private readonly valueState = signal<any>(undefined);
+
+    /** Unique id for this input. */
+    private readonly uid = `kbq-tree-select-${nextUniqueId++}`;
+    private readonly validTabIndex = linkedSignal<number | null, number | null>({
+        source: () => this.tabIndexInput(),
+        computation: (value, previous) => (Number.isInteger(value) || value === null ? value : (previous?.value ?? 0))
+    });
+
+    /** Whether the select is disabled. Also set by the bound form control. */
+    readonly disabled = linkedSignal(() => this.disabledInput());
+
+    // One signal per host value. The host bindings of every tree-select in a view run in that view's reactive
+    // consumer, where a signal read again by another binding costs a scan of everything the view has read.
+    private readonly resolvedTabIndex = computed(() => (this.disabled() ? -1 : this.validTabIndex()));
 
     /**
      * Id of the element that names the control: its own `aria-labelledby`, or else the form-field label.
@@ -561,42 +613,126 @@ export class KbqTreeSelect<T = any, K = T>
         () => this.ariaLabelledby() ?? this.parentFormField?.labelId() ?? null
     );
 
-    /** Object used to control when error messages are shown. */
-    readonly errorStateMatcher = input<ErrorStateMatcher>();
-
-    /**
-     * Function used to sort the values in a select in multiple mode, by default their order in the panel.
-     * Follows the same logic as `Array.prototype.sort`. Receives two selected data nodes and every data node of the
-     * tree in panel order, collapsed branches included — a node in a collapsed branch has no option.
-     */
-    readonly sortComparator: InputSignal<KbqTreeSelectSortComparator> = input<KbqTreeSelectSortComparator>(undefined!);
-
-    /**
-     * Decides which selected nodes the projected `KbqCleaner` removes: return `true` to clear the node,
-     * `false` to keep it. Receives the data node, not the option — a node in a collapsed branch has no
-     * option. Disabled nodes are kept by default. Bind a stable reference — a new function on every
-     * change detection re-runs the predicate over the whole selection.
-     *
-     * Not consulted by `writeValue` / `reset()`, which always clear everything. The parameter type becomes the select's
-     * `T` in a template: type it with the tree's node, not with an option.
-     */
-    readonly clearPredicate = input<(node: T) => boolean, (node: T) => boolean>(
-        this.defaultOptions?.clearPredicate ?? ((node) => !this.isNodeDisabled(node)),
-        {
-            transform: (fn) => {
-                if (typeof fn !== 'function') {
-                    throw Error('`clearPredicate` must be a function.');
-                }
-
-                return fn;
-            }
-        }
+    private readonly resolvedAriaLabel = computed(() =>
+        this.resolvedAriaLabelledby() ? null : this.ariaLabel() || this.placeholder() || null
     );
+    private readonly focusedValue = signal(false);
+    private readonly panelOpenValue = signal(false);
+    private closeSubscription = Subscription.EMPTY;
+
+    /** The scroll offset the panel is restored to when it attaches — the list always opens at the top. */
+    private scrollTop = 0;
 
     /**
-     * Whether to use a multiline matcher or not. Default is false
+     * Whether projected content has been resolved. The search field reaches its form control through
+     * its own form field, and that is only guaranteed to have been wired by `ngAfterContentInit`.
      */
-    readonly multiline = input<boolean, unknown>(false, { transform: booleanAttribute });
+    private readonly contentInitialized = signal(false);
+
+    /**
+     * The last value the form wrote while the tree could not resolve all of it yet — before the content was
+     * initialized, or before the data held every node it names. Applied again as the data changes, until every node
+     * is found or the selection is reported to the form.
+     */
+    private pendingValue: { value: any } | null = null;
+
+    /** The data nodes {@link pendingValue} was last resolved against. */
+    private pendingValueDataNodes: readonly unknown[] | null = null;
+
+    /** Whether the selection is being set to a value the form wrote, which is no change to report back. */
+    private writingValue = false;
+
+    /** Handles of the timers that outlive the call that scheduled them. */
+    private readonly pendingTimers = new Set<ReturnType<typeof setTimeout>>();
+    private readonly emptyValue = signal(true);
+
+    /** Whether the component is in an error state. */
+    readonly errorState = this.errorStateTracker.errorState;
+
+    /** A name for this control that can be used by `kbq-form-field`. */
+    controlType = 'select';
+
+    /**
+     * A `kbq-tree-select` is not a native labelable element, so the form-field's `<label for>` cannot
+     * associate with it. The control is named through `aria-labelledby` instead.
+     */
+    readonly isNativeLabelSupported = false;
+
+    /** Number of the selected items that do not fit into the trigger. */
+    readonly hiddenItems = signal(0);
+
+    /** The last measured value for the trigger's client bounding rect, or `undefined` until the panel first opens. */
+    protected triggerRect: DOMRect | undefined;
+
+    /** The cached font-size of the trigger element. */
+    triggerFontSize = 0;
+
+    /**
+     * Deals with the selection logic. The projected `kbq-tree-selection` shares the same instance.
+     *
+     * `T` is the type of the data nodes, the same as the projected tree's. A template infers it from `[clearPredicate]`
+     * alone, apart from the tree; a query names it: `viewChild.required<KbqTreeSelect<Node>>(KbqTreeSelect)`, and a
+     * select whose tree control has a `trackBy` names the key type too: `KbqTreeSelect<Node, string>`.
+     *
+     * Created once the content is initialized, and only with a projected tree.
+     */
+    selectionModel: SelectionModel<T> | undefined;
+
+    /** Emits once the panel has rendered (`'showing'`) or has been removed (`'void'`). */
+    protected readonly panelDoneAnimatingStream = new Subject<string>();
+
+    /** Strategy that will be used to handle scrolling while the select panel is open. */
+    scrollStrategy: ScrollStrategy = this.scrollStrategyFactory();
+
+    /**
+     * Minimum space to keep between the overlay and the viewport edge.
+     * At least `defaultOffsetY` so CDK's fit check — which runs before the `kbq-connected-overlay_below/_above`
+     * gap padding is applied to the pane — stays conservative enough to absorb that padding instead of
+     * letting the panel overflow the viewport by the size of the gap.
+     */
+    protected readonly viewportMargin = defaultOffsetY;
+
+    /**
+     * Opens the panel below the trigger, falling back to above it when it does not fit.
+     *
+     * A third position is appended at runtime by `updatePanelAnchor`: a multiline trigger that has grown
+     * taller than the panel gets it anchored to its first row and drawn over the rest of it.
+     */
+    positions: ConnectedPosition[] = [
+        {
+            originX: 'start',
+            originY: 'bottom',
+            overlayX: 'start',
+            overlayY: 'top',
+            panelClass: KBQ_CONNECTED_OVERLAY_BELOW_CLASS
+        },
+        {
+            originX: 'start',
+            originY: 'top',
+            overlayX: 'start',
+            overlayY: 'bottom',
+            panelClass: KBQ_CONNECTED_OVERLAY_ABOVE_CLASS
+        }
+    ];
+
+    /** Rendered options of the projected tree, once the content is initialized. */
+    protected options: QueryList<KbqTreeOption<T>> | undefined;
+
+    /**
+     * Tree that the search field filters, as the field describes it to assistive technology.
+     *
+     * @docs-private
+     */
+    readonly searchFieldPopup: KbqSearchFieldPopup = {
+        comboboxPopupRole: 'tree',
+        popup: () => this.treeElement()?.nativeElement,
+        activeDescendant: () => {
+            const option = this.panelOpen ? this.tree()?.keyManager?.activeItem : null;
+
+            // The tree paints its highlight from `hasFocus`, which an option keeps while the search takes the caret back.
+            return option?.hasFocus ? option.getHostElement() : null;
+        }
+    };
 
     /** Combined stream of all of the child options' change events. */
     readonly optionSelectionChanges: Observable<KbqTreeSelectChange> = defer(() => {
@@ -626,190 +762,26 @@ export class KbqTreeSelect<T = any, K = T>
         return this.optionsInitialized.pipe(switchMap(() => this.userInteractionChanges));
     });
 
-    /** Emits once `options` is assigned, for subscribers that arrive before the content is resolved. */
-    private readonly optionsInitialized = new Subject<void>();
-
-    /** Placeholder shown in the trigger while nothing is selected. */
-    readonly placeholder = input<string>();
-
-    /** Whether the select is required. */
-    readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
-
-    /** @docs-private */
-    readonly multipleInput = input<boolean, boolean | string | null | undefined>(false, {
-        alias: 'multiple',
-        transform: booleanAttribute
-    });
-
-    /** Whether multiple nodes can be selected. Cannot be changed once the selection model exists. */
-    get multiple(): boolean {
-        return this.multipleValue ?? this.multipleInput();
-    }
-
-    /** The multiplicity the selection model was created with; a later binding change is refused. */
-    private multipleValue: boolean | undefined;
-
-    /** @docs-private */
-    readonly autoSelectInput = input<boolean, boolean | string | null | undefined>(true, {
-        alias: 'autoSelect',
-        transform: booleanAttribute
-    });
-
-    /** Whether moving the active node selects it. Always off in multiple selection. */
-    get autoSelect(): boolean {
-        return !this.multiSelection && this.autoSelectInput();
-    }
-
-    /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
-    readonly selectAllToggle = input(false, { transform: booleanAttribute });
-
-    /**
-     * Whether to render the "select all" master checkbox above the tree. Multiple selection only.
-     *
-     * The row acts on the nodes the user can actually toggle — enabled and selectable. Without a search
-     * query that covers the whole data set, collapsed branches included; while a query is active it
-     * covers only the matches. Enabling it also makes Ctrl/Cmd + A a two-way toggle, so the shortcut and
-     * the checkbox never disagree (`selectAllToggle` is implied).
-     */
-    readonly selectAll = input(false, { transform: booleanAttribute });
-
-    private readonly valueState = signal<any>(undefined);
-
     /** Values of the selected nodes: an array in multiple mode. */
     readonly value = this.valueState.asReadonly();
-
-    /** @docs-private */
-    readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
 
     /** Unique identifier of the select, generated when not provided. */
     readonly id = computed(() => this.idInput() || this.uid);
 
-    /** Whether the overlay panel is rendered on top of a backdrop. */
-    readonly hasBackdrop = input(false, { transform: booleanAttribute });
-
-    /** @docs-private */
-    readonly tabIndexInput = input<number | null>(0, { alias: 'tabIndex' });
-
-    /** Tab index of the select, `-1` while it is disabled. A value that is not an integer keeps the last valid one. */
-    get tabIndex(): number | null {
-        return this.resolvedTabIndex();
-    }
-
-    private readonly validTabIndex = linkedSignal<number | null, number | null>({
-        source: () => this.tabIndexInput(),
-        computation: (value, previous) => (Number.isInteger(value) || value === null ? value : (previous?.value ?? 0))
-    });
-
-    /** @docs-private */
-    readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
-        alias: 'disabled',
-        transform: booleanAttribute
-    });
-
-    /** Whether the select is disabled. Also set by the bound form control. */
-    readonly disabled = linkedSignal(() => this.disabledInput());
-
-    // One signal per host value. The host bindings of every tree-select in a view run in that view's reactive
-    // consumer, where a signal read again by another binding costs a scan of everything the view has read.
-    private readonly resolvedTabIndex = computed(() => (this.disabled() ? -1 : this.validTabIndex()));
-    private readonly resolvedAriaLabel = computed(() =>
-        this.resolvedAriaLabelledby() ? null : this.ariaLabel() || this.placeholder() || null
-    );
     /** @docs-private */
     protected readonly disabledAttribute = computed(() => this.disabled() || null);
+
     /** @docs-private */
     protected readonly disabledClass = computed(() => this.disabled());
+
     /** @docs-private */
     protected readonly invalidClass = computed(() => this.errorState());
-
-    /** @docs-private */
-    readonly selectAllHandlerInput = input<
-        ((event: KeyboardEvent, select: KbqTreeSelect<T, K>) => void) | undefined,
-        ((event: KeyboardEvent, select: KbqTreeSelect<T, K>) => void) | undefined
-    >(undefined, {
-        alias: 'selectAllHandler',
-        transform: kbqSelectAllHandlerTransform
-    });
-
-    /**
-     * Function for handling the combination Ctrl + A (select all). By default, the internal handler is used.
-     */
-    get selectAllHandler(): (event: KeyboardEvent, select: KbqTreeSelect<T, K>) => void {
-        return this.selectAllHandlerInput() ?? this.defaultSelectAllHandler;
-    }
-
-    /** Function for handling the combination Ctrl + A (select all). By default, the internal handler is used. */
-    private defaultSelectAllHandler(event: KeyboardEvent, select: KbqTreeSelect<T, K>): void {
-        const searchInput = isInput(event) ? (event.target as HTMLInputElement) : null;
-
-        if (shouldSelectSearchText(searchInput)) {
-            searchInput!.select();
-            event.preventDefault();
-
-            return;
-        }
-
-        event.preventDefault();
-
-        // With the master checkbox on screen the shortcut has to behave exactly like clicking it,
-        // otherwise the same action would leave the checkbox showing something the selection contradicts.
-        // `onSelectAll` is emitted by the tree subscription set up in `ngAfterContentInit`.
-        select.tree()!.selectAllOptions(select.selectAll() || select.selectAllToggle());
-    }
-
-    private readonly focusedValue = signal(false);
-    private readonly panelOpenValue = signal(false);
 
     /** Whether the select is focused. */
     readonly focused = computed(() => this.focusedValue() || this.panelOpenValue());
 
-    /** Whether multiple choice is enabled or not. True if multiple or multiline */
-    get multiSelection(): boolean {
-        return this.multiple || this.multiline();
-    }
-
-    /**
-     * Minimum width of the panel.
-     * If minWidth is larger than window width, it will be ignored.
-     */
-    readonly panelMinWidth = input<KbqPanelMinWidth, unknown>(
-        this.defaultOptions?.panelMinWidth === undefined
-            ? KBQ_PANEL_DEFAULT_MIN_WIDTH
-            : this.defaultOptions.panelMinWidth,
-        { transform: numberAttribute }
-    );
-
     /** Origin for the overlay panel. */
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
-
-    /**
-     * Width of the panel. If set to `auto`, the panel will match the trigger width, but will never be
-     * narrower than `panelMinWidth`. If set to null or an empty string, the panel will grow to match the
-     * longest option's text. Any other value is used as an exact width, and `panelMinWidth` is not applied.
-     */
-    readonly panelWidth = input<KbqPanelWidth>(this.defaultOptions?.panelWidth ?? null);
-
-    /**
-     * Maximum width of the panel in pixels. Caps how far the panel grows with its content — it never makes
-     * the panel narrower than the trigger, and never clamps an explicit `panelWidth`.
-     * When null, the `--kbq-panel-size-width-max` token applies.
-     */
-    readonly panelMaxWidth = input<KbqPanelMaxWidth, unknown>(
-        this.defaultOptions?.panelMaxWidth === undefined ? null : this.defaultOptions.panelMaxWidth,
-        { transform: numberAttribute }
-    );
-
-    /**
-     * Maximum height of the panel's scrollable option list, in pixels. Applied as the
-     * `--kbq-select-panel-size-max-height` custom property on the panel.
-     *
-     * The search field and the footer sit outside the scrollable area and add to the panel's total height.
-     * When null, the token default (256px) applies.
-     */
-    readonly panelMaxHeight = input<KbqPanelMaxHeight, unknown>(
-        this.defaultOptions?.panelMaxHeight === undefined ? null : this.defaultOptions.panelMaxHeight,
-        { transform: numberAttribute }
-    );
 
     /**
      * `panelMaxHeight` rendered as a CSS length for the `--kbq-select-panel-size-max-height` token.
@@ -830,75 +802,6 @@ export class KbqTreeSelect<T = any, K = T>
             this.resolveSearchMinOptionsThreshold(this.searchMinOptionsThresholdInput()) ??
             this.resolveSearchMinOptionsThreshold(this.defaultOptions?.searchMinOptionsThreshold)
     );
-
-    /** @docs-private */
-    readonly searchMinOptionsThresholdInput = input<'auto' | number | undefined>(undefined, {
-        alias: 'searchMinOptionsThreshold'
-    });
-
-    get panelOpen(): boolean {
-        return this.panelOpenValue();
-    }
-
-    /** Whether the overlay panel is currently on screen. Part of the `KbqSiblingPopup` contract. */
-    get isAttached(): boolean {
-        return this.panelOpenValue();
-    }
-
-    /**
-     * Whether the cleaner (clear button) should be shown.
-     *
-     * @docs-private
-     */
-    get canShowCleaner(): boolean {
-        return !!this.cleaner()?.canShow;
-    }
-
-    /**
-     * Whether the cleaner still has a node to remove.
-     *
-     * @docs-private
-     */
-    get canClear(): boolean {
-        return !!this.selectionModel?.selected.some((node) => runClearPredicate(this.clearPredicate(), node));
-    }
-
-    /** Selected nodes the cleaner removes, in selection order. */
-    private get clearTargets(): T[] {
-        return this.selectionModel?.selected.filter((node) => runClearPredicate(this.clearPredicate(), node)) ?? [];
-    }
-
-    /**
-     * The tree answers for any node; the option is asked only for its own `[disabled]` input, and a
-     * node inside a collapsed branch has no option to ask.
-     */
-    private isNodeDisabled(node: T, optionsByNode?: Map<T, KbqTreeOption<T>>): boolean {
-        const tree = this.tree();
-
-        if (!tree) return false;
-
-        if (tree.disabled || tree.treeControl.isDisabled(node)) return true;
-
-        const option = optionsByNode
-            ? optionsByNode.get(node)
-            : tree.renderedOptions.find((option) => option.data === node);
-
-        return option?.disabled ?? false;
-    }
-
-    /** The rendered option of each node, for asking `isNodeDisabled` about every selected node at once. */
-    private renderedOptionsByNode(): Map<T, KbqTreeOption<T>> {
-        const optionsByNode = new Map<T, KbqTreeOption<T>>();
-
-        this.tree()?.renderedOptions.forEach((option) => {
-            const { data } = option;
-
-            // The "select all" row renders no node.
-            if (data !== undefined && !optionsByNode.has(data)) optionsByNode.set(data, option);
-        });
-
-        return optionsByNode;
-    }
 
     /**
      * Colour of the trigger's tags and arrow.
@@ -933,6 +836,82 @@ export class KbqTreeSelect<T = any, K = T>
             this.hiddenItems()
         )
     );
+    isEmptySearchResult = false;
+    triggerValues: KbqTreeSelectTriggerValue[] = [];
+
+    /** Id of the overlay panel, referenced by the host's `aria-controls`. */
+    protected readonly panelId = `${this.uid}-panel`;
+
+    /** Whether no node is selected. */
+    readonly empty = this.emptyValue.asReadonly();
+
+    /** Reference to the CDK connected overlay directive. */
+    protected get overlayDir(): CdkConnectedOverlay {
+        return this.overlayDirQuery()!;
+    }
+
+    protected get tags(): QueryList<KbqTag> {
+        return this.tagsList();
+    }
+
+    /** Whether multiple nodes can be selected. Cannot be changed once the selection model exists. */
+    get multiple(): boolean {
+        return this.multipleValue ?? this.multipleInput();
+    }
+
+    /** Whether moving the active node selects it. Always off in multiple selection. */
+    get autoSelect(): boolean {
+        return !this.multiSelection && this.autoSelectInput();
+    }
+
+    /** Tab index of the select, `-1` while it is disabled. A value that is not an integer keeps the last valid one. */
+    get tabIndex(): number | null {
+        return this.resolvedTabIndex();
+    }
+
+    /**
+     * Function for handling the combination Ctrl + A (select all). By default, the internal handler is used.
+     */
+    get selectAllHandler(): (event: KeyboardEvent, select: KbqTreeSelect<T, K>) => void {
+        return this.selectAllHandlerInput() ?? this.defaultSelectAllHandler;
+    }
+
+    /** Whether multiple choice is enabled or not. True if multiple or multiline */
+    get multiSelection(): boolean {
+        return this.multiple || this.multiline();
+    }
+
+    get panelOpen(): boolean {
+        return this.panelOpenValue();
+    }
+
+    /** Whether the overlay panel is currently on screen. Part of the `KbqSiblingPopup` contract. */
+    get isAttached(): boolean {
+        return this.panelOpenValue();
+    }
+
+    /**
+     * Whether the cleaner (clear button) should be shown.
+     *
+     * @docs-private
+     */
+    get canShowCleaner(): boolean {
+        return !!this.cleaner()?.canShow;
+    }
+
+    /**
+     * Whether the cleaner still has a node to remove.
+     *
+     * @docs-private
+     */
+    get canClear(): boolean {
+        return !!this.selectionModel?.selected.some((node) => runClearPredicate(this.clearPredicate(), node));
+    }
+
+    /** Selected nodes the cleaner removes, in selection order. */
+    private get clearTargets(): T[] {
+        return this.selectionModel?.selected.filter((node) => runClearPredicate(this.clearPredicate(), node)) ?? [];
+    }
 
     /**
      * Accessible name of the combobox.
@@ -946,44 +925,37 @@ export class KbqTreeSelect<T = any, K = T>
         return this.resolvedAriaLabel();
     }
 
-    isEmptySearchResult = false;
-
-    triggerValues: KbqTreeSelectTriggerValue[] = [];
-
-    private closeSubscription = Subscription.EMPTY;
-
-    /** The scroll offset the panel is restored to when it attaches — the list always opens at the top. */
-    private scrollTop = 0;
-
-    /** Unique id for this input. */
-    private readonly uid = `kbq-tree-select-${nextUniqueId++}`;
-
-    /** Id of the overlay panel, referenced by the host's `aria-controls`. */
-    protected readonly panelId = `${this.uid}-panel`;
-
     /**
-     * Whether projected content has been resolved. The search field reaches its form control through
-     * its own form field, and that is only guaranteed to have been wired by `ngAfterContentInit`.
+     * The selected node, or the array of them in multiple selection. `undefined` while nothing is selected in single
+     * selection, and before the content is initialized.
      */
-    private readonly contentInitialized = signal(false);
+    get selected(): T | T[] | undefined {
+        const [first] = this.selectionModel?.selected ?? [];
 
-    /**
-     * The last value the form wrote while the tree could not resolve all of it yet — before the content was
-     * initialized, or before the data held every node it names. Applied again as the data changes, until every node
-     * is found or the selection is reported to the form.
-     */
-    private pendingValue: { value: any } | null = null;
+        return this.multiSelection ? this.selectionModel?.selected : first;
+    }
 
-    /** The data nodes {@link pendingValue} was last resolved against. */
-    private pendingValueDataNodes: readonly unknown[] | null = null;
+    get selectedValues(): any {
+        const selectedValues = (this.selectionModel?.selected ?? []).map((value) =>
+            this.tree()!.treeControl.getValue(value)
+        );
 
-    /** Whether the selection is being set to a value the form wrote, which is no change to report back. */
-    private writingValue = false;
+        return this.multiSelection ? selectedValues : selectedValues[0];
+    }
 
-    /** Handles of the timers that outlive the call that scheduled them. */
-    private readonly pendingTimers = new Set<ReturnType<typeof setTimeout>>();
+    get triggerValue(): string {
+        if (this.empty()) {
+            return '';
+        }
 
-    private readonly destroyRef = inject(DestroyRef);
+        // Shown in single selection, where `selected` is the node.
+        return this.tree()!.treeControl.getViewValue(this.selected as T);
+    }
+
+    /** First selected node that is not disabled — the one the panel highlights when it opens. */
+    protected get firstSelected(): T | undefined {
+        return (this.selectionModel?.selected ?? []).filter((node) => !this.tree()!.treeControl.isDisabled(node))[0];
+    }
 
     constructor() {
         super();
@@ -1249,6 +1221,57 @@ export class KbqTreeSelect<T = any, K = T>
         this.unsubscribeFromPanelResize();
     }
 
+    /** Function for handling the combination Ctrl + A (select all). By default, the internal handler is used. */
+    private defaultSelectAllHandler(event: KeyboardEvent, select: KbqTreeSelect<T, K>): void {
+        const searchInput = isInput(event) ? (event.target as HTMLInputElement) : null;
+
+        if (shouldSelectSearchText(searchInput)) {
+            searchInput!.select();
+            event.preventDefault();
+
+            return;
+        }
+
+        event.preventDefault();
+
+        // With the master checkbox on screen the shortcut has to behave exactly like clicking it,
+        // otherwise the same action would leave the checkbox showing something the selection contradicts.
+        // `onSelectAll` is emitted by the tree subscription set up in `ngAfterContentInit`.
+        select.tree()!.selectAllOptions(select.selectAll() || select.selectAllToggle());
+    }
+
+    /**
+     * The tree answers for any node; the option is asked only for its own `[disabled]` input, and a
+     * node inside a collapsed branch has no option to ask.
+     */
+    private isNodeDisabled(node: T, optionsByNode?: Map<T, KbqTreeOption<T>>): boolean {
+        const tree = this.tree();
+
+        if (!tree) return false;
+
+        if (tree.disabled || tree.treeControl.isDisabled(node)) return true;
+
+        const option = optionsByNode
+            ? optionsByNode.get(node)
+            : tree.renderedOptions.find((option) => option.data === node);
+
+        return option?.disabled ?? false;
+    }
+
+    /** The rendered option of each node, for asking `isNodeDisabled` about every selected node at once. */
+    private renderedOptionsByNode(): Map<T, KbqTreeOption<T>> {
+        const optionsByNode = new Map<T, KbqTreeOption<T>>();
+
+        this.tree()?.renderedOptions.forEach((option) => {
+            const { data } = option;
+
+            // The "select all" row renders no node.
+            if (data !== undefined && !optionsByNode.has(data)) optionsByNode.set(data, option);
+        });
+
+        return optionsByNode;
+    }
+
     updateErrorState() {
         this.errorStateTracker.errorStateMatcher = this.errorStateMatcher();
         this.errorStateTracker.updateErrorState();
@@ -1476,43 +1499,6 @@ export class KbqTreeSelect<T = any, K = T>
      */
     setDisabledState(isDisabled: boolean) {
         this.disabled.set(isDisabled);
-    }
-
-    /**
-     * The selected node, or the array of them in multiple selection. `undefined` while nothing is selected in single
-     * selection, and before the content is initialized.
-     */
-    get selected(): T | T[] | undefined {
-        const [first] = this.selectionModel?.selected ?? [];
-
-        return this.multiSelection ? this.selectionModel?.selected : first;
-    }
-
-    get selectedValues(): any {
-        const selectedValues = (this.selectionModel?.selected ?? []).map((value) =>
-            this.tree()!.treeControl.getValue(value)
-        );
-
-        return this.multiSelection ? selectedValues : selectedValues[0];
-    }
-
-    get triggerValue(): string {
-        if (this.empty()) {
-            return '';
-        }
-
-        // Shown in single selection, where `selected` is the node.
-        return this.tree()!.treeControl.getViewValue(this.selected as T);
-    }
-
-    private readonly emptyValue = signal(true);
-
-    /** Whether no node is selected. */
-    readonly empty = this.emptyValue.asReadonly();
-
-    /** First selected node that is not disabled — the one the panel highlights when it opens. */
-    protected get firstSelected(): T | undefined {
-        return (this.selectionModel?.selected ?? []).filter((node) => !this.tree()!.treeControl.isDisabled(node))[0];
     }
 
     /**

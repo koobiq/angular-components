@@ -143,9 +143,7 @@ export class TreeSelectChildSelectionOverviewExample {
 
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     control = new FormControl(['Downloads', 'rootNode_1']);
 
     constructor() {

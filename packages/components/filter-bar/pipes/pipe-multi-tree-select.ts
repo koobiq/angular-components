@@ -64,6 +64,20 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     /** @docs-private */
     readonly tree = viewChild.required<KbqTreeSelection<KbqTreeSelectFlatNode>>(KbqTreeSelection);
 
+    /**
+     * Values of every locked node, the subtree of a locked branch included. Resolved once per template
+     * change rather than on demand — `isEmpty` reads it on every change-detection pass.
+     */
+    private lockedNodeValues: unknown[] = [];
+    private readonly multiSelect = new KbqMultiSelectPipeState({
+        data: this.data,
+        filterBar: this.filterBar,
+        allOptionsSelected: () => this.allOptionsSelected,
+        lockedValues: () => this.lockedNodeValues,
+        isSameValue: (first, second) => this.treeControl.compareValues(first, second),
+        emptyValue: () => null
+    });
+
     /** selected value */
     get selected() {
         return this.multiSelect.selected;
@@ -170,21 +184,6 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     private get lockedDataNodes(): KbqTreeSelectFlatNode[] {
         return this.lockedValues?.length ? (this.treeControl.dataNodes?.filter(this.isLockedNode) ?? []) : [];
     }
-
-    /**
-     * Values of every locked node, the subtree of a locked branch included. Resolved once per template
-     * change rather than on demand — `isEmpty` reads it on every change-detection pass.
-     */
-    private lockedNodeValues: unknown[] = [];
-
-    private readonly multiSelect = new KbqMultiSelectPipeState({
-        data: this.data,
-        filterBar: this.filterBar,
-        allOptionsSelected: () => this.allOptionsSelected,
-        lockedValues: () => this.lockedNodeValues,
-        isSameValue: (first, second) => this.treeControl.compareValues(first, second),
-        emptyValue: () => null
-    });
 
     constructor() {
         super();

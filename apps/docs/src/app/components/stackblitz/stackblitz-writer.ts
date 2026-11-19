@@ -88,7 +88,9 @@ export const DOCS_TEMPLATE_FILES = [
 @Injectable({ providedIn: 'root' })
 export class DocsStackblitzWriter {
     private readonly http = inject(HttpClient);
+
     private readonly cache = new Map<string, Promise<() => void>>();
+
     // The template is the same for every example, so its files are fetched once for all of them.
     private readonly templateFiles = new Map<string, Promise<string>>();
 

@@ -77,6 +77,10 @@ interface AgentStateValue extends KbqSelectValue {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarValueTemplateExample {
+    readonly optionTemplate =
+        viewChild<TemplateRef<KbqMultiTreeSelectValueTemplateContext<AgentStateNode>>>('optionTemplate');
+    readonly flatOptionTemplate = viewChild<TemplateRef<any>>('flatOptionTemplate');
+
     protected readonly t = injectTranslation(TRANSLATIONS);
 
     private readonly values = computed<AgentStateNode[]>(() => {
@@ -105,7 +109,6 @@ export class FilterBarValueTemplateExample {
             }
         ];
     });
-
     private readonly flatValues = computed<AgentStateValue[]>(() => {
         const text = this.t();
 
@@ -128,11 +131,6 @@ export class FilterBarValueTemplateExample {
             }
         ];
     });
-
-    readonly optionTemplate =
-        viewChild<TemplateRef<KbqMultiTreeSelectValueTemplateContext<AgentStateNode>>>('optionTemplate');
-
-    readonly flatOptionTemplate = viewChild<TemplateRef<any>>('flatOptionTemplate');
 
     readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
         {
@@ -187,7 +185,6 @@ export class FilterBarValueTemplateExample {
             disabled: false
         }
     ]);
-
     activeFilter: KbqFilter = {
         name: '',
         readonly: false,

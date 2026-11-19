@@ -49,14 +49,16 @@ export type DocsIconPreviewModalData = {
     encapsulation: ViewEncapsulation.None
 })
 export class DocsIconPreviewModalComponent extends DocsLocaleState {
-    private readonly icon = viewChild.required('iconPreview', { read: KbqIcon });
-
     private readonly clipboard = inject(DocsClipboardService);
     private readonly httpClient = inject(HttpClient);
     protected readonly modal = inject(KbqModalRef);
     private readonly window = inject(KBQ_WINDOW);
     private readonly document = inject(DOCUMENT);
     private readonly data = inject<DocsIconPreviewModalData>(KBQ_MODAL_DATA);
+
+    protected readonly color = model<KbqComponentColors | string>(KbqComponentColors.Contrast);
+
+    private readonly icon = viewChild.required('iconPreview', { read: KbqIcon });
 
     protected readonly iconItem: DocsIconItem = this.data.iconItem;
     protected readonly svgLink = `assets/SVGIcons/${this.iconItem.id}.svg`;
@@ -70,8 +72,6 @@ export class DocsIconPreviewModalComponent extends DocsLocaleState {
         KbqComponentColors.Success,
         KbqComponentColors.Warning
     ];
-
-    protected readonly color = model<KbqComponentColors | string>(KbqComponentColors.Contrast);
     protected readonly iconExample = computed(
         () => `<i kbq-icon="${this.iconItem.cssClass}" color="${this.color()}"></i>`
     );

@@ -17,6 +17,32 @@ export class KbqModalControlService {
     private parentService = inject(KbqModalControlService, { optional: true, skipSelf: true });
     private readonly document = inject(DOCUMENT);
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    private rootOpenModals: KbqModalRef[] = this.parentService ? null : [];
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    private rootAfterAllClose: Subject<void> = this.parentService ? null : new Subject<void>();
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    private rootRegisteredMetaMap: Map<KbqModalRef, IRegisteredMeta> = this.parentService ? null : new Map();
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    private readonly rootVisibleModals: WritableSignal<KbqModalRef[]> = this.parentService
+        ? null
+        : signal<KbqModalRef[]>([]);
+
+    // Lazy, so the copy a child-level service never reads costs nothing.
+    private readonly rootTopVisibleModal: Signal<KbqModalRef | null> = computed(
+        () => this.visibleModals().at(-1) ?? null
+    );
+
+    /** Elements this service took out of the accessibility tree while a dialog is shown. */
+    private inertedElements: Element[] = [];
+
     // Track singleton afterAllClose through over the injection tree
     get afterAllClose(): Subject<void> {
         return this.parentService ? this.parentService.afterAllClose : this.rootAfterAllClose;
@@ -40,29 +66,6 @@ export class KbqModalControlService {
     get topVisibleModal(): Signal<KbqModalRef | null> {
         return this.parentService ? this.parentService.topVisibleModal : this.rootTopVisibleModal;
     }
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    private rootOpenModals: KbqModalRef[] = this.parentService ? null : [];
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    private rootAfterAllClose: Subject<void> = this.parentService ? null : new Subject<void>();
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    private rootRegisteredMetaMap: Map<KbqModalRef, IRegisteredMeta> = this.parentService ? null : new Map();
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    private readonly rootVisibleModals: WritableSignal<KbqModalRef[]> = this.parentService
-        ? null
-        : signal<KbqModalRef[]>([]);
-
-    // Lazy, so the copy a child-level service never reads costs nothing.
-    private readonly rootTopVisibleModal: Signal<KbqModalRef | null> = computed(
-        () => this.visibleModals().at(-1) ?? null
-    );
-
-    /** Elements this service took out of the accessibility tree while a dialog is shown. */
-    private inertedElements: Element[] = [];
 
     // Registered modal for later usage
     private get registeredMetaMap(): Map<KbqModalRef, IRegisteredMeta> {

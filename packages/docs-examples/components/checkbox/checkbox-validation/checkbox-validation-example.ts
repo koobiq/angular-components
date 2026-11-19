@@ -36,6 +36,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class CheckboxValidationExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly agreement = signal(false);
 }

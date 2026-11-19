@@ -23,11 +23,10 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastHideOverviewExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
-    progress = false;
-
     readonly toastService = inject(KbqToastService);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
+    progress = false;
 
     showDefaultToast(actions: TemplateRef<any>) {
         this.toastService.show({

@@ -360,7 +360,6 @@ describe('KbqCalendar', () => {
 })
 class StandardCalendar {
     adapter = inject_1<DateAdapter<DateTime>>(DateAdapter);
-
     selected: DateTime;
     selectedYear: DateTime;
     selectedMonth: DateTime;
@@ -375,7 +374,6 @@ class StandardCalendar {
 })
 class CalendarWithMinMax {
     adapter = inject_1<DateAdapter<DateTime>>(DateAdapter);
-
     startAt: DateTime;
     minDate: DateTime | undefined = this.adapter.createDate(2016, 0, 1);
     maxDate = this.adapter.createDate(2018, 0, 1);
@@ -389,7 +387,6 @@ class CalendarWithMinMax {
 })
 class CalendarWithDateFilter {
     adapter = inject_1<DateAdapter<DateTime>>(DateAdapter);
-
     selected: DateTime;
     startDate = this.adapter.createDate(2017, 0, 1);
 

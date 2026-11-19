@@ -28,16 +28,14 @@ export interface KbqMultiSelectPipeStateHost {
  * deselected, how they are folded into an incoming value, and what a cleared pipe is left with.
  */
 export class KbqMultiSelectPipeState {
-    /** Snapshot of the committed selection, preserved across the "all selected → []" collapse. */
-    internalSelected: KbqSelectValue[] | null = null;
-
     /**
      * Whether the owning pipe's view is live. Until it is, the pipe's view queries cannot be read and no
      * user interaction has happened yet — so the "all selected" sentinel cannot exist.
      */
     private viewInitialized = false;
 
-    constructor(private readonly host: KbqMultiSelectPipeStateHost) {}
+    /** Snapshot of the committed selection, preserved across the "all selected → []" collapse. */
+    internalSelected: KbqSelectValue[] | null = null;
 
     /** Whether selecting every option is treated as selecting nothing. */
     get selectedAllEqualsSelectedNothing(): boolean {
@@ -57,6 +55,8 @@ export class KbqMultiSelectPipeState {
     get lockedValues(): unknown[] {
         return this.host.lockedValues();
     }
+
+    constructor(private readonly host: KbqMultiSelectPipeStateHost) {}
 
     /** Marks the owning pipe's view live. Called from its `ngAfterViewInit`. */
     markViewInitialized(): void {

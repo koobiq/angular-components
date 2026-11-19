@@ -107,12 +107,14 @@ class ExampleResetTouchedOnFirstInput {
     }
 })
 export class ValidationOnBlurFilledExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly tooltip = viewChild(KbqTooltipTrigger);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly ipAddressControl = new FormControl('123...12123123', [
         Validators.pattern(IP_PATTERN)
     ]);
+    protected readonly colors = KbqComponentColors;
+    protected readonly popUpPlacements = PopUpPlacements;
 
     constructor() {
         afterNextRender(() => {
@@ -120,9 +122,6 @@ export class ValidationOnBlurFilledExample {
             this.ipAddressControl.updateValueAndValidity();
         });
     }
-
-    protected readonly colors = KbqComponentColors;
-    protected readonly popUpPlacements = PopUpPlacements;
 
     protected onInput(event: Event): void {
         if (!(event.target instanceof HTMLInputElement)) return;

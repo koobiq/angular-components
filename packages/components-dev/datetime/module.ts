@@ -43,7 +43,6 @@ export class DevApp {
     protected readonly timeFormats = TimeFormats;
     protected readonly min = DateTime.fromISO('2026-11-10T09:00');
     protected readonly max = DateTime.fromISO('2026-11-20T18:00');
-
     protected readonly control = new FormControl<DateTime | null>(null, [Validators.required]);
     protected readonly disabledControl = new FormControl<DateTime | null>({
         value: DateTime.fromISO('2026-11-11T20:20:35'),
