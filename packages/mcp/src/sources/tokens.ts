@@ -33,6 +33,7 @@ const READERS = new Map<number, Reader>([
         3,
         {
             files: [
+                { path: 'web/css-tokens.css', theme: 'common' },
                 { path: 'web/css-tokens-light.css', theme: 'light' },
                 { path: 'web/css-tokens-dark.css', theme: 'dark' },
                 { path: 'web/css-tokens-font.css', theme: 'font' }
