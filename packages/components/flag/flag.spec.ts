@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject, signal, Type } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, inject, signal, type Type } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By, DomSanitizer } from '@angular/platform-browser';
 import { KbqFlag } from './flag';
 
@@ -23,6 +23,7 @@ describe(KbqFlag.name, () => {
         @Component({
             imports: [KbqFlag],
             template: `
+                <!-- eslint-disable-next-line @angular-eslint/template/prefer-ngsrc -- the flag takes a plain image, which is what the test is about -->
                 <kbq-flag><img src="AL.svg" alt="" /></kbq-flag>
             `
         })
@@ -55,6 +56,7 @@ describe(KbqFlag.name, () => {
         @Component({
             imports: [KbqFlag],
             template: `
+                <!-- eslint-disable-next-line @angular-eslint/template/prefer-ngsrc -- the flag takes a plain image, which is what the test is about -->
                 <kbq-flag [svg]="svg"><img src="AL.svg" alt="" /></kbq-flag>
             `
         })
@@ -321,9 +323,12 @@ describe(KbqFlag.name, () => {
                 @Component({
                     imports: [KbqFlag],
                     template: `
+                        <!-- eslint-disable-next-line @angular-eslint/template/prefer-ngsrc -- the flag takes a plain image, which is what the test is about -->
                         <kbq-flag label="Germany"><img src="DE.svg" alt="" /></kbq-flag>
+                        <!-- eslint-disable-next-line @angular-eslint/template/prefer-ngsrc -- the flag takes a plain image, which is what the test is about -->
                         <kbq-flag decorative><img src="DE.svg" alt="" /></kbq-flag>
                         Germany
+                        <!-- eslint-disable-next-line @angular-eslint/template/prefer-ngsrc -- the flag takes a plain image, which is what the test is about -->
                         <kbq-flag><img src="DE.svg" alt="" /></kbq-flag>
                     `
                 })

@@ -28,7 +28,7 @@
                 [kbqOverflowShadowTop]="overflowContainer()"
             >
                 @if (isTemplateRef(header)) {
-                    <ng-container [ngTemplateOutlet]="$any(header)" [ngTemplateOutletContext]="context" />
+                    <ng-container [ngTemplateOutlet]="header" [ngTemplateOutletContext]="context" />
                 } @else {
                     <div class="kbq-popover__header-text" [id]="headerId">{{ header }}</div>
                 }
@@ -49,7 +49,7 @@
                 (cdkObserveContent)="popoverContent.checkOverflow()"
             >
                 @if (isTemplateRef(content)) {
-                    <ng-container [ngTemplateOutlet]="$any(content)" [ngTemplateOutletContext]="context" />
+                    <ng-container [ngTemplateOutlet]="content" [ngTemplateOutletContext]="context" />
                 } @else {
                     <div>{{ content }}</div>
                 }
@@ -63,7 +63,7 @@
                 [kbqOverflowShadowBottom]="overflowContainer()"
             >
                 @if (isTemplateRef(footer)) {
-                    <ng-container [ngTemplateOutlet]="$any(footer)" [ngTemplateOutletContext]="context" />
+                    <ng-container [ngTemplateOutlet]="footer" [ngTemplateOutletContext]="context" />
                 } @else {
                     <div>{{ footer }}</div>
                 }
@@ -76,6 +76,7 @@
             <div class="kbq-popover__close" [class.kbq-popover__close_background-overlay-inverse]="!header">
                 <button
                     kbq-button
+                    type="button"
                     class="kbq-button_transparent"
                     [attr.aria-label]="a11yLocaleConfiguration().close"
                     [color]="componentColors.Contrast"

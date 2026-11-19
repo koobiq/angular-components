@@ -6,7 +6,7 @@ import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { type KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
@@ -48,10 +48,10 @@ import { TRANSLATIONS } from './l10n';
                 Tags
                 <i
                     kbq-icon-button="kbq-circle-info_16"
-                    [kbqTooltip]="'Tooltip on hover or focus'"
+                    kbqTooltip="Tooltip on hover or focus"
+                    color="contrast-fade"
                     [kbqTooltipArrow]="false"
                     [kbqPlacement]="popupPlacements.Top"
-                    [color]="'contrast-fade'"
                 ></i>
             </kbq-label>
 
@@ -90,7 +90,7 @@ import { TRANSLATIONS } from './l10n';
                     <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                 } @else {
                     <span class="example-inline-text__content">
-                        <i kbq-icon="kbq-diamond_16" [color]="'contrast-fade'"></i>
+                        <i kbq-icon="kbq-diamond_16" color="contrast-fade"></i>
                         {{ iconControl.value }}
                     </span>
                 }

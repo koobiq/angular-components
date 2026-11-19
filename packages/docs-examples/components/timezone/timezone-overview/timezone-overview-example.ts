@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
     getZonesGroupedByCountry,
     kbqResolveHostCountry,
-    KbqTimezoneGroup,
+    type KbqTimezoneGroup,
     KbqTimezoneModule,
-    KbqTimezoneZone,
+    type KbqTimezoneZone,
     promoteCountry
 } from '@koobiq/components/timezone';
 import { timezones } from '../timezone-data';

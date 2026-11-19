@@ -30,7 +30,7 @@
             [class.kbq-active]="languageDropdownTrigger.opened"
             [kbqDropdownTriggerFor]="languageDropdown"
         >
-            <kbq-navbar-title>{{ selectedLanguage.name }}</kbq-navbar-title>
+            <kbq-navbar-title>{{ selectedLanguage?.name }}</kbq-navbar-title>
             <i kbq-icon="kbq-globe_16"></i>
         </kbq-navbar-item>
 
@@ -60,22 +60,22 @@
 <br />
 
 <kbq-form-field class="flex-20">
-    <kbq-select [multiple]="true" [placeholder]="'placeholder'">
-        <kbq-option disabled [value]="'Disabled'">Disabled</kbq-option>
-        <kbq-option [value]="'Normal'">Normal</kbq-option>
-        <kbq-option [value]="'Hovered'">Hovered</kbq-option>
-        <kbq-option [value]="'Focused'">Focused</kbq-option>
-        <kbq-option [value]="'Selected'">Selected</kbq-option>
-        <kbq-option [value]="'Selected1'">Selected1</kbq-option>
-        <kbq-option [value]="'Selected2'">Selected2</kbq-option>
-        <kbq-option [value]="'Selected3'">Selected3</kbq-option>
-        <kbq-option [value]="'Selected4'">Selected4</kbq-option>
-        <kbq-option [value]="'Selected5'">Selected5</kbq-option>
-        <kbq-option [value]="'Selected6'">Selected6</kbq-option>
-        <kbq-option [value]="'Selected7'">Selected7</kbq-option>
-        <kbq-option [value]="'Selected8'">Selected8</kbq-option>
-        <kbq-option [value]="'Selected9'">Selected9</kbq-option>
-        <kbq-option [value]="'Selected10'">Selected10</kbq-option>
+    <kbq-select placeholder="placeholder" [multiple]="true">
+        <kbq-option disabled value="Disabled">Disabled</kbq-option>
+        <kbq-option value="Normal">Normal</kbq-option>
+        <kbq-option value="Hovered">Hovered</kbq-option>
+        <kbq-option value="Focused">Focused</kbq-option>
+        <kbq-option value="Selected">Selected</kbq-option>
+        <kbq-option value="Selected1">Selected1</kbq-option>
+        <kbq-option value="Selected2">Selected2</kbq-option>
+        <kbq-option value="Selected3">Selected3</kbq-option>
+        <kbq-option value="Selected4">Selected4</kbq-option>
+        <kbq-option value="Selected5">Selected5</kbq-option>
+        <kbq-option value="Selected6">Selected6</kbq-option>
+        <kbq-option value="Selected7">Selected7</kbq-option>
+        <kbq-option value="Selected8">Selected8</kbq-option>
+        <kbq-option value="Selected9">Selected9</kbq-option>
+        <kbq-option value="Selected10">Selected10</kbq-option>
     </kbq-select>
 </kbq-form-field>
 
@@ -87,9 +87,9 @@
 <div class="dev-locale-per-instance" [kbqLocaleOverrides]="{ select: { selectAll: 'From the region' } }">
     <kbq-form-field class="flex-20">
         <kbq-label>Region</kbq-label>
-        <kbq-select multiple selectAll [placeholder]="'placeholder'">
-            <kbq-option [value]="'Normal'">Normal</kbq-option>
-            <kbq-option [value]="'Selected'">Selected</kbq-option>
+        <kbq-select multiple selectAll placeholder="placeholder">
+            <kbq-option value="Normal">Normal</kbq-option>
+            <kbq-option value="Selected">Selected</kbq-option>
         </kbq-select>
     </kbq-form-field>
 
@@ -98,11 +98,11 @@
         <kbq-select
             multiple
             selectAll
-            [placeholder]="'placeholder'"
+            placeholder="placeholder"
             [localeOverrides]="{ select: { selectAll: 'From this instance' } }"
         >
-            <kbq-option [value]="'Normal'">Normal</kbq-option>
-            <kbq-option [value]="'Selected'">Selected</kbq-option>
+            <kbq-option value="Normal">Normal</kbq-option>
+            <kbq-option value="Selected">Selected</kbq-option>
         </kbq-select>
     </kbq-form-field>
 </div>

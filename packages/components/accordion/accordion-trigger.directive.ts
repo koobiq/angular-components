@@ -1,5 +1,6 @@
 import { computed, Directive, inject } from '@angular/core';
 import { kbqInjectNativeElement } from '@koobiq/components/core';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqAccordion } from './accordion';
 import { KbqAccordionItem } from './accordion-item';
 

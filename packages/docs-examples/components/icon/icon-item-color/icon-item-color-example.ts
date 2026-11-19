@@ -38,7 +38,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
             </div>
         </div>
     `,
-    styleUrls: ['icon-item-color-example.css'],
+    styleUrl: 'icon-item-color-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IconItemColorExample {

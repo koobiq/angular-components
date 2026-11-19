@@ -1,7 +1,6 @@
 @use '../core/styles/common/animation';
 @use '../core/styles/functions/timing';
-
-@use './progress-bar-theme' as *;
+@use './progress-bar-theme';
 
 // The fill is sized statically, so the animation only has to move and stretch it: both are
 // compositor-only, and neither is the thing that makes the bar visible. `translateX()` is a share of
@@ -44,32 +43,29 @@
     }
 
     & .kbq-progress-bar__inner {
-        overflow: hidden;
-
         height: var(--kbq-progress-bar-size-bar-height);
+        overflow: hidden;
         border-radius: var(--kbq-progress-bar-size-container-border-radius);
     }
 
     & .kbq-progress-bar__line {
         height: 100%;
+        border-radius: var(--kbq-progress-bar-size-bar-border-radius);
         // Load-bearing: the indeterminate animation stretches the fill with `scaleX()`, which grows it
         // away from its leading edge only while the origin stays at the left.
         transform-origin: top left;
-
-        border-radius: var(--kbq-progress-bar-size-bar-border-radius);
     }
 
     &.kbq-progress-bar_determinate .kbq-progress-bar__line {
-        transition: width 0.3s;
-
         @include animation.kbq-animations-off();
+
+        transition: width 0.3s;
     }
 
     &.kbq-progress-bar_indeterminate .kbq-progress-bar__line {
         // Declared outside the keyframes so that suppressing the animation cannot leave the fill at
         // `width: auto`, which covers the whole track and reads as a finished operation.
         width: 25%;
-
         animation: kbq-progress-bar-indeterminate 2.1s timing.$ease-in-out-quad infinite;
 
         // Without motion the fill still has to read as running, so it pulses in place instead of sliding.
@@ -83,5 +79,5 @@
     }
 }
 
-@include kbq-progress-bar-theme();
-@include kbq-progress-bar-typography();
+@include progress-bar-theme.kbq-progress-bar-theme();
+@include progress-bar-theme.kbq-progress-bar-typography();

@@ -1,5 +1,5 @@
 @use '../../core/styles/common';
-@use '../filter-bar-theme' as *;
+@use '../filter-bar-theme';
 
 .kbq-pipe {
     display: flex;
@@ -21,8 +21,8 @@
     // two-class selector would only win on source order, which differs between app bundles.
     .kbq-button .kbq-button-text {
         display: grid;
-        grid-auto-flow: column;
         grid-auto-columns: minmax(0, max-content);
+        grid-auto-flow: column;
         align-items: center;
     }
 
@@ -43,6 +43,7 @@
     .kbq-button:not(:hover, .kbq-active, [disabled]) {
         & + .kbq-pipe-button:not(:hover, .kbq-active)::after {
             content: '';
+
             position: absolute;
             inset-inline-start: 0;
             top: var(--kbq-size-s);
@@ -60,31 +61,35 @@
 .kbq-pipe.kbq-pipe_removable,
 .kbq-pipe.kbq-pipe_cleanable:not(.kbq-pipe_empty) {
     .kbq-button {
-        border-end-end-radius: unset;
-        border-start-end-radius: unset;
         border-inline-end: none;
+        border-start-end-radius: unset;
+        border-end-end-radius: unset;
 
         &.cdk-keyboard-focused::after {
             content: '';
+
             position: absolute;
             inset-inline-end: 0;
             top: 0;
             bottom: 0;
+
             width: 1px;
         }
     }
 
     .kbq-button-icon {
-        border-end-start-radius: unset;
-        border-start-start-radius: unset;
         border-inline-start: none;
+        border-start-start-radius: unset;
+        border-end-start-radius: unset;
 
         &.cdk-keyboard-focused::after {
             content: '';
+
             position: absolute;
             inset-inline-start: 0;
             top: 0;
             bottom: 0;
+
             width: 1px;
         }
     }
@@ -128,11 +133,10 @@
 
         & > .kbq-tree-node-toggle {
             align-self: flex-start;
-
             height: var(--kbq-typography-text-normal-line-height);
             margin-top: 0;
         }
     }
 }
 
-@include kbq-filter-bar-pipe-theme();
+@include filter-bar-theme.kbq-filter-bar-pipe-theme();

@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, ElementRef, model, viewChild } from
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTagEvent, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { type KbqTagEvent, KbqTagInput, type KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 
 const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Removable tag ${i}` }));
 

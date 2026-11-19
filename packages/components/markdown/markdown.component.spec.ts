@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, DebugElement, signal, Type } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, type DebugElement, signal, type Type } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqMarkdown } from '@koobiq/components/markdown';
 

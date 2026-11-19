@@ -3,8 +3,8 @@
 @mixin kbq-tab-item-state($type, $sub-type, $style-name) {
     $base: tabs-tab-item-#{$type}-#{$sub-type}-#{$style-name};
 
-    background: var(--kbq-#{$base}-background);
     color: var(--kbq-#{$base}-text-color);
+    background: var(--kbq-#{$base}-background);
 
     & .kbq-icon.kbq-empty {
         color: var(--kbq-#{$base}-icon-color);

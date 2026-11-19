@@ -2,7 +2,7 @@ import { _IdGenerator } from '@angular/cdk/a11y';
 import { computed, Directive, inject, input, model, numberAttribute } from '@angular/core';
 import { kbqInjectNativeElement, KbqLocaleOverridesDirective } from '@koobiq/components/core';
 import { kbqInjectCollapseAnimation } from './collapse-animation';
-import { KbqClamped, KbqClampedRoot, kbqInjectClampedTextLocaleConfiguration } from './constants';
+import { type KbqClamped, KbqClampedRoot, kbqInjectClampedTextLocaleConfiguration } from './constants';
 
 /**
  * Renders a long list compactly: keeps the first `collapsedVisibleCount` items and lets a projected

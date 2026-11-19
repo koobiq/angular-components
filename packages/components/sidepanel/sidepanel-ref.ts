@@ -1,11 +1,10 @@
-﻿import { OverlayRef } from '@angular/cdk/overlay';
+﻿import type { OverlayRef } from '@angular/cdk/overlay';
 import { signal, untracked } from '@angular/core';
-import { ESCAPE, isHtmlElement, KbqOverflowShadowState } from '@koobiq/components/core';
-import { merge, Observable, Subject } from 'rxjs';
-import { filter, take, tap } from 'rxjs/operators';
+import { filter, merge, type Observable, Subject, take, tap } from 'rxjs';
+import { ESCAPE, isHtmlElement, type KbqOverflowShadowState } from '@koobiq/components/core';
 import { KbqSidepanelAnimationState } from './sidepanel-animations';
-import { KbqSidepanelConfig } from './sidepanel-config';
-import { KbqSidepanelContainerComponent } from './sidepanel-container.component';
+import type { KbqSidepanelConfig } from './sidepanel-config';
+import type { KbqSidepanelContainerComponent } from './sidepanel-container.component';
 
 // Counter for unique sidepanel ids.
 let uniqueId = 0;
@@ -19,8 +18,8 @@ export class KbqSidepanelRef<T = any, R = any> {
      */
     readonly bodyOverflow = signal<KbqOverflowShadowState>({ top: false, bottom: false });
 
-    /** Instance of the component making up the content of the sidepanel. */
-    instance: T;
+    /** Instance of the component making up the content of the sidepanel, `undefined` when it was opened with a template. */
+    instance: T | undefined;
 
     /** Subject for notifying the user that the sidepanel has been closed and dismissed. */
     private readonly afterClosed$ = new Subject<R | undefined>();

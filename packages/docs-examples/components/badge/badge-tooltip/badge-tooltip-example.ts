@@ -26,7 +26,7 @@ import { TRANSLATIONS } from './l10n';
             </kbq-badge>
         </div>
     `,
-    styleUrls: ['badge-tooltip-example.css'],
+    styleUrl: 'badge-tooltip-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BadgeTooltipExample {

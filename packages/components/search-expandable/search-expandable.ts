@@ -1,7 +1,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
-    AfterViewChecked,
-    AfterViewInit,
+    type AfterViewChecked,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
@@ -12,43 +12,42 @@ import {
     InjectionToken,
     input,
     numberAttribute,
-    OnChanges,
-    OnDestroy,
+    type OnChanges,
+    type OnDestroy,
     output,
-    Provider,
+    type Provider,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
-    AbstractControl,
-    ControlValueAccessor,
+    type AbstractControl,
+    type ControlValueAccessor,
     FormControl,
-    FormGroupDirective,
+    type FormGroupDirective,
     FormsModule,
     NgControl,
-    NgForm,
+    type NgForm,
     ReactiveFormsModule
 } from '@angular/forms';
+import { filter, map, Subject, type Subscription, switchMap, takeUntil, timer } from 'rxjs';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import {
     ErrorStateMatcher,
     KBQ_A11Y_LOCALE_CONFIGURATION,
-    KbqDeepPartial,
+    type KbqDeepPartial,
     kbqLocaleConfigurationOverrideProvider,
     KbqLocaleOverridesDirective,
     kbqOptionalNumberAttribute,
-    KbqSearchExpandableLocaleConfiguration,
+    type KbqSearchExpandableLocaleConfiguration,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { filter, Subject, Subscription, timer } from 'rxjs';
-import { map, switchMap, takeUntil } from 'rxjs/operators';
 
 /** default configuration of search-expandable */
 export const KBQ_SEARCH_EXPANDABLE_DEFAULT_LOCALE_CONFIGURATION: KbqSearchExpandableLocaleConfiguration =
@@ -209,7 +208,7 @@ export class KbqSearchExpandable
         this._tooltipText = value;
     }
 
-    private _tooltipText: string | null;
+    private _tooltipText?: string | null;
 
     /** Placeholder for input when expanded */
     get placeholder(): string {

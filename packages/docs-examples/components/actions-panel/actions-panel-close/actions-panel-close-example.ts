@@ -7,7 +7,7 @@ import {
     TemplateRef,
     viewChild
 } from '@angular/core';
-import { KbqActionsPanel, KbqActionsPanelRef } from '@koobiq/components/actions-panel';
+import { KbqActionsPanel, type KbqActionsPanelRef } from '@koobiq/components/actions-panel';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToastService } from '@koobiq/components/toast';
@@ -21,10 +21,10 @@ import { TRANSLATIONS } from './l10n';
     selector: 'actions-panel-close-example',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
-        <button kbq-button (click)="open()">{{ t().open }}</button>
+        <button kbq-button type="button" (click)="open()">{{ t().open }}</button>
 
         <ng-template let-data>
-            <button color="contrast" kbq-button (click)="onAction(t().executeAndClose)">
+            <button color="contrast" kbq-button type="button" (click)="onAction(t().executeAndClose)">
                 <i kbq-icon="kbq-user_16"></i>
                 {{ t().executeAndClose }}
             </button>
@@ -49,7 +49,7 @@ export class ActionsPanelCloseExample {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly templateRef = viewChild.required(TemplateRef);
     private readonly toast = inject(KbqToastService);
-    private actionsPanelRef: KbqActionsPanelRef | null;
+    private actionsPanelRef: KbqActionsPanelRef | null = null;
 
     constructor() {
         afterNextRender(() => this.open());

@@ -3,8 +3,8 @@ import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import { NgModule } from '@angular/core';
 import { KbqActionContainer, KbqOptionModule, KbqPseudoCheckboxModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqListOption, KbqListOptionCaption, KbqListSelection } from './list-selection.component';
 import { KbqList, KbqListItem } from './list.component';
+import { KbqListOption, KbqListOptionCaption, KbqListSelection } from './list-selection.component';
 
 @NgModule({
     imports: [

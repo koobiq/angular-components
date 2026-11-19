@@ -2,11 +2,13 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    Provider,
-    ViewEncapsulation,
-    inject
+    inject,
+    type Provider,
+    ViewEncapsulation
 } from '@angular/core';
-import { Routes } from '@angular/router';
+import type { Routes } from '@angular/router';
+import type { DateTime } from 'luxon';
+import { delay, distinctUntilChanged } from 'rxjs';
 import {
     KBQ_LUXON_DATE_ADAPTER_OPTIONS,
     KBQ_LUXON_DATE_FORMATS,
@@ -20,12 +22,10 @@ import {
     KBQ_DATE_LOCALE,
     KBQ_LOCALE_SERVICE,
     KbqFormattersModule,
-    KbqLocaleService,
+    type KbqLocaleService,
     KbqLocaleServiceModule,
     kbqLocaleServiceProvider
 } from '@koobiq/components/core';
-import { DateTime } from 'luxon';
-import { delay, distinctUntilChanged } from 'rxjs';
 import { DevLocaleSelector } from '../locale-selector';
 
 @Component({
@@ -36,8 +36,8 @@ import { DevLocaleSelector } from '../locale-selector';
         KbqButtonModule,
         DevLocaleSelector
     ],
-    templateUrl: 'template.html',
-    styleUrls: ['styles.scss'],
+    templateUrl: './template.html',
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

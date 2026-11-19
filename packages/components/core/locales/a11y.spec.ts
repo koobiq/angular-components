@@ -7,7 +7,7 @@ import { kbqInjectLocaleConfiguration, kbqLocaleConfigurationOverrideProvider } 
 import { enUSLocaleData } from './en-US';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from './locale-service';
 import { ruRULocaleData } from './ru-RU';
-import { KbqSelectLocaleConfiguration } from './types';
+import type { KbqSelectLocaleConfiguration } from './types';
 
 describe('kbqInjectA11yLocaleConfiguration', () => {
     const inject = () => TestBed.runInInjectionContext(kbqInjectA11yLocaleConfiguration);

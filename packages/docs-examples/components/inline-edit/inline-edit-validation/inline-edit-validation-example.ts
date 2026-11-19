@@ -58,11 +58,11 @@ const restSymbolsRegex = /[^0-9.]+/g;
             <kbq-form-field kbqInlineEditEditMode>
                 <input
                     kbqInput
+                    kbqTrigger="manual"
+                    kbqTooltip="Numbers and dots only"
                     [formControl]="ipAddressControl"
                     [kbqEnterDelay]="10"
                     [kbqPlacement]="tooltipPlacement"
-                    [kbqTrigger]="'manual'"
-                    [kbqTooltip]="'Numbers and dots only'"
                     [kbqTooltipColor]="tooltipColor"
                     [kbqTooltipArrow]="false"
                     (input)="onInput($event)"

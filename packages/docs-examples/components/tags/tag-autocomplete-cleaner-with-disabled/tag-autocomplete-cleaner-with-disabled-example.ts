@@ -1,10 +1,10 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
+import { KbqAutocompleteModule, type KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTagEvent, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { type KbqTagEvent, type KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 
 const getAutocompleteOptions = () => [
     'BruteForce',

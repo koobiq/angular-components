@@ -1,6 +1,7 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import { EMPTY } from 'rxjs';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import {
@@ -11,20 +12,19 @@ import {
     KbqTreeFlattener,
     KbqTreeModule
 } from '@koobiq/components/tree';
-import { EMPTY } from 'rxjs';
 import { KbqTreeSelectModule } from './tree-select.module';
 
 class FileNode {
-    children: FileNode[];
-    name: string;
+    children?: FileNode[];
+    name = '';
     type: any;
 }
 
 class FileFlatNode {
-    name: string;
+    name = '';
     type: any;
-    level: number;
-    expandable: boolean;
+    level = 0;
+    expandable = false;
     parent: any;
 }
 
@@ -136,7 +136,7 @@ class BaseTreeSelectStates {
         return node.expandable;
     };
 
-    protected getChildren = (node: FileNode): FileNode[] => {
+    protected getChildren = (node: FileNode): FileNode[] | undefined => {
         return node.children;
     };
 
@@ -167,11 +167,11 @@ class BaseTreeSelectStates {
             <kbq-tree-select
                 data-testid="e2eTreeSelect"
                 placeholder="this is placeholder"
-                [ngModel]="'rootNode_1_long_text_long_text'"
+                ngModel="rootNode_1_long_text_long_text"
             >
                 <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-                    <input kbqInput type="text" [ngModel]="''" />
+                    <input kbqInput type="text" ngModel="" />
                     <kbq-cleaner />
                 </kbq-form-field>
 
@@ -235,7 +235,7 @@ export class E2eTreeSelectStates extends BaseTreeSelectStates {}
             >
                 <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-                    <input kbqInput type="text" [ngModel]="''" />
+                    <input kbqInput type="text" ngModel="" />
                     <kbq-cleaner />
                 </kbq-form-field>
 
@@ -296,7 +296,7 @@ export class E2eMultiTreeSelectStates extends BaseTreeSelectStates {}
             >
                 <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-                    <input kbqInput type="text" [ngModel]="''" />
+                    <input kbqInput type="text" ngModel="" />
                     <kbq-cleaner />
                 </kbq-form-field>
 
@@ -596,7 +596,7 @@ export class E2eTreeSelectFormControlDisabled extends BaseTreeSelectStates {
     }
 })
 export class E2eTreeSelectPropertyDisabled extends BaseTreeSelectStates {
-    readonly isDisabled = signal(true);
+    override readonly isDisabled = signal(true);
 }
 
 @Component({
@@ -673,7 +673,7 @@ export class E2eTreeSelectNoPlaceholder extends BaseTreeSelectStates {}
     imports: [KbqTreeModule, KbqTreeSelectModule],
     template: `
         <kbq-form-field style="width: 300px;" [attr.data-testid]="'e2eFormField'">
-            <kbq-tree-select data-testid="e2eTreeSelect" [panelWidth]="'auto'">
+            <kbq-tree-select data-testid="e2eTreeSelect" panelWidth="auto">
                 <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         <span [innerHTML]="treeControl.getViewValue(node)"></span>

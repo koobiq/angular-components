@@ -200,6 +200,7 @@ export class KbqSkeletonTree {
     // (undocumented)
     protected readonly childList: _angular_core.Signal<number[]>;
     readonly children: _angular_core.InputSignalWithTransform<number, string | number>;
+    protected nodeClass(index: number): string;
     // (undocumented)
     protected readonly rowList: _angular_core.Signal<number[]>;
     readonly rows: _angular_core.InputSignalWithTransform<number, string | number>;

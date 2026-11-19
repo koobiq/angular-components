@@ -1,6 +1,6 @@
-import { FocusOrigin } from '@angular/cdk/a11y';
-import { InjectionToken, Provider, TemplateRef } from '@angular/core';
-import { Subject } from 'rxjs';
+import type { FocusOrigin } from '@angular/cdk/a11y';
+import { InjectionToken, type Provider, type TemplateRef } from '@angular/core';
+import type { Subject } from 'rxjs';
 
 export enum KbqToastStyle {
     Contrast = 'contrast',

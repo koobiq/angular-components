@@ -8,36 +8,35 @@ import {
     inject,
     InjectionToken,
     input,
-    OnInit,
+    type OnInit,
     output,
-    Provider,
-    Signal,
+    type Provider,
+    type Signal,
     signal,
-    TemplateRef,
+    type TemplateRef,
     untracked,
     ViewEncapsulation,
-    WritableSignal
+    type WritableSignal
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, FormControl, NgControl, ReactiveFormsModule } from '@angular/forms';
+import { type ControlValueAccessor, FormControl, NgControl, ReactiveFormsModule } from '@angular/forms';
+import { fromEvent, take } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
-    KbqDeepPartial,
+    type KbqDeepPartial,
     kbqLocaleConfigurationOverrideProvider,
     KbqLocaleOverridesDirective,
-    KbqTimeRangeLocaleConfiguration,
+    type KbqTimeRangeLocaleConfiguration,
     PopUpPlacements,
     PopUpSizes,
     ruRULocaleData
 } from '@koobiq/components/core';
-import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
-import { fromEvent } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/popover';
+import { KbqTimeRangeService } from './time-range.service';
 import { KbqTimeRangeEditor } from './time-range-editor';
 import { KbqTimeRangeEditorBridge } from './time-range-editor-bridge';
 import { KbqTimeRangeTitle } from './time-range-title';
-import { KbqTimeRangeService } from './time-range.service';
-import {
+import type {
     KbqRangeValue,
     KbqTimeRangeCustomizableTitleContext,
     KbqTimeRangeOptionContext,
@@ -104,15 +103,15 @@ export const kbqTimeRangeLocaleConfigurationProvider = (
         <ng-template #timeRangePopoverFooter>
             <!-- The grouping is purely visual: an unnamed role=group only added a boundary. -->
             <div class="kbq-time-range__buttons" (mousedown)="onFooterPointerDown()">
-                <button kbq-button [color]="'contrast'" (click)="onApply(popover)">
+                <button kbq-button type="button" color="contrast" (click)="onApply(popover)">
                     {{ localeConfig.editor.apply }}
                 </button>
 
-                <button kbq-button (click)="onCancel(popover)">{{ localeConfig.editor.cancel }}</button>
+                <button kbq-button type="button" (click)="onCancel(popover)">{{ localeConfig.editor.cancel }}</button>
             </div>
         </ng-template>
     `,
-    styleUrls: ['./time-range.scss'],
+    styleUrl: './time-range.scss',
     providers: [KbqTimeRangeService, KbqTimeRangeEditorBridge],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,

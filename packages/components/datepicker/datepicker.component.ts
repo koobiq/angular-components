@@ -1,6 +1,12 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Overlay, OverlayConfig, OverlayRef, PositionStrategy, ScrollStrategy } from '@angular/cdk/overlay';
+import {
+    Overlay,
+    OverlayConfig,
+    type OverlayRef,
+    type PositionStrategy,
+    type ScrollStrategy
+} from '@angular/cdk/overlay';
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
@@ -9,22 +15,23 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    ComponentRef,
+    type ComponentRef,
     ElementRef,
     inject,
     InjectionToken,
     Injector,
     input,
-    OnChanges,
-    OnDestroy,
+    type OnChanges,
+    type OnDestroy,
     output,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     untracked,
     viewChild,
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
+import { filter, merge, Subject, Subscription, take } from 'rxjs';
 import {
     ESCAPE,
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
@@ -34,12 +41,10 @@ import {
     kbqAnimationsDisabled,
     KbqLocaleOverridesDirective
 } from '@koobiq/components/core';
-import { merge, Subject, Subscription } from 'rxjs';
-import { filter, take } from 'rxjs/operators';
-import { KbqCalendarCellCssClasses } from './calendar-body.component';
 import { KbqCalendar } from './calendar.component';
+import type { KbqCalendarCellCssClasses } from './calendar-body.component';
 import { injectRequiredDateAdapter } from './datepicker-errors';
-import { KbqDatepickerInput } from './datepicker-input.directive';
+import { acceptAnyDate, type KbqDatepickerInput } from './datepicker-input.directive';
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
@@ -85,8 +90,8 @@ export const KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     imports: [
         KbqCalendar
     ],
-    templateUrl: 'datepicker-content.html',
-    styleUrls: ['datepicker-content.scss', 'datepicker-tokens.scss'],
+    templateUrl: './datepicker-content.html',
+    styleUrls: ['./datepicker-content.scss', './datepicker-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -106,8 +111,8 @@ export class KbqDatepickerContent<D> implements OnDestroy {
     /** Emits when the exit animation has finished. */
     readonly animationDone = new Subject<void>();
 
-    /** Reference to the datepicker that created the overlay. */
-    datepicker: KbqDatepicker<D>;
+    /** Reference to the datepicker that created the overlay: the panel is attached through its view container. */
+    datepicker: KbqDatepicker<D> = inject<KbqDatepicker<D>>(KbqDatepicker);
 
     /** Current state of the animation. */
     get animationState(): 'enter' | 'void' {
@@ -178,7 +183,7 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
     get startAt(): D | null {
         // If an explicit startAt is set we start there, otherwise we start at whatever the currently
         // selected value is.
-        return this._startAt || this.datepickerInput?.value();
+        return this._startAt || (this.datepickerInput?.value() ?? null);
     }
 
     set startAt(value: D | null) {
@@ -192,7 +197,7 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
                 : null;
     }
 
-    private _startAt: D | null;
+    private _startAt?: D | null;
 
     /** Whether the datepicker pop-up should be disabled. */
     get disabled(): boolean {
@@ -258,7 +263,7 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
     }
 
     get dateFilter(): (date: D | null) => boolean {
-        return this.datepickerInput && this.datepickerInput.dateFilter;
+        return this.datepickerInput?.dateFilter ?? acceptAnyDate;
     }
 
     get value(): D | null {
@@ -306,21 +311,21 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
     /** The id for the datepicker calendar. */
     id: string = `kbq-datepicker-${datepickerUid++}`;
 
-    /** A reference to the overlay when the calendar is opened as a popup. */
-    popupRef: OverlayRef | null;
+    /** A reference to the overlay when the calendar is opened as a popup. Defaults to `null`. */
+    popupRef: OverlayRef | null = null;
 
     /** The input element this datepicker is associated with. */
-    datepickerInput: KbqDatepickerInput<D>;
+    datepickerInput: KbqDatepickerInput<D> | undefined;
 
     private scrollStrategy: () => ScrollStrategy;
 
     private validSelected: D | null = null;
 
     /** A portal containing the calendar for this datepicker. */
-    private calendarPortal: ComponentPortal<KbqDatepickerContent<D>>;
+    private calendarPortal?: ComponentPortal<KbqDatepickerContent<D>>;
 
     /** Reference to the component instantiated in popup mode. */
-    private popupComponentRef: ComponentRef<KbqDatepickerContent<D>> | null;
+    private popupComponentRef?: ComponentRef<KbqDatepickerContent<D>> | null;
 
     /** The element that was focused before the datepicker was opened. */
     private focusedElementBeforeOpen: HTMLElement | null = null;
@@ -425,7 +430,7 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
     }
 
     toggle(): void {
-        if (this.datepickerInput.isReadOnly) {
+        if (this.datepickerInput?.isReadOnly) {
             return;
         }
 
@@ -442,7 +447,9 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
             return;
         }
 
-        if (!this.datepickerInput) {
+        const datepickerInput = this.datepickerInput;
+
+        if (!datepickerInput) {
             throw Error('Attempted to open an KbqDatepicker with no associated input.');
         }
 
@@ -450,7 +457,7 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
             this.focusedElementBeforeOpen = _getFocusedElementPierceShadowDom();
         }
 
-        this.openAsPopup();
+        this.openAsPopup(datepickerInput);
 
         this.openedState.set(true);
         this.openedStream.emit();
@@ -491,11 +498,14 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
     }
 
     /** Open the calendar as a popup. */
-    private openAsPopup(): void {
+    private openAsPopup(datepickerInput: KbqDatepickerInput<D>): void {
         if (!this.calendarPortal) {
+            // The host's injector matches a directive by its exact type, so a subclass of the datepicker is provided
+            // under the base token here.
             this.calendarPortal = new ComponentPortal<KbqDatepickerContent<D>>(
                 KbqDatepickerContent,
-                this.viewContainerRef
+                this.viewContainerRef,
+                Injector.create({ providers: [{ provide: KbqDatepicker, useValue: this }], parent: this.injector })
             );
         }
 
@@ -505,12 +515,11 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
         }
 
         if (!this.popupRef) {
-            this.createPopup();
+            this.createPopup(datepickerInput);
         }
 
         if (!this.popupRef!.hasAttached()) {
             this.popupComponentRef = this.popupRef!.attach(this.calendarPortal);
-            this.popupComponentRef.instance.datepicker = this;
 
             // Update the position once the calendar has rendered.
             afterNextRender(() => this.popupRef?.updatePosition(), { injector: this.injector });
@@ -518,9 +527,9 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
     }
 
     /** Create the popup. */
-    private createPopup(): void {
+    private createPopup(datepickerInput: KbqDatepickerInput<D>): void {
         const overlayConfig = new OverlayConfig({
-            positionStrategy: this.createPopupPositionStrategy(),
+            positionStrategy: this.createPopupPositionStrategy(datepickerInput),
             hasBackdrop: this.hasBackdrop,
             backdropClass: this.backdropClass(),
             direction: this.dir,
@@ -529,7 +538,7 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
         });
 
         this.popupRef = this.overlay.create(overlayConfig);
-        this.overlayLayers.adopt(this.popupRef, this.datepickerInput.getOrigin().nativeElement);
+        this.overlayLayers.adopt(this.popupRef, datepickerInput.getOrigin().nativeElement);
 
         this.closeSubscription = this.closingActions().subscribe(() => this.close(this.restoreFocus()));
 
@@ -563,11 +572,11 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
     }
 
     /** Create the popup PositionStrategy. */
-    private createPopupPositionStrategy(): PositionStrategy {
+    private createPopupPositionStrategy(datepickerInput: KbqDatepickerInput<D>): PositionStrategy {
         return (
             this.overlay
                 .position()
-                .flexibleConnectedTo(this.datepickerInput.getOrigin())
+                .flexibleConnectedTo(datepickerInput.getOrigin())
                 .withTransformOriginOn('.kbq-datepicker__content')
                 .withFlexibleDimensions(false)
                 // Also large enough to absorb the trigger↔panel gap padding (kbq-connected-overlay-gap,

@@ -1,4 +1,4 @@
-import { KbqLocaleStringsData } from './types';
+import type { KbqLocaleStringsData } from './types';
 
 export const ruRULocaleData = {
     a11y: {
@@ -26,7 +26,8 @@ export const ruRULocaleData = {
         optionActions: 'Действия',
         progressBar: 'Прогресс',
         date: 'Дата',
-        time: 'Время'
+        time: 'Время',
+        search: 'Поиск'
     },
     select: { hiddenItemsText: '+{{ number }}', selectAll: 'Выбрать все' },
     datepicker: {

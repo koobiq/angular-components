@@ -7,7 +7,7 @@
             [class.example-alert_in-progress]="inProgress()"
             [compact]="true"
         >
-            <i kbq-icon="kbq-circle-info_16" [color]="'error'"></i>
+            <i kbq-icon="kbq-circle-info_16" color="error"></i>
             <span>
                 {{ t().fillAtLeastOne }}
                 <span kbqLink (click)="seriesInput.focus()">{{ t().series }},</span>
@@ -31,10 +31,10 @@
                         kbqInput
                         name="input"
                         kbqTooltipColor="error"
+                        kbqTrigger="manual"
                         [kbqEnterDelay]="10"
                         [kbqPlacement]="popUpPlacements.Top"
                         [kbqTooltip]="t().onlyNumbers"
-                        [kbqTrigger]="'manual'"
                         (blur)="seriesTooltip.hide()"
                         (input)="onInput($event, seriesTooltip, form.controls.series)"
                     />
@@ -51,10 +51,10 @@
                         kbqInput
                         name="input"
                         kbqTooltipColor="error"
+                        kbqTrigger="manual"
                         [kbqEnterDelay]="10"
                         [kbqPlacement]="popUpPlacements.Top"
                         [kbqTooltip]="t().onlyNumbers"
-                        [kbqTrigger]="'manual'"
                         (blur)="numberTooltip.hide()"
                         (input)="onInput($event, numberTooltip, form.controls.number)"
                     />

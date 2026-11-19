@@ -1,4 +1,4 @@
-import { KbqFilterBarHost, KbqPipeData, KbqSelectValue } from '../filter-bar.types';
+import type { KbqFilterBarHost, KbqPipeData, KbqSelectValue } from '../filter-bar.types';
 
 /** The pieces {@link KbqMultiSelectPipeState} reads from its owning multi-select pipe. */
 export interface KbqMultiSelectPipeStateHost {

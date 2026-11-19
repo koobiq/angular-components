@@ -60,7 +60,7 @@ import { TRANSLATIONS } from './l10n';
                         {{ t().base }}
                         <i
                             kbq-icon="kbq-circle-question_16"
-                            [color]="'contrast-fade'"
+                            color="contrast-fade"
                             [style.cursor]="'help'"
                             [kbqPlacement]="popUpPlacements.Right"
                             [kbqTooltip]="tooltipText"

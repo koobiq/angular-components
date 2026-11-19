@@ -19,7 +19,7 @@ import { TRANSLATIONS } from './l10n';
         KbqIconModule,
         KbqInputModule
     ],
-    templateUrl: 'dropdown-lazyload-data-example.html',
+    templateUrl: './dropdown-lazyload-data-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownLazyloadDataExample {

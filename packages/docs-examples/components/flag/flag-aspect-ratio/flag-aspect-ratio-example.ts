@@ -1,15 +1,17 @@
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
+import { countries } from 'country-flag-icons';
+import * as flags3x2 from 'country-flag-icons/string/3x2';
 import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { KbqFlag } from '@koobiq/components/flag';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { countries } from 'country-flag-icons';
-import * as flags3x2 from 'country-flag-icons/string/3x2';
 import { TRANSLATIONS } from './l10n';
+
+const flags: Record<string, string> = flags3x2;
 
 const getCountryName = (regionNames: Intl.DisplayNames, code: string): string => {
     try {
@@ -87,7 +89,7 @@ export class FlagAspectRatioExample {
             .map((code) => ({
                 code,
                 name: getCountryName(regionNames, code),
-                svg: this.sanitizer.bypassSecurityTrustHtml(flags3x2[code.replace(/-/g, '_')])
+                svg: this.sanitizer.bypassSecurityTrustHtml(flags[code.replace(/-/g, '_')] ?? '')
             }))
             .sort((a, b) => a.name.localeCompare(b.name));
     });

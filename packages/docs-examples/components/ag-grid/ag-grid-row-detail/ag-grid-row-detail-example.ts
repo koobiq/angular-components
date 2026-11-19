@@ -1,9 +1,21 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AgGridModule } from 'ag-grid-angular';
+import {
+    AllCommunityModule,
+    type CellClickedEvent,
+    type CellKeyDownEvent,
+    type ColDef,
+    type FullWidthCellKeyDownEvent,
+    type GetRowIdFunc,
+    ModuleRegistry,
+    type RowSelectionOptions,
+    SELECTION_COLUMN_ID
+} from 'ag-grid-community';
 import {
     KBQ_AG_GRID_ROW_DETAIL_LABELS_EN,
     KBQ_AG_GRID_ROW_DETAIL_PARAMS,
-    KbqAgGridRowDetail,
+    type KbqAgGridRowDetail,
     kbqAgGridRowDetailLabelsProvider,
     KbqAgGridThemeModule
 } from '@koobiq/ag-grid-angular-theme';
@@ -11,18 +23,6 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { AgGridModule } from 'ag-grid-angular';
-import {
-    AllCommunityModule,
-    CellClickedEvent,
-    CellKeyDownEvent,
-    ColDef,
-    FullWidthCellKeyDownEvent,
-    GetRowIdFunc,
-    ModuleRegistry,
-    RowSelectionOptions,
-    SELECTION_COLUMN_ID
-} from 'ag-grid-community';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);

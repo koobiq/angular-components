@@ -1,6 +1,7 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { map, type Observable, startWith } from 'rxjs';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import {
     createSearchPredicate,
@@ -10,8 +11,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { TRANSLATIONS } from './l10n';
 
 /**
@@ -54,7 +53,7 @@ import { TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AutocompleteSearchSmartExample implements OnInit {
+export class AutocompleteSearchSmartExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
 
     // The suggested queries in the label are English, so the options they match stay English in every locale.
@@ -72,15 +71,11 @@ export class AutocompleteSearchSmartExample implements OnInit {
     ];
 
     control = new FormControl('');
-    filteredOptions: Observable<string[]>;
+    filteredOptions: Observable<string[]> = this.control.valueChanges.pipe(
+        startWith(''),
+        map((value) => this.filter(value as string))
+    );
     protected searchTokens: string[] = [];
-
-    ngOnInit(): void {
-        this.filteredOptions = this.control.valueChanges.pipe(
-            startWith(''),
-            map((value) => this.filter(value as string))
-        );
-    }
 
     private filter(value: string): string[] {
         this.searchTokens = tokenizeSearchQuery(value ?? '');

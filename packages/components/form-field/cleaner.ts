@@ -1,16 +1,17 @@
 import {
-    AfterContentInit,
+    type AfterContentInit,
     ChangeDetectionStrategy,
     Component,
     computed,
     inject,
     InjectionToken,
     input,
-    Provider,
+    type Provider,
     untracked,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { fromEvent } from 'rxjs';
 import {
     ESCAPE,
     KBQ_A11Y_LOCALE_CONFIGURATION,
@@ -18,8 +19,7 @@ import {
     KbqLocaleOverridesDirective
 } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
-import { fromEvent } from 'rxjs';
-import { KbqFormFieldControl } from './form-field-control';
+import type { KbqFormFieldControl } from './form-field-control';
 
 /** @docs-private */
 export interface KbqCleanerContextBase {
@@ -73,7 +73,7 @@ export function getKbqFormFieldYouCanNotUseCleanerInNumberInputError(): Error {
     template: `
         <ng-content />
     `,
-    styleUrls: ['cleaner.scss', '../icon/icon-button.scss', '../icon/icon-button-tokens.scss'],
+    styleUrls: ['./cleaner.scss', '../icon/icon-button.scss', '../icon/icon-button-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -128,7 +128,7 @@ export class KbqCleaner extends KbqIconButton implements AfterContentInit {
         this.autoColor = true;
     }
 
-    ngAfterContentInit(): void {
+    override ngAfterContentInit(): void {
         super.ngAfterContentInit();
 
         if (this.context?.control?.controlType === 'input-number') {

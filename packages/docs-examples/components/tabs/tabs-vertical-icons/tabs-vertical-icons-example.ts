@@ -106,7 +106,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
             </kbq-tab-group>
         </div>
     `,
-    styleUrls: ['tabs-vertical-icons-example.css'],
+    styleUrl: 'tabs-vertical-icons-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

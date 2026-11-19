@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import type { Page } from '@playwright/test';
 
 export const e2eEnableDarkTheme = async (page: Page): Promise<void> =>
     await page.evaluate(() => {

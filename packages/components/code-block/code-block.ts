@@ -5,7 +5,7 @@ import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
     afterEveryRender,
-    AfterViewInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
@@ -22,7 +22,7 @@ import {
     linkedSignal,
     numberAttribute,
     output,
-    Provider,
+    type Provider,
     SecurityContext,
     signal,
     TemplateRef,
@@ -32,12 +32,13 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { DomSanitizer } from '@angular/platform-browser';
+import { debounceTime, filter, fromEvent, map, merge, type Observable, take } from 'rxjs';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import {
     KBQ_WINDOW,
-    KbqCodeBlockLocaleConfiguration,
+    type KbqCodeBlockLocaleConfiguration,
     KbqComponentColors,
-    KbqDeepPartial,
+    type KbqDeepPartial,
     kbqLocaleConfigurationOverrideProvider,
     KbqLocaleOverridesDirective,
     kbqOptionalNumberAttribute,
@@ -46,12 +47,11 @@ import {
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqScrollbarViewport, type KbqScrollbarScrollToOptions } from '@koobiq/components/scrollbar';
+import { type KbqScrollbarScrollToOptions, KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTabsModule } from '@koobiq/components/tabs';
-import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { debounceTime, filter, fromEvent, map, merge, take, type Observable } from 'rxjs';
+import { KbqToolTipModule, type KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqCodeBlockHighlight } from './code-block-highlight';
-import { KbqCodeBlockFile, KbqTabLinkTemplateContext } from './types';
+import type { KbqCodeBlockFile, KbqTabLinkTemplateContext } from './types';
 
 /** Localization configuration provider. */
 export const KBQ_CODE_BLOCK_LOCALE_CONFIGURATION = new InjectionToken<KbqCodeBlockLocaleConfiguration>(
@@ -340,7 +340,7 @@ export class KbqCodeBlock implements AfterViewInit {
     readonly tabsHidden = computed(() => {
         const files = this.files();
 
-        return this.hideTabs() || (files.length === 1 && !files[0].filename);
+        return this.hideTabs() || (files.length === 1 && !files[0]?.filename);
     });
     private readonly actionbarHovered = signal(false);
 

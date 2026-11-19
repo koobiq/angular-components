@@ -16,21 +16,21 @@ import { TRANSLATIONS } from './l10n';
     ],
     template: `
         <div kbq-button-group>
-            <button kbq-button>
+            <button kbq-button type="button">
                 <i kbqButtonPrefix kbq-icon="kbq-diamond_16"></i>
                 {{ data()[0] }}
             </button>
 
-            <button kbq-button class="kbq-dropdown-trigger">
+            <button kbq-button class="kbq-dropdown-trigger" type="button">
                 {{ data()[1] }}
                 <i kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
 
-            <button kbq-button>
+            <button kbq-button type="button">
                 {{ data()[2] }}
             </button>
 
-            <button kbq-button [attr.aria-label]="t().more">
+            <button kbq-button type="button" [attr.aria-label]="t().more">
                 <i kbq-icon="kbq-ellipsis-vertical_16"></i>
             </button>
         </div>

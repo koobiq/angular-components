@@ -18,11 +18,17 @@ import { TRANSLATIONS } from './l10n';
         <kbq-empty-state style="min-height: 216px">
             <div kbq-empty-state-text>{{ t().agentsGroupText }}</div>
             <div class="layout-row layout-align-center" kbq-empty-state-actions style="min-width: 340px">
-                <button class="layout-margin-right-s" kbq-button [color]="colors.Contrast" [kbqStyle]="styles.Filled">
+                <button
+                    class="layout-margin-right-s"
+                    kbq-button
+                    type="button"
+                    [color]="colors.Contrast"
+                    [kbqStyle]="styles.Filled"
+                >
                     {{ t().createGroup }}
                 </button>
 
-                <button kbq-button [color]="colors.ContrastFade" [kbqStyle]="styles.Filled">
+                <button kbq-button type="button" [color]="colors.ContrastFade" [kbqStyle]="styles.Filled">
                     {{ t().mergeGroups }}
                 </button>
             </div>

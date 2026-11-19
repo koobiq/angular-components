@@ -1,4 +1,4 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { KbqStateSavingService } from '@koobiq/components/core';
 
 const STORAGE_KEY = 'docs-migration-done';

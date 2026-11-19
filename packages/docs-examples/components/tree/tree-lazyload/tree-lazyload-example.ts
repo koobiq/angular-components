@@ -1,9 +1,9 @@
-import { SelectionChange } from '@angular/cdk/collections';
-import { ChangeDetectionStrategy, Component, Injectable, inject } from '@angular/core';
+import type { SelectionChange } from '@angular/cdk/collections';
+import { ChangeDetectionStrategy, Component, inject, Injectable } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { BehaviorSubject, type Observable, timer } from 'rxjs';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
-import { BehaviorSubject, Observable, timer } from 'rxjs';
 
 interface INodeResponse {
     id: string;
@@ -12,12 +12,12 @@ interface INodeResponse {
 }
 
 class LazyLoadFlatNode {
-    id: string;
-    name: string;
-    expandable: boolean;
-    level: number;
-    parent: LazyLoadFlatNode;
-    loading: boolean;
+    id = '';
+    name = '';
+    expandable = false;
+    level = 0;
+    parent: LazyLoadFlatNode | null = null;
+    loading = false;
 }
 
 class LazyLoadNode {
@@ -150,7 +150,7 @@ class LazyLoadDataSource<T, F> extends KbqTreeFlatDataSource<T, F> {
         super(treeControl, treeFlattener, []);
     }
 
-    expansionHandler(change: SelectionChange<F>): F[] {
+    override expansionHandler(change: SelectionChange<F>): F[] {
         if (change && (change as SelectionChange<F>).added && (change as SelectionChange<F>).added.length) {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore

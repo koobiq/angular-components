@@ -2,14 +2,12 @@
     display: flex;
     flex: 1 1 auto;
     align-items: center;
-
     min-width: 0;
 }
 
 // One line of text: the date takes the width of what it renders, and the time starts a space after it.
 .kbq-datetime__date.kbq-input {
     flex: none;
-
     width: auto;
     padding-right: 0;
 }

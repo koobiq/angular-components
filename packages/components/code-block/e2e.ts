@@ -1,7 +1,7 @@
 import { afterNextRender, ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import {
     KbqCodeBlock,
-    KbqCodeBlockFile,
+    type KbqCodeBlockFile,
     kbqCodeBlockHighlightJsConfigProvider,
     kbqCodeBlockLocaleConfigurationProvider
 } from '@koobiq/components/code-block';

@@ -13,7 +13,7 @@ type Versions = {
 };
 
 function getNPMVersions(): Versions {
-    const versions = {
+    const versions: Versions = {
         next: {
             version: 'Next',
             url: 'https://next.koobiq.io'
@@ -31,7 +31,7 @@ function getNPMVersions(): Versions {
             return;
         }
 
-        const majorVersion = version.split('.')[0];
+        const [majorVersion = ''] = version.split('.');
 
         const releaseDate = new Date(date);
 

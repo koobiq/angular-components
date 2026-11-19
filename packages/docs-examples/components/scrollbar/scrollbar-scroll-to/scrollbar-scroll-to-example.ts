@@ -12,17 +12,20 @@ import { TRANSLATIONS } from './l10n';
     imports: [KbqScrollbar, KbqButtonModule],
     template: `
         <div class="example-buttons">
-            <button kbq-button (click)="scrollbar.scrollToTop('smooth')">{{ t().scrollTop }}</button>
-            <button kbq-button (click)="scrollbar.scrollToBottom('smooth')">{{ t().scrollBottom }}</button>
-            <button kbq-button (click)="scrollbar.scrollStart('smooth')">{{ t().scrollStart }}</button>
-            <button kbq-button (click)="scrollbar.scrollEnd('smooth')">{{ t().scrollEnd }}</button>
+            <button kbq-button type="button" (click)="scrollbar.scrollToTop('smooth')">{{ t().scrollTop }}</button>
+            <button kbq-button type="button" (click)="scrollbar.scrollToBottom('smooth')">
+                {{ t().scrollBottom }}
+            </button>
+            <button kbq-button type="button" (click)="scrollbar.scrollStart('smooth')">{{ t().scrollStart }}</button>
+            <button kbq-button type="button" (click)="scrollbar.scrollEnd('smooth')">{{ t().scrollEnd }}</button>
             <button
                 kbq-button
+                type="button"
                 (click)="scrollbar.scrollToElement(scrollToElementTarget, { behavior: 'smooth', top: 16, left: 16 })"
             >
                 Scroll to element
             </button>
-            <button kbq-button (click)="scrollbar.scrollIntoView(scrollIntoViewTarget, 'smooth')">
+            <button kbq-button type="button" (click)="scrollbar.scrollIntoView(scrollIntoViewTarget, 'smooth')">
                 Scroll into view
             </button>
         </div>

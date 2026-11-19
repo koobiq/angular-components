@@ -1,4 +1,4 @@
-import { assertNoPlaceholders, IPackageJson, syncComponentsVersion, syncNgVersion } from './version-placeholders';
+import { assertNoPlaceholders, type IPackageJson, syncComponentsVersion, syncNgVersion } from './version-placeholders';
 
 const VERSION = '{{VERSION}}';
 const NG_VERSION = '{{NG_VERSION}}';

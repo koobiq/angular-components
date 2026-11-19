@@ -15,7 +15,7 @@ import { TRANSLATIONS } from './l10n';
         </kbq-sidepanel-body>
         <kbq-sidepanel-footer>
             <kbq-sidepanel-actions>
-                <button kbq-button color="contrast" kbq-sidepanel-close>
+                <button kbq-button color="contrast" kbq-sidepanel-close type="button">
                     <span>{{ t().close }}</span>
                 </button>
             </kbq-sidepanel-actions>
@@ -34,7 +34,7 @@ export class ExampleSidepanelDisableCloseContent {
     selector: 'sidepanel-disable-close-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="open()">
+        <button kbq-button type="button" (click)="open()">
             <span>{{ t().open }}</span>
         </button>
     `,

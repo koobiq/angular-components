@@ -1,4 +1,4 @@
-import { InjectionToken, Provider, Signal } from '@angular/core';
+import { InjectionToken, type Provider, type Signal } from '@angular/core';
 
 /**
  * Narrow contract that lets `KbqIcon` react to a host's error state (e.g. `autoColor`) without

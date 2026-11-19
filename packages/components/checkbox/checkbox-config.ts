@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import { KbqCheckableClickAction } from '@koobiq/components/core';
+import type { KbqCheckableClickAction } from '@koobiq/components/core';
 
 /**
  * Checkbox click action when user click on input element.

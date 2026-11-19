@@ -22,10 +22,11 @@ export class ComponentLevelService {
         <kbq-modal-body>{{ t().subtitle }}</kbq-modal-body>
 
         <div kbq-modal-footer>
-            <button kbq-button [color]="'contrast'" (click)="customService.action()">
+            <button kbq-button type="button" color="contrast" (click)="customService.action()">
                 Call method from injected service
             </button>
-            <button kbq-button autofocus (click)="destroyModal('close')">{{ t().close }}</button>
+            <!-- eslint-disable-next-line @angular-eslint/template/no-autofocus -- the dialog moves the focus to the element marked autofocus when it opens -->
+            <button kbq-button autofocus type="button" (click)="destroyModal('close')">{{ t().close }}</button>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -48,7 +49,7 @@ export class CustomModalComponent {
     selector: 'modal-component-with-injector-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="openModal()">{{ t().openModal }}</button>
+        <button kbq-button type="button" (click)="openModal()">{{ t().openModal }}</button>
     `,
     providers: [ComponentLevelService],
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -59,7 +60,7 @@ export class ModalComponentWithInjectorExample {
     private readonly modalService = inject(KbqModalService);
     private readonly injector = inject(Injector);
 
-    modalRef: KbqModalRef<CustomModalComponent, 'save' | 'close'>;
+    modalRef?: KbqModalRef<CustomModalComponent, 'save' | 'close'>;
 
     openModal(): void {
         this.modalRef = this.modalService.open({

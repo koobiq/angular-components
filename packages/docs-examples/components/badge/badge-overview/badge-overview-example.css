@@ -6,8 +6,8 @@
 }
 
 .example-badge-fill-and-style__badge-label {
-    color: var(--kbq-foreground-contrast-secondary);
     margin-bottom: 8px;
+    color: var(--kbq-foreground-contrast-secondary);
 }
 
 .example-badge-fill-and-style__badge {

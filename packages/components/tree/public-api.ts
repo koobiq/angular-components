@@ -10,7 +10,7 @@ export * from './outlet';
 export * from './padding.directive';
 export * from './toggle';
 export * from './tree';
+export * from './tree.module';
 export * from './tree-base';
 export * from './tree-option.component';
 export * from './tree-selection.component';
-export * from './tree.module';

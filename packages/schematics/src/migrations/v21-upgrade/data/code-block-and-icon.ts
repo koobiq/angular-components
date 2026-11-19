@@ -1,4 +1,4 @@
-import { TAG_BODY, codeBlockTagWith, codeBlockTagWithout } from '../../../utils/tag-patterns';
+import { codeBlockTagWith, codeBlockTagWithout, TAG_BODY } from '../../../utils/tag-patterns';
 import type { AreaData } from '../data';
 
 // An opening `<kbq-code-block>` tag that binds `name` twice.

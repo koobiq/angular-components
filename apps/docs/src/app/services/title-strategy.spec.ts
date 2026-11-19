@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
-import { DefaultUrlSerializer, Router, RouterStateSnapshot } from '@angular/router';
+import { DefaultUrlSerializer, Router, type RouterStateSnapshot } from '@angular/router';
 import type { Mock } from 'vitest';
 import { DocsLocale } from '../constants/locale';
 import { DocsLocaleService } from './locale';

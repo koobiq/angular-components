@@ -1,7 +1,7 @@
 import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqListModule, KbqListSelectionDroppedEvent } from '@koobiq/components/list';
+import { KbqListModule, type KbqListSelectionDroppedEvent } from '@koobiq/components/list';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
 
@@ -28,7 +28,7 @@ export class ListDraggableHandleExample {
 
     protected readonly items = signal(Array.from({ length: this.t().fruits.length }, (_, index) => index + 1));
 
-    protected readonly fruits = computed(() => this.items().map((id) => this.t().fruits[id - 1]));
+    protected readonly fruits = computed(() => this.items().map((id) => this.t().fruits[id - 1]!));
 
     protected dropped({ previousIndex, currentIndex }: KbqListSelectionDroppedEvent): void {
         const items = [...this.items()];

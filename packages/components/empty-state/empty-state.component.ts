@@ -1,19 +1,19 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    Directive,
-    ViewEncapsulation,
     computed,
     contentChild,
     contentChildren,
+    Directive,
     effect,
     forwardRef,
     inject,
-    input
+    input,
+    ViewEncapsulation
 } from '@angular/core';
-import { KbqComponentColors, KbqDefaultSizes } from '@koobiq/components/core';
+import { KbqComponentColors, type KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqIconItem } from '@koobiq/components/icon';
-import { KBQ_EMPTY_STATE_CONTEXT, KbqEmptyStateContext } from './empty-state-context';
+import { KBQ_EMPTY_STATE_CONTEXT, type KbqEmptyStateContext } from './empty-state-context';
 
 /**
  * Illustration slot of `kbq-empty-state`. Holds an icon, an image or any other element.
@@ -124,7 +124,7 @@ export class KbqEmptyStateActions {}
 @Component({
     selector: 'kbq-empty-state',
     templateUrl: './empty-state.component.html',
-    styleUrls: ['./empty-state.scss'],
+    styleUrl: './empty-state.scss',
     providers: [{ provide: KBQ_EMPTY_STATE_CONTEXT, useExisting: forwardRef(() => KbqEmptyState) }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,

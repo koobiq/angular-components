@@ -1,4 +1,4 @@
-import { KbqLocaleStringsData } from './types';
+import type { KbqLocaleStringsData } from './types';
 
 export const ptBRLocaleData = {
     a11y: {
@@ -26,7 +26,8 @@ export const ptBRLocaleData = {
         optionActions: 'Ações',
         progressBar: 'Progresso',
         date: 'Data',
-        time: 'Hora'
+        time: 'Hora',
+        search: 'Buscar'
     },
     select: {
         hiddenItemsText: '+{{ number }}',

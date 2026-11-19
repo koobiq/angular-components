@@ -1,4 +1,4 @@
-import { KbqUnitSystem } from './config';
+import type { KbqUnitSystem } from './config';
 
 export const KBQ_INVALID_VALUE_ERROR = 'Argument "value" must be a finite number!';
 
@@ -56,6 +56,6 @@ export const getHumanizedBytes = (
 
     return {
         result,
-        unit: system.abbreviations[step]
+        unit: system.abbreviations[step]!
     };
 };

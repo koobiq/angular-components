@@ -1,17 +1,22 @@
-import { Overlay, OverlayConfig, OverlayContainer, OverlayRef, ScrollStrategy } from '@angular/cdk/overlay';
-import { ComponentPortal, ComponentType, TemplatePortal } from '@angular/cdk/portal';
+import { Overlay, OverlayConfig, OverlayContainer, type OverlayRef, type ScrollStrategy } from '@angular/cdk/overlay';
+import { ComponentPortal, type ComponentType, TemplatePortal } from '@angular/cdk/portal';
 import {
-    ComponentRef,
+    type ComponentRef,
+    inject,
     Injectable,
     InjectionToken,
     Injector,
-    OnDestroy,
-    TemplateRef,
-    inject,
     isDevMode,
+    type OnDestroy,
+    TemplateRef,
     untracked
 } from '@angular/core';
-import { KBQ_STATE_STORE, KbqStateSavingRef, KbqStateSavingService, KbqStateStore } from '@koobiq/components/core';
+import {
+    KBQ_STATE_STORE,
+    type KbqStateSavingRef,
+    KbqStateSavingService,
+    type KbqStateStore
+} from '@koobiq/components/core';
 import { KbqSidepanelAnimationState } from './sidepanel-animations';
 import { KBQ_SIDEPANEL_DATA, KbqSidepanelConfig } from './sidepanel-config';
 import { KBQ_SIDEPANEL_WITH_INDENT, KbqSidepanelContainerComponent } from './sidepanel-container.component';
@@ -387,13 +392,11 @@ export class KbqSidepanelService implements OnDestroy {
     private restoreScrollBlock(closedConfig: KbqSidepanelConfig, closedIndex: number) {
         if (!closedConfig.hasBackdrop) return;
 
-        const ownerIndex = this.openedSidepanels.findIndex(({ config }) => config.hasBackdrop);
+        const owner = this.openedSidepanels.find(({ config }) => config.hasBackdrop);
 
         // A backdropped sidepanel that was already below the closed one still holds the block. Re-applying
         // the strategy there would release and re-take the page, scrolling it twice for nothing.
-        if (ownerIndex === -1 || ownerIndex < closedIndex) return;
-
-        const owner = this.openedSidepanels[ownerIndex];
+        if (!owner || this.openedSidepanels.indexOf(owner) < closedIndex) return;
 
         owner.overlayRef.updateScrollStrategy(this.resolveScrollStrategy(owner.config));
     }
@@ -451,7 +454,7 @@ export class KbqSidepanelService implements OnDestroy {
         // only allow animations if ref is last element in sidepanels list
         if (index === -1 || index !== this.openedSidepanels.length - 1) return;
 
-        const [lower, bottom] = this.getLowerSidepanelsWithSamePosition(index);
+        const [lower, bottom] = this.getLowerSidepanelsWithSamePosition(sidepanelRef.config);
 
         this.setAnimationState(lower, KbqSidepanelAnimationState.BecomingNormal);
         this.setAnimationState(bottom, KbqSidepanelAnimationState.Lower);
@@ -487,7 +490,7 @@ export class KbqSidepanelService implements OnDestroy {
         const index = this.openedSidepanels.indexOf(sidepanelRef);
 
         if (index > -1) {
-            const [lower] = this.getLowerSidepanelsWithSamePosition(index);
+            const [lower] = this.getLowerSidepanelsWithSamePosition(sidepanelRef.config);
 
             this.setAnimationState(lower, KbqSidepanelAnimationState.Visible);
 
@@ -531,9 +534,7 @@ export class KbqSidepanelService implements OnDestroy {
 
         if (!siblings) return;
 
-        for (let i = siblings.length - 1; i > -1; i--) {
-            const sibling = siblings[i];
-
+        for (const sibling of Array.from(siblings)) {
             if (
                 sibling === overlayContainerElement ||
                 sibling.nodeName === 'SCRIPT' ||
@@ -569,14 +570,9 @@ export class KbqSidepanelService implements OnDestroy {
         this.modalSidepanels.clear();
     }
 
-    private getLowerSidepanelsWithSamePosition(index: number): KbqSidepanelRef[] {
-        const openedSidepanelsWithSamePosition = this.getOpenedSidepanelsWithSamePosition(
-            this.openedSidepanels[index].config
-        );
+    private getLowerSidepanelsWithSamePosition(config: KbqSidepanelConfig): (KbqSidepanelRef | undefined)[] {
+        const openedSidepanelsWithSamePosition = this.getOpenedSidepanelsWithSamePosition(config);
 
-        return [
-            openedSidepanelsWithSamePosition[openedSidepanelsWithSamePosition.length - 2],
-            openedSidepanelsWithSamePosition[openedSidepanelsWithSamePosition.length - 3]
-        ];
+        return [openedSidepanelsWithSamePosition.at(-2), openedSidepanelsWithSamePosition.at(-3)];
     }
 }

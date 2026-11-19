@@ -14,7 +14,7 @@ import {
     input,
     linkedSignal,
     numberAttribute,
-    OnInit,
+    type OnInit,
     output,
     signal,
     untracked,
@@ -22,6 +22,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { debounceTime, firstValueFrom, isObservable, type Observable, Subject } from 'rxjs';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import {
     KBQ_A11Y_LOCALE_CONFIGURATION,
@@ -33,12 +34,10 @@ import {
     KbqStateSaving
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqResizable, KbqResizer, KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
+import { KbqResizable, KbqResizer, type KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { SizeL } from '@koobiq/design-tokens';
-import { firstValueFrom, isObservable, Observable, Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
 
 @Component({
     selector: 'kbq-content-panel-aside',
@@ -550,6 +549,7 @@ export class KbqContentPanelContainer implements OnInit {
         // A request the panel dropped by closing meanwhile is not answered.
         const request: Promise<void> = Promise.resolve(answer)
             .then((allowed) => {
+                // eslint-disable-next-line promise/always-return -- the callback closes the panel, nothing is returned
                 if (request !== this.closeRequest) return;
 
                 // Over before the panel closes, so that a listener of the close can request the next one.

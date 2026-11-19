@@ -1,7 +1,7 @@
-import { Path } from '@angular-devkit/core';
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Path } from '@angular-devkit/core';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
-import { getSimpleAttributeName, visitAll, Visitor } from '../../utils/ast';
+import { getSimpleAttributeName, visitAll, type Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
@@ -19,9 +19,9 @@ import {
     tsWarnPatterns,
     UNCHANGED_VALUES,
     UNPARSEABLE_TEMPLATE_MESSAGE,
-    WarnPattern
+    type WarnPattern
 } from './data';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 const TS_EXT = '.ts';
 const HTML_EXT = '.html';
@@ -58,9 +58,9 @@ function resolveValue(attr: any): { value: string; binding: boolean } | null {
 
     if (!binding) return { value: raw, binding };
 
-    const quoted = /^\s*'([^']*)'\s*$/.exec(raw) ?? /^\s*"([^"]*)"\s*$/.exec(raw);
+    const value = (/^\s*'([^']*)'\s*$/.exec(raw) ?? /^\s*"([^"]*)"\s*$/.exec(raw))?.[1];
 
-    return quoted ? { value: quoted[1], binding } : null;
+    return value === undefined ? null : { value, binding };
 }
 
 /** Renders the attribute back, keeping the binding syntax the author used. */

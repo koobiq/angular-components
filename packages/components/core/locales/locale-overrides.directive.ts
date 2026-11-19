@@ -3,16 +3,16 @@ import {
     Directive,
     forwardRef,
     inject,
-    InjectionToken,
+    type InjectionToken,
     Injector,
     input,
-    InputSignal,
+    type InputSignal,
     runInInjectionContext,
-    Signal
+    type Signal
 } from '@angular/core';
 import { kbqDeepMerge } from '../utils';
-import { KBQ_LOCALE_OVERRIDES_HOST, kbqInjectLocaleConfiguration, KbqLocaleOverridesHost } from './configuration';
-import { KbqLocaleData, KbqLocaleSection, KbqPartialLocaleData } from './types';
+import { KBQ_LOCALE_OVERRIDES_HOST, kbqInjectLocaleConfiguration, type KbqLocaleOverridesHost } from './configuration';
+import type { KbqLocaleData, KbqLocaleSection, KbqPartialLocaleData } from './types';
 
 /**
  * Overrides localized strings for one element and its subtree, as a template binding.

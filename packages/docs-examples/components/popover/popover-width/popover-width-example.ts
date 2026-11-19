@@ -14,7 +14,7 @@ import { TRANSLATIONS } from './l10n';
         KbqPopoverModule,
         KbqButtonModule
     ],
-    templateUrl: 'popover-width-example.html',
+    templateUrl: './popover-width-example.html',
     styles: `
         ::ng-deep .kbq-popover.popover-width-example p:first-child {
             margin-top: 0;

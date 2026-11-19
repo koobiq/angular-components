@@ -5,10 +5,10 @@ import {
     ChangeDetectionStrategy,
     Component,
     contentChildren,
-    ElementRef,
+    type ElementRef,
     inject,
     input,
-    QueryList,
+    type QueryList,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -43,6 +43,7 @@ const TAB_PADDING = 12;
         '[class.kbq-tab-header__pagination-controls_enabled]': 'showPaginationControls',
         '[class.kbq-tab-header_rtl]': "getLayoutDirection() == 'rtl'"
     },
+    // eslint-disable-next-line @angular-eslint/no-outputs-metadata-property -- the outputs of the base class
     outputs: ['selectFocusedIndex', 'indexFocused']
 })
 export class KbqTabHeader extends KbqPaginatedTabHeader {

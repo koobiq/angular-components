@@ -1,21 +1,26 @@
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
 .kbq-content-panel {
-    display: flex;
-    flex-grow: 1;
-    min-width: 0;
-    @include kbq-squircle(var(--kbq-content-panel-border-radius));
-    background-color: var(--kbq-content-panel-background-color);
-    border: var(--kbq-content-panel-border);
-    height: 100%;
-    box-sizing: border-box;
+    @include squircle.kbq-squircle(var(--kbq-content-panel-border-radius));
+
     position: relative;
 
+    display: flex;
+    flex-grow: 1;
+
+    box-sizing: border-box;
+    min-width: 0;
+    height: 100%;
+
+    background-color: var(--kbq-content-panel-background-color);
+    border: var(--kbq-content-panel-border);
+
     .kbq-content-panel__content {
+        @include squircle.kbq-squircle-inherit(border-top-right-radius border-bottom-right-radius);
+
         display: flex;
         flex: 1;
         flex-direction: column;
         min-width: 0;
-        @include kbq-squircle-inherit(border-top-right-radius border-bottom-right-radius);
     }
 }

@@ -6,18 +6,19 @@ import {
     inject,
     InjectionToken,
     Injector,
-    OnDestroy,
-    Provider,
+    type OnDestroy,
+    type Provider,
     Renderer2,
     signal,
     ViewEncapsulation
 } from '@angular/core';
+import { Subject } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
-    KbqActionsPanelLocaleConfiguration,
+    type KbqActionsPanelLocaleConfiguration,
     kbqAfterAnimations,
     kbqAnimationsDisabled,
-    KbqDeepPartial,
+    type KbqDeepPartial,
     kbqLocaleConfigurationOverrideProvider,
     KbqLocaleOverridesDirective,
     ruRULocaleData
@@ -25,7 +26,7 @@ import {
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { Subject } from 'rxjs';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqActionsPanel } from './actions-panel';
 import { KbqActionsPanelConfig } from './actions-panel-config';
 
@@ -64,6 +65,7 @@ export const kbqActionsPanelLocaleConfigurationProvider = (
         @if (!config.disableClose) {
             <kbq-divider class="kbq-actions-panel-container__vertical-divider" [vertical]="true" />
             <button
+                type="button"
                 class="kbq-actions-panel-container__close-button"
                 color="contrast"
                 kbq-button
@@ -127,7 +129,7 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
     private pendingTransition?: { state: 'visible' | 'hidden'; wait: { destroy(): void } };
 
     /** Whether the actions panel container has been destroyed. */
-    private destroyed: boolean;
+    private destroyed?: boolean;
 
     /**
      * Actions panel configuration.

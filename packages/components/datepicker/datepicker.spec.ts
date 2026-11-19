@@ -4,32 +4,35 @@ import {
     ChangeDetectionStrategy,
     Component,
     effect,
-    FactoryProvider,
+    type FactoryProvider,
     inject as inject_1,
     input,
     LOCALE_ID,
-    Provider,
+    type Provider,
     signal,
-    Type,
-    ValueProvider,
+    type Type,
+    type ValueProvider,
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import {
-    AsyncValidatorFn,
+    type AsyncValidatorFn,
     FormControl,
-    FormControlStatus,
+    type FormControlStatus,
     FormGroup,
     FormsModule,
     NgModel,
     ReactiveFormsModule,
     UntypedFormControl,
-    ValidationErrors,
+    type ValidationErrors,
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
+import { DateTime } from 'luxon';
+import { map, type Observable, timer } from 'rxjs';
+import type { MockInstance } from 'vitest';
 import {
     KBQ_LUXON_DATE_FORMATS,
     KbqLuxonDateModule,
@@ -62,19 +65,16 @@ import {
     UP_ARROW
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqInputModule } from '@koobiq/components/input';
 import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
-import { DateTime } from 'luxon';
-import { map, Observable, timer } from 'rxjs';
-import type { MockInstance } from 'vitest';
-import { KbqInputModule } from '../input/index';
+import { KbqDatepicker } from './datepicker.component';
 import {
     KBQ_DATEPICKER_LOCALE_CONFIGURATION,
     KbqDatepickerInput,
-    KbqDatepickerInputEvent,
+    type KbqDatepickerInputEvent,
     kbqDatepickerLocaleConfigurationProvider
 } from './datepicker-input.directive';
 import { KbqDatepickerToggleIconComponent } from './datepicker-toggle.component';
-import { KbqDatepicker } from './datepicker.component';
 import { KbqDatepickerModule } from './index';
 
 // The modal's own animation timeout, which is internal to its entry point.
@@ -268,7 +268,7 @@ describe('KbqDatepicker', () => {
             });
 
             it('should focus input after close', async () => {
-                const input = testComponent.datepicker().datepickerInput.elementRef.nativeElement;
+                const input = testComponent.datepicker().datepickerInput!.elementRef.nativeElement;
 
                 input.focus();
 
@@ -779,6 +779,28 @@ describe('KbqDatepicker', () => {
             });
         });
 
+        describe('datepicker subclass', () => {
+            it('should open the popup of a subclass that provides no datepicker token', async () => {
+                vi.useFakeTimers();
+
+                const fixture = createComponent(DatepickerSubclassHost, [KbqLuxonDateModule]);
+
+                fixture.detectChanges();
+
+                const datepicker = fixture.componentInstance.datepicker();
+
+                datepicker.open();
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(document.querySelector('.kbq-datepicker__content')).not.toBeNull();
+
+                datepicker.close();
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+            });
+        });
+
         describe('datepicker with startAt', () => {
             let fixture: ComponentFixture<DatepickerWithStartAt>;
             let testComponent: DatepickerWithStartAt;
@@ -804,15 +826,14 @@ describe('KbqDatepicker', () => {
             let fixture: ComponentFixture<DatepickerWithNgModel>;
             let testComponent: DatepickerWithNgModel;
 
-            beforeEach(() => {
+            beforeEach(async () => {
                 fixture = createComponent(DatepickerWithNgModel, [KbqLuxonDateModule]);
                 fixture.detectChanges();
 
-                fixture.whenStable().then(() => {
-                    fixture.detectChanges();
+                await fixture.whenStable();
+                fixture.detectChanges();
 
-                    testComponent = fixture.componentInstance;
-                });
+                testComponent = fixture.componentInstance;
             });
 
             afterEach(() => {
@@ -1716,7 +1737,6 @@ describe('KbqDatepicker', () => {
 
                 expect(getDatepickerNgModel(fixture).errors).toHaveProperty('kbqDatepickerMin');
             });
-
             it('should re-validate when min changes', async () => {
                 vi.useFakeTimers();
 
@@ -2918,6 +2938,26 @@ class MultiInputDatepicker {}
 })
 class NoInputDatepicker {
     readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
+}
+
+@Component({
+    selector: 'test-datepicker',
+    template: ''
+})
+class DatepickerSubclass<D> extends KbqDatepicker<D> {}
+
+@Component({
+    imports: [
+        KbqDatepickerModule,
+        DatepickerSubclass
+    ],
+    template: `
+        <input [kbqDatepicker]="d" />
+        <test-datepicker #d />
+    `
+})
+class DatepickerSubclassHost {
+    readonly datepicker = viewChild.required<DatepickerSubclass<DateTime>>('d');
 }
 
 @Component({

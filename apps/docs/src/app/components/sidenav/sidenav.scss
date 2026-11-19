@@ -8,20 +8,18 @@
     display: flex;
     flex-direction: column;
 
+    min-width: 300px;
+    max-height: 100%;
     overflow: hidden;
 
-    max-height: 100%;
-    min-width: 300px;
-
     .kbq-divider {
-        margin: 0 !important;
         min-height: 1px;
+        margin: 0 !important;
     }
 }
 
 .docs-sidenav__header {
     display: flex;
-
     gap: var(--kbq-size-m);
     padding: var(--kbq-size-xl) var(--kbq-size-l) var(--kbq-size-xl) var(--kbq-size-xxl);
 
@@ -31,8 +29,8 @@
 }
 
 .docs-sidenav__menu {
-    overflow-y: auto;
     flex: 1;
+    overflow-y: auto;
 
     .docs-sidenav__category {
         height: 40px;
@@ -43,17 +41,17 @@
         padding-bottom: var(--kbq-size-xxl);
 
         .kbq-tree-option {
-            padding-left: calc(var(--kbq-size-m) - var(--kbq-size-3xs));
-            padding-right: calc(var(--kbq-size-m) - var(--kbq-size-3xs));
-
             @include select.item-active-area(var(--kbq-size-3xs));
+
+            padding-right: calc(var(--kbq-size-m) - var(--kbq-size-3xs));
+            padding-left: calc(var(--kbq-size-m) - var(--kbq-size-3xs));
         }
     }
 
     .docs-sidenav__category-text {
         display: flex;
-        justify-content: space-between;
         align-items: center;
+        justify-content: space-between;
 
         & > span {
             display: flex;
@@ -81,17 +79,17 @@
             top: 0;
             left: 0;
 
+            display: flex;
+            gap: var(--kbq-size-s);
+            align-items: center;
+            justify-content: space-between;
+
+            box-sizing: border-box;
             width: 100%;
             height: 100%;
 
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: var(--kbq-size-s);
-
-            box-sizing: border-box;
-
             text-decoration: none;
+
             color: inherit;
         }
     }
@@ -100,21 +98,22 @@
 @media (width <= 768px) {
     .docs-sidenav {
         margin-top: calc(var(--kbq-size-7xl) + 1px);
-
         overflow-y: auto;
 
         .kbq-tree-selection {
-            padding: 0 0;
+            padding: 0;
 
             .kbq-tree-option {
-                border-radius: 0;
-                font-size: var(--kbq-typography-text-big-font-size);
-                line-height: var(--kbq-typography-text-big-line-height);
                 min-height: 48px;
                 padding: calc(var(--kbq-size-m) - var(--kbq-size-3xs)) calc(var(--kbq-size-l) - var(--kbq-size-3xs));
 
-                &:before,
-                &:after {
+                font-size: var(--kbq-typography-text-big-font-size);
+                line-height: var(--kbq-typography-text-big-line-height);
+
+                border-radius: 0;
+
+                &::before,
+                &::after {
                     display: none;
                 }
             }
@@ -125,9 +124,9 @@
         }
 
         .docs-sidenav__menu {
-            overflow-y: unset;
             padding-top: var(--kbq-size-s);
             padding-bottom: var(--kbq-size-xxl);
+            overflow-y: unset;
         }
 
         .docs-sidenav__category-text {

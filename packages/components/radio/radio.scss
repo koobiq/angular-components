@@ -1,6 +1,5 @@
-@use '../core/styles/common/tokens' as *;
-
-@use './radio-theme' as *;
+@use '../core/styles/common/tokens';
+@use './radio-theme';
 
 .kbq-radio-group {
     display: inline-flex;
@@ -24,8 +23,7 @@
     // Sits as close to the last option as a hint to its label, as in a checkbox: the gap of the group, which spaces
     // the options apart, would otherwise push the error away from them.
     margin-top: calc(var(--kbq-radio-size-normal-vertical-content-padding) - var(--kbq-radio-size-normal-vertical-gap));
-
-    padding-left: kbq-sum-series-css-variables(
+    padding-left: tokens.kbq-sum-series-css-variables(
         [radio-size-normal-outer-size,
         radio-size-normal-horizontal-content-padding,
         calc(var(--kbq-radio-size-normal-outer-circle-border-width) * 2)]
@@ -33,17 +31,17 @@
 }
 
 .kbq-radio-group_label-before .kbq-radio-group__subscript {
-    padding-left: 0;
-    padding-right: kbq-sum-series-css-variables(
+    padding-right: tokens.kbq-sum-series-css-variables(
         [radio-size-normal-outer-size,
         radio-size-normal-horizontal-content-padding,
         calc(var(--kbq-radio-size-normal-outer-circle-border-width) * 2)]
     );
+    padding-left: 0;
 }
 
 .kbq-radio-group_big .kbq-radio-group__subscript {
     margin-top: calc(var(--kbq-radio-size-big-vertical-content-padding) - var(--kbq-radio-size-big-vertical-gap));
-    padding-left: kbq-sum-series-css-variables(
+    padding-left: tokens.kbq-sum-series-css-variables(
         [radio-size-big-outer-size,
         radio-size-big-horizontal-content-padding,
         calc(var(--kbq-radio-size-big-outer-circle-border-width) * 2)]
@@ -51,12 +49,12 @@
 }
 
 .kbq-radio-group_big.kbq-radio-group_label-before .kbq-radio-group__subscript {
-    padding-left: 0;
-    padding-right: kbq-sum-series-css-variables(
+    padding-right: tokens.kbq-sum-series-css-variables(
         [radio-size-big-outer-size,
         radio-size-big-horizontal-content-padding,
         calc(var(--kbq-radio-size-big-outer-circle-border-width) * 2)]
     );
+    padding-left: 0;
 }
 
 // Top-level host container.
@@ -72,62 +70,60 @@
 
     display: inline-flex;
     align-items: center;
-    vertical-align: top;
-
-    cursor: pointer;
 
     // for maximum clickable area.
     width: 100%;
+
+    vertical-align: top;
+
+    cursor: pointer;
 }
 
 .kbq-radio-label-content {
-    display: inline-flex;
-
     position: relative;
 
+    display: inline-flex;
     order: 0;
-    line-height: inherit;
 
-    padding-left: kbq-sum-series-css-variables(
+    padding-right: 0;
+    padding-left: tokens.kbq-sum-series-css-variables(
         [radio-size-normal-outer-size,
         radio-size-normal-horizontal-content-padding,
         calc(var(--kbq-radio-size-normal-outer-circle-border-width) * 2)]
     );
-    padding-right: 0;
+
+    line-height: inherit;
 
     .kbq-radio-button__outer-circle,
     .kbq-radio-button__inner-circle {
-        box-sizing: content-box;
         position: absolute;
         display: flex;
-
+        box-sizing: content-box;
         border-radius: 50%;
     }
 
     .kbq-radio-button__outer-circle {
-        // Only the outer circle is drawn with a border. Setting `border-style` on both used to give the
-        // inner circle the initial `medium` width, which the theme then had to cancel with `!important`.
-        border-style: solid;
-        border-width: var(--kbq-radio-size-normal-outer-circle-border-width);
-
-        left: 0;
-
-        top: kbq-css-half-difference(
+        top: tokens.kbq-css-half-difference(
             typography-text-normal-line-height,
             radio-size-normal-outer-size,
             radio-size-normal-outer-circle-border-width
         );
+        left: 0;
 
         width: var(--kbq-radio-size-normal-outer-size);
         height: var(--kbq-radio-size-normal-outer-size);
+
+        border-width: var(--kbq-radio-size-normal-outer-circle-border-width);
+        // Only the outer circle is drawn with a border. Setting `border-style` on both used to give the
+        // inner circle the initial `medium` width, which the theme then had to cancel with `!important`.
+        border-style: solid;
     }
 
     .kbq-radio-button__inner-circle {
         position: relative;
-        margin: auto;
-
         width: var(--kbq-radio-size-normal-inner-size);
         height: var(--kbq-radio-size-normal-inner-size);
+        margin: auto;
     }
 
     .kbq-radio__text-container {
@@ -140,39 +136,37 @@
     }
 
     &.kbq-radio-label-before {
-        padding-left: 0;
-        padding-right: kbq-sum-series-css-variables(
+        padding-right: tokens.kbq-sum-series-css-variables(
             [radio-size-normal-outer-size,
             radio-size-normal-horizontal-content-padding,
             calc(var(--kbq-radio-size-normal-outer-circle-border-width) * 2)]
         );
+        padding-left: 0;
 
         .kbq-radio-button__outer-circle {
-            left: unset;
             right: 0;
+            left: unset;
         }
     }
 }
 
 .kbq-radio-button.kbq-radio-button_big {
     .kbq-radio-label-content {
-        padding-left: kbq-sum-series-css-variables(
+        padding-left: tokens.kbq-sum-series-css-variables(
             [radio-size-big-outer-size,
             radio-size-big-horizontal-content-padding,
             calc(var(--kbq-radio-size-big-outer-circle-border-width) * 2)]
         );
 
         .kbq-radio-button__outer-circle {
-            border-width: var(--kbq-radio-size-big-outer-circle-border-width);
-
-            top: kbq-css-half-difference(
+            top: tokens.kbq-css-half-difference(
                 typography-text-big-line-height,
                 radio-size-big-outer-size,
                 radio-size-big-outer-circle-border-width
             );
-
             width: var(--kbq-radio-size-big-outer-size);
             height: var(--kbq-radio-size-big-outer-size);
+            border-width: var(--kbq-radio-size-big-outer-circle-border-width);
         }
 
         .kbq-radio-button__inner-circle {
@@ -185,15 +179,15 @@
         }
 
         &.kbq-radio-label-before {
-            padding-left: 0;
-            padding-right: kbq-sum-series-css-variables(
+            padding-right: tokens.kbq-sum-series-css-variables(
                 [radio-size-big-outer-size,
                 radio-size-big-horizontal-content-padding,
                 calc(var(--kbq-radio-size-big-outer-circle-border-width) * 2)]
             );
+            padding-left: 0;
         }
     }
 }
 
-@include kbq-radio-theme();
-@include kbq-radio-typography();
+@include radio-theme.kbq-radio-theme();
+@include radio-theme.kbq-radio-typography();

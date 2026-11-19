@@ -9,16 +9,16 @@ import {
     isDevMode,
     numberAttribute,
     PendingTasks,
-    Provider,
+    type Provider,
     Renderer2,
     SecurityContext,
     signal
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { kbqInjectNativeElement } from '@koobiq/components/core';
 import type { HLJSApi, LanguageFn } from 'highlight.js';
+import { kbqInjectNativeElement } from '@koobiq/components/core';
 import { KbqCodeBlockHighlightJsLoader, PLAIN_TEXT_LANGUAGE } from './code-block-highlight-js-loader';
-import { KbqCodeBlockFile } from './types';
+import type { KbqCodeBlockFile } from './types';
 
 /**
  * Configuration of highlight.js, which highlights the code of a code block: how to load it and which languages to
@@ -175,7 +175,8 @@ export class KbqCodeBlockHighlight {
             this._pending.set(true);
             const removeTask = keepsServerMarkup ? null : this.pendingTasks.add();
 
-            this.loader
+            // The load resolves to `null` rather than rejecting
+            void this.loader
                 .load(this.config)
                 .then((loaded) => {
                     if (loaded && !cancelled) this.highlight(loaded, file);
@@ -379,7 +380,7 @@ export class KbqCodeBlockHighlight {
             while (low < high) {
                 const middle = Math.ceil((low + high) / 2);
 
-                if (lines[middle][0] <= offset) {
+                if (lines[middle]![0] <= offset) {
                     low = middle;
                 } else {
                     high = middle - 1;
@@ -427,8 +428,11 @@ export class KbqCodeBlockHighlight {
             }
 
             for (const [from, to] of matches) {
-                for (let line = lineAt(from); line < lines.length && lines[line][0] < to; line++) {
-                    const [lineStart, lineEnd] = lines[line];
+                for (let line = lineAt(from); line < lines.length; line++) {
+                    const [lineStart, lineEnd] = lines[line]!;
+
+                    if (lineStart >= to) break;
+
                     const columns: [number, number] = [
                         Math.max(from, lineStart) - lineStart,
                         Math.min(to, lineEnd) - lineStart
@@ -471,7 +475,7 @@ export class KbqCodeBlockHighlight {
         const regExp = new RegExp(pattern.source, `${pattern.flags.replace(/[dg]/g, '')}dg`);
 
         return Array.from(content.matchAll(regExp), ({ indices }) => indices!).flatMap(([match, ...groups]) =>
-            groups.length ? groups.filter(Boolean) : [match]
+            groups.length ? groups.filter(Boolean) : [match!]
         );
     }
 

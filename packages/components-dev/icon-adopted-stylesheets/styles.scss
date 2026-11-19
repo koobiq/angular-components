@@ -4,12 +4,12 @@
     z-index: 10;
 
     display: flex;
+    gap: var(--kbq-size-l);
     align-items: center;
     justify-content: space-between;
-    gap: var(--kbq-size-l);
 
-    padding: var(--kbq-size-m);
     margin-bottom: var(--kbq-size-l);
+    padding: var(--kbq-size-m);
 
     background: var(--kbq-background-bg);
     border-bottom: 1px solid var(--kbq-line-contrast-less);
@@ -17,8 +17,8 @@
 
 .dev-toolbar__modes {
     display: flex;
-    gap: var(--kbq-size-s);
     flex-wrap: wrap;
+    gap: var(--kbq-size-s);
 }
 
 .dev-hint {
@@ -48,11 +48,11 @@ h3 {
 .dev-grid {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
     gap: var(--kbq-size-l);
+    align-items: center;
 
-    padding: var(--kbq-size-m);
     margin: 0 var(--kbq-size-m);
+    padding: var(--kbq-size-m);
 }
 
 .dev-grid_column {
@@ -67,8 +67,8 @@ h3 {
 .dev-cell {
     display: inline-flex;
     flex-direction: column;
-    align-items: center;
     gap: var(--kbq-size-xxs);
+    align-items: center;
 
     min-width: 64px;
     padding: var(--kbq-size-s);

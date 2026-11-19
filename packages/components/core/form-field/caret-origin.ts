@@ -1,4 +1,4 @@
-import { KbqCaretRect } from './caret-rect';
+import type { KbqCaretRect } from './caret-rect';
 
 /**
  * Overlay origin that stays on the caret: a virtual origin for `FlexibleConnectedPositionStrategy.setOrigin()` whose

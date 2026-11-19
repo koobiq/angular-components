@@ -14,12 +14,14 @@
     &:fullscreen {
         display: flex;
         flex-direction: column;
+
         box-sizing: border-box;
         width: 100%;
         height: 100%;
         margin: 0;
         padding: var(--kbq-size-xl);
         overflow: auto;
+
         background: var(--kbq-background-bg);
 
         & > .docs-live-example__container,
@@ -46,23 +48,23 @@
 .docs-live-example__footer {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
     gap: var(--kbq-size-l);
+    align-items: center;
+    justify-content: space-between;
 
     padding: var(--kbq-size-s) var(--kbq-size-xl);
 }
 
 .docs-live-example__footer-actions {
     display: flex;
-    align-items: center;
     gap: var(--kbq-size-s);
+    align-items: center;
 }
 
 .docs-live-example__footer-icon-buttons {
     display: flex;
-    align-items: center;
     gap: var(--kbq-size-3xs);
+    align-items: center;
 }
 
 .docs-example-vertical-margin {

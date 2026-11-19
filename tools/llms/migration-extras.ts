@@ -2,7 +2,7 @@ import { globSync } from 'glob';
 import {
     docsGetItemById,
     DocsStructureCategoryId,
-    DocsStructureItem,
+    type DocsStructureItem,
     DocsStructureItemId
 } from '../../apps/docs/src/app/structure';
 import { shiftHeadings } from './markdown-text';
@@ -14,7 +14,7 @@ const MIGRATIONS_PATH = 'packages/schematics/src/migrations.json';
 /** The full lists of breaking changes the migration guide refers to, one per major version of Angular, newest first. */
 const findBreakingChanges = (): { angular: string; path: string }[] =>
     globSync('docs/guides/angular-*-breaking-changes.en.md', { posix: true })
-        .map((path) => ({ angular: /angular-(\d+)-/.exec(path)![1], path }))
+        .map((path) => ({ angular: /(?<=angular-)\d+(?=-)/.exec(path)![0], path }))
         .sort((a, b) => Number(b.angular) - Number(a.angular));
 
 const getBreakingChangesPath = (migration: DocsStructureItem, angular: string): string =>
@@ -26,13 +26,13 @@ const BREAKING_CHANGES_ON_GITHUB =
 
 /** The copy of a list of breaking changes the site serves, for a link of a page to it on GitHub; `null` for any other. */
 export const resolveBreakingChangesUrl = (url: string): string | null => {
-    const match = BREAKING_CHANGES_ON_GITHUB.exec(url);
+    const [, angular, section = ''] = BREAKING_CHANGES_ON_GITHUB.exec(url) ?? [];
 
-    if (!match || !findBreakingChanges().some(({ angular }) => angular === match[1])) return null;
+    if (!angular || !findBreakingChanges().some((list) => list.angular === angular)) return null;
 
     const migration = docsGetItemById(DocsStructureItemId.Migration, DocsStructureCategoryId.Main)!;
 
-    return `${getSiteUrl(getBreakingChangesPath(migration, match[1]))}${match[2] ?? ''}`;
+    return `${getSiteUrl(getBreakingChangesPath(migration, angular))}${section}`;
 };
 
 interface Migration {
@@ -52,9 +52,10 @@ const markCode = (text: string): string =>
 const releaseOf = (version: string): string => version.replace(/-\d+$/, '');
 
 const compareVersions = (a: string, b: string): number => {
-    const [left, right] = [a, b].map((version) => version.split('.').map(Number));
+    const partsOf = (version: string) => version.split('.').map(Number);
+    const right = partsOf(b);
 
-    return left.reduce((result, part, index) => result || part - right[index], 0);
+    return partsOf(a).reduce((result, part, index) => result || part - (right[index] ?? 0), 0);
 };
 
 const renderMigrations = (item: DocsStructureItem): string => {

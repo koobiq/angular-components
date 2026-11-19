@@ -14,18 +14,18 @@ import { TRANSLATIONS } from './l10n';
     ],
     template: `
         <div class="example-fixed-content__button-group">
-            <button class="example-fixed-content__button" kbq-button [color]="colors.Contrast">
+            <button class="example-fixed-content__button" kbq-button type="button" [color]="colors.Contrast">
                 {{ t().buttonText }}
             </button>
             &nbsp;
             <br />
-            <button class="example-fixed-content__button" kbq-button [color]="colors.Contrast">
+            <button class="example-fixed-content__button" kbq-button type="button" [color]="colors.Contrast">
                 {{ t().longButtonText }}
             </button>
             &nbsp;
         </div>
     `,
-    styleUrls: ['button-fixed-content-example.css'],
+    styleUrl: 'button-fixed-content-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonFixedContentExample {

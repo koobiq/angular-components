@@ -265,7 +265,7 @@ export function createChangelogWriterOptions(
 
             context.linkReferences = !config.withoutReferences;
             context.packageGroups = sortedPackageGroupNames.map((pkgName) => {
-                const packageGroup = packageGroups[pkgName];
+                const packageGroup = packageGroups[pkgName]!;
 
                 return {
                     title: preparePackageName(pkgName),

@@ -34,7 +34,7 @@ type SearchResult = {
                     <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
                     <input kbqInput [placeholder]="t().search" [formControl]="control" />
                 </kbq-form-field>
-                <button kbqFieldsetItem kbq-button [color]="colors.Contrast" (click)="applySearch()">
+                <button kbqFieldsetItem kbq-button type="button" [color]="colors.Contrast" (click)="applySearch()">
                     {{ t().search }}
                 </button>
             </kbq-fieldset>
@@ -42,7 +42,7 @@ type SearchResult = {
 
         @for (result of results; track result.url) {
             <article style="margin-bottom: var(--kbq-size-l)">
-                <a href="{{ result.url }}" target="_blank" kbqLink>
+                <a target="_blank" kbqLink [href]="result.url">
                     <span
                         class="kbq-text-big-strong"
                         [innerHTML]="result.title | kbqHighlightBackground: query()"

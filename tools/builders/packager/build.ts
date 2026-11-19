@@ -1,17 +1,16 @@
-import { BuilderContext, BuilderOutput, Target } from '@angular-devkit/architect';
-import { Schema } from '@angular/cli/lib/config/workspace-schema';
+import type { BuilderContext, BuilderOutput, Target } from '@angular-devkit/architect';
 // chalk 5+ is an ES module: the colour helpers are properties of the default export, not
 // named exports.
 import chalk from 'chalk';
 import { execSync } from 'child_process';
 import { promises as fs, writeFileSync } from 'fs';
 import { dirname, join, resolve } from 'path';
-import { IPackagerOptions } from './schema';
-import { assertNoPlaceholders, IPackageJson, syncComponentsVersion, syncNgVersion } from './version-placeholders';
+import type { IPackagerOptions } from './schema';
+import { assertNoPlaceholders, type IPackageJson, syncComponentsVersion, syncNgVersion } from './version-placeholders';
 
 const { green } = chalk;
 
-const isCI = !!process.env.CI;
+const isCI = !!process.env['CI'];
 const packageVersionFilePath = './packages/components/core/version.ts';
 
 export async function packager(options: IPackagerOptions, context: BuilderContext): Promise<BuilderOutput> {
@@ -35,23 +34,21 @@ export async function packager(options: IPackagerOptions, context: BuilderContex
             throw new Error('❌ Build target does not exist in angular.json');
         }
     } catch (err) {
-        context.logger.error(err);
+        // Logged and returned as it was thrown: the logger and `BuilderOutput` are typed for a message only.
+        context.logger.error(err as string);
 
         return {
-            error: err,
+            error: err as string,
             success: false
         };
     }
 
     try {
-        context.logger.info('📖 angular.json file...');
-        const angularJson = await tryJsonParse<Schema>(join(context.workspaceRoot, 'angular.json'));
-
         // get the package json
         context.logger.info('📖 package.json file...');
         const packageJson = await tryJsonParse<IPackageJson>(join(context.workspaceRoot, 'package.json'));
 
-        const projectRoot = angularJson.projects && angularJson.projects[project] && angularJson.projects[project].root;
+        const { root: projectRoot } = await context.getProjectMetadata(project);
 
         if (!projectRoot) {
             context.logger.error(
@@ -113,7 +110,7 @@ export async function packager(options: IPackagerOptions, context: BuilderContex
 
         return { success: buildResult.success };
     } catch (error) {
-        context.logger.error(error);
+        context.logger.error(error as string);
     }
 
     return {
@@ -136,6 +133,10 @@ async function tryJsonParse<T>(path: string): Promise<T> {
 
 function parseAdditionalTargets(targetRef: string): { target: string; project: string } {
     const [project, target] = targetRef.split(':');
+
+    if (!project || !target) {
+        throw new Error(`Expected an additional target as <project>:<target>, got '${targetRef}'`);
+    }
 
     return { project, target };
 }

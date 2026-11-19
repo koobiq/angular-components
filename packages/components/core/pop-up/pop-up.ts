@@ -7,18 +7,18 @@ import {
     EventEmitter,
     inject,
     Injector,
-    OnDestroy,
+    type OnDestroy,
     Renderer2,
     RendererStyleFlags2,
-    Signal,
+    type Signal,
     signal,
     TemplateRef
 } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { type Observable, Subject } from 'rxjs';
 import { kbqAfterAnimations, kbqAnimationsDisabled } from '../animation/animations-state';
 import { PopUpPlacements, PopUpVisibility } from './constants';
 import { kbqGetPopUpArrowShift } from './pop-up-positioning';
-import { KbqPopUpTrigger } from './pop-up-trigger';
+import type { KbqPopUpTrigger } from './pop-up-trigger';
 
 @Directive({
     host: {
@@ -51,10 +51,10 @@ export abstract class KbqPopUp implements OnDestroy {
     /** Whether the pointer is over the pop-up. */
     readonly hovered: Signal<boolean> = this.hoveredState.asReadonly();
 
-    trigger: KbqPopUpTrigger<unknown>;
-    header: string | TemplateRef<unknown>;
-    content: string | TemplateRef<unknown>;
-    context: { $implicit: unknown } | null;
+    trigger: KbqPopUpTrigger<unknown> | undefined;
+    header: string | TemplateRef<unknown> = '';
+    content: string | TemplateRef<unknown> = '';
+    context: { $implicit: unknown } | null = null;
 
     private readonly classMapState = signal({});
 
@@ -67,7 +67,7 @@ export abstract class KbqPopUp implements OnDestroy {
         this.classMapState.set(value);
     }
 
-    arrow: boolean;
+    arrow: boolean = false;
 
     /** Whether the arrow points at the origin center while the panel keeps its placement. Defaults to `false`. */
     arrowCentered = false;
@@ -75,9 +75,9 @@ export abstract class KbqPopUp implements OnDestroy {
     /** Distance from a panel edge to the arrow center, in pixels. Defaults to `0`. */
     protected arrowCenterInset = 0;
 
-    defaultPaddings: boolean;
+    defaultPaddings: boolean = false;
 
-    offset: number | null;
+    offset: number | null = null;
 
     private resolvedPlacement = 'top';
     private appliedArrowShift: { x: string; y: string } | null = null;
@@ -95,7 +95,7 @@ export abstract class KbqPopUp implements OnDestroy {
 
     visibleChange = new EventEmitter<boolean>();
 
-    protected prefix: string;
+    protected abstract prefix: string;
 
     /** Subject for notifying that the tooltip has been hidden from the view */
     protected readonly onHideSubject = new Subject<void>();
@@ -121,7 +121,7 @@ export abstract class KbqPopUp implements OnDestroy {
         this.visibleChange.complete();
     }
 
-    isTemplateRef(value: any): boolean {
+    isTemplateRef<C>(value: unknown): value is TemplateRef<C> {
         return value instanceof TemplateRef;
     }
 
@@ -152,7 +152,7 @@ export abstract class KbqPopUp implements OnDestroy {
                 this.waitForShowAnimation();
             }
 
-            if (this.trigger.triggerName === 'mouseenter') {
+            if (this.trigger?.triggerName === 'mouseenter') {
                 this.addEventListenerForHide();
             }
         }, delay);
@@ -189,7 +189,7 @@ export abstract class KbqPopUp implements OnDestroy {
         return this.visibility === PopUpVisibility.Visible;
     }
 
-    updateClassMap(placement: string, customClass: string, classMap?): void {
+    updateClassMap(placement: string, customClass: string, classMap?: any): void {
         this.resolvedPlacement = placement;
 
         // `customClass` may be a whitespace-separated list of class names; expand it into
@@ -232,7 +232,7 @@ export abstract class KbqPopUp implements OnDestroy {
 
         const point = this.trigger?.getArrowPoint();
 
-        if (!point || !this.arrow || this.trigger.stickToWindow) {
+        if (!point || !this.arrow || this.trigger?.stickToWindow) {
             this.resetArrowShift();
 
             return;
@@ -331,46 +331,40 @@ export abstract class KbqPopUp implements OnDestroy {
     }
 
     protected setStickPosition() {
-        if (!this.trigger.stickToWindow) return;
+        const trigger = this.trigger;
+
+        if (!trigger?.stickToWindow) return;
 
         const oppositeSide = {
             [PopUpPlacements.Top]: PopUpPlacements.Bottom,
             [PopUpPlacements.Bottom]: PopUpPlacements.Top,
             [PopUpPlacements.Right]: PopUpPlacements.Left,
             [PopUpPlacements.Left]: PopUpPlacements.Right
-        }[this.trigger.stickToWindow];
+        }[trigger.stickToWindow];
 
         if (!oppositeSide) return;
 
         this.arrow = false;
 
-        if (this.trigger.container) {
+        if (trigger.container) {
             const { width, height } = this.elementRef.nativeElement.getBoundingClientRect();
-            const { right, left, top, bottom } = this.trigger.container.getBoundingClientRect();
+            const { right, left, top, bottom } = trigger.container.getBoundingClientRect();
 
-            if (this.trigger.stickToWindow === PopUpPlacements.Right) {
-                this.renderer.setStyle(
-                    this.trigger.overlayRef?.overlayElement,
-                    'left',
-                    coerceCssPixelValue(right - width)
-                );
-            } else if (this.trigger.stickToWindow === PopUpPlacements.Left) {
-                this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, 'left', coerceCssPixelValue(left));
-            } else if (this.trigger.stickToWindow === PopUpPlacements.Top) {
-                this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, 'top', coerceCssPixelValue(top));
-            } else if (this.trigger.stickToWindow === PopUpPlacements.Bottom) {
-                this.renderer.setStyle(
-                    this.trigger.overlayRef?.overlayElement,
-                    'top',
-                    coerceCssPixelValue(bottom - height)
-                );
+            if (trigger.stickToWindow === PopUpPlacements.Right) {
+                this.renderer.setStyle(trigger.overlayRef?.overlayElement, 'left', coerceCssPixelValue(right - width));
+            } else if (trigger.stickToWindow === PopUpPlacements.Left) {
+                this.renderer.setStyle(trigger.overlayRef?.overlayElement, 'left', coerceCssPixelValue(left));
+            } else if (trigger.stickToWindow === PopUpPlacements.Top) {
+                this.renderer.setStyle(trigger.overlayRef?.overlayElement, 'top', coerceCssPixelValue(top));
+            } else if (trigger.stickToWindow === PopUpPlacements.Bottom) {
+                this.renderer.setStyle(trigger.overlayRef?.overlayElement, 'top', coerceCssPixelValue(bottom - height));
             }
 
-            this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, 'right', 'unset');
-            this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, 'bottom', 'unset');
+            this.renderer.setStyle(trigger.overlayRef?.overlayElement, 'right', 'unset');
+            this.renderer.setStyle(trigger.overlayRef?.overlayElement, 'bottom', 'unset');
         } else {
-            this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, this.trigger.stickToWindow, 0);
-            this.renderer.setStyle(this.trigger.overlayRef?.overlayElement, oppositeSide, 'unset');
+            this.renderer.setStyle(trigger.overlayRef?.overlayElement, trigger.stickToWindow, 0);
+            this.renderer.setStyle(trigger.overlayRef?.overlayElement, oppositeSide, 'unset');
         }
     }
 }

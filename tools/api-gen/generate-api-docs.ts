@@ -1,7 +1,7 @@
 import { extractApiToJson } from './extraction';
 import { generateManifest } from './manifest';
 import { generateApiPages } from './rendering';
-import { ModuleInfo } from './types';
+import type { ModuleInfo } from './types';
 
 const modules: ModuleInfo[] = [
     {

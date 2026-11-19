@@ -1,9 +1,8 @@
-import { CollectionViewer, DataSource, SelectionChange } from '@angular/cdk/collections';
+import { type CollectionViewer, DataSource, type SelectionChange } from '@angular/cdk/collections';
 import { signal } from '@angular/core';
-import { BehaviorSubject, Observable, merge } from 'rxjs';
-import { map, take } from 'rxjs/operators';
-import { FlatTreeControl } from '../control/flat-tree-control';
-import { TreeControl } from '../control/tree-control';
+import { BehaviorSubject, map, merge, type Observable, take } from 'rxjs';
+import type { FlatTreeControl } from '../control/flat-tree-control';
+import type { TreeControl } from '../control/tree-control';
 
 /**
  * Tree flattener to convert a normal type of node to node with children & level information.
@@ -114,7 +113,7 @@ export class KbqTreeFlattener<T, F> {
             let expand = true;
 
             for (let i = 0; i <= this.getLevel(node); i++) {
-                expand = expand && currentExpand[i];
+                expand = expand && !!currentExpand[i];
             }
 
             if (expand) {

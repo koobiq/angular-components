@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
     KBQ_ANIMATIONS_CONFIG,
     KBQ_LOCALE_SERVICE,
     KbqComponentColors,
-    KbqLocaleService,
+    type KbqLocaleService,
     KbqLocaleServiceModule,
     ruRULocaleData
 } from '@koobiq/components/core';
-import { KbqProgressBarModule, ProgressBarMode } from './index';
+import { KbqProgressBarModule, type ProgressBarMode } from './index';
 
 const DEFAULT_ARIA_LABEL = ruRULocaleData.a11y.progressBar;
 
@@ -389,7 +389,7 @@ class TestApp {
     selector: 'projected-app',
     imports: [KbqProgressBarModule],
     template: `
-        <kbq-progress-bar [aria-label]="ariaLabel" [id]="'upload-bar'" [value]="30">
+        <kbq-progress-bar id="upload-bar" [aria-label]="ariaLabel" [value]="30">
             <div kbq-progress-bar-text>Uploading the archive</div>
             <div kbq-progress-bar-caption>3 of 12 files</div>
         </kbq-progress-bar>
@@ -452,7 +452,7 @@ class MultipleApp {}
     selector: 'indeterminate-app',
     imports: [KbqProgressBarModule],
     template: `
-        <kbq-progress-bar [mode]="'indeterminate'">
+        <kbq-progress-bar mode="indeterminate">
             <div kbq-progress-bar-text>Uploading the archive</div>
             <div kbq-progress-bar-caption>3 of 12 files</div>
         </kbq-progress-bar>

@@ -1,18 +1,19 @@
 import { Dialog } from '@angular/cdk/dialog';
-import { ComponentType, Overlay, OVERLAY_DEFAULT_CONFIG, OverlayContainer } from '@angular/cdk/overlay';
+import { type ComponentType, Overlay, OVERLAY_DEFAULT_CONFIG, OverlayContainer } from '@angular/cdk/overlay';
 import {
     createEnvironmentInjector,
-    ElementRef,
+    type ElementRef,
     EnvironmentInjector,
     inject,
     Injectable,
     InjectionToken,
     Injector,
-    OnDestroy,
-    TemplateRef
+    type OnDestroy,
+    type TemplateRef
 } from '@angular/core';
 import { KBQ_OVERFLOW_ITEMS_RESIZE_OBSERVER_TARGETS } from '@koobiq/components/overflow-items';
 import { KBQ_ACTIONS_PANEL_DEFAULT_CONFIG, KbqActionsPanelConfig } from './actions-panel-config';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqActionsPanelContainer } from './actions-panel-container';
 import { KbqActionsPanelRef } from './actions-panel-ref';
 import {

@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import type { Routes } from '@angular/router';
 
 /**
  * Sibling dev apps deliberately left out of the shell. Listed here so a new dev app is either

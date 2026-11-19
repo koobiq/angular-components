@@ -1,25 +1,23 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 @use './navbar-theme';
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
 .kbq-navbar-logo {
     display: flex;
 }
 
 .kbq-navbar-brand {
-    position: relative;
+    @include squircle.kbq-squircle(var(--kbq-size-s));
 
+    position: relative;
     display: flex;
 
-    @include kbq-squircle(var(--kbq-size-s));
+    &::after {
+        @include squircle.kbq-squircle(var(--kbq-navbar-item-size-content-border-radius));
 
-    &:after {
-        position: absolute;
         content: '';
-
+        position: absolute;
         display: none;
-
-        @include kbq-squircle(var(--kbq-navbar-item-size-content-border-radius));
     }
 
     &:not(.kbq-disabled) .kbq-navbar-title {
@@ -32,13 +30,11 @@ a.kbq-navbar-brand {
 }
 
 .kbq-navbar-brand.kbq-horizontal {
+    gap: var(--kbq-size-s);
+    align-items: center;
     padding: var(--kbq-size-s) var(--kbq-size-xs) var(--kbq-size-s) var(--kbq-size-xxs);
 
-    align-items: center;
-
-    gap: var(--kbq-size-s);
-
-    &:after {
+    &::after {
         top: var(--kbq-size-xxs);
         right: var(--kbq-size-xxs);
         bottom: var(--kbq-size-xxs);
@@ -51,9 +47,7 @@ a.kbq-navbar-brand {
         // reset in a consuming application the cap would absorb the padding and a long brand title
         // would start truncating 12px earlier.
         box-sizing: content-box;
-
         max-width: 154px;
-
         padding-right: var(--kbq-size-m);
     }
 }
@@ -61,10 +55,9 @@ a.kbq-navbar-brand {
 .kbq-navbar-brand.kbq-vertical {
     flex-direction: row;
     align-items: center;
-
     padding: var(--kbq-size-m);
 
-    &:after {
+    &::after {
         top: var(--kbq-size-s);
         right: var(--kbq-size-s);
         bottom: var(--kbq-size-s);
@@ -78,7 +71,6 @@ a.kbq-navbar-brand {
     & .kbq-navbar-title {
         display: block;
         align-items: center;
-
         padding-left: var(--kbq-size-s);
     }
 
@@ -103,11 +95,11 @@ a.kbq-navbar-brand {
 // `.kbq-collapsed` still wins over it, on specificity.
 .kbq-navbar-brand.kbq-navbar-brand_long-title .kbq-navbar-title {
     display: -webkit-box;
-
     -webkit-box-orient: vertical;
+
+    white-space: normal;
     -webkit-line-clamp: 2;
     line-clamp: 2;
-    white-space: normal;
 }
 
 @mixin kbq-navbar-brand-theme() {
@@ -131,7 +123,7 @@ a.kbq-navbar-brand {
             &.cdk-focused.cdk-keyboard-focused:not(.kbq-disabled) {
                 outline: none;
 
-                &:after {
+                &::after {
                     display: block;
                     box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
                 }
@@ -164,13 +156,14 @@ a.kbq-navbar-brand {
 @mixin kbq-navbar-brand-typography() {
     .kbq-navbar-brand {
         & .kbq-navbar-title {
-            @include kbq-typography-level-to-styles-css-variables(typography, navbar-title);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, navbar-title);
         }
 
         // Both orientations: two lines of the 18px/28px default would grow the navbar (48px -> 72px
         // horizontally), which is what the compact type exists to prevent.
         &.kbq-navbar-brand_long-title .kbq-navbar-title {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-normal-strong);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-strong);
+
             line-height: 16px;
         }
     }

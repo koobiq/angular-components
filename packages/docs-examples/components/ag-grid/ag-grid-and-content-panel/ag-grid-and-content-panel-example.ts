@@ -1,5 +1,17 @@
 import { ENTER } from '@angular/cdk/keycodes';
 import { ChangeDetectionStrategy, Component, computed, inject, model, output, signal } from '@angular/core';
+import { AgGridModule } from 'ag-grid-angular';
+import {
+    AllCommunityModule,
+    type CellClickedEvent,
+    type CellFocusedEvent,
+    type CellKeyDownEvent,
+    type ColDef,
+    type FirstDataRenderedEvent,
+    type FullWidthCellKeyDownEvent,
+    ModuleRegistry,
+    type RowSelectionOptions
+} from 'ag-grid-community';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
@@ -9,18 +21,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { AgGridModule } from 'ag-grid-angular';
-import {
-    AllCommunityModule,
-    CellClickedEvent,
-    CellFocusedEvent,
-    CellKeyDownEvent,
-    ColDef,
-    FirstDataRenderedEvent,
-    FullWidthCellKeyDownEvent,
-    ModuleRegistry,
-    RowSelectionOptions
-} from 'ag-grid-community';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -113,11 +113,12 @@ export class ExampleGrid {
         <kbq-modal-title class="example-modal-title">
             <div>{{ t().clickRowHint }}</div>
             <div class="example-modal-title-actions">
-                <button kbq-button [color]="componentColors.Contrast" (click)="modalRef.close()">
+                <button kbq-button type="button" [color]="componentColors.Contrast" (click)="modalRef.close()">
                     {{ t().closeWindow }}
                 </button>
                 <button
                     kbq-button
+                    type="button"
                     [attr.aria-label]="t().more"
                     [color]="componentColors.Contrast"
                     [kbqStyle]="buttonStyles.Transparent"
@@ -138,6 +139,7 @@ export class ExampleGrid {
                         @for (_i of [0, 1, 2, 3]; track $index) {
                             <button
                                 kbq-button
+                                type="button"
                                 [attr.aria-label]="t().reportBug"
                                 [class.kbq-active]="$first"
                                 [color]="componentColors.Contrast"
@@ -156,6 +158,7 @@ export class ExampleGrid {
                         <div class="example-content-header-actions" kbqContentPanelHeaderActions>
                             <button
                                 kbq-button
+                                type="button"
                                 [attr.aria-label]="t().copyLink"
                                 [color]="componentColors.Contrast"
                                 [kbqStyle]="buttonStyles.Transparent"
@@ -164,6 +167,7 @@ export class ExampleGrid {
                             </button>
                             <button
                                 kbq-button
+                                type="button"
                                 [attr.aria-label]="t().expand"
                                 [color]="componentColors.Contrast"
                                 [kbqStyle]="buttonStyles.Transparent"
@@ -172,6 +176,7 @@ export class ExampleGrid {
                             </button>
                             <button
                                 kbq-button
+                                type="button"
                                 [attr.aria-label]="t().more"
                                 [color]="componentColors.Contrast"
                                 [kbqStyle]="buttonStyles.Transparent"
@@ -181,15 +186,15 @@ export class ExampleGrid {
                         </div>
                         <div class="example-content-header-caption">{{ t().caption }}</div>
                         <div class="example-content-header-buttons">
-                            <button kbq-button [color]="componentColors.ContrastFade">
+                            <button kbq-button type="button" [color]="componentColors.ContrastFade">
                                 <i kbq-icon="kbq-pencil_16"></i>
                                 {{ t().edit }}
                             </button>
-                            <button kbq-button [color]="componentColors.ContrastFade">
+                            <button kbq-button type="button" [color]="componentColors.ContrastFade">
                                 <i kbq-icon="kbq-square-multiple-o_16"></i>
                                 {{ t().copy }}
                             </button>
-                            <button kbq-button [color]="componentColors.ContrastFade">
+                            <button kbq-button type="button" [color]="componentColors.ContrastFade">
                                 <i kbq-icon="kbq-trash_16"></i>
                                 {{ t().delete }}
                             </button>
@@ -201,9 +206,9 @@ export class ExampleGrid {
                         }
                     </kbq-content-panel-body>
                     <kbq-content-panel-footer>
-                        <button kbq-button [color]="componentColors.Contrast">Button 1</button>
-                        <button kbq-button [color]="componentColors.ContrastFade">Button 2</button>
-                        <button kbq-button [color]="componentColors.ContrastFade">Button 3</button>
+                        <button kbq-button type="button" [color]="componentColors.Contrast">Button 1</button>
+                        <button kbq-button type="button" [color]="componentColors.ContrastFade">Button 2</button>
+                        <button kbq-button type="button" [color]="componentColors.ContrastFade">Button 3</button>
                     </kbq-content-panel-footer>
                 </kbq-content-panel>
             </kbq-content-panel-container>
@@ -313,7 +318,7 @@ export class ExampleContentPanel {
     selector: 'ag-grid-and-content-panel-example',
     imports: [KbqButtonModule, KbqModalModule],
     template: `
-        <button kbq-button (click)="openModal()">{{ t().showExample }}</button>
+        <button kbq-button type="button" (click)="openModal()">{{ t().showExample }}</button>
     `,
     styles: `
         :host {

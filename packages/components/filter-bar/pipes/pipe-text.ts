@@ -1,8 +1,8 @@
 ﻿import {
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     Component,
-    OnInit,
+    type OnInit,
     untracked,
     viewChild,
     ViewEncapsulation
@@ -34,8 +34,8 @@ import { KbqPipeState } from './pipe-state';
         KbqTitleModule,
         KbqPipeState
     ],
-    templateUrl: 'pipe-text.html',
-    styleUrls: ['base-pipe.scss'],
+    templateUrl: './pipe-text.html',
+    styleUrl: './base-pipe.scss',
     providers: [
         {
             provide: KbqBasePipe,
@@ -63,7 +63,7 @@ export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements 
         this.control.setValue(this.data.value);
     }
 
-    ngAfterViewInit() {
+    override ngAfterViewInit() {
         super.ngAfterViewInit();
 
         this.popover()

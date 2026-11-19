@@ -1,8 +1,9 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ChangeDetectionStrategy, Component, signal, Type } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, signal, type Type } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { DateTime } from 'luxon';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     BACKSPACE,
@@ -16,7 +17,6 @@ import {
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { TimeFormats } from '@koobiq/components/timepicker';
-import { DateTime } from 'luxon';
 import { KbqDatetime, KbqDatetimeModule } from './index';
 
 const ISO = "yyyy-MM-dd'T'HH:mm:ss.SSS";
@@ -484,8 +484,8 @@ describe('KbqDatetime', () => {
             control.setValue(DateTime.fromISO('2026-11-10T08:59'));
             await settle(fixture);
 
-            expect(control.errors?.kbqDatetimeMin.min.toFormat(ISO)).toBe('2026-11-10T09:00:00.000');
-            expect(control.errors?.kbqDatetimeMin.actual.toFormat(ISO)).toBe('2026-11-10T08:59:00.000');
+            expect(control.errors?.['kbqDatetimeMin'].min.toFormat(ISO)).toBe('2026-11-10T09:00:00.000');
+            expect(control.errors?.['kbqDatetimeMin'].actual.toFormat(ISO)).toBe('2026-11-10T08:59:00.000');
 
             control.setValue(DateTime.fromISO('2026-11-10T09:00'));
 
@@ -497,8 +497,8 @@ describe('KbqDatetime', () => {
             control.setValue(DateTime.fromISO('2026-11-20T18:01'));
             await settle(fixture);
 
-            expect(control.errors?.kbqDatetimeMax.max.toFormat(ISO)).toBe('2026-11-20T18:00:00.000');
-            expect(control.errors?.kbqDatetimeMax.actual.toFormat(ISO)).toBe('2026-11-20T18:01:00.000');
+            expect(control.errors?.['kbqDatetimeMax'].max.toFormat(ISO)).toBe('2026-11-20T18:00:00.000');
+            expect(control.errors?.['kbqDatetimeMax'].actual.toFormat(ISO)).toBe('2026-11-20T18:01:00.000');
         });
 
         it('should revalidate when the bounds change', async () => {

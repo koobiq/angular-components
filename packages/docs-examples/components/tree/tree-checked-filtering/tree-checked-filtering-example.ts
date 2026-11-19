@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqButtonToggleChange, KbqButtonToggleModule } from '@koobiq/components/button-toggle';
+import { type KbqButtonToggleChange, KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqHighlightModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -11,22 +11,21 @@ import {
     FlatTreeControl,
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
-    KbqTreeModule,
-    KbqTreeSelection
+    KbqTreeModule
 } from '@koobiq/components/tree';
 
 export class FileNode {
-    children: FileNode[];
-    name: string;
+    children?: FileNode[];
+    name = '';
     type: any;
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-    name: string;
+    name = '';
     type: any;
-    level: number;
-    expandable: boolean;
+    level = 0;
+    expandable = false;
     parent: any;
 }
 
@@ -112,7 +111,6 @@ abstract class TreeParams {
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
     treeData: FileNode[];
-    tree: KbqTreeSelection;
 
     constructor() {
         this.treeControl = new FlatTreeControl(this.getLevel, this.isExpandable, this.getValue, this.getViewValue);
@@ -216,11 +214,7 @@ abstract class TreeParams {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeCheckedFilteringExample extends TreeParams {
-    treeControl: FlatTreeControl<FileFlatNode>;
     filterByValues: FilterByValues<FileFlatNode>;
-    treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
-    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     modelValue: any = ['docs'];
     filterValue: string = '';
@@ -243,7 +237,7 @@ export class TreeCheckedFilteringExample extends TreeParams {
         );
     }
 
-    onModelValueChange(values) {
+    onModelValueChange(values: string[]) {
         this.filterByValues.setValues(values);
     }
 

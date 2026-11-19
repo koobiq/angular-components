@@ -1,4 +1,4 @@
-<button kbq-button (click)="openPanel()">{{ t().openPanel }}</button>
+<button kbq-button type="button" (click)="openPanel()">{{ t().openPanel }}</button>
 
 <ng-template #template>
     <kbq-sidepanel-header [closeable]="true">{{ t().panel }}</kbq-sidepanel-header>

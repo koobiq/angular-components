@@ -1,45 +1,45 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { IMAGE_LOADER, ImageLoaderConfig } from '@angular/common';
-import { Component, Provider, Type } from '@angular/core';
-import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { IMAGE_LOADER, type ImageLoaderConfig } from '@angular/common';
+import { Component, type Provider, type Type } from '@angular/core';
+import { type ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { of } from 'rxjs';
 import {
+    createKeyboardEvent,
+    dispatchKeyboardEvent,
+    dispatchMouseEvent,
     DOWN_ARROW,
     END,
     ENTER,
     ESCAPE,
     HOME,
-    KbqPopUpPlacementValues,
+    type KbqPopUpPlacementValues,
     LEFT_ARROW,
     PopUpPlacements,
     RIGHT_ARROW,
     SPACE,
     TAB,
-    UP_ARROW,
-    createKeyboardEvent,
-    dispatchKeyboardEvent,
-    dispatchMouseEvent
+    UP_ARROW
 } from '@koobiq/components/core';
 import { NESTED_HOVER_SWITCH_DELAY } from '@koobiq/components/dropdown';
 import { defaultOffsetYWithArrow } from '@koobiq/components/popover';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { of } from 'rxjs';
 import {
+    defaultGroupBy,
     KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING,
     KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_SEARCH,
-    KbqAppSwitcherApp,
-    KbqAppSwitcherComponent,
-    KbqAppSwitcherGroupBy,
-    KbqAppSwitcherSite,
+    type KbqAppSwitcherApp,
+    type KbqAppSwitcherComponent,
+    type KbqAppSwitcherGroupBy,
+    type KbqAppSwitcherSite,
     KbqAppSwitcherTrigger,
-    defaultGroupBy,
     makeGroupsForApps
 } from './app-switcher';
+import { KbqAppSwitcherModule } from './app-switcher.module';
 import { KbqAppSwitcherDropdownApp } from './app-switcher-dropdown-app';
 import { KbqAppSwitcherDropdownSite } from './app-switcher-dropdown-site';
 import { KbqAppSwitcherListItem } from './app-switcher-list-item';
-import { KbqAppSwitcherModule } from './app-switcher.module';
 
 const APP_1: KbqAppSwitcherApp = { id: 1, name: 'App One', type: 'TypeA', link: '/1', icon: '<svg></svg>' };
 const APP_2: KbqAppSwitcherApp = { id: 2, name: 'App Two', type: 'TypeA', link: '/2' };
@@ -1035,7 +1035,7 @@ describe('KbqAppSwitcher', () => {
         };
 
         const getHost = () => overlayContainerElement.querySelector('.kbq-app-switcher') as HTMLElement;
-        const keyManagerOf = (popup: KbqAppSwitcherComponent) => popup['keyManager'];
+        const keyManagerOf = (popup: KbqAppSwitcherComponent) => popup['keyManager']!;
         const menuItemsOf = (popup: KbqAppSwitcherComponent) => popup['menuItems'];
 
         describe('close on focus-out', () => {
@@ -1059,7 +1059,7 @@ describe('KbqAppSwitcher', () => {
                 const { popup } = await open(AppSwitcherMultiSite);
 
                 vi.spyOn(popup, 'hide').mockImplementation(() => {});
-                const focusSpy = vi.spyOn(popup.trigger, 'focus').mockImplementation(() => {});
+                const focusSpy = vi.spyOn(popup.trigger!, 'focus').mockImplementation(() => {});
                 const outside = document.createElement('button');
 
                 document.body.appendChild(outside);
@@ -1075,7 +1075,7 @@ describe('KbqAppSwitcher', () => {
                 const { popup } = await open(AppSwitcherMultiSite);
 
                 vi.spyOn(popup, 'hide').mockImplementation(() => {});
-                const focusSpy = vi.spyOn(popup.trigger, 'focus').mockImplementation(() => {});
+                const focusSpy = vi.spyOn(popup.trigger!, 'focus').mockImplementation(() => {});
                 const event = createKeyboardEvent('keydown', TAB, getHost());
                 const preventSpy = vi.spyOn(event, 'preventDefault');
 
@@ -2298,7 +2298,7 @@ class AppSwitcherMultiSite {
     template: `
         <button
             kbqAppSwitcher
-            [kbqTooltip]="'TOOLTIP'"
+            kbqTooltip="TOOLTIP"
             [kbqEnterDelay]="enterDelay"
             [sites]="sites"
             [selectedSite]="sites[0]"

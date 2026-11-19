@@ -1,4 +1,4 @@
-import { Translations } from '@koobiq/docs-examples/i18n';
+import type { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the popover-header example: a cube-building rhyme and the demo labels. */
 export interface ExampleTranslation {

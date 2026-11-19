@@ -2,36 +2,36 @@ import {
     ChangeDetectorRef,
     Component,
     computed,
-    DebugElement,
+    type DebugElement,
     Directive,
     effect,
     inject,
     viewChild
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { BehaviorSubject } from 'rxjs';
 import {
     KBQ_LOCALE_SERVICE,
     KBQ_STATE_STORE,
-    KbqFilterBarLocaleConfiguration,
-    KbqStateStore
+    type KbqFilterBarLocaleConfiguration,
+    type KbqStateStore
 } from '@koobiq/components/core';
 import {
     KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
     KBQ_FILTER_BAR_LOCALE_CONFIGURATION,
     KBQ_FILTER_BAR_NAME_RESOLVER,
-    KbqFilter,
+    type KbqFilter,
     KbqFilterBar,
     kbqFilterBarLocaleConfigurationProvider,
     KbqFilterBarModule,
-    KbqFilterBarNameResolver,
-    KbqPipe,
-    KbqPipeTemplate,
+    type KbqFilterBarNameResolver,
+    type KbqPipe,
+    type KbqPipeTemplate,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
 import { KbqSearchExpandable, KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
-import { BehaviorSubject } from 'rxjs';
 import { KBQ_PIPE_DATA, KbqBasePipe } from './pipes/base-pipe';
 
 const PIPE_TEMPLATE_ID = 'TestText';

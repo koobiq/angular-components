@@ -1,3 +1,4 @@
+// eslint-disable-next-line @angular-eslint/no-experimental -- `fs.cpSync` is stable since Node 22.3, @types/node still marks it experimental
 const { copyFileSync, cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } = require('fs');
 const { resolve } = require('path');
 
@@ -21,6 +22,7 @@ copyFileSync(getSrcPckgPath('LICENSE'), getDistPath(`${distCLIPath}/LICENSE`));
 copyFileSync(getSrcPckgPath('bin/cli'), getDistPath(`${distCLIPath}/bin/cli`));
 copyFileSync(getSrcPckgPath('dist/cli.js'), getDistPath(`${distCLIPath}/dist/cli.js`));
 copyFileSync(getSrcPckgPath('dist/cli.js.map'), getDistPath(`${distCLIPath}/dist/cli.js.map`));
+// eslint-disable-next-line @angular-eslint/no-experimental -- `fs.cpSync` is stable since Node 22.3, @types/node still marks it experimental
 cpSync(getSrcPckgPath('dist/release'), getDistPath(`${distCLIPath}/dist/release`), { recursive: true });
 
 // Update package version

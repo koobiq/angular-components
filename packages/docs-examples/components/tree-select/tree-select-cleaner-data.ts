@@ -1,18 +1,18 @@
 /** Keeps the tree plumbing out of the cleaner example, which is about the reset control. */
 
 export class Node {
-    id: string;
-    label: string;
-    children: Node[];
+    id = '';
+    label = '';
+    children: Node[] = [];
 }
 
 /** Flat node with expandable and level information. */
 export class FlatNode {
-    id: string;
-    label: string;
-    level: number;
-    expandable: boolean;
-    parent: FlatNode | null;
+    id = '';
+    label = '';
+    level = 0;
+    expandable = false;
+    parent: FlatNode | null = null;
 }
 
 export interface TreeNames {
@@ -44,7 +44,7 @@ export const getLevel = (node: FlatNode): number => node.level;
 
 export const isExpandable = (node: FlatNode): boolean => node.expandable;
 
-export const getChildren = (node: Node): Node[] => node.children;
+export const getChildren = (node: Node): Node[] | undefined => node.children;
 
 export const getValue = (node: FlatNode): string => node.id;
 

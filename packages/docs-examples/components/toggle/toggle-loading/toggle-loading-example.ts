@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { KbqToggleChange, KbqToggleModule } from '@koobiq/components/toggle';
 import { timer } from 'rxjs';
+import { type KbqToggleChange, KbqToggleModule } from '@koobiq/components/toggle';
 
 /**
  * @title Toggle Loading

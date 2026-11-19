@@ -1,11 +1,11 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ChangeDetectionStrategy, Component, Directive, signal, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, Directive, signal, type Type, viewChild } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter, RouterLink } from '@angular/router';
-import { dispatchKeyboardEvent, ENTER, KbqDefaultSizes, SPACE } from '@koobiq/components/core';
+import { dispatchKeyboardEvent, ENTER, type KbqDefaultSizes, SPACE } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLink, kbqLinkOptionsProvider, KbqLinkPrefix, KbqLinkSuffix, KbqLinkUnderline } from './index';
+import { KbqLink, kbqLinkOptionsProvider, KbqLinkPrefix, KbqLinkSuffix, type KbqLinkUnderline } from './index';
 
 const getLink = (fixture: ComponentFixture<unknown>): HTMLElement => fixture.nativeElement.querySelector('[kbqLink]');
 

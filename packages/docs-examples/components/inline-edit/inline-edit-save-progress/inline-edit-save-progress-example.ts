@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { type Observable, timer } from 'rxjs';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
-import { KbqInlineEditModule, KbqInlineEditSaveHandler } from '@koobiq/components/inline-edit';
+import { KbqInlineEditModule, type KbqInlineEditSaveHandler } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { Observable, timer } from 'rxjs';
 import { TRANSLATIONS } from './l10n';
 
 /**

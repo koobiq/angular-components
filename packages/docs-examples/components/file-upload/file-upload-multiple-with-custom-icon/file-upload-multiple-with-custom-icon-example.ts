@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqFileItem, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
+import { type KbqFileItem, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
 
 const createBlobPart = (sizeInMB: number): BlobPart => {

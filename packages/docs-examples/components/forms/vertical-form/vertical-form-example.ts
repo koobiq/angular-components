@@ -15,7 +15,7 @@ import { TRANSLATIONS } from './l10n';
         KbqFormsModule,
         KbqInputModule
     ],
-    templateUrl: 'vertical-form-example.html',
+    templateUrl: './vertical-form-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VerticalFormExample {

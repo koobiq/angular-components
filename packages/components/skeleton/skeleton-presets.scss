@@ -57,8 +57,9 @@
     display: grid;
     grid-template-columns: var(--kbq-skeleton-dl-term-width) minmax(0, 1fr);
     grid-auto-rows: var(--kbq-skeleton-dl-row-height);
-    align-items: center;
     gap: var(--kbq-skeleton-dl-row-gap) var(--kbq-skeleton-dl-column-gap);
+    align-items: center;
+
     width: 100%;
 }
 
@@ -87,6 +88,7 @@
 :where(.kbq-skeleton-table__cell) {
     display: flex;
     align-items: center;
+
     min-width: 0;
     height: var(--kbq-skeleton-table-row-height);
     padding-inline: var(--kbq-skeleton-table-cell-padding-horizontal);
@@ -115,8 +117,8 @@
 :where(.kbq-skeleton-group) {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
     gap: var(--kbq-skeleton-group-gap);
+    align-items: center;
 }
 
 :where(.kbq-skeleton-form-field) {
@@ -132,8 +134,8 @@
 
 // Sized the way the label of .kbq-form-field is, so a labelClass such as flex-30 gives both the same width.
 :where(.kbq-skeleton-form-field__label) {
-    box-sizing: border-box;
     display: flex;
+    box-sizing: border-box;
     margin-bottom: var(--kbq-skeleton-form-field-gap);
 }
 
@@ -152,8 +154,8 @@
 
 :where(.kbq-skeleton-form-field__content) {
     display: flex;
-    flex-direction: column;
     flex: 1;
+    flex-direction: column;
     min-width: 0;
 }
 
@@ -180,16 +182,19 @@
 :where(.kbq-skeleton-accordion__item) {
     display: flex;
     align-items: center;
+
     box-sizing: border-box;
     height: calc(var(--kbq-skeleton-accordion-header-height) + var(--kbq-skeleton-accordion-border-width) * 2);
-    border: var(--kbq-skeleton-accordion-border-width) solid transparent;
     padding: var(--kbq-skeleton-accordion-padding);
+
+    border: var(--kbq-skeleton-accordion-border-width) solid transparent;
 }
 
 // At the top of the header, as the icon of the component.
 :where(.kbq-skeleton-accordion__icon) {
     flex: none;
     align-self: flex-start;
+
     width: var(--kbq-skeleton-accordion-icon-size);
     height: var(--kbq-skeleton-accordion-icon-size);
     margin: var(--kbq-skeleton-accordion-icon-padding);
@@ -208,8 +213,8 @@
 
 :where(.kbq-skeleton-checkable__row) {
     display: flex;
-    align-items: flex-start;
     gap: var(--kbq-skeleton-checkable-control-gap);
+    align-items: flex-start;
 }
 
 // The control sits in the middle of the line of the label, as in the component.
@@ -271,8 +276,8 @@
 }
 
 :where(.kbq-skeleton-tabs_vertical > .kbq-skeleton-tabs__header) {
-    flex-direction: column;
     flex: none;
+    flex-direction: column;
     width: var(--kbq-skeleton-tabs-vertical-width);
 }
 
@@ -317,8 +322,9 @@
 
 :where(.kbq-skeleton-tree__node) {
     display: flex;
-    align-items: center;
     gap: var(--kbq-skeleton-tree-gap);
+    align-items: center;
+
     height: var(--kbq-skeleton-tree-node-height);
     padding-inline-start: var(--kbq-skeleton-tree-padding);
 }

@@ -1,5 +1,5 @@
 import type { MockInstance } from 'vitest';
-import { KbqMultipleInput, MultipleMode, resolveMultipleMode } from './constants';
+import { type KbqMultipleInput, MultipleMode, resolveMultipleMode } from './constants';
 
 describe('resolveMultipleMode', () => {
     let warn: MockInstance;

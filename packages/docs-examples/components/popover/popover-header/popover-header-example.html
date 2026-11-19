@@ -26,13 +26,14 @@
 </ng-template>
 
 <ng-template #customFooter>
-    <button kbq-button (click)="kbqPopover.hide()">{{ t().close }}</button>
+    <button kbq-button type="button" (click)="kbqPopover.hide()">{{ t().close }}</button>
 </ng-template>
 
 <div style="gap: 16px" class="layout-row layout-wrap">
     <button
         kbq-button
         kbqPopover
+        type="button"
         [kbqPopoverHasCloseButton]="true"
         [kbqPopoverContent]="customContent"
         [kbqPopoverHeader]="t().popoverTitle"
@@ -43,10 +44,11 @@
         #kbqPopover="kbqPopover"
         kbq-button
         kbqPopover
+        type="button"
         [kbqPopoverContent]="customContent"
         [kbqPopoverFooter]="customFooter"
     >
         {{ t().onlyFooter }}
     </button>
-    <button kbq-button kbqPopover [kbqPopoverContent]="customContent">{{ t().plain }}</button>
+    <button kbq-button kbqPopover type="button" [kbqPopoverContent]="customContent">{{ t().plain }}</button>
 </div>

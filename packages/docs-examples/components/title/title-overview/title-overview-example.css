@@ -1,8 +1,7 @@
 .example-title-overview-container {
-    max-width: 400px;
-
     display: flex;
     flex-direction: column;
+    max-width: 400px;
 }
 
 .example-title-overview-container.example-title-overview-container-responsive {
@@ -12,6 +11,6 @@
 .example-title-overview-child {
     flex-grow: 1;
     overflow: hidden;
-    white-space: nowrap;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }

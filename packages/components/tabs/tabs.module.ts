@@ -5,6 +5,7 @@ import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import { NgModule } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { KbqTab } from './tab.component';
 import { KbqTabBody, KbqTabBodyPortal } from './tab-body.component';
 import { KbqTabContent } from './tab-content.directive';
 import {
@@ -15,10 +16,9 @@ import {
     KbqVerticalTabsCssStyler
 } from './tab-group.component';
 import { KbqTabHeader } from './tab-header.component';
-import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
 import { KbqTabLabel } from './tab-label.directive';
+import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
 import { KbqTabLink, KbqTabNavBar, KbqTabNavPanel } from './tab-nav-bar';
-import { KbqTab } from './tab.component';
 
 const STANDALONE_COMPONENTS = [
     KbqTabNavBar,

@@ -21,8 +21,10 @@ import { TRANSLATIONS } from './l10n';
 
         <ng-template #customFooter>
             <div class="layout-row layout-wrap" style="gap: 16px">
-                <button kbq-button [color]="'contrast'" (click)="kbqPopover.hide(0)">{{ t().save }}</button>
-                <button kbq-button (click)="kbqPopover.hide(0)">{{ t().cancel }}</button>
+                <button kbq-button type="button" color="contrast" (click)="kbqPopover.hide(0)">
+                    {{ t().save }}
+                </button>
+                <button kbq-button type="button" (click)="kbqPopover.hide(0)">{{ t().cancel }}</button>
             </div>
         </ng-template>
 
@@ -30,7 +32,8 @@ import { TRANSLATIONS } from './l10n';
             #kbqPopover="kbqPopover"
             kbq-button
             kbqPopover
-            [kbqPopoverClass]="'popover-overview-example'"
+            type="button"
+            kbqPopoverClass="popover-overview-example"
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
         >

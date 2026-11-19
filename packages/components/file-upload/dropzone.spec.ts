@@ -1,5 +1,5 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, Provider, viewChild } from '@angular/core';
+import { Component, type Provider, viewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { KBQ_ANIMATIONS_CONFIG } from '@koobiq/components/core';
 import { KbqFullScreenDropzoneService, KbqLocalDropzone } from './dropzone';

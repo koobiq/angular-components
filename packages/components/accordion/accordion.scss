@@ -1,13 +1,14 @@
 @use '../core/styles/common/animation';
-@use './accordion-theme' as *;
+@use './accordion-theme';
 
 .kbq-accordion {
     display: block;
 }
 
 .kbq-accordion-item {
-    box-sizing: border-box;
     display: block;
+
+    box-sizing: border-box;
 
     border-width: var(--kbq-accordion-size-item-border-width);
     border-style: solid;
@@ -16,7 +17,6 @@
 
 .kbq-accordion-header {
     display: flex;
-
     height: var(--kbq-accordion-size-item-header-height);
     // The height above is fixed, so a trigger label long enough to wrap would paint outside the
     // header and over the item's border. Clipping keeps it inside; the trigger is a flex container,
@@ -30,12 +30,12 @@
     // the trigger's own right padding, which is `--kbq-size-s` in every variant.
     & > .kbq-accordion-header__actions {
         display: flex;
-        align-items: center;
-        gap: var(--kbq-accordion-size-item-header-actions-gap);
 
         // Icon buttons have a fixed size and nothing to reflow, so the trigger — not the actions —
         // is what gives way when the header runs out of room.
         flex-shrink: 0;
+        gap: var(--kbq-accordion-size-item-header-actions-gap);
+        align-items: center;
 
         padding-right: var(--kbq-accordion-size-item-header-actions-padding-right);
     }
@@ -54,19 +54,19 @@
     }
 
     &[data-state='open'] {
-        transition: height 300ms ease-out;
-        height: var(--kbq-accordion-content-height, auto);
-
         @include animation.kbq-animations-off();
+
+        height: var(--kbq-accordion-content-height, auto);
+        transition: height 300ms ease-out;
     }
 
     &[data-state='closed'] {
-        transition: height 300ms ease-out;
-        height: 0;
-
         @include animation.kbq-animations-off();
+
+        height: 0;
+        transition: height 300ms ease-out;
     }
 }
 
-@include kbq-accordion-theme();
-@include kbq-accordion-typography();
+@include accordion-theme.kbq-accordion-theme();
+@include accordion-theme.kbq-accordion-typography();

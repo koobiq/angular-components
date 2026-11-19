@@ -1,4 +1,4 @@
-import { Translations } from '@koobiq/docs-examples/i18n';
+import type { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text shown by the radio examples. Person names stay as proper nouns; Normal/Big/Error are style names. */
 export interface ExampleTranslation {

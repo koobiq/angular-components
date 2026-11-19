@@ -1,6 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { inject, PLATFORM_ID } from '@angular/core';
-import { NavigationError, Router } from '@angular/router';
+import { type NavigationError, Router } from '@angular/router';
 import { KBQ_WINDOW } from '@koobiq/components/core';
 
 /** What Chromium, Safari and Firefox report when a dynamic import cannot load its chunk. */

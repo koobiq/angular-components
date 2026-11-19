@@ -28,7 +28,7 @@ import { TRANSLATIONS } from './l10n';
             <kbq-breadcrumb-item [text]="t().reportDated">
                 <ng-container *kbqBreadcrumbView>
                     <a routerLink="./report" tabindex="-1">
-                        <button aria-current="page" disabled kbq-button kbqBreadcrumb>
+                        <button type="button" aria-current="page" disabled kbq-button kbqBreadcrumb>
                             <span
                                 [kbqEllipsisCenter]="t().reportDated"
                                 [minVisibleLength]="15"

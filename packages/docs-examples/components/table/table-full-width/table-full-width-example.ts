@@ -11,7 +11,7 @@ import { TRANSLATIONS } from './l10n';
     imports: [
         KbqTableModule
     ],
-    templateUrl: 'table-full-width-example.html',
+    templateUrl: './table-full-width-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableFullWidthExample {

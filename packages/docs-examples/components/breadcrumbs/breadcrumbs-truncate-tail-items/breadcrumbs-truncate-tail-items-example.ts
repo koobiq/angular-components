@@ -17,9 +17,9 @@ import { TRANSLATIONS } from './l10n';
         <nav class="example-breadcrumbs_truncate-last-by-length-reverse" kbq-breadcrumbs>
             @for (breadcrumb of breadcrumbs(); track breadcrumb) {
                 <kbq-breadcrumb-item
+                    fragment="fragment"
                     [routerLink]="breadcrumb.url"
                     [queryParams]="{ queryParams: 'queryParams' }"
-                    [fragment]="'fragment'"
                     [text]="breadcrumb.label"
                 />
             }

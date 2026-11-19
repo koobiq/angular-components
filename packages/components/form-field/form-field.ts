@@ -1,10 +1,10 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { NgTemplateOutlet } from '@angular/common';
 import {
-    AfterContentChecked,
-    AfterContentInit,
-    AfterViewInit,
+    type AfterContentChecked,
+    type AfterContentInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -20,9 +20,9 @@ import {
     InjectionToken,
     input,
     model,
-    OnDestroy,
-    Provider,
-    Signal,
+    type OnDestroy,
+    type Provider,
+    type Signal,
     signal,
     untracked,
     viewChild,
@@ -37,9 +37,12 @@ import { KbqError } from './error';
 import { KbqFormFieldControl, kbqSetDescribedByIds } from './form-field-control';
 import { KbqHint, kbqHintParentFactoryProvider } from './hint';
 import { KbqLabel } from './label';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqPasswordToggle } from './password-toggle';
 import { KbqPrefix } from './prefix';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqReactivePasswordHint } from './reactive-password-hint';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqStepper } from './stepper';
 import { KbqSuffix } from './suffix';
 
@@ -93,10 +96,10 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
 @Component({
     selector: 'kbq-form-field',
     imports: [NgTemplateOutlet],
-    templateUrl: 'form-field.html',
+    templateUrl: './form-field.html',
     styleUrls: [
-        'form-field.scss',
-        'form-field-tokens.scss',
+        './form-field.scss',
+        './form-field-tokens.scss',
         // The controls below are directives, and directives can't declare styles. The form field is the only
         // component they are always rendered inside of, so it carries their styles on their behalf.
         // Keep every entry paired with the control that owns it; removing one silently unstyles that control.
@@ -183,7 +186,7 @@ export class KbqFormField
     /**
      * @docs-private
      */
-    readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    override readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
     /** Disables form field borders and shadows. */
     readonly noBorders = input(this.defaultOptions?.noBorders, { transform: booleanAttribute });
@@ -372,7 +375,7 @@ export class KbqFormField
         return this._focusOrigin;
     }
 
-    private _focusOrigin: FocusOrigin;
+    private _focusOrigin: FocusOrigin = null;
 
     /**
      * @docs-private

@@ -46,7 +46,7 @@ import { TRANSLATIONS } from './l10n';
                 <kbq-skeleton-icon />
                 <kbq-skeleton-link />
             } @else {
-                <button kbq-button color="contrast">{{ t().start }}</button>
+                <button kbq-button color="contrast" type="button">{{ t().start }}</button>
                 <kbq-badge [badgeColor]="badgeColors.FadeSuccess">{{ t().active }}</kbq-badge>
                 <kbq-tag>
                     LDAP

@@ -3,13 +3,16 @@
 :host {
     position: sticky;
     z-index: var(--kbq-scrollbar-track-z-index, 1000);
+
     display: block;
     // Prevent a flex viewport from shrinking the track to zero; runtime margins cancel its layout contribution.
     flex-shrink: 0;
-    pointer-events: none;
+
     overflow: hidden;
     // Inherit instance-level custom properties from the viewport that creates this element dynamically.
     color: var(--kbq-scrollbar-color, currentColor);
+
+    pointer-events: none;
 }
 
 @keyframes kbq-scrollbar-fade {
@@ -31,9 +34,9 @@
 
 .kbq-scrollbar-track__bar_enter,
 .kbq-scrollbar-track__bar_leave {
-    animation: kbq-scrollbar-fade var(--kbq-scrollbar-transition-duration) ease-in-out;
-
     @include animation.kbq-animations-off();
+
+    animation: kbq-scrollbar-fade var(--kbq-scrollbar-transition-duration) ease-in-out;
 }
 
 .kbq-scrollbar-track__bar_leave {
@@ -60,19 +63,23 @@
 }
 
 .kbq-scrollbar-track__thumb {
-    transition: background-color var(--kbq-scrollbar-transition-duration) ease;
+    @include animation.kbq-animations-off();
+
     position: absolute;
+
+    box-sizing: border-box;
+
+    background-color: var(--kbq-scrollbar-thumb-default-background);
     // A transparent border keeps the painted thumb smaller than its hit area.
     border: var(--kbq-scrollbar-thumb-gap) solid transparent;
     border-radius: var(--kbq-size-border-radius);
-    box-sizing: border-box;
-    background-color: var(--kbq-scrollbar-thumb-default-background);
     background-clip: content-box;
-    cursor: default;
-    user-select: none;
-    pointer-events: auto;
 
-    @include animation.kbq-animations-off();
+    cursor: default;
+    pointer-events: auto;
+    user-select: none;
+
+    transition: background-color var(--kbq-scrollbar-transition-duration) ease;
 }
 
 .kbq-scrollbar-track__thumb:hover {

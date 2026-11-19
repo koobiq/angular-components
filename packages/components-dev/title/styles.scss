@@ -1,12 +1,10 @@
 .dev-container {
-    max-width: 400px;
-
-    padding: 24px;
-
     display: flex;
     flex-direction: column;
 
+    max-width: 400px;
     margin-bottom: 24px;
+    padding: 24px;
 
     &.dev-container-responsive {
         max-width: 50%;
@@ -18,42 +16,46 @@
 }
 
 .dev-parent {
+    position: relative;
+
     display: flex;
     flex-direction: row;
     align-items: center;
+
     box-sizing: border-box;
-    position: relative;
     max-width: 100%;
 }
 
 .dev-child {
     flex-grow: 1;
     overflow: hidden;
-    white-space: nowrap;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .dev-vertical-overflown {
-    width: 200px;
-
     display: -webkit-box;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+
+    width: 200px;
+    overflow: hidden;
+
+    text-overflow: ellipsis;
     overflow-wrap: break-word;
+    -webkit-line-clamp: 2;
 }
 
 .dev-text-with-tooltip {
     max-width: 150px;
 
     & .kbq-button-wrapper {
-        max-width: 100%;
-
         display: block !important;
         flex-grow: 1;
+
+        max-width: 100%;
         overflow: hidden;
-        white-space: nowrap;
+
         text-overflow: ellipsis;
+        white-space: nowrap;
     }
 }

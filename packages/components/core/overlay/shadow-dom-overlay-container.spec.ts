@@ -2,8 +2,8 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { ElementRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import {
-    KbqShadowDomOverlayContainer,
-    KbqShadowDomOverlayHost,
+    type KbqShadowDomOverlayContainer,
+    type KbqShadowDomOverlayHost,
     kbqShadowDomOverlayProvider
 } from '@koobiq/components/core';
 

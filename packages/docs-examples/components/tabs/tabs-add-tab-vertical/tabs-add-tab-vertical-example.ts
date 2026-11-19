@@ -31,6 +31,7 @@ import { TRANSLATIONS } from './l10n';
                         @if (activeTab === tab) {
                             <div class="example-tab-close">
                                 <button
+                                    type="button"
                                     color="contrast-fade"
                                     kbq-icon-button="kbq-xmark-s_16"
                                     kbqTooltip="Remove tab"
@@ -44,6 +45,7 @@ import { TRANSLATIONS } from './l10n';
                 }
             </nav>
             <button
+                type="button"
                 class="example-tab-add-button"
                 color="contrast-fade"
                 kbq-button
@@ -81,7 +83,7 @@ import { TRANSLATIONS } from './l10n';
             </p>
         </div>
     `,
-    styleUrls: ['./tabs-add-tab-vertical-example.css'],
+    styleUrl: './tabs-add-tab-vertical-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabsAddTabVerticalExample {
@@ -110,7 +112,7 @@ export class TabsAddTabVerticalExample {
             this.tabs = [...base, ...added];
 
             if (!this.tabs.includes(this.activeTab)) {
-                this.activeTab = this.tabs[0];
+                this.activeTab = this.tabs[0]!;
             }
         });
     }
@@ -133,7 +135,7 @@ export class TabsAddTabVerticalExample {
         this.tabs = this.tabs.filter((t) => t !== tab);
 
         if (this.tabs.length > 0) {
-            this.activeTab = this.tabs[Math.max(0, index - 1)];
+            this.activeTab = this.tabs[Math.max(0, index - 1)]!;
         }
     }
 }

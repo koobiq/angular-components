@@ -99,7 +99,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
-    registerInput(input: any): void;
+    registerInput(input: KbqDatepickerInput<D>): void;
     get selected(): D | null;
     set selected(value: D | null);
     readonly selectedChange: _angular_core.OutputEmitterRef<D>;
@@ -135,9 +135,9 @@ export class KbqCalendarBody implements OnChanges {
     ngOnChanges(changes: SimpleChanges): void;
     readonly numCols: _angular_core.InputSignal<number>;
     readonly rows: _angular_core.InputSignal<KbqCalendarCell[][]>;
-    readonly selectedValue: _angular_core.InputSignal<number>;
+    readonly selectedValue: _angular_core.InputSignal<number | null>;
     readonly selectedValueChange: _angular_core.OutputEmitterRef<number>;
-    readonly todayValue: _angular_core.InputSignal<number>;
+    readonly todayValue: _angular_core.InputSignal<number | null>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqCalendarBody, "[kbq-calendar-body]", ["kbqCalendarBody"], { "rows": { "alias": "rows"; "required": false; "isSignal": true; }; "todayValue": { "alias": "todayValue"; "required": false; "isSignal": true; }; "selectedValue": { "alias": "selectedValue"; "required": false; "isSignal": true; }; "labelMinRequiredCells": { "alias": "labelMinRequiredCells"; "required": false; "isSignal": true; }; "numCols": { "alias": "numCols"; "required": false; "isSignal": true; }; "activeCell": { "alias": "activeCell"; "required": false; "isSignal": true; }; "cellAspectRatio": { "alias": "cellAspectRatio"; "required": false; "isSignal": true; }; }, { "selectedValueChange": "selectedValueChange"; }, never, never, true, never>;
     // (undocumented)
@@ -223,7 +223,7 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
     readonly dateClass: _angular_core.InputSignal<(date: D) => KbqCalendarCellCssClasses>;
     // (undocumented)
     get dateFilter(): (date: D | null) => boolean;
-    datepickerInput: KbqDatepickerInput<D>;
+    datepickerInput: KbqDatepickerInput<D> | undefined;
     get disabled(): boolean;
     set disabled(value: boolean);
     readonly disabledChange: Subject<boolean>;
@@ -294,17 +294,16 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     // (undocumented)
     readonly adapter: DateAdapter<D>;
     // (undocumented)
-    calendar: KbqCalendar<D>;
+    calendar: KbqCalendar<D> | undefined;
     // (undocumented)
     controlType: string;
     readonly dateChange: _angular_core.OutputEmitterRef<KbqDatepickerInputEvent<D>>;
-    // (undocumented)
     dateFilter: (date: D | null) => boolean;
     readonly dateInput: _angular_core.OutputEmitterRef<KbqDatepickerInputEvent<D>>;
     // (undocumented)
     get dateInputFormat(): string;
     // (undocumented)
-    datepicker: KbqDatepicker<D>;
+    datepicker: KbqDatepicker<D> | undefined;
     readonly disabled: _angular_core.WritableSignal<boolean>;
     disabledChange: EventEmitter<boolean>;
     readonly disabledInput: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
@@ -468,7 +467,7 @@ export class KbqMonthView<D> implements AfterContentInit, OnChanges {
     ngOnChanges(changes: SimpleChanges): void;
     get selected(): D | null;
     set selected(value: D | null);
-    readonly selectedChange: _angular_core.OutputEmitterRef<D | null>;
+    readonly selectedChange: _angular_core.OutputEmitterRef<D>;
     selectedDate: number | null;
     readonly selectedInput: _angular_core.InputSignal<D | null | undefined>;
     todayDate: number | null;

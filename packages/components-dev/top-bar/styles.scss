@@ -1,6 +1,6 @@
 body {
-    margin: 0;
     display: block;
+    margin: 0;
 }
 
 html,
@@ -12,22 +12,27 @@ body {
 .dev-shell {
     display: flex;
     flex-direction: row;
-    height: 100vh;
+
     min-width: 0;
+    height: 100vh;
     overflow-y: auto;
+
     scroll-behavior: smooth;
 
     .dev-sidebar {
         position: sticky;
         top: 0;
-        max-height: 100%;
-        overflow: hidden;
+
         display: flex;
         flex-direction: column;
+
         min-width: 300px;
         max-width: 300px;
-        background-color: var(--kbq-background-bg-secondary);
+        max-height: 100%;
         padding: var(--kbq-size-s);
+        overflow: hidden;
+
+        background-color: var(--kbq-background-bg-secondary);
     }
 
     .dev-container {

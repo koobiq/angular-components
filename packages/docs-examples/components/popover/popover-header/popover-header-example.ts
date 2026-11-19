@@ -19,7 +19,7 @@ import { TRANSLATIONS } from './l10n';
         KbqButtonModule,
         KbqBadgeModule
     ],
-    templateUrl: 'popover-header-example.html',
+    templateUrl: './popover-header-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverHeaderExample {

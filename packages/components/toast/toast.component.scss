@@ -1,36 +1,33 @@
 @use '../core/styles/common/animation';
-@use './toast-theme' as *;
-@use '../core/styles/common/squircle' as *;
+@use './toast-theme';
+@use '../core/styles/common/squircle';
 
 .kbq-toast {
+    @include squircle.kbq-squircle(var(--kbq-toast-size-container-border-radius));
+    @include animation.kbq-animations-off();
+
     display: flex;
+
     box-sizing: border-box;
-
     width: var(--kbq-toast-size-container-width);
-
     height: auto;
-
-    @include kbq-squircle(var(--kbq-toast-size-container-border-radius));
-
-    padding-left: var(--kbq-toast-size-container-padding-left);
     padding-right: var(--kbq-toast-size-container-padding-right);
+    padding-left: var(--kbq-toast-size-container-padding-left);
 
     animation: kbq-toast-enter 150ms ease-out;
 
     &.kbq-toast_leaving {
+        @include animation.kbq-animations-off();
+
         pointer-events: none;
         animation: kbq-toast-leave 300ms ease-in forwards;
-
-        @include animation.kbq-animations-off();
     }
-
-    @include animation.kbq-animations-off();
 }
 
 @keyframes kbq-toast-enter {
     from {
-        transform: translateX(100%);
         opacity: 0;
+        transform: translateX(100%);
     }
 }
 
@@ -40,44 +37,41 @@
     }
 
     to {
-        transform: translateX(50%);
-        opacity: 0;
         height: 0;
+        opacity: 0;
+        transform: translateX(50%);
     }
 }
 
 .kbq-toast__icon-container {
+    $padding-top: var(--kbq-toast-size-content-padding-top);
+    $toast-font-title-line-height: var(--kbq-typography-text-normal-line-height);
+    $toast-size-icon-height: var(--kbq-toast-size-icon-height);
+
     // Self-contained layout: the component must not depend on the global `layout-*` utility bundle.
     display: flex;
+    flex-shrink: 0;
     align-items: flex-start;
     justify-content: flex-start;
 
-    flex-shrink: 0;
     width: var(--kbq-toast-size-icon-width);
     max-width: var(--kbq-toast-size-icon-width);
     height: var(--kbq-toast-size-icon-height);
     max-height: var(--kbq-toast-size-icon-height);
+    margin-right: var(--kbq-toast-size-icon-margin-right);
+    padding-top: calc($padding-top + (($toast-font-title-line-height - $toast-size-icon-height) / 2));
 
     border-radius: var(--kbq-toast-size-icon-border-radius);
-
-    margin-right: var(--kbq-toast-size-icon-margin-right);
-
-    $padding-top: var(--kbq-toast-size-content-padding-top);
-    $toast-font-title-line-height: var(--kbq-typography-text-normal-line-height);
-    $toast-size-icon-height: var(--kbq-toast-size-icon-height);
-    padding-top: calc($padding-top + (($toast-font-title-line-height - $toast-size-icon-height) / 2));
 }
 
 .kbq-toast__container {
     display: flex;
-    flex-direction: column;
-
     flex: 1;
+    flex-direction: column;
 
     padding-top: var(--kbq-toast-size-content-padding-top);
     padding-right: var(--kbq-size-s);
     padding-bottom: var(--kbq-toast-size-content-padding-bottom);
-
     overflow: hidden;
 }
 
@@ -122,10 +116,8 @@
 .kbq-toast__actions {
     display: flex;
     flex-wrap: wrap;
-
-    padding-top: var(--kbq-toast-size-button-stack-padding-top);
-
     gap: var(--kbq-toast-size-button-stack-content-gap-horizontal);
+    padding-top: var(--kbq-toast-size-button-stack-padding-top);
 }
 
 .kbq-toast__close-button {
@@ -138,5 +130,5 @@
     }
 }
 
-@include kbq-toast-theme();
-@include kbq-toast-typography();
+@include toast-theme.kbq-toast-theme();
+@include toast-theme.kbq-toast-typography();
