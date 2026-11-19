@@ -2679,7 +2679,7 @@ describe('KbqNavbar', () => {
                 await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
-                return document.querySelector('.kbq-navbar__more-content')!;
+                return document.querySelector<HTMLElement>('.kbq-navbar__more-content')!;
             };
 
             it('should label an icon-only panel row with its tooltip text', async () => {
