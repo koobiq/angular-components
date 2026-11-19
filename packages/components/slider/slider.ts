@@ -1,9 +1,11 @@
+import { InputModalityDetector } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { Overlay } from '@angular/cdk/overlay';
 import { Platform } from '@angular/cdk/platform';
 import {
     afterNextRender,
     afterRenderEffect,
+    type AfterRenderRef,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
@@ -13,6 +15,7 @@ import {
     ElementRef,
     forwardRef,
     inject,
+    Injector,
     input,
     Renderer2,
     signal,
@@ -27,7 +30,21 @@ import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import type { KbqSliderFill, KbqSliderScale, KbqSliderValue } from './slider.types';
 import { KbqSliderBase } from './slider-base';
-import { sliderEqual, sliderSnap, sliderStops } from './slider-value';
+import { sliderEqual, sliderMove, sliderSnap, sliderStops } from './slider-value';
+
+interface SliderMarkAnimation {
+    index: number;
+    animations: Animation[];
+    fillSizes: { element: HTMLElement; property: string }[];
+    render?: AfterRenderRef;
+    frame?: number;
+}
+
+const MARK_ANIMATION_TIMING: KeyframeAnimationOptions = {
+    duration: 120,
+    easing: 'cubic-bezier(0.23, 1, 0.32, 1)',
+    fill: 'both'
+};
 
 /** Selects a number or range by dragging, clicking the scale or using the keyboard. */
 @Component({
@@ -80,6 +97,8 @@ export class KbqSlider extends KbqSliderBase {
 
     private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly platform = inject(Platform);
+    private readonly injector = inject(Injector);
+    private readonly modality = inject(InputModalityDetector);
     private readonly overlay = inject(Overlay);
     protected readonly tooltipScrollStrategy = () => this.overlay.scrollStrategies.reposition();
     private readonly directionality = inject(Directionality, { optional: true });
@@ -131,7 +150,8 @@ export class KbqSlider extends KbqSliderBase {
             const inset = 'var(--kbq-slider-inset)';
 
             return {
-                start: `calc(${start}% - ${start === 0 && size > 0 ? inset : '0px'})`,
+                // Keep a collapsing fill anchored to the outer track edge.
+                start: `calc(${start}% - ${start === 0 ? inset : '0px'} + ${start === 100 ? inset : '0px'})`,
                 size: `calc(${size}% + ${size > 0 && end < 100 ? 'var(--kbq-slider-fill-extension, 0px)' : '0px'} + ${size > 0 && start === 0 ? inset : '0px'} + ${size > 0 && end === 100 ? inset : '0px'})`
             };
         })
@@ -142,9 +162,13 @@ export class KbqSlider extends KbqSliderBase {
     protected readonly dragging = signal(false);
 
     private tooltipTimer: ReturnType<typeof setTimeout> | undefined;
+    private markAnimation?: SliderMarkAnimation;
 
     constructor() {
         super();
+        this.modality.modalityDetected
+            .pipe(takeUntilDestroyed())
+            .subscribe((modality) => this.setPointerMotion(modality === 'mouse' || modality === 'touch'));
         this.directionality?.change.pipe(takeUntilDestroyed()).subscribe((direction) => this.direction.set(direction));
         effect(() => {
             this.disabled();
@@ -157,6 +181,8 @@ export class KbqSlider extends KbqSliderBase {
             this.reversed();
             this.scale();
             this.thumbAlignment();
+            this.fill();
+            this.fillOrigin();
             this.direction();
             untracked(() => this.cancelGesture());
         });
@@ -174,6 +200,7 @@ export class KbqSlider extends KbqSliderBase {
             destroyRef.onDestroy(stopBlur);
         });
         destroyRef.onDestroy(() => {
+            this.finishMarkAnimation();
             this.clearTooltip();
             this.pointer = null;
         });
@@ -205,12 +232,28 @@ export class KbqSlider extends KbqSliderBase {
         return (this.vertical() || this.direction() === 'rtl') !== this.reversed();
     }
 
-    protected onPointerDown(event: PointerEvent): void {
-        if (!this.platform.isBrowser || this.disabled() || this.pointer || event.button !== 0 || !event.isPrimary)
-            return;
+    private setPointerMotion(enabled: boolean): void {
+        // Apply the modality before the browser moves focus on Tab.
+        this.element.nativeElement.classList.toggle('kbq-slider_pointer-motion', enabled);
+    }
 
-        this.animateMark.set(false);
+    protected onPointerDown(event: PointerEvent): void {
+        if (!this.platform.isBrowser) return;
+
         const target = event.target as HTMLElement;
+
+        if (target.closest('.kbq-slider__mark-label')) {
+            event.stopPropagation();
+            event.preventDefault();
+            if (event.isPrimary && event.button === 0) this.setPointerMotion(true);
+
+            return;
+        }
+
+        if (this.disabled() || this.pointer || event.button !== 0 || !event.isPrimary) return;
+
+        this.setPointerMotion(true);
+        this.finishMarkAnimation();
         const thumb = target.closest<HTMLElement>('[data-thumb-index]');
         const next = this.valueAt(event);
         const index = thumb ? Number(thumb.dataset['thumbIndex']) : this.nearest(next);
@@ -259,7 +302,7 @@ export class KbqSlider extends KbqSliderBase {
 
     protected onKeyDown(event: KeyboardEvent, index: number): void {
         if (event.key === 'Escape') {
-            if (this.tooltipIndex() !== null || this.pointer || this.keyboardStart !== null) {
+            if (this.tooltipIndex() !== null || this.markAnimation || this.pointer || this.keyboardStart !== null) {
                 event.stopPropagation();
                 event.preventDefault();
             }
@@ -268,6 +311,7 @@ export class KbqSlider extends KbqSliderBase {
                 this.cancelGesture();
             }
 
+            this.finishMarkAnimation();
             this.clearTooltip();
 
             return;
@@ -278,7 +322,7 @@ export class KbqSlider extends KbqSliderBase {
         if (!keys.includes(event.key) || event.altKey || event.ctrlKey || event.metaKey) return;
         event.preventDefault();
         if (this.disabled() || this.readonly() || this.pointer) return;
-        this.animateMark.set(false);
+        this.finishMarkAnimation();
         this.keyboardStart ??= this.value();
         this.activeIndex.set(index);
         let direction = event.key === 'ArrowRight' || event.key === 'ArrowUp' || event.key === 'PageUp' ? 1 : -1;
@@ -326,7 +370,7 @@ export class KbqSlider extends KbqSliderBase {
         }
 
         if (this.pointer) return;
-        this.animateMark.set(false);
+        this.finishMarkAnimation();
         const start = this.value();
 
         const current = this.thumbValue(index);
@@ -352,12 +396,16 @@ export class KbqSlider extends KbqSliderBase {
     protected onThumbFocus(index: number): void {
         this.activeIndex.set(index);
         this.focused.set(true);
+        if (this.markAnimation?.index === index) return;
+
+        this.finishMarkAnimation();
         this.revealTooltip(index);
     }
 
     protected onFocusOut(event: FocusEvent): void {
         if (this.element.nativeElement.contains(event.relatedTarget as Node | null)) return;
         this.focused.set(false);
+        this.finishMarkAnimation();
         this.finishKeyboard();
         if (this.pointer) this.cancelGesture();
         this.clearTooltip();
@@ -426,6 +474,7 @@ export class KbqSlider extends KbqSliderBase {
     }
 
     private cancelGesture(): void {
+        this.finishMarkAnimation();
         const start = this.pointer?.start ?? this.keyboardStart;
 
         this.releasePointer();
@@ -441,7 +490,14 @@ export class KbqSlider extends KbqSliderBase {
     }
 
     protected hover(index: number): void {
-        if (!this.showTooltip() || this.disabled() || this.pointer || this.tooltipIndex() === index) return;
+        if (
+            !this.showTooltip() ||
+            this.disabled() ||
+            this.pointer ||
+            this.markAnimation ||
+            this.tooltipIndex() === index
+        )
+            return;
         clearTimeout(this.tooltipTimer);
         this.tooltipTimer = setTimeout(() => this.revealTooltip(index), 400);
     }
@@ -452,30 +508,143 @@ export class KbqSlider extends KbqSliderBase {
     }
 
     protected finishMarkAnimation(): void {
-        this.animateMark.set(false);
-        const index = this.tooltipIndex();
+        const motion = this.markAnimation;
 
-        if (index !== null) this.tooltips()[index]?.overlayRef?.updatePosition();
+        if (!motion) return;
+        this.markAnimation = undefined;
+        motion.render?.destroy();
+        if (motion.frame !== undefined) this.window.cancelAnimationFrame(motion.frame);
+        for (const animation of motion.animations) animation.cancel();
+        for (const { element, property } of motion.fillSizes) element.style.removeProperty(property);
+        this.animateMark.set(false);
     }
 
     protected selectMark(value: number): void {
-        if (this.disabled() || this.readonly()) return;
-        const index = this.nearest(value);
+        if (this.disabled() || this.readonly() || this.pointer) return;
+
         const start = this.value();
+        const next = sliderMove(start, this.nearest(value), value, this.settings(), this.collision());
 
-        this.animateMark.set(true);
-        const active = this.move(index, value);
+        if (sliderEqual(start, next.value)) return;
 
-        if (sliderEqual(start, this.value())) return;
-        this.focus({ preventScroll: true }, active);
+        this.prepareMarkAnimation(next.index);
+        this.changeValue(next.value);
+        this.focus({ preventScroll: true }, next.index);
+        if (!this.markAnimation) this.revealTooltip(next.index);
         this.valueCommit.emit({ value: this.value(), source: 'pointer' });
+    }
+
+    private prepareMarkAnimation(index: number): void {
+        const rail = this.rail()?.nativeElement;
+
+        if (
+            !this.platform.isBrowser ||
+            typeof rail?.animate !== 'function' ||
+            this.animationsDisabled ||
+            this.window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+        ) {
+            this.finishMarkAnimation();
+
+            return;
+        }
+
+        const vertical = this.vertical();
+        const snapshots = Array.from(rail.querySelectorAll<HTMLElement>('.kbq-slider__thumb, .kbq-slider__fill')).map(
+            (element) => ({ element, before: element.getBoundingClientRect() })
+        );
+
+        // Take the measurements before cancelling so a second click starts at the current visual position.
+        this.finishMarkAnimation();
+        if (this.tooltipIndex() !== index || !this.tooltips()[index]?.overlayRef?.hasAttached()) this.clearTooltip();
+
+        const motion: SliderMarkAnimation = { index, animations: [], fillSizes: [] };
+
+        this.markAnimation = motion;
+        this.animateMark.set(true);
+        motion.render = afterNextRender(
+            () => {
+                const geometry = snapshots.map(({ element, before }) => ({
+                    element,
+                    before,
+                    after: element.getBoundingClientRect()
+                }));
+
+                for (const { element, before, after } of geometry) {
+                    const start = vertical ? before.top : before.left;
+                    const end = vertical ? after.top : after.left;
+                    const translate = (distance: number): string =>
+                        vertical ? '0px ' + distance + 'px' : distance + 'px';
+
+                    if (element.classList.contains('kbq-slider__thumb')) {
+                        if (start !== end) {
+                            motion.animations.push(
+                                element.animate({ translate: [translate(start - end), '0px'] }, MARK_ANIMATION_TIMING)
+                            );
+                        }
+
+                        continue;
+                    }
+
+                    const from = vertical ? before.height : before.width;
+                    const to = vertical ? after.height : after.width;
+
+                    if ((from === 0 && to === 0) || (start === end && from === to)) continue;
+
+                    // Keep enough of the fill laid out to collapse it all the way to zero with transforms.
+                    const size = Math.max(from, to);
+
+                    if (size > to) {
+                        const property = vertical ? 'min-height' : 'min-width';
+
+                        element.style.setProperty(property, size + 'px');
+                        motion.fillSizes.push({ element, property });
+                    }
+
+                    const scale = (length: number): string => (vertical ? '1 ' + length / size : length / size + ' 1');
+
+                    // Interpolate both ends together. A fixed outer end stays fixed even when the fill collapses.
+                    motion.animations.push(
+                        element.animate(
+                            {
+                                translate: [translate(start - end + (from - size) / 2), translate((to - size) / 2)],
+                                scale: [scale(from), scale(to)]
+                            },
+                            MARK_ANIMATION_TIMING
+                        )
+                    );
+                }
+
+                const complete = (): void => {
+                    if (this.markAnimation !== motion) return;
+
+                    this.finishMarkAnimation();
+                    if (this.focused() && this.activeIndex() === index) this.revealTooltip(index);
+                    this.tooltips()[index]?.overlayRef?.updatePosition();
+                };
+
+                if (!motion.animations.length) return complete();
+
+                this.followMarkTooltip(motion);
+                void Promise.allSettled(motion.animations.map(({ finished }) => finished)).then(complete);
+            },
+            { injector: this.injector }
+        );
+    }
+
+    private followMarkTooltip(motion: SliderMarkAnimation): void {
+        const overlay = this.tooltips()[motion.index]?.overlayRef;
+
+        if (this.markAnimation !== motion || this.tooltipIndex() !== motion.index || !overlay?.hasAttached()) return;
+
+        overlay.updatePosition();
+        motion.frame = this.window.requestAnimationFrame(() => this.followMarkTooltip(motion));
     }
 
     override writeValue(value: KbqSliderValue | null): void {
         this.releasePointer();
         this.keyboardStart = null;
         this.clearTooltip();
-        this.animateMark.set(false);
+        this.finishMarkAnimation();
         super.writeValue(value);
     }
 

@@ -36,6 +36,8 @@
     pointer-events: none;
 
     transform: translateY(-50%);
+    translate: 0;
+    scale: 1;
 }
 
 .kbq-slider__track {
@@ -68,6 +70,8 @@
     height: var(--kbq-slider-control-size);
 
     cursor: grab;
+
+    translate: 0;
 
     &.kbq-slider__thumb_active,
     &:focus-within {
@@ -243,30 +247,21 @@
     }
 }
 @media (prefers-reduced-motion: no-preference) {
-    .kbq-slider_snap {
-        .kbq-slider__thumb {
-            @include animation.kbq-animations-off();
-
-            transition:
-                left 120ms ease-out,
-                top 120ms ease-out;
-        }
-
-        .kbq-slider__fill {
-            @include animation.kbq-animations-off();
-
-            transition:
-                left 120ms ease-out,
-                width 120ms ease-out,
-                top 120ms ease-out,
-                height 120ms ease-out;
-        }
-    }
-
-    .kbq-slider__thumb-shape {
+    .kbq-slider_pointer-motion .kbq-slider__thumb-shape {
         @include animation.kbq-animations-off();
 
-        transition: scale 100ms ease-out;
+        transition:
+            scale 100ms ease-out,
+            box-shadow 120ms ease-out;
+
+        &:not(.kbq-animations-disabled) {
+            &::before,
+            &::after {
+                transition:
+                    opacity 120ms ease-out,
+                    scale 120ms ease-out;
+            }
+        }
     }
 }
 

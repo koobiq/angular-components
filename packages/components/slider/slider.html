@@ -31,11 +31,7 @@
                     <span class="kbq-slider__tick" [class.kbq-slider__tick_filled]="isMarkFilled(mark.value)"></span>
                 }
                 @if (mark.label) {
-                    <span
-                        class="kbq-slider__mark-label"
-                        (pointerdown)="$event.stopPropagation(); $event.preventDefault()"
-                        (click)="selectMark(mark.value)"
-                    >
+                    <span class="kbq-slider__mark-label" (click)="selectMark(mark.value)">
                         {{ mark.label }}
                     </span>
                 }
@@ -50,7 +46,6 @@
                 [style.--kbq-slider-position]="`${position(value)}%`"
                 (pointerenter)="hover($index)"
                 (pointerleave)="leave($index)"
-                (transitionend)="finishMarkAnimation()"
             >
                 <input
                     class="kbq-slider__input"
