@@ -425,6 +425,13 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
 
     private morePanelKeyManager: FocusKeyManager<KbqNavbarFocusableItem> | null = null;
 
+    /**
+     * The panel row to put the focus back on once the rows are back in the panel. A recalculation with the panel
+     * open returns the rows to their containers and moves them right back; a DOM move of the focused node drops
+     * the focus to `body`, and the restore can only happen after `moveItemsIntoMorePanel` has rebuilt the list.
+     */
+    private pendingPanelFocusRestore: KbqNavbarItem | null = null;
+
     /** Raw `resize` events of the window, fed from outside the Angular zone. @docs-private */
     readonly resizeStream = new Subject<Event>();
 
@@ -619,6 +626,8 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         if (dropdownTrigger?.opened) {
             if (this.moreTriggerVisible()) {
                 this.moveItemsIntoMorePanel();
+
+                this.restoreMorePanelFocus();
             } else {
                 dropdownTrigger.close();
             }
@@ -911,15 +920,11 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         const openedBy = this.moreDropdownTrigger()?.openedBy;
 
         // The dropdown's own key manager drives `KbqDropdownItem`s only; the navbar items carried into the panel
-        // get their arrow navigation from the navbar, vertical as a menu reads. A panel opened without the
-        // keyboard — a click — leaves the focus on the trigger, and the arrows below it would never reach the
-        // panel: the navbar's key manager does not walk vertically. Focus the first row, as the keyboard open
-        // does, so the panel is reachable either way.
-        if (openedBy === 'keyboard') {
-            this.morePanelKeyManager.setFocusOrigin('keyboard').setFirstItemActive();
-        } else if (!openedBy) {
-            this.morePanelKeyManager.setFocusOrigin('program').setFirstItemActive();
-        }
+        // get their arrow navigation from the navbar, vertical as a menu reads. Whatever way the panel was
+        // opened — a click, a touch or code, not only the keyboard — the focus starts on the first row: the
+        // navbar's key manager does not walk vertically, so a focus left on the trigger would strand the panel
+        // behind an arrow key that has nowhere to go.
+        this.morePanelKeyManager.setFocusOrigin(openedBy === 'keyboard' ? 'keyboard' : 'program').setFirstItemActive();
     }
 
     private onMorePanelClosed(): void {
@@ -1040,16 +1045,26 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
 
         this.morePanelItems.set([]);
 
-        if (focusedEntry) this.restoreMorePanelFocus(focusedEntry[1].item);
+        // The list is rebuilt only when the rows are back in the panel (`moveItemsIntoMorePanel`, further down the
+        // fit), so the restore has to wait for that: here the index would read -1 against a just-emptied list.
+        if (focusedEntry) this.pendingPanelFocusRestore = focusedEntry[1].item;
     }
 
-    /** Puts the focus back on the panel row a recalculation moved through the containers. */
-    private restoreMorePanelFocus(item: KbqNavbarItem | null): void {
+    /** Puts the focus back on the panel row a recalculation moved through the containers, once it is back. */
+    private restoreMorePanelFocus(): void {
+        const item = this.pendingPanelFocusRestore;
+
+        this.pendingPanelFocusRestore = null;
+
         if (!item) return;
+
+        const index = this.morePanelItems().indexOf(item.navbarFocusableItem);
+
+        if (index < 0) return;
 
         this.morePanelKeyManager?.setFocusOrigin('program');
         this.morePanelItemsList();
-        this.morePanelKeyManager?.setActiveItem(this.morePanelItems().indexOf(item.navbarFocusableItem));
+        this.morePanelKeyManager?.setActiveItem(index);
     }
 }
 
