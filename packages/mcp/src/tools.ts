@@ -7,6 +7,7 @@ import type { ResolvedSymbol } from './sources/components.js';
 import { findSection, guideCaveat, guideIds, pickGuide, sectionPath } from './sources/guides.js';
 import { changesFor, migrationSections, summarise } from './sources/history.js';
 import { describeRename, resolveRename } from './sources/icon-renames.js';
+import { TOKEN_THEME_ORDER } from './sources/tokens.js';
 import { parseChoices, parseKeywords } from './sources/which-component.js';
 import type { ComponentEntry } from './types.js';
 
@@ -455,14 +456,21 @@ export const toolGetToken = (catalog: Catalog, args: { name: string }): string =
         ].join('\n');
     }
 
-    const lines = found.slice(0, 8).flatMap((token) => [
+    const lines = found.slice(0, 8).flatMap((token) => {
+        const themes = TOKEN_THEME_ORDER.filter((theme) => token.themeValues[theme] !== undefined);
+        const valueLines = themes.map(
+            (theme) => `  value${theme === 'common' ? '' : ` (${theme})`}: ${token.themeValues[theme]}`
+        );
+
+        return [
             `${token.cssName}${token.deprecated ? '   DEPRECATED' : ''}`,
-            `  value: ${token.value}`,
+            ...valueLines,
             `  themes: ${token.themes.join(', ')}`,
             token.references?.length ? `  references: ${token.references.join(', ')}` : null,
             token.deprecationNote ? `  instead: ${token.deprecationNote}` : null,
             ''
-        ].filter((line): line is string => line !== null));
+        ].filter((line): line is string => line !== null);
+    });
 
     // No advice on how to theme is given here. 1862 of 3.20.0's 2004 tokens are deprecated, most of
     // them component-level ones the package says to replace with global tokens — so the house rule
