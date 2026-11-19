@@ -42,9 +42,9 @@
         margin: 0;
     }
 
-    // Every row is indented alike, an icon-only one as much as one with a title: the base `_with-title` rule of
-    // the same weight as this one loads later, so the weight has to grow past it.
-    & .kbq-navbar-item.kbq-horizontal:not(.kbq-navbar-item_collapsed) {
+    // Every row is indented alike, an icon-only one as much as one with a title. The base `_with-title` rule
+    // carries the same weight and loads later, so the doubled class here is what grows the weight past it.
+    & .kbq-navbar-item.kbq-navbar-item.kbq-horizontal:not(.kbq-navbar-item_collapsed) {
         padding-right: var(--kbq-size-xs);
         padding-left: var(--kbq-size-xs);
     }
