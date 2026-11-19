@@ -852,7 +852,9 @@ export class E2eNavbarCollapse {}
             <a kbq-dropdown-item href="#">Nested link</a>
         </kbq-dropdown>
 
-        <div data-testid="e2eNavbarMoreFrame" style="width: 330px">
+        <!-- Tall enough to hold the open panel below the navbar: the panel renders in the overlay, and the
+             screenshot target of the panel states test is this frame, so the rows must land inside its box. -->
+        <div data-testid="e2eNavbarMoreFrame" style="width: 330px; height: 400px">
             <div data-testid="e2eScreenshotTarget">
                 <kbq-navbar>
                     <kbq-navbar-container>

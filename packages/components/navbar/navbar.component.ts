@@ -333,7 +333,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     private readonly inputModalityDetector = inject(InputModalityDetector);
 
     /**
-     * Localized strings of the navbar, the accessible name of the «Ещё» trigger among them, see
+     * Localized strings of the navbar, the accessible name of the «More» trigger among them, see
      * `KbqNavbarLocaleConfiguration`.
      */
     readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
@@ -342,7 +342,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     );
 
     /**
-     * Accessible name of the «Ещё» trigger: the active locale's `more`, or the default's — a full custom
+     * Accessible name of the «More» trigger: the active locale's `more`, or the default's — a full custom
      * configuration that leaves `more` out must not leave the trigger an unnamed icon-only button.
      */
     protected readonly moreAriaLabel = computed(
@@ -366,32 +366,32 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         { descendants: true }
     );
 
-    /** The «Ещё» trigger, whose host the navbar moves into its last container. */
+    /** The «More» trigger, whose host the navbar moves into its last container. */
     private readonly moreTriggerElement = viewChild('moreTrigger', { read: ElementRef<HTMLElement> });
 
-    /** The focusable side of the «Ещё» trigger, joined to the roving focus order while it is shown. */
+    /** The focusable side of the «More» trigger, joined to the roving focus order while it is shown. */
     private readonly moreTriggerFocusable = viewChild(KbqNavbarFocusableItem);
 
-    /** The dropdown trigger of the «Ещё» panel, an internal view child. */
+    /** The dropdown trigger of the «More» panel, an internal view child. */
     private readonly moreDropdownTrigger = viewChild(KbqDropdownTrigger);
 
-    /** The rectangle of the «Ещё» trigger, whose orientation the content-query effect never reaches. */
+    /** The rectangle of the «More» trigger, whose orientation the content-query effect never reaches. */
     private readonly moreTriggerRectangle = viewChild(KbqNavbarRectangleElement);
 
-    /** The container the hidden items are moved into while the «Ещё» panel is open. */
+    /** The container the hidden items are moved into while the «More» panel is open. */
     private readonly morePanelContent = viewChild('morePanelContent', { read: ElementRef<HTMLElement> });
 
-    /** Whether the «Ещё» trigger is shown, i.e. whether anything is hidden under it. @docs-private */
+    /** Whether the «More» trigger is shown, i.e. whether anything is hidden under it. @docs-private */
     protected readonly moreTriggerVisible = signal(false);
 
-    /** The «Ещё» trigger as the engine's result slot, its width joining the budget once it is shown. */
+    /** The «More» trigger as the engine's result slot, its width joining the budget once it is shown. */
     private readonly moreResult: KbqOverflowFitResult = {
         hide: () => this.setMoreTriggerHidden(true),
         show: () => this.setMoreTriggerHidden(false)
     };
 
     /**
-     * Writes the «Ещё» trigger's visibility: the class, synchronously, and the signal that follows it. The class
+     * Writes the «More» trigger's visibility: the class, synchronously, and the signal that follows it. The class
      * cannot be a binding: the engine measures the trigger's width in the same pass it shows it, and a binding
      * reaches the DOM only at the next change detection, which would budget a `display: none` box as nothing.
      */
@@ -409,16 +409,16 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         }
     }
 
-    /** Items moved into the «Ещё» panel, with the anchors they return to. */
+    /** Items moved into the «More» panel, with the anchors they return to. */
     private readonly movedToMorePanel = new Map<
         KbqNavbarRectangleElement,
         { container: HTMLElement; anchor: Element | null; item: KbqNavbarItem | null; wasCollapsed: boolean }
     >();
 
-    /** Dividers whose both neighbours are hidden, which move into the «Ещё» panel with the items. */
+    /** Dividers whose both neighbours are hidden, which move into the «More» panel with the items. */
     private readonly panelDividers = new Set<KbqNavbarRectangleElement>();
 
-    /** Focusable items of the open «Ещё» panel, in panel order. */
+    /** Focusable items of the open «More» panel, in panel order. */
     private readonly morePanelItems = signal<KbqNavbarFocusableItem[]>([]);
 
     private readonly morePanelItemsList = kbqQueryListFrom(this.morePanelItems);
@@ -457,7 +457,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         super();
 
         // The base class builds its key manager over the projected items alone, as a field initializer that
-        // runs before this override's `focusableItems` exists. The «Ещё» trigger joins the roving order while
+        // runs before this override's `focusableItems` exists. The «More» trigger joins the roving order while
         // it is shown, so the manager here is rebuilt over this navbar's own list.
         this.keyManager = new FocusKeyManager<KbqNavbarFocusableItem>(this.focusableItems).withTypeAhead();
 
@@ -546,7 +546,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     }
 
     /**
-     * The focusable items with the «Ещё» trigger appended, visible only while there is something hidden.
+     * The focusable items with the «More» trigger appended, visible only while there is something hidden.
      */
     private readonly focusableItemsWithTrigger = computed<readonly KbqNavbarFocusableItem[]>(() => {
         const items = this.focusableItemsQuery();
@@ -568,7 +568,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
 
     /**
      * Recomputes which items fit into the current navbar width, collapsing the collapsable ones into icons first
-     * and hiding what still does not fit under the «Ещё» trigger.
+     * and hiding what still does not fit under the «More» trigger.
      *
      * Every measurement is taken up front, and only then is anything written: collapsing or hiding an item
      * invalidates layout, so a measurement taken afterwards forces a synchronous reflow for each of the remaining
@@ -585,7 +585,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
 
     /** Body of `updateExpandedStateForItems()`. */
     private fitNavbarItems(): void {
-        // The items sit in the «Ещё» panel while it is open: bring them back before anything is measured.
+        // The items sit in the «More» panel while it is open: bring them back before anything is measured.
         this.returnItemsFromMorePanel();
 
         this.placeMoreTrigger();
@@ -611,7 +611,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         // Stage 1: collapse into icons, the fit the navbar has always had.
         this.fitItems(containers);
 
-        // Stage 2: hide under «Ещё», from the end, the trigger's width joining the budget once it is shown.
+        // Stage 2: hide under «More», from the end, the trigger's width joining the budget once it is shown.
         // Dividers ride along in the order the engine gives things up: each right after the neighbour it
         // dangles from, so its width leaves the budget with that neighbour's instead of costing an item that
         // would fit without it.
@@ -746,7 +746,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     }
 
     /**
-     * The rectangle elements that sit in a container, the «Ещё» trigger apart: items, brands and dividers.
+     * The rectangle elements that sit in a container, the «More» trigger apart: items, brands and dividers.
      */
     private containerRectangles(containers: readonly HTMLElement[]): KbqNavbarRectangleElement[] {
         const trigger = this.moreTriggerElement()?.nativeElement;
@@ -841,7 +841,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     }
 
     /**
-     * The children of a container that take part in the fit: laid out, with the «Ещё» trigger counted only
+     * The children of a container that take part in the fit: laid out, with the «More» trigger counted only
      * while it is shown — the engine budgets for it as its result slot, so it joins the content exactly when
      * the engine has something hidden.
      */
@@ -856,7 +856,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
 
     /**
      * Hides and shows the dividers by the state of their neighbours: one hidden neighbour leaves the divider
-     * dangling and hides it, two hidden ones take it into the «Ещё» panel with the items between them. A divider
+     * dangling and hides it, two hidden ones take it into the «More» panel with the items between them. A divider
      * pinned with `alwaysVisible` stays, the same contract the engine honors on items.
      */
     private fitDividers(containers: readonly HTMLElement[], containerRectangles: KbqNavbarRectangleElement[]): void {
@@ -900,7 +900,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         }
     }
 
-    /** Moves the «Ещё» trigger's host into the last container, the right end of the navbar. */
+    /** Moves the «More» trigger's host into the last container, the right end of the navbar. */
     private placeMoreTrigger(): void {
         const containers = this.containerElements();
         const element = this.moreTriggerElement()?.nativeElement;
@@ -940,7 +940,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         this.morePanelKeyManager?.setActiveItem(-1);
     }
 
-    /** Handles the arrow keys of the items moved into the «Ещё» panel. */
+    /** Handles the arrow keys of the items moved into the «More» panel. */
     protected onMorePanelKeydown(event: KeyboardEvent): void {
         // The same guard the navbar's own keydown carries: an arrow inside an input moves the caret, not the row.
         if (this.eventFromInput(event)) return;
@@ -966,7 +966,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     }
 
     /**
-     * Moves the hidden items, and the dividers between them, into the «Ещё» panel: the original host elements, so
+     * Moves the hidden items, and the dividers between them, into the «More» panel: the original host elements, so
      * whatever the consumer projected — a submenu, a router link, a listener — keeps working where the element lands.
      */
     private moveItemsIntoMorePanel(): void {
@@ -1007,7 +1007,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         );
     }
 
-    /** Returns the items moved into the «Ещё» panel to their places, hidden again as the fit left them. */
+    /** Returns the items moved into the «More» panel to their places, hidden again as the fit left them. */
     private returnItemsFromMorePanel(): void {
         if (!this.movedToMorePanel.size) return;
 

@@ -368,11 +368,12 @@ test.describe('KbqNavbarModule', () => {
             await getTrigger(page).click();
             await expect(getPanelContent(page).getByText('Помощь')).toBeVisible();
 
-            // The panel renders in the overlay, outside the scenario's own box, so the page is the target.
+            // The panel renders in the overlay, below the navbar and inside the frame's box: the frame is the
+            // target, not the whole 2400px page.
             await page.mouse.move(1200, 10);
-            await expect(page).toHaveScreenshot('navbar-more-02-light.png');
+            await expect(page.getByTestId('e2eNavbarMoreFrame')).toHaveScreenshot('navbar-more-02-light.png');
             await e2eEnableDarkTheme(page);
-            await expect(page).toHaveScreenshot('navbar-more-02-dark.png');
+            await expect(page.getByTestId('e2eNavbarMoreFrame')).toHaveScreenshot('navbar-more-02-dark.png');
         });
     });
 

@@ -284,7 +284,7 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
     private readonly rectangleElement = inject(KbqNavbarRectangleElement, { optional: true });
 
     /**
-     * Whether the item is disabled. Also `true` for a decorative element and for one hidden under the «Ещё» panel
+     * Whether the item is disabled. Also `true` for a decorative element and for one hidden under the «More» panel
      * of a horizontal navbar, which the key manager skips as well.
      */
     // An accessor, not a signal: `FocusKeyManager` reads it as a boolean through its default skip predicate, where a
@@ -515,14 +515,14 @@ export class KbqNavbarRectangleElement implements KbqOverflowFitItem {
     }
 
     /**
-     * Element with this attribute is never hidden under the «Ещё» panel of a horizontal navbar, whatever the
+     * Element with this attribute is never hidden under the «More» panel of a horizontal navbar, whatever the
      * overflow. Defaults to `false`.
      */
     readonly alwaysVisible = input<boolean, boolean | string | null | undefined>(false, {
         transform: booleanAttribute
     });
 
-    /** Whether the element is hidden under the «Ещё» panel of a horizontal navbar. @docs-private */
+    /** Whether the element is hidden under the «More» panel of a horizontal navbar. @docs-private */
     readonly hidden = computed(() => this.hiddenState());
 
     private readonly hiddenState = signal(false);
@@ -924,7 +924,7 @@ export class KbqNavbarItem implements AfterContentInit {
             return;
         }
 
-        // In the «Ещё» panel the arrow belongs to the panel: a row with a submenu is a row among others there,
+        // In the «More» panel the arrow belongs to the panel: a row with a submenu is a row among others there,
         // and the arrow moves to the next one instead of opening the submenu a click on the row would.
         if (this.inMorePanel() && $event.keyCode === DOWN_ARROW) return;
 

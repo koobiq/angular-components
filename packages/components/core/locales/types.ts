@@ -180,7 +180,7 @@ export type KbqTimezoneLocaleConfiguration = {
     otherCountriesLabel: string;
 };
 
-/** Locale configuration for the navbar: the vertical collapse toggle and the horizontal «Ещё» trigger. */
+/** Locale configuration for the navbar: the vertical collapse toggle and the horizontal «More» trigger. */
 export type KbqNavbarLocaleConfiguration = {
     toggle: {
         /** Accessible name of the toggle while the navbar is collapsed. */

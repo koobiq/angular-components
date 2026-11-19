@@ -41,7 +41,7 @@ export interface KbqOverflowFitItem {
 }
 
 /**
- * The slot the engine shows once it has hidden an item, an «Ещё» trigger: its width joins the budget the items are
+ * The slot the engine shows once it has hidden an item, a "More" trigger: its width joins the budget the items are
  * hidden against.
  *
  * A result is expected to make itself measurable in the very pass the engine shows it in: the engine calls `show()`
