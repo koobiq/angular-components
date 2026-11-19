@@ -75,7 +75,8 @@ export const DOCS_TEMPLATE_FILES = [
     'tsconfig.json',
     'src/index.html',
     'src/main.ts',
-    'src/language-switcher.ts',
+    'src/docs-header/docs-header.ts',
+    'src/docs-header/mount.ts',
     'src/styles.scss',
     // Should be removed after next release (#DS-4881)
     'src/layout.scss'
