@@ -7,8 +7,8 @@ import { SelectCustomTagContentExample } from './select-custom-tag-content/selec
 import { SelectCustomTriggerExample } from './select-custom-trigger/select-custom-trigger-example';
 import { SelectDisabledExample } from './select-disabled/select-disabled-example';
 import { SelectFooterExample } from './select-footer/select-footer-example';
-import { SelectGroupsLabelExample } from './select-groups-label/select-groups-label-example';
 import { SelectGroupsExample } from './select-groups/select-groups-example';
+import { SelectGroupsLabelExample } from './select-groups-label/select-groups-label-example';
 import { SelectHeightExample } from './select-height/select-height-example';
 import { SelectIconExample } from './select-icon/select-icon-example';
 import { SelectLoadingExample } from './select-loading/select-loading-example';

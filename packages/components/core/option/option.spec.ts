@@ -64,13 +64,13 @@ class OptionInGroup {
 @Component({
     imports: [KbqOptionModule],
     template: `
-        <kbq-optgroup [label]="'Meat'">
+        <kbq-optgroup label="Meat">
             <div kbq-optgroup-label>
                 Meat
                 <span class="count">{{ group().selectedCount }}</span>
             </div>
-            <kbq-option [value]="'steak'">Steak</kbq-option>
-            <kbq-option [value]="'pizza'">Pizza</kbq-option>
+            <kbq-option value="steak">Steak</kbq-option>
+            <kbq-option value="pizza">Pizza</kbq-option>
         </kbq-optgroup>
     `
 })
@@ -81,7 +81,7 @@ class OptgroupWithProjectedLabel {
 @Component({
     imports: [KbqOptionModule],
     template: `
-        <kbq-optgroup [label]="'Meat'">
+        <kbq-optgroup label="Meat">
             <div kbq-optgroup-label>One</div>
             <div kbq-optgroup-label>Two</div>
         </kbq-optgroup>
@@ -93,7 +93,7 @@ class OptgroupWithTwoLabels {}
 @Component({
     imports: [KbqOptgroup],
     template: `
-        <kbq-optgroup [label]="'Meat'">
+        <kbq-optgroup label="Meat">
             <div kbq-optgroup-label>Custom</div>
         </kbq-optgroup>
     `
