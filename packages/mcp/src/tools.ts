@@ -7,7 +7,7 @@ import type { ResolvedSymbol } from './sources/components.js';
 import { findSection, guideCaveat, guideIds, pickGuide, sectionPath } from './sources/guides.js';
 import { changesFor, migrationSections, summarise } from './sources/history.js';
 import { describeRename, resolveRename } from './sources/icon-renames.js';
-import type { TokenTheme } from './sources/tokens.js';
+import { TOKEN_THEME_ORDER } from './sources/tokens.js';
 import { parseChoices, parseKeywords } from './sources/which-component.js';
 import type { ComponentEntry } from './types.js';
 
@@ -456,16 +456,11 @@ export const toolGetToken = (catalog: Catalog, args: { name: string }): string =
         ].join('\n');
     }
 
-    const THEME_ORDER: TokenTheme[] = ['common', 'light', 'dark', 'font'];
-
     const lines = found.slice(0, 8).flatMap((token) => {
-        const themes = token.themeValues ? THEME_ORDER.filter((theme) => token.themeValues![theme] !== undefined) : [];
-        const valueLines =
-            themes.length > 0
-                ? themes.map(
-                      (theme) => `  value${theme === 'common' ? '' : ` (${theme})`}: ${token.themeValues![theme]}`
-                  )
-                : [`  value: ${token.value}`];
+        const themes = TOKEN_THEME_ORDER.filter((theme) => token.themeValues[theme] !== undefined);
+        const valueLines = themes.map(
+            (theme) => `  value${theme === 'common' ? '' : ` (${theme})`}: ${token.themeValues[theme]}`
+        );
 
         return [
             `${token.cssName}${token.deprecated ? '   DEPRECATED' : ''}`,

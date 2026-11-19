@@ -1,7 +1,11 @@
-import { resolve } from 'node:path';
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, resolve } from 'node:path';
 import { indexSkew, loadCatalog } from '../src/catalog';
 import { search } from '../src/search';
 import { readIcons } from '../src/sources/icons';
+import type { PackageRef } from '../src/sources/project';
+import { readTokens } from '../src/sources/tokens';
 import { toolGetComponent, toolGetIcon, toolGetToken, toolListComponents, toolSearch } from '../src/tools';
 import { componentsAvailable, CONSUMER } from './project';
 
@@ -14,7 +18,10 @@ import { componentsAvailable, CONSUMER } from './project';
 
 const catalog = loadCatalog(CONSUMER);
 
-describe('get_token', () => {
+// The resolved-value assertions (oklch, component tokens) hold for the v4 reader only.
+const tokensV4 = catalog.tokens.ok && catalog.tokens.readerMajor === 4;
+
+describe.skipIf(!tokensV4)('get_token', () => {
     test('reports resolved theme token values without a degraded note', () => {
         const output = toolGetToken(catalog, { name: 'background-bg' });
 
@@ -23,6 +30,18 @@ describe('get_token', () => {
         expect(output).toMatch(/value \(dark\): oklch/);
         expect(output).not.toMatch(/Degraded:/);
     });
+
+    test.each(['scrollbar-size-thumb-width', 'code-block-hljs-addition-background'])(
+        'finds the v4 component token %s',
+        (name) => {
+            // These live in component-tokens*.css, which only the major-4 reader opens.
+            const output = toolGetToken(catalog, { name });
+
+            expect(output).toMatch(new RegExp(`--kbq-${name}`));
+            expect(output).not.toMatch(/No token named/);
+            expect(output).not.toMatch(/Degraded:/);
+        }
+    );
 
     test.each(['size-s', 'plt-white', 'font-family-accent'])('finds common token %s', (name) => {
         const output = toolGetToken(catalog, { name });
@@ -38,6 +57,72 @@ describe('get_token', () => {
         const output = toolGetToken(catalog, { name: 'background-bg' });
 
         expect(!/redefining/.test(output)).toBeTruthy();
+    });
+});
+
+describe('readTokens', () => {
+    const createPackage = (root: string, major: number): PackageRef => ({
+        name: '@koobiq/design-tokens',
+        version: `${major}.0.0`,
+        root,
+        major
+    });
+
+    test('reads v3 tokens, deprecation notes and /* DEPRECATED */ comments', () => {
+        const dir = mkdtempSync(join(tmpdir(), 'kbq-tokens-v3-'));
+
+        try {
+            mkdirSync(join(dir, 'web'), { recursive: true });
+            writeFileSync(
+                join(dir, 'web/css-tokens-light.css'),
+                '--kbq-test-old: #ffffff; /* DEPRECATED: use --kbq-test-new instead */\n' + '--kbq-test-new: #000000;\n'
+            );
+            writeFileSync(
+                join(dir, 'web/css-tokens-dark.css'),
+                '--kbq-test-old: #eeeeee; /* DEPRECATED: use --kbq-test-new instead */\n' + '--kbq-test-new: #111111;\n'
+            );
+
+            const result = readTokens(createPackage(dir, 3));
+
+            expect(result.ok).toBe(true);
+            if (!result.ok) return;
+
+            const oldToken = result.data.find((token) => token.cssName === '--kbq-test-old');
+            const newToken = result.data.find((token) => token.cssName === '--kbq-test-new');
+
+            expect(oldToken).toBeTruthy();
+            expect(oldToken!.deprecated).toBe(true);
+            expect(oldToken!.deprecationNote).toBe('use --kbq-test-new instead');
+            expect(newToken).toBeTruthy();
+            expect(newToken!.deprecated).toBeUndefined();
+        } finally {
+            rmSync(dir, { recursive: true, force: true });
+        }
+    });
+
+    test('reads v4 /** */ comments and resolves var() references', () => {
+        const dir = mkdtempSync(join(tmpdir(), 'kbq-tokens-v4-'));
+
+        try {
+            mkdirSync(join(dir, 'web'), { recursive: true });
+            writeFileSync(
+                join(dir, 'web/css-tokens.css'),
+                '--kbq-palette-white: #fff;\n' + '--kbq-test-ref: var(--kbq-palette-white); /** reference token */\n'
+            );
+
+            const result = readTokens(createPackage(dir, 4));
+
+            expect(result.ok).toBe(true);
+            if (!result.ok) return;
+
+            const refToken = result.data.find((token) => token.cssName === '--kbq-test-ref');
+
+            expect(refToken).toBeTruthy();
+            expect(refToken!.value).toBe('#fff');
+            expect(refToken!.deprecated).toBeUndefined();
+        } finally {
+            rmSync(dir, { recursive: true, force: true });
+        }
     });
 });
 

@@ -7,17 +7,21 @@ import type { PackageRef } from './project.js';
  * Reads design tokens out of the consumer's own `@koobiq/design-tokens`.
  *
  * The compiled CSS is the source, not the `properties/*.json5` behind it: the CSS carries the
- * final custom-property names, the resolved values and any deprecation marker, so nothing has to
- * reproduce the token build's naming transform. The json5 sources would add the reference chain
- * (`{plt.slate.1}`) and nothing else.
+ * final custom-property names and any deprecation marker, so nothing has to reproduce the token
+ * build's naming transform. Since v4 the CSS values are `var(--kbq-*)` references rather than
+ * resolved values — the reference chain (`{plt.slate.1}`) is present in the CSS itself — and
+ * those references are resolved here.
  */
 
 export type TokenTheme = 'light' | 'dark' | 'font' | 'common';
 
+/** Themes in precedence order: a token's own theme wins, then the first defined fallback. */
+export const TOKEN_THEME_ORDER: TokenTheme[] = ['common', 'light', 'dark', 'font'];
+
 export type ThemedToken = DesignToken & {
     themes: TokenTheme[];
-    /** Resolved value per theme, when the token varies by theme or lives outside the theme files. */
-    themeValues?: Partial<Record<TokenTheme, string>>;
+    /** Resolved value per theme; populated for every theme the token appears in. */
+    themeValues: Partial<Record<TokenTheme, string>>;
 };
 
 type Reader = {
@@ -41,7 +45,10 @@ const READERS = new Map<number, Reader>([
             files: [
                 { path: 'web/css-tokens.css', theme: 'common' },
                 { path: 'web/css-tokens-light.css', theme: 'light' },
-                { path: 'web/css-tokens-dark.css', theme: 'dark' }
+                { path: 'web/css-tokens-dark.css', theme: 'dark' },
+                { path: 'web/component-tokens.css', theme: 'common' },
+                { path: 'web/component-tokens-light.css', theme: 'light' },
+                { path: 'web/component-tokens-dark.css', theme: 'dark' }
             ]
         }
     ]
@@ -98,15 +105,33 @@ const resolveValue = (
     token: RawToken,
     theme: TokenTheme,
     all: Map<string, RawToken>,
+    cache: Map<string, string>,
     stack: Set<string> = new Set()
 ): string => {
-    const value =
-        token.values.get(theme) ??
-        token.values.get('common') ??
-        token.values.get('light') ??
-        token.values.get('dark') ??
-        token.values.get('font') ??
-        '';
+    // Shared palette tokens are referenced from hundreds of component tokens; resolving each
+    // occurrence again would repeat the same expansion for every referencing token.
+    const key = `${theme}:${token.cssName}`;
+
+    if (!stack.has(token.cssName)) {
+        const cached = cache.get(key);
+
+        if (cached !== undefined) return cached;
+    }
+
+    let value = token.values.get(theme);
+
+    if (value === undefined) {
+        for (const fallback of TOKEN_THEME_ORDER) {
+            const candidate = token.values.get(fallback);
+
+            if (candidate !== undefined) {
+                value = candidate;
+                break;
+            }
+        }
+    }
+
+    value ??= '';
 
     if (!value || stack.has(token.cssName)) return value;
 
@@ -125,15 +150,16 @@ const resolveValue = (
               ? 'common'
               : target.themes[0]!;
 
-        return resolveValue(target, targetTheme, all, stack);
+        return resolveValue(target, targetTheme, all, cache, stack);
     });
 
     stack.delete(token.cssName);
+    cache.set(key, resolved);
 
     return resolved;
 };
 
-const resolveToken = (token: RawToken, all: Map<string, RawToken>): ThemedToken => {
+const resolveToken = (token: RawToken, all: Map<string, RawToken>, cache: Map<string, string>): ThemedToken => {
     const references = new Set<string>();
 
     for (const value of token.values.values()) {
@@ -143,11 +169,10 @@ const resolveToken = (token: RawToken, all: Map<string, RawToken>): ThemedToken 
     const themeValues: Partial<Record<TokenTheme, string>> = {};
 
     for (const theme of token.themes) {
-        themeValues[theme] = resolveValue(token, theme, all);
+        themeValues[theme] = resolveValue(token, theme, all, cache);
     }
 
-    const orderedThemes: TokenTheme[] = ['common', 'light', 'dark', 'font'];
-    const defaultTheme = orderedThemes.find((theme) => token.themes.includes(theme)) ?? token.themes[0]!;
+    const defaultTheme = TOKEN_THEME_ORDER.find((theme) => token.themes.includes(theme)) ?? token.themes[0]!;
 
     const deprecation = /^DEPRECATED:\s*(.*)$/i.exec((token.comment ?? '').trim());
     const note = deprecation?.[1]?.trim();
@@ -177,6 +202,7 @@ export const readTokens = (pkg: PackageRef | undefined): SourceResult<ThemedToke
     const exact = READERS.get(pkg.major);
     const reader = exact ?? READERS.get(NEWEST_KNOWN_MAJOR)!;
     const collected = new Map<string, RawToken>();
+    const cache = new Map<string, string>();
     const missing: string[] = [];
 
     for (const file of reader.files) {
@@ -213,6 +239,6 @@ export const readTokens = (pkg: PackageRef | undefined): SourceResult<ThemedToke
         version: pkg.version,
         readerMajor: exact ? pkg.major : NEWEST_KNOWN_MAJOR,
         degraded: notes.length > 0 ? notes.join('; ') : undefined,
-        data: [...collected.values()].map((token) => resolveToken(token, collected))
+        data: [...collected.values()].map((token) => resolveToken(token, collected, cache))
     };
 };
