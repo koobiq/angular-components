@@ -17,9 +17,8 @@
 // label from stretching a narrow panel. Wrap the truncating text in `.kbq-truncate-line` yourself.
 .kbq-optgroup-label-content {
     display: flex;
-    align-items: center;
-
     gap: var(--kbq-optgroup-label-gap);
+    align-items: center;
     min-width: 0;
 }
 
