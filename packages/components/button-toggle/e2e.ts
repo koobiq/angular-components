@@ -162,14 +162,16 @@ export class E2eButtonToggleStates {
                         [class.kbq-progress]="state.progress"
                         [disabled]="state.disabled!"
                     >
+                        <!-- the marker slots, i.e. the placement that keeps both the icons and the
+                             ellipsis; the legacy default slot is covered by E2eButtonToggleStates -->
                         @if (showPrefixIcon()) {
-                            <i kbq-icon="kbq-play_16"></i>
+                            <i kbqButtonPrefix kbq-icon="kbq-play_16"></i>
                         }
                         @if (showTitle()) {
                             {{ state.title }}
                         }
                         @if (showSuffixIcon()) {
-                            <i kbq-icon="kbq-chevron-down-s_16"></i>
+                            <i kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
                         }
                     </kbq-button-toggle>
                     <kbq-button-toggle [value]="2">default 2</kbq-button-toggle>
@@ -214,4 +216,81 @@ export class E2eButtonToggleStatesStretched {
                 if (args.every((a) => a === false)) this.showTitle.set(true);
             });
     }
+}
+
+/**
+ * Label truncation scenarios.
+ *
+ * `.kbq-button-toggle-text` must stay a block container, because `text-overflow: ellipsis` is never
+ * painted on a flex box — and it is also the box `kbq-title` measures, so the tooltip opens at exactly
+ * the width the ellipsis appears at. That only holds while the icons are laid out *beside* it, which
+ * is what the `kbqButtonPrefix`/`kbqButtonSuffix` slots are for; an icon left in the default slot
+ * shares the box with the label and gives the ellipsis up, the same trade-off as `KbqButton`.
+ */
+@Component({
+    selector: 'e2e-button-toggle-truncation',
+    imports: [KbqButtonToggleModule, KbqIconModule],
+    template: `
+        <div data-testid="e2eScreenshotTarget">
+            <!-- marker slots: the icons sit outside the truncating box, so both survive -->
+            <kbq-button-toggle-group stretched>
+                <kbq-button-toggle data-testid="e2eButtonToggleTruncationSlots" [value]="1">
+                    <i kbqButtonPrefix kbq-icon="kbq-play_16"></i>
+                    {{ label }}
+                    <i kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
+                </kbq-button-toggle>
+            </kbq-button-toggle-group>
+
+            <!-- the same, with the label in the consumer's own element: it is inline content of the
+                 label box, so it truncates just like a bare text node -->
+            <kbq-button-toggle-group stretched>
+                <kbq-button-toggle data-testid="e2eButtonToggleTruncationWrappedLabel" [value]="1">
+                    <i kbqButtonPrefix kbq-icon="kbq-play_16"></i>
+                    <span>{{ label }}</span>
+                </kbq-button-toggle>
+            </kbq-button-toggle-group>
+
+            <!-- legacy markup: the icon is projected into the default slot, i.e. into the label box,
+                 which then lays its content out as a flex row — centred icon, no ellipsis -->
+            <kbq-button-toggle-group stretched>
+                <kbq-button-toggle data-testid="e2eButtonToggleTruncationLegacy" [value]="1">
+                    <i kbq-icon="kbq-play_16"></i>
+                    {{ label }}
+                </kbq-button-toggle>
+            </kbq-button-toggle-group>
+
+            <!-- nothing to lay out beside the label: the plain truncating box -->
+            <kbq-button-toggle-group stretched>
+                <kbq-button-toggle data-testid="e2eButtonToggleTruncationLabelOnly" [value]="1">
+                    {{ label }}
+                </kbq-button-toggle>
+            </kbq-button-toggle-group>
+
+            <!-- a slotted icon with no label at all: the label box is empty and must not take a gap
+                 of the row, or it would push the icon off centre -->
+            <kbq-button-toggle-group>
+                <kbq-button-toggle data-testid="e2eButtonToggleTruncationIconOnly" [value]="1">
+                    <i kbqButtonPrefix kbq-icon="kbq-play_16"></i>
+                </kbq-button-toggle>
+            </kbq-button-toggle-group>
+        </div>
+    `,
+    styles: `
+        [data-testid='e2eScreenshotTarget'] {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: var(--kbq-size-m);
+            padding: var(--kbq-size-m);
+
+            width: 200px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eButtonToggleTruncation'
+    }
+})
+export class E2eButtonToggleTruncation {
+    protected readonly label = 'Длинный текст кнопки-переключателя';
 }

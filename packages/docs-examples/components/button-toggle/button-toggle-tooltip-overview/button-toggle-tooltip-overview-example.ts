@@ -25,7 +25,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
         <kbq-button-toggle-group stretched [(ngModel)]="model">
             @for (toggle of group; track toggle) {
                 <kbq-button-toggle [value]="$index">
-                    <i kbq-icon="kbq-briefcase_16"></i>
+                    <i kbqButtonPrefix kbq-icon="kbq-briefcase_16"></i>
                     <span>{{ toggle }}</span>
                 </kbq-button-toggle>
             }

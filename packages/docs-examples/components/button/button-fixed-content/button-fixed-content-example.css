@@ -3,17 +3,3 @@
     display: flex;
     flex-direction: column;
 }
-
-.example-fixed-content__button {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-.example-fixed-content__button ::ng-deep .kbq-button-wrapper {
-    display: inline-block;
-    flex-grow: 1;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
