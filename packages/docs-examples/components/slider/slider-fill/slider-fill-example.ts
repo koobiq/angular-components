@@ -12,43 +12,43 @@ import { TRANSLATIONS } from './l10n';
     selector: 'slider-fill-example',
     imports: [KbqFormFieldModule, KbqSlider, LuxonDateModule],
     template: `
-        <div>
-            <span>{{ t().threshold }}</span>
-            <output>{{ salary.value() }}</output>
-        </div>
-        <kbq-slider #salary fill="end" [max]="200000" [step]="5000" [value]="75000" [aria-label]="t().threshold" />
-        <div>
-            <span>{{ t().quietHours }}</span>
-            <output>{{ time(quietEnd(quiet.value())) }}–{{ time(quietStart(quiet.value())) }}</output>
-        </div>
-        <kbq-slider
-            #quiet
-            fill="outside"
-            [max]="24"
-            [minDistance]="1"
-            [value]="[7, 18]"
-            [marks]="hours"
-            [displayWith]="time"
-            [thumbLabels]="t().bounds"
-        />
-        <section class="example-balance">
-            <span>{{ t().balance }}</span>
+        <kbq-form-field>
+            <kbq-label class="example-heading">
+                <span>{{ t().threshold }}</span>
+                <output aria-hidden="true">{{ salary.value() }}</output>
+            </kbq-label>
+            <kbq-slider #salary fill="end" [max]="200000" [step]="5000" [value]="75000" />
+        </kbq-form-field>
+        <kbq-form-field>
+            <kbq-label class="example-heading">
+                <span>{{ t().quietHours }}</span>
+                <output aria-hidden="true">
+                    {{ time(quietEnd(quiet.value())) }}–{{ time(quietStart(quiet.value())) }}
+                </output>
+            </kbq-label>
             <kbq-slider
-                #balance
-                fill="origin"
-                [min]="-1"
-                [max]="1"
-                [step]="0.01"
-                [value]="0.33"
-                [aria-label]="t().balance"
+                #quiet
+                fill="outside"
+                [max]="24"
+                [minDistance]="1"
+                [value]="[7, 18]"
+                [marks]="hours"
+                [displayWith]="time"
+                [thumbLabels]="t().bounds"
             />
-            <div>
+        </kbq-form-field>
+        <div>
+            <kbq-form-field>
+                <kbq-label>{{ t().balance }}</kbq-label>
+                <kbq-slider #balance fill="origin" [min]="-1" [max]="1" [step]="0.01" [value]="0.33" />
+            </kbq-form-field>
+            <div class="example-balance-values">
                 <span>{{ t().left }}</span>
                 <output>{{ signed(balance.value()) }}</output>
                 <span>{{ t().right }}</span>
             </div>
-        </section>
-        <kbq-form-field class="example-temperature">
+        </div>
+        <kbq-form-field>
             <kbq-label class="example-heading">
                 <span>{{ t().thermal }}</span>
                 <output aria-hidden="true">{{ temperature.value() }}&nbsp;°C</output>
@@ -68,25 +68,13 @@ import { TRANSLATIONS } from './l10n';
         :host {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 24px;
             width: 100%;
             max-width: 320px;
             margin: 0 auto;
             justify-content: center;
             min-height: 96px;
             font-variant-numeric: tabular-nums;
-        }
-        .example-balance {
-            display: grid;
-            gap: 0;
-        }
-        .example-balance output {
-            position: absolute;
-            inset-inline: 0;
-            text-align: center;
-        }
-        .example-balance div {
-            position: relative;
         }
         .example-heading {
             display: flex;
@@ -101,10 +89,13 @@ import { TRANSLATIONS } from './l10n';
         output {
             white-space: nowrap;
         }
-        div {
-            display: flex;
-            justify-content: space-between;
+        .example-balance-values {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             gap: 8px;
+        }
+        .example-balance-values span:last-child {
+            text-align: end;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

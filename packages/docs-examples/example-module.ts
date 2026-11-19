@@ -7056,6 +7056,36 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "slider-input-example.ts",
     "importPath": "components/slider"
   },
+  "slider-invalid": {
+    "packagePath": "components/slider/slider-invalid",
+    "title": "Invalid slider value",
+    "componentName": "SliderInvalidExample",
+    "files": [
+      "slider-invalid-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "slider-invalid-example",
+    "primaryFile": "slider-invalid-example.ts",
+    "importPath": "components/slider"
+  },
+  "slider-keyboard": {
+    "packagePath": "components/slider/slider-keyboard",
+    "title": "Slider keyboard interaction",
+    "componentName": "SliderKeyboardExample",
+    "files": [
+      "slider-keyboard-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "slider-keyboard-example",
+    "primaryFile": "slider-keyboard-example.ts",
+    "importPath": "components/slider"
+  },
   "slider-labels": {
     "packagePath": "components/slider/slider-labels",
     "title": "Slider label and selected value",
@@ -10283,6 +10313,8 @@ export type LiveExampleId =
   | 'slider-fill'
   | 'slider-forms'
   | 'slider-input'
+  | 'slider-invalid'
+  | 'slider-keyboard'
   | 'slider-labels'
   | 'slider-marks'
   | 'slider-overview'

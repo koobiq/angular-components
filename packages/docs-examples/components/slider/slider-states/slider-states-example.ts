@@ -10,8 +10,6 @@ import { TRANSLATIONS } from './l10n';
     template: `
         <span>{{ t().normal }}</span>
         <kbq-slider showTooltip [value]="30" [aria-label]="t().normal" />
-        <span>{{ t().error }}</span>
-        <kbq-slider showTooltip invalid [value]="30" [aria-label]="t().error" />
         <span>{{ t().disabled }}</span>
         <kbq-slider showTooltip disabled [value]="30" [aria-label]="t().disabled" />
         <span>{{ t().readonly }}</span>

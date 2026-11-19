@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -30,12 +30,14 @@ import { TRANSLATIONS } from './l10n';
             <kbq-label>{{ t().price }}</kbq-label>
             <kbq-input-slider [max]="100_000_000" [step]="1_000_000" [value]="50_000_000" [showStepper]="false" />
         </kbq-form-field>
-        <kbq-form-field class="example-price-range">
-            <kbq-label class="example-heading">
-                <span>{{ t().range }}</span>
-                <output aria-hidden="true">{{ rangeCaption() }}</output>
-            </kbq-label>
-            <kbq-input-slider [max]="100_000_000" [step]="1_000_000" [thumbLabels]="t().bounds" [(value)]="range" />
+        <kbq-form-field>
+            <kbq-label>{{ t().range }}</kbq-label>
+            <kbq-input-slider
+                [max]="100_000_000"
+                [step]="1_000_000"
+                [value]="[20_000_000, 75_000_000]"
+                [thumbLabels]="t().bounds"
+            />
         </kbq-form-field>
     `,
     styles: `
@@ -50,16 +52,6 @@ import { TRANSLATIONS } from './l10n';
             min-height: 96px;
             font-variant-numeric: tabular-nums;
         }
-        .example-heading {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: baseline;
-            column-gap: 8px;
-            width: 100%;
-        }
-        .example-heading output {
-            margin-inline-start: auto;
-        }
         .example-volume {
             display: grid;
             grid-template-columns: minmax(0, 1fr) 88px;
@@ -70,19 +62,6 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SliderInputExample {
-    protected readonly range = signal<KbqSliderValue>([20_000_000, 75_000_000]);
-    protected readonly rangeCaption = computed(() => {
-        const range = this.range();
-
-        if (typeof range === 'number') return '';
-        const { locale, currency } = this.t();
-        const format = new Intl.NumberFormat(locale);
-        const [min, max] = range.map((value) => format.format(value));
-
-        if (currency === '₽') return `${min}—${max}\u00a0${currency}`;
-
-        return `${currency}${min}–${currency}${max}`;
-    });
     protected readonly volume = signal(70);
     protected draft: number | null = 70;
     protected normalizeVolume(): void {

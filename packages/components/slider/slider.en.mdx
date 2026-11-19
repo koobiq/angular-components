@@ -2,11 +2,9 @@ A slider selects a numeric value or range. It suits approximate adjustments with
 
 <Example id="slider-overview" />
 
-Drag a thumb, click the track or use the keyboard to change the value. The 32-pixel interaction area extends beyond the visible track.
-
 ### When to use a slider
 
-Use a slider for quick adjustments within known bounds. Show the selected value beside the track when it matters to the decision. In the scan settings, each schedule has its own concurrency limit.
+Use a slider for quick adjustments within known bounds. Show the selected value beside the track when it matters to the decision.
 
 <Example id="slider-settings" />
 
@@ -14,13 +12,15 @@ Use a slider for quick adjustments within known bounds. Show the selected value 
 
 `min` and `max` bound the scale; `step` defines a positive step anchored at `min`. Defaults are 0, 100 and 1. Fractional values are supported. The greatest selectable value lies on the step grid: with `min=0`, `max=10`, `step=3`, it is 9.
 
-External values are clamped and snapped for display. Changing inputs alone does not emit `valueCommit`. A non-positive or non-finite step falls back to 1; `max < min` collapses the scale to a single point.
-
 ### States
 
-`invalid` indicates an error, for example when validity depends on another form field. In Angular forms, `ErrorStateMatcher` controls when errors appear. `disabled` prevents changes and removes thumbs from the focus sequence. `readonly` allows focus and reading the value while preventing changes.
+`disabled` prevents changes and removes thumbs from the focus sequence. `readonly` allows focus and reading the value while preventing changes.
 
 <Example id="slider-states" />
+
+Use `invalid` when a value is within the scale bounds but breaks an additional rule. Display the reason next to the slider. In this example, the saved timeout exceeds the 45-minute limit.
+
+<Example id="slider-invalid" />
 
 ### Track marks
 
@@ -44,7 +44,7 @@ A range value is a pair `[start, end]`. Each thumb has an individual accessible 
 
 #### Minimum distance
 
-Set `minDistance` to keep the thumbs apart. In this example, the bounds stay at least 10 minutes apart.
+In this example, `minDistance` keeps the bounds at least 10 minutes apart with every `collision` strategy. Drag the lower thumb past the upper thumb to compare the strategies.
 
 <Example id="slider-distance" />
 
@@ -108,7 +108,7 @@ Place the numeric field beside the slider when both controls fit. Use `kbq-input
 
 <Example id="slider-input" />
 
-Intermediate text, including an empty field, is preserved during editing. On <kbd>Enter</kbd> or blur, the field displays the snapped valid value; an empty field restores the last selected value. Number formatting and separators follow the Koobiq locale. Esc cancels the field edit.
+Intermediate text, including an empty field, is preserved during editing. On <kbd>Enter</kbd> or blur, the field displays the snapped valid value; an empty field restores the last selected value. Esc cancels the field edit.
 
 ### Accessibility
 
@@ -116,16 +116,18 @@ Use `kbq-label` inside `kbq-form-field`. Clicking the label focuses the thumb or
 
 ### Keyboard interaction
 
-Each thumb participates in the normal Tab sequence. Disabled thumbs are skipped; read-only thumbs remain focusable.
-
-| Key                                                                                             | Action                                               |
-| ----------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| <span class="docs-hot-key-button">Esc</span>                                                    | Cancels the current change and hides the tooltip     |
-| <span class="docs-hot-key-button">→</span>, <span class="docs-hot-key-button">↑</span>          | Increases the value by one step                      |
-| <span class="docs-hot-key-button">←</span>, <span class="docs-hot-key-button">↓</span>          | Decreases the value by one step                      |
-| <span class="docs-hot-key-button">Home</span>                                                   | Selects the lowest available value                   |
-| <span class="docs-hot-key-button">End</span>                                                    | Selects the highest available value                  |
-| <span class="docs-hot-key-button">PgUp</span>, <span class="docs-hot-key-button">PgDn</span>    | Changes the value by `pageStep` steps, 10 by default |
-| <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">arrow</span> | Changes the value by `pageStep` steps                |
+| Key         | Action                                                                    |
+| ----------- | ------------------------------------------------------------------------- |
+| Tab         | Moves focus to the next range thumb or the next focusable element         |
+| Shift+Tab   | Moves focus to the previous range thumb or the previous focusable element |
+| Esc         | Cancels the current change and hides the tooltip                          |
+| →, ↑        | Increases the value by one step                                           |
+| ←, ↓        | Decreases the value by one step                                           |
+| Home        | Selects the lowest available value                                        |
+| End         | Selects the highest available value                                       |
+| PgUp, PgDn  | Changes the value by `pageStep` steps, 10 by default                      |
+| Shift+arrow | Changes the value by `pageStep` steps                                     |
 
 `reversed` reverses the arrow keys along the scale. Home, End, PgUp and PgDn keep their numeric meaning. With `step=null`, arrows move between marks. Standard text editing commands in the numeric field are preserved.
+
+<Example id="slider-keyboard" />

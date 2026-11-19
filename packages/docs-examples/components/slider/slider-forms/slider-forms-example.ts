@@ -3,19 +3,19 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqInputSlider, KbqSlider } from '@koobiq/components/slider';
+import { KbqSlider } from '@koobiq/components/slider';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
 
 /** @title Slider with Angular forms */
 @Component({
     selector: 'slider-forms-example',
-    imports: [KbqSlider, KbqInputSlider, KbqFormFieldModule, KbqButtonModule, ReactiveFormsModule],
+    imports: [KbqSlider, KbqFormFieldModule, KbqButtonModule, ReactiveFormsModule],
     template: `
         <form [formGroup]="settings" (ngSubmit)="save()">
             <kbq-form-field>
                 <kbq-label>{{ t().retention }}</kbq-label>
-                <kbq-input-slider formControlName="retention" [min]="1" [max]="90" />
+                <kbq-slider showTooltip formControlName="retention" [min]="1" [max]="90" />
             </kbq-form-field>
             <kbq-form-field>
                 <kbq-label>{{ t().window }}</kbq-label>
@@ -23,7 +23,7 @@ import { TRANSLATIONS } from './l10n';
                 <kbq-hint>{{ t().hint }}</kbq-hint>
                 <kbq-error>{{ t().error }}</kbq-error>
             </kbq-form-field>
-            <button kbq-button type="submit">{{ t().save }}</button>
+            <button color="contrast" kbq-button type="submit">{{ t().save }}</button>
             @if (saved(); as settings) {
                 <output>{{ t().saved }} {{ settings[0] }} / {{ settings[1] }}</output>
             }

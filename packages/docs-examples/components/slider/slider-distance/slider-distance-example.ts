@@ -9,15 +9,24 @@ import { TRANSLATIONS } from './l10n';
     selector: 'slider-distance-example',
     imports: [KbqFormFieldModule, KbqSlider],
     template: `
-        <kbq-form-field>
-            <kbq-label>{{ t().label }}</kbq-label>
-            <kbq-slider showTooltip [max]="60" [value]="[25, 35]" [minDistance]="10" [thumbLabels]="t().bounds" />
-            <kbq-hint>{{ t().hint }}</kbq-hint>
-        </kbq-form-field>
+        @for (mode of modes; track mode.value) {
+            <kbq-form-field>
+                <kbq-label>{{ mode.label }}</kbq-label>
+                <kbq-slider
+                    showTooltip
+                    [max]="60"
+                    [value]="[25, 35]"
+                    [minDistance]="10"
+                    [collision]="mode.value"
+                    [thumbLabels]="t().bounds"
+                />
+            </kbq-form-field>
+        }
     `,
     styles: `
         :host {
-            display: block;
+            display: grid;
+            gap: 10px;
             width: min(100%, 320px);
             margin: auto;
         }
@@ -25,5 +34,10 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SliderDistanceExample {
+    protected readonly modes = [
+        { value: 'none', label: 'None' },
+        { value: 'swap', label: 'Swap' },
+        { value: 'push', label: 'Push' }
+    ] as const;
     protected readonly t = injectTranslation(TRANSLATIONS);
 }

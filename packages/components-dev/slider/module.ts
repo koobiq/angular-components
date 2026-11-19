@@ -15,6 +15,8 @@ import { DevThemeToggle } from '../theme-toggle';
             <slider-settings-example />
             <h2>States</h2>
             <slider-states-example />
+            <h2>Invalid</h2>
+            <slider-invalid-example />
             <h2>Marks</h2>
             <slider-marks-example />
             <h2>Range</h2>
@@ -37,6 +39,8 @@ import { DevThemeToggle } from '../theme-toggle';
             <slider-forms-example />
             <h2>Input slider</h2>
             <slider-input-example />
+            <h2>Keyboard interaction</h2>
+            <slider-keyboard-example />
             <h2>Custom styles</h2>
             <slider-custom-example />
         </main>

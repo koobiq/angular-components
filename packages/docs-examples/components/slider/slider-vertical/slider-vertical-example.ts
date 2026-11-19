@@ -9,17 +9,12 @@ import { TRANSLATIONS } from './l10n';
     imports: [KbqSlider],
     template: `
         <div class="example-slider-vertical-row">
-            @for (level of levels; track $index) {
-                <kbq-slider showTooltip vertical [value]="level" [aria-label]="t().channel + ' ' + ($index + 1)" />
-            }
-            <kbq-slider
-                showTooltip
-                vertical
-                class="example-scale"
-                [value]="[25, 75]"
-                [marks]="marks"
-                [thumbLabels]="t().bounds"
-            />
+            <div class="example-channels">
+                @for (level of levels; track $index) {
+                    <kbq-slider showTooltip vertical [value]="level" [aria-label]="t().channel + ' ' + ($index + 1)" />
+                }
+            </div>
+            <kbq-slider showTooltip vertical [value]="[25, 75]" [marks]="marks" [thumbLabels]="t().bounds" />
         </div>
     `,
     styles: `
@@ -34,24 +29,24 @@ import { TRANSLATIONS } from './l10n';
             min-height: 96px;
             font-variant-numeric: tabular-nums;
         }
-        .example-scale {
-            --kbq-slider-tick-size: 4px;
-        }
-
         .example-slider-vertical-row {
             display: flex;
             justify-content: center;
-            gap: 0;
+            gap: 16px;
             padding-inline-end: 24px;
+        }
+        .example-channels {
+            display: flex;
+            min-width: 0;
+        }
+        .example-channels kbq-slider {
+            min-width: 24px;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SliderVerticalExample {
     protected readonly levels = [40, 90, 60, 30, 85, 60, 15];
-    protected readonly marks = [0, 25, 50, 75, 100].map((value) => ({
-        value,
-        label: value % 50 === 0 ? String(value) : undefined
-    }));
+    protected readonly marks = [10, 50, 90].map((value) => ({ value, label: String(value) }));
     protected readonly t = injectTranslation(TRANSLATIONS);
 }

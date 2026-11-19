@@ -29,7 +29,7 @@ import { TRANSLATIONS } from './l10n';
         :host {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 24px;
             width: 100%;
             max-width: 320px;
             margin: 0 auto;

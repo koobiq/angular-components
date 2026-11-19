@@ -6,6 +6,8 @@ import { SliderDistanceExample } from './slider-distance/slider-distance-example
 import { SliderFillExample } from './slider-fill/slider-fill-example';
 import { SliderFormsExample } from './slider-forms/slider-forms-example';
 import { SliderInputExample } from './slider-input/slider-input-example';
+import { SliderInvalidExample } from './slider-invalid/slider-invalid-example';
+import { SliderKeyboardExample } from './slider-keyboard/slider-keyboard-example';
 import { SliderLabelsExample } from './slider-labels/slider-labels-example';
 import { SliderMarksExample } from './slider-marks/slider-marks-example';
 import { SliderOverviewExample } from './slider-overview/slider-overview-example';
@@ -23,6 +25,8 @@ export {
     SliderFillExample,
     SliderFormsExample,
     SliderInputExample,
+    SliderInvalidExample,
+    SliderKeyboardExample,
     SliderLabelsExample,
     SliderMarksExample,
     SliderOverviewExample,
@@ -36,6 +40,7 @@ const EXAMPLES = [
     SliderOverviewExample,
     SliderSettingsExample,
     SliderStatesExample,
+    SliderInvalidExample,
     SliderMarksExample,
     SliderRangeExample,
     SliderDistanceExample,
@@ -47,6 +52,7 @@ const EXAMPLES = [
     SliderFormsExample,
     SliderInputExample,
     SliderCommitExample,
+    SliderKeyboardExample,
     SliderCustomExample
 ];
 @NgModule({ imports: EXAMPLES, exports: EXAMPLES })

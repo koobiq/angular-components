@@ -971,6 +971,10 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/slider').then((m) => m.SliderFormsExample);
         case 'slider-input':
             return import('@koobiq/docs-examples/components/slider').then((m) => m.SliderInputExample);
+        case 'slider-invalid':
+            return import('@koobiq/docs-examples/components/slider').then((m) => m.SliderInvalidExample);
+        case 'slider-keyboard':
+            return import('@koobiq/docs-examples/components/slider').then((m) => m.SliderKeyboardExample);
         case 'slider-labels':
             return import('@koobiq/docs-examples/components/slider').then((m) => m.SliderLabelsExample);
         case 'slider-marks':

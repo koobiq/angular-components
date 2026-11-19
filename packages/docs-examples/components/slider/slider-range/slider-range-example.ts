@@ -9,10 +9,10 @@ import { TRANSLATIONS } from './l10n';
     selector: 'slider-range-example',
     imports: [KbqFormFieldModule, KbqSlider],
     template: `
-        @for (mode of modes; track mode) {
+        @for (mode of modes; track mode.value) {
             <kbq-form-field>
-                <kbq-label class="example-scenario">{{ t().scenarios[mode] }}</kbq-label>
-                <kbq-slider showTooltip [value]="[25, 75]" [collision]="mode" [thumbLabels]="t().bounds" />
+                <kbq-label>{{ mode.label }}</kbq-label>
+                <kbq-slider showTooltip [value]="[25, 75]" [collision]="mode.value" [thumbLabels]="t().bounds" />
             </kbq-form-field>
         }
     `,
@@ -20,7 +20,7 @@ import { TRANSLATIONS } from './l10n';
         :host {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 24px;
             width: 100%;
             max-width: 320px;
             margin: 0 auto;
@@ -28,13 +28,14 @@ import { TRANSLATIONS } from './l10n';
             min-height: 96px;
             font-variant-numeric: tabular-nums;
         }
-        .example-scenario {
-            text-transform: uppercase;
-        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SliderRangeExample {
-    protected readonly modes = ['none', 'swap', 'push'] as const;
+    protected readonly modes = [
+        { value: 'none', label: 'None' },
+        { value: 'swap', label: 'Swap' },
+        { value: 'push', label: 'Push' }
+    ] as const;
     protected readonly t = injectTranslation(TRANSLATIONS);
 }
