@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title Select group label
@@ -10,7 +12,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [KbqSelectModule, KbqBadgeModule],
     template: `
         <kbq-form-field>
-            <kbq-select multiple placeholder="Pokemon" [value]="selected">
+            <kbq-select multiple [placeholder]="t().placeholder" [value]="selected">
                 @for (group of pokemonTypes; track group.name) {
                     <kbq-optgroup #optgroup="kbqOptgroup" [label]="group.name">
                         <div kbq-optgroup-label>
@@ -39,6 +41,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectGroupsLabelExample {
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     readonly pokemonTypes = [
         {
             name: 'Grass',
@@ -65,5 +69,5 @@ export class SelectGroupsLabelExample {
         }
     ];
 
-    readonly selected = this.pokemonTypes[0].pokemon.slice(0, 2).map((pokemon) => pokemon.value);
+    readonly selected = ['bulbasaur-0', 'oddish-1'];
 }

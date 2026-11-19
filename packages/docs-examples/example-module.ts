@@ -6204,7 +6204,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-groups-label-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
     "selector": "select-groups-label-example",
     "primaryFile": "select-groups-label-example.ts",
     "importPath": "components/select"
