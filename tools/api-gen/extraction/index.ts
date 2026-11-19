@@ -2,6 +2,7 @@ import { NgtscProgram } from '@angular/compiler-cli';
 import { basename, join } from 'path';
 import ts from 'typescript';
 import { type ConstantEntry, type DocEntry, EntryType } from '../rendering/entities';
+import type { ExternalApiPage } from '../rendering/entry-point';
 import type {
     ClassEntryMetadata,
     DeclarationSourceMetadata,
@@ -10,6 +11,7 @@ import type {
     PackageMetadata
 } from '../types';
 import { src } from '../utils';
+import { getExternalApiPages } from './external-pages';
 import { prepareMergedMetadata, readSourceFile, updateEntries } from './helpers';
 
 const BASE_PATH = process.env['BASE_PATH'] ?? 'packages';
@@ -71,7 +73,11 @@ const getModulePackagePaths = ({ moduleName, include, exclude }: ModuleInfo): st
     return src(join(BASE_PATH, moduleName, rule));
 };
 
-export function extractApiToJson(packages: ModuleInfo[]) {
+/** The API of the packages, and where the declarations of Angular, its CDK and RxJS their types name are documented. */
+export function extractApiToJson(packages: ModuleInfo[]): {
+    entryCollections: EntryCollection[];
+    externalPages: Map<string, ExternalApiPage>;
+} {
     const modules = packages.reduce<{ [moduleName: string]: PackageMetadata[] }>((res, current) => {
         res[current.moduleName] = getModulePackagePaths(current)
             .map((packagePath: string) => basename(packagePath))
@@ -144,7 +150,7 @@ export function extractApiToJson(packages: ModuleInfo[]) {
         }
     }
 
-    return extracted.map(
+    const entryCollections = extracted.map(
         ({ moduleName, packages }) =>
             ({
                 moduleName,
@@ -158,4 +164,6 @@ export function extractApiToJson(packages: ModuleInfo[]) {
                 }))
             }) as EntryCollection
     );
+
+    return { entryCollections, externalPages: getExternalApiPages(program.getTsProgram()) };
 }

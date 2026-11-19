@@ -6,16 +6,21 @@
 /** A block of JSDoc text: prose compiled from Markdown into HTML, or code, which the page highlights. */
 export type DocsApiBlock = { type: 'html'; html: string } | { type: 'code'; code: string; language: string };
 
-/** A piece of a type: text, or the name of an entry documented on an API tab, which links to its section. */
+/**
+ * A piece of a type: text, or a name that links to its documentation — the section of an entry documented on an API
+ * tab, or the page of a declaration of Angular, its CDK or RxJS.
+ */
 export interface DocsApiTypePart {
     text: string;
     link?: DocsApiTypeLink;
 }
 
-/** Where the section of an entry named in a type is, the id of the section being the name. */
+/** Where the documentation of a name in a type is; the id of the section of an entry is the name. */
 export interface DocsApiTypeLink {
     /** The API tab showing it, without the locale — `components/core/api` — unless it is the tab the type is on. */
     page?: string;
+    /** The address of a declaration of another library on the site documenting it, such as angular.dev. */
+    url?: string;
 }
 
 /** A parameter with a description; the signature above already lists every parameter. */

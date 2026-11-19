@@ -7,7 +7,7 @@ import {
     MemberType,
     type PropertyEntry
 } from './entities';
-import { type ApiEntryPage, getApiEntryPoint, linkType } from './entry-point';
+import { type ApiEntryPage, type ExternalApiPage, getApiEntryPoint, linkType } from './entry-point';
 
 const entry = (patch: Partial<DocEntry> & Record<string, unknown>): DocEntry =>
     ({ name: '', entryType: EntryType.Constant, description: '', rawComment: '', jsdocTags: [], ...patch }) as DocEntry;
@@ -337,7 +337,7 @@ describe(getApiEntryPoint.name, () => {
 });
 
 describe(linkType.name, () => {
-    const pages = new Map<string, ApiEntryPage>([
+    const pages = new Map<string, ApiEntryPage | ExternalApiPage>([
         [
             'KbqActionsPanelRef',
             { entryPoint: '@koobiq/components/actions-panel', page: 'components/actions-panel/api' }
@@ -347,7 +347,9 @@ describe(linkType.name, () => {
             { entryPoint: '@koobiq/components/actions-panel', page: 'components/actions-panel/api' }
         ],
         ['KbqOption', { entryPoint: '@koobiq/components/core', page: 'components/core/api' }],
-        ['T', { entryPoint: '@koobiq/components/core', page: 'components/core/api', isValue: true }]
+        ['T', { entryPoint: '@koobiq/components/core', page: 'components/core/api', isValue: true }],
+        ['Signal', { url: 'https://v21.angular.dev/api/core/Signal' }],
+        ['signal', { url: 'https://v21.angular.dev/api/core/signal', isValue: true }]
     ]);
     const links = { pages, entryPoint: '@koobiq/components/actions-panel', self: 'KbqActionsPanelConfig' };
 
@@ -365,6 +367,14 @@ describe(linkType.name, () => {
             { text: '[...' },
             { text: 'KbqOption', link: { page: 'components/core/api' } },
             { text: '[]]' }
+        ]);
+    });
+
+    it('links a declaration of another library to its documentation, a function of it only after `typeof`', () => {
+        expect(linkType('Signal<signal> | typeof signal', links)).toEqual([
+            { text: 'Signal', link: { url: 'https://v21.angular.dev/api/core/Signal' } },
+            { text: '<signal> | typeof ' },
+            { text: 'signal', link: { url: 'https://v21.angular.dev/api/core/signal' } }
         ]);
     });
 

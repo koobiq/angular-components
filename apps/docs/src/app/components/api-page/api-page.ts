@@ -107,7 +107,8 @@ export class DocsApiText {
 }
 
 /**
- * A type, the names of the entries documented on an API tab in it linked to their sections. Each piece of text is an
+ * A type, the names of the entries documented on an API tab in it linked to their sections, and those of Angular, its
+ * CDK and RxJS to their documentation, in a new tab as the other links leaving the site. Each piece of text is an
  * `ng-container` of its own: the whitespace of the template around it is then dropped, not kept as a space in the type.
  */
 @Component({
@@ -117,6 +118,10 @@ export class DocsApiText {
         @for (part of parts(); track $index) {
             @if (!part.link) {
                 <ng-container>{{ part.text }}</ng-container>
+            } @else if (part.link.url) {
+                <a kbqLink underline="none" target="_blank" rel="noopener noreferrer" [href]="part.link.url">
+                    <ng-container>{{ part.text }}</ng-container>
+                </a>
             } @else if (part.link.page) {
                 <a kbqLink underline="none" [fragment]="part.text" [routerLink]="getTabPath(part.link.page)">
                     <ng-container>{{ part.text }}</ng-container>
