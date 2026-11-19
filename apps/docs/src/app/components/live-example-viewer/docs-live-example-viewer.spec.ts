@@ -372,6 +372,47 @@ describe(DocsLiveExampleViewerComponent.name, () => {
                 );
             });
 
+            it('marks the code the page names, and opens the first file that has it', async () => {
+                fixture.componentRef.setInput('marks', ['class X']);
+                showSource();
+                await fixture.whenStable();
+
+                const code: HTMLElement = fixture.nativeElement.querySelector('kbq-code-block code');
+
+                expect(code.textContent).toBe('export class X {}');
+                // highlight.js splits the code into tokens, and the mark into pieces with them.
+                expect(Array.from(code.querySelectorAll('mark'), ({ textContent }) => textContent).join('')).toBe(
+                    'class X'
+                );
+                expect(fixture.componentInstance.files().map(({ markedText }) => markedText)).toEqual([
+                    undefined,
+                    ['class X']
+                ]);
+            });
+
+            it('opens the source of another example on its first file with marked code', async () => {
+                const OTHER_ID = 'other-select-example';
+
+                EXAMPLE_COMPONENTS[OTHER_ID] = EXAMPLE_COMPONENTS[EXAMPLE_ID]!;
+
+                try {
+                    fixture.componentRef.setInput('marks', ['<p>']);
+                    showSource();
+                    (fixture.nativeElement.querySelectorAll('.kbq-tab-link')[1] as HTMLElement).click();
+                    await fixture.whenStable();
+
+                    // The other example has the same files, which the document loader answers from its cache.
+                    fixture.componentRef.setInput('example', OTHER_ID);
+                    await fixture.whenStable();
+
+                    expect(fixture.nativeElement.querySelector('kbq-code-block code')?.textContent).toBe(
+                        '<p>\n\tOne\n</p>'
+                    );
+                } finally {
+                    Reflect.deleteProperty(EXAMPLE_COMPONENTS, OTHER_ID);
+                }
+            });
+
             it('scrolls to none of the lines the reader selects after a link to lines the source lacks', async () => {
                 // The code block warns that the line it is given is past the end of the file.
                 const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});

@@ -1656,7 +1656,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "code-block-with-no-border": {
     "packagePath": "components/code-block/code-block-with-no-border",
-    "title": "Code-block with noBorder attribute",
+    "title": "Code-block without borders",
     "componentName": "CodeBlockWithNoBorderExample",
     "files": [
       "code-block-with-no-border-example.ts"

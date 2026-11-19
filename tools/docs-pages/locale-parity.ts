@@ -26,7 +26,15 @@ const describeParagraph = (paragraph: Paragraph): string => {
 };
 
 const describeElement = (element: MdxJsxFlowElement): string => {
-    if (element.name === 'Example') return `example ${getAttribute(element, 'id')}`;
+    if (element.name === 'Example') {
+        const id = getAttribute(element, 'id');
+        const marks = getAttribute(element, 'marks');
+
+        // The code a page marks in an example is code rather than text, the same in both languages.
+        return typeof marks === 'string'
+            ? `example ${id} marking ${marks.trim().split(/\s+/).join(' ')}`
+            : `example ${id}`;
+    }
 
     const source = getAttribute(element, 'src');
 

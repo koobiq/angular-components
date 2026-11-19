@@ -98,10 +98,22 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
      */
     readonly component = input.required<Type<unknown> | DocsExampleLoader>();
 
+    /** Code to mark in the source of the example, wherever it occurs: what the section that shows it is about. */
+    readonly marks = input<readonly string[]>([]);
+
     protected readonly isSourceShown = signal(false);
 
     /** The source files of the example, once they have loaded. */
     private readonly sourceFiles = signal<KbqCodeBlockFile[]>([]);
+
+    /** The source files, with the code of `marks` marked in those that have it. */
+    private readonly markedFiles = computed(() =>
+        this.sourceFiles().map((file) => {
+            const markedText = this.marks().filter((mark) => file.content.includes(mark));
+
+            return markedText.length ? { ...file, markedText } : file;
+        })
+    );
 
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
@@ -124,21 +136,34 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
         return link ? this.sourceFiles().findIndex(({ language }) => language?.toLowerCase() === link.file) : -1;
     });
 
-    /** The source files, with the lines the address names marked in their file. */
+    /** The source files, with their marked code and the lines the address names. */
     readonly files = computed(() => {
         const index = this.linkedFileIndex();
         const lines = this.linkedLines()?.lines;
 
-        return this.sourceFiles().map((file, fileIndex) =>
+        return this.markedFiles().map((file, fileIndex) =>
             fileIndex === index && lines ? { ...file, markedLines: [lines] } : file
         );
     });
 
-    /** The source file on screen: the one the address names, until the reader picks another. */
-    protected readonly activeFileIndex = linkedSignal<number, number>({
-        source: this.linkedFileIndex,
-        // An address that stops naming a file leaves the reader on the one they are reading.
-        computation: (index, previous) => (index >= 0 ? index : (previous?.value ?? 0))
+    /**
+     * The source file on screen: the one the address names, or else the first one with marked code, until the reader
+     * picks another.
+     */
+    protected readonly activeFileIndex = linkedSignal({
+        source: () => ({
+            linked: this.linkedFileIndex(),
+            marked: this.markedFiles().findIndex(({ markedText }) => markedText),
+            files: this.sourceFiles()
+        }),
+        computation: ({ linked, marked, files }, previous): number => {
+            if (linked >= 0) return linked;
+
+            // An address that stops naming a file leaves the reader on the one they are reading, in the same files.
+            if (files === previous?.source.files) return previous.value;
+
+            return Math.max(marked, 0);
+        }
     });
 
     /** The lines the reader has selected last: the address that names them next does not scroll to them. */
@@ -355,7 +380,6 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     /** Rebuilds the shown source tabs of the example. */
     private resetExample(): void {
         this.sourceFiles.set([]);
-        this.activeFileIndex.set(0);
 
         if (this.isSourceShown()) {
             this.generateExampleTabs();

@@ -260,6 +260,47 @@ describe(compilePage.name, () => {
         expect(page.browserExamples).toEqual([EXAMPLES['ag-grid-overview']]);
     });
 
+    describe('marks of an example', () => {
+        const SOURCES = ['<kbq-code-block [lineNumbers]="true" />', 'readonly files = [];'];
+        const compileWithSources = (source: string) =>
+            compilePage(source, {
+                path: 'alert.en.mdx',
+                examples: EXAMPLES,
+                readExampleSources: () => SOURCES,
+                url: '/en/components/alert/overview'
+            });
+
+        it('binds the code to mark by its index, so that code never becomes template text', () => {
+            const page = compileWithSources(
+                '<Example id="alert-status" marks="[lineNumbers]  files" />\n\n<Example id="alert-overview" marks=\'[lineNumbers]="true"\' />'
+            );
+
+            expect(page.template).toBe(
+                [
+                    '<docs-live-example-viewer example="alert-status" [marks]="exampleMarks[0]" [component]="examples.AlertStatusExample" />',
+                    '<docs-live-example-viewer example="alert-overview" [marks]="exampleMarks[1]" [component]="examples.AlertOverviewExample" />'
+                ].join('\n')
+            );
+            expect(page.exampleMarks).toEqual([['[lineNumbers]', 'files'], ['[lineNumbers]="true"']]);
+        });
+
+        it.each([
+            [
+                'code the source lacks',
+                '<Example id="alert-status" marks="[filled]" />',
+                'the source of the example "alert-status" has no "[filled]" to mark'
+            ],
+            ['no code', '<Example id="alert-status" marks=" " />', '<Example marks> names no code to mark'],
+            [
+                'marks twice',
+                '<Example id="alert-status" marks="files" marks="files" />',
+                '<Example> takes the string attributes id and, to mark code in its source, marks'
+            ]
+        ])('fails on marks of %s', (_name, source, message) => {
+            expect(() => compileWithSources(source)).toThrow(`alert.en.mdx:1:1: ${message}`);
+        });
+    });
+
     it('reports the position of what it cannot compile', () => {
         expect(() => compile('Intro.\n\n  <Example id="alert-missing" />')).toThrow(
             'alert.en.mdx:3:3: there is no example "alert-missing" in packages/docs-examples'
@@ -271,11 +312,15 @@ describe(compilePage.name, () => {
     });
 
     it.each([
-        ['an example without an id', '<Example />', '<Example> takes a single string attribute: id'],
+        [
+            'an example without an id',
+            '<Example />',
+            '<Example> takes the string attributes id and, to mark code in its source, marks'
+        ],
         [
             'an example with other attributes',
             '<Example id="alert-status" open />',
-            '<Example> takes a single string attribute: id'
+            '<Example> takes the string attributes id and, to mark code in its source, marks'
         ],
         [
             'an example with content',

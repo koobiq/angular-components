@@ -40,6 +40,10 @@ describe(comparePageLocales.name, () => {
         expect(compare('<Example id="a" />\n', '<Example id="b" />\n')).toEqual([
             'page.en.mdx:1 has example a, but page.ru.mdx:1 has example b'
         ]);
+        expect(compare('<Example id="a" marks="x  y" />\n', '<Example id="a" marks="x y" />\n')).toEqual([]);
+        expect(compare('<Example id="a" marks="x y" />\n', '<Example id="a" marks="x" />\n')).toEqual([
+            'page.en.mdx:1 has example a marking x y, but page.ru.mdx:1 has example a marking x'
+        ]);
         expect(compare('![a](./a.png)\n', '![а](./b.png)\n')).toEqual([
             'page.en.mdx:1 has paragraph with image ./a.png, but page.ru.mdx:1 has paragraph with image ./b.png'
         ]);

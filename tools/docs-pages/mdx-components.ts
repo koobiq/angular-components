@@ -28,6 +28,11 @@ declare global {
         Example: (props: {
             /** Key of the example in `packages/docs-examples/example-module.ts`. */
             id: LiveExampleId;
+            /**
+             * Code to mark in the source of the example, separated by spaces: what the section is about, such as
+             * `marks="[lineNumbers]"`. Every occurrence is marked, and the build fails on code the source lacks.
+             */
+            marks?: string;
         }) => null;
     };
 }
