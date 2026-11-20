@@ -1245,10 +1245,16 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectIconExample);
         case 'tree-select-lazyload':
             return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectLazyloadExample);
+        case 'tree-select-locale-configuration':
+            return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectLocaleConfigurationExample);
         case 'tree-select-multiple-overview':
             return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectMultipleOverviewExample);
         case 'tree-select-overview':
             return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectOverviewExample);
+        case 'tree-select-scrolling-and-layering-page':
+            return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectScrollingAndLayeringPageExample);
+        case 'tree-select-scrolling-and-layering':
+            return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectScrollingAndLayeringExample);
         case 'tree-select-search-overview':
             return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectSearchOverviewExample);
         case 'tree-select-search-smart':

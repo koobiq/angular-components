@@ -10,8 +10,11 @@ import { TreeSelectFooterOverviewExample } from './tree-select-footer-overview/t
 import { TreeSelectHeightExample } from './tree-select-height/tree-select-height-example';
 import { TreeSelectIconExample } from './tree-select-icon/tree-select-icon-example';
 import { TreeSelectLazyloadExample } from './tree-select-lazyload/tree-select-lazyload-example';
+import { TreeSelectLocaleConfigurationExample } from './tree-select-locale-configuration/tree-select-locale-configuration-example';
 import { TreeSelectMultipleOverviewExample } from './tree-select-multiple-overview/tree-select-multiple-overview-example';
 import { TreeSelectOverviewExample } from './tree-select-overview/tree-select-overview-example';
+import { TreeSelectScrollingAndLayeringExample } from './tree-select-scrolling-and-layering/tree-select-scrolling-and-layering-example';
+import { TreeSelectScrollingAndLayeringPageExample } from './tree-select-scrolling-and-layering-page/tree-select-scrolling-and-layering-page-example';
 import { TreeSelectSearchOverviewExample } from './tree-select-search-overview/tree-select-search-overview-example';
 import { TreeSelectSearchSmartExample } from './tree-select-search-smart/tree-select-search-smart-example';
 import { TreeSelectSelectAllExample } from './tree-select-select-all/tree-select-select-all-example';
@@ -32,8 +35,11 @@ export {
     TreeSelectHeightExample,
     TreeSelectIconExample,
     TreeSelectLazyloadExample,
+    TreeSelectLocaleConfigurationExample,
     TreeSelectMultipleOverviewExample,
     TreeSelectOverviewExample,
+    TreeSelectScrollingAndLayeringExample,
+    TreeSelectScrollingAndLayeringPageExample,
     TreeSelectSearchOverviewExample,
     TreeSelectSearchSmartExample,
     TreeSelectSelectAllExample,
@@ -63,7 +69,10 @@ const EXAMPLES = [
     TreeSelectCleanerWithDisabledExample,
     TreeSelectValidationExample,
     TreeSelectDisabledExample,
-    TreeSelectIconExample
+    TreeSelectIconExample,
+    TreeSelectLocaleConfigurationExample,
+    TreeSelectScrollingAndLayeringExample,
+    TreeSelectScrollingAndLayeringPageExample
 ];
 
 @NgModule({

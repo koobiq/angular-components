@@ -8966,6 +8966,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tree-select-lazyload-example.ts",
     "importPath": "components/tree-select"
   },
+  "tree-select-locale-configuration": {
+    "packagePath": "components/tree-select/tree-select-locale-configuration",
+    "title": "Tree-select locale configuration",
+    "componentName": "TreeSelectLocaleConfigurationExample",
+    "files": [
+      "tree-select-locale-configuration-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "tree-select-locale-configuration-example",
+    "primaryFile": "tree-select-locale-configuration-example.ts",
+    "importPath": "components/tree-select"
+  },
   "tree-select-multiple-overview": {
     "packagePath": "components/tree-select/tree-select-multiple-overview",
     "title": "Tree-select multiple",
@@ -8988,6 +9003,33 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "tree-select-overview-example",
     "primaryFile": "tree-select-overview-example.ts",
+    "importPath": "components/tree-select"
+  },
+  "tree-select-scrolling-and-layering-page": {
+    "packagePath": "components/tree-select/tree-select-scrolling-and-layering-page",
+    "title": "Tree-select scrolling and layering page",
+    "componentName": "TreeSelectScrollingAndLayeringPageExample",
+    "files": [
+      "tree-select-scrolling-and-layering-page-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "tree-select-scrolling-and-layering-page-example",
+    "primaryFile": "tree-select-scrolling-and-layering-page-example.ts",
+    "importPath": "components/tree-select"
+  },
+  "tree-select-scrolling-and-layering": {
+    "packagePath": "components/tree-select/tree-select-scrolling-and-layering",
+    "title": "tree-select-scrolling-and-layering",
+    "componentName": "TreeSelectScrollingAndLayeringExample",
+    "files": [
+      "tree-select-scrolling-and-layering-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tree-select-scrolling-and-layering-example",
+    "primaryFile": "tree-select-scrolling-and-layering-example.ts",
     "importPath": "components/tree-select"
   },
   "tree-select-search-overview": {
@@ -10264,8 +10306,11 @@ export type LiveExampleId =
   | 'tree-select-height'
   | 'tree-select-icon'
   | 'tree-select-lazyload'
+  | 'tree-select-locale-configuration'
   | 'tree-select-multiple-overview'
   | 'tree-select-overview'
+  | 'tree-select-scrolling-and-layering-page'
+  | 'tree-select-scrolling-and-layering'
   | 'tree-select-search-overview'
   | 'tree-select-search-smart'
   | 'tree-select-select-all-label'
