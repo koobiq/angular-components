@@ -311,6 +311,8 @@
 
         &.kbq-code-block_filled {
             @include kbq-code-block-style(filled);
+
+            --kbq-code-block-gutter-background: var(--kbq-background-bg-tertiary);
         }
 
         .kbq-code-block__main.cdk-keyboard-focused {

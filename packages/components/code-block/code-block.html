@@ -25,11 +25,14 @@
 
     <div class="kbq-code-block__actionbar">
         <div class="kbq-code-block__actionbar__button-stack">
-            @if (canToggleSoftWrap()) {
+            @if (canToggleSoftWrap() && !hasCollapseControl()) {
                 <button
+                    #softWrapTooltip="kbqTooltip"
                     kbq-button
                     type="button"
                     class="kbq-code-block__actionbar__soft-wrap-button"
+                    kbqTooltipClass="kbq-code-block-tooltip"
+                    [kbqEnterDelay]="0"
                     [attr.aria-label]="
                         softWrap() ? localeConfiguration().softWrapOffTooltip : localeConfiguration().softWrapOnTooltip
                     "
@@ -39,6 +42,8 @@
                         softWrap() ? localeConfiguration().softWrapOffTooltip : localeConfiguration().softWrapOnTooltip
                     "
                     (click)="toggleSoftWrap()"
+                    (pointerenter)="prepareCodeTooltip(softWrapTooltip, false)"
+                    (focusin)="prepareCodeTooltip(softWrapTooltip, true)"
                 >
                     @if (softWrap()) {
                         <i kbq-icon="kbq-text-overflow_16"></i>
@@ -50,21 +55,33 @@
 
             @if (canDownload()) {
                 <button
+                    #downloadTooltip="kbqTooltip"
                     kbq-button
                     type="button"
                     class="kbq-code-block__actionbar__download-button"
+                    kbqTooltipClass="kbq-code-block-tooltip"
+                    [kbqEnterDelay]="0"
                     [attr.aria-label]="localeConfiguration().downloadTooltip"
                     [color]="componentColor.Contrast"
                     [kbqStyle]="buttonStyle.Transparent"
                     [kbqTooltip]="localeConfiguration().downloadTooltip"
                     (click)="downloadCode()"
+                    (pointerenter)="prepareCodeTooltip(downloadTooltip, false)"
+                    (focusin)="prepareCodeTooltip(downloadTooltip, true)"
                 >
                     <i kbq-icon="kbq-arrow-down-to-line_16"></i>
                 </button>
             }
 
             @if (canCopy()) {
-                <div #copyButtonTooltip="kbqTooltip" [kbqTooltip]="localeConfiguration().copyTooltip">
+                <div
+                    #copyButtonTooltip="kbqTooltip"
+                    kbqTooltipClass="kbq-code-block-tooltip"
+                    [kbqEnterDelay]="0"
+                    [kbqTooltip]="localeConfiguration().copyTooltip"
+                    (pointerenter)="prepareCodeTooltip(copyButtonTooltip, false)"
+                    (focusin)="prepareCodeTooltip(copyButtonTooltip, true)"
+                >
                     <button
                         kbq-button
                         type="button"
@@ -72,7 +89,7 @@
                         [attr.aria-label]="localeConfiguration().copyTooltip"
                         [color]="componentColor.Contrast"
                         [kbqStyle]="buttonStyle.Transparent"
-                        (click)="copyCode()"
+                        (click)="copyCode($event)"
                     >
                         <i kbq-icon="kbq-file-multiple-o_16"></i>
                     </button>
@@ -81,14 +98,19 @@
 
             @if (activeFile()?.link) {
                 <button
+                    #externalLinkTooltip="kbqTooltip"
                     kbq-button
                     type="button"
                     class="kbq-code-block__actionbar__link-button"
+                    kbqTooltipClass="kbq-code-block-tooltip"
+                    [kbqEnterDelay]="0"
                     [attr.aria-label]="localeConfiguration().openExternalSystemTooltip"
                     [color]="componentColor.Contrast"
                     [kbqStyle]="buttonStyle.Transparent"
                     [kbqTooltip]="localeConfiguration().openExternalSystemTooltip"
                     (click)="openLink()"
+                    (pointerenter)="prepareCodeTooltip(externalLinkTooltip, false)"
+                    (focusin)="prepareCodeTooltip(externalLinkTooltip, true)"
                 >
                     <i kbq-icon="kbq-arrow-up-right-from-square_16"></i>
                 </button>
@@ -106,16 +128,26 @@
     kbqTabNavPanel
     class="kbq-code-block__main"
     tabindex="0"
-    [style.max-height.px]="calculatedMaxHeight()"
+    [attr.aria-description]="
+        activeFile()?.id ? lineLocale().lineNavigationStartHint : lineLocale().scrollHint
+    "
+    [style.max-height.px]="codeContentMaxHeight()"
+    (scroll)="onCodeScroll()"
+    (click)="onLineClick($event)"
+    (keydown)="onLineKeydown($event)"
+    (pointerover)="onLineHover($event)"
+    (pointerout)="onLineTooltipLeave($event)"
+    (focusin)="onLineFocus($event)"
+    (focusout)="onLineTooltipLeave($event)"
 >
     @if (activeFile(); as file) {
         <pre
             #codeBlockPre
             class="kbq-code-block__pre"
-        ><code #codeBlockCode kbqCodeBlockHighlight class="kbq-code-block__code" [file]="file"></code></pre>
+        ><code #codeBlockCode kbqCodeBlockHighlight class="kbq-code-block__code" [file]="file" (rendered)="onCodeRendered()"></code></pre>
     }
 
-    @if (contentExceedsMaxHeight()) {
+    @if (contentExceedsMaxHeight() && !collapsedLineCount()) {
         <div
             class="kbq-code-block__view-all"
             [class.kbq-code-block__view-all_collapsed]="!viewAll()"
@@ -143,3 +175,42 @@
         </div>
     }
 </div>
+
+@if (hasLineCollapse()) {
+    <button
+        kbq-button
+        type="button"
+        class="kbq-code-block__line-collapse-button"
+        [kbqStyle]="buttonStyle.Transparent"
+        [attr.aria-expanded]="viewAll()"
+        (click)="toggleViewAll()"
+    >
+        {{ viewAll() ? localeConfiguration().viewLessText : localeConfiguration().viewAllText }}
+    </button>
+}
+
+<span
+    #lineCopyTooltip="kbqTooltip"
+    hidden
+    kbqTrigger="manual"
+    kbqPlacement="left"
+    kbqTooltipClass="kbq-code-block-tooltip"
+    [kbqEnterDelay]="0"
+    [kbqPlacementPriority]="['left', 'topLeft', 'bottomLeft']"
+    [kbqTooltip]="lineLocale().copyLinkText"
+></span>
+
+@if (manualCopyText(); as text) {
+    <dialog
+        #manualCopyDialog
+        class="kbq-code-block__copy-dialog"
+        [attr.aria-label]="lineLocale().manualCopyText"
+        (close)="closeManualCopy()"
+    >
+        <p>{{ lineLocale().manualCopyText }}</p>
+        <textarea #manualCopyField readonly [value]="text" [attr.aria-label]="lineLocale().manualCopyText"></textarea>
+        <form method="dialog">
+            <button kbq-button type="submit">{{ lineLocale().closeText }}</button>
+        </form>
+    </dialog>
+}

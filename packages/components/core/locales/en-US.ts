@@ -67,6 +67,18 @@ export const enUSLocaleData = {
         }
     },
     codeBlock: {
+        copyLinkText: 'Copy link',
+        selectLineText: 'Select line {{ line }}',
+        lineText: 'Line {{ start }}',
+        linesText: 'Lines {{ start }}–{{ end }}',
+        clearSelectionText: 'Clear selection',
+        selectionHiddenText: 'Part of the selection is hidden',
+        lineNavigationHint: 'Arrow keys move focus, Shift extends the selection, and Enter copies a link. Escape returns to scrolling.',
+        scrollHint: 'Use arrow keys to scroll the code.',
+        lineNavigationStartHint: 'Arrow keys scroll the code. Enter enables line navigation; Escape returns to scrolling.',
+        manualCopyText: 'Copy the selected text with Ctrl+C or Command+C',
+        closeText: 'Close',
+
         softWrapOnTooltip: 'Enable word wrap',
         softWrapOffTooltip: 'Disable word wrap',
         downloadTooltip: 'Download',

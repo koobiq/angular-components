@@ -1549,6 +1549,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "code-block-header-pinned-example.ts",
     "importPath": "components/code-block"
   },
+  "code-block-line-links": {
+    "packagePath": "components/code-block/code-block-line-links",
+    "title": "Code block line links and author highlights",
+    "componentName": "CodeBlockLineLinksExample",
+    "files": [
+      "code-block-line-links-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "code-block-line-links-example",
+    "primaryFile": "code-block-line-links-example.ts",
+    "importPath": "components/code-block"
+  },
   "code-block-line-numbers": {
     "packagePath": "components/code-block/code-block-line-numbers",
     "title": "Code-block with lineNumbers attribute",
@@ -9692,6 +9707,7 @@ export type LiveExampleId =
   | 'clamped-text-external-state'
   | 'clamped-text-overview'
   | 'code-block-header-pinned'
+  | 'code-block-line-links'
   | 'code-block-line-numbers'
   | 'code-block-overview'
   | 'code-block-with-custom-locale-configuration'
