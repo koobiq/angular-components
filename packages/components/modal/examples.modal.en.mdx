@@ -10,6 +10,6 @@ A missing dependency surfaces as `NullInjectorError: No provider for …`, throw
 
 ### Buttons in the loading state
 
-Footer buttons (`kbqFooter`) render a spinner while their `onClick` promise is pending — this is the default, disabled via `autoLoading: false`. The `loading` and `disabled` states accept functions, which are re-evaluated from the application state.
+Footer buttons render a spinner while the click handler is running — this is the default behavior and can be turned off. The loading and disabled states can be set as functions that are re-evaluated from the application state.
 
 <Example id="modal-button-loading" />

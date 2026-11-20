@@ -26,8 +26,9 @@ export class ModalButtonLoadingExample {
         const buttons: IModalButtonOptions[] = [
             {
                 label: this.t().save,
-                type: 'primary',
+                type: 'contrast',
                 kbqModalMainAction: true,
+                disabled: () => this.saving(),
                 // While the returned promise is pending, the button renders a spinner automatically.
                 onClick: () => this.save()
             },
