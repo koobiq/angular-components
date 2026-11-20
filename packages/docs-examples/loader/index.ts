@@ -1235,10 +1235,14 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectCustomTriggerExample);
         case 'tree-select-deleted-nodes':
             return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectDeletedNodesExample);
+        case 'tree-select-disabled':
+            return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectDisabledExample);
         case 'tree-select-footer-overview':
             return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectFooterOverviewExample);
         case 'tree-select-height':
             return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectHeightExample);
+        case 'tree-select-icon':
+            return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectIconExample);
         case 'tree-select-lazyload':
             return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectLazyloadExample);
         case 'tree-select-multiple-overview':
@@ -1255,6 +1259,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectSelectAllExample);
         case 'tree-select-two-line-option':
             return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectTwoLineOptionExample);
+        case 'tree-select-validation':
+            return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectValidationExample);
         case 'tree-select-with-multiline-matcher':
             return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectWithMultilineMatcherExample);
         case 'tree-access-rights':

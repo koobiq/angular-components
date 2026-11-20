@@ -8900,6 +8900,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tree-select-deleted-nodes-example.ts",
     "importPath": "components/tree-select"
   },
+  "tree-select-disabled": {
+    "packagePath": "components/tree-select/tree-select-disabled",
+    "title": "Tree-select disabled",
+    "componentName": "TreeSelectDisabledExample",
+    "files": [
+      "tree-select-disabled-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "tree-select-disabled-example",
+    "primaryFile": "tree-select-disabled-example.ts",
+    "importPath": "components/tree-select"
+  },
   "tree-select-footer-overview": {
     "packagePath": "components/tree-select/tree-select-footer-overview",
     "title": "Tree-select footer",
@@ -8925,6 +8940,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "tree-select-height-example",
     "primaryFile": "tree-select-height-example.ts",
+    "importPath": "components/tree-select"
+  },
+  "tree-select-icon": {
+    "packagePath": "components/tree-select/tree-select-icon",
+    "title": "Tree-select icon",
+    "componentName": "TreeSelectIconExample",
+    "files": [
+      "tree-select-icon-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tree-select-icon-example",
+    "primaryFile": "tree-select-icon-example.ts",
     "importPath": "components/tree-select"
   },
   "tree-select-lazyload": {
@@ -9033,6 +9060,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "tree-select-two-line-option-example",
     "primaryFile": "tree-select-two-line-option-example.ts",
+    "importPath": "components/tree-select"
+  },
+  "tree-select-validation": {
+    "packagePath": "components/tree-select/tree-select-validation",
+    "title": "Tree-select validation",
+    "componentName": "TreeSelectValidationExample",
+    "files": [
+      "tree-select-validation-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "tree-select-validation-example",
+    "primaryFile": "tree-select-validation-example.ts",
     "importPath": "components/tree-select"
   },
   "tree-select-with-multiline-matcher": {
@@ -10217,8 +10259,10 @@ export type LiveExampleId =
   | 'tree-select-custom-matcher'
   | 'tree-select-custom-trigger'
   | 'tree-select-deleted-nodes'
+  | 'tree-select-disabled'
   | 'tree-select-footer-overview'
   | 'tree-select-height'
+  | 'tree-select-icon'
   | 'tree-select-lazyload'
   | 'tree-select-multiple-overview'
   | 'tree-select-overview'
@@ -10227,6 +10271,7 @@ export type LiveExampleId =
   | 'tree-select-select-all-label'
   | 'tree-select-select-all'
   | 'tree-select-two-line-option'
+  | 'tree-select-validation'
   | 'tree-select-with-multiline-matcher'
   | 'tree-access-rights'
   | 'tree-action-button'
