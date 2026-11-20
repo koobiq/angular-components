@@ -47,6 +47,7 @@ export * from '../components/search-expandable/e2e';
 export * from '../components/select/e2e';
 export * from '../components/sidepanel/e2e';
 export * from '../components/skeleton/e2e';
+export * from '../components/slider/e2e';
 export * from '../components/split-button/e2e';
 export * from '../components/splitter/deprecated/e2e';
 export * from '../components/splitter/e2e';

@@ -263,6 +263,10 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "en": "A skeleton is a temporary placeholder that previews the approximate shape of content while it loads. Use one when you know where the elements will appear.",
         "ru": "Скелетон — временная заглушка, которая показывает примерную форму содержимого при загрузке. Подходит, если заранее известно расположение элементов."
     },
+    "slider": {
+        "en": "A slider selects a numeric value or range. It suits approximate adjustments with immediate visual feedback. A numeric input can accompany the slider when an exact value matters.",
+        "ru": "Слайдер — ползунок для выбора числового значения или диапазона. Он подходит для приблизительной настройки с мгновенной визуальной обратной связью. Для точного значения слайдер можно дополнить…"
+    },
     "split-button": {
         "en": "A split button combines several related actions into a single control. The primary action is immediately accessible, while additional options are hidden in a dropdown menu.",
         "ru": "Сплит-кнопка объединяет несколько связанных действий в одном элементе управления. Основное действие доступно сразу, а дополнительные варианты скрыты в выпадающем меню."

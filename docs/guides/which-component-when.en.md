@@ -187,6 +187,7 @@ One line each: when to reach for it. `→` names the neighbor to prefer in the c
 ### Data entry
 
 - `form-field` — the wrapper that gives a control its label, hint, error and cleaner; input, select, textarea, autocomplete, tag input, tag autocomplete, timepicker, timezone and tree select are built to sit inside it.
+- `slider` — approximate numeric adjustment or a range; `kbq-input-slider` combines it with exact numeric entry.
 - `input` — text, number and password entry with formatting, masks and validation.
 - `textarea` — multi-line text.
 - `datepicker` — a date, typed or picked from the calendar; `minDate`/`maxDate` bound the calendar, `min`/`max` on the input drive validation.

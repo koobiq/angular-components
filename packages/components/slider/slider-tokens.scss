@@ -1,0 +1,18 @@
+.kbq-slider {
+    --kbq-slider-control-size: 32px;
+    --kbq-slider-track-size: 4px;
+    --kbq-slider-track-radius: 2px;
+    --kbq-slider-thumb-width: 28px;
+    --kbq-slider-thumb-height: 20px;
+    --kbq-slider-thumb-radius: var(--kbq-size-border-radius);
+    --kbq-slider-track: var(--kbq-background-contrast-fade);
+    --kbq-slider-fill: var(--kbq-background-theme);
+    --kbq-slider-filled-tick: var(--kbq-icon-white);
+    --kbq-slider-thumb-background: var(--kbq-background-card);
+    --kbq-slider-thumb-border: var(--kbq-line-contrast-fade);
+    --kbq-slider-focus-color: var(--kbq-states-line-focus-theme);
+    --kbq-slider-focus-gap-color: var(--kbq-background-bg);
+    --kbq-slider-error-color: var(--kbq-background-error);
+    --kbq-slider-disabled-color: var(--kbq-background-contrast-fade);
+    --kbq-slider-label-color: var(--kbq-foreground-contrast-secondary);
+}

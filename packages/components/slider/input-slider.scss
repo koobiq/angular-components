@@ -1,0 +1,91 @@
+.kbq-input-slider {
+    position: relative;
+
+    display: block;
+
+    width: 100%;
+    min-width: 0;
+    padding-bottom: 8px;
+}
+
+.kbq-input-slider:has(.kbq-slider_with-labels) {
+    padding-bottom: 26px;
+}
+
+.kbq-input-slider__fields {
+    isolation: isolate;
+
+    > .kbq-fieldset__container > .kbq-form-field {
+        flex: 1;
+        min-width: 0;
+    }
+
+    > .kbq-fieldset__container > .kbq-form-field:not(:first-child) {
+        margin-inline-start: calc(var(--kbq-size-border-width) * -1);
+        margin-inline-end: 0;
+    }
+
+    &:dir(rtl) > .kbq-fieldset__container {
+        > .kbq-form-field:first-child:not(:last-child) {
+            .kbq-form-field__container,
+            .kbq-form-field__container .kbq-input {
+                border-radius: 0 var(--kbq-form-field-size-border-radius) var(--kbq-form-field-size-border-radius) 0;
+            }
+        }
+
+        > .kbq-form-field:last-child:not(:first-child) .kbq-form-field__container {
+            border-radius: var(--kbq-form-field-size-border-radius) 0 0 var(--kbq-form-field-size-border-radius);
+        }
+    }
+}
+
+.kbq-input-slider .kbq-input-slider__slider {
+    --kbq-slider-track-size: 2px;
+    --kbq-slider-thumb-width: 16px;
+    --kbq-slider-thumb-height: 16px;
+    --kbq-slider-thumb-radius: 4px;
+    --kbq-slider-track: transparent;
+
+    position: absolute;
+    inset: 15px 8px auto;
+    z-index: 2;
+
+    width: auto;
+
+    pointer-events: none;
+
+    .kbq-slider__surface {
+        pointer-events: none;
+
+        &::after {
+            content: '';
+
+            position: absolute;
+            top: calc(50% - 3px);
+            right: 0;
+            left: 0;
+
+            height: 12px;
+
+            pointer-events: auto;
+        }
+    }
+
+    .kbq-slider__mark-label {
+        pointer-events: auto;
+    }
+
+    .kbq-slider__thumb {
+        height: 24px;
+        cursor: grab;
+        pointer-events: auto;
+    }
+}
+
+.kbq-input-slider__slider .kbq-slider__surface::after {
+    z-index: 0;
+}
+
+.kbq-input-slider__slider .kbq-slider__rail {
+    z-index: 1;
+}

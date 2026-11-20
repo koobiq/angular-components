@@ -1,0 +1,98 @@
+<div
+    #surface
+    class="kbq-slider__surface"
+    (pointerdown)="onPointerDown($event)"
+    (pointermove)="onPointerMove($event)"
+    (pointerup)="onPointerUp($event)"
+    (pointercancel)="onPointerCancel($event)"
+    (lostpointercapture)="onPointerCancel($event)"
+>
+    <div class="kbq-slider__track" aria-hidden="true"></div>
+    <div #rail class="kbq-slider__rail">
+        @for (segment of segments(); track $index) {
+            <div
+                class="kbq-slider__fill"
+                aria-hidden="true"
+                [class.kbq-animations-disabled]="animationsDisabled"
+                [style.left]="vertical() ? null : segment.start"
+                [style.width]="vertical() ? null : segment.size"
+                [style.top]="vertical() ? segment.start : null"
+                [style.height]="vertical() ? segment.size : null"
+            ></div>
+        }
+        @for (mark of visibleMarks(); track $index) {
+            <span
+                class="kbq-slider__mark"
+                aria-hidden="true"
+                [attr.data-mark-value]="mark.value"
+                [style.--kbq-slider-position]="`${position(mark.value)}%`"
+            >
+                @if (mark.value !== bounds().min && mark.value !== bounds().max) {
+                    <span class="kbq-slider__tick" [class.kbq-slider__tick_filled]="isMarkFilled(mark.value)"></span>
+                }
+                @if (mark.label) {
+                    <span class="kbq-slider__mark-label" (click)="selectMark(mark.value)">
+                        {{ mark.label }}
+                    </span>
+                }
+            </span>
+        }
+        @for (value of values(); track $index) {
+            <span
+                class="kbq-slider__thumb"
+                [class.kbq-animations-disabled]="animationsDisabled"
+                [attr.data-thumb-index]="$index"
+                [class.kbq-slider__thumb_active]="activeIndex() === $index"
+                [style.--kbq-slider-position]="`${position(value)}%`"
+                (pointerenter)="hover($index)"
+                (pointerleave)="leave($index)"
+            >
+                <input
+                    class="kbq-slider__input"
+                    type="range"
+                    [step]="step() === null ? 'any' : bounds().step"
+                    [min]="thumbMin($index)"
+                    [max]="thumbMax($index)"
+                    [value]="value"
+                    [defaultValue]="value"
+                    [disabled]="disabled()"
+                    [attr.aria-label]="thumbLabel($index)"
+                    [attr.aria-labelledby]="thumbLabelledBy($index)"
+                    [attr.aria-describedby]="description()"
+                    [attr.aria-valuenow]="value"
+                    [attr.aria-valuetext]="displayWith()(value)"
+                    [attr.aria-orientation]="vertical() ? 'vertical' : 'horizontal'"
+                    [attr.aria-readonly]="readonly() || null"
+                    [attr.aria-invalid]="errorState() || null"
+                    (keydown)="onKeyDown($event, $index)"
+                    (keyup)="onKeyUp($event)"
+                    (input)="onNativeInput($event, $index)"
+                    (focus)="onThumbFocus($index)"
+                />
+                <span class="cdk-visually-hidden" [id]="`${id()}-thumb-${$index}-label`">
+                    {{ thumbLabel($index) }}
+                </span>
+                <span
+                    class="kbq-slider__thumb-shape"
+                    aria-hidden="true"
+                    kbqTrigger="manual"
+                    kbqTooltipClass="kbq-slider__tooltip"
+                    [class.kbq-animations-disabled]="animationsDisabled"
+                    [kbqTooltip]="displayWith()(value)"
+                    [kbqPlacement]="vertical() ? 'left' : 'top'"
+                    [kbqTooltipArrow]="false"
+                    [kbqTooltipOffset]="4"
+                    [kbqTooltipScrollStrategy]="tooltipScrollStrategy"
+                    [kbqEnterDelay]="0"
+                    [kbqLeaveDelay]="0"
+                    [kbqVisible]="tooltipIndex() === $index && (showTooltip() || tooltipOnFocus())"
+                ></span>
+            </span>
+        }
+    </div>
+</div>
+@for (value of values(); track $index) {
+    @if (inputName($index)) {
+        <input type="hidden" [name]="inputName($index)" [value]="value" [disabled]="disabled()" />
+    }
+}

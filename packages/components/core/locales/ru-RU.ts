@@ -25,6 +25,9 @@ export const ruRULocaleData = {
         toastRegion: 'Уведомления',
         optionActions: 'Действия',
         progressBar: 'Прогресс',
+        slider: 'Значение',
+        sliderStart: 'Нижняя граница',
+        sliderEnd: 'Верхняя граница',
         date: 'Дата',
         time: 'Время',
         search: 'Поиск'
