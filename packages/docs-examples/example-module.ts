@@ -8873,6 +8873,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tree-select-custom-matcher-example.ts",
     "importPath": "components/tree-select"
   },
+  "tree-select-custom-tag-content": {
+    "packagePath": "components/tree-select/tree-select-custom-tag-content",
+    "title": "tree-select-custom-tag-content",
+    "componentName": "TreeSelectCustomTagContentExample",
+    "files": [
+      "tree-select-custom-tag-content-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "tree-select-custom-tag-content-example",
+    "primaryFile": "tree-select-custom-tag-content-example.ts",
+    "importPath": "components/tree-select"
+  },
   "tree-select-custom-trigger": {
     "packagePath": "components/tree-select/tree-select-custom-trigger",
     "title": "tree-select-custom-trigger",
@@ -8898,6 +8913,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "selector": "tree-select-deleted-nodes-example",
     "primaryFile": "tree-select-deleted-nodes-example.ts",
+    "importPath": "components/tree-select"
+  },
+  "tree-select-disabled": {
+    "packagePath": "components/tree-select/tree-select-disabled",
+    "title": "Tree-select disabled",
+    "componentName": "TreeSelectDisabledExample",
+    "files": [
+      "tree-select-disabled-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "tree-select-disabled-example",
+    "primaryFile": "tree-select-disabled-example.ts",
     "importPath": "components/tree-select"
   },
   "tree-select-footer-overview": {
@@ -8927,6 +8957,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tree-select-height-example.ts",
     "importPath": "components/tree-select"
   },
+  "tree-select-icon": {
+    "packagePath": "components/tree-select/tree-select-icon",
+    "title": "Tree-select icon",
+    "componentName": "TreeSelectIconExample",
+    "files": [
+      "tree-select-icon-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tree-select-icon-example",
+    "primaryFile": "tree-select-icon-example.ts",
+    "importPath": "components/tree-select"
+  },
   "tree-select-lazyload": {
     "packagePath": "components/tree-select/tree-select-lazyload",
     "title": "Tree-select lazyload",
@@ -8937,6 +8979,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "tree-select-lazyload-example",
     "primaryFile": "tree-select-lazyload-example.ts",
+    "importPath": "components/tree-select"
+  },
+  "tree-select-locale-configuration": {
+    "packagePath": "components/tree-select/tree-select-locale-configuration",
+    "title": "Tree-select locale configuration",
+    "componentName": "TreeSelectLocaleConfigurationExample",
+    "files": [
+      "tree-select-locale-configuration-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "tree-select-locale-configuration-example",
+    "primaryFile": "tree-select-locale-configuration-example.ts",
     "importPath": "components/tree-select"
   },
   "tree-select-multiple-overview": {
@@ -8951,6 +9008,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tree-select-multiple-overview-example.ts",
     "importPath": "components/tree-select"
   },
+  "tree-select-no-variants": {
+    "packagePath": "components/tree-select/tree-select-no-variants",
+    "title": "tree-select-no-variants",
+    "componentName": "TreeSelectNoVariantsExample",
+    "files": [
+      "tree-select-no-variants-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "tree-select-no-variants-example",
+    "primaryFile": "tree-select-no-variants-example.ts",
+    "importPath": "components/tree-select"
+  },
   "tree-select-overview": {
     "packagePath": "components/tree-select/tree-select-overview",
     "title": "Tree-select",
@@ -8961,6 +9033,48 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "tree-select-overview-example",
     "primaryFile": "tree-select-overview-example.ts",
+    "importPath": "components/tree-select"
+  },
+  "tree-select-scroll-strategy": {
+    "packagePath": "components/tree-select/tree-select-scroll-strategy",
+    "title": "tree-select-scroll-strategy",
+    "componentName": "TreeSelectScrollStrategyExample",
+    "files": [
+      "tree-select-scroll-strategy-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "tree-select-scroll-strategy-example",
+    "primaryFile": "tree-select-scroll-strategy-example.ts",
+    "importPath": "components/tree-select"
+  },
+  "tree-select-scrolling-and-layering-page": {
+    "packagePath": "components/tree-select/tree-select-scrolling-and-layering-page",
+    "title": "Tree-select scrolling and layering page",
+    "componentName": "TreeSelectScrollingAndLayeringPageExample",
+    "files": [
+      "tree-select-scrolling-and-layering-page-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "tree-select-scrolling-and-layering-page-example",
+    "primaryFile": "tree-select-scrolling-and-layering-page-example.ts",
+    "importPath": "components/tree-select"
+  },
+  "tree-select-scrolling-and-layering": {
+    "packagePath": "components/tree-select/tree-select-scrolling-and-layering",
+    "title": "tree-select-scrolling-and-layering",
+    "componentName": "TreeSelectScrollingAndLayeringExample",
+    "files": [
+      "tree-select-scrolling-and-layering-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tree-select-scrolling-and-layering-example",
+    "primaryFile": "tree-select-scrolling-and-layering-example.ts",
     "importPath": "components/tree-select"
   },
   "tree-select-search-overview": {
@@ -9033,6 +9147,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "tree-select-two-line-option-example",
     "primaryFile": "tree-select-two-line-option-example.ts",
+    "importPath": "components/tree-select"
+  },
+  "tree-select-validation": {
+    "packagePath": "components/tree-select/tree-select-validation",
+    "title": "Tree-select validation",
+    "componentName": "TreeSelectValidationExample",
+    "files": [
+      "tree-select-validation-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "tree-select-validation-example",
+    "primaryFile": "tree-select-validation-example.ts",
     "importPath": "components/tree-select"
   },
   "tree-select-with-multiline-matcher": {
@@ -10215,18 +10344,27 @@ export type LiveExampleId =
   | 'tree-select-cleaner-with-disabled'
   | 'tree-select-custom-matcher-with-input'
   | 'tree-select-custom-matcher'
+  | 'tree-select-custom-tag-content'
   | 'tree-select-custom-trigger'
   | 'tree-select-deleted-nodes'
+  | 'tree-select-disabled'
   | 'tree-select-footer-overview'
   | 'tree-select-height'
+  | 'tree-select-icon'
   | 'tree-select-lazyload'
+  | 'tree-select-locale-configuration'
   | 'tree-select-multiple-overview'
+  | 'tree-select-no-variants'
   | 'tree-select-overview'
+  | 'tree-select-scroll-strategy'
+  | 'tree-select-scrolling-and-layering-page'
+  | 'tree-select-scrolling-and-layering'
   | 'tree-select-search-overview'
   | 'tree-select-search-smart'
   | 'tree-select-select-all-label'
   | 'tree-select-select-all'
   | 'tree-select-two-line-option'
+  | 'tree-select-validation'
   | 'tree-select-with-multiline-matcher'
   | 'tree-access-rights'
   | 'tree-action-button'

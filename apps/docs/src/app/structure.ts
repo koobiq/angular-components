@@ -1211,7 +1211,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'tree-select',
                     hasApi: true,
                     apiId: 'tree-select',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-12-04')
                 },
                 {
                     id: DocsStructureItemId.Username,
