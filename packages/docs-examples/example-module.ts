@@ -5064,6 +5064,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "markdown-table-example.ts",
     "importPath": "components/markdown"
   },
+  "modal-button-loading": {
+    "packagePath": "components/modal/modal-button-loading",
+    "title": "Modal buttons in the loading state",
+    "componentName": "ModalButtonLoadingExample",
+    "files": [
+      "modal-button-loading-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "modal-button-loading-example",
+    "primaryFile": "modal-button-loading-example.ts",
+    "importPath": "components/modal"
+  },
   "modal-caption": {
     "packagePath": "components/modal/modal-caption",
     "title": "Modal with caption",
@@ -9949,6 +9964,7 @@ export type LiveExampleId =
   | 'markdown-quote'
   | 'markdown-selection'
   | 'markdown-table'
+  | 'modal-button-loading'
   | 'modal-caption'
   | 'modal-component-with-injector'
   | 'modal-component'
