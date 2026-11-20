@@ -36,12 +36,14 @@ The failure modes the gates below pin, most likely first:
 ### Task 1: Overview-facing examples — validation, disabled, icon
 
 **Files:**
+
 - Create: `packages/docs-examples/components/tree-select/tree-select-validation/{tree-select-validation-example.ts,l10n.ts}`
 - Create: `packages/docs-examples/components/tree-select/tree-select-disabled/{tree-select-disabled-example.ts,l10n.ts}`
 - Create: `packages/docs-examples/components/tree-select/tree-select-icon/{tree-select-icon-example.ts,l10n.ts}`
 - Modify: `packages/docs-examples/components/tree-select/index.ts`
 
 **Interfaces:**
+
 - Consumes: the tree data pattern of `tree-select-overview-example.ts` (FlatTreeControl + KbqTreeFlattener); `injectTranslation` from `@koobiq/docs-examples/i18n`.
 - Produces: example ids `tree-select-validation`, `tree-select-disabled`, `tree-select-icon`, registered in `example-module.ts` — Tasks 4 embeds exactly these ids.
 
@@ -76,11 +78,13 @@ git commit -m "docs(examples): add tree-select validation, disabled and icon exa
 ### Task 2: Overview-facing examples — locale-configuration, scrolling-and-layering
 
 **Files:**
+
 - Create: `packages/docs-examples/components/tree-select/tree-select-locale-configuration/{tree-select-locale-configuration-example.ts,l10n.ts}`
 - Create: `packages/docs-examples/components/tree-select/tree-select-scrolling-and-layering/{tree-select-scrolling-and-layering-example.ts,l10n.ts}`
 - Modify: `packages/docs-examples/components/tree-select/index.ts`
 
 **Interfaces:**
+
 - Consumes: Task 1's tree data pattern.
 - Produces: example ids `tree-select-locale-configuration`, `tree-select-scrolling-and-layering`, registered — Task 4 embeds exactly these ids.
 
@@ -108,12 +112,14 @@ git commit -m "docs(examples): add tree-select locale-configuration and layering
 ### Task 3: Examples-tab examples — custom-tag-content, no-variants, scroll-strategy
 
 **Files:**
+
 - Create: `packages/docs-examples/components/tree-select/tree-select-custom-tag-content/{tree-select-custom-tag-content-example.ts,l10n.ts}`
 - Create: `packages/docs-examples/components/tree-select/tree-select-no-variants/{tree-select-no-variants-example.ts,l10n.ts}`
 - Create: `packages/docs-examples/components/tree-select/tree-select-scroll-strategy/{tree-select-scroll-strategy-example.ts,l10n.ts}`
 - Modify: `packages/docs-examples/components/tree-select/index.ts`
 
 **Interfaces:**
+
 - Consumes: tree data pattern; `KbqSelectNoOptions` (rendered by tree-select via its `contentChild`, `tree-select.component.ts:465`); `kbqAutoHideScrollStrategyFactory` from `@koobiq/components/core`.
 - Produces: example ids `tree-select-custom-tag-content`, `tree-select-no-variants`, `tree-select-scroll-strategy` — Task 5 embeds exactly these ids.
 
@@ -145,11 +151,13 @@ git commit -m "docs(examples): add tree-select tag-content, no-variants and scro
 ### Task 4: Overview rewrite — both locales
 
 **Files:**
+
 - Modify: `packages/components/tree-select/tree-select.en.mdx`
 - Modify: `packages/components/tree-select/tree-select.ru.mdx`
 - Modify: `apps/docs/src/app/structure.ts`
 
 **Interfaces:**
+
 - Consumes: example ids from Tasks 1–2: `tree-select-validation`, `tree-select-disabled`, `tree-select-icon`, `tree-select-locale-configuration`, `tree-select-scrolling-and-layering`; the existing dangling `tree-select-two-line-option`.
 - Produces: the overview in select's section order; heading texts in both locales that Task 5's tab must not collide with.
 
@@ -186,10 +194,12 @@ git commit -m "docs(tree-select): mirror the select page structure on the overvi
 ### Task 5: Examples tab — both locales
 
 **Files:**
+
 - Modify: `packages/components/tree-select/examples.tree-select.en.mdx`
 - Modify: `packages/components/tree-select/examples.tree-select.ru.mdx`
 
 **Interfaces:**
+
 - Consumes: example ids from Task 3: `tree-select-custom-tag-content`, `tree-select-no-variants`, `tree-select-scroll-strategy`.
 
 - [ ] **Step 1: Add the three sections to `examples.tree-select.en.mdx`**
@@ -217,6 +227,7 @@ git commit -m "docs(tree-select): mirror select's examples-tab sections (#DS-158
 **Files:** none modified (read-only pass; fixes land as amendments to the owning task's commit).
 
 **Interfaces:**
+
 - Consumes: everything above.
 
 - [ ] **Step 1: Compile the pages**

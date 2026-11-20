@@ -73,34 +73,34 @@ the work is mirroring select's section set onto it and closing every verified ga
 
 The final order (select's order, with tree-specific sections slotted in):
 
-| # | Section | Source |
-|---|---------|--------|
-| 1 | Intro + `tree-select-overview` | current, unchanged |
-| 2 | Validation | **new**, mirrors `select-validation`; new example `tree-select-validation` |
-| 3 | Inactive states | **new**; new example `tree-select-disabled` |
-| 4 | Reset selected value | current |
-| 5 | Multiple tree-select | current + **new** paragraph on panel order and `sortComparator` |
-| 6 | Multiline matcher | current |
-| 7 | Multiple with child selection | current, tree-specific (kept after multiple sections) |
-| 8 | Counter of the hidden items | current, tree-specific (kept; select has no such section) |
-| 9 | Customizing tags | **new**; code snippet in the overview (as select), live example on the examples tab. The snippet cannot copy select's verbatim: the tree-select template context is `{ $implicit: KbqTreeSelectTriggerValue, select }` and the removal API is `select.onRemoveSelectedOption`, not select's `onRemoveMatcherItem` over `KbqOption` |
-| — | Grouping values | **dropped**: the tree *is* the grouping |
-| 10 | With search | current, aligned with select's "List with search" (links the Smart search guide) |
-| 11 | Search for short lists | **new**: `searchMinOptionsThreshold` is supported |
-| 12 | Select all | current |
-| 13 | Selecting everything from the keyboard | current |
-| 14 | Lazy loading | current, tree-specific (kept as the tree's async-data section) |
-| 15 | With custom footer | current |
-| 16 | Dropdown height | current |
-| 17 | Dropdown width | current |
-| — | Customized selection (preselected/prioritized) | **dropped**: inputs not supported |
-| 18 | Optional icon | **new** (`kbqPrefix` icon); new example `tree-select-icon` |
-| — | Virtual scroll | **dropped**: not supported |
-| 19 | Layering | **new**; new example `tree-select-scrolling-and-layering`; links the core overview |
-| 20 | Caption in options | **new**: wires the existing dangling `tree-select-two-line-option` example; text describes the tree-option template approach (there is no `multilineOptions` input on tree-select) |
-| 21 | Localization | **new**: `[localeOverrides]` resolves `KBQ_SELECT_LOCALE_CONFIGURATION`; new example `tree-select-locale-configuration` |
-| 22 | Accessibility | current, aligned with select's newer a11y text (naming, tag remove buttons) |
-| 23 | Recommendations | **new** |
+| #   | Section                                        | Source                                                                                                                                                                                                                                                                                                                             |
+| --- | ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Intro + `tree-select-overview`                 | current, unchanged                                                                                                                                                                                                                                                                                                                 |
+| 2   | Validation                                     | **new**, mirrors `select-validation`; new example `tree-select-validation`                                                                                                                                                                                                                                                         |
+| 3   | Inactive states                                | **new**; new example `tree-select-disabled`                                                                                                                                                                                                                                                                                        |
+| 4   | Reset selected value                           | current                                                                                                                                                                                                                                                                                                                            |
+| 5   | Multiple tree-select                           | current + **new** paragraph on panel order and `sortComparator`                                                                                                                                                                                                                                                                    |
+| 6   | Multiline matcher                              | current                                                                                                                                                                                                                                                                                                                            |
+| 7   | Multiple with child selection                  | current, tree-specific (kept after multiple sections)                                                                                                                                                                                                                                                                              |
+| 8   | Counter of the hidden items                    | current, tree-specific (kept; select has no such section)                                                                                                                                                                                                                                                                          |
+| 9   | Customizing tags                               | **new**; code snippet in the overview (as select), live example on the examples tab. The snippet cannot copy select's verbatim: the tree-select template context is `{ $implicit: KbqTreeSelectTriggerValue, select }` and the removal API is `select.onRemoveSelectedOption`, not select's `onRemoveMatcherItem` over `KbqOption` |
+| —   | Grouping values                                | **dropped**: the tree _is_ the grouping                                                                                                                                                                                                                                                                                            |
+| 10  | With search                                    | current, aligned with select's "List with search" (links the Smart search guide)                                                                                                                                                                                                                                                   |
+| 11  | Search for short lists                         | **new**: `searchMinOptionsThreshold` is supported                                                                                                                                                                                                                                                                                  |
+| 12  | Select all                                     | current                                                                                                                                                                                                                                                                                                                            |
+| 13  | Selecting everything from the keyboard         | current                                                                                                                                                                                                                                                                                                                            |
+| 14  | Lazy loading                                   | current, tree-specific (kept as the tree's async-data section)                                                                                                                                                                                                                                                                     |
+| 15  | With custom footer                             | current                                                                                                                                                                                                                                                                                                                            |
+| 16  | Dropdown height                                | current                                                                                                                                                                                                                                                                                                                            |
+| 17  | Dropdown width                                 | current                                                                                                                                                                                                                                                                                                                            |
+| —   | Customized selection (preselected/prioritized) | **dropped**: inputs not supported                                                                                                                                                                                                                                                                                                  |
+| 18  | Optional icon                                  | **new** (`kbqPrefix` icon); new example `tree-select-icon`                                                                                                                                                                                                                                                                         |
+| —   | Virtual scroll                                 | **dropped**: not supported                                                                                                                                                                                                                                                                                                         |
+| 19  | Layering                                       | **new**; new example `tree-select-scrolling-and-layering`; links the core overview                                                                                                                                                                                                                                                 |
+| 20  | Caption in options                             | **new**: wires the existing dangling `tree-select-two-line-option` example; text describes the tree-option template approach (there is no `multilineOptions` input on tree-select)                                                                                                                                                 |
+| 21  | Localization                                   | **new**: `[localeOverrides]` resolves `KBQ_SELECT_LOCALE_CONFIGURATION`; new example `tree-select-locale-configuration`                                                                                                                                                                                                            |
+| 22  | Accessibility                                  | current, aligned with select's newer a11y text (naming, tag remove buttons)                                                                                                                                                                                                                                                        |
+| 23  | Recommendations                                | **new**                                                                                                                                                                                                                                                                                                                            |
 
 ### Examples tab
 
@@ -120,16 +120,16 @@ The final order (select's order, with tree-specific sections slotted in):
 
 ### New live examples
 
-| Example | Mirrors | Notes |
-|---------|---------|-------|
-| `tree-select-validation` | `select-validation` | form + invalid state |
-| `tree-select-disabled` | `select-disabled` | |
-| `tree-select-icon` | `select-icon` | `kbqPrefix` icon |
-| `tree-select-locale-configuration` | `select-locale-configuration` | l10n overrides |
-| `tree-select-scrolling-and-layering` | `select-scrolling-and-layering` | `kbqOverlayLayer` |
-| `tree-select-custom-tag-content` | `select-custom-tag-content` | examples tab only |
-| `tree-select-no-variants` | `select-no-variants` | examples tab only; `KbqSelectNoOptions` |
-| `tree-select-scroll-strategy` | `select-auto-hide-scroll-strategy` | examples tab only; `scrollStrategy` input |
+| Example                              | Mirrors                            | Notes                                     |
+| ------------------------------------ | ---------------------------------- | ----------------------------------------- |
+| `tree-select-validation`             | `select-validation`                | form + invalid state                      |
+| `tree-select-disabled`               | `select-disabled`                  |                                           |
+| `tree-select-icon`                   | `select-icon`                      | `kbqPrefix` icon                          |
+| `tree-select-locale-configuration`   | `select-locale-configuration`      | l10n overrides                            |
+| `tree-select-scrolling-and-layering` | `select-scrolling-and-layering`    | `kbqOverlayLayer`                         |
+| `tree-select-custom-tag-content`     | `select-custom-tag-content`        | examples tab only                         |
+| `tree-select-no-variants`            | `select-no-variants`               | examples tab only; `KbqSelectNoOptions`   |
+| `tree-select-scroll-strategy`        | `select-auto-hide-scroll-strategy` | examples tab only; `scrollStrategy` input |
 
 Each gets a `l10n.ts` (en/ru) and a line in the docs-examples `index.ts`;
 `example-module.ts` is regenerated, not hand-edited.
