@@ -3527,21 +3527,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "form-field-password-overview-example.ts",
     "importPath": "components/form-field"
   },
-  "form-field-with-cleaner": {
-    "packagePath": "components/form-field/form-field-with-cleaner",
-    "title": "Form field with kbq-cleaner",
-    "componentName": "FormFieldWithCleanerExample",
-    "files": [
-      "form-field-with-cleaner-example.ts"
-    ],
-    "localImportFiles": [
-      "../../../i18n/index.ts",
-      "l10n.ts"
-    ],
-    "selector": "form-field-with-cleaner-example",
-    "primaryFile": "form-field-with-cleaner-example.ts",
-    "importPath": "components/form-field"
-  },
   "form-field-with-custom-error-state-matcher-set-by-attribute": {
     "packagePath": "components/form-field/form-field-with-custom-error-state-matcher-set-by-attribute",
     "title": "Form field with CustomErrorStateMatcher which set by `errorStateMatcher` attribute",
@@ -3630,21 +3615,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "selector": "form-field-with-prefix-and-suffix-example",
     "primaryFile": "form-field-with-prefix-and-suffix-example.ts",
-    "importPath": "components/form-field"
-  },
-  "form-field-without-borders": {
-    "packagePath": "components/form-field/form-field-without-borders",
-    "title": "Form field without borders",
-    "componentName": "FormFieldWithoutBordersExample",
-    "files": [
-      "form-field-without-borders-example.ts"
-    ],
-    "localImportFiles": [
-      "../../../i18n/index.ts",
-      "l10n.ts"
-    ],
-    "selector": "form-field-without-borders-example",
-    "primaryFile": "form-field-without-borders-example.ts",
     "importPath": "components/form-field"
   },
   "form-fieldset-invalid": {
@@ -4225,6 +4195,63 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "inline-edit-without-label-example.ts",
     "importPath": "components/inline-edit"
   },
+  "input-autocomplete": {
+    "packagePath": "components/input/input-autocomplete",
+    "title": "Input autocomplete",
+    "componentName": "InputAutocompleteExample",
+    "files": [
+      "input-autocomplete-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "input-autocomplete-example",
+    "primaryFile": "input-autocomplete-example.ts",
+    "importPath": "components/input"
+  },
+  "input-disabled": {
+    "packagePath": "components/input/input-disabled",
+    "title": "Disabled input",
+    "componentName": "InputDisabledExample",
+    "files": [
+      "input-disabled-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "input-disabled-example",
+    "primaryFile": "input-disabled-example.ts",
+    "importPath": "components/input"
+  },
+  "input-label-and-hint": {
+    "packagePath": "components/input/input-label-and-hint",
+    "title": "Input with label and hint",
+    "componentName": "InputLabelAndHintExample",
+    "files": [
+      "input-label-and-hint-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "input-label-and-hint-example",
+    "primaryFile": "input-label-and-hint-example.ts",
+    "importPath": "components/input"
+  },
+  "input-monospace": {
+    "packagePath": "components/input/input-monospace",
+    "title": "Monospace input",
+    "componentName": "InputMonospaceExample",
+    "files": [
+      "input-monospace-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "input-monospace-example",
+    "primaryFile": "input-monospace-example.ts",
+    "importPath": "components/input"
+  },
   "input-number-overview": {
     "packagePath": "components/input/input-number-overview",
     "title": "Input number",
@@ -4247,10 +4274,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "input-overview-example.ts"
     ],
-    "localImportFiles": [
-      "../../../i18n/index.ts",
-      "l10n.ts"
-    ],
+    "localImportFiles": [],
     "selector": "input-overview-example",
     "primaryFile": "input-overview-example.ts",
     "importPath": "components/input"
@@ -4300,6 +4324,48 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "input-readonly-example.ts",
     "importPath": "components/input"
   },
+  "input-search": {
+    "packagePath": "components/input/input-search",
+    "title": "Search input",
+    "componentName": "InputSearchExample",
+    "files": [
+      "input-search-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "input-search-example",
+    "primaryFile": "input-search-example.ts",
+    "importPath": "components/input"
+  },
+  "input-validation": {
+    "packagePath": "components/input/input-validation",
+    "title": "Input validation",
+    "componentName": "InputValidationExample",
+    "files": [
+      "input-validation-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "input-validation-example",
+    "primaryFile": "input-validation-example.ts",
+    "importPath": "components/input"
+  },
+  "input-with-cleaner": {
+    "packagePath": "components/input/input-with-cleaner",
+    "title": "Input with cleaner",
+    "componentName": "InputWithCleanerExample",
+    "files": [
+      "input-with-cleaner-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "input-with-cleaner-example",
+    "primaryFile": "input-with-cleaner-example.ts",
+    "importPath": "components/input"
+  },
   "input-with-mask": {
     "packagePath": "components/input/input-with-mask",
     "title": "Input with mask",
@@ -4313,6 +4379,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "selector": "input-with-mask-example",
     "primaryFile": "input-with-mask-example.ts",
+    "importPath": "components/input"
+  },
+  "input-without-borders": {
+    "packagePath": "components/input/input-without-borders",
+    "title": "Input without borders",
+    "componentName": "InputWithoutBordersExample",
+    "files": [
+      "input-without-borders-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "input-without-borders-example",
+    "primaryFile": "input-without-borders-example.ts",
     "importPath": "components/input"
   },
   "layout-flex-alignment": {
@@ -9845,14 +9926,12 @@ export type LiveExampleId =
   | 'form-field-horizontal'
   | 'form-field-overview'
   | 'form-field-password-overview'
-  | 'form-field-with-cleaner'
   | 'form-field-with-custom-error-state-matcher-set-by-attribute'
   | 'form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider'
   | 'form-field-with-error'
   | 'form-field-with-hint'
   | 'form-field-with-label'
   | 'form-field-with-prefix-and-suffix'
-  | 'form-field-without-borders'
   | 'form-fieldset-invalid'
   | 'form-fieldset-overview'
   | 'form-fieldset-with-button'
@@ -9892,12 +9971,20 @@ export type LiveExampleId =
   | 'inline-edit-validation'
   | 'inline-edit-vertical-list'
   | 'inline-edit-without-label'
+  | 'input-autocomplete'
+  | 'input-disabled'
+  | 'input-label-and-hint'
+  | 'input-monospace'
   | 'input-number-overview'
   | 'input-overview'
   | 'input-password-overview'
   | 'input-password-template-driven'
   | 'input-readonly'
+  | 'input-search'
+  | 'input-validation'
+  | 'input-with-cleaner'
   | 'input-with-mask'
+  | 'input-without-borders'
   | 'layout-flex-alignment'
   | 'layout-flex-behaviour-modifiers'
   | 'layout-flex-offsets'
