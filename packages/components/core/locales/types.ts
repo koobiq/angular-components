@@ -71,6 +71,29 @@ export type KbqA11yLocaleConfiguration = {
 
 /** Locale configuration for `KbqCodeBlockModule`. */
 export type KbqCodeBlockLocaleConfiguration = {
+    /** Label of the line link action. */
+    copyLinkText?: string;
+    /** Label of a line selector. Supports `{{ line }}`. */
+    selectLineText?: string;
+    /** Single line label. Supports `{{ start }}`. */
+    lineText?: string;
+    /** Range label. Supports `{{ start }}` and `{{ end }}`. */
+    linesText?: string;
+    /** Label of the clear selection action. */
+    clearSelectionText?: string;
+    /** Message when collapsed code hides part of the selection. */
+    selectionHiddenText?: string;
+    /** Keyboard instructions for line actions. */
+    lineNavigationHint?: string;
+    /** Keyboard instructions for a scrollable code viewport. */
+    scrollHint?: string;
+    /** Keyboard instructions for entering optional line navigation from the viewport. */
+    lineNavigationStartHint?: string;
+    /** Instructions when automatic copying is unavailable. */
+    manualCopyText?: string;
+    /** Label of the manual copy dialog close action. */
+    closeText?: string;
+
     softWrapOnTooltip: string;
     softWrapOffTooltip: string;
 

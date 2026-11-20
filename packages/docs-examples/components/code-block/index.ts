@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CodeBlockHeaderPinnedExample } from './code-block-header-pinned/code-block-header-pinned-example';
+import { CodeBlockLineLinksExample } from './code-block-line-links/code-block-line-links-example';
 import { CodeBlockLineNumbersExample } from './code-block-line-numbers/code-block-line-numbers-example';
 import { CodeBlockOverviewExample } from './code-block-overview/code-block-overview-example';
 import { CodeBlockWithCustomLocaleConfigurationExample } from './code-block-with-custom-locale-configuration/code-block-with-custom-locale-configuration-example';
@@ -13,6 +14,7 @@ import { CodeBlockWithTabsAndShadowExample } from './code-block-with-tabs-and-sh
 
 export {
     CodeBlockHeaderPinnedExample,
+    CodeBlockLineLinksExample,
     CodeBlockLineNumbersExample,
     CodeBlockOverviewExample,
     CodeBlockWithCustomLocaleConfigurationExample,
@@ -32,6 +34,7 @@ const EXAMPLES = [
     CodeBlockWithFilledExample,
     CodeBlockWithNoBorderExample,
     CodeBlockOverviewExample,
+    CodeBlockLineLinksExample,
     CodeBlockLineNumbersExample,
     CodeBlockWithCustomLocaleConfigurationExample,
     CodeBlockWithTabsAndShadowExample,

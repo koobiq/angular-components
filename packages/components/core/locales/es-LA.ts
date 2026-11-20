@@ -69,6 +69,19 @@ export const esLALocaleData = {
         }
     },
     codeBlock: {
+        copyLinkText: 'Copiar enlace',
+        selectLineText: 'Seleccionar línea {{ line }}',
+        lineText: 'Línea {{ start }}',
+        linesText: 'Líneas {{ start }}–{{ end }}',
+        clearSelectionText: 'Borrar selección',
+        selectionHiddenText: 'Parte de la selección está oculta',
+        lineNavigationHint:
+            'Las flechas mueven el foco, Shift amplía la selección y Enter copia el enlace. Escape vuelve al desplazamiento.',
+        scrollHint: 'Use las flechas para desplazar el código.',
+        lineNavigationStartHint: 'Las flechas desplazan el código. Enter activa la navegación por líneas; Escape vuelve al desplazamiento.',
+        manualCopyText: 'Copie el texto seleccionado con Ctrl+C o Command+C',
+        closeText: 'Cerrar',
+
         softWrapOnTooltip: 'Activar el ajuste de texto',
         softWrapOffTooltip: 'Desactivar el ajuste de texto',
         downloadTooltip: 'Descargar',

@@ -67,6 +67,18 @@ export const ruRULocaleData = {
         }
     },
     codeBlock: {
+        copyLinkText: 'Скопировать ссылку',
+        selectLineText: 'Выбрать строку {{ line }}',
+        lineText: 'Строка {{ start }}',
+        linesText: 'Строки {{ start }}–{{ end }}',
+        clearSelectionText: 'Снять выбор',
+        selectionHiddenText: 'Часть выбора скрыта',
+        lineNavigationHint: 'Стрелки перемещают фокус, Shift расширяет выбор, Enter копирует ссылку. Esc возвращает к прокрутке.',
+        scrollHint: 'Используйте стрелки для прокрутки кода.',
+        lineNavigationStartHint: 'Стрелки прокручивают код. Enter включает навигацию по строкам, Esc возвращает к прокрутке.',
+        manualCopyText: 'Скопируйте выделенный текст с помощью Ctrl+C или Command+C',
+        closeText: 'Закрыть',
+
         softWrapOnTooltip: 'Включить перенос по словам',
         softWrapOffTooltip: 'Выключить перенос по словам',
         downloadTooltip: 'Скачать',

@@ -12,6 +12,18 @@ export type KbqCodeBlockFile = {
     content: string;
 
     /**
+     * Stable identifier, unique among all code files on the page. Enables links such as `#request-L3-L7`.
+     * Keep it unchanged when reordering files or blocks. Defaults to `undefined` (line links disabled).
+     */
+    id?: string;
+
+    /** Author highlights of whole source lines. Defaults to an empty list. */
+    highlightedLines?: readonly KbqCodeBlockLineRange[];
+
+    /** Author highlights of text fragments. Defaults to an empty list. */
+    highlightedRanges?: readonly KbqCodeBlockTextRange[];
+
+    /**
      * File name, which will be displayed in UI and when downloading.
      * If not provided, will be set to `KBQ_CODE_BLOCK_FALLBACK_FILE_NAME`.
      */
@@ -32,4 +44,28 @@ export type KbqCodeBlockFile = {
      * Adds `openExternalSystem` button.
      */
     link?: string;
+};
+
+/** Inclusive range of source lines, numbered from 1. */
+export type KbqCodeBlockLineRange = {
+    /** First source line. */
+    start: number;
+    /** Last source line, included in the range. */
+    end: number;
+};
+
+/** Position in the original code, using UTF-16 offsets as JavaScript strings do. */
+export type KbqCodeBlockTextPosition = {
+    /** Source line, numbered from 1. */
+    line: number;
+    /** UTF-16 offset within the line, numbered from 0. */
+    offset: number;
+};
+
+/** Text fragment to emphasize, from an inclusive start to an exclusive end. */
+export type KbqCodeBlockTextRange = {
+    /** First included position. */
+    start: KbqCodeBlockTextPosition;
+    /** First excluded position. */
+    end: KbqCodeBlockTextPosition;
 };
