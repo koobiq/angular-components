@@ -572,7 +572,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'description list',
                     hasApi: true,
                     apiId: 'dl',
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-12-03')
                 },
                 {
                     id: DocsStructureItemId.Dropdown,

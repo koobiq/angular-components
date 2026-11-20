@@ -78,7 +78,7 @@ export class KbqDlModule {
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqDlModule>;
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqDlModule, never, [typeof KbqDl, typeof KbqDt, typeof KbqDd], [typeof KbqDl, typeof KbqDt, typeof KbqDd]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqDlModule, never, [typeof KbqDl, typeof KbqDt, typeof KbqDtCaption, typeof KbqDd], [typeof KbqDl, typeof KbqDt, typeof KbqDtCaption, typeof KbqDd]>;
 }
 
 // @public
@@ -100,9 +100,17 @@ export function kbqDlOptionsProvider(options: Partial<KbqDlOptions>): Provider;
 // @public
 export class KbqDt {
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDt, "kbq-dt", never, {}, {}, never, ["*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDt, "kbq-dt", never, {}, {}, never, ["*", "[kbqDtCaption]"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDt, never>;
+}
+
+// @public
+export class KbqDtCaption {
+    // (undocumented)
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqDtCaption, "[kbqDtCaption]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDtCaption, never>;
 }
 
 // @public @deprecated (undocumented)

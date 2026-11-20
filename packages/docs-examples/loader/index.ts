@@ -277,6 +277,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/divider').then((m) => m.DividerVerticalExample);
         case 'dl-alignment':
             return import('@koobiq/docs-examples/components/dl').then((m) => m.DlAlignmentExample);
+        case 'dl-caption':
+            return import('@koobiq/docs-examples/components/dl').then((m) => m.DlCaptionExample);
         case 'dl-dt-width':
             return import('@koobiq/docs-examples/components/dl').then((m) => m.DlDtWidthExample);
         case 'dl-long-text':
