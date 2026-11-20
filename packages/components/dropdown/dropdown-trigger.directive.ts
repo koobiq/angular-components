@@ -360,12 +360,19 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
             this.dropdown.lazyContent.attach(this.data);
         }
 
+        // Position the pane right away, before the panel enters its animation state: `OverlayRef.attach()`
+        // only re-places it after the render, and by then a nested panel can be measured against a parent
+        // panel that is still mid-animation.
+        overlayRef.updatePosition();
+
         this.closeSubscription = this.closingActions().subscribe(() => this.close());
 
         this.init();
 
         if (this.dropdown instanceof KbqDropdown) {
-            this.dropdown.startAnimation();
+            const panelElement = overlayRef.overlayElement.querySelector('.kbq-dropdown__panel') as HTMLElement;
+
+            this.dropdown.startAnimation(panelElement);
         }
 
         this.addClassToOverlayContainer();
