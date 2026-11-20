@@ -16,11 +16,37 @@ An input inside `kbq-select-matcher`. `[useDefaultHandlers]="false"` turns off t
 
 <Example id="tree-select-custom-matcher-with-input" />
 
+#### Custom tag content
+
+In multiple selection mode the markup of every tag can be replaced with your own. How the `#kbqSelectTagContent` template works — its context of a
+`KbqTreeSelectTriggerValue` and the select instance, removal through `select.onRemoveSelectedOption` — is described in
+[Customizing tags](/en/components/tree-select/overview#customizing-tags). The example colors each tag by its value and gives it a prefix icon.
+
+<Example id="tree-select-custom-tag-content" />
+
 #### Deleted nodes example
 
 Shows how to handle selected values whose nodes were deleted on the backend: the deleted nodes are hidden from the dropdown but stay in the selection as removable error tags, the field is shown in an error state while any deleted value is selected, and a hint explains why.
 
 <Example id="tree-select-deleted-nodes" />
+
+#### No available options
+
+A tree select is intended to have available choices. If it has no nodes, this should be treated as an exceptional case — when the application does not
+provide any choices, the control should be replaced with an input field or a dialog for creating a new entity.
+
+As a last resort, a message can be placed in the panel through `<kbq-select-no-options>`, the same directive the plain select reads. The empty
+`kbq-tree-selection` in the example is load-bearing: without one the tree-select never resolves its options, and the panel refuses to open — the
+message would never be seen.
+
+<Example id="tree-select-no-variants" />
+
+#### Custom scroll strategy
+
+Override the scroll strategy via `KBQ_SELECT_SCROLL_STRATEGY`. `KbqAutoHideScrollStrategy` (from `@koobiq/components/core`) stops repositioning once
+the trigger scrolls out of view and emits on `hide`, so you can close the panel yourself.
+
+<Example id="tree-select-scroll-strategy" />
 
 #### Smart search
 
