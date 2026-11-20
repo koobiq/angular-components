@@ -49,9 +49,11 @@
                     @if (hiddenItemIDs().has($index)) {
                         <a
                             kbq-dropdown-item
+                            kbq-title
                             [routerLink]="item.routerLink?.urlTree"
                             [attr.aria-current]="item.current() ? 'page' : null"
                             [disabled]="disabled() || item.disabled()"
+                            [kbqTooltipArrow]="false"
                         >
                             @if (item.customTemplateRef(); as customTemplateRef) {
                                 <ng-container [ngTemplateOutlet]="customTemplateRef" />
