@@ -1,6 +1,6 @@
 import { CdkTrapFocus, FocusMonitor, type FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
+import { _getFocusedElementPierceShadowDom, Platform } from '@angular/cdk/platform';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
     afterNextRender,
@@ -139,6 +139,7 @@ export class KbqModalComponent<T = any, R = any>
     private focusMonitor = inject(FocusMonitor);
     private readonly inputModalityDetector = inject(InputModalityDetector);
     private readonly injector = inject(Injector);
+    private readonly platform = inject(Platform);
 
     /**
      * Whether the dialog and its dim layer move without motion. Read from the dialog's own injector, under
@@ -542,7 +543,7 @@ export class KbqModalComponent<T = any, R = any>
 
         this.viewInitialized = true;
 
-        if (this.kbqVisible()) {
+        if (this.kbqVisible() && this.platform.isBrowser) {
             this.monitorContainer();
             this.focusInitialElement();
         }
@@ -862,6 +863,8 @@ export class KbqModalComponent<T = any, R = any>
      * service-created one.
      */
     private captureFocus(): void {
+        if (!this.platform.isBrowser) return;
+
         this.focusedElementBeforeOpen = _getFocusedElementPierceShadowDom();
         // `FocusMonitor` keeps the last origin private; the modality detector behind it is public
         // and reports the same thing. No modality means the focus was moved by code.
@@ -891,11 +894,11 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     private restoreFocus(): void {
-        if (this.kbqRestoreFocus() && this.focusedElementBeforeOpen) {
-            this.focusMonitor.focusVia(this.focusedElementBeforeOpen, this.previouslyFocusedElementOrigin);
+        if (!this.kbqRestoreFocus() || !this.focusedElementBeforeOpen) return;
 
-            this.focusedElementBeforeOpen = null;
-        }
+        this.focusMonitor.focusVia(this.focusedElementBeforeOpen, this.previouslyFocusedElementOrigin);
+
+        this.focusedElementBeforeOpen = null;
     }
 
     /** Moves focus into the dialog once the shown state has been rendered. */
