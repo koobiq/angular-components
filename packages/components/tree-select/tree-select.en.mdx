@@ -259,7 +259,7 @@ A combobox has to be named, and `<label for>` only names native form controls. I
 
 From the keyboard, `Escape` and `Alt` + arrow close the dropdown and return the focus to the control, while `Tab` closes it and moves on to the next control the way it does everywhere else.
 
-In multiple selection mode every tag has its own remove control: a `button` operable with `Enter` and `Space`, named after the a11y locale (`remove`) — bind `aria-label` on the remove icon to name it after the value. Only the tags the trigger actually shows take a place in the tab order — the ones the “+N” counter stands for are clipped out of sight, and a tab stop there would move focus to something invisible. A custom `#kbqSelectTagContent` template replaces that markup wholesale — reproduce the control if you keep tag removal.
+In multiple selection mode every tag has its own remove control: a `button` operable with `Enter` and `Space`, named after the a11y locale (`remove`) — in a custom tag template, bind `aria-label` on the remove icon to name it after the value. Only the tags the trigger actually shows take a place in the tab order — the ones the “+N” counter stands for are clipped out of sight, and a tab stop there would move focus to something invisible. A custom `#kbqSelectTagContent` template replaces that markup wholesale — reproduce the control if you keep tag removal.
 
 When the operating system asks for reduced motion, the panel opens and closes without the fade animation.
 
