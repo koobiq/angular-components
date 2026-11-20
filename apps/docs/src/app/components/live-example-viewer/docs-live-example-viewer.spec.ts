@@ -2,9 +2,11 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { provideRouter, Router } from '@angular/router';
 import { BehaviorSubject, map } from 'rxjs';
 import type { Mock } from 'vitest';
-import { kbqCodeBlockHighlightJsConfigProvider } from '@koobiq/components/code-block';
+import { KbqCodeBlock, kbqCodeBlockHighlightJsConfigProvider } from '@koobiq/components/code-block';
 import { KbqStateSavingService } from '@koobiq/components/core';
 import { EXAMPLE_COMPONENTS, type LiveExample } from '@koobiq/docs-examples';
 import { DOCS_HIGHLIGHT_JS_LANGUAGES } from '../../constants/highlight-js';
@@ -57,16 +59,19 @@ describe(DocsLiveExampleViewerComponent.name, () => {
 
     // Separate from `beforeEach` so a spec can re-create the component after changing the Fullscreen
     // API stubs: the capability is resolved once, by the root service, on the first render.
-    const createFixture = async (): Promise<void> => {
+    const createFixture = async (url = '/en/components/select/overview'): Promise<void> => {
         TestBed.configureTestingModule({
             imports: [DocsLiveExampleViewerComponent],
             providers: [
                 provideDocsLocale(DocsLocale.En),
                 provideHttpClient(),
                 provideHttpClientTesting(),
+                provideRouter([{ path: '**', children: [] }]),
                 kbqCodeBlockHighlightJsConfigProvider({ languages: DOCS_HIGHLIGHT_JS_LANGUAGES })
             ]
         });
+
+        await TestBed.inject(Router).navigateByUrl(url);
 
         fixture = TestBed.createComponent(DocsLiveExampleViewerComponent);
         httpMock = TestBed.inject(HttpTestingController);
@@ -207,13 +212,16 @@ describe(DocsLiveExampleViewerComponent.name, () => {
     });
 
     describe('with a registered example', () => {
+        const flushSource = (): void => {
+            httpMock.expectOne(`${EXAMPLE_SOURCE_PATH}/basic-select-example.ts`).flush('export class X {}');
+            httpMock.expectOne(`${EXAMPLE_SOURCE_PATH}/basic-select-example.html`).flush('<p>\n\tOne\n</p>');
+            fixture.detectChanges();
+        };
+
         const showSource = (): void => {
             toggle().click();
             fixture.detectChanges();
-
-            httpMock.expectOne(`${EXAMPLE_SOURCE_PATH}/basic-select-example.ts`).flush('export class X {}');
-            httpMock.expectOne(`${EXAMPLE_SOURCE_PATH}/basic-select-example.html`).flush('<p></p>');
-            fixture.detectChanges();
+            flushSource();
         };
 
         const renderedExample = (): HTMLElement | null =>
@@ -226,7 +234,7 @@ describe(DocsLiveExampleViewerComponent.name, () => {
 
             showSource();
 
-            expect(fixture.componentInstance.files).toHaveLength(2);
+            expect(fixture.componentInstance.files()).toHaveLength(2);
             expect(fixture.nativeElement.querySelector('kbq-code-block')).not.toBeNull();
         });
 
@@ -278,8 +286,151 @@ describe(DocsLiveExampleViewerComponent.name, () => {
             toggle().click();
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.files).toHaveLength(2);
+            expect(fixture.componentInstance.files()).toHaveLength(2);
             expect(fixture.componentInstance.exampleData()).toBeDefined();
+        });
+
+        describe('link to lines of the source', () => {
+            const scrollIntoView = vi.fn();
+            const markedLines = (): string[] =>
+                Array.from<HTMLElement>(
+                    fixture.nativeElement.querySelectorAll('kbq-code-block .kbq-code-block__line_marked')
+                ).map(({ textContent }) => textContent?.trim() ?? '');
+
+            // jsdom does not implement scrolling into view.
+            beforeEach(() => (Element.prototype.scrollIntoView = scrollIntoView));
+            afterEach(() => Reflect.deleteProperty(Element.prototype, 'scrollIntoView'));
+
+            it('opens the source at the lines of the file the address names and scrolls to them', async () => {
+                TestBed.resetTestingModule();
+                await createFixture(`/en/components/select/overview?example=${EXAMPLE_ID}&file=html&lines=2-3`);
+                flushSource();
+                await fixture.whenStable();
+
+                expect(toggle().getAttribute('aria-expanded')).toBe('true');
+                expect(markedLines()).toEqual(['One', '</p>']);
+                expect(scrollIntoView).toHaveBeenCalledTimes(1);
+                expect(scrollIntoView.mock.contexts[0]).toHaveProperty('textContent', '\tOne\n');
+            });
+
+            it('marks nothing for an address that names another example', async () => {
+                TestBed.resetTestingModule();
+                await createFixture('/en/components/select/overview?example=other-example&file=html&lines=2');
+
+                expect(toggle().getAttribute('aria-expanded')).toBe('false');
+                httpMock.expectNone(`${EXAMPLE_SOURCE_PATH}/basic-select-example.ts`);
+            });
+
+            it('puts the lines the reader selects into the address, and takes them out with the source', async () => {
+                const router = TestBed.inject(Router);
+
+                showSource();
+
+                const codeBlock: KbqCodeBlock = fixture.debugElement.query(
+                    By.directive(KbqCodeBlock)
+                ).componentInstance;
+
+                codeBlock.filesChange.emit(
+                    codeBlock.files().map((file, index) => (index === 0 ? { ...file, markedLines: [[2, 3]] } : file))
+                );
+                await fixture.whenStable();
+
+                expect(router.url).toBe(`/en/components/select/overview?example=${EXAMPLE_ID}&file=html&lines=2-3`);
+                expect(markedLines()).toEqual(['One', '</p>']);
+                // The reader is at the lines already.
+                expect(scrollIntoView).not.toHaveBeenCalled();
+
+                toggle().click();
+                await fixture.whenStable();
+
+                expect(router.url).toBe('/en/components/select/overview');
+            });
+
+            const selectLines = async (fileIndex: number, markedLines: [number, number][]): Promise<void> => {
+                const codeBlock: KbqCodeBlock = fixture.debugElement.query(
+                    By.directive(KbqCodeBlock)
+                ).componentInstance;
+
+                codeBlock.filesChange.emit(
+                    codeBlock.files().map((file, index) => (index === fileIndex ? { ...file, markedLines } : file))
+                );
+                await fixture.whenStable();
+            };
+
+            it('keeps the reader on the file they unmark the lines of', async () => {
+                showSource();
+
+                const tabs: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('.kbq-tab-link'));
+
+                tabs[1]?.click();
+                await selectLines(1, [[1, 1]]);
+                await selectLines(1, []);
+
+                expect(TestBed.inject(Router).url).toBe('/en/components/select/overview');
+                expect(fixture.nativeElement.querySelector('kbq-code-block code')?.textContent).toBe(
+                    'export class X {}'
+                );
+            });
+
+            it('marks the code the page names, and opens the first file that has it', async () => {
+                fixture.componentRef.setInput('marks', ['class X']);
+                showSource();
+                await fixture.whenStable();
+
+                const code: HTMLElement = fixture.nativeElement.querySelector('kbq-code-block code');
+
+                expect(code.textContent).toBe('export class X {}');
+                // highlight.js splits the code into tokens, and the mark into pieces with them.
+                expect(Array.from(code.querySelectorAll('mark'), ({ textContent }) => textContent).join('')).toBe(
+                    'class X'
+                );
+                expect(fixture.componentInstance.files().map(({ markedText }) => markedText)).toEqual([
+                    undefined,
+                    ['class X']
+                ]);
+            });
+
+            it('opens the source of another example on its first file with marked code', async () => {
+                const OTHER_ID = 'other-select-example';
+
+                EXAMPLE_COMPONENTS[OTHER_ID] = EXAMPLE_COMPONENTS[EXAMPLE_ID]!;
+
+                try {
+                    fixture.componentRef.setInput('marks', ['<p>']);
+                    showSource();
+                    (fixture.nativeElement.querySelectorAll('.kbq-tab-link')[1] as HTMLElement).click();
+                    await fixture.whenStable();
+
+                    // The other example has the same files, which the document loader answers from its cache.
+                    fixture.componentRef.setInput('example', OTHER_ID);
+                    await fixture.whenStable();
+
+                    expect(fixture.nativeElement.querySelector('kbq-code-block code')?.textContent).toBe(
+                        '<p>\n\tOne\n</p>'
+                    );
+                } finally {
+                    Reflect.deleteProperty(EXAMPLE_COMPONENTS, OTHER_ID);
+                }
+            });
+
+            it('scrolls to none of the lines the reader selects after a link to lines the source lacks', async () => {
+                // The code block warns that the line it is given is past the end of the file.
+                const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+                try {
+                    TestBed.resetTestingModule();
+                    await createFixture(`/en/components/select/overview?example=${EXAMPLE_ID}&file=html&lines=99`);
+                    flushSource();
+                    await fixture.whenStable();
+
+                    await selectLines(0, [[2, 2]]);
+
+                    expect(markedLines()).toEqual(['One']);
+                    expect(scrollIntoView).not.toHaveBeenCalled();
+                } finally {
+                    warn.mockRestore();
+                }
+            });
         });
 
         it('clears what the components inside the example persisted, and leaves the rest alone', () => {

@@ -305,6 +305,22 @@
             color: kbq-code-block-hljs-attr(line-numbers-color);
         }
 
+        .kbq-code-block__line_marked {
+            background-color: var(--kbq-code-block-marked-line-background);
+            box-shadow: inset var(--kbq-code-block-size-marked-line-border-width) 0 0
+                var(--kbq-code-block-marked-line-border-color);
+
+            // A shadow has no logical sides: the bar follows the start of the line by hand.
+            &:dir(rtl) {
+                box-shadow: inset calc(var(--kbq-code-block-size-marked-line-border-width) * -1) 0 0
+                    var(--kbq-code-block-marked-line-border-color);
+            }
+        }
+
+        .kbq-code-block__mark {
+            background: var(--kbq-code-block-marked-text-background);
+        }
+
         &.kbq-code-block_outline {
             @include kbq-code-block-style(outline);
         }
@@ -315,6 +331,16 @@
 
         .kbq-code-block__main.cdk-keyboard-focused {
             outline-color: var(--kbq-states-line-focus-theme);
+        }
+
+        // An image over the background color of a marked line, so that the hover shows on it too.
+        @media (hover: hover) {
+            &.kbq-code-block_can-select-lines .kbq-code-block__code_line-numbers .kbq-code-block__line:hover {
+                background-image: linear-gradient(
+                    var(--kbq-code-block-hovered-line-background),
+                    var(--kbq-code-block-hovered-line-background)
+                );
+            }
         }
     }
 }

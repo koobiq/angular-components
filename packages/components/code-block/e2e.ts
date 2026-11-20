@@ -31,6 +31,16 @@ const importsFile: KbqCodeBlockFile = {
 
 const linkedImportsFile: KbqCodeBlockFile = { ...importsFile, link: 'https://koobiq.io/' };
 
+// The lines fit a 250px block, so every mark is in view: two adjacent marked lines, text on a plain line and text on
+// a marked one.
+const markedFile: KbqCodeBlockFile = {
+    language: 'typescript',
+    filename: 'user.ts',
+    content: `const user = {\n\tid: 1,\n\tname: 'John',\n\trole: 'admin'\n};`,
+    markedLines: [[2, 3]],
+    markedText: ['user', 'John']
+};
+
 // The URL is one token wider than the block, so soft wrap has to break inside it.
 const anchorFile: KbqCodeBlockFile = {
     // For testing KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE
@@ -169,6 +179,62 @@ export class E2eCodeBlockTabs {
 })
 export class E2eCodeBlockLineNumbers {
     protected readonly importsFile = importsFile;
+}
+
+@Component({
+    selector: 'e2e-code-block-marks',
+    imports: [KbqCodeBlock],
+    template: `
+        <!-- A marked line spans the code's padding, which differs with and without the header, and its code starts
+        after the numbers when there are any. The first block shows the hover of a line under its marked text -->
+        <div class="e2e-code-block-grid" data-testid="e2eScreenshotTarget">
+            <kbq-code-block canSelectLines lineNumbers [files]="[markedFile]" />
+            <kbq-code-block hideTabs [files]="[markedFile]" />
+        </div>
+    `,
+    styles: `
+        .e2e-code-block-grid {
+            display: inline-grid;
+            grid-template-columns: repeat(2, 250px);
+            align-items: start;
+            gap: var(--kbq-size-s);
+            padding: var(--kbq-size-xs);
+        }
+    `,
+    providers: [kbqCodeBlockLocaleConfigurationProvider(enUSLocaleData.codeBlock), HIGHLIGHT_JS_CONFIG],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eCodeBlockMarks'
+    }
+})
+export class E2eCodeBlockMarks {
+    protected readonly markedFile = markedFile;
+}
+
+@Component({
+    selector: 'e2e-code-block-line-selection',
+    imports: [KbqCodeBlock],
+    template: `
+        <!-- Lines selected by the reader replace the marked lines of the file and keep its marked text -->
+        <div class="e2e-code-block-grid" data-testid="e2eScreenshotTarget">
+            <kbq-code-block canSelectLines lineNumbers [files]="[markedFile]" />
+        </div>
+    `,
+    styles: `
+        .e2e-code-block-grid {
+            display: inline-grid;
+            grid-template-columns: 250px;
+            padding: var(--kbq-size-xs);
+        }
+    `,
+    providers: [kbqCodeBlockLocaleConfigurationProvider(enUSLocaleData.codeBlock), HIGHLIGHT_JS_CONFIG],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eCodeBlockLineSelection'
+    }
+})
+export class E2eCodeBlockLineSelection {
+    protected readonly markedFile = markedFile;
 }
 
 @Component({

@@ -56,6 +56,60 @@ test.describe('KbqCodeBlockModule', () => {
         });
     });
 
+    test.describe('E2eCodeBlockMarks', () => {
+        test('marked lines and text', async ({ page }) => {
+            await page.goto('/E2eCodeBlockMarks');
+
+            const target = getScreenshotTarget(page, 'e2eCodeBlockMarks');
+
+            await expectHighlighted(target, 2);
+            await e2eWaitForSettledScrollbars(target, 2);
+
+            await target.locator('.kbq-code-block__line').first().hover();
+
+            await expect(target).toHaveScreenshot('07-marks-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(target).toHaveScreenshot('07-marks-dark.png');
+        });
+    });
+
+    test.describe('E2eCodeBlockLineSelection', () => {
+        // The numbers are drawn before the text of a line, which its first row is outdented back to.
+        const clickLineNumber = async (line: Locator, modifiers?: 'Shift'[]): Promise<void> => {
+            const x = await line.evaluate((element) => {
+                const { paddingLeft, textIndent } = getComputedStyle(element);
+
+                return parseFloat(paddingLeft) + parseFloat(textIndent) + 1;
+            });
+
+            await line.click({ position: { x, y: 1 }, modifiers });
+        };
+
+        test('lines selected by clicking their numbers, and the hover of a line', async ({ page }) => {
+            await page.goto('/E2eCodeBlockLineSelection');
+
+            const target = getScreenshotTarget(page, 'e2eCodeBlockLineSelection');
+            const lines = target.locator('.kbq-code-block__line');
+            const marked = target.locator('.kbq-code-block__line_marked');
+
+            await expectHighlighted(target, 1);
+            await e2eWaitForSettledScrollbars(target, 1);
+
+            await lines.nth(0).hover();
+            await expect(lines.nth(0)).toHaveCSS('background-image', /linear-gradient/);
+            await expect(lines.nth(1)).toHaveCSS('background-image', 'none');
+
+            await clickLineNumber(lines.nth(3));
+            await clickLineNumber(lines.nth(4), ['Shift']);
+            await expect(marked).toHaveText([/role/, /};/]);
+
+            // The pointer stays on the last line clicked, which shows the hover over its mark.
+            await expect(target).toHaveScreenshot('08-line-selection-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(target).toHaveScreenshot('08-line-selection-dark.png');
+        });
+    });
+
     test.describe('E2eCodeBlockSoftWrap', () => {
         test('wrapped lines', async ({ page }) => {
             await page.goto('/E2eCodeBlockSoftWrap');

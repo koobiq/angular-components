@@ -1,20 +1,25 @@
 import { NgComponentOutlet } from '@angular/common';
 import {
+    afterEveryRender,
     afterNextRender,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     computed,
     effect,
-    type ElementRef,
+    ElementRef,
     inject,
+    Injector,
     input,
+    linkedSignal,
     signal,
     type Type,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, map, type Observable } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { type KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
@@ -28,6 +33,12 @@ import { KbqToastService } from '@koobiq/components/toast';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { EXAMPLE_COMPONENTS } from '@koobiq/docs-examples';
 import { DocsLocaleState } from 'src/app/services/locale';
+import {
+    DOCS_CODE_EXAMPLE_PARAM,
+    DOCS_CODE_FILE_PARAM,
+    DOCS_CODE_LINES_PARAM,
+    DOCS_WITHOUT_CODE_LINES
+} from '../../constants/code-lines';
 import { docsExamplePageUrl } from '../../constants/example-page';
 import { DocsDocumentLoader } from '../../services/document-loader';
 import { DocsFullscreenService } from '../../services/fullscreen';
@@ -41,6 +52,9 @@ interface ExampleFileData {
     content: string;
     language: string;
 }
+
+/** Lines of the source of an example, from the first to the last. */
+type DocsCodeLines = [first: number, last: number];
 
 /** Loads the class of an example that cannot render on the server, so the page does not carry its code. */
 export interface DocsExampleLoader {
@@ -84,9 +98,81 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
      */
     readonly component = input.required<Type<unknown> | DocsExampleLoader>();
 
+    /** Code to mark in the source of the example, wherever it occurs: what the section that shows it is about. */
+    readonly marks = input<readonly string[]>([]);
+
     protected readonly isSourceShown = signal(false);
 
-    files: KbqCodeBlockFile[] = [];
+    /** The source files of the example, once they have loaded. */
+    private readonly sourceFiles = signal<KbqCodeBlockFile[]>([]);
+
+    /** The source files, with the code of `marks` marked in those that have it. */
+    private readonly markedFiles = computed(() =>
+        this.sourceFiles().map((file) => {
+            const markedText = this.marks().filter((mark) => file.content.includes(mark));
+
+            return markedText.length ? { ...file, markedText } : file;
+        })
+    );
+
+    private readonly router = inject(Router);
+    private readonly route = inject(ActivatedRoute);
+    private readonly queryParams = toSignal(this.route.queryParamMap, { requireSync: true });
+
+    /** The file, by its extension, and the lines of the source that the address names, when it names this example. */
+    private readonly linkedLines = computed(() => {
+        const params = this.queryParams();
+        const lines = this.parseLines(params.get(DOCS_CODE_LINES_PARAM));
+
+        return params.get(DOCS_CODE_EXAMPLE_PARAM) === this.example() && lines
+            ? { file: params.get(DOCS_CODE_FILE_PARAM), lines }
+            : null;
+    });
+
+    /** Index of the source file the address names, or `-1`. */
+    private readonly linkedFileIndex = computed(() => {
+        const link = this.linkedLines();
+
+        return link ? this.sourceFiles().findIndex(({ language }) => language?.toLowerCase() === link.file) : -1;
+    });
+
+    /** The source files, with their marked code and the lines the address names. */
+    readonly files = computed(() => {
+        const index = this.linkedFileIndex();
+        const lines = this.linkedLines()?.lines;
+
+        return this.markedFiles().map((file, fileIndex) =>
+            fileIndex === index && lines ? { ...file, markedLines: [lines] } : file
+        );
+    });
+
+    /**
+     * The source file on screen: the one the address names, or else the first one with marked code, until the reader
+     * picks another.
+     */
+    protected readonly activeFileIndex = linkedSignal({
+        source: () => ({
+            linked: this.linkedFileIndex(),
+            marked: this.markedFiles().findIndex(({ markedText }) => markedText),
+            files: this.sourceFiles()
+        }),
+        computation: ({ linked, marked, files }, previous): number => {
+            if (linked >= 0) return linked;
+
+            // An address that stops naming a file leaves the reader on the one they are reading, in the same files.
+            if (files === previous?.source.files) return previous.value;
+
+            return Math.max(marked, 0);
+        }
+    });
+
+    /** The lines the reader has selected last: the address that names them next does not scroll to them. */
+    private sharedLines: string | null = null;
+
+    /** Set while the source scrolls to the lines the address names once they are marked. */
+    private scrollsToLinkedLines = false;
+
+    private readonly sourceCode = viewChild<unknown, ElementRef<HTMLElement>>('sourceCode', { read: ElementRef });
 
     /** Data for the currently selected example: the example-page routes only accept a known example id. */
     readonly exampleData = computed(() => EXAMPLE_COMPONENTS[this.example()]!);
@@ -132,6 +218,7 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     private readonly modalService = inject(KbqModalService, { optional: true });
     private readonly toastService = inject(KbqToastService, { optional: true });
     private readonly stateSaving = inject(KbqStateSavingService);
+    private readonly injector = inject(Injector);
 
     protected readonly fullscreenAvailable = this.fullscreen.available;
     protected readonly isFullscreen = computed(() => this.fullscreen.element() === this.host);
@@ -141,6 +228,20 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
 
         // Render hooks do not run on the server, which leaves an example given as a loader to the browser.
         afterNextRender(() => this.loadComponent());
+
+        // After hydration, which the source shown would not find in the markup of the server.
+        afterNextRender(() => this.followLinkedLines());
+
+        afterEveryRender(() => {
+            const line = this.scrollsToLinkedLines
+                ? this.sourceCode()?.nativeElement.querySelector('.kbq-code-block__line_marked')
+                : null;
+
+            if (!line) return;
+
+            this.scrollsToLinkedLines = false;
+            line.scrollIntoView({ block: 'center', behavior: 'instant' });
+        });
 
         // Start over whenever the key changes (replaces a side-effecting `@Input` setter).
         effect(() => {
@@ -155,9 +256,90 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
 
         // On demand rather than with the example: fetched while rendering on the server, the sources
         // would be serialized into the page by the HTTP transfer cache.
-        if (this.isSourceShown() && this.files.length === 0) {
+        if (this.isSourceShown() && this.sourceFiles().length === 0) {
             this.generateExampleTabs();
         }
+
+        if (!this.isSourceShown() && this.linkedLines()) {
+            this.sharedLines = null;
+            this.navigateToLines(null);
+        }
+    }
+
+    /** Puts the lines the reader has selected in the source into the address of the page, or takes them out of it. */
+    protected shareLines(files: KbqCodeBlockFile[]): void {
+        const file = files[this.activeFileIndex()];
+        const [mark] = file?.markedLines ?? [];
+        const lines: DocsCodeLines | null = typeof mark === 'number' ? [mark, mark] : Array.isArray(mark) ? mark : null;
+
+        // Unmarked lines of another example than the one the address names leave the address to it.
+        if (!lines && !this.linkedLines()) return;
+
+        this.sharedLines = lines && this.linkKey(file?.language, lines);
+        // Lines a link named but the source could not mark are not scrolled to on the reader's own selection.
+        this.scrollsToLinkedLines = false;
+        this.navigateToLines(lines && { file: file?.language?.toLowerCase(), lines });
+    }
+
+    /**
+     * Shows the source of the example when the address names lines of it, and scrolls to them, unless the reader has
+     * just selected them.
+     */
+    private followLinkedLines(): void {
+        effect(
+            () => {
+                const link = this.linkedLines();
+
+                if (!link) return;
+
+                untracked(() => {
+                    const file = this.sourceFiles()[this.linkedFileIndex()];
+
+                    if (this.linkKey(file?.language, link.lines) === this.sharedLines) return;
+
+                    this.scrollsToLinkedLines = true;
+
+                    if (!this.isSourceShown()) this.toggleSourceView();
+                });
+            },
+            { injector: this.injector }
+        );
+    }
+
+    private navigateToLines(link: { file: string | undefined; lines: DocsCodeLines } | null): void {
+        void this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: link
+                ? {
+                      [DOCS_CODE_EXAMPLE_PARAM]: this.example(),
+                      [DOCS_CODE_FILE_PARAM]: link.file,
+                      [DOCS_CODE_LINES_PARAM]: this.formatLines(link.lines)
+                  }
+                : DOCS_WITHOUT_CODE_LINES,
+            queryParamsHandling: 'merge',
+            replaceUrl: true
+        });
+    }
+
+    /** Lines as the address names them: `12` or `12-14`. */
+    private parseLines(value: string | null): DocsCodeLines | null {
+        const match = value?.match(/^([1-9]\d*)(?:-([1-9]\d*))?$/);
+
+        if (!match) return null;
+
+        const first = Number(match[1]);
+        const last = Number(match[2] ?? match[1]);
+
+        return [Math.min(first, last), Math.max(first, last)];
+    }
+
+    private formatLines([first, last]: DocsCodeLines): string {
+        return first === last ? `${first}` : `${first}-${last}`;
+    }
+
+    /** Lines of a file, as the reader's own selection is told from a link. */
+    private linkKey(language: string | undefined, lines: DocsCodeLines): string {
+        return `${language}:${this.formatLines(lines)}`;
     }
 
     protected toggleFullscreen(): Promise<void> {
@@ -197,7 +379,7 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
 
     /** Rebuilds the shown source tabs of the example. */
     private resetExample(): void {
-        this.files = [];
+        this.sourceFiles.set([]);
 
         if (this.isSourceShown()) {
             this.generateExampleTabs();
@@ -254,9 +436,7 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
                 );
                 // Assign rather than append: showing the source again for the same example would
                 // otherwise duplicate every source tab.
-                this.files = this.prepareCodeFiles(results);
-                // Files arrive from async HTTP; under OnPush the code panel needs an explicit check.
-                this.cdr.markForCheck();
+                this.sourceFiles.set(this.prepareCodeFiles(results));
             },
             error: (error: unknown) => {
                 console.error('Error fetching the files', error);

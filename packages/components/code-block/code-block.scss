@@ -73,11 +73,12 @@
 
         .kbq-code-block__code {
             --kbq-code-block-line-numbers-gap: var(--kbq-code-block-size-with-header-content-content-gap-horizontal);
+            --kbq-code-block-code-padding-horizontal: var(--kbq-code-block-size-with-header-content-padding-horizontal);
 
             padding: var(--kbq-code-block-size-with-header-content-padding-top)
-                var(--kbq-code-block-size-with-header-content-padding-horizontal)
+                var(--kbq-code-block-code-padding-horizontal)
                 var(--kbq-code-block-size-with-header-content-padding-bottom)
-                var(--kbq-code-block-size-with-header-content-padding-horizontal);
+                var(--kbq-code-block-code-padding-horizontal);
             tab-size: var(--kbq-code-block-tab-size);
 
             &:focus-visible {
@@ -90,8 +91,15 @@
             display: block;
         }
 
+        // A line spans the horizontal padding of the code, so that a marked line is marked from edge to edge.
         .kbq-code-block__line {
             display: block;
+            margin-inline: calc(var(--kbq-code-block-code-padding-horizontal) * -1);
+            padding-inline: var(--kbq-code-block-code-padding-horizontal);
+        }
+
+        .kbq-code-block__mark {
+            color: inherit;
         }
     }
 
@@ -108,7 +116,9 @@
 
         .kbq-code-block__line {
             counter-increment: kbq-code-block-line;
-            padding-inline-start: var(--kbq-code-block-line-numbers-indent);
+            padding-inline-start: calc(
+                var(--kbq-code-block-code-padding-horizontal) + var(--kbq-code-block-line-numbers-indent)
+            );
             text-indent: calc(var(--kbq-code-block-line-numbers-indent) * -1);
 
             &::before {
@@ -127,6 +137,14 @@
                 white-space: nowrap;
             }
         }
+    }
+
+    // The number takes in the padding before it and the gap after it, so the whole column answers a click.
+    &.kbq-code-block_can-select-lines .kbq-code-block__code_line-numbers .kbq-code-block__line::before {
+        box-sizing: content-box;
+        margin-inline: calc(var(--kbq-code-block-code-padding-horizontal) * -1) 0;
+        padding-inline: var(--kbq-code-block-code-padding-horizontal) var(--kbq-code-block-line-numbers-gap);
+        cursor: pointer;
     }
 
     &.kbq-code-block_soft-wrap {
@@ -193,9 +211,12 @@
 
             .kbq-code-block__code {
                 --kbq-code-block-line-numbers-gap: var(--kbq-code-block-size-no-header-content-content-gap-horizontal);
+                --kbq-code-block-code-padding-horizontal: var(
+                    --kbq-code-block-size-no-header-content-padding-horizontal
+                );
 
                 padding: var(--kbq-code-block-size-no-header-content-padding-vertical)
-                    var(--kbq-code-block-size-no-header-content-padding-horizontal);
+                    var(--kbq-code-block-code-padding-horizontal);
             }
         }
     }

@@ -71,6 +71,12 @@ const getHighlight = (fixture: ComponentFixture<unknown>): KbqCodeBlockHighlight
 const getLines = (code: HTMLElement): HTMLElement[] =>
     Array.from(code.querySelectorAll<HTMLElement>(':scope > .kbq-code-block__line'));
 
+const getMarkedLines = (code: HTMLElement): boolean[] =>
+    getLines(code).map((line) => line.classList.contains('kbq-code-block__line_marked'));
+
+const getMarks = (code: HTMLElement): HTMLElement[] =>
+    Array.from(code.querySelectorAll<HTMLElement>('mark.kbq-code-block__mark'));
+
 @Component({
     imports: [KbqCodeBlockHighlight],
     template: `
@@ -516,6 +522,227 @@ describe(KbqCodeBlockHighlight.name, () => {
             fixture.detectChanges();
 
             expect(code.classList).toContain('kbq-code-block__code_line-numbers');
+        });
+    });
+
+    describe('marks', () => {
+        const CONTENT = 'one\ntwo\nthree\nfour\nfive';
+
+        it('should mark lines by number and by range, counted from 1', async () => {
+            const fixture = createComponent(SingleBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({ core: coreLoader(buildMockCore()) })
+            ]);
+            const [code] = getCodeElements(fixture);
+
+            fixture.componentInstance.file.set({ content: CONTENT, language: 'typescript', markedLines: [1, [3, 4]] });
+            await settle(fixture);
+
+            expect(getMarkedLines(code)).toEqual([true, false, true, true, false]);
+            expect(getMarks(code)).toHaveLength(0);
+        });
+
+        it('should mark every line that a match of the text reaches', async () => {
+            const fixture = createComponent(SingleBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({ core: coreLoader(buildMockCore()) })
+            ]);
+            const [code] = getCodeElements(fixture);
+
+            fixture.componentInstance.file.set({
+                content: CONTENT,
+                language: 'typescript',
+                markedLines: ['five', /two\nthree/]
+            });
+            await settle(fixture);
+
+            expect(getMarkedLines(code)).toEqual([false, true, true, false, true]);
+        });
+
+        it('should mark every match of the text, and only what the groups of a regular expression capture', async () => {
+            const fixture = createComponent(SingleBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({ core: coreLoader(buildMockCore()) })
+            ]);
+            const [code] = getCodeElements(fixture);
+
+            fixture.componentInstance.file.set({
+                content: 'one two one three',
+                language: 'typescript',
+                markedText: ['one', /two one (thr)ee/]
+            });
+            await settle(fixture);
+
+            expect(getMarks(code).map((mark) => mark.textContent)).toEqual(['one', 'one', 'thr']);
+            expect(code.textContent).toBe('one two one three');
+            expect(getMarkedLines(code)).toEqual([false]);
+        });
+
+        it('should mark text across spans and lines piece by piece', async () => {
+            const core = buildMockCore();
+
+            core.highlight = vi.fn().mockReturnValue({
+                value: '<span class="hljs-keyword">one</span> two\nthree',
+                language: 'typescript',
+                illegal: false,
+                relevance: 10
+            });
+
+            const fixture = createComponent(SingleBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({ core: coreLoader(core) })
+            ]);
+            const [code] = getCodeElements(fixture);
+
+            fixture.componentInstance.file.set({
+                content: 'one two\nthree',
+                language: 'typescript',
+                markedText: [/e two\nth/]
+            });
+            await settle(fixture);
+
+            const marks = getMarks(code);
+
+            expect(marks.map((mark) => mark.textContent)).toEqual(['e', ' two', 'th']);
+            expect(marks.map((mark) => mark.childElementCount)).toEqual([0, 0, 0]);
+            expect(marks[0].parentElement?.classList).toContain('hljs-keyword');
+            expect(getLines(code).map((line) => line.textContent)).toEqual(['one two\n', 'three']);
+        });
+
+        it('should count the characters of the file, not those of the escaped markup', async () => {
+            const fixture = createComponent(SingleBlock, [kbqCodeBlockHighlightJsConfigProvider({})]);
+            const [code] = getCodeElements(fixture);
+
+            fixture.componentInstance.file.set({ content: `a < "b" && 'c'`, markedText: ["'c'"] });
+            fixture.detectChanges();
+            await settle(fixture);
+
+            expect(getMarks(code).map((mark) => mark.textContent)).toEqual(["'c'"]);
+        });
+
+        it('should find the lines of a file with every kind of line break', async () => {
+            const fixture = createComponent(SingleBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({ core: coreLoader(buildMockCore()) })
+            ]);
+            const [code] = getCodeElements(fixture);
+
+            fixture.componentInstance.file.set({
+                content: 'one\r\ntwo\rthree\nfour',
+                language: 'typescript',
+                markedLines: ['three'],
+                markedText: ['four']
+            });
+            await settle(fixture);
+
+            expect(getMarkedLines(code)).toEqual([false, false, true, false]);
+            expect(getMarks(code).map((mark) => mark.textContent)).toEqual(['four']);
+            expect(getMarks(code)[0].closest('.kbq-code-block__line')).toBe(getLines(code)[3]);
+        });
+
+        it('should keep the flags of a regular expression and leave the regular expression itself alone', async () => {
+            const fixture = createComponent(SingleBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({ core: coreLoader(buildMockCore()) })
+            ]);
+            const [code] = getCodeElements(fixture);
+            const regExp = /^O\w+/gim;
+
+            regExp.lastIndex = 5;
+            fixture.componentInstance.file.set({
+                content: 'one\ntwo\nonce',
+                language: 'typescript',
+                markedText: [regExp]
+            });
+            await settle(fixture);
+
+            expect(getMarks(code).map((mark) => mark.textContent)).toEqual(['one', 'once']);
+            expect(regExp.lastIndex).toBe(5);
+        });
+
+        it('should take a mark field set to null, as JSON has it, for no marks', async () => {
+            const fixture = createComponent(SingleBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({ core: coreLoader(buildMockCore()) })
+            ]);
+            const [code] = getCodeElements(fixture);
+            const file = JSON.parse(`{ "content": "one\\ntwo", "markedLines": null, "markedText": ["two"] }`);
+
+            fixture.componentInstance.file.set(file);
+            await settle(fixture);
+
+            expect(getMarkedLines(code)).toEqual([false, false]);
+            expect(getMarks(code).map((mark) => mark.textContent)).toEqual(['two']);
+        });
+
+        it('should warn about the marks that mark nothing', async () => {
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+            try {
+                const fixture = createComponent(SingleBlock, [
+                    kbqCodeBlockHighlightJsConfigProvider({ core: coreLoader(buildMockCore()) })
+                ]);
+                const [code] = getCodeElements(fixture);
+                const file: KbqCodeBlockFile = {
+                    content: 'one\ntwo\n',
+                    language: 'typescript',
+                    markedLines: [2, 3, [0, 0], 'four'],
+                    markedText: ['two', '', /four/]
+                };
+
+                fixture.componentInstance.file.set(file);
+                await settle(fixture);
+
+                expect(getMarkedLines(code)).toEqual([false, true]);
+                expect(warn.mock.calls).toEqual([
+                    ['[KbqCodeBlock] Line mark does not mark any line of the file.', 3, file],
+                    ['[KbqCodeBlock] Line mark does not mark any line of the file.', [0, 0], file],
+                    ['[KbqCodeBlock] Line mark does not mark any line of the file.', 'four', file],
+                    ['[KbqCodeBlock] Text mark does not mark any text of the file.', '', file],
+                    ['[KbqCodeBlock] Text mark does not mark any text of the file.', /four/, file]
+                ]);
+            } finally {
+                warn.mockRestore();
+            }
+        });
+
+        it('should mark other lines of the same markup when only the marked lines change', async () => {
+            const core = buildMockCore();
+            const fixture = createComponent(SingleBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({ core: coreLoader(core) })
+            ]);
+            const [code] = getCodeElements(fixture);
+            const file: KbqCodeBlockFile = {
+                content: CONTENT,
+                language: 'typescript',
+                markedLines: [1],
+                markedText: [/t(wo)/]
+            };
+
+            fixture.componentInstance.file.set(file);
+            await settle(fixture);
+
+            const [firstLine] = getLines(code);
+
+            vi.mocked(core.highlight).mockClear();
+            // A copy of the text marks, as a parent that builds its files anew passes them.
+            fixture.componentInstance.file.set({ ...file, markedLines: [[3, 4]], markedText: [/t(wo)/] });
+            await settle(fixture);
+
+            expect(getMarkedLines(code)).toEqual([false, false, true, true, false]);
+            expect(getMarks(code).map((mark) => mark.textContent)).toEqual(['wo']);
+            expect(getLines(code)[0]).toBe(firstLine);
+            expect(core.highlight).not.toHaveBeenCalled();
+        });
+
+        it('should highlight the file anew when its text marks change', async () => {
+            const core = buildMockCore();
+            const fixture = createComponent(SingleBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({ core: coreLoader(core) })
+            ]);
+            const file: KbqCodeBlockFile = { content: CONTENT, language: 'typescript', markedText: [/two/] };
+
+            fixture.componentInstance.file.set(file);
+            await settle(fixture);
+
+            vi.mocked(core.highlight).mockClear();
+            fixture.componentInstance.file.set({ ...file, markedText: [/two/i] });
+            await settle(fixture);
+
+            expect(core.highlight).toHaveBeenCalledTimes(1);
         });
     });
 

@@ -32,4 +32,23 @@ export type KbqCodeBlockFile = {
      * Adds `openExternalSystem` button.
      */
     link?: string;
+
+    /** Lines to mark: line numbers, ranges of line numbers or text to find in the content. */
+    markedLines?: KbqCodeBlockLineMark[];
+
+    /** Text to mark inside the lines. */
+    markedText?: KbqCodeBlockTextMark[];
 };
+
+/**
+ * Lines to mark in a code block file: a line number, a range of line numbers with both ends included, or text to find
+ * in the content, which marks every line its matches reach. Lines are counted from 1, the first line of the content.
+ * Text is found as `KbqCodeBlockTextMark` finds it.
+ */
+export type KbqCodeBlockLineMark = number | [start: number, end: number] | string | RegExp;
+
+/**
+ * Text to mark in a code block file, a string or a regular expression, every match of which is marked. A regular
+ * expression with capturing groups marks only what they capture: `/"name": "(John)"/` marks `John`.
+ */
+export type KbqCodeBlockTextMark = string | RegExp;

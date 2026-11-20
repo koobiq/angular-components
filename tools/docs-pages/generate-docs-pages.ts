@@ -14,6 +14,9 @@ import { findPageSources, findRoutesWithoutPage, parsePageSource } from './sourc
 
 const OUTPUT_DIR = join('dist', 'docs-pages');
 
+/** Where `packagePath` of an example starts. */
+const EXAMPLES_DIR = join('packages', 'docs-examples');
+
 // The last release: a release commit sets it, and CI stamps the same version into the packages.
 const RELEASE: string = JSON.parse(readFileSync('package.json', 'utf8')).version;
 
@@ -55,6 +58,8 @@ const generate = (): void => {
         const page = compilePage(readFileSync(path, 'utf8'), {
             path,
             examples: EXAMPLE_COMPONENTS,
+            readExampleSources: ({ packagePath, files }) =>
+                files.map((file) => readFileSync(join(EXAMPLES_DIR, packagePath, file), 'utf8')),
             url: source.url,
             layout: docsIsMigrationSource(path) ? docsMigrationGuideLayout(path, RELEASE) : undefined
         });

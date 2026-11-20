@@ -258,6 +258,59 @@ export class TestCodeBlockWithTemplateTabLink {
 @Component({
     imports: [KbqCodeBlockModule],
     template: `
+        <kbq-code-block
+            [canSelectLines]="canSelectLines"
+            [lineNumbers]="lineNumbers"
+            [(activeFileIndex)]="activeFileIndex"
+            [(files)]="files"
+        />
+    `,
+    changeDetection: ChangeDetectionStrategy.Default
+})
+class LineSelectionCodeBlock {
+    canSelectLines = true;
+    lineNumbers = true;
+    activeFileIndex = 0;
+    files: KbqCodeBlockFile[] = [
+        {
+            language: 'typescript',
+            filename: 'a.ts',
+            content: 'const a = 1;\nconst b = 2;\nconst c = 3;\nconst d = 4;',
+            markedLines: [[2, 3]],
+            markedText: ['b']
+        },
+        { language: 'typescript', filename: 'b.ts', content: 'const e = 5;\nconst f = 6;' }
+    ];
+}
+
+// jsdom lays nothing out: the text of a line is given a start 40px from the start of the line, after the numbers.
+const LINE_START = 100;
+const NUMBER_X = LINE_START + 30;
+const TEXT_X = LINE_START + 50;
+
+const layOutLines = (code: HTMLElement, direction: 'ltr' | 'rtl' = 'ltr'): void => {
+    for (const line of Array.from(code.children) as HTMLElement[]) {
+        line.style.direction = direction;
+        line.style[direction === 'ltr' ? 'paddingLeft' : 'paddingRight'] = '40px';
+        line.getBoundingClientRect = () =>
+            line.isConnected ? DOMRect.fromRect({ x: LINE_START, width: 200 }) : new DOMRect();
+    }
+};
+
+const pressLine = (code: HTMLElement, line: number, init: MouseEventInit = {}): MouseEvent[] => {
+    const target = code.children[line - 1]!;
+    const events = ['mousedown', 'click'].map(
+        (type) => new MouseEvent(type, { bubbles: true, cancelable: true, clientX: NUMBER_X, detail: 1, ...init })
+    );
+
+    events.forEach((event) => target.dispatchEvent(event));
+
+    return events;
+};
+
+@Component({
+    imports: [KbqCodeBlockModule],
+    template: `
         <kbq-code-block [files]="files" [maxHeight]="maxHeight" />
     `,
     changeDetection: ChangeDetectionStrategy.Default
@@ -1487,5 +1540,152 @@ describe(KbqCodeBlock.name, () => {
 
         expect(() => fixture.detectChanges()).not.toThrow();
         expect(codeBlock.activeFileIndex()).toBe(0);
+    });
+
+    describe('line selection', () => {
+        const setUp = async () => {
+            const fixture = createComponent(LineSelectionCodeBlock);
+
+            await fixture.whenStable();
+
+            const code = getCodeElement(fixture.debugElement);
+
+            layOutLines(code);
+
+            return { fixture, host: fixture.componentInstance, code };
+        };
+
+        const getMarkedLines = (code: HTMLElement): boolean[] =>
+            Array.from(code.children).map((line) => line.classList.contains('kbq-code-block__line_marked'));
+
+        it('should mark the line whose number is clicked, in place of the marked lines of its file', async () => {
+            const { fixture, host, code } = await setUp();
+            const [first, second] = host.files;
+
+            pressLine(code, 4);
+            await fixture.whenStable();
+
+            expect(host.files[0]).toEqual({ ...first, markedLines: [4] });
+            expect(host.files[1]).toBe(second);
+            expect(getMarkedLines(code)).toEqual([false, false, false, true]);
+        });
+
+        it('should take a click anywhere before the text of a line for a click on its number', async () => {
+            const { fixture, host, code } = await setUp();
+
+            pressLine(code, 2, { clientX: LINE_START + 1 });
+            await fixture.whenStable();
+
+            expect(host.files[0]?.markedLines).toEqual([2]);
+        });
+
+        it('should unmark the line when its number is clicked again', async () => {
+            const { fixture, host, code } = await setUp();
+
+            pressLine(code, 4);
+            await fixture.whenStable();
+            pressLine(code, 4);
+            await fixture.whenStable();
+
+            expect(host.files[0]?.markedLines).toEqual([]);
+            expect(getMarkedLines(code)).toEqual([false, false, false, false]);
+        });
+
+        it('should mark the lines from the one clicked before when a number is clicked with Shift', async () => {
+            const { fixture, host, code } = await setUp();
+
+            pressLine(code, 4);
+            pressLine(code, 1, { shiftKey: true });
+            await fixture.whenStable();
+
+            expect(host.files[0]?.markedLines).toEqual([[1, 4]]);
+            expect(getMarkedLines(code)).toEqual([true, true, true, true]);
+
+            pressLine(code, 3, { shiftKey: true });
+            await fixture.whenStable();
+
+            expect(host.files[0]?.markedLines).toEqual([[3, 4]]);
+        });
+
+        it('should take a click with Shift and no line clicked before for a click without it', async () => {
+            const { fixture, host, code } = await setUp();
+
+            pressLine(code, 1, { shiftKey: true });
+            await fixture.whenStable();
+
+            expect(host.files[0]?.markedLines).toEqual([1]);
+        });
+
+        it('should leave a press on the text of a line to text selection', async () => {
+            const { fixture, host, code } = await setUp();
+            const { files } = host;
+            const [textPress] = pressLine(code, 2, { clientX: TEXT_X });
+
+            await fixture.whenStable();
+
+            expect(textPress?.defaultPrevented).toBe(false);
+            expect(host.files).toBe(files);
+
+            const [numberPress] = pressLine(code, 2);
+
+            expect(numberPress?.defaultPrevented).toBe(true);
+        });
+
+        it('should not unmark the line on the second click of a double click', async () => {
+            const { fixture, host, code } = await setUp();
+
+            pressLine(code, 4);
+            pressLine(code, 4, { detail: 2 });
+            await fixture.whenStable();
+
+            expect(host.files[0]?.markedLines).toEqual([4]);
+        });
+
+        it('should mark lines only when they can be selected and their numbers are shown', async () => {
+            const { fixture, host, code } = await setUp();
+            const codeBlock: HTMLElement = geCodeBlockDebugElement(fixture.debugElement).nativeElement;
+            const { files } = host;
+
+            expect(codeBlock.classList).toContain('kbq-code-block_can-select-lines');
+
+            host.lineNumbers = false;
+            fixture.detectChanges();
+            pressLine(code, 4);
+
+            expect(codeBlock.classList).not.toContain('kbq-code-block_can-select-lines');
+
+            host.lineNumbers = true;
+            host.canSelectLines = false;
+            fixture.detectChanges();
+            pressLine(code, 4);
+            await fixture.whenStable();
+
+            expect(codeBlock.classList).not.toContain('kbq-code-block_can-select-lines');
+            expect(host.files).toBe(files);
+        });
+
+        it('should mark the lines of the active file, and start the lines with Shift anew in it', async () => {
+            const { fixture, host, code } = await setUp();
+
+            pressLine(code, 1);
+            host.activeFileIndex = 1;
+            fixture.detectChanges();
+            await fixture.whenStable();
+            layOutLines(code);
+            pressLine(code, 2, { shiftKey: true });
+            await fixture.whenStable();
+
+            expect(host.files.map(({ markedLines }) => markedLines)).toEqual([[1], [2]]);
+        });
+
+        it('should find the numbers at the start of a right-to-left line', async () => {
+            const { fixture, host, code } = await setUp();
+
+            layOutLines(code, 'rtl');
+            pressLine(code, 3, { clientX: LINE_START + 200 - (NUMBER_X - LINE_START) });
+            await fixture.whenStable();
+
+            expect(host.files[0]?.markedLines).toEqual([3]);
+        });
     });
 });
