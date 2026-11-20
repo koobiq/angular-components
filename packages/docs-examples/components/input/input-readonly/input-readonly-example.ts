@@ -43,7 +43,7 @@ import { TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'layout-margin-xl layout-column'
+        class: 'layout-margin-5xl layout-column layout-align-center-center'
     }
 })
 export class InputReadonlyExample {

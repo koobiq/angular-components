@@ -67,7 +67,10 @@ class ExamplePasswordRules implements Validator {
             </kbq-reactive-password-hint>
         </kbq-form-field>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    }
 })
 export class InputPasswordTemplateDrivenExample {
     protected readonly t = injectTranslation(TRANSLATIONS);

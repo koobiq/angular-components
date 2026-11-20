@@ -11,7 +11,8 @@ import { TRANSLATIONS } from './l10n';
     template: `
         <kbq-form-field style="width: 320px">
             <kbq-label>{{ t().withAutocomplete }}</kbq-label>
-            <input kbqInput type="email" autocomplete="email" [formControl]="withAutocomplete" />
+            <input kbqInput type="email" name="email" autocomplete="email" [formControl]="withAutocomplete" />
+            <kbq-hint>admin@admin.ai</kbq-hint>
         </kbq-form-field>
 
         <kbq-form-field style="width: 320px">
@@ -21,11 +22,11 @@ import { TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'layout-column layout-gap-l'
+        class: 'layout-margin-5xl layout-column layout-gap-l layout-align-center-center'
     }
 })
 export class InputAutocompleteExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-    protected readonly withAutocomplete = new FormControl('admin@admin.ai');
+    protected readonly withAutocomplete = new FormControl('');
     protected readonly withoutAutocomplete = new FormControl('');
 }

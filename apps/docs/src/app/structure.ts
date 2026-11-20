@@ -728,8 +728,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'form-field',
                     hasApi: true,
                     apiId: 'form-field',
-                    hasExamples: false,
-                    isUpdated: expiresAt('2026-12-03')
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.Highlight,

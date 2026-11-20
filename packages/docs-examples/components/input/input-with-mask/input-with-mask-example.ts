@@ -100,7 +100,7 @@ import { TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'layout-column layout-gap-l layout-align-start-center'
+        class: 'layout-margin-5xl layout-column layout-gap-l layout-align-center-center'
     }
 })
 export class InputWithMaskExample {

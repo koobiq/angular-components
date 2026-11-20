@@ -14,7 +14,10 @@ import { TRANSLATIONS } from './l10n';
             <kbq-hint>{{ t().hint }}</kbq-hint>
         </kbq-form-field>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    }
 })
 export class InputLabelAndHintExample {
     protected readonly t = injectTranslation(TRANSLATIONS);

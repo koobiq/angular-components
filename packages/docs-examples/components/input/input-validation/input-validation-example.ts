@@ -22,7 +22,7 @@ import { TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'layout-column layout-gap-s'
+        class: 'layout-margin-5xl layout-column layout-gap-s layout-align-center-center'
     }
 })
 export class InputValidationExample {

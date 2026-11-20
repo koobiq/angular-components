@@ -12,7 +12,10 @@ import { KbqInputModule } from '@koobiq/components/input';
             <kbq-cleaner />
         </kbq-form-field>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    }
 })
 export class InputWithCleanerExample {
     protected readonly control = new FormControl('Text');

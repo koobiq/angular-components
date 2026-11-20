@@ -14,7 +14,10 @@ import { TRANSLATIONS } from './l10n';
             <input kbqInput [placeholder]="t().search" />
         </kbq-form-field>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    }
 })
 export class InputWithoutBordersExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
