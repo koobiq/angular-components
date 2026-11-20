@@ -45,7 +45,8 @@ import { DevThemeToggle } from '../theme-toggle';
         InputAutocompleteExample,
         InputLabelAndHintExample,
         InputPasswordTemplateDrivenExample,
-        InputMonospaceExample
+        InputMonospaceExample,
+        InputReadonlyExample
     ],
     template: `
         <input-overview-example />
@@ -74,6 +75,8 @@ import { DevThemeToggle } from '../theme-toggle';
         <hr />
         <input-monospace-example />
         <hr />
+        <input-readonly-example />
+        <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -92,7 +95,7 @@ export class DevDocsExamples {}
         KbqNormalizeWhitespace,
         DevThemeToggle,
         KbqToggleComponent,
-        InputReadonlyExample
+        DevDocsExamples
     ],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
