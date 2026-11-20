@@ -12,7 +12,7 @@
     @let localeData = localeConfiguration().multiple;
     @if (!files.length) {
         @if (size() === 'default') {
-            <kbq-file-upload-empty-state [size]="'normal'" [title]="localeData.title" [caption]="captionText" />
+            <kbq-file-upload-empty-state size="normal" [title]="localeData.title" [caption]="captionText" />
         } @else {
             <div class="kbq-file-dropzone">
                 <i kbq-icon="kbq-arrow-up-from-bracket_16" class="kbq-file-upload__dropzone-icon"></i>
@@ -38,7 +38,7 @@
                                 <div class="kbq-file-upload__file kbq-file-upload__grid-cell">
                                     @if (!isLoading(file)) {
                                         <ng-container
-                                            [ngTemplateOutlet]="$any(customFileIcon())"
+                                            [ngTemplateOutlet]="customFileIcon() ?? null"
                                             [ngTemplateOutletContext]="{ $implicit: file }"
                                         />
                                     } @else {

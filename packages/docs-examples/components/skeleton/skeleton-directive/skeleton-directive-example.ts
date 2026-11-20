@@ -52,11 +52,11 @@ import { TRANSLATIONS } from './l10n';
             </span>
         </div>
         <div class="example-actions">
-            <button kbq-button color="contrast" [kbqSkeleton]="loading()">{{ t().readMore }}</button>
+            <button kbq-button color="contrast" type="button" [kbqSkeleton]="loading()">{{ t().readMore }}</button>
             <div kbq-button-group>
-                <button kbq-button [kbqSkeleton]="loading()">{{ t().block }}</button>
-                <button kbq-button [kbqSkeleton]="loading()">{{ t().ignore }}</button>
-                <button kbq-button [kbqSkeleton]="loading()">{{ t().report }}</button>
+                <button kbq-button type="button" [kbqSkeleton]="loading()">{{ t().block }}</button>
+                <button kbq-button type="button" [kbqSkeleton]="loading()">{{ t().ignore }}</button>
+                <button kbq-button type="button" [kbqSkeleton]="loading()">{{ t().report }}</button>
             </div>
         </div>
     `,

@@ -1,4 +1,4 @@
-import { Renderer2 } from '@angular/core';
+import type { Renderer2 } from '@angular/core';
 
 export const applyPopupMargins = (renderer: Renderer2, element: HTMLElement, name: string, value: string) => {
     const classList = element.classList;

@@ -51,8 +51,8 @@ import { TRANSLATIONS } from './l10n';
 export class SelectNoVariantsExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
 
-    options: string[];
-    noOptions: boolean;
+    options: string[] = [];
+    noOptions = false;
 
     constructor() {
         this.loadOptions();

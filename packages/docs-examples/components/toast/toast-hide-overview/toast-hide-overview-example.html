@@ -16,7 +16,7 @@
 
 <ng-template #toastPermanentContentTemplate>
     @if (progress) {
-        <kbq-progress-bar class="layout-margin-top-m layout-margin-bottom-m" [mode]="'indeterminate'" />
+        <kbq-progress-bar class="layout-margin-top-m layout-margin-bottom-m" mode="indeterminate" />
     } @else {
         <div>
             <span>{{ t().importComplete }}</span>
@@ -30,9 +30,13 @@
 </ng-template>
 
 <div style="gap: 16px" class="layout-row">
-    <button kbq-button (click)="showDefaultToast(toastActionInfo)">{{ t().byTimer }}</button>
-    <button kbq-button (click)="showPermanentToast(toastPermanentContentTemplate, toastPermanentActionsTemplate)">
+    <button kbq-button type="button" (click)="showDefaultToast(toastActionInfo)">{{ t().byTimer }}</button>
+    <button
+        kbq-button
+        type="button"
+        (click)="showPermanentToast(toastPermanentContentTemplate, toastPermanentActionsTemplate)"
+    >
         {{ t().onCommand }}
     </button>
-    <button kbq-button (click)="showWarningToast(toastActionWarning)">{{ t().hoverOrFocus }}</button>
+    <button kbq-button type="button" (click)="showWarningToast(toastActionWarning)">{{ t().hoverOrFocus }}</button>
 </div>

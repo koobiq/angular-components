@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter } from '@angular/router';
-import { KBQ_WINDOW } from '@koobiq/components/core';
 import { BehaviorSubject, map, of } from 'rxjs';
 import type { Mock } from 'vitest';
+import { KBQ_WINDOW } from '@koobiq/components/core';
 import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleService } from '../../services/locale';
 import { DocsStructureTokensTab } from '../../structure';

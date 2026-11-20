@@ -1,9 +1,8 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { Component, DebugElement, effect, signal, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, type DebugElement, effect, signal, viewChild } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-
 import { KbqButton } from '@koobiq/components/button';
 import { dispatchKeyboardEvent, ESCAPE, ruRULocaleData } from '@koobiq/components/core';
 import { KbqInput } from '@koobiq/components/input';

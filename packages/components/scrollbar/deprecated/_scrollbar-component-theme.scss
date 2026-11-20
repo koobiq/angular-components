@@ -1,45 +1,43 @@
-@use '../../core/styles/common/tokens' as *;
-
 @mixin kbq-scrollbar-component-theme() {
     .kbq-scrollbar-component {
         &.kbq-hover .os-scrollbar .os-scrollbar-handle,
         & .os-scrollbar .os-scrollbar-handle:hover {
             &::before {
-                border-color: var(--kbq-scrollbar-thumb-hover-background);
                 background-color: var(--kbq-scrollbar-thumb-hover-background);
+                border-color: var(--kbq-scrollbar-thumb-hover-background);
             }
         }
 
         &.kbq-active .os-scrollbar .os-scrollbar-handle,
         & .os-scrollbar .os-scrollbar-handle:active {
             &::before {
-                border-color: var(--kbq-scrollbar-thumb-active-background);
                 background-color: var(--kbq-scrollbar-thumb-active-background);
+                border-color: var(--kbq-scrollbar-thumb-active-background);
             }
         }
 
         .os-scrollbar {
             .os-scrollbar-handle {
                 &::before {
-                    border-color: var(--kbq-scrollbar-thumb-default-background);
                     background-color: var(--kbq-scrollbar-thumb-default-background);
+                    border-color: var(--kbq-scrollbar-thumb-default-background);
                 }
             }
 
             .os-scrollbar-track,
             .os-scrollbar-handle {
+                background-color: var(--kbq-scrollbar-track-default-background);
                 border-style: solid;
                 border-color: var(--kbq-scrollbar-track-default-border) !important;
-                background-color: var(--kbq-scrollbar-track-default-background);
 
                 &:hover {
-                    border-color: var(--kbq-scrollbar-track-hover-border);
                     background: var(--kbq-scrollbar-track-hover-background);
+                    border-color: var(--kbq-scrollbar-track-hover-border);
                 }
 
                 &:active {
-                    border-color: var(--kbq-scrollbar-track-active-border);
                     background: var(--kbq-scrollbar-track-active-background);
+                    border-color: var(--kbq-scrollbar-track-active-border);
                 }
             }
         }

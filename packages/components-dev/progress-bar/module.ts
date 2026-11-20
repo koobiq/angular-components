@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { KbqProgressBarModule, ProgressBarMode } from '@koobiq/components/progress-bar';
-import { ProgressBarExamplesModule } from 'packages/docs-examples/components/progress-bar';
 import { interval } from 'rxjs';
+import { KbqProgressBarModule, type ProgressBarMode } from '@koobiq/components/progress-bar';
+import { ProgressBarExamplesModule } from 'packages/docs-examples/components/progress-bar';
 import { DevThemeToggle } from '../theme-toggle';
 
 const INTERVAL: number = 300;
@@ -26,7 +26,7 @@ export class DevDocsExamples {}
     selector: 'dev-app',
     imports: [KbqProgressBarModule, FormsModule, DevDocsExamples, DevThemeToggle],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

@@ -1,22 +1,18 @@
 @use '../core/styles/common/animation';
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 @use '../core/styles/common/tokens';
 @use '../core/styles/common/vendor-prefixes';
 
 @mixin tab-label {
+    @include squircle.kbq-squircle(var(--kbq-tabs-size-tab-item-border-radius));
+
     position: relative;
 
-    box-sizing: border-box;
-
     display: inline-flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 
-    text-align: center;
-    white-space: nowrap;
-
-    cursor: pointer;
-
+    box-sizing: border-box;
     padding: tokens.kbq-difference-series-css-variables(
             [tabs-size-tab-item-padding-vertical,
             tabs-size-tab-item-focus-outline-width]
@@ -26,15 +22,15 @@
             tabs-size-tab-item-focus-outline-width]
         );
 
-    border: {
-        width: var(--kbq-tabs-size-tab-item-focus-outline-width);
-        style: solid;
-        color: transparent;
-    }
+    text-align: center;
+    white-space: nowrap;
 
-    @include kbq-squircle(var(--kbq-tabs-size-tab-item-border-radius));
-
+    border-width: var(--kbq-tabs-size-tab-item-focus-outline-width);
+    border-style: solid;
+    border-color: transparent;
     outline: none;
+
+    cursor: pointer;
 
     &.kbq-selected {
         cursor: default;
@@ -50,74 +46,85 @@
 
     & .kbq-tab-label__content {
         display: flex;
+        gap: var(--kbq-tabs-size-tab-item-content-gap-horizontal);
         align-items: center;
         overflow: hidden;
-
-        gap: var(--kbq-tabs-size-tab-item-content-gap-horizontal);
     }
 
-    &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical):before {
+    &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical)::before {
         content: '';
         position: absolute;
         inset: calc(-1 * (var(--kbq-size-s) + var(--kbq-tabs-size-tab-item-focus-outline-width)))
             calc(-1 * var(--kbq-tabs-size-tab-item-focus-outline-width));
     }
 
-    &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical):not(.kbq-tab-label_icon-only):after {
+    &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical):not(.kbq-tab-label_icon-only)::after {
         content: '';
+
         position: absolute;
-        left: calc(
-            var(--kbq-tabs-size-tab-item-padding-horizontal) - var(--kbq-tabs-size-tab-item-focus-outline-width)
-        );
         right: calc(
             var(--kbq-tabs-size-tab-item-padding-horizontal) - var(--kbq-tabs-size-tab-item-focus-outline-width)
         );
         bottom: calc(-1 * (var(--kbq-size-s) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
+        left: calc(
+            var(--kbq-tabs-size-tab-item-padding-horizontal) - var(--kbq-tabs-size-tab-item-focus-outline-width)
+        );
+
         height: 3px;
-        border-radius: var(--kbq-size-3xs) var(--kbq-size-3xs) 0 0;
+
         background: transparent;
-        transition: background 0.2s ease-in-out;
+        border-radius: var(--kbq-size-3xs) var(--kbq-size-3xs) 0 0;
+
         pointer-events: none;
+
+        transition: background 0.2s ease-in-out;
     }
 
     // Two classes outweigh the single-class base rule above, so no `!important` is needed to drop the
     // padding here — and without it a consumer can still override the padding on an icon-only tab.
     &.kbq-tab-label_icon-only {
+        box-sizing: content-box;
         width: var(--kbq-size-3xl);
         height: var(--kbq-size-3xl);
-        padding: 0;
         margin-inline: var(--kbq-size-xxs);
-        box-sizing: content-box;
+        padding: 0;
 
         &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical) {
             width: var(--kbq-tabs-size-tab-item-underlined-icon-only-size);
             height: var(--kbq-tabs-size-tab-item-underlined-icon-only-size);
 
-            &:before {
-                left: calc(-1 * (var(--kbq-size-xxs) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
+            &::before {
                 right: calc(-1 * (var(--kbq-size-xxs) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
+                left: calc(-1 * (var(--kbq-size-xxs) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
             }
 
-            &:after {
+            &::after {
                 top: auto;
-                bottom: calc(-1 * (var(--kbq-size-s) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
-                height: 3px;
-                left: calc(-1 * var(--kbq-tabs-size-tab-item-focus-outline-width));
                 right: calc(-1 * var(--kbq-tabs-size-tab-item-focus-outline-width));
+                bottom: calc(-1 * (var(--kbq-size-s) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
+                left: calc(-1 * var(--kbq-tabs-size-tab-item-focus-outline-width));
+
+                height: 3px;
+
                 border-radius: var(--kbq-size-3xs) var(--kbq-size-3xs) 0 0;
-                transition: background 0.2s ease-in-out;
+
                 pointer-events: none;
+
+                transition: background 0.2s ease-in-out;
             }
         }
 
-        &:not(.kbq-tab-label_vertical):after {
+        &:not(.kbq-tab-label_vertical)::after {
             content: '';
-            display: block;
+
             position: absolute;
             top: 0;
+            right: calc(-1 * (var(--kbq-size-xxs) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
             bottom: 0;
             left: calc(-1 * (var(--kbq-size-xxs) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
-            right: calc(-1 * (var(--kbq-size-xxs) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
+
+            display: block;
+
             background: transparent;
         }
     }
@@ -133,8 +140,8 @@
         }
 
         &.kbq-tab-label_icon-only {
-            margin-inline: 0;
             justify-content: center;
+            margin-inline: 0;
         }
     }
 }
@@ -149,18 +156,21 @@
         // itself fades away at each scroll bound instead of the tab list resizing around it.
         position: absolute;
         inset-block: 0;
-        display: none;
-        justify-content: center;
-        align-items: center;
         z-index: 2;
-        -webkit-tap-highlight-color: transparent;
+
+        display: none;
+        align-items: center;
+        justify-content: center;
+
+        padding: 0 var(--kbq-size-m);
+
+        opacity: 1;
+        visibility: visible;
         // Not `none`: this element overlays live scroll-container edge, so `none` also blocks a
         // touch swipe that starts in that band from panning the strip at all. `manipulation` still
         // suppresses double-tap-to-zoom, which is all this was here for.
         touch-action: manipulation;
-        padding: 0 var(--kbq-size-m);
-        opacity: 1;
-        visibility: visible;
+        -webkit-tap-highlight-color: transparent;
 
         .kbq-tab-header__pagination-controls_enabled & {
             display: flex;
@@ -302,13 +312,16 @@
         }
     }
 
-    .kbq-tab-header_underlined:not(.kbq-tab-header_vertical):after {
+    .kbq-tab-header_underlined:not(.kbq-tab-header_vertical)::after {
         content: '';
+
         position: absolute;
-        left: 0;
-        bottom: 0;
         right: 0;
+        bottom: 0;
+        left: 0;
+
         height: 1px;
+
         background: var(--kbq-line-contrast-less);
     }
 
@@ -317,18 +330,22 @@
     }
 
     .kbq-tab-header_underlined:not(.kbq-tab-header_vertical) .kbq-tab-list__active-tab-underline {
-        display: block;
+        @include animation.kbq-animations-off();
+
         position: absolute;
         bottom: 0;
+
+        display: block;
+
         height: 3px;
-        border-radius: var(--kbq-size-3xs) var(--kbq-size-3xs) 0 0;
+
         background: var(--kbq-line-contrast);
+        border-radius: var(--kbq-size-3xs) var(--kbq-size-3xs) 0 0;
+
         transition: all 0.2s ease-in-out;
 
         &.kbq-disabled {
             background: var(--kbq-states-icon-disabled);
         }
-
-        @include animation.kbq-animations-off();
     }
 }

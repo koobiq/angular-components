@@ -3,8 +3,8 @@ import {
     ChangeDetectionStrategy,
     Component,
     inject,
-    OnDestroy,
-    OnInit,
+    type OnDestroy,
+    type OnInit,
     signal,
     ViewEncapsulation
 } from '@angular/core';
@@ -37,7 +37,7 @@ type IconMode = 'style' | 'adopted' | 'adopted-layer';
         DevThemeToggle
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

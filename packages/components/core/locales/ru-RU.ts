@@ -1,4 +1,4 @@
-import { KbqLocaleStringsData } from './types';
+import type { KbqLocaleStringsData } from './types';
 
 export const ruRULocaleData = {
     a11y: {
@@ -15,6 +15,8 @@ export const ruRULocaleData = {
         previousMonth: 'Предыдущий месяц',
         currentDate: 'Текущая дата',
         nextMonth: 'Следующий месяц',
+        month: 'Месяц',
+        year: 'Год',
         clear: 'Очистить',
         showPassword: 'Показать пароль',
         hidePassword: 'Скрыть пароль',
@@ -22,7 +24,10 @@ export const ruRULocaleData = {
         resizePanels: 'Изменить размер панелей',
         toastRegion: 'Уведомления',
         optionActions: 'Действия',
-        progressBar: 'Прогресс'
+        progressBar: 'Прогресс',
+        date: 'Дата',
+        time: 'Время',
+        search: 'Поиск'
     },
     select: { hiddenItemsText: '+{{ number }}', selectAll: 'Выбрать все' },
     datepicker: {
@@ -133,14 +138,16 @@ export const ruRULocaleData = {
     clampedText: {
         openText: 'Развернуть',
         closeText: 'Свернуть',
-        showMoreText: 'Показать еще {exceededItemCount}',
-        moreText: 'еще'
+        showMoreText: 'Еще {exceededItemCount}',
+        moreText: 'еще',
+        showMoreTextCompact: 'Еще {exceededItemCount}'
     },
     navbar: {
         toggle: {
             expand: 'Развернуть',
             collapse: 'Свернуть'
-        }
+        },
+        more: 'Ещё'
     },
     searchExpandable: {
         tooltip: 'Поиск',

@@ -1,19 +1,20 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-input-typography() {
     .kbq-input,
     .kbq-input.kbq-input-password::placeholder {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
     .kbq-input.kbq-input-password,
     .kbq-input.kbq-input_monospace {
-        @include kbq-typography-level-to-styles-css-variables(typography, mono-normal);
-        // disable font-specific symbols replacements
-        font-variant-ligatures: none;
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-normal);
+
         font-feature-settings:
             'liga' 0,
             'clig' 0,
             'calt' 0;
+        // disable font-specific symbols replacements
+        font-variant-ligatures: none;
     }
 }

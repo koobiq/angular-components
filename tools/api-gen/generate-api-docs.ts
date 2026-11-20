@@ -1,7 +1,7 @@
 import { extractApiToJson } from './extraction';
 import { generateManifest } from './manifest';
 import { generateApiPages } from './rendering';
-import { ModuleInfo } from './types';
+import type { ModuleInfo } from './types';
 
 const modules: ModuleInfo[] = [
     {
@@ -14,9 +14,9 @@ const modules: ModuleInfo[] = [
 ];
 
 const generateApiDocs = () => {
-    const data = extractApiToJson(modules);
-    const filteredData = generateManifest(data);
-    const pageCount = generateApiPages(filteredData);
+    const { entryCollections, externalPages } = extractApiToJson(modules);
+    const filteredData = generateManifest(entryCollections);
+    const pageCount = generateApiPages(filteredData, externalPages);
 
     console.log(`Generated ${pageCount} API pages into dist/docs-pages-api`);
 };

@@ -1,8 +1,8 @@
-import { InjectionToken, Provider, Signal } from '@angular/core';
-import { KbqDeepPartial } from '../utils';
+import { InjectionToken, type Provider, type Signal } from '@angular/core';
+import type { KbqDeepPartial } from '../utils';
 import { kbqInjectLocaleConfiguration, kbqLocaleConfigurationOverrideProvider } from './configuration';
 import { ruRULocaleData } from './ru-RU';
-import { KbqA11yLocaleConfiguration } from './types';
+import type { KbqA11yLocaleConfiguration } from './types';
 
 /** Localization configuration provider for the accessible names of built-in icon-only buttons. */
 export const KBQ_A11Y_LOCALE_CONFIGURATION = new InjectionToken<KbqA11yLocaleConfiguration>(

@@ -1,4 +1,4 @@
-import { KbqLocaleStringsData } from './types';
+import type { KbqLocaleStringsData } from './types';
 
 export const enUSLocaleData = {
     a11y: {
@@ -15,6 +15,8 @@ export const enUSLocaleData = {
         previousMonth: 'Previous month',
         currentDate: 'Current date',
         nextMonth: 'Next month',
+        month: 'Month',
+        year: 'Year',
         clear: 'Clear',
         showPassword: 'Show password',
         hidePassword: 'Hide password',
@@ -22,7 +24,10 @@ export const enUSLocaleData = {
         resizePanels: 'Resize panels',
         toastRegion: 'Notifications',
         optionActions: 'Actions',
-        progressBar: 'Progress'
+        progressBar: 'Progress',
+        date: 'Date',
+        time: 'Time',
+        search: 'Search'
     },
     select: { hiddenItemsText: '+{{ number }}', selectAll: 'Select all' },
     datepicker: {
@@ -134,13 +139,15 @@ export const enUSLocaleData = {
         openText: 'Expand',
         closeText: 'Collapse',
         showMoreText: 'Show {exceededItemCount} more',
-        moreText: 'more'
+        moreText: 'more',
+        showMoreTextCompact: '{exceededItemCount} more'
     },
     navbar: {
         toggle: {
             expand: 'Expand',
             collapse: 'Collapse'
-        }
+        },
+        more: 'More'
     },
     searchExpandable: {
         tooltip: 'Search',

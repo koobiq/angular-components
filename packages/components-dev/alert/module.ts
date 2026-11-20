@@ -41,7 +41,7 @@ export class DevDocsExamples {}
     selector: 'dev-app',
     imports: [E2eAlertStateAndStyle, DevDocsExamples, DevThemeToggle],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

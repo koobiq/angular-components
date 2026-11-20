@@ -16,8 +16,8 @@
         [activeCell]="adapter.getDate(activeDate) - 1"
         [labelMinRequiredCells]="3"
         [rows]="weeks"
-        [selectedValue]="selectedDate!"
-        [todayValue]="todayDate!"
+        [selectedValue]="selectedDate"
+        [todayValue]="todayDate"
         (selectedValueChange)="dateSelected($event)"
     ></tbody>
 </table>

@@ -1,4 +1,4 @@
-import { KoobiqTheme } from '../utils/workspace-styles';
+import type { KoobiqTheme } from '../utils/workspace-styles';
 
 export function noProject(project: string) {
     return `Unable to find project '${project}' in the workspace`;

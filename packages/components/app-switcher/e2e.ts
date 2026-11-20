@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
-    KbqAppSwitcherApp,
+    type KbqAppSwitcherApp,
     KbqAppSwitcherComponent,
     KbqAppSwitcherModule,
-    KbqAppSwitcherSite
+    type KbqAppSwitcherSite
 } from '@koobiq/components/app-switcher';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -91,7 +91,7 @@ export class E2eAppSwitcherStates {
             ]
         }
     ];
-    selected: KbqAppSwitcherApp = this.sites[0].apps[0];
+    selected: KbqAppSwitcherApp | undefined = this.sites[0]?.apps[0];
 }
 
 @Component({
@@ -407,6 +407,6 @@ export class E2eAppSwitcherWithSitesStates {
         }
     ];
 
-    selectedSite: KbqAppSwitcherSite = this.sites[0];
-    selectedApp: KbqAppSwitcherApp = this.sites[0].apps[0];
+    selectedSite: KbqAppSwitcherSite | undefined = this.sites[0];
+    selectedApp: KbqAppSwitcherApp | undefined = this.sites[0]?.apps[0];
 }

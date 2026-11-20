@@ -43,7 +43,8 @@ export function emitPage(page: CompiledPage, source: DocsPageSource): EmittedPag
         imports.push(renderImport(['KbqCodeBlock', 'KbqCodeBlockFile'], '@koobiq/components/code-block'));
         componentImports.push('KbqCodeBlock');
         members.push(
-            `protected readonly codeBlocks: KbqCodeBlockFile[] = ${indent(JSON.stringify(page.codeBlocks, null, 4), 1)};`
+            // A tuple, so that the template's `codeBlocks[0]` is a file and an index past the end does not compile.
+            `protected readonly codeBlocks = ${indent(JSON.stringify(page.codeBlocks, null, 4), 1)} as const satisfies readonly KbqCodeBlockFile[];`
         );
     }
 

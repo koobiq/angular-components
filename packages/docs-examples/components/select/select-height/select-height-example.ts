@@ -19,7 +19,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
 
         <kbq-form-field>
             <kbq-label>--kbq-select-panel-size-max-height</kbq-label>
-            <kbq-select [panelClass]="'example-select-panel-height'" [(value)]="themedValue">
+            <kbq-select panelClass="example-select-panel-height" [(value)]="themedValue">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }

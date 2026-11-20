@@ -3,14 +3,14 @@ import { Platform } from '@angular/cdk/platform';
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { dispatchKeyboardEvent, ENTER, KbqComponentColors, KbqDefaultSizes } from '@koobiq/components/core';
+import { dispatchKeyboardEvent, ENTER, KbqComponentColors, type KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import {
     KbqLoaderOverlay,
     KbqLoaderOverlayCaption,
     KbqLoaderOverlayIndicator,
     KbqLoaderOverlayModule,
-    KbqLoaderOverlaySurface,
+    type KbqLoaderOverlaySurface,
     KbqLoaderOverlayText
 } from './index';
 
@@ -587,7 +587,7 @@ class OverlayBeforeDisabledButton {
         <div class="loader-overlay-container">
             text text text text text text text text text text text text text text text text text text text text
 
-            <kbq-loader-overlay [text]="'Создание отчета'" [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'" />
+            <kbq-loader-overlay text="Создание отчета" caption="18,7 МБ из 25 МБ — осталось 2 мин" />
         </div>
     `
 })
@@ -651,7 +651,7 @@ class OverlayNoParams {}
             text text text text text text text text text text text text text text text text text text text text
 
             <kbq-loader-overlay>
-                <kbq-progress-spinner kbq-loader-overlay-indicator [mode]="'indeterminate'" [color]="colors.Error" />
+                <kbq-progress-spinner kbq-loader-overlay-indicator mode="indeterminate" [color]="colors.Error" />
 
                 <div kbq-loader-overlay-text>Создание отчета</div>
                 <div kbq-loader-overlay-caption>18,7 МБ из 25 МБ — осталось 2 мин</div>

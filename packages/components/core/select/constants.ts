@@ -1,4 +1,4 @@
-import { ScrollDispatcher, ScrollStrategy } from '@angular/cdk/overlay';
+import { ScrollDispatcher, type ScrollStrategy } from '@angular/cdk/overlay';
 import { inject, InjectionToken } from '@angular/core';
 import { kbqRepositionScrollStrategyFactory } from '../overlay/reposition-scroll-strategy';
 

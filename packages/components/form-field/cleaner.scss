@@ -1,6 +1,8 @@
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
 .kbq-cleaner {
+    @include squircle.kbq-squircle(var(--kbq-size-xxs));
+
     display: flex;
     align-items: center;
     justify-content: center;
@@ -9,6 +11,4 @@
     height: var(--kbq-size-xxl);
 
     outline: none;
-
-    @include kbq-squircle(var(--kbq-size-xxs));
 }

@@ -2,7 +2,7 @@ import { Overlay } from '@angular/cdk/overlay';
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KBQ_AUTOCOMPLETE_SCROLL_STRATEGY, KbqAutocompleteModule } from '@koobiq/components/autocomplete';
-import { KbqTextQuery } from '@koobiq/components/core';
+import type { KbqTextQuery } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTextareaModule } from '@koobiq/components/textarea';

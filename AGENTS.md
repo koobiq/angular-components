@@ -92,7 +92,7 @@ Libraries are built by the custom `@koobiq/builders:packager` builder around ng-
 
 The docs app resolves `@koobiq/*` from `dist/` (see `apps/docs/tsconfig.app.json`), so rebuild the libraries before `docs:build`, and again after changing a component you want to see on the site. `yarn run docs` runs the whole chain in the right order.
 
-`docs:build`, `ssr:build` and the dev-e2e build behind `serve:e2e` fail on any builder warning (`tools/build-strict.mjs`). Fix the cause, or silence an expected warning where it comes from: `allowedCommonJsDependencies` in `angular.json` for the package the warning names, the budgets, `stylePreprocessorOptions.sass.silenceDeprecations`. Angular's extended diagnostics are errors (`extendedDiagnostics.defaultCategory` in the root `tsconfig.json`); a tsconfig that declares its own `extendedDiagnostics` repeats it.
+`docs:build`, `ssr:build` and the dev-e2e build behind `serve:e2e` fail on any builder warning (`tools/build-strict.mjs`). Fix the cause, or silence an expected warning where it comes from: `allowedCommonJsDependencies` in `angular.json` for the package the warning names, the budgets, `stylePreprocessorOptions.sass.silenceDeprecations`. Angular's extended diagnostics are errors (`extendedDiagnostics.defaultCategory` in `tsconfig.angular.json`); a tsconfig that declares its own `extendedDiagnostics` repeats it.
 
 The Angular CLI cache (`.angular/cache`) is on locally and off in CI; `yarn run clean` empties it. Every published library sets `"incremental": false` in its `tsconfig.lib.json`, or its typings would depend on the cache.
 
@@ -160,7 +160,7 @@ yarn run check-docs-pages                                              # Fail wh
 yarn run eslint:fix && yarn run stylelint:fix && yarn run prettier:fix # Auto-fix all
 ```
 
-CI runs ESLint and stylelint with `--max-warnings=0`, so a warning fails the build. Formatting is prettier with 120 columns, 4-space indent, single quotes and no trailing commas, plus the `organize-imports`, `multiline-arrays` and `sh` plugins — let it order imports and break arrays rather than fighting it. The `sh` plugin formats shell scripts, the Dockerfile, husky hooks, ignore files and the shell snippets in Markdown. Quote placeholders in those snippets (`--project "<your project>"`): unquoted, `<` and `>` are redirects, and the plugin either rewrites the command or silently skips the block.
+CI runs ESLint and stylelint with `--max-warnings=0`, so a warning fails the build. Formatting is prettier with 120 columns, 4-space indent, single quotes and no trailing commas, plus the `multiline-arrays` and `sh` plugins — let it break arrays rather than fighting it. Imports are up to ESLint (`tools/eslint/imports.ts`): `--fix` sorts imports into one block (`node:`, `@angular/*`, the other packages, `@koobiq/*`, relative paths) and re-exports, adds `type` to an import used as a type only, and removes the unused imports, and `import-x/no-cycle` fails on a cycle between modules. The `sh` plugin formats shell scripts, the Dockerfile, husky hooks, ignore files and the shell snippets in Markdown. Quote placeholders in those snippets (`--project "<your project>"`): unquoted, `<` and `>` are redirects, and the plugin either rewrites the command or silently skips the block.
 
 ### API Management
 
@@ -233,7 +233,7 @@ The details of each area live in the rule files listed under [Agent Rules](#agen
 
 - This file holds what applies to any task. A rule about some files only goes to `.claude/rules/<topic>.md`, with the globs it covers in a `paths` frontmatter list: Claude Code loads it once it reads or edits a matching file, so it costs no context before.
 - List each rule file in the table below with a plain Markdown link, so that agents that read only this file can open it. An `@` import would load the file at startup.
-- A rule a linter can check goes to its config (`eslint.config.ts`, `.stylelintrc.js`, the commitlint config, cspell); the text keeps only the reason.
+- A rule a linter can check goes to its config (`eslint.config.ts`, `stylelint.config.ts`, the commitlint config, cspell); the text keeps only the reason.
 - Write rules in English, one per bullet, each with its reason, and keep every rule in one place.
 - Claude Code reads this file natively from version 2.1.277 and stops doing so as soon as a `CLAUDE.md` or `CLAUDE.local.md` exists in the repository or a directory above it: add neither here, and keep personal notes in `~/.claude/CLAUDE.md`, which does not count.
 
@@ -260,7 +260,12 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 
 ### TypeScript Best Practices
 
-- `strictNullChecks` and `strictFunctionTypes` are on but `noImplicitAny` is off, so a parameter without a type annotation silently becomes `any`: annotate parameters, and rely on inference where the type is obvious
+- `tsconfig.strict.json` holds the type-checking strictness: `strict`, `noUncheckedIndexedAccess`, `noImplicitReturns`, `noImplicitOverride`, `noFallthroughCasesInSwitch`, `noPropertyAccessFromIndexSignature`, `noUncheckedSideEffectImports` and no unused locals, parameters, unreachable code or labels. The root `tsconfig.json`, and every project that extends it, gets it through `tsconfig.angular.json`, the strictness of the Angular compiler. A Node tool that ts-node has to type-check when it runs extends `tsconfig.strict.json` directly, since ts-node inherits the root's `transpileOnly` along `extends`: `tools/api-extractor`, `tools/api-gen`, `tools/docs-pages`, `tools/llms`, `tools/skills` and the scripts directly under `tools/` use the root config and run unchecked, and `packages/cli` and `packages/mcp` set their own options. Rely on inference where the type is obvious
+- `tsconfig.spec.json` and `tsconfig.playwright-spec.json` turn `noUncheckedIndexedAccess` and `strictPropertyInitialization` off: a spec fails right away on a missing item or field, so both checks would only add `!` all over it. The project configs leave the specs out, and `packages/tsconfig.json`, `apps/tsconfig.json` and `tools/tsconfig.json` lead the editor to those two
+- An indexed access gives `T | undefined`: take `for...of`, `.entries()`, destructuring with a check, an early return or `?.`. `!` goes only next to the check of the length or index that the compiler does not see, since it is otherwise the same `undefined` at runtime
+- A private field that may stay unset is optional (`?:`), so that the compiler makes every read of it handle `undefined`
+- A field says what it holds: an initializer of its type where "not set yet" behaves like that value, a constructor parameter for data a class is created with, `abstract` for a member a subclass provides, otherwise `T | undefined` with every read handling it. ESLint rejects `!` on a field of the library: the typings would promise a value that is `undefined` until something sets it
+- A change to the declared type of a public or protected member changes the published typings, which `check-api` shows, and ships with an `ng update` migration, a warn-only one when no rewrite is safe. A parameter that was implicitly `any` is typed with what it receives
 - Avoid `any`, and use `unknown` for a value of uncertain type — but not in published declarations: `check-public-api-any` counts both and fails when a package's count grows, so give new public members concrete or generic types
 - Prefer `readonly` where appropriate (e.g., signals, injections)
 - Use `protected` for template bindings

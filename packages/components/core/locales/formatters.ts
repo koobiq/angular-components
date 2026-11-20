@@ -1,4 +1,4 @@
-import { KbqLocaleFormattersData } from './types';
+import type { KbqLocaleFormattersData } from './types';
 
 export const enUSFormattersData = {
     formatters: {
@@ -165,7 +165,7 @@ export const tkTMFormattersData = {
         number: {
             rounding: {
                 separator: ' ',
-                groupSeparator: '',
+                groupSeparator: ',',
                 thousand: 'M',
                 million: 'Mn',
                 billion: 'Mr',

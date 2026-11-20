@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -8,14 +9,13 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import {
     KBQ_CUSTOM_TIME_RANGE_TYPES,
     KBQ_DEFAULT_TIME_RANGE_TYPES,
-    KbqCustomTimeRangeType,
+    type KbqCustomTimeRangeType,
     KbqTimeRangeModule,
-    KbqTimeRangeTranslationType,
-    KbqTimeRangeType,
-    KbqTimeRangeUnits
+    type KbqTimeRangeTranslationType,
+    type KbqTimeRangeType,
+    type KbqTimeRangeUnits
 } from '@koobiq/components/time-range';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { of } from 'rxjs';
 import { TRANSLATIONS } from './l10n';
 
 const customTypes: KbqCustomTimeRangeType[] = [
@@ -67,7 +67,7 @@ const customTypeTranslation: Record<string, KbqTimeRangeTranslationType> = Objec
                         {{ optionLabel(context.type) }}
                     }
                 </kbq-time-range-title-as-control>
-                <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix [color]="'contrast-fade'"></i>
+                <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix color="contrast-fade"></i>
             </kbq-form-field>
         </ng-template>
 
@@ -107,10 +107,10 @@ export class TimeRangeCustomRangeTypesExample {
 
     protected optionLabel(type: string): string {
         const localeConfig = this.localeConfig();
-
-        if (!localeConfig) return type;
-
         const units = customTypeUnits[type];
+
+        if (!localeConfig || !units) return type;
+
         const translationType = customTypeTranslation[type];
         const startDate = this.dateAdapter.addCalendarUnits(this.dateAdapter.today(), units);
 

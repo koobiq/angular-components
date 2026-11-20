@@ -1,6 +1,6 @@
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, computed, signal, WritableSignal } from '@angular/core';
-import { KbqListModule, KbqListSelectionDroppedEvent } from '@koobiq/components/list';
+import { ChangeDetectionStrategy, Component, computed, signal, type WritableSignal } from '@angular/core';
+import { KbqListModule, type KbqListSelectionDroppedEvent } from '@koobiq/components/list';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
 
@@ -49,8 +49,8 @@ export class ListDraggableConnectedExample {
     protected readonly available = signal(this.metricIds.slice(0, -1));
     protected readonly selected = signal(this.metricIds.slice(-1));
 
-    protected readonly availableMetrics = computed(() => this.available().map((id) => this.t().metrics[id - 1]));
-    protected readonly selectedMetrics = computed(() => this.selected().map((id) => this.t().metrics[id - 1]));
+    protected readonly availableMetrics = computed(() => this.available().map((id) => this.t().metrics[id - 1]!));
+    protected readonly selectedMetrics = computed(() => this.selected().map((id) => this.t().metrics[id - 1]!));
 
     protected dropped({
         previousIndex,

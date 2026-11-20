@@ -1,7 +1,9 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
+import { map } from 'rxjs';
 import { kbqBreadcrumbsConfigurationProvider, KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
@@ -11,7 +13,6 @@ import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { map } from 'rxjs/operators';
 import { TRANSLATIONS } from './l10n';
 
 /**
@@ -27,13 +28,14 @@ import { TRANSLATIONS } from './l10n';
         KbqIconModule,
         KbqBreadcrumbsModule,
         KbqDropdownModule,
-        KbqOverflowItemsModule
+        KbqOverflowItemsModule,
+        NgOptimizedImage
     ],
     template: `
         <kbq-top-bar>
             <div class="layout-align-center-center" kbqTopBarContainer placement="start">
                 <div class="layout-row layout-margin-right-m flex-none">
-                    <img alt="example icon" src="https://koobiq.io/assets/example-icon.svg" width="24" height="24" />
+                    <img alt="example icon" ngSrc="https://koobiq.io/assets/example-icon.svg" width="24" height="24" />
                 </div>
                 <nav class="flex" kbq-breadcrumbs size="big">
                     <kbq-breadcrumb-item routerLink="./dashboards" [text]="t().dashboards" />
@@ -44,6 +46,7 @@ import { TRANSLATIONS } from './l10n';
             <div kbqTopBarContainer placement="end">
                 <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
                     <button
+                        type="button"
                         kbqOverflowItem="0"
                         kbq-button
                         [kbqTooltip]="t().filter"
@@ -57,6 +60,7 @@ import { TRANSLATIONS } from './l10n';
                     </button>
 
                     <button
+                        type="button"
                         kbqOverflowItem="1"
                         kbq-button
                         [kbqTooltip]="t().share"
@@ -76,6 +80,7 @@ import { TRANSLATIONS } from './l10n';
                     <div kbqOverflowItemsResult>
                         <button
                             kbq-button
+                            type="button"
                             aria-label="More"
                             [kbqStyle]="KbqButtonStyles.Transparent"
                             [color]="KbqComponentColors.Contrast"
@@ -86,10 +91,10 @@ import { TRANSLATIONS } from './l10n';
 
                         <kbq-dropdown #appDropdown="kbqDropdown">
                             @if (kbqOverflowItems.hiddenItemIDs().has('0')) {
-                                <button kbq-dropdown-item>{{ t().filter }}</button>
+                                <button kbq-dropdown-item type="button">{{ t().filter }}</button>
                             }
                             @if (kbqOverflowItems.hiddenItemIDs().has('1')) {
-                                <button kbq-dropdown-item>{{ t().share }}</button>
+                                <button kbq-dropdown-item type="button">{{ t().share }}</button>
                             }
                         </kbq-dropdown>
                     </div>

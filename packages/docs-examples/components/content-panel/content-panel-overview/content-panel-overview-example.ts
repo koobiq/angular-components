@@ -15,9 +15,9 @@ import { TRANSLATIONS } from './l10n';
     template: `
         <kbq-content-panel-container #panel="kbqContentPanelContainer" width="350" maxWidth="450" minWidth="250">
             <div class="example-content-panel-container__content">
-                <button kbq-button (click)="panel.toggle()">{{ t().toggle }}</button>
-                <button kbq-button (click)="panel.open()">{{ t().open }}</button>
-                <button kbq-button (click)="panel.close()">{{ t().close }}</button>
+                <button kbq-button type="button" (click)="panel.toggle()">{{ t().toggle }}</button>
+                <button kbq-button type="button" (click)="panel.open()">{{ t().open }}</button>
+                <button kbq-button type="button" (click)="panel.close()">{{ t().close }}</button>
             </div>
 
             <kbq-content-panel>
@@ -26,6 +26,7 @@ import { TRANSLATIONS } from './l10n';
                     <div kbqContentPanelHeaderActions>
                         <button
                             kbq-button
+                            type="button"
                             [attr.aria-label]="t().copyLink"
                             [color]="componentColors.Contrast"
                             [kbqStyle]="buttonStyles.Transparent"
@@ -34,6 +35,7 @@ import { TRANSLATIONS } from './l10n';
                         </button>
                         <button
                             kbq-button
+                            type="button"
                             [attr.aria-label]="t().expand"
                             [color]="componentColors.Contrast"
                             [kbqStyle]="buttonStyles.Transparent"
@@ -48,8 +50,8 @@ import { TRANSLATIONS } from './l10n';
                     }
                 </kbq-content-panel-body>
                 <kbq-content-panel-footer>
-                    <button kbq-button [color]="componentColors.Contrast">Button 1</button>
-                    <button kbq-button [color]="componentColors.ContrastFade">Button 2</button>
+                    <button kbq-button type="button" [color]="componentColors.Contrast">Button 1</button>
+                    <button kbq-button type="button" [color]="componentColors.ContrastFade">Button 2</button>
                 </kbq-content-panel-footer>
             </kbq-content-panel>
         </kbq-content-panel-container>

@@ -18,7 +18,7 @@ import {
     linkedSignal,
     numberAttribute,
     output,
-    Provider,
+    type Provider,
     signal,
     untracked,
     viewChild,
@@ -32,7 +32,12 @@ import {
     KbqLocaleOverridesDirective,
     kbqOptionalNumberAttribute
 } from '@koobiq/components/core';
-import { KbqResizable, KbqResizer, KbqResizerDirection, KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
+import {
+    KbqResizable,
+    KbqResizer,
+    type KbqResizerDirection,
+    type KbqResizerSizeChangeEvent
+} from '@koobiq/components/resizer';
 
 /** Supported alignment values for description list items. */
 export type KbqDlAlign = 'start' | 'center' | 'end';
@@ -161,7 +166,7 @@ export class KbqDd {}
             </div>
         }
     `,
-    styleUrls: ['dl.scss', 'dl-tokens.scss'],
+    styleUrls: ['./dl.scss', './dl-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

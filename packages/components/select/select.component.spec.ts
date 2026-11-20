@@ -5,23 +5,23 @@ import { AsyncPipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
-    DebugElement,
-    OnInit,
-    TemplateRef,
-    Type,
+    type DebugElement,
     effect,
     getDebugNode,
     inject as inject_1,
+    type OnInit,
     signal,
+    type TemplateRef,
+    type Type,
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { type ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import {
-    AsyncValidatorFn,
-    ControlValueAccessor,
+    type AsyncValidatorFn,
+    type ControlValueAccessor,
     FormControl,
-    FormControlStatus,
+    type FormControlStatus,
     FormGroup,
     FormGroupDirective,
     FormsModule,
@@ -29,62 +29,61 @@ import {
     ReactiveFormsModule,
     UntypedFormControl,
     UntypedFormGroup,
-    ValidationErrors,
+    type ValidationErrors,
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { map, merge, type Observable, of, Subject, type Subscription, take, timer } from 'rxjs';
+import type { MockInstance } from 'vitest';
 import {
     A,
-    DOWN_ARROW,
-    END,
-    ENTER,
-    ESCAPE,
-    ErrorStateMatcher,
-    HOME,
-    KBQ_LOCALE_SERVICE,
-    KBQ_SELECT_SCROLL_STRATEGY,
-    KbqComponentColors,
-    KbqLocaleService,
-    KbqLocaleServiceModule,
-    KbqOption,
-    KbqOptionBase,
-    KbqOptionSelectionChange,
-    KbqOverlayLayer,
-    KbqPanelMaxHeight,
-    KbqPanelWidth,
-    KbqPartialLocaleData,
-    KbqRepositionScrollStrategy,
-    KbqVirtualOption,
-    LEFT_ARROW,
-    RIGHT_ARROW,
-    SPACE,
-    ShowOnControlDirtyErrorStateMatcher,
-    ShowOnFormSubmitErrorStateMatcher,
-    TAB,
-    UP_ARROW,
     createKeyboardEvent,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
+    DOWN_ARROW,
+    END,
+    ENTER,
+    ErrorStateMatcher,
+    ESCAPE,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
     getKbqSelectNonFunctionValueError,
+    HOME,
+    KBQ_LOCALE_SERVICE,
+    KBQ_SELECT_SCROLL_STRATEGY,
+    KbqComponentColors,
     kbqErrorStateMatcherProvider,
+    type KbqLocaleService,
+    KbqLocaleServiceModule,
+    KbqOption,
+    type KbqOptionBase,
+    KbqOptionSelectionChange,
+    KbqOverlayLayer,
+    type KbqPanelMaxHeight,
+    type KbqPanelWidth,
+    type KbqPartialLocaleData,
+    KbqRepositionScrollStrategy,
+    KbqVirtualOption,
+    LEFT_ARROW,
+    RIGHT_ARROW,
     ruRULocaleData,
+    ShowOnControlDirtyErrorStateMatcher,
+    ShowOnFormSubmitErrorStateMatcher,
+    SPACE,
+    TAB,
+    UP_ARROW,
     wrappedErrorMessage
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagsModule } from '@koobiq/components/tags';
-import { Observable, Subject, Subscription, merge, of, timer } from 'rxjs';
-import { map, take } from 'rxjs/operators';
-import type { MockInstance } from 'vitest';
 import { KbqSelectHiddenItemsMeasurer } from './hidden-items-measurer';
-import { KbqOptionTooltip } from './select-option.directive';
-import { KbqSelect, delayBeforeDisplayingResultWithoutOptions, kbqSelectOptionsProvider } from './select.component';
+import { delayBeforeDisplayingResultWithoutOptions, KbqSelect, kbqSelectOptionsProvider } from './select.component';
 import { KbqSelectModule } from './select.module';
+import { KbqOptionTooltip } from './select-option.directive';
 
 const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component], providers }).compileComponents();
@@ -158,7 +157,7 @@ function stubTagLayout(): () => void {
             if (original) {
                 Object.defineProperty(proto, prop, original);
             } else {
-                delete proto[prop];
+                Reflect.deleteProperty(proto, prop);
             }
         });
     };
@@ -513,14 +512,14 @@ class BasicEvents {
     template: `
         <kbq-form-field>
             <kbq-select placeholder="First">
-                <kbq-option [value]="'one'">one</kbq-option>
-                <kbq-option [value]="'two'">two</kbq-option>
+                <kbq-option value="one">one</kbq-option>
+                <kbq-option value="two">two</kbq-option>
             </kbq-select>
         </kbq-form-field>
         <kbq-form-field>
             <kbq-select placeholder="Second">
-                <kbq-option [value]="'three'">three</kbq-option>
-                <kbq-option [value]="'four'">four</kbq-option>
+                <kbq-option value="three">three</kbq-option>
+                <kbq-option value="four">four</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `
@@ -1008,8 +1007,8 @@ class SelectEarlyAccessSibling {}
     template: `
         <kbq-form-field [color]="theme">
             <kbq-select placeholder="Food">
-                <kbq-option [value]="'steak - 0'">Steak</kbq-option>
-                <kbq-option [value]="'pizza - 1'">Pizza</kbq-option>
+                <kbq-option value="steak - 0">Steak</kbq-option>
+                <kbq-option value="pizza - 1">Pizza</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `
@@ -1123,7 +1122,7 @@ class FalsyValueSelect {
                         }
                     </kbq-optgroup>
                 }
-                <kbq-option [value]="'mime - 11'">Mr. Mime</kbq-option>
+                <kbq-option value="mime - 11">Mr. Mime</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `
@@ -1197,6 +1196,49 @@ class SelectWithGroupsAndNgContainer {
             pokemon: [{ value: 'bulbasaur-0', viewValue: 'Bulbasaur' }]
         }
     ];
+}
+
+@Component({
+    selector: 'select-with-projected-group-label',
+    imports: [
+        KbqSelectModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-select multiple placeholder="Pokemon" [formControl]="control">
+                @for (group of pokemonTypes; track group.name) {
+                    <kbq-optgroup #groupRef="kbqOptgroup" [label]="group.name">
+                        <div kbq-optgroup-label>
+                            {{ group.name }}
+                            <span class="count">{{ groupRef.selectedCount }}</span>
+                        </div>
+                        @for (pokemon of group.pokemon; track pokemon.value) {
+                            <kbq-option [value]="pokemon.value">{{ pokemon.viewValue }}</kbq-option>
+                        }
+                    </kbq-optgroup>
+                }
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectWithProjectedGroupLabel {
+    control = new UntypedFormControl();
+    pokemonTypes = [
+        {
+            name: 'Grass',
+            pokemon: [
+                { value: 'bulbasaur-0', viewValue: 'Bulbasaur' },
+                { value: 'oddish-1', viewValue: 'Oddish' }
+            ]
+        },
+        {
+            name: 'Water',
+            pokemon: [{ value: 'squirtle-3', viewValue: 'Squirtle' }]
+        }
+    ];
+
+    readonly select = viewChild.required(KbqSelect);
 }
 
 @Component({
@@ -1525,7 +1567,7 @@ class SelectWithoutOptionCentering {
             <!--<kbq-label>Select a thing</kbq-label>-->
 
             <kbq-select [placeholder]="placeholder">
-                <kbq-option [value]="'thing'">A thing</kbq-option>
+                <kbq-option value="thing">A thing</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `
@@ -1543,16 +1585,16 @@ class SelectWithFormFieldLabel {
     template: `
         <kbq-form-field>
             <kbq-select>
-                <kbq-option [value]="'value1'">Not long text</kbq-option>
-                <kbq-option style="max-width: 200px;" [value]="'value2'" [kbqTooltipDisabled]="tooltipDisabled">
+                <kbq-option value="value1">Not long text</kbq-option>
+                <kbq-option style="max-width: 200px;" value="value2" [kbqTooltipDisabled]="tooltipDisabled">
                     Long long long long Long long long long Long long long long Long long long long Long long long long
                     Long long long long text
                 </kbq-option>
-                <kbq-option style="max-width: 200px;" [value]="'value3'">
+                <kbq-option style="max-width: 200px;" value="value3">
                     {{ changingLabel }}
                 </kbq-option>
                 <!-- Two-line option: each line clips itself, so the overflow never reaches the option text. -->
-                <kbq-option style="max-width: 200px;" [value]="'value4'" [viewValue]="'Two line option'">
+                <kbq-option style="max-width: 200px;" value="value4" viewValue="Two line option">
                     <div class="name-line">Two line option</div>
                     <div class="kbq-option-caption">caption</div>
                 </kbq-option>
@@ -1592,12 +1634,12 @@ class SelectWithLongOptionText {
     template: `
         <kbq-form-field>
             <kbq-select #select style="max-width: 300px" [multiple]="true" [value]="selected">
-                <kbq-option [value]="'value1'">value</kbq-option>
-                <kbq-option [value]="'value2'">value2</kbq-option>
-                <kbq-option [value]="'value3'">value3</kbq-option>
-                <kbq-option [value]="'value4'">Not long text</kbq-option>
-                <kbq-option [value]="'value5'">Not long text</kbq-option>
-                <kbq-option [value]="'value6'">Not long text</kbq-option>
+                <kbq-option value="value1">value</kbq-option>
+                <kbq-option value="value2">value2</kbq-option>
+                <kbq-option value="value3">value3</kbq-option>
+                <kbq-option value="value4">Not long text</kbq-option>
+                <kbq-option value="value5">Not long text</kbq-option>
+                <kbq-option value="value6">Not long text</kbq-option>
                 <ng-template #kbqSelectTagContent let-option let-select="select">
                     <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.viewValue }}
@@ -1701,15 +1743,15 @@ class CdkVirtualScrollViewportSelectOptionAsObject extends CdkVirtualScrollViewp
     id: number;
     name: string;
 }> {
-    scrollDispatcher: ScrollDispatcher;
+    override scrollDispatcher: ScrollDispatcher;
 
-    values: any[] = [
+    override values: any[] = [
         { id: 3, name: 'Anapa' },
         { id: 55, name: 'Lyubertsy' },
         { id: 114, name: 'Tomsk' }
     ];
 
-    options: { id: number; name: string }[] = OPTIONS.sort().map((option, index) => {
+    override options: { id: number; name: string }[] = OPTIONS.sort().map((option, index) => {
         return { id: index, name: option, active: true };
     });
 
@@ -2023,7 +2065,7 @@ class NgIfSelect {
     template: `
         <kbq-form-field>
             <kbq-select [style.display]="isVisible ? 'block' : 'none'">
-                <kbq-option [value]="'value'">There are no other options</kbq-option>
+                <kbq-option value="value">There are no other options</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `
@@ -2040,7 +2082,7 @@ class BasicSelectInitiallyHidden {
     template: `
         <kbq-form-field>
             <kbq-select>
-                <kbq-option [value]="'value'">There are no other options</kbq-option>
+                <kbq-option value="value">There are no other options</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `
@@ -2052,13 +2094,13 @@ class BasicSelectNoPlaceholder {}
     template: `
         <kbq-form-field style="width: 300px">
             <kbq-select [panelWidth]="panelWidth">
-                <kbq-option [value]="'option1'">
+                <kbq-option value="option1">
                     Long long long long long long long long long long long long long long long long long long long long
                     long long long long long long long long long long long long long long long long long long long long
                     long long long long long long long long long option
                 </kbq-option>
-                <kbq-option [value]="'option2'">Option2</kbq-option>
-                <kbq-option [value]="'option3'">Option3</kbq-option>
+                <kbq-option value="option2">Option2</kbq-option>
+                <kbq-option value="option3">Option3</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `,
@@ -2073,8 +2115,8 @@ class SelectWithPanelWidth {
     template: `
         <kbq-form-field style="width: 300px">
             <kbq-select [multilineOptions]="multilineOptions" [panelWidth]="panelWidth" [panelClass]="panelClass">
-                <kbq-option [value]="'option1'">Option1</kbq-option>
-                <kbq-option [value]="'option2'">Option2</kbq-option>
+                <kbq-option value="option1">Option1</kbq-option>
+                <kbq-option value="option2">Option2</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `
@@ -2108,9 +2150,9 @@ class SelectWithMultilineOptionsAndVirtualScroll {
     template: `
         <kbq-form-field style="width: 300px">
             <kbq-select [panelMaxHeight]="panelMaxHeight">
-                <kbq-option [value]="'option1'">Option1</kbq-option>
-                <kbq-option [value]="'option2'">Option2</kbq-option>
-                <kbq-option [value]="'option3'">Option3</kbq-option>
+                <kbq-option value="option1">Option1</kbq-option>
+                <kbq-option value="option2">Option2</kbq-option>
+                <kbq-option value="option3">Option3</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `,
@@ -2128,11 +2170,11 @@ class SelectWithPanelMaxHeight {
                 <kbq-form-field kbqSelectSearch>
                     <input kbqInput type="text" [formControl]="searchCtrl" />
                 </kbq-form-field>
-                <kbq-option [value]="'option1'">
+                <kbq-option value="option1">
                     Long long long long long long long long long long long long long long long long option
                 </kbq-option>
-                <kbq-option [value]="'option2'">Option2</kbq-option>
-                <kbq-option [value]="'option3'">Option3</kbq-option>
+                <kbq-option value="option2">Option2</kbq-option>
+                <kbq-option value="option3">Option3</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `,
@@ -2149,9 +2191,9 @@ class SelectWithSearchAndPanelWidth {
     template: `
         <kbq-form-field style="width: 300px">
             <kbq-select>
-                <kbq-option [value]="'option1'">Option1</kbq-option>
-                <kbq-option [value]="'option2'">Option2</kbq-option>
-                <kbq-option [value]="'option3'">Option3</kbq-option>
+                <kbq-option value="option1">Option1</kbq-option>
+                <kbq-option value="option2">Option2</kbq-option>
+                <kbq-option value="option3">Option3</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `
@@ -2523,7 +2565,7 @@ class SelectWithLabel {
     template: `
         <kbq-form-field>
             <kbq-select aria-label="Pick a food">
-                <kbq-option [value]="'steak-0'">Steak</kbq-option>
+                <kbq-option value="steak-0">Steak</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `
@@ -2542,7 +2584,7 @@ class SelectWithAriaLabel {
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Country">
-                <kbq-option [value]="'ru'">Russia</kbq-option>
+                <kbq-option value="ru">Russia</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `
@@ -2772,6 +2814,7 @@ describe('KbqSelect', () => {
                 MultiSelectWithClearPredicate,
                 SelectWithGroups,
                 SelectWithGroupsAndNgContainer,
+                SelectWithProjectedGroupLabel,
                 SelectWithFormFieldLabel,
                 SelectWithChangeEvent
             ]);
@@ -3889,6 +3932,54 @@ describe('KbqSelect', () => {
                 expect(groupFixture.componentInstance.select().selected).toBeUndefined();
             });
 
+            it('should replace the label input of a group with the projected kbq-optgroup-label', async () => {
+                fixture.destroy();
+
+                const groupFixture = TestBed.createComponent(SelectWithProjectedGroupLabel);
+
+                groupFixture.detectChanges();
+                groupFixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement.click();
+                groupFixture.detectChanges();
+
+                const group = overlayContainerElement.querySelector('kbq-optgroup')!;
+                const label = group.querySelector('.kbq-optgroup-label') as HTMLElement;
+                const content = group.querySelector('.kbq-optgroup-label-content') as HTMLElement;
+
+                expect(content.closest('.kbq-optgroup-label')).toBe(label);
+                expect(group.getAttribute('aria-labelledby')).toBe(label.id);
+                // The `label` input the fixture also sets gives way to the projected content.
+                expect(label.textContent!.replace(/\s+/g, ' ').trim()).toBe('Grass 0');
+            });
+
+            it('should update the projected label counter as options of the group are selected', async () => {
+                fixture.destroy();
+
+                const groupFixture = TestBed.createComponent(SelectWithProjectedGroupLabel);
+
+                groupFixture.detectChanges();
+                groupFixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement.click();
+                groupFixture.detectChanges();
+
+                const group = overlayContainerElement.querySelector('kbq-optgroup')!;
+                const counter = () => (group.querySelector('.count') as HTMLElement).textContent!.trim();
+                const options: NodeListOf<HTMLElement> = group.querySelectorAll('kbq-option');
+
+                expect(counter()).toBe('0');
+
+                options[0].click();
+                groupFixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(counter()).toBe('1');
+
+                options[1].click();
+                groupFixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(counter()).toBe('2');
+                expect(groupFixture.componentInstance.control.value).toEqual(['bulbasaur-0', 'oddish-1']);
+            });
+
             it('should not throw if triggerValue accessed with no selected value', async () => {
                 expect(() => fixture.componentInstance.select().triggerValue).not.toThrow();
             });
@@ -4881,6 +4972,16 @@ describe('KbqSelect', () => {
             expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
         });
 
+        it('should turn browser autocomplete off on the search input', async () => {
+            trigger.click();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            const input: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+
+            expect(input.getAttribute('autocomplete')).toBe('off');
+        });
+
         it('should focus search field after open', async () => {
             trigger.click();
             fixture.detectChanges();
@@ -5097,6 +5198,88 @@ describe('KbqSelect', () => {
             await vi.runOnlyPendingTimersAsync();
 
             expect(focusSpy).toHaveBeenCalled();
+        });
+
+        describe('described to assistive technology', () => {
+            const open = async () => {
+                trigger.click();
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+            };
+
+            const filter = async (query: string) => {
+                fixture.componentInstance.searchCtrl.setValue(query);
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                await vi.advanceTimersByTimeAsync(1);
+                fixture.detectChanges();
+            };
+
+            const getSearchInput = (): HTMLInputElement => fixture.debugElement.query(By.css('input')).nativeElement;
+            const getHighlightedOption = () => overlayContainerElement.querySelector('kbq-option.kbq-active')!;
+
+            it('should make the search field a combobox of the option list', async () => {
+                await open();
+
+                const input = getSearchInput();
+
+                expect(input.getAttribute('role')).toBe('combobox');
+                expect(input.getAttribute('aria-expanded')).toBe('true');
+                expect(input.getAttribute('aria-haspopup')).toBe('listbox');
+                expect(input.getAttribute('aria-autocomplete')).toBe('list');
+                expect(input.getAttribute('aria-controls')).toBe(
+                    overlayContainerElement.querySelector('[role="listbox"]')!.id
+                );
+            });
+
+            it('should point aria-activedescendant at the option the arrow keys highlight', async () => {
+                await open();
+
+                const input = getSearchInput();
+
+                expect(input.getAttribute('aria-activedescendant')).toBe(getHighlightedOption().id);
+
+                dispatchKeyboardEvent(input, 'keydown', DOWN_ARROW);
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+
+                expect(getHighlightedOption().textContent!.trim()).toBe('Almetyevsk');
+                expect(input.getAttribute('aria-activedescendant')).toBe(getHighlightedOption().id);
+                expect(document.activeElement).toBe(input);
+            });
+
+            it('should move aria-activedescendant to the option the search highlights', async () => {
+                await open();
+                await filter('Anapa');
+
+                expect(getHighlightedOption().textContent!.trim()).toBe('Anapa');
+                expect(getSearchInput().getAttribute('aria-activedescendant')).toBe(getHighlightedOption().id);
+            });
+
+            it('should drop aria-activedescendant when the search leaves no options', async () => {
+                await open();
+                await filter('No such city');
+
+                expect(overlayContainerElement.querySelector('kbq-option')).toBeNull();
+                expect(getSearchInput().hasAttribute('aria-activedescendant')).toBe(false);
+            });
+
+            it('should name a search field that has no name of its own', async () => {
+                await open();
+
+                expect(getSearchInput().getAttribute('aria-label')).toBe(ruRULocaleData.a11y.search);
+            });
+
+            it('should leave the name of the search field to its placeholder', async () => {
+                await open();
+
+                fixture.componentInstance.select().search()!.setPlaceholder('City');
+                fixture.detectChanges();
+
+                expect(getSearchInput().hasAttribute('aria-label')).toBe(false);
+            });
         });
     });
 
@@ -6199,7 +6382,7 @@ describe('KbqSelect', () => {
             fixture.detectChanges();
             fixture.detectChanges();
 
-            expect(testInstance.select().selectionModel.selected.map((option) => option.value)).toEqual([
+            expect(testInstance.select().selectionModel!.selected.map((option) => option.value)).toEqual([
                 'steak-0',
                 'pizza-1',
                 'tacos-2'
@@ -6423,7 +6606,7 @@ describe('KbqSelect', () => {
             await shiftClickDisabledOption();
 
             expect(testInstance.options()[2].selected).toBe(true);
-            expect(testInstance.select().selectionModel.isSelected(testInstance.options()[2])).toBe(true);
+            expect(testInstance.select().selectionModel!.isSelected(testInstance.options()[2])).toBe(true);
             expect(testInstance.control.value).toEqual(['tacos-2']);
             // A rejected click must leave the range anchor alone: parking it on an option the user cannot
             // toggle would let that option's frozen selected state dictate the next shift-range.
@@ -6451,7 +6634,7 @@ describe('KbqSelect', () => {
             await vi.advanceTimersByTimeAsync(0);
             await vi.runOnlyPendingTimersAsync();
 
-            expect(select.selectionModel.selected.length).toBe(0);
+            expect(select.selectionModel!.selected.length).toBe(0);
             expect(options[0].classList).not.toContain('kbq-selected');
             expect(nonSelectableFixture.componentInstance.control.value).toBeFalsy();
         });
@@ -6762,7 +6945,7 @@ describe('KbqSelect', () => {
             await vi.advanceTimersByTimeAsync(0);
             await vi.runOnlyPendingTimersAsync();
 
-            HTMLElement.prototype.querySelector = function (selectors: string) {
+            HTMLElement.prototype.querySelector = function (this: HTMLElement, selectors: string) {
                 if (selectors === '.kbq-select__match-hidden-text') return null;
 
                 return originalQuerySelector.call(this, selectors);
@@ -7041,7 +7224,7 @@ describe('KbqSelect', () => {
 
             const selectedOptions: string[] = testInstance
                 .select()
-                .selectionModel.selected.map((option) => option.value);
+                .selectionModel!.selected.map((option) => option.value);
 
             testInstance
                 .select()
@@ -7049,7 +7232,7 @@ describe('KbqSelect', () => {
                 .subscribe(() => {
                     const currentSelectedOptions: string[] = testInstance
                         .select()
-                        .selectionModel.selected.map((option) => option.value);
+                        .selectionModel!.selected.map((option) => option.value);
 
                     expect(selectedOptions.length).toEqual(currentSelectedOptions.length);
                     expect(selectedOptions).toEqual(currentSelectedOptions);
@@ -7193,7 +7376,7 @@ describe('KbqSelect', () => {
 
                 // The selected entry must be a KbqVirtualOption produced by the factory,
                 // and its viewValue must come from the factory-supplied `_viewValue`.
-                expect(instance.select().selectionModel.selected[0]).toBeInstanceOf(KbqVirtualOption);
+                expect(instance.select().selectionModel!.selected[0]).toBeInstanceOf(KbqVirtualOption);
                 expect(triggerText).toBe(target.name);
             });
 
@@ -7231,7 +7414,7 @@ describe('KbqSelect', () => {
                 multiFixture.detectChanges();
                 await vi.runOnlyPendingTimersAsync();
 
-                const selected = instance.select().selectionModel.selected;
+                const selected = instance.select().selectionModel!.selected;
                 const disabledStates = selected.map((opt) => opt.disabled);
 
                 expect(disabledStates).toContain(true);
@@ -7415,7 +7598,7 @@ describe('KbqSelect', () => {
                 instance.visible = [...instance.options];
                 await finishInit(fixture);
 
-                const selected = instance.select().selectionModel.selected;
+                const selected = instance.select().selectionModel!.selected;
 
                 expect(selected.length).toBe(1);
                 expect(selected[0]).toBeInstanceOf(KbqOption);
@@ -7772,7 +7955,7 @@ describe('KbqSelect', () => {
             const triggerText = fixture.debugElement.query(By.css('.kbq-select__matcher-text')).nativeElement
                 .textContent;
 
-            expect(testInstance.select().selectionModel.selected[0]).toBeInstanceOf(KbqVirtualOption);
+            expect(testInstance.select().selectionModel!.selected[0]).toBeInstanceOf(KbqVirtualOption);
             expect(triggerText.trim()).toBe('Option #0');
         });
 
@@ -7793,7 +7976,7 @@ describe('KbqSelect', () => {
         it('should replace the preselected virtual option with the matching one once it is rendered', async () => {
             await openPanelWithFirstPage();
 
-            const selected = testInstance.select().selectionModel.selected[0];
+            const selected = testInstance.select().selectionModel!.selected[0];
 
             expect(selected).not.toBeInstanceOf(KbqVirtualOption);
             expect(selected.value.id).toBe(0);
@@ -9915,6 +10098,29 @@ describe('KbqSelect', () => {
 
                     await expect(overlayContainerElement).toHaveNoViolations();
                 });
+            });
+
+            // The search field keeps the caret and points at the option the arrow keys highlight.
+            describe('with a search field', () => {
+                it('should have no violations while an option is highlighted', async () => {
+                    configureKbqSelectTestingModule([SelectWithSearch]);
+
+                    const fixture = TestBed.createComponent(SelectWithSearch);
+
+                    fixture.detectChanges();
+                    fixture.componentInstance.select().open();
+                    fixture.detectChanges();
+                    await fixture.whenStable();
+                    fixture.detectChanges();
+
+                    const input = overlayContainerElement.querySelector('input')!;
+
+                    dispatchKeyboardEvent(input, 'keydown', DOWN_ARROW);
+                    fixture.detectChanges();
+
+                    expect(input.getAttribute('aria-activedescendant')).toBeTruthy();
+                    await expect(overlayContainerElement).toHaveNoViolations();
+                }, 15_000);
             });
         });
     });

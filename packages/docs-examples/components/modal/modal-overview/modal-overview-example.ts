@@ -11,9 +11,9 @@ import { TRANSLATIONS } from './l10n';
     selector: 'modal-overview-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="showConfirmModal()">{{ t().openConfirmModal }}</button>
-        <button kbq-button (click)="showSuccessModal()">{{ t().openSuccessModal }}</button>
-        <button kbq-button (click)="showDeleteModal()">{{ t().openDeleteModal }}</button>
+        <button kbq-button type="button" (click)="showConfirmModal()">{{ t().openConfirmModal }}</button>
+        <button kbq-button type="button" (click)="showSuccessModal()">{{ t().openSuccessModal }}</button>
+        <button kbq-button type="button" (click)="showDeleteModal()">{{ t().openDeleteModal }}</button>
     `,
     styles: `
         :host {

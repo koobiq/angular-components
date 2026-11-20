@@ -1,4 +1,4 @@
-import { ClassEntry, DocEntry, EntryType, MemberTags, MemberType, PropertyEntry } from './entities';
+import { type ClassEntry, type DocEntry, EntryType, MemberTags, MemberType, type PropertyEntry } from './entities';
 import { getNgModuleNames, renderApiAsMarkdown } from './markdown';
 
 const entry = (patch: Partial<DocEntry> & Record<string, unknown>): DocEntry =>

@@ -1,4 +1,4 @@
-import { Translations } from '@koobiq/docs-examples/i18n';
+import type { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text shown by the clamped-text examples. MITRE technique names in the list example stay English as proper names. */
 export interface ExampleTranslation {

@@ -17,7 +17,7 @@ import { TRANSLATIONS } from './l10n';
     ],
     template: `
         @for (item of [1, 2, 3, 4, 5, 6]; track item) {
-            <button kbq-button [kbqTooltip]="'Action' + item" [attr.aria-label]="t().diamond">
+            <button kbq-button type="button" [kbqTooltip]="'Action' + item" [attr.aria-label]="t().diamond">
                 <i kbq-icon="kbq-diamond_16"></i>
             </button>
         }

@@ -1,5 +1,5 @@
-import { InjectionToken, Provider, Type } from '@angular/core';
-import { KbqPipeType, KbqPipeTypes } from './filter-bar.types';
+import { InjectionToken, type Provider, type Type } from '@angular/core';
+import { type KbqPipeType, KbqPipeTypes } from './filter-bar.types';
 import type { KbqBasePipe } from './pipes/base-pipe';
 import { KbqPipeDateComponent } from './pipes/pipe-date';
 import { KbqPipeDatetimeComponent } from './pipes/pipe-datetime';

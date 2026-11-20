@@ -2,15 +2,14 @@
 
 .docs-welcome {
     display: flex;
+    flex: 1;
     flex-direction: column;
 
-    flex: 1;
-
+    min-width: 0;
     height: 100%;
     overflow-y: auto;
-    scroll-behavior: smooth;
 
-    min-width: 0;
+    scroll-behavior: smooth;
 }
 
 // Padding lives on the inner wrapper, not on the scroll host, so the custom scrollbar track hugs the
@@ -18,7 +17,6 @@
 .docs-welcome__content {
     display: flex;
     flex-direction: column;
-
     padding-bottom: 160px;
     padding-left: 160px;
 }
@@ -33,13 +31,12 @@
 }
 
 .docs-welcome__category {
-    margin-top: var(--kbq-size-5xl);
     max-width: 1300px;
+    margin-top: var(--kbq-size-5xl);
 }
 
 .docs-welcome__category-items {
     flex-wrap: wrap;
-
     gap: var(--kbq-size-4xl);
 }
 
@@ -55,8 +52,8 @@
 }
 
 .docs-welcome__category-item-title {
-    margin-top: var(--kbq-size-m);
     min-height: var(--kbq-size-xxl);
+    margin-top: var(--kbq-size-m);
 }
 
 @media (width < 768px) {

@@ -1,11 +1,11 @@
 import { Component, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { FlatTreeControl } from './control/flat-tree-control';
 import { KbqTreeFlatDataSource, KbqTreeFlattener } from './data-source/flat-data-source';
 import { KbqTreeNodeToggleComponent } from './toggle';
-import { KbqTreeSelection } from './tree-selection.component';
 import { KbqTreeModule } from './tree.module';
+import { KbqTreeSelection } from './tree-selection.component';
 
 interface Node {
     name: string;

@@ -13,7 +13,7 @@ import { TRANSLATIONS } from './l10n';
         KbqCheckboxModule,
         KbqFormFieldModule
     ],
-    templateUrl: 'checkbox-overview-example.html',
+    templateUrl: './checkbox-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CheckboxOverviewExample {

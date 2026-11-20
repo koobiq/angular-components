@@ -32,7 +32,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
             }
         </kbq-list-selection>
     `,
-    styleUrls: ['./title-list-option-example.css'],
+    styleUrl: './title-list-option-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleListOptionExample {

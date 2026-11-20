@@ -25,10 +25,10 @@ const restSymbolsRegex = /[^0-9a-zA-Zа-яА-ЯйЙёЁ]+/g;
                 <input
                     formControlName="folderName"
                     kbqInput
+                    kbqTrigger="manual"
                     [kbqEnterDelay]="10"
                     [kbqPlacement]="popUpPlacements.Top"
                     [kbqRelativeToCaret]="true"
-                    [kbqTrigger]="'manual'"
                     [kbqTooltip]="t().lettersAndNumbers"
                     [kbqTooltipColor]="colors.Error"
                     (blur)="onBlur()"

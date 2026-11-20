@@ -1,8 +1,9 @@
 .docs-page-not-found {
     display: flex;
+    flex: 1;
     flex-direction: column;
     align-items: center;
-    flex: 1;
+
     margin-top: var(--kbq-size-5xl);
     padding-top: 164px;
 

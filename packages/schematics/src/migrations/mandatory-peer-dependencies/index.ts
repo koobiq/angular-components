@@ -1,4 +1,4 @@
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { logMessage } from '../../utils/messages';
 import { addPackageToPackageJson, getPackageVersionFromPackageJson } from '../../utils/package-config';

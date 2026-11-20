@@ -8,10 +8,10 @@ dev-app {
     align-items: center;
 
     .dev-percent {
-        margin-right: 8px;
-        width: 60px;
-        text-align: center;
         flex-shrink: 0;
+        width: 60px;
+        margin-right: 8px;
+        text-align: center;
     }
 
     .dev-lines {

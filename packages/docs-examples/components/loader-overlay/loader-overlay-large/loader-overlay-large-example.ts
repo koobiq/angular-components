@@ -19,7 +19,7 @@ import { TRANSLATIONS } from './l10n';
             text text text text text text text text text text text text text text text text text text text text text
             text text text text text text text text text text text text text text text
             <kbq-loader-overlay [text]="t().loadingData">
-                <kbq-progress-spinner size="big" kbq-loader-overlay-indicator [mode]="'indeterminate'" />
+                <kbq-progress-spinner size="big" kbq-loader-overlay-indicator mode="indeterminate" />
             </kbq-loader-overlay>
         </div>
     `,

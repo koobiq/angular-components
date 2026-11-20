@@ -2,7 +2,7 @@ import { _IdGenerator } from '@angular/cdk/a11y';
 import { computed, Directive, inject, input, model, numberAttribute } from '@angular/core';
 import { kbqInjectNativeElement, KbqLocaleOverridesDirective } from '@koobiq/components/core';
 import { kbqInjectCollapseAnimation } from './collapse-animation';
-import { KbqClamped, KbqClampedRoot, kbqInjectClampedTextLocaleConfiguration } from './constants';
+import { type KbqClamped, KbqClampedRoot, kbqInjectClampedTextLocaleConfiguration } from './constants';
 
 /**
  * Renders a long list compactly: keeps the first `collapsedVisibleCount` items and lets a projected
@@ -63,6 +63,14 @@ export class KbqClampedList<T> implements KbqClamped {
     readonly showMoreCountText = computed(() =>
         this.localeConfiguration().showMoreText.replace('{exceededItemCount}', this.exceededItemCount().toString(10))
     );
+
+    /** Localized "show more compact" label with the exceeded item count interpolated into the `{exceededItemCount}` placeholder. */
+    readonly showMoreCompactCountText = computed(() => {
+        const { showMoreTextCompact, moreText } = this.localeConfiguration();
+        const count = this.exceededItemCount().toString(10);
+
+        return showMoreTextCompact?.replace('{exceededItemCount}', count) ?? `${count} ${moreText}`;
+    });
 
     /** Clamped text locale configuration. */
     readonly localeConfiguration = kbqInjectClampedTextLocaleConfiguration();

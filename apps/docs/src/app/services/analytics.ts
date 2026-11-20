@@ -1,6 +1,6 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
-    EnvironmentProviders,
+    type EnvironmentProviders,
     inject,
     makeEnvironmentProviders,
     PLATFORM_ID,

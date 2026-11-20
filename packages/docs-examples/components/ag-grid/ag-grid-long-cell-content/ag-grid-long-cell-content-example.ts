@@ -1,5 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AgGridModule, type ICellRendererAngularComp } from 'ag-grid-angular';
+import { AllCommunityModule, type ColDef, type ICellRendererParams, ModuleRegistry } from 'ag-grid-community';
+import { filter, fromEvent } from 'rxjs';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { PopUpPlacements, PopUpSizes } from '@koobiq/components/core';
@@ -7,9 +10,6 @@ import { KbqLink } from '@koobiq/components/link';
 import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { AgGridModule, ICellRendererAngularComp } from 'ag-grid-angular';
-import { AllCommunityModule, ColDef, ICellRendererParams, ModuleRegistry } from 'ag-grid-community';
-import { filter, fromEvent } from 'rxjs';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -257,7 +257,7 @@ export class AgGridLongCellContentExample {
     // Repeats of the events above, enough rows to scroll and to see the grid recalculate the cells it renders.
     protected readonly rowData = computed<ExampleRowData[]>(() =>
         Array.from({ length: 100 }, (_, index) => {
-            const event = this.t().events[index % this.t().events.length];
+            const event = this.t().events[index % this.t().events.length]!;
 
             return { ...event, event: `${event.event} ${index + 1}` };
         })

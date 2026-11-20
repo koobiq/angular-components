@@ -16,7 +16,7 @@ import {
     kbqDefaultProfileMapping,
     kbqInjectUsernameLocaleConfiguration
 } from './constants';
-import { KbqUserInfo, KbqUsernameMode, KbqUsernameStyle } from './types';
+import type { KbqUserInfo, KbqUsernameMode, KbqUsernameStyle } from './types';
 import { kbqFormatUsername } from './username.pipe';
 
 const baseClass = 'kbq-username';

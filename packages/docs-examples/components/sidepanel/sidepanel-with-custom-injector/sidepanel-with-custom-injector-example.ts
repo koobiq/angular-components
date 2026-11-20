@@ -17,7 +17,7 @@ export const EXAMPLE_SIDEPANEL_TOKEN = new InjectionToken<{ name: string; role: 
         </kbq-sidepanel-body>
         <kbq-sidepanel-footer>
             <kbq-sidepanel-actions>
-                <button kbq-button kbq-sidepanel-close>{{ t().close }}</button>
+                <button kbq-button kbq-sidepanel-close type="button">{{ t().close }}</button>
             </kbq-sidepanel-actions>
         </kbq-sidepanel-footer>
     `,
@@ -36,7 +36,7 @@ export class ExampleSidepanelWithCustomInjectorContent {
     selector: 'sidepanel-with-custom-injector-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="open()">
+        <button kbq-button type="button" (click)="open()">
             <span>{{ t().open }}</span>
         </button>
     `,

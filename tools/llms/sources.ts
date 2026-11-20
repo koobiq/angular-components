@@ -10,16 +10,16 @@ import {
 } from '../../apps/docs/src/app/page-paths';
 import {
     docsGetItemById,
-    DocsStructureCategoryId,
-    DocsStructureItem,
+    type DocsStructureCategoryId,
+    type DocsStructureItem,
     DocsStructureItemId,
     DocsStructureItemTab,
     DocsStructureTokensTab
 } from '../../apps/docs/src/app/structure';
 import { EXAMPLE_COMPONENTS } from '../../packages/docs-examples/example-module';
-import { DocEntry } from '../api-gen/rendering/entities';
+import type { DocEntry } from '../api-gen/rendering/entities';
 import { DOCS_PAGE_SOURCES, parsePageSource } from '../docs-pages/sources';
-import { LlmsExample, LlmsExampleFile } from './page-markdown';
+import type { LlmsExample, LlmsExampleFile } from './page-markdown';
 
 /** The site of the latest major version, which the committed `llms.txt` and the skills link. */
 export const KOOBIQ_SITE_ORIGIN = 'https://koobiq.io';
@@ -29,7 +29,7 @@ export const KOOBIQ_SITE_ORIGIN = 'https://koobiq.io';
  * agent that reads the Markdown of `next.koobiq.io` or of `v21.koobiq.io` stays on that version. The workflow that
  * deploys a site to another address sets `KOOBIQ_DOCS_ORIGIN`.
  */
-export const LLMS_SITE_ORIGIN = (process.env.KOOBIQ_DOCS_ORIGIN || KOOBIQ_SITE_ORIGIN).replace(/\/+$/, '');
+export const LLMS_SITE_ORIGIN = (process.env['KOOBIQ_DOCS_ORIGIN'] || KOOBIQ_SITE_ORIGIN).replace(/\/+$/, '');
 
 /** The address of a file of the documentation for agents, by its path under the root of the site. */
 export const getSiteUrl = (path: string): string => `${LLMS_SITE_ORIGIN}/${path}`;
@@ -107,8 +107,9 @@ export const resolveSiteUrl = (url: string): string => {
     if (isAbsoluteUrl(local) || local.startsWith('#')) return local;
 
     // The base href of the site is `/`, so a link without the leading slash leads from its root as well.
-    const [path, hash] = (local.startsWith('/') ? local : `/${local}`).split('#');
-    const [locale, categoryId, id, tab] = path.split('?')[0].split('/').filter(Boolean);
+    const [path = '', hash] = (local.startsWith('/') ? local : `/${local}`).split('#');
+    const [pathname = ''] = path.split('?');
+    const [locale = '', categoryId, id, tab] = pathname.split('/').filter(Boolean);
     const item =
         Object.values<string>(DocsLocale).includes(locale) &&
         docsGetItemById(id as DocsStructureItemId, categoryId as DocsStructureCategoryId);

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
-import { KbqDefaultSizes } from '@koobiq/components/core';
+import type { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
@@ -33,8 +33,8 @@ import { TRANSLATIONS } from './l10n';
             <h2 kbq-empty-state-title>{{ t().noGroups }}</h2>
             <div kbq-empty-state-text>{{ t().agentsGroupText }}</div>
             <div kbq-empty-state-actions>
-                <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'">
-                    <i kbq-icon="kbq-plus_16" [color]="'theme'"></i>
+                <button kbq-button type="button" color="theme" kbqStyle="transparent">
+                    <i kbq-icon="kbq-plus_16" color="theme"></i>
                     {{ t().createGroup }}
                 </button>
             </div>

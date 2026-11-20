@@ -1,9 +1,8 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-toast($style-name) {
-    box-shadow: var(--kbq-toast-#{$style-name}-container-shadow);
-
     background: var(--kbq-toast-#{$style-name}-container-background);
+    box-shadow: var(--kbq-toast-#{$style-name}-container-shadow);
 
     .kbq-toast__title {
         color: var(--kbq-toast-#{$style-name}-container-title);
@@ -37,6 +36,6 @@
 @mixin kbq-toast-typography() {
     // `.kbq-toast__title` inherits this level, so emitting the identical one for it changed nothing.
     .kbq-toast {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }

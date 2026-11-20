@@ -1,4 +1,4 @@
-import { CdkScrollable, OverlayRef } from '@angular/cdk/overlay';
+import type { CdkScrollable, OverlayRef } from '@angular/cdk/overlay';
 
 /** @docs-private */
 export function isScrollFromInsideOverlay(overlayRef: OverlayRef, scrollable: CdkScrollable | void): boolean {

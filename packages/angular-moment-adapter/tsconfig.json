@@ -9,6 +9,8 @@
         }
     },
     "include": ["./**/*.ts"],
+    // The editor finds them through packages/tsconfig.json, under the strictness of the specs.
+    "exclude": ["**/*.spec.ts", "**/*.spec-helper.ts", "**/*.playwright-spec.ts"],
     "angularCompilerOptions": {
         "annotateForClosureCompiler": true,
         "flatModuleId": "@koobiq/angular-moment-adapter",

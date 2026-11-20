@@ -5,7 +5,7 @@ import { KbqDividerModule } from '@koobiq/components/divider';
     selector: 'dev-app',
     imports: [KbqDividerModule],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

@@ -51,7 +51,7 @@ export class InlineEditOverviewExample {
         return this.t().placeholder;
     }
     protected readonly options = Array.from({ length: 10 }, (_, i) => 'Option #' + i);
-    protected value: string[] = [this.options[0]];
+    protected value: string[] = this.options.slice(0, 1);
     protected readonly displayValue = signal(this.value);
 
     protected update(): void {

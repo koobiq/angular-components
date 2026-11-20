@@ -20,8 +20,8 @@ import { TRANSLATIONS } from './l10n';
             <i
                 kbq-empty-state-icon
                 kbq-icon-item="kbq-triangle-exclamation_16"
+                color="contrast"
                 [big]="true"
-                [color]="'contrast'"
                 [fade]="true"
             ></i>
             <h2 kbq-empty-state-title>{{ t().errorTitle }}</h2>
@@ -29,7 +29,7 @@ import { TRANSLATIONS } from './l10n';
                 {{ t().errorText }}
             </div>
             <div kbq-empty-state-actions>
-                <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'">{{ t().refresh }}</button>
+                <button kbq-button type="button" color="theme" kbqStyle="transparent">{{ t().refresh }}</button>
             </div>
         </kbq-empty-state>
     `,

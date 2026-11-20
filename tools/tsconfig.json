@@ -1,0 +1,6 @@
+{
+    // Only for the editor: the projects under tools/ leave the specs out, so the editor looks further up, reaches this
+    // file and follows its reference to the project that types them.
+    "files": [],
+    "references": [{ "path": "../tsconfig.spec.json" }]
+}

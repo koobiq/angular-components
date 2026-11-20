@@ -34,9 +34,9 @@
 
 <ng-template #customFooter>
     <div class="flex-100 layout-row layout-align-space-between-center">
-        <button kbq-button class="step" [color]="'contrast'" (click)="changeStep(-1)">&larr; Назад</button>
+        <button kbq-button class="step" color="contrast" (click)="changeStep(-1)">&larr; Назад</button>
 
-        <button kbq-button class="step" [color]="'contrast'" (click)="changeStep(1)">Дальше &rarr;</button>
+        <button kbq-button class="step" color="contrast" (click)="changeStep(1)">Дальше &rarr;</button>
     </div>
 </ng-template>
 
@@ -49,23 +49,21 @@
     No `kbqTrigger` here: the input alias is shared, so binding it would reconfigure both directives at once.
 -->
 <div class="dev-section layout-row layout-align-start-center">
-    <button kbq-button kbqPopover [kbqPopoverContent]="'Popover content'" [kbqTooltip]="'Popover trigger tooltip'">
+    <button kbq-button kbqPopover kbqPopoverContent="Popover content" kbqTooltip="Popover trigger tooltip">
         Popover
     </button>
 
     <button
         kbq-button
         kbqPopover
-        [kbqPopoverContent]="'Popover content'"
-        [kbqTooltip]="'Backdrop trigger tooltip'"
+        kbqPopoverContent="Popover content"
+        kbqTooltip="Backdrop trigger tooltip"
         [kbqPopoverHasBackdrop]="true"
     >
         Popover with backdrop
     </button>
 
-    <button kbq-button [kbqDropdownTriggerFor]="siblingDropdown" [kbqTooltip]="'Dropdown trigger tooltip'">
-        Dropdown
-    </button>
+    <button kbq-button kbqTooltip="Dropdown trigger tooltip" [kbqDropdownTriggerFor]="siblingDropdown">Dropdown</button>
 
     <kbq-dropdown #siblingDropdown="kbqDropdown">
         <button kbq-dropdown-item>Item</button>
@@ -92,7 +90,7 @@
                 <label for="element" class="kbq-form__label">Choose trigger element</label>
 
                 <kbq-form-field id="element" class="kbq-form__control">
-                    <kbq-select [placeholder]="'Select element'" [(value)]="selectedElement">
+                    <kbq-select placeholder="Select element" [(value)]="selectedElement">
                         <kbq-option [value]="ELEMENTS.BUTTON">Button</kbq-option>
                         <kbq-option [value]="ELEMENTS.CONFIRM_BUTTON">Confirm Button</kbq-option>
                         <kbq-option [value]="ELEMENTS.ICON">Icon</kbq-option>
@@ -111,7 +109,7 @@
 
                 <div class="kbq-form__control">
                     <kbq-form-field id="trigger">
-                        <kbq-select [placeholder]="'Select trigger'" [(value)]="selectedTrigger">
+                        <kbq-select placeholder="Select trigger" [(value)]="selectedTrigger">
                             <kbq-option [value]="TRIGGERS.CLICK">Click</kbq-option>
                             <kbq-option [value]="TRIGGERS.HOVER">Hover</kbq-option>
                             <kbq-option [value]="TRIGGERS.FOCUS">Focus</kbq-option>
@@ -135,7 +133,7 @@
                 <label for="size" class="kbq-form__label">Choose popover size</label>
 
                 <kbq-form-field id="size" class="kbq-form__control">
-                    <kbq-select [placeholder]="'Select size'" [(value)]="selectedSize">
+                    <kbq-select placeholder="Select size" [(value)]="selectedSize">
                         <kbq-option [value]="SIZE.SMALL">Small</kbq-option>
                         <kbq-option [value]="SIZE.MEDIUM">Medium</kbq-option>
                         <kbq-option [value]="SIZE.LARGE">Large</kbq-option>
@@ -147,16 +145,16 @@
                 <label for="layout" class="kbq-form__label">Choose layout content placement</label>
 
                 <kbq-form-field id="layout" class="kbq-form__control">
-                    <kbq-select [placeholder]="'Select layout'" [(value)]="layoutClass">
-                        <kbq-option [value]="'layout-row layout-align-start-start'">Start start</kbq-option>
-                        <kbq-option [value]="'layout-row layout-align-start-center'">Start center</kbq-option>
-                        <kbq-option [value]="'layout-row layout-align-start-end'">Start end</kbq-option>
-                        <kbq-option [value]="'layout-row layout-align-center-start'">Center start</kbq-option>
-                        <kbq-option [value]="'layout-row layout-align-center-center'">Center center</kbq-option>
-                        <kbq-option [value]="'layout-row layout-align-center-end'">Center end</kbq-option>
-                        <kbq-option [value]="'layout-row layout-align-end-start'">End start</kbq-option>
-                        <kbq-option [value]="'layout-row layout-align-end-center'">End center</kbq-option>
-                        <kbq-option [value]="'layout-row layout-align-end-end'">End end</kbq-option>
+                    <kbq-select placeholder="Select layout" [(value)]="layoutClass">
+                        <kbq-option value="layout-row layout-align-start-start">Start start</kbq-option>
+                        <kbq-option value="layout-row layout-align-start-center">Start center</kbq-option>
+                        <kbq-option value="layout-row layout-align-start-end">Start end</kbq-option>
+                        <kbq-option value="layout-row layout-align-center-start">Center start</kbq-option>
+                        <kbq-option value="layout-row layout-align-center-center">Center center</kbq-option>
+                        <kbq-option value="layout-row layout-align-center-end">Center end</kbq-option>
+                        <kbq-option value="layout-row layout-align-end-start">End start</kbq-option>
+                        <kbq-option value="layout-row layout-align-end-center">End center</kbq-option>
+                        <kbq-option value="layout-row layout-align-end-end">End end</kbq-option>
                     </kbq-select>
                 </kbq-form-field>
             </div>
@@ -176,7 +174,7 @@
                 <label for="layout" class="kbq-form__label">Stick to window</label>
 
                 <kbq-form-field id="layout" class="kbq-form__control">
-                    <kbq-select [placeholder]="'Select layout'" [(value)]="stickToWindow">
+                    <kbq-select placeholder="Select layout" [(value)]="stickToWindow">
                         <kbq-option [value]="popUpPlacements.Top">{{ popUpPlacements.Top }}</kbq-option>
                         <kbq-option [value]="popUpPlacements.Right">{{ popUpPlacements.Right }}</kbq-option>
                         <kbq-option [value]="popUpPlacements.Bottom">{{ popUpPlacements.Bottom }}</kbq-option>
@@ -327,18 +325,24 @@
         </div>
     </div>
 
-    <div class="{{ layoutClass }} dev-result" cdkScrollable style="overflow: scroll" [style.order]="getOrder('result')">
+    <div
+        class="dev-result"
+        cdkScrollable
+        style="overflow: scroll"
+        [class]="layoutClass"
+        [style.order]="getOrder('result')"
+    >
         <div style="min-width: 1500px; display: flex; justify-content: center">
             @switch (showElement()) {
                 @case (ELEMENTS.BUTTON) {
                     <button
                         kbq-button
                         kbqPopover
+                        kbqPopoverClass="dev-popover-485"
+                        kbqPopoverHeader="Сегодня этот текст используют практически все дизайнеры, набирающие рыбу латиницей. Абзац считается каноническим во всех справочниках по типографике и предлагается к использованию в статьях, посвященных изготовлению макета верстки при отсутствии финальных текстов. В руководствах по работе с фирменным стилем крупных международных компаний именно с этих слов начинаются образцы верстки. Существуют даже издания с названием Lorem ipsum"
                         [kbqPopoverHasCloseButton]="isClosable"
-                        [kbqPopoverClass]="'dev-popover-485'"
                         [kbqPopoverContent]="customContent"
                         [kbqPopoverFooter]="customFooter"
-                        [kbqPopoverHeader]="'Сегодня этот текст используют практически все дизайнеры, набирающие рыбу латиницей. Абзац считается каноническим во всех справочниках по типографике и предлагается к использованию в статьях, посвященных изготовлению макета верстки при отсутствии финальных текстов. В руководствах по работе с фирменным стилем крупных международных компаний именно с этих слов начинаются образцы верстки. Существуют даже издания с названием Lorem ipsum'"
                         [kbqPopoverPlacement]="selectedPlacement"
                         [kbqPopoverPlacementPriority]="multipleSelected"
                         [kbqPopoverSize]="selectedSize"
@@ -354,7 +358,7 @@
                     <button
                         kbq-button
                         kbqPopoverConfirm
-                        [kbqPopoverClass]="'dev-popover-485'"
+                        kbqPopoverClass="dev-popover-485"
                         [kbqPopoverConfirmButtonText]="confirmButtonText"
                         [kbqPopoverConfirmText]="confirmText"
                         [kbqPopoverPlacement]="selectedPlacement"
@@ -372,10 +376,10 @@
                             kbqInput
                             kbqPopover
                             placeholder="Button content"
-                            [kbqPopoverClass]="'dev-popover-485'"
+                            kbqPopoverClass="dev-popover-485"
+                            kbqPopoverHeader="Lorem ipsum"
                             [kbqPopoverContent]="customContent"
                             [kbqPopoverFooter]="customFooter"
-                            [kbqPopoverHeader]="'Lorem ipsum'"
                             [kbqPopoverPlacement]="selectedPlacement"
                             [kbqPopoverPlacementPriority]="multipleSelected"
                             [kbqPopoverSize]="selectedSize"
@@ -391,10 +395,10 @@
                         <i
                             kbq-icon="kbq-calendar_16"
                             kbqPopover
-                            [kbqPopoverClass]="'dev-popover-485'"
+                            kbqPopoverClass="dev-popover-485"
+                            kbqPopoverHeader="Header text"
                             [kbqPopoverContent]="customContent"
                             [kbqPopoverFooter]="customFooter"
-                            [kbqPopoverHeader]="'Header text'"
                             [kbqPopoverPlacement]="selectedPlacement"
                             [kbqPopoverPlacementPriority]="multipleSelected"
                             [kbqPopoverSize]="selectedSize"
@@ -409,10 +413,10 @@
                         <span
                             kbqLink
                             kbqPopover
-                            [kbqPopoverClass]="'dev-popover-485'"
+                            kbqPopoverClass="dev-popover-485"
+                            kbqPopoverHeader="Header text"
                             [kbqPopoverContent]="customContent"
                             [kbqPopoverFooter]="customFooter"
-                            [kbqPopoverHeader]="'Header text'"
                             [kbqPopoverPlacement]="selectedPlacement"
                             [kbqPopoverPlacementPriority]="multipleSelected"
                             [kbqPopoverSize]="selectedSize"
@@ -431,10 +435,10 @@
                                 <span
                                     kbqLink
                                     kbqPopover
-                                    [kbqPopoverClass]="'dev-popover-485'"
+                                    kbqPopoverClass="dev-popover-485"
+                                    kbqPopoverHeader="Сегодня этот текст используют практически все дизайнеры, набирающие рыбу латиницей. Абзац считается каноническим во всех справочниках по типографике и предлагается к использованию в статьях, посвященных изготовлению макета верстки при отсутствии финальных текстов. В руководствах по работе с фирменным стилем крупных международных компаний именно с этих слов начинаются образцы верстки. Существуют даже издания с названием Lorem ipsum"
                                     [kbqPopoverContent]="customContent"
                                     [kbqPopoverFooter]="customFooter"
-                                    [kbqPopoverHeader]="'Сегодня этот текст используют практически все дизайнеры, набирающие рыбу латиницей. Абзац считается каноническим во всех справочниках по типографике и предлагается к использованию в статьях, посвященных изготовлению макета верстки при отсутствии финальных текстов. В руководствах по работе с фирменным стилем крупных международных компаний именно с этих слов начинаются образцы верстки. Существуют даже издания с названием Lorem ipsum'"
                                     [kbqPopoverPlacement]="selectedPlacement"
                                     [kbqPopoverPlacementPriority]="multipleSelected"
                                     [kbqPopoverSize]="selectedSize"
@@ -451,8 +455,8 @@
                                 <button
                                     kbq-button
                                     kbqPopover
+                                    kbqPopoverClass="dev-popover-485"
                                     [kbqPopoverHasCloseButton]="true"
-                                    [kbqPopoverClass]="'dev-popover-485'"
                                     [kbqPopoverContent]="customContent"
                                     [kbqPopoverFooter]="customFooter"
                                     [kbqPopoverPlacement]="selectedPlacement"

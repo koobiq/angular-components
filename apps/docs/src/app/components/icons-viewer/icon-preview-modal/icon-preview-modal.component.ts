@@ -19,7 +19,7 @@ import { KBQ_MODAL_DATA, KbqModalModule, KbqModalRef } from '@koobiq/components/
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { DocsClipboardService } from 'src/app/services/clipboard';
-import { DocsIconItem } from 'src/app/services/icon-items';
+import type { DocsIconItem } from 'src/app/services/icon-items';
 import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsCodeSnippetDirective } from '../../code-snippet/code-snippet';
 
@@ -44,7 +44,7 @@ export type DocsIconPreviewModalData = {
         DocsCodeSnippetDirective
     ],
     templateUrl: './icon-preview-modal.template.html',
-    styleUrls: ['./icon-preview-modal.scss'],
+    styleUrl: './icon-preview-modal.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -138,9 +138,9 @@ export class DocsIconPreviewModalComponent extends DocsLocaleState {
         ctx.fillStyle = color;
         ctx.fillRect(0, 0, 1, 1);
 
-        const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+        const rgb = Array.from(ctx.getImageData(0, 0, 1, 1).data.slice(0, 3));
 
-        return `#${[r, g, b]
+        return `#${rgb
             .map((v) => v.toString(16).padStart(2, '0'))
             .join('')
             .toUpperCase()}`;

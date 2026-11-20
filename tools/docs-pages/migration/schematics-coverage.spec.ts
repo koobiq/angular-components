@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { compilePage } from '../compile-page';
-import { DocsMigrationSection, docsFindMigrationSchematics, docsSplitMigrationSections } from './migration-steps';
+import { docsFindMigrationSchematics, type DocsMigrationSection, docsSplitMigrationSections } from './migration-steps';
 
 /**
  * Every `ng update` migration is a breaking change a consumer has to act on, so every one of them

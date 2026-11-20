@@ -1,16 +1,9 @@
-import { ListRange } from '@angular/cdk/collections';
+import type { ListRange } from '@angular/cdk/collections';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 // import { AsyncPipe } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    inject,
-    OnInit,
-    signal,
-    viewChild,
-    ViewEncapsulation
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, viewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
+import { map, merge, type Observable, of } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
@@ -20,11 +13,9 @@ import {
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqSelectChange, KbqSelectModule, kbqSelectOptionsProvider } from '@koobiq/components/select';
+import { type KbqSelectChange, KbqSelectModule, kbqSelectOptionsProvider } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { SelectExamplesModule } from 'packages/docs-examples/components/select';
-import { merge, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { DevThemeToggle } from '../theme-toggle';
 import { DEV_OPTIONS } from './mock';
 
@@ -287,7 +278,7 @@ export class DevPanelAnchor {
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class DevApp implements OnInit {
+export class DevApp {
     singleSelected = '';
     multipleSelected = ['Disabled', 'Normal', 'Hovered', 'Selected', 'Selected1'];
     multipleSelectedForCustomTagText = ['Normal', 'Hovered'];
@@ -300,10 +291,16 @@ export class DevApp implements OnInit {
     multiSelectSelectFormControl = new UntypedFormControl([], Validators.pattern(/^w/));
 
     searchCtrl: UntypedFormControl = new UntypedFormControl();
-    filteredOptions: Observable<string[]>;
+    filteredOptions: Observable<string[]> = merge(
+        of(DEV_OPTIONS),
+        this.searchCtrl.valueChanges.pipe(map((value) => this.getFilteredOptions(value)))
+    );
 
     multipleSearchCtrl: UntypedFormControl = new UntypedFormControl();
-    filteredMultipleOptions: Observable<string[]>;
+    filteredMultipleOptions: Observable<string[]> = merge(
+        of(DEV_OPTIONS),
+        this.multipleSearchCtrl.valueChanges.pipe(map((value) => this.getFilteredOptions(value)))
+    );
 
     optionCounter = 0;
 
@@ -323,21 +320,9 @@ export class DevApp implements OnInit {
 
     readonly cdkVirtualScrollViewport = viewChild.required(CdkVirtualScrollViewport);
 
-    ngOnInit(): void {
-        this.filteredOptions = merge(
-            of(DEV_OPTIONS),
-            this.searchCtrl.valueChanges.pipe(map((value) => this.getFilteredOptions(value)))
-        );
-
-        this.filteredMultipleOptions = merge(
-            of(DEV_OPTIONS),
-            this.multipleSearchCtrl.valueChanges.pipe(map((value) => this.getFilteredOptions(value)))
-        );
-    }
-
     compareWithById = (o1: any, o2: any): boolean => o1 && o2 && o1.id === o2.id;
 
-    openedChange(opened) {
+    openedChange(opened: boolean) {
         console.log('openedChange: ', opened);
 
         if (!opened) {
@@ -354,16 +339,16 @@ export class DevApp implements OnInit {
         return `${hiddenItemsText} ${hiddenItems}`;
     }
 
-    opened($event) {
-        console.log('opened: ', $event);
+    opened() {
+        console.log('opened');
     }
 
-    closed($event) {
-        console.log('closed: ', $event);
+    closed() {
+        console.log('closed');
     }
 
-    private getFilteredOptions(value): string[] {
-        const searchFilter = value && value.new ? value.value : value;
+    private getFilteredOptions(value: string | { new: true; value: string } | null): string[] {
+        const searchFilter = typeof value === 'string' ? value : value?.value;
 
         return searchFilter
             ? this.options.filter((option) => option.toLowerCase().includes(searchFilter.toLowerCase()))

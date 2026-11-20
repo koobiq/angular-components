@@ -1,7 +1,18 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, DebugElement, effect, ErrorHandler, model, Provider, signal, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+    Component,
+    type DebugElement,
+    effect,
+    ErrorHandler,
+    model,
+    type Provider,
+    signal,
+    type Type,
+    viewChild
+} from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { EMPTY, of, Subject } from 'rxjs';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import {
     dispatchFakeEvent,
@@ -9,12 +20,11 @@ import {
     ESCAPE,
     KBQ_STATE_STORE,
     KbqStateSavingService,
-    KbqStateStore
+    type KbqStateStore
 } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { EMPTY, of, Subject } from 'rxjs';
-import { KbqContentPanelBeforeClose, KbqContentPanelContainer } from './content-panel';
+import { type KbqContentPanelBeforeClose, KbqContentPanelContainer } from './content-panel';
 import { KbqContentPanelModule } from './module';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {

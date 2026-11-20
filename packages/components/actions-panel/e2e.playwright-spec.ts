@@ -1,4 +1,4 @@
-import { expect, Locator, Page, test } from '@playwright/test';
+import { expect, type Locator, type Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme } from 'packages/e2e/utils';
 
 // Spelled out rather than imported from the component package: a Playwright spec runs in Node, and pulling in an

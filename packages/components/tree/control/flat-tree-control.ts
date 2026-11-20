@@ -1,7 +1,7 @@
 import { escapeRegExp } from '@koobiq/components/core';
 import { BaseTreeControl } from './base-tree-control';
-import { FilterByViewValue, FilterParentsForNodes, FlatTreeControlFilter } from './flat-tree-control.filters';
-import { KbqTreeControlOptions } from './tree-control';
+import { FilterByViewValue, FilterParentsForNodes, type FlatTreeControlFilter } from './flat-tree-control.filters';
+import type { KbqTreeControlOptions } from './tree-control';
 
 export function defaultCompareValues(firstValue: string, secondValue: string): boolean {
     return firstValue === secondValue;
@@ -15,7 +15,7 @@ export function defaultCompareViewValues(firstViewValue: string, secondViewValue
 export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
     expandedItemsBeforeFiltration: K[] = [];
 
-    private filters: FlatTreeControlFilter<T>[];
+    private filters: FlatTreeControlFilter<T>[] = [];
 
     // Positions in each `dataNodes` array: a tree looks up every rendered row, and `indexOf` would make that
     // rows × nodes. Keyed weakly by the array, so replacing `dataNodes` releases the old nodes.
@@ -23,16 +23,16 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
 
     /** Construct with flat tree data node functions getLevel, isExpandable, getValue and getViewValue. */
     constructor(
-        public getLevel: (dataNode: T) => number,
-        public isExpandable: (dataNode: T) => boolean,
+        public override getLevel: (dataNode: T) => number,
+        public override isExpandable: (dataNode: T) => boolean,
         /** getValue will be used to determine if the tree contains value or not. Used in method hasValue */
         public getValue: (dataNode: T) => any,
         /** getViewValue will be used for filter nodes. Returned value will be first argument in filterNodesFunction */
         public getViewValue: (dataNode: T) => string,
         /** compareValues will be used to comparing values. */
-        public compareValues: (firstValue, secondValue) => boolean = defaultCompareValues,
+        public compareValues: (firstValue: any, secondValue: any) => boolean = defaultCompareValues,
         /** compareValues will be used to comparing values. */
-        public compareViewValues: (firstViewValue, secondViewValue) => boolean = defaultCompareViewValues,
+        public compareViewValues: (firstViewValue: any, secondViewValue: any) => boolean = defaultCompareViewValues,
         /** isDisabled will be used to determine if the node is disabled. */
         public isDisabled: (dataNode: T) => boolean = () => false,
         /** Further options: the `trackBy` the nodes are expanded by. */
@@ -71,10 +71,10 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
         // sibling of an ancestor.
         for (
             let i = startIndex + 1;
-            i < this.dataNodes.length && this.getLevel(dataNode) < this.getLevel(this.dataNodes[i]);
+            i < this.dataNodes.length && this.getLevel(dataNode) < this.getLevel(this.dataNodes[i]!);
             i++
         ) {
-            results.push(this.dataNodes[i]);
+            results.push(this.dataNodes[i]!);
         }
 
         return results;
@@ -111,7 +111,7 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
         let level = this.getLevel(node);
 
         for (let i = startIndex - 1; i >= 0 && level > 0; i--) {
-            const candidate = this.dataNodes[i];
+            const candidate = this.dataNodes[i]!;
             const candidateLevel = this.getLevel(candidate);
 
             if (candidateLevel < level) {
@@ -160,13 +160,13 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
 
         this.updateFilterValue(value);
 
-        Promise.resolve().then(() => this.restoreExpansionState());
+        void Promise.resolve().then(() => this.restoreExpansionState());
     }
 
     /** Clears the active filter and restores the expansion state saved before filtering. */
     resetFilter(): void {
         if (this.hasActiveFilter) {
-            Promise.resolve().then(() => this.restoreExpansionState());
+            void Promise.resolve().then(() => this.restoreExpansionState());
         }
 
         this.filterQuery = null;
@@ -184,7 +184,7 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
     }
 
     private updateFilterValue(value: T[] | string | null) {
-        Promise.resolve().then(() => this.filterValue.next(value));
+        void Promise.resolve().then(() => this.filterValue.next(value));
     }
 
     private saveExpansionState() {

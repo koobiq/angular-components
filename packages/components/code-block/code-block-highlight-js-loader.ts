@@ -81,7 +81,7 @@ export class KbqCodeBlockHighlightJsLoader {
             Promise.all(entries.map(([, loader]) => loader()))
         ]);
 
-        entries.forEach(([name], index) => instance.registerLanguage(name, loaded[index].default));
+        entries.forEach(([name], index) => instance.registerLanguage(name, loaded[index]!.default));
 
         // The directive falls back to plain text, and highlight.js throws on a language it has not registered, as the
         // core has none.

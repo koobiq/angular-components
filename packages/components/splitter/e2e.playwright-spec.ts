@@ -1,4 +1,4 @@
-import { expect, Locator, Page, test } from '@playwright/test';
+import { expect, type Locator, type Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme } from '../../e2e/utils';
 
 const getPanel = (page: Page, name: 'First' | 'Second' | 'Third') => page.getByTestId(`e2eSplitterPanel${name}`);

@@ -1,8 +1,5 @@
-@use '../core/styles/common/select' as *;
-
-@use '../core/styles/common/tokens' as *;
-
-@use './select-theme' as *;
+@use '../core/styles/common/select';
+@use './select-theme';
 
 .kbq-select {
     @extend %kbq-select-base;
@@ -40,7 +37,7 @@
     @extend %kbq-select-content;
 
     .kbq-option {
-        @include item-active-area(var(--kbq-size-3xs));
+        @include select.item-active-area(var(--kbq-size-3xs));
     }
 
     &:not(:has(> .kbq-select__no-options-message)) .cdk-virtual-scroll-viewport {
@@ -53,5 +50,5 @@
     }
 }
 
-@include kbq-select-theme();
-@include kbq-select-typography();
+@include select-theme.kbq-select-theme();
+@include select-theme.kbq-select-typography();

@@ -1,5 +1,5 @@
-import { DocEntry, MemberEntry } from '../rendering/entities';
-import { EntryCollection, PackageApiInfo } from '../types';
+import type { DocEntry, MemberEntry } from '../rendering/entities';
+import type { EntryCollection, PackageApiInfo } from '../types';
 import { getApiLookupKey, isDocumentedMember, isPublic } from './helpers';
 
 export function generateManifest(apiCollections: EntryCollection[]): EntryCollection<DocEntry>[] {

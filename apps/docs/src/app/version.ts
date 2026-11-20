@@ -6,4 +6,4 @@ export const docsDevVersionPlaceholder = '0.0.0-dev';
 
 const version = VERSION.full === '{{VERSION}}' ? new Version(docsDevVersionPlaceholder) : VERSION;
 
-export const docsKoobiqVersion = version.full.match(/(\d+\.\d+\.\d+(?:[^\+]*))/)![1];
+export const docsKoobiqVersion = version.full.match(/(\d+\.\d+\.\d+(?:[^+]*))/)![1];

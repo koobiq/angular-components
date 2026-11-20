@@ -8,24 +8,25 @@ import { SelectCustomTriggerExample } from './select-custom-trigger/select-custo
 import { SelectDisabledExample } from './select-disabled/select-disabled-example';
 import { SelectFooterExample } from './select-footer/select-footer-example';
 import { SelectGroupsExample } from './select-groups/select-groups-example';
+import { SelectGroupsLabelExample } from './select-groups-label/select-groups-label-example';
 import { SelectHeightExample } from './select-height/select-height-example';
 import { SelectIconExample } from './select-icon/select-icon-example';
-import { SelectLoadingErrorCustomExample } from './select-loading-error-custom/select-loading-error-custom-example';
-import { SelectLoadingErrorExample } from './select-loading-error/select-loading-error-example';
 import { SelectLoadingExample } from './select-loading/select-loading-example';
+import { SelectLoadingErrorExample } from './select-loading-error/select-loading-error-example';
+import { SelectLoadingErrorCustomExample } from './select-loading-error-custom/select-loading-error-custom-example';
 import { SelectLocaleConfigurationExample } from './select-locale-configuration/select-locale-configuration-example';
 import { SelectMultipleExample } from './select-multiple/select-multiple-example';
 import { SelectNoVariantsExample } from './select-no-variants/select-no-variants-example';
 import { SelectOverviewExample } from './select-overview/select-overview-example';
-import { SelectPagingErrorExample } from './select-paging-error/select-paging-error-example';
 import { SelectPagingExample } from './select-paging/select-paging-example';
+import { SelectPagingErrorExample } from './select-paging-error/select-paging-error-example';
 import { SelectPreselectedValuesExample } from './select-preselected-values/select-preselected-values-example';
 import { SelectPrioritizedSelectedExample } from './select-prioritized-selected/select-prioritized-selected-example';
-import { SelectScrollingAndLayeringPageExample } from './select-scrolling-and-layering-page/select-scrolling-and-layering-page-example';
 import { SelectScrollingAndLayeringExample } from './select-scrolling-and-layering/select-scrolling-and-layering-example';
+import { SelectScrollingAndLayeringPageExample } from './select-scrolling-and-layering-page/select-scrolling-and-layering-page-example';
 import { SelectSearchExample } from './select-search/select-search-example';
-import { SelectSelectAllLabelExample } from './select-select-all-label/select-select-all-label-example';
 import { SelectSelectAllExample } from './select-select-all/select-select-all-example';
+import { SelectSelectAllLabelExample } from './select-select-all-label/select-select-all-label-example';
 import { SelectTwoLineOptionExample } from './select-two-line-option/select-two-line-option-example';
 import { SelectValidationExample } from './select-validation/select-validation-example';
 import { SelectVirtualScrollExample } from './select-virtual-scroll/select-virtual-scroll-example';
@@ -45,6 +46,7 @@ export {
     SelectDisabledExample,
     SelectFooterExample,
     SelectGroupsExample,
+    SelectGroupsLabelExample,
     SelectHeightExample,
     SelectIconExample,
     SelectLoadingErrorCustomExample,
@@ -85,6 +87,7 @@ const EXAMPLES = [
     SelectSelectAllLabelExample,
     SelectPreselectedValuesExample,
     SelectGroupsExample,
+    SelectGroupsLabelExample,
     SelectHeightExample,
     SelectIconExample,
     SelectFooterExample,

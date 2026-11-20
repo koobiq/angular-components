@@ -1,6 +1,6 @@
-import { InjectionToken, Provider } from '@angular/core';
+import { InjectionToken, type Provider } from '@angular/core';
 import { enUSFormattersData, kbqLocaleConfigurationOverrideProvider } from '../../locales';
-import { KbqDeepPartial } from '../../utils';
+import type { KbqDeepPartial } from '../../utils';
 
 /**
  * Available unit systems for file size formatting.

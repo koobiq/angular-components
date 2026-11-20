@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { MarkdownArticleExample } from './markdown-article/markdown-article-example';
-import { MarkdownCodeBlockExample } from './markdown-code-block/markdown-code-block-example';
 import { MarkdownCodeExample } from './markdown-code/markdown-code-example';
+import { MarkdownCodeBlockExample } from './markdown-code-block/markdown-code-block-example';
 import { MarkdownDividerExample } from './markdown-divider/markdown-divider-example';
 import { MarkdownHeadersCombinationsExample } from './markdown-headers-combinations/markdown-headers-combinations-example';
 import { MarkdownImageExample } from './markdown-image/markdown-image-example';
-import { MarkdownLineBreakWithMarkdownTextInputExample } from './markdown-line-break-with-markdown-text-input/markdown-line-break-with-markdown-text-input-example';
 import { MarkdownLineBreakExample } from './markdown-line-break/markdown-line-break-example';
+import { MarkdownLineBreakWithMarkdownTextInputExample } from './markdown-line-break-with-markdown-text-input/markdown-line-break-with-markdown-text-input-example';
 import { MarkdownLinkExample } from './markdown-link/markdown-link-example';
 import { MarkdownListExample } from './markdown-list/markdown-list-example';
 import { MarkdownOverviewExample } from './markdown-overview/markdown-overview-example';

@@ -7,14 +7,14 @@ import {
     inject,
     Injector,
     input,
-    TemplateRef
+    type TemplateRef
 } from '@angular/core';
-import { KbqTimeRangeLocaleConfiguration } from '@koobiq/components/core';
+import type { KbqTimeRangeLocaleConfiguration } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTimeRangeService } from './time-range.service';
-import { KbqTimeRangeCustomizableTitleContext, KbqTimeRangeRange, KbqTimeRangeTitleContext } from './types';
+import type { KbqTimeRangeCustomizableTitleContext, KbqTimeRangeRange, KbqTimeRangeTitleContext } from './types';
 
 /** @docs-private */
 @Component({
@@ -26,8 +26,8 @@ import { KbqTimeRangeCustomizableTitleContext, KbqTimeRangeRange, KbqTimeRangeTi
         KbqIconModule
     ],
     template: `
-        @if (titleTemplate()) {
-            <ng-container *ngTemplateOutlet="titleTemplate()!; context: titleContext() ?? null; injector: injector" />
+        @if (titleTemplate(); as template) {
+            <ng-container *ngTemplateOutlet="template; context: titleContext() ?? null; injector: injector" />
         } @else {
             <a kbqLink pseudo size="normal" [disabled]="disabled()">
                 {{ formattedDate() }}

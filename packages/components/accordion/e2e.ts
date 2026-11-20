@@ -8,15 +8,15 @@ import { KBQ_ANIMATIONS_CONFIG } from '@koobiq/components/core';
     imports: [KbqAccordionModule],
     template: `
         <div data-testid="e2eScreenshotTarget">
-            <kbq-accordion [defaultValue]="'item-1'">
-                <kbq-accordion-item [value]="'item-1'">
+            <kbq-accordion defaultValue="item-1">
+                <kbq-accordion-item value="item-1">
                     <kbq-accordion-header>
                         <button kbq-accordion-trigger type="button">Is it accessible?</button>
                     </kbq-accordion-header>
                     <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
                 </kbq-accordion-item>
 
-                <kbq-accordion-item [disabled]="true" [value]="'item-2'">
+                <kbq-accordion-item value="item-2" [disabled]="true">
                     <kbq-accordion-header>
                         <button kbq-accordion-trigger type="button">Is it unstyled?</button>
                     </kbq-accordion-header>
@@ -25,7 +25,7 @@ import { KBQ_ANIMATIONS_CONFIG } from '@koobiq/components/core';
                     </kbq-accordion-content>
                 </kbq-accordion-item>
 
-                <kbq-accordion-item [value]="'item-3'">
+                <kbq-accordion-item value="item-3">
                     <kbq-accordion-header>
                         <button kbq-accordion-trigger type="button">Can it be animated?</button>
                     </kbq-accordion-header>
@@ -37,15 +37,15 @@ import { KBQ_ANIMATIONS_CONFIG } from '@koobiq/components/core';
 
             <br />
 
-            <kbq-accordion [variant]="'hug'" [defaultValue]="'item-1'">
-                <kbq-accordion-item [value]="'item-1'">
+            <kbq-accordion variant="hug" defaultValue="item-1">
+                <kbq-accordion-item value="item-1">
                     <kbq-accordion-header>
                         <button kbq-accordion-trigger type="button">Is it accessible?</button>
                     </kbq-accordion-header>
                     <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
                 </kbq-accordion-item>
 
-                <kbq-accordion-item [disabled]="true" [value]="'item-2'">
+                <kbq-accordion-item value="item-2" [disabled]="true">
                     <kbq-accordion-header>
                         <button kbq-accordion-trigger type="button">Is it unstyled?</button>
                     </kbq-accordion-header>
@@ -54,7 +54,7 @@ import { KBQ_ANIMATIONS_CONFIG } from '@koobiq/components/core';
                     </kbq-accordion-content>
                 </kbq-accordion-item>
 
-                <kbq-accordion-item [value]="'item-3'">
+                <kbq-accordion-item value="item-3">
                     <kbq-accordion-header>
                         <button kbq-accordion-trigger type="button">Can it be animated?</button>
                     </kbq-accordion-header>
@@ -66,15 +66,15 @@ import { KBQ_ANIMATIONS_CONFIG } from '@koobiq/components/core';
 
             <br />
 
-            <kbq-accordion [variant]="'hugSpaceBetween'" [defaultValue]="'item-1'">
-                <kbq-accordion-item [value]="'item-1'">
+            <kbq-accordion variant="hugSpaceBetween" defaultValue="item-1">
+                <kbq-accordion-item value="item-1">
                     <kbq-accordion-header>
                         <button kbq-accordion-trigger type="button">Is it accessible?</button>
                     </kbq-accordion-header>
                     <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
                 </kbq-accordion-item>
 
-                <kbq-accordion-item [disabled]="true" [value]="'item-2'">
+                <kbq-accordion-item value="item-2" [disabled]="true">
                     <kbq-accordion-header>
                         <button kbq-accordion-trigger type="button">Is it unstyled?</button>
                     </kbq-accordion-header>
@@ -83,7 +83,7 @@ import { KBQ_ANIMATIONS_CONFIG } from '@koobiq/components/core';
                     </kbq-accordion-content>
                 </kbq-accordion-item>
 
-                <kbq-accordion-item [value]="'item-3'">
+                <kbq-accordion-item value="item-3">
                     <kbq-accordion-header>
                         <button kbq-accordion-trigger type="button">Can it be animated?</button>
                     </kbq-accordion-header>
@@ -95,15 +95,15 @@ import { KBQ_ANIMATIONS_CONFIG } from '@koobiq/components/core';
 
             <br />
 
-            <kbq-accordion [type]="'multiple'" [defaultValue]="['item-1', 'item-2', 'item-3']">
-                <kbq-accordion-item [value]="'item-1'">
+            <kbq-accordion type="multiple" [defaultValue]="['item-1', 'item-2', 'item-3']">
+                <kbq-accordion-item value="item-1">
                     <kbq-accordion-header>
                         <button kbq-accordion-trigger type="button">Is it accessible?</button>
                     </kbq-accordion-header>
                     <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
                 </kbq-accordion-item>
 
-                <kbq-accordion-item [disabled]="true" [value]="'item-2'">
+                <kbq-accordion-item value="item-2" [disabled]="true">
                     <kbq-accordion-header>
                         <button kbq-accordion-trigger type="button">Is it unstyled?</button>
                     </kbq-accordion-header>
@@ -112,7 +112,7 @@ import { KBQ_ANIMATIONS_CONFIG } from '@koobiq/components/core';
                     </kbq-accordion-content>
                 </kbq-accordion-item>
 
-                <kbq-accordion-item [value]="'item-3'">
+                <kbq-accordion-item value="item-3">
                     <kbq-accordion-header>
                         <button kbq-accordion-trigger type="button">Can it be animated?</button>
                     </kbq-accordion-header>
@@ -140,15 +140,15 @@ export class E2eAccordionStates {}
 
             <kbq-content-panel>
                 <kbq-content-panel-body>
-                    <kbq-accordion [type]="'multiple'" [defaultValue]="['item-1']">
-                        <kbq-accordion-item [value]="'item-1'">
+                    <kbq-accordion type="multiple" [defaultValue]="['item-1']">
+                        <kbq-accordion-item value="item-1">
                             <kbq-accordion-header>
                                 <button kbq-accordion-trigger type="button">Expanded while the panel is closed</button>
                             </kbq-accordion-header>
                             <kbq-accordion-content>{{ text }}</kbq-accordion-content>
                         </kbq-accordion-item>
 
-                        <kbq-accordion-item [value]="'item-2'">
+                        <kbq-accordion-item value="item-2">
                             <kbq-accordion-header>
                                 <button kbq-accordion-trigger type="button">Expanded in the open panel</button>
                             </kbq-accordion-header>

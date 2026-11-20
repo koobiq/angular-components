@@ -1,13 +1,20 @@
-import { InjectionToken, ModelSignal, OutputEmitterRef, Provider, Signal, TemplateRef } from '@angular/core';
+import {
+    InjectionToken,
+    type ModelSignal,
+    type OutputEmitterRef,
+    type Provider,
+    type Signal,
+    type TemplateRef
+} from '@angular/core';
+import type { BehaviorSubject } from 'rxjs';
 import type { KbqButton } from '@koobiq/components/button';
 import {
-    KbqDeepPartial,
-    KbqFilterBarLocaleConfiguration,
+    type KbqDeepPartial,
+    type KbqFilterBarLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
-    KbqPanelMaxHeight,
+    type KbqPanelMaxHeight,
     ruRULocaleData
 } from '@koobiq/components/core';
-import { BehaviorSubject } from 'rxjs';
 import type { KbqFilterBar } from './filter-bar';
 import type { KbqFilterBarNameContext } from './filter-bar-name';
 
@@ -369,12 +376,12 @@ export interface KbqSaveFilterEvent {
 
 /** Flattened node */
 export class KbqTreeSelectFlatNode {
-    name: string;
+    name = '';
     /** Optional key a name resolver can use to localize the node name. */
     nameKey?: string;
     value: unknown;
-    level: number;
-    expandable: boolean;
+    level = 0;
+    expandable = false;
     parent?: KbqTreeSelectFlatNode;
     /** Second line under `name` in the dropdown of the tree-select pipes. */
     caption?: string;

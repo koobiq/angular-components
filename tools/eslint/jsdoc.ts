@@ -54,7 +54,7 @@ const forbidInternalLineCommentOnMember: Rule.RuleModule = {
     },
     create(context) {
         return {
-            [memberNodes](node) {
+            [memberNodes](node: Rule.Node) {
                 const internalLineComment = context.sourceCode
                     .getCommentsBefore(node)
                     .find(({ type, value }) => type === 'Line' && value.includes('@internal'));

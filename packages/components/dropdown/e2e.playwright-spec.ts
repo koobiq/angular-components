@@ -1,4 +1,4 @@
-import { expect, Locator, Page, test } from '@playwright/test';
+import { expect, type Locator, type Page, test } from '@playwright/test';
 import { e2eDisableResizeObserver, e2eEnableDarkTheme, e2eExpectNoScrollbarAfterFlash } from '../../e2e/utils';
 
 // Mirrors NESTED_PANEL_LEFT_PADDING / NESTED_PANEL_TOP_PADDING from dropdown-trigger.directive.ts.

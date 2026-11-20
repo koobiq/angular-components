@@ -2,7 +2,8 @@
     <kbq-select
         #monthSelect="kbqSelect"
         class="kbq-calendar-header__select"
-        [panelClass]="'kbq-calendar-select-panel'"
+        panelClass="kbq-calendar-select-panel"
+        [aria-label]="a11yLocaleConfiguration().month"
         [tabIndex]="-1"
         [value]="selectedMonth"
         (selectionChange)="onMonthSelected($event.value)"
@@ -10,14 +11,15 @@
         <button
             kbq-button
             kbq-select-matcher
+            type="button"
             class="layout-padding-right-xs"
+            color="contrast"
+            kbqStyle="transparent"
             [class.kbq-active]="monthSelect.panelOpen"
-            [color]="'contrast'"
-            [kbqStyle]="'transparent'"
         >
-            {{ monthNames[selectedMonth].nameShort | titlecase }}
+            {{ monthNames[selectedMonth]?.nameShort | titlecase }}
 
-            <i kbq-icon="kbq-chevron-down-s_16" class="layout-padding-left-3xs" [color]="'contrast'"></i>
+            <i kbq-icon="kbq-chevron-down-s_16" class="layout-padding-left-3xs" color="contrast"></i>
         </button>
 
         @for (month of monthNames; track month.nameShort) {
@@ -29,7 +31,8 @@
 
     <kbq-select
         #yearSelect="kbqSelect"
-        [panelClass]="'kbq-calendar-select-panel'"
+        panelClass="kbq-calendar-select-panel"
+        [aria-label]="a11yLocaleConfiguration().year"
         [tabIndex]="-1"
         [value]="selectedYear"
         (selectionChange)="onYearSelected($event.value)"
@@ -37,10 +40,11 @@
         <button
             kbq-button
             kbq-select-matcher
+            type="button"
             class="layout-padding-right-xs"
+            color="contrast"
+            kbqStyle="transparent"
             [class.kbq-active]="yearSelect.panelOpen"
-            [color]="'contrast'"
-            [kbqStyle]="'transparent'"
         >
             {{ selectedYear }}
 
@@ -58,11 +62,12 @@
 <div class="kbq-calendar-header__button-group">
     <button
         kbq-button
+        type="button"
         class="kbq-calendar-header__previous-button"
+        color="contrast"
+        kbqStyle="transparent"
         [attr.aria-label]="a11yLocaleConfiguration().previousMonth"
-        [color]="'contrast'"
         [disabled]="previousDisabled"
-        [kbqStyle]="'transparent'"
         [tabindex]="-1"
         (click)="selectPreviousMonth()"
     >
@@ -71,10 +76,11 @@
 
     <button
         kbq-button
+        type="button"
+        color="contrast"
+        kbqStyle="transparent"
         [attr.aria-label]="a11yLocaleConfiguration().currentDate"
-        [color]="'contrast'"
         [disabled]="currentDisabled"
-        [kbqStyle]="'transparent'"
         [tabindex]="-1"
         (click)="selectCurrentDate()"
     >
@@ -83,11 +89,12 @@
 
     <button
         kbq-button
+        type="button"
         class="kbq-calendar-header__next-button"
+        color="contrast"
+        kbqStyle="transparent"
         [attr.aria-label]="a11yLocaleConfiguration().nextMonth"
-        [color]="'contrast'"
         [disabled]="nextDisabled"
-        [kbqStyle]="'transparent'"
         [tabindex]="-1"
         (click)="selectNextMonth()"
     >

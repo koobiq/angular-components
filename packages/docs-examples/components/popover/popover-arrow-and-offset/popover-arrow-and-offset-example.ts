@@ -1,11 +1,15 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
+import { type AfterViewInit, ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqButtonToggleChange, KbqButtonToggleGroup, KbqButtonToggleModule } from '@koobiq/components/button-toggle';
+import {
+    type KbqButtonToggleChange,
+    KbqButtonToggleGroup,
+    KbqButtonToggleModule
+} from '@koobiq/components/button-toggle';
 import { PopUpSizes } from '@koobiq/components/core';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule } from '@koobiq/components/popover';
-import { KbqToggleChange, KbqToggleModule } from '@koobiq/components/toggle';
+import { type KbqToggleChange, KbqToggleModule } from '@koobiq/components/toggle';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
 
@@ -38,8 +42,10 @@ import { TRANSLATIONS } from './l10n';
 
                 <ng-template #customFooter>
                     <div class="layout-row layout-wrap layout-gap-l">
-                        <button color="contrast" kbq-button (click)="kbqPopover.hide(0)">{{ t().save }}</button>
-                        <button kbq-button (click)="kbqPopover.hide(0)">{{ t().cancel }}</button>
+                        <button color="contrast" kbq-button type="button" (click)="kbqPopover.hide(0)">
+                            {{ t().save }}
+                        </button>
+                        <button kbq-button type="button" (click)="kbqPopover.hide(0)">{{ t().cancel }}</button>
                     </div>
                 </ng-template>
 
@@ -47,12 +53,13 @@ import { TRANSLATIONS } from './l10n';
                     #kbqPopover="kbqPopover"
                     kbq-button
                     kbqPopover
+                    type="button"
+                    kbqPopoverPlacement="bottomRight"
                     [kbqPopoverContent]="customContent"
                     [kbqPopoverFooter]="customFooter"
                     [kbqPopoverArrow]="arrow"
                     [kbqPopoverArrowCentered]="arrowCentered"
                     [kbqPopoverOffset]="offset"
-                    [kbqPopoverPlacement]="'bottomRight'"
                     [kbqPopoverSize]="popoverSize"
                 >
                     Open popover
@@ -95,7 +102,7 @@ export class PopoverArrowAndOffsetExample implements AfterViewInit {
     protected readonly toggleGroup = viewChild.required(KbqButtonToggleGroup);
 
     ngAfterViewInit() {
-        Promise.resolve().then(() => {
+        void Promise.resolve().then(() => {
             this.toggleGroup().buttonToggles().at(3)!.checked = true;
         });
     }

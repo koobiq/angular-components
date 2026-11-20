@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
+import { type Observable, ReplaySubject } from 'rxjs';
 import { KBQ_WINDOW } from '@koobiq/components/core';
-import { Observable, ReplaySubject } from 'rxjs';
 
 export interface DocsNavbarPropertyParameters {
     // name of local storage property

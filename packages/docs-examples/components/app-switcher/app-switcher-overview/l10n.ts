@@ -1,4 +1,4 @@
-import { Translations } from '@koobiq/docs-examples/i18n';
+import type { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text shown around the app switcher in the examples. The sites and apps stay the same in every locale. */
 export interface ExampleTranslation {

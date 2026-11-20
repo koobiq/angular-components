@@ -5,8 +5,8 @@ import { DlLongTextExample } from './dl-long-text/dl-long-text-example';
 import { DlMinWidthExample } from './dl-min-width/dl-min-width-example';
 import { DlOverviewExample } from './dl-overview/dl-overview-example';
 import { DlResizableExample } from './dl-resizable/dl-resizable-example';
-import { DlVerticalBreakpointExample } from './dl-vertical-breakpoint/dl-vertical-breakpoint-example';
 import { DlVerticalExample } from './dl-vertical/dl-vertical-example';
+import { DlVerticalBreakpointExample } from './dl-vertical-breakpoint/dl-vertical-breakpoint-example';
 import { DlWideExample } from './dl-wide/dl-wide-example';
 import { DlWidthSyncExample } from './dl-width-sync/dl-width-sync-example';
 

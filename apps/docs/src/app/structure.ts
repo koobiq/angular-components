@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { DocsLocale } from './constants/locale';
+import type { DocsLocale } from './constants/locale';
 
 export enum DocsStructureItemId {
     // Main
@@ -33,6 +33,7 @@ export enum DocsStructureItemId {
     ContentPanel = 'content-panel',
     Core = 'core',
     Datepicker = 'datepicker',
+    Datetime = 'datetime',
     Divider = 'divider',
     Dl = 'dl',
     Dropdown = 'dropdown',
@@ -537,6 +538,19 @@ const structure: DocsStructure = makeStructure({
                     hasExamples: false
                 },
                 {
+                    id: DocsStructureItemId.Datetime,
+                    name: {
+                        ru: 'Datetime',
+                        en: 'Datetime'
+                    },
+                    path: 'packages/components/datetime',
+                    svgPreview: 'datepicker',
+                    hasApi: true,
+                    apiId: 'datetime',
+                    hasExamples: false,
+                    isNew: expiresAt('2027-02-12')
+                },
+                {
                     id: DocsStructureItemId.Divider,
                     name: {
                         ru: 'Divider',
@@ -809,7 +823,7 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'navbar',
                     hasExamples: true,
-                    isUpdated: expiresAt('2026-11-23')
+                    isUpdated: expiresAt('2026-12-01')
                 },
                 {
                     id: DocsStructureItemId.NotificationCenter,

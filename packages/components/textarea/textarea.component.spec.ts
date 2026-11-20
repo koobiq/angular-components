@@ -1,33 +1,31 @@
-﻿import { Component, Directive, ElementRef, Provider, Type, inject, signal, viewChild } from '@angular/core';
-import { ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
+﻿import { Component, Directive, ElementRef, inject, type Provider, signal, type Type, viewChild } from '@angular/core';
+import { type ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import {
-    AsyncValidatorFn,
+    type AsyncValidatorFn,
     FormControl,
-    FormControlStatus,
+    type FormControlStatus,
     FormGroup,
     FormsModule,
     ReactiveFormsModule,
-    ValidationErrors,
+    type ValidationErrors,
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { map, type Observable, timer } from 'rxjs';
 import {
-    ESCAPE,
     createMouseEvent,
     dispatchEvent,
     dispatchFakeEvent,
-    dispatchKeyboardEvent
+    dispatchKeyboardEvent,
+    ErrorStateMatcher,
+    ESCAPE,
+    KBQ_WINDOW,
+    kbqErrorStateMatcherProvider,
+    ShowOnControlDirtyErrorStateMatcher,
+    ShowOnFormSubmitErrorStateMatcher
 } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqTabGroup, KbqTabsModule } from '@koobiq/components/tabs';
-import { Observable, map, timer } from 'rxjs';
-import {
-    ErrorStateMatcher,
-    KBQ_WINDOW,
-    ShowOnControlDirtyErrorStateMatcher,
-    ShowOnFormSubmitErrorStateMatcher,
-    kbqErrorStateMatcherProvider
-} from '../core';
 import { KBQ_TEXTAREA_VALUE_ACCESSOR, KbqTextarea, KbqTextareaModule } from './index';
 
 function createComponent<T>(component: Type<T>, imports: any[] = [], providers: Provider[] = []): ComponentFixture<T> {
@@ -244,6 +242,26 @@ class TextareaInIf {
 }
 
 @Component({
+    imports: [KbqTextareaModule],
+    template: `
+        <kbq-form-field>
+            <textarea kbqTextarea></textarea>
+        </kbq-form-field>
+    `
+})
+class TextareaWithoutForm {}
+
+@Component({
+    imports: [KbqTextareaModule],
+    template: `
+        <kbq-form-field>
+            <textarea kbqTextarea autocomplete="on"></textarea>
+        </kbq-form-field>
+    `
+})
+class TextareaWithBrowserAutocomplete {}
+
+@Component({
     imports: [KbqTextareaModule, FormsModule],
     template: `
         <kbq-form-field>
@@ -335,6 +353,20 @@ describe('KbqTextarea', () => {
     afterEach(() => vi.useRealTimers());
 
     describe('basic behaviors', () => {
+        describe('browser autocomplete', () => {
+            it('should be off by default', () => {
+                const fixture = createComponent(TextareaWithoutForm);
+
+                expect(getTextareaElement(fixture).getAttribute('autocomplete')).toBe('off');
+            });
+
+            it('should keep the autocomplete the consumer set statically', () => {
+                const fixture = createComponent(TextareaWithBrowserAutocomplete);
+
+                expect(getTextareaElement(fixture).getAttribute('autocomplete')).toBe('on');
+            });
+        });
+
         it('should change "disabled" state', async () => {
             vi.useFakeTimers();
 

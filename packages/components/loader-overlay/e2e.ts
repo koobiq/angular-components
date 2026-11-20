@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, type TemplateRef, viewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqLoaderOverlayModule, KbqLoaderOverlaySurface } from '@koobiq/components/loader-overlay';
+import { KbqLoaderOverlayModule, type KbqLoaderOverlaySurface } from '@koobiq/components/loader-overlay';
 import { KbqModalService, ModalSize } from '@koobiq/components/modal';
 
 @Component({
@@ -86,7 +86,7 @@ export class E2eLoaderOverlayStates {}
     imports: [KbqLoaderOverlayModule],
     template: `
         @for (surface of surfaces; track surface.value) {
-            <div class="e2e-loader-overlay-background__item {{ surface.surfaceClass }}">
+            <div class="e2e-loader-overlay-background__item" [class]="surface.surfaceClass">
                 <div class="e2e-loader-overlay-background__content">
                     <p class="e2e-loader-overlay-background__paragraph kbq-text-normal">{{ content }}</p>
                     <p

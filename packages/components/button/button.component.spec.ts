@@ -1,6 +1,6 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
-import { Component, ElementRef, Provider, Type, viewChild, viewChildren } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, ElementRef, type Provider, type Type, viewChild, viewChildren } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter, RouterLink } from '@angular/router';
 import {
@@ -9,7 +9,7 @@ import {
     DOWN_ARROW,
     ENTER,
     KbqComponentColors,
-    KbqOrientation,
+    type KbqOrientation,
     leftIconClassName,
     rightIconClassName,
     SPACE
@@ -20,11 +20,11 @@ import {
     buttonLeftIconClassName,
     buttonRightIconClassName,
     KbqButton,
-    KbqButtonColor,
+    type KbqButtonColor,
     KbqButtonCssStyler,
     KbqButtonGroupRoot,
     KbqButtonModule,
-    KbqButtonStyleInput,
+    type KbqButtonStyleInput,
     KbqButtonStyles
 } from './index';
 

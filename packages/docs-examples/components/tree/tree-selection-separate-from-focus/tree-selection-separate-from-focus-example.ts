@@ -4,19 +4,19 @@ import { KbqPseudoCheckboxModule } from '@koobiq/components/core';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 
 export class FileNode {
-    children: FileNode[];
-    name: string;
-    description: string;
+    children?: FileNode[];
+    name = '';
+    description = '';
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-    name: string;
-    description: string;
-    level: number;
-    expandable: boolean;
+    name = '';
+    description = '';
+    level = 0;
+    expandable = false;
     parent: any;
-    checked: boolean;
+    checked = false;
 }
 
 /**
@@ -150,8 +150,8 @@ export const DATA_OBJECT = [
             </div>
 
             <div class="layout-padding-left-l layout-padding-right-l flex-70">
-                <div class="kbq-subheading layout-padding-bottom-s">{{ modelValue.name }}</div>
-                <div class="kbq-text-normal">{{ modelValue.description }}</div>
+                <div class="kbq-subheading layout-padding-bottom-s">{{ modelValue?.name }}</div>
+                <div class="kbq-text-normal">{{ modelValue?.description }}</div>
             </div>
         </div>
     `,
@@ -163,7 +163,7 @@ export class TreeSelectionSeparateFromFocusExample {
 
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
-    modelValue: FileFlatNode;
+    modelValue: FileFlatNode | undefined;
 
     constructor() {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
@@ -205,7 +205,7 @@ export class TreeSelectionSeparateFromFocusExample {
         return node.expandable;
     };
 
-    private getChildren = (node: FileNode): FileNode[] => {
+    private getChildren = (node: FileNode): FileNode[] | undefined => {
         return node.children;
     };
 

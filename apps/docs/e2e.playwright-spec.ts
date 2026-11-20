@@ -1,5 +1,5 @@
-import { expect, Page, test } from '@playwright/test';
 import { join } from 'node:path';
+import { expect, type Page, test } from '@playwright/test';
 import { docsCompareVersions, docsParseVersion } from './src/app/components/migration-guide/migration-versions';
 import { DocsLocale } from './src/app/constants/locale';
 import { DOCS_SEO_DESCRIPTIONS } from './src/app/seo-descriptions';
@@ -126,6 +126,19 @@ test.describe('docs app', () => {
 
         await expect(toggle).toHaveAttribute('aria-expanded', 'true');
         await expect(page.locator('kbq-code-block').first()).toBeVisible();
+    });
+
+    test('separates the expanded clamped list from its collapse trigger without a comma', async ({ page }) => {
+        await page.goto('/ru/components/clamped-list');
+        await waitForHydration(page);
+
+        const example = page.locator('clamped-list-example');
+        const trigger = example.locator('[kbqClampedListTrigger]');
+
+        await trigger.click();
+
+        await expect(trigger).toHaveText('Свернуть');
+        await expect(example.locator('[kbqClampedList] > div').last()).not.toHaveText(/,\s*$/);
     });
 
     test('opens a live example in fullscreen with its overlays', async ({ page }) => {

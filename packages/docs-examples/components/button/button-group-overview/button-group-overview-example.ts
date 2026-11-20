@@ -13,7 +13,7 @@ import { TRANSLATIONS } from './l10n';
     template: `
         <div kbq-button-group>
             @for (item of data(); track item) {
-                <button kbq-button>
+                <button kbq-button type="button">
                     {{ item }}
                 </button>
             }

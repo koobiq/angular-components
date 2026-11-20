@@ -1,8 +1,12 @@
-@use '../core/styles/common/select' as *;
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/select';
+@use '../core/styles/common/tokens';
 @use '../tree/tree-theme' as tree-theme;
 
 @mixin kbq-tree-select-theme() {
+    // Placeholder, search container and empty-result message: styled identically wherever a
+    // select-shaped panel is rendered, so the rules live next to the structure they belong to.
+    @include select.kbq-select-shared-theme();
+
     .kbq-tree-select {
         color: var(--kbq-foreground-contrast);
 
@@ -24,13 +28,9 @@
         }
     }
 
-    // Placeholder, search container and empty-result message: styled identically wherever a
-    // select-shaped panel is rendered, so the rules live next to the structure they belong to.
-    @include kbq-select-shared-theme();
-
     .kbq-tree-select__panel {
-        box-shadow: var(--kbq-select-panel-dropdown-shadow);
         background: var(--kbq-select-panel-dropdown-background);
+        box-shadow: var(--kbq-select-panel-dropdown-shadow);
 
         .kbq-tree-selection .kbq-tree-option:not(.kbq-disabled) {
             &:hover:not(.kbq-focused),
@@ -68,8 +68,7 @@
                 }
             }
 
-            &.kbq-checked:not(.kbq-selected),
-            &.kbq-tree-option_multiple.kbq-selected {
+            &.kbq-checked:not(.kbq-selected) {
                 &:hover:not(.kbq-focused),
                 &.kbq-hovered:not(.kbq-focused) {
                     background: var(--kbq-tree-multiple-states-selected-container-background);
@@ -87,6 +86,39 @@
                 }
             }
 
+            // A selected option of a multiple tree-select shares the background of an unselected one in
+            // every state: the checkbox is the selection mark, so the row follows hover, focus and
+            // pressed like any other row (#DS-5466). Every state is spelled out because the shared tree
+            // theme paints the selected row at a specificity this block has to beat.
+            &.kbq-tree-option_multiple.kbq-selected {
+                --kbq-option-background: transparent;
+
+                background: transparent;
+
+                // Hover included, not left to the base rule: the `.kbq-selected` group above paints the
+                // single-select tint on hover at (0,7,0), one class over this block's base, and would
+                // otherwise win it back. Transparent, like an unselected row's hover in this panel.
+                &:hover:not(.kbq-focused),
+                &.kbq-hovered:not(.kbq-focused) {
+                    --kbq-option-background: transparent;
+
+                    background: transparent;
+                }
+
+                &.kbq-focused {
+                    --kbq-option-background: var(--kbq-tree-states-hover-container-background);
+
+                    background: var(--kbq-tree-states-hover-container-background);
+                }
+
+                &:active:not(.kbq-disabled),
+                &.kbq-active:not(.kbq-disabled) {
+                    --kbq-option-background: var(--kbq-tree-states-active-container-background);
+
+                    background: var(--kbq-tree-states-active-container-background);
+                }
+            }
+
             &.kbq-focused:not(.kbq-action-button-focused) {
                 border-color: transparent;
             }
@@ -101,6 +133,6 @@
 @mixin kbq-tree-select-typography() {
     .kbq-tree-select,
     .kbq-tree-select__panel {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }

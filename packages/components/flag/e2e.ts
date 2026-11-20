@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { KbqFlagModule, KbqFlagShape } from '@koobiq/components/flag';
+import { KbqFlagModule, type KbqFlagShape } from '@koobiq/components/flag';
 
 // A minimal inline SVG (Norway-like) is enough to exercise shape/shadow decoration without
 // depending on a flag data package in the e2e app. Its 11:8 ratio matches none of the shapes, so
@@ -23,6 +23,7 @@ const sampleFlag = `<svg viewBox="0 0 22 16" xmlns="http://www.w3.org/2000/svg">
             }
             <!-- The same flag delivered as an image: it must crop exactly like the inline svg above. -->
             <kbq-flag decorative shape="square">
+                <!-- eslint-disable-next-line @angular-eslint/template/prefer-ngsrc -- a data URL, which NgOptimizedImage does not take -->
                 <img alt="" [src]="flagSrc" />
             </kbq-flag>
         </div>

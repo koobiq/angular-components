@@ -2,13 +2,13 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { VERSION } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { EXAMPLE_COMPONENTS, ExampleData, LiveExample } from '@koobiq/docs-examples';
-import StackBlitzSDK, { ProjectFiles } from '@stackblitz/sdk';
+import StackBlitzSDK, { type ProjectFiles } from '@stackblitz/sdk';
 import { existsSync, readdirSync, readFileSync } from 'fs';
 import { join, relative, sep } from 'path';
 import { compile } from 'sass';
 import { satisfies } from 'semver';
 import { pathToFileURL } from 'url';
+import { EXAMPLE_COMPONENTS, type ExampleData, type LiveExample } from '@koobiq/docs-examples';
 import { docsKoobiqVersion } from '../../version';
 import {
     DOCS_STACKBLITZ_OPTIONAL_DEPENDENCIES,
@@ -95,8 +95,8 @@ describe(DocsStackblitzWriter.name, () => {
 
     afterEach(() => {
         httpMock.verify();
-        delete EXAMPLE_COMPONENTS[EXAMPLE_ID];
-        delete EXAMPLE_COMPONENTS[OTHER_EXAMPLE_ID];
+        Reflect.deleteProperty(EXAMPLE_COMPONENTS, EXAMPLE_ID);
+        Reflect.deleteProperty(EXAMPLE_COMPONENTS, OTHER_EXAMPLE_ID);
         vi.restoreAllMocks();
     });
 
@@ -124,6 +124,50 @@ describe(DocsStackblitzWriter.name, () => {
         );
         expect(files['src/main.ts']).toContain('bootstrapApplication(BasicButtonExample,');
         expect(files['src/index.html']).toContain('<basic-button-example></basic-button-example>');
+    });
+
+    it('links the header to Telegram, drops the stars badge and takes the theme from the theme service', async () => {
+        const files = await buildProject();
+
+        expect(files['src/docs-header/docs-header.ts']).toContain('https://t.me/koobiq_io');
+        expect(files['src/docs-header/docs-header.ts']).toContain('KbqThemeService');
+        expect(files['src/index.html']).not.toContain('kbq-light');
+        expect(files['src/index.html']).not.toContain('img.shields.io');
+        expect(files['src/main.ts']).toContain('kbqThemeProvider({');
+    });
+
+    it('keeps the social links beside the logo and the language and theme selects on the right', async () => {
+        const header = (await buildProject())['src/docs-header/docs-header.ts'];
+        const actions = header.indexOf('class="docs-header__actions"');
+
+        expect(header.indexOf('kbq-telegram_16')).toBeLessThan(actions);
+        expect(header.indexOf('kbq-github_16')).toBeLessThan(actions);
+        expect(header.indexOf('<kbq-select', actions)).toBeGreaterThan(actions);
+        expect(header.split('<kbq-select').length - 1).toBe(2);
+        expect(header.split('kbq-select-matcher').length - 1).toBe(2);
+        expect(header).toContain(`originX: 'end'`);
+        expect(header).toContain(`[class.kbq-active]="languageSelect.panelOpen"`);
+        expect(header).toContain(`[class.kbq-active]="themeSelect.panelOpen"`);
+        expect(header).toContain(`(focus)="languageButton.focus()"`);
+        expect(header.split('[kbqTooltip]=').length - 1).toBe(4);
+        expect(header).toContain(`language: 'Язык интерфейса'`);
+        expect(header).toContain('kbqPlacement="bottomRight"');
+        expect(header).toContain(`(focus)="themeButton.focus()"`);
+        expect(header).not.toContain('kbq-dropdown');
+    });
+
+    it('draws the divider as a shadow below the 48px header, as the design does', async () => {
+        const header = (await buildProject())['src/docs-header/docs-header.ts'];
+
+        expect(header).toContain('box-shadow: 0 1px 0 0 var(--kbq-line-contrast-less)');
+        expect(header).not.toContain('border-bottom');
+    });
+
+    it('draws the wordmark in the text color, so it stays visible in the dark theme', async () => {
+        const files = await buildProject();
+
+        expect(files['src/docs-header/docs-header.ts']).toContain('fill="currentColor"');
+        expect(files['src/docs-header/docs-header.ts']).toContain('color: var(--kbq-foreground-contrast)');
     });
 
     it('adds an optional dependency only to an example that imports it', async () => {

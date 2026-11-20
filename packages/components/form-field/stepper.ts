@@ -6,14 +6,14 @@ import {
     DestroyRef,
     inject,
     output,
-    OutputEmitterRef,
-    Signal,
+    type OutputEmitterRef,
+    type Signal,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { concatMap, fromEvent, interval, Subject, take, takeUntil, timer } from 'rxjs';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { concatMap, fromEvent, interval, Subject, timer } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KBQ_FORM_FIELD } from './form-field';
 
 /**
@@ -94,7 +94,7 @@ export const KBQ_STEPPER_INTERVAL_DELAY = 75;
             (mousedown)="onStepDown($event)"
         ></i>
     `,
-    styleUrls: ['stepper.scss'],
+    styleUrl: 'stepper.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

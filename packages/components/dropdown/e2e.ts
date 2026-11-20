@@ -34,7 +34,7 @@ import { KbqDropdownModule } from './dropdown.module';
             <button kbq-dropdown-item class="kbq-active kbq-selected">Selected pressed item</button>
 
             <button kbq-dropdown-item>
-                <i kbq-icon="kbq-bug_16" [color]="'contrast'"></i>
+                <i kbq-icon="kbq-bug_16" color="contrast"></i>
                 Item with icon
             </button>
 
@@ -44,7 +44,7 @@ import { KbqDropdownModule } from './dropdown.module';
             </button>
 
             <button kbq-dropdown-item>
-                <i kbq-icon="kbq-bug_16" [color]="'contrast'"></i>
+                <i kbq-icon="kbq-bug_16" color="contrast"></i>
                 Item with icon and caption
                 <div kbqDropdownItemCaption>Caption</div>
             </button>
@@ -72,7 +72,7 @@ import { KbqDropdownModule } from './dropdown.module';
             <button disabled kbq-dropdown-item>Disabled item</button>
 
             <button disabled kbq-dropdown-item>
-                <i kbq-icon="kbq-bug_16" [color]="'contrast'"></i>
+                <i kbq-icon="kbq-bug_16" color="contrast"></i>
                 Disabled with icon
             </button>
 
@@ -91,7 +91,7 @@ import { KbqDropdownModule } from './dropdown.module';
             <kbq-divider />
             <kbq-optgroup label="Subheading" />
             <button kbq-dropdown-item data-testid="e2eSubmenu2Trigger" [kbqDropdownTriggerFor]="submenu2">
-                <i kbq-icon="kbq-bug_16" [color]="'contrast'"></i>
+                <i kbq-icon="kbq-bug_16" color="contrast"></i>
                 Item with icon
             </button>
             <button kbq-dropdown-item disabled>
@@ -105,7 +105,7 @@ import { KbqDropdownModule } from './dropdown.module';
             <div kbqDropdownGroupHeader>Group header</div>
             <button kbq-dropdown-item disabled>Item disabled</button>
             <button kbq-dropdown-item data-testid="e2eSubmenu2ItemWithIcon">
-                <i kbq-icon="kbq-bug_16" [color]="'contrast'"></i>
+                <i kbq-icon="kbq-bug_16" color="contrast"></i>
                 Item with icon
             </button>
             <kbq-divider />
@@ -323,35 +323,35 @@ export class E2eDropdownTitleOverflow {
             <div kbq-dropdown-item data-testid="e2eDropdownItemActionDefault">
                 Default with action
                 <a kbq-icon-button kbqDropdownItemAction aria-label="Settings" href="/settings">
-                    <i kbq-icon="kbq-gear_16" [color]="'contrast-fade'"></i>
+                    <i kbq-icon="kbq-gear_16" color="contrast-fade"></i>
                 </a>
             </div>
 
             <div kbq-dropdown-item class="kbq-active" data-testid="e2eDropdownItemActionPressed">
                 Pressed row with action
                 <a kbq-icon-button kbqDropdownItemAction aria-label="Settings" href="/settings">
-                    <i kbq-icon="kbq-gear_16" [color]="'contrast-fade'"></i>
+                    <i kbq-icon="kbq-gear_16" color="contrast-fade"></i>
                 </a>
             </div>
 
             <div kbq-dropdown-item disabled data-testid="e2eDropdownItemActionDisabled">
                 Disabled row and action
                 <a disabled kbq-icon-button kbqDropdownItemAction aria-label="Settings" href="/settings">
-                    <i kbq-icon="kbq-gear_16" [color]="'contrast-fade'"></i>
+                    <i kbq-icon="kbq-gear_16" color="contrast-fade"></i>
                 </a>
             </div>
 
             <div kbq-dropdown-item progress data-testid="e2eDropdownItemActionProgress">
                 In progress row with action
                 <a kbq-icon-button kbqDropdownItemAction aria-label="Settings" href="/settings">
-                    <i kbq-icon="kbq-gear_16" [color]="'contrast-fade'"></i>
+                    <i kbq-icon="kbq-gear_16" color="contrast-fade"></i>
                 </a>
             </div>
 
             <div kbq-dropdown-item data-testid="e2eDropdownItemActionNested" [kbqDropdownTriggerFor]="nestedWithAction">
                 Nested row with action
                 <a kbq-icon-button kbqDropdownItemAction aria-label="Settings" href="/settings">
-                    <i kbq-icon="kbq-gear_16" [color]="'contrast-fade'"></i>
+                    <i kbq-icon="kbq-gear_16" color="contrast-fade"></i>
                 </a>
             </div>
 
@@ -363,7 +363,7 @@ export class E2eDropdownTitleOverflow {
             >
                 Row with a very long label that does not fit next to the action and gets truncated
                 <a kbq-icon-button kbqDropdownItemAction aria-label="Settings" href="/settings">
-                    <i kbq-icon="kbq-gear_16" [color]="'contrast-fade'"></i>
+                    <i kbq-icon="kbq-gear_16" color="contrast-fade"></i>
                 </a>
             </div>
         </kbq-dropdown>

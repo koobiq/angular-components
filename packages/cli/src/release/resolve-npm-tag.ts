@@ -15,9 +15,9 @@ export interface IResolveNpmTagConfig {
 
 /**
  * Standalone command wrapping `resolveNpmDistTag` so any koobiq repo's CI can resolve the
- * correct npm dist-tag (`latest` vs `v<major>-lts`) without reimplementing the semver-against-
- * registry comparison itself. Prints only the resolved tag to stdout, so callers can do
- * `TAG=$(koobiq-cli resolve-npm-tag --package-name @koobiq/icons)`.
+ * correct npm dist-tag (`latest`, `v<major>-lts`, or the fallback `v<major>.<minor>-lts`)
+ * without reimplementing the semver-against-registry comparison itself. Prints only the resolved
+ * tag to stdout, so callers can do `TAG=$(koobiq-cli resolve-npm-tag --package-name @koobiq/icons)`.
  */
 export class ResolveNpmTagTask {
     constructor(private readonly config: IResolveNpmTagConfig) {}

@@ -1,48 +1,57 @@
 import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
 import { AsyncPipe } from '@angular/common';
-import { Component, OnInit, Type, effect, getDebugNode, signal, viewChild, viewChildren } from '@angular/core';
-import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import {
+    Component,
+    effect,
+    getDebugNode,
+    type OnInit,
+    signal,
+    type Type,
+    viewChild,
+    viewChildren
+} from '@angular/core';
+import { type ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { map, merge, type Observable, of, Subject } from 'rxjs';
 import {
+    createKeyboardEvent,
+    dispatchEvent,
+    dispatchKeyboardEvent,
+    dispatchMouseEvent,
     DOWN_ARROW,
+    enUSLocaleData,
     ESCAPE,
     KBQ_LOCALE_SERVICE,
     KBQ_PANEL_DEFAULT_MIN_WIDTH,
     KbqComponentColors,
     KbqLocaleService,
+    KbqOptgroup,
     KbqOptionModule,
     KbqOptionSelectionChange,
     KbqOverlayLayer,
-    KbqPanelMaxHeight,
-    KbqPanelMaxWidth,
-    KbqPanelMinWidth,
-    KbqPanelWidth,
+    type KbqPanelMaxHeight,
+    type KbqPanelMaxWidth,
+    type KbqPanelMinWidth,
+    type KbqPanelWidth,
     KbqRepositionScrollStrategy,
     KbqSelectFooter,
     KbqSelectMatcher,
     KbqSelectSearch,
     LEFT_ARROW,
     RIGHT_ARROW,
-    UP_ARROW,
-    createKeyboardEvent,
-    dispatchEvent,
-    dispatchKeyboardEvent,
-    dispatchMouseEvent,
-    enUSLocaleData,
-    ruRULocaleData
+    ruRULocaleData,
+    UP_ARROW
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { Observable, Subject, merge, of } from 'rxjs';
-import { map } from 'rxjs/operators';
 import {
-    KbqTimezoneGroup,
+    getKbqTimezoneSelectMultipleError,
+    type KbqTimezoneGroup,
     KbqTimezoneModule,
     KbqTimezoneOption,
     KbqTimezoneSelect,
-    getKbqTimezoneSelectMultipleError,
     offsetFormatter,
     resolveZoneOffset
 } from './index';
@@ -737,6 +746,16 @@ describe('KbqTimezoneSelect', () => {
             expect(overlayContainerElement.textContent).toContain('city17');
         });
 
+        it('should have no axe violations in the open panel', async () => {
+            trigger.click();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            // axe-core runs its checks on timers.
+            vi.useRealTimers();
+
+            await expect(overlayContainerElement).toHaveNoViolations();
+        }, 15_000);
+
         it('should close the panel when an item is clicked', async () => {
             trigger.click();
             fixture.detectChanges();
@@ -1070,6 +1089,22 @@ describe('KbqTimezoneSelect', () => {
             await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
+        });
+
+        it('should make the search field a combobox of the option list', async () => {
+            trigger.click();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const input: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+            const highlighted = overlayContainerElement.querySelector('kbq-timezone-option.kbq-active')!;
+
+            expect(input.getAttribute('role')).toBe('combobox');
+            expect(input.getAttribute('aria-controls')).toBe(
+                overlayContainerElement.querySelector('[role="listbox"]')!.id
+            );
+            expect(input.getAttribute('aria-activedescendant')).toBe(highlighted.id);
         });
     });
 
@@ -1483,6 +1518,61 @@ describe('KbqTimezoneSelect', () => {
 
             expect(select.panelOpen).toBe(false);
             expect(fixture.componentInstance.runs).toBe(1);
+        });
+    });
+
+    @Component({
+        selector: 'timezone-select-with-group-counters',
+        imports: [KbqOptionModule, KbqTimezoneModule],
+        template: `
+            <kbq-form-field>
+                <kbq-timezone-select>
+                    @for (group of groups; track group.countryName) {
+                        <kbq-optgroup [label]="group.countryName">
+                            @for (zone of group.zones; track zone) {
+                                <kbq-timezone-option [timezone]="zone" />
+                            }
+                        </kbq-optgroup>
+                    }
+                </kbq-timezone-select>
+            </kbq-form-field>
+        `
+    })
+    class TimezoneSelectWithGroupCounters {
+        readonly groups = groupedZones;
+        readonly select = viewChild.required(KbqTimezoneSelect);
+    }
+
+    // `KbqTimezoneOption` extends `KbqOption` and re-provides it, which is what lets the group's
+    // `contentChildren(KbqOption)` count the options of a timezone select too.
+    describe('KbqOptgroup selectedCount in a timezone select', () => {
+        it('should count the selected timezone options of the group', async () => {
+            configureTestingModule([TimezoneSelectWithGroupCounters]);
+
+            const fixture = TestBed.createComponent(TimezoneSelectWithGroupCounters);
+
+            fixture.detectChanges();
+            fixture.componentInstance.select().open();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const group = getDebugNode(overlayContainerElement.querySelector('kbq-optgroup')!)!.injector.get(
+                KbqOptgroup
+            );
+            const zones = Array.from(overlayContainerElement.querySelectorAll('kbq-timezone-option')).map((node) =>
+                getDebugNode(node)!.injector.get(KbqTimezoneOption)
+            );
+
+            // The timezone select is single-choice, so one selected option of the group is the maximum.
+            zones[0].select();
+            fixture.detectChanges();
+
+            expect(group.selectedCount).toBe(1);
+
+            zones[0].deselect();
+            fixture.detectChanges();
+
+            expect(group.selectedCount).toBe(0);
         });
     });
 });

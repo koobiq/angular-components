@@ -1,18 +1,18 @@
 import { _CdkPrivateStyleLoader } from '@angular/cdk/private';
 import {
+    afterRenderEffect,
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     Directive,
+    inject,
     Injectable,
     InjectionToken,
-    NgZone,
-    Provider,
-    ViewEncapsulation,
-    afterRenderEffect,
-    booleanAttribute,
-    inject,
     input,
-    numberAttribute
+    NgZone,
+    numberAttribute,
+    type Provider,
+    ViewEncapsulation
 } from '@angular/core';
 import { KBQ_WINDOW, kbqAnimationsDisabled, kbqInjectNativeElement } from '@koobiq/components/core';
 
@@ -30,7 +30,7 @@ const findWave = (host: HTMLElement): Animation | undefined =>
 @Component({
     selector: 'skeleton-style-loader',
     template: '',
-    styleUrls: ['skeleton.scss', 'skeleton-presets.scss', 'skeleton-tokens.scss'],
+    styleUrls: ['./skeleton.scss', './skeleton-presets.scss', './skeleton-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

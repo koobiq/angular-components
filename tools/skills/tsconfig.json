@@ -6,5 +6,7 @@
         // "type": "module", and Node loads those packages through require(esm).
         "module": "nodenext",
         "moduleResolution": "nodenext"
-    }
+    },
+    // The editor finds them through tools/tsconfig.json, under the strictness of the specs.
+    "exclude": ["**/*.spec.ts"]
 }

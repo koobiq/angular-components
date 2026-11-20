@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, DebugElement, model, Provider, Type } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, type DebugElement, model, type Provider, type Type } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqDynamicTranslation } from './dynamic-translation';

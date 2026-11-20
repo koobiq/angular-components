@@ -31,6 +31,7 @@ import { TRANSLATIONS } from './l10n';
                         <button
                             kbq-button
                             kbqBreadcrumb
+                            type="button"
                             [attr.aria-current]="$last ? 'page' : null"
                             [disabled]="$last"
                             [kbqPlacementPriority]="PopUpPlacements.Bottom"

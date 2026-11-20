@@ -1,17 +1,26 @@
 @use '../styles/common/vendor-prefixes';
-@use '../styles/common/tokens' as *;
-
-@use './optgroup-theme' as *;
+@use './optgroup-theme';
 
 .kbq-optgroup-label {
+    @include vendor-prefixes.user-select(none);
+
     display: flex;
     align-items: center;
+
     box-sizing: border-box;
     padding: var(--kbq-size-s) var(--kbq-size-l) var(--kbq-size-s) var(--kbq-size-m);
 
-    @include vendor-prefixes.user-select(none);
     cursor: default;
 }
 
-@include kbq-optgroup-theme();
-@include kbq-optgroup-typography();
+// Custom heading content: the label box stays the flex row of the heading, this element keeps a long
+// label from stretching a narrow panel. Wrap the truncating text in `.kbq-truncate-line` yourself.
+.kbq-optgroup-label-content {
+    display: flex;
+    gap: var(--kbq-optgroup-label-gap);
+    align-items: center;
+    min-width: 0;
+}
+
+@include optgroup-theme.kbq-optgroup-theme();
+@include optgroup-theme.kbq-optgroup-typography();

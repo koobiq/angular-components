@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { merge, Observable, Subject } from 'rxjs';
+import { merge, type Observable, Subject } from 'rxjs';
 import { KBQ_STATE_STORE } from './state-store';
 
 /**

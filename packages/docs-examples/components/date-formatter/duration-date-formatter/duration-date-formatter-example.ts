@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import type { DateTime } from 'luxon';
+import { delay, distinctUntilChanged } from 'rxjs';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KBQ_LOCALE_SERVICE, KbqFormattersModule } from '@koobiq/components/core';
-import { DateTime } from 'luxon';
-import { delay } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
 
 /**
  * @title Duration date-formatter
@@ -11,8 +10,8 @@ import { distinctUntilChanged } from 'rxjs/operators';
 @Component({
     selector: 'duration-date-formatter-example',
     imports: [LuxonDateModule, KbqFormattersModule],
-    templateUrl: 'duration-date-formatter-example.html',
-    styleUrls: ['duration-date-formatter-example.css'],
+    templateUrl: './duration-date-formatter-example.html',
+    styleUrl: './duration-date-formatter-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DurationDateFormatterExample {

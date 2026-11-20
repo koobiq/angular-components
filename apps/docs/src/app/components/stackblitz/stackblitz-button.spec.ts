@@ -1,7 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { dispatchFakeEvent, dispatchKeyboardEvent, ENTER } from '@koobiq/components/core';
-import { EXAMPLE_COMPONENTS, LiveExample } from '@koobiq/docs-examples';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import type { Mock } from 'vitest';
+import { dispatchFakeEvent, dispatchKeyboardEvent, ENTER } from '@koobiq/components/core';
+import { EXAMPLE_COMPONENTS, type LiveExample } from '@koobiq/docs-examples';
 import { DocsStackblitzButtonComponent } from './stackblitz-button';
 import { DocsStackblitzWriter } from './stackblitz-writer';
 
@@ -34,7 +34,7 @@ describe(DocsStackblitzButtonComponent.name, () => {
     });
 
     afterEach(() => {
-        delete EXAMPLE_COMPONENTS[EXAMPLE_ID];
+        Reflect.deleteProperty(EXAMPLE_COMPONENTS, EXAMPLE_ID);
     });
 
     it('loads the files of the example on hover and on focus, before the click', () => {

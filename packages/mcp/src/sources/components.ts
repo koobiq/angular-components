@@ -1,12 +1,12 @@
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import {
-    parseDts,
     type DtsFile,
     type DtsInput,
     type DtsMember,
     type DtsOutput,
-    type DtsSymbol
+    type DtsSymbol,
+    parseDts
 } from '../dts/parse-dts.js';
 import type { PackageRef } from './project.js';
 

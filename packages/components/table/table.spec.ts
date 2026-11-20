@@ -1,8 +1,8 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { Component, Injectable, Type } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, Injectable, type Type } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { type Observable, Subject } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { Observable, Subject } from 'rxjs';
 import { KbqTableModule } from './table.module';
 
 @Injectable()

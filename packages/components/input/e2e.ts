@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { AbstractControl, FormGroupDirective, FormsModule, NgForm } from '@angular/forms';
-import { ErrorStateMatcher, KbqNormalizeWhitespace } from '@koobiq/components/core';
+import { type AbstractControl, type FormGroupDirective, FormsModule, type NgForm } from '@angular/forms';
+import { type ErrorStateMatcher, KbqNormalizeWhitespace } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from './input.module';
 
 type InputStates = {
     // No 'autofill': no row ever emitted it and no spec asserted it, so it advertised coverage that
     // did not exist. Autofill is covered for real by E2eFormFieldAutofill (#DS-4096).
-    state: ('default' | 'focused' | 'disabled' | 'placeholder' | 'invalid' | 'error' | 'ellipsis')[];
+    state: ('default' | 'focused' | 'disabled' | 'placeholder' | 'invalid' | 'error' | 'narrow')[];
     inputNumberHasSeparator?: boolean;
 };
 
@@ -33,7 +33,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                 @for (state of states; track $index) {
                     <div class="e2e__row">
                         @for (cell of state; track $index) {
-                            <div class="e2e__cell" [class.has_ellipsis]="cell.state.includes('ellipsis')">
+                            <div class="e2e__cell" [class.has_narrow]="cell.state.includes('narrow')">
                                 <kbq-form-field
                                     [class.cdk-keyboard-focused]="cell.state.includes('focused')"
                                     [class.cdk-focused]="cell.state.includes('focused')"
@@ -49,7 +49,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                                 </kbq-form-field>
                             </div>
 
-                            <div class="e2e__cell" [class.has_ellipsis]="cell.state.includes('ellipsis')">
+                            <div class="e2e__cell" [class.has_narrow]="cell.state.includes('narrow')">
                                 <kbq-form-field
                                     [class.cdk-keyboard-focused]="cell.state.includes('focused')"
                                     [class.cdk-focused]="cell.state.includes('focused')"
@@ -57,16 +57,16 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                                     <input
                                         kbqInput
                                         kbqInputMonospace
+                                        placeholder="Inp@t M0n0"
                                         [errorStateMatcher]="errorStateMatcher(cell.state)"
                                         [disabled]="cell.state.includes('disabled')"
-                                        [placeholder]="'Inp@t M0n0'"
                                         [ngModel]="cell.state.join().includes('placeholder') ? '' : inputMonoValue()"
                                         (ngModelChange)="inputMonoValue.set($event)"
                                     />
                                 </kbq-form-field>
                             </div>
 
-                            <div class="e2e__cell" [class.has_ellipsis]="cell.state.includes('ellipsis')">
+                            <div class="e2e__cell" [class.has_narrow]="cell.state.includes('narrow')">
                                 <kbq-form-field
                                     [class.cdk-keyboard-focused]="cell.state.includes('focused')"
                                     [class.cdk-focused]="cell.state.includes('focused')"
@@ -101,7 +101,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                 @for (state of states; track $index) {
                     <div class="e2e__row">
                         @for (cell of state; track $index) {
-                            <div class="e2e__cell" [class.has_ellipsis]="cell.state.includes('ellipsis')">
+                            <div class="e2e__cell" [class.has_narrow]="cell.state.includes('narrow')">
                                 <kbq-form-field
                                     [class.cdk-keyboard-focused]="cell.state.includes('focused')"
                                     [class.cdk-focused]="cell.state.includes('focused')"
@@ -222,7 +222,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                 width: 200px;
             }
 
-            div.has_ellipsis {
+            div.has_narrow {
                 width: 75px;
             }
         }
@@ -242,7 +242,7 @@ export class E2eInputStateAndStyle {
 
     states: InputStates[][] = [
         [{ state: ['placeholder'] }],
-        [{ state: ['ellipsis'] }],
+        [{ state: ['narrow'] }],
         [{ state: ['default'] }],
         [{ state: ['default'], inputNumberHasSeparator: false }],
         [{ state: ['focused'] }],

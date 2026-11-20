@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqScrollbar, KbqScrollbarMode } from '@koobiq/components/scrollbar';
+import { KbqScrollbar, type KbqScrollbarMode } from '@koobiq/components/scrollbar';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 /**

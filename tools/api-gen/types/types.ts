@@ -1,4 +1,4 @@
-import { DeclaredFunctionType, DocEntry, LiteralContext, MemberEntry, PropertyEntry } from '../rendering/entities';
+import type { DeclaredFunctionType, DocEntry, LiteralContext, MemberEntry, PropertyEntry } from '../rendering/entities';
 
 export type PackageMetadata = { resolvedPath: string; tsCompilerPath: string; packageName: string };
 

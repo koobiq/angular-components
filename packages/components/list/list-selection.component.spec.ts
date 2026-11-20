@@ -6,19 +6,20 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    DebugElement,
+    type DebugElement,
     effect,
     inject,
     isSignal,
-    Provider,
+    type Provider,
     signal,
-    Type,
+    type Type,
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import type { MockInstance } from 'vitest';
 import {
     A,
     C,
@@ -32,9 +33,9 @@ import {
     END,
     ENTER,
     ESCAPE,
-    FocusKeyManager,
+    type FocusKeyManager,
     HOME,
-    KbqMultipleInput,
+    type KbqMultipleInput,
     KbqOptionActionComponent,
     KbqOptionModule,
     kbqSelectLocaleConfigurationProvider,
@@ -51,16 +52,15 @@ import {
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import type { MockInstance } from 'vitest';
 import {
-    KbqListCopyEvent,
-    KbqListDragCursor,
+    type KbqListCopyEvent,
+    type KbqListDragCursor,
     KbqListModule,
     KbqListOption,
-    KbqListSelectAllEvent,
+    type KbqListSelectAllEvent,
     KbqListSelection,
-    KbqListSelectionChange,
-    KbqListSelectionDroppedEvent
+    type KbqListSelectionChange,
+    type KbqListSelectionDroppedEvent
 } from './index';
 
 const getFocusMonitor = () => TestBed.inject(FocusMonitor);
@@ -94,7 +94,7 @@ describe('KbqListSelection without forms', () => {
                             const originalClipboard = new Clipboard(document);
 
                             return {
-                                copy: (value) => {
+                                copy: (value: string) => {
                                     originalClipboard.copy(value);
                                     clipboardContent = value;
                                 }
@@ -2631,13 +2631,13 @@ class SelectionListWithCustomComparator {
             [selectAllHandler]="selectAllHandler"
             (selectionChange)="onValueChange($event)"
         >
-            <kbq-list-option checkboxPosition="before" disabled="true" [value]="'inbox'">
+            <kbq-list-option checkboxPosition="before" disabled="true" value="inbox">
                 Inbox (disabled selection-option)
             </kbq-list-option>
-            <kbq-list-option id="testSelect" checkboxPosition="before" [value]="'starred'">Starred</kbq-list-option>
-            <kbq-list-option checkboxPosition="before" [value]="'sent-mail'">Sent Mail</kbq-list-option>
+            <kbq-list-option id="testSelect" checkboxPosition="before" value="starred">Starred</kbq-list-option>
+            <kbq-list-option checkboxPosition="before" value="sent-mail">Sent Mail</kbq-list-option>
             @if (showLastOption) {
-                <kbq-list-option checkboxPosition="before" [value]="'drafts'">Drafts</kbq-list-option>
+                <kbq-list-option checkboxPosition="before" value="drafts">Drafts</kbq-list-option>
             }
         </kbq-list-selection>
     `
@@ -2657,11 +2657,11 @@ class SelectionListWithListOptions {
     ],
     template: `
         <kbq-list-selection multiple="checkbox" [autoSelect]="false" [noUnselectLast]="false" [(ngModel)]="model">
-            <kbq-list-option [value]="'value1'">value1</kbq-list-option>
-            <kbq-list-option [value]="'value2'">value2</kbq-list-option>
-            <kbq-list-option [value]="'value3'">value3</kbq-list-option>
-            <kbq-list-option [value]="'value4'">value4</kbq-list-option>
-            <kbq-list-option [value]="'disabled option'" [disabled]="true">disabled option</kbq-list-option>
+            <kbq-list-option value="value1">value1</kbq-list-option>
+            <kbq-list-option value="value2">value2</kbq-list-option>
+            <kbq-list-option value="value3">value3</kbq-list-option>
+            <kbq-list-option value="value4">value4</kbq-list-option>
+            <kbq-list-option value="disabled option" [disabled]="true">disabled option</kbq-list-option>
         </kbq-list-selection>
     `
 })
@@ -2703,11 +2703,11 @@ class SelectionListWithSelectedOption {}
     ],
     template: `
         <kbq-list-selection [(ngModel)]="selectedOptions">
-            <kbq-list-option [value]="'option_1'">Option 1</kbq-list-option>
-            <kbq-list-option [value]="'option_2'">Option 2</kbq-list-option>
-            <kbq-list-option [value]="'option_3'">Option 3</kbq-list-option>
-            <kbq-list-option [value]="'option_4'">Option 4</kbq-list-option>
-            <kbq-list-option [value]="'option_5'">Option 5</kbq-list-option>
+            <kbq-list-option value="option_1">Option 1</kbq-list-option>
+            <kbq-list-option value="option_2">Option 2</kbq-list-option>
+            <kbq-list-option value="option_3">Option 3</kbq-list-option>
+            <kbq-list-option value="option_4">Option 4</kbq-list-option>
+            <kbq-list-option value="option_5">Option 5</kbq-list-option>
         </kbq-list-selection>
     `
 })
@@ -2723,11 +2723,11 @@ class SelectionListFocusStates {
     ],
     template: `
         <kbq-list-selection>
-            <kbq-list-option [value]="'option_1'">
+            <kbq-list-option value="option_1">
                 Option 1
                 <kbq-option-action [kbqDropdownTriggerFor]="dropdown" />
             </kbq-list-option>
-            <kbq-list-option [value]="'option_2'">
+            <kbq-list-option value="option_2">
                 Option 2
                 <kbq-option-action [kbqDropdownTriggerFor]="dropdown" />
             </kbq-list-option>
@@ -2749,11 +2749,11 @@ class SelectionListWithActionButton {}
     ],
     template: `
         <kbq-list-selection>
-            <kbq-list-option [value]="'option_1'">
+            <kbq-list-option value="option_1">
                 Option 1
                 <kbq-option-action
+                    kbqTooltip="Tooltip text"
                     [kbqDropdownTriggerFor]="dropdown"
-                    [kbqTooltip]="'Tooltip text'"
                     [kbqTooltipDisabled]="tooltipDisabled"
                 />
             </kbq-list-option>
@@ -2816,11 +2816,11 @@ class SelectionListWithTabindexInDisabledState {
     imports: [KbqListModule],
     template: `
         <kbq-list-selection>
-            <kbq-list-option [value]="'opt1'">
+            <kbq-list-option value="opt1">
                 Option 1
                 <input aria-label="Note" />
             </kbq-list-option>
-            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
+            <kbq-list-option value="opt2">Option 2</kbq-list-option>
         </kbq-list-selection>
         <button type="button">After</button>
     `
@@ -2831,7 +2831,7 @@ class SelectionListWithFocusableContent {}
     imports: [KbqListModule, ReactiveFormsModule],
     template: `
         <kbq-list-selection [disabled]="disabled" [formControl]="control">
-            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
+            <kbq-list-option value="opt1">Option 1</kbq-list-option>
         </kbq-list-selection>
     `
 })
@@ -2847,10 +2847,10 @@ class SelectionListWithFormControlAndDisabledBinding {
     ],
     template: `
         <kbq-list-selection [autoSelect]="false" [(ngModel)]="selectedOptions">
-            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
-            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
+            <kbq-list-option value="opt1">Option 1</kbq-list-option>
+            <kbq-list-option value="opt2">Option 2</kbq-list-option>
             @if (renderLastOption) {
-                <kbq-list-option [value]="'opt3'">Option 3</kbq-list-option>
+                <kbq-list-option value="opt3">Option 3</kbq-list-option>
             }
         </kbq-list-selection>
         <button type="button">After</button>
@@ -2868,9 +2868,9 @@ class SelectionListWithModel {
     ],
     template: `
         <kbq-list-selection multiple="checkbox" [formControl]="formControl">
-            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
-            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
-            <kbq-list-option [value]="'opt3'">Option 3</kbq-list-option>
+            <kbq-list-option value="opt1">Option 1</kbq-list-option>
+            <kbq-list-option value="opt2">Option 2</kbq-list-option>
+            <kbq-list-option value="opt3">Option 3</kbq-list-option>
         </kbq-list-selection>
     `
 })
@@ -2885,8 +2885,8 @@ class SelectionListWithFormControl {
     ],
     template: `
         <kbq-list-selection multiple="checkbox" [(ngModel)]="selectedOptions">
-            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
-            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
+            <kbq-list-option value="opt1">Option 1</kbq-list-option>
+            <kbq-list-option value="opt2">Option 2</kbq-list-option>
         </kbq-list-selection>
     `
 })
@@ -2901,8 +2901,8 @@ class SelectionListWithPreselectedOption {
     ],
     template: `
         <kbq-list-selection multiple="checkbox" [(ngModel)]="selectedOptions">
-            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
-            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
+            <kbq-list-option value="opt1">Option 1</kbq-list-option>
+            <kbq-list-option value="opt2">Option 2</kbq-list-option>
         </kbq-list-selection>
     `
 })
@@ -2959,9 +2959,9 @@ class TestListSelectionWithDynamicList {
     imports: [KbqListModule],
     template: `
         <kbq-list-selection [autoSelect]="false" [noUnselectLast]="false" (onCopy)="handleCopy($event)">
-            <kbq-list-option [value]="'option1'">Option 1</kbq-list-option>
-            <kbq-list-option [value]="'option2'">Option 2</kbq-list-option>
-            <kbq-list-option [value]="'option3'">Option 3</kbq-list-option>
+            <kbq-list-option value="option1">Option 1</kbq-list-option>
+            <kbq-list-option value="option2">Option 2</kbq-list-option>
+            <kbq-list-option value="option3">Option 3</kbq-list-option>
         </kbq-list-selection>
     `
 })
@@ -2979,9 +2979,9 @@ class SelectionListWithOnCopyHandler {
     ],
     template: `
         <kbq-list-selection [horizontal]="true">
-            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
-            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
-            <kbq-list-option [value]="'opt3'">Option 3</kbq-list-option>
+            <kbq-list-option value="opt1">Option 1</kbq-list-option>
+            <kbq-list-option value="opt2">Option 2</kbq-list-option>
+            <kbq-list-option value="opt3">Option 3</kbq-list-option>
         </kbq-list-selection>
     `
 })
@@ -2994,8 +2994,8 @@ class SelectionListHorizontal {}
     ],
     template: `
         <kbq-list-selection multiple="checkbox" [formControl]="formControl">
-            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
-            <kbq-list-option [disabled]="true" [value]="'opt2'">Option 2</kbq-list-option>
+            <kbq-list-option value="opt1">Option 1</kbq-list-option>
+            <kbq-list-option value="opt2" [disabled]="true">Option 2</kbq-list-option>
         </kbq-list-selection>
     `
 })
@@ -3010,9 +3010,9 @@ class SelectionListWithFormControlAndDisabledOption {
     ],
     template: `
         <kbq-list-selection aria-label="Mailboxes">
-            <kbq-list-option [value]="'inbox'">Inbox</kbq-list-option>
-            <kbq-list-option [value]="'starred'">Starred</kbq-list-option>
-            <kbq-list-option [disabled]="true" [value]="'drafts'">Drafts</kbq-list-option>
+            <kbq-list-option value="inbox">Inbox</kbq-list-option>
+            <kbq-list-option value="starred">Starred</kbq-list-option>
+            <kbq-list-option value="drafts" [disabled]="true">Drafts</kbq-list-option>
         </kbq-list-selection>
     `
 })
@@ -3024,8 +3024,8 @@ class SelectionListForA11y {}
     ],
     template: `
         <kbq-list-selection aria-label="Mailboxes" multiple="checkbox">
-            <kbq-list-option [value]="'inbox'">Inbox</kbq-list-option>
-            <kbq-list-option [value]="'starred'">Starred</kbq-list-option>
+            <kbq-list-option value="inbox">Inbox</kbq-list-option>
+            <kbq-list-option value="starred">Starred</kbq-list-option>
         </kbq-list-selection>
     `
 })
@@ -3039,10 +3039,10 @@ class SelectionListMultipleForA11y {}
     template: `
         <kbq-list-selection aria-label="Security controls" multiple="checkbox">
             <kbq-optgroup label="Network">
-                <kbq-list-option [value]="'firewall'">Firewall</kbq-list-option>
-                <kbq-list-option [value]="'vpn'">VPN</kbq-list-option>
+                <kbq-list-option value="firewall">Firewall</kbq-list-option>
+                <kbq-list-option value="vpn">VPN</kbq-list-option>
             </kbq-optgroup>
-            <kbq-list-option [value]="'rbac'">RBAC</kbq-list-option>
+            <kbq-list-option value="rbac">RBAC</kbq-list-option>
         </kbq-list-selection>
     `
 })
@@ -3054,8 +3054,8 @@ class SelectionListGroupedForA11y {}
     ],
     template: `
         <kbq-list-selection aria-label="Mailboxes" [disabled]="true">
-            <kbq-list-option [value]="'inbox'">Inbox</kbq-list-option>
-            <kbq-list-option [value]="'starred'">Starred</kbq-list-option>
+            <kbq-list-option value="inbox">Inbox</kbq-list-option>
+            <kbq-list-option value="starred">Starred</kbq-list-option>
         </kbq-list-selection>
     `
 })
@@ -3065,7 +3065,7 @@ class SelectionListDisabledForA11y {}
     imports: [KbqListModule],
     template: `
         <kbq-list-selection [draggable]="true">
-            <kbq-list-option [value]="'pinned'">
+            <kbq-list-option value="pinned">
                 <span cdkDragHandle>handle</span>
                 Option
             </kbq-list-option>
@@ -3129,8 +3129,8 @@ class SelectionListWithDragAndDrop {
     imports: [KbqListModule],
     template: `
         <kbq-list-selection aria-label="Items" [draggable]="true">
-            <kbq-list-option [value]="'plain'">Plain</kbq-list-option>
-            <kbq-list-option [value]="'captioned'">
+            <kbq-list-option value="plain">Plain</kbq-list-option>
+            <kbq-list-option value="captioned">
                 Captioned
                 <span kbq-list-option-caption>Caption text</span>
             </kbq-list-option>
@@ -3201,18 +3201,13 @@ class ConnectedSelectionLists {
 @Component({
     imports: [KbqListModule],
     template: `
-        <kbq-list-selection
-            id="source-list"
-            [connectedTo]="'target-list'"
-            [draggable]="true"
-            (dropped)="dropped = $event"
-        >
+        <kbq-list-selection id="source-list" connectedTo="target-list" [draggable]="true" (dropped)="dropped = $event">
             @for (item of sourceItems(); track item) {
                 <kbq-list-option [value]="item">{{ item }}</kbq-list-option>
             }
         </kbq-list-selection>
         <kbq-list-selection id="target-list" [draggable]="true">
-            <kbq-list-option [value]="'target 0'">target 0</kbq-list-option>
+            <kbq-list-option value="target 0">target 0</kbq-list-option>
         </kbq-list-selection>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -3227,12 +3222,12 @@ class IdConnectedSelectionLists {
     imports: [KbqListModule, KbqOptionModule, KbqDividerModule],
     template: `
         <kbq-list-selection aria-label="Items" multiple="checkbox" [draggable]="true">
-            <kbq-list-option [value]="'loose'">Loose</kbq-list-option>
+            <kbq-list-option value="loose">Loose</kbq-list-option>
             <kbq-optgroup label="Group">
-                <kbq-list-option [value]="'grouped'">Grouped</kbq-list-option>
+                <kbq-list-option value="grouped">Grouped</kbq-list-option>
             </kbq-optgroup>
             <kbq-divider aria-hidden="true" />
-            <kbq-list-option [draggable]="false" [value]="'pinned'">Pinned</kbq-list-option>
+            <kbq-list-option value="pinned" [draggable]="false">Pinned</kbq-list-option>
         </kbq-list-selection>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -3260,8 +3255,8 @@ class SelectionListInVirtualScroll {
     template: `
         <kbq-list-selection [draggable]="draggable()">
             <kbq-optgroup label="Group">
-                <kbq-list-option [value]="'Item 0'">Item 0</kbq-list-option>
-                <kbq-list-option [value]="'Item 1'">Item 1</kbq-list-option>
+                <kbq-list-option value="Item 0">Item 0</kbq-list-option>
+                <kbq-list-option value="Item 1">Item 1</kbq-list-option>
             </kbq-optgroup>
         </kbq-list-selection>
     `,
@@ -3388,7 +3383,7 @@ class SingleSelectionListWithComparator {
 @Component({
     imports: [KbqListModule, ReactiveFormsModule],
     template: `
-        <kbq-list-selection multiple="checkbox" [compareWith]="$any(compareById)" [formControl]="formControl">
+        <kbq-list-selection multiple="checkbox" [compareWith]="compareById" [formControl]="formControl">
             @for (item of items(); track item.id) {
                 <kbq-list-option [value]="item">{{ item.label }}</kbq-list-option>
             }
@@ -3414,7 +3409,7 @@ class SelectionListWithAsymmetricComparator {
     template: `
         <kbq-list-selection multiple="checkbox" [formControl]="formControl">
             <kbq-list-option [value]="null">Any</kbq-list-option>
-            <kbq-list-option [value]="'a'">A</kbq-list-option>
+            <kbq-list-option value="a">A</kbq-list-option>
         </kbq-list-selection>
     `
 })
@@ -3471,9 +3466,9 @@ class SingleSelectionListWithMultipleValues {
     ],
     template: `
         <kbq-list-selection [multiple]="multiple()" [(ngModel)]="selected">
-            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
-            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
-            <kbq-list-option [value]="'opt3'">Option 3</kbq-list-option>
+            <kbq-list-option value="opt1">Option 1</kbq-list-option>
+            <kbq-list-option value="opt2">Option 2</kbq-list-option>
+            <kbq-list-option value="opt3">Option 3</kbq-list-option>
         </kbq-list-selection>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -3487,9 +3482,9 @@ class SelectionListWithBoundMultiple {
     imports: [KbqListModule, ReactiveFormsModule],
     template: `
         <kbq-list-selection [multiple]="multiple()" [formControl]="formControl()">
-            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
-            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
-            <kbq-list-option [value]="'opt3'">Option 3</kbq-list-option>
+            <kbq-list-option value="opt1">Option 1</kbq-list-option>
+            <kbq-list-option value="opt2">Option 2</kbq-list-option>
+            <kbq-list-option value="opt3">Option 3</kbq-list-option>
         </kbq-list-selection>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -3503,8 +3498,8 @@ class SelectionListWithBoundMultipleAndControl {
     imports: [KbqListModule],
     template: `
         <kbq-list-selection multiple="false">
-            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
-            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
+            <kbq-list-option value="opt1">Option 1</kbq-list-option>
+            <kbq-list-option value="opt2">Option 2</kbq-list-option>
         </kbq-list-selection>
     `
 })
@@ -3514,8 +3509,8 @@ class SelectionListMultipleFalse {}
     imports: [KbqListModule],
     template: `
         <kbq-list-selection multiple>
-            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
-            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
+            <kbq-list-option value="opt1">Option 1</kbq-list-option>
+            <kbq-list-option value="opt2">Option 2</kbq-list-option>
         </kbq-list-selection>
     `
 })
@@ -3525,8 +3520,8 @@ class SelectionListBareMultiple {}
     imports: [KbqListModule],
     template: `
         <kbq-list-selection autoSelect="true" [multiple]="multiple()">
-            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
-            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
+            <kbq-list-option value="opt1">Option 1</kbq-list-option>
+            <kbq-list-option value="opt2">Option 2</kbq-list-option>
         </kbq-list-selection>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -3873,8 +3868,8 @@ describe('KbqListSelection multiple mode', () => {
     imports: [KbqListModule],
     template: `
         <kbq-list-selection noUnselectLast="false" [multiple]="multiple()">
-            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
-            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
+            <kbq-list-option value="opt1">Option 1</kbq-list-option>
+            <kbq-list-option value="opt2">Option 2</kbq-list-option>
         </kbq-list-selection>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -4664,7 +4659,7 @@ class SelectionListWithSelectAll {
                 absence can only be explained by the virtual-scroll gate: the virtual-for itself
                 renders nothing in jsdom, where a zero-height viewport reports no visible range.
             -->
-            <kbq-list-option [value]="'pinned'">Pinned</kbq-list-option>
+            <kbq-list-option value="pinned">Pinned</kbq-list-option>
             <cdk-virtual-scroll-viewport style="height: 100%" itemSize="32">
                 <kbq-list-option *cdkVirtualFor="let item of items" [value]="item">{{ item }}</kbq-list-option>
             </cdk-virtual-scroll-viewport>

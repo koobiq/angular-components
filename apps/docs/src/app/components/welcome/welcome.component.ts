@@ -5,19 +5,18 @@ import {
     computed,
     ElementRef,
     inject,
-    OnInit,
+    type OnInit,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
+import { debounceTime, fromEvent } from 'rxjs';
 import { KbqThemeService } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
-import { fromEvent } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
 import { DocsDocStates } from 'src/app/services/doc-states';
 import { DocsLocaleState } from 'src/app/services/locale';
-import { docsGetCategories, DocsStructureCategory } from '../../structure';
+import { docsGetCategories } from '../../structure';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 
 @Component({
@@ -29,7 +28,7 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
         DocsRegisterHeaderDirective
     ],
     templateUrl: './welcome.component.html',
-    styleUrls: ['./welcome.component.scss'],
+    styleUrl: './welcome.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -40,7 +39,7 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
 export class DocsWelcomeComponent extends DocsLocaleState implements OnInit {
     private readonly themeService = inject(KbqThemeService);
 
-    protected structureCategories: DocsStructureCategory[];
+    protected readonly structureCategories = docsGetCategories().filter((category) => category.isPreviewed);
     readonly currentTheme = computed(() => this.themeService.colorScheme());
 
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -55,7 +54,6 @@ export class DocsWelcomeComponent extends DocsLocaleState implements OnInit {
     }
 
     ngOnInit(): void {
-        this.structureCategories = docsGetCategories().filter((category) => category.isPreviewed);
         this.docStates.registerHeaderScrollContainer(this.elementRef.nativeElement);
     }
 

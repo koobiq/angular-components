@@ -4,7 +4,7 @@
  ******************************************************************************
  */
 
-import { Type } from '@angular/core';
+import type { Type } from '@angular/core';
 
 /** Loads the component of the example with the given id, or resolves to `undefined` for an unknown id. */
 export async function loadExampleComponent(id: string): Promise<Type<unknown> | undefined> {
@@ -265,6 +265,12 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/datepicker').then((m) => m.DatepickerRangeExample);
         case 'datepicker-required':
             return import('@koobiq/docs-examples/components/datepicker').then((m) => m.DatepickerRequiredExample);
+        case 'datetime-overview':
+            return import('@koobiq/docs-examples/components/datetime').then((m) => m.DatetimeOverviewExample);
+        case 'datetime-validation':
+            return import('@koobiq/docs-examples/components/datetime').then((m) => m.DatetimeValidationExample);
+        case 'datetime-with-seconds':
+            return import('@koobiq/docs-examples/components/datetime').then((m) => m.DatetimeWithSecondsExample);
         case 'divider-overview':
             return import('@koobiq/docs-examples/components/divider').then((m) => m.DividerOverviewExample);
         case 'divider-vertical':
@@ -847,6 +853,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/select').then((m) => m.SelectDisabledExample);
         case 'select-footer':
             return import('@koobiq/docs-examples/components/select').then((m) => m.SelectFooterExample);
+        case 'select-groups-label':
+            return import('@koobiq/docs-examples/components/select').then((m) => m.SelectGroupsLabelExample);
         case 'select-groups':
             return import('@koobiq/docs-examples/components/select').then((m) => m.SelectGroupsExample);
         case 'select-height':

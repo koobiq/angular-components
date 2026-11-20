@@ -26,7 +26,7 @@ describe('kbqAnimationsSettled', () => {
 
         const settled = vi.fn();
 
-        kbqAnimationsSettled(elementWithPausedAnimation(), 1000)!.then(settled);
+        void kbqAnimationsSettled(elementWithPausedAnimation(), 1000)!.then(settled);
 
         await vi.advanceTimersByTimeAsync(999);
         expect(settled).not.toHaveBeenCalled();

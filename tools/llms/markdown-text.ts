@@ -26,7 +26,7 @@ export const tableCells = (table: Table, text: string): string[][] =>
     );
 
 /** A table without the padding that aligns its columns: an agent pays for every space of it. */
-export const renderTable = ([header, ...rows]: string[][]): string =>
+export const renderTable = ([header = [], ...rows]: string[][]): string =>
     [header, header.map(() => '-'), ...rows].map((cells) => `| ${cells.join(' | ')} |`).join('\n');
 
 /** The text with every table in it written without padding; the rest stays as written. */
@@ -77,9 +77,9 @@ export const headingLevels = (text: string): number[] => {
     const levels: number[] = [];
 
     forEachLine(text, (line, outsideCode) => {
-        const heading = outsideCode && HEADING.exec(line);
+        const hashes = outsideCode && HEADING.exec(line)?.[1];
 
-        if (heading) levels.push(heading[1].length);
+        if (hashes) levels.push(hashes.length);
     });
 
     return levels;

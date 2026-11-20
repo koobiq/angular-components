@@ -15,9 +15,9 @@
 }
 
 .example-popover-close__text {
-    color: #6c7393;
     margin-top: 4px;
     margin-bottom: 12px;
+    color: #6c7393;
 }
 
 .example-popover-close__list {
@@ -39,6 +39,6 @@
 .example-popover-close__list-item-image {
     width: 32px;
     height: 32px;
-    border-radius: 100%;
     margin-right: 12px;
+    border-radius: 100%;
 }

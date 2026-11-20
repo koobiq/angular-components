@@ -1,4 +1,4 @@
-import { KbqLocaleStringsData } from './types';
+import type { KbqLocaleStringsData } from './types';
 
 export const esLALocaleData = {
     a11y: {
@@ -15,6 +15,8 @@ export const esLALocaleData = {
         previousMonth: 'Mes anterior',
         currentDate: 'Fecha actual',
         nextMonth: 'Mes siguiente',
+        month: 'Mes',
+        year: 'Año',
         clear: 'Borrar',
         showPassword: 'Mostrar la contraseña',
         hidePassword: 'Ocultar la contraseña',
@@ -22,7 +24,10 @@ export const esLALocaleData = {
         resizePanels: 'Redimensionar paneles',
         toastRegion: 'Notificaciones',
         optionActions: 'Acciones',
-        progressBar: 'Progreso'
+        progressBar: 'Progreso',
+        date: 'Fecha',
+        time: 'Hora',
+        search: 'Búsqueda'
     },
     select: {
         hiddenItemsText: '+{{ number }}',
@@ -136,13 +141,15 @@ export const esLALocaleData = {
         openText: 'Expandir',
         closeText: 'Contraer',
         showMoreText: 'Mostrar {exceededItemCount} más',
-        moreText: 'más'
+        moreText: 'más',
+        showMoreTextCompact: '{exceededItemCount} más'
     },
     navbar: {
         toggle: {
             expand: 'Expandir',
             collapse: 'Colapsar'
-        }
+        },
+        more: 'Más'
     },
     searchExpandable: {
         tooltip: 'Búsqueda',

@@ -1,6 +1,6 @@
 import { CdkScrollableModule, ScrollDispatcher, ViewportRuler } from '@angular/cdk/scrolling';
 import {
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
@@ -11,7 +11,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     KBQ_SELECT_SCROLL_STRATEGY,
-    KbqAutoHideScrollStrategy,
+    type KbqAutoHideScrollStrategy,
     kbqAutoHideScrollStrategyFactory
 } from '@koobiq/components/core';
 import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';

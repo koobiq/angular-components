@@ -272,7 +272,6 @@ export class KbqFileUploadModule {
 
 // @public
 export class KbqFullScreenDropzoneService extends KbqDrop implements OnDestroy {
-    constructor();
     close(): void;
     protected createOverlay(): OverlayRef;
     init(config?: KbqDropzoneData): void;

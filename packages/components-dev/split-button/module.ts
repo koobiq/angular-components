@@ -42,6 +42,4 @@ export class DevDocsExamples {}
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class DevApp {
-    search: string;
-}
+export class DevApp {}

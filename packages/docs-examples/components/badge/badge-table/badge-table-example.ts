@@ -15,7 +15,7 @@ import { TRANSLATIONS } from './l10n';
         KbqLink,
         KbqTableModule
     ],
-    templateUrl: 'badge-table-example.html',
+    templateUrl: './badge-table-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BadgeTableExample {

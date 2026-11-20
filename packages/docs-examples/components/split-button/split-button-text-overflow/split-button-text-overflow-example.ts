@@ -21,21 +21,21 @@ import { TRANSLATIONS } from './l10n';
     ],
     template: `
         <kbq-split-button>
-            <button kbq-button>
+            <button kbq-button type="button">
                 <i kbq-icon="kbq-plus_16"></i>
                 <span kbq-title class="kbq-truncate-line">
                     {{ t().saveEngineering }}
                 </span>
             </button>
-            <button kbq-button [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
+            <button kbq-button type="button" [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </kbq-split-button>
 
         <kbq-dropdown #dropdown="kbqDropdown">
-            <button kbq-dropdown-item>Extra Action 1</button>
-            <button kbq-dropdown-item>Extra Action 2</button>
-            <button kbq-dropdown-item>Extra Action 3</button>
+            <button kbq-dropdown-item type="button">Extra Action 1</button>
+            <button kbq-dropdown-item type="button">Extra Action 2</button>
+            <button kbq-dropdown-item type="button">Extra Action 3</button>
         </kbq-dropdown>
     `,
     styles: `

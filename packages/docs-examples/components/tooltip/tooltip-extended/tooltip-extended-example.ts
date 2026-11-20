@@ -28,8 +28,8 @@ import { TRANSLATIONS } from './l10n';
             <a
                 kbqLink
                 href="https://en.wikipedia.org/wiki/Geocentric_orbit"
+                kbqTooltipClass="example__custom-tooltip"
                 [kbqTooltip]="tooltipContent"
-                [kbqTooltipClass]="'example__custom-tooltip'"
                 [kbqTooltipArrow]="true"
                 [kbqTooltipColor]="extendedTooltipPreferredColor"
             >
@@ -44,8 +44,9 @@ import { TRANSLATIONS } from './l10n';
 
         <button
             kbq-button
+            type="button"
+            kbqTooltipClass="example__custom-extended-tooltip"
             [kbqTooltip]="tableContent"
-            [kbqTooltipClass]="'example__custom-extended-tooltip'"
             [kbqTooltipColor]="extendedTooltipPreferredColor"
         >
             Table Data
