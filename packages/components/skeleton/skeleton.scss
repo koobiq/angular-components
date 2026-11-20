@@ -1,9 +1,9 @@
 @use '../core/styles/common/animation';
 
 // The wave crosses the viewport, not the host: the host offset turns viewport coordinates into the host's own, so
-// every skeleton on the page shows the same band at the same moment. `mask-position` is animated directly and must
-// never be `!important`: either an animated custom property or an important base value makes the browser recompute
-// the whole style of every host on every frame.
+// every skeleton of one duration on the page shows the same band at the same moment. `mask-position` is animated
+// directly and must never be `!important`: either an animated custom property or an important base value makes the
+// browser recompute the whole style of every host on every frame.
 @keyframes kbq-skeleton-wave {
     from {
         mask-position:
@@ -60,6 +60,7 @@
     pointer-events: none;
     user-select: none;
 
+    // The `animationDuration` input sets the duration on the host.
     animation: kbq-skeleton-wave var(--kbq-skeleton-animation-duration) ease-in infinite;
 
     // A host outside the viewport keeps the fill and skips the per-frame work of the wave.

@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KBQ_ANIMATIONS_CONFIG, KBQ_WINDOW } from '@koobiq/components/core';
-import { KbqSkeleton } from './skeleton';
+import { KbqSkeleton, kbqSkeletonOptionsProvider } from './skeleton';
 
 const waveAnimationName = 'kbq-skeleton-wave';
 const offscreenClass = 'kbq-skeleton_offscreen';
@@ -19,6 +19,23 @@ const offscreenClass = 'kbq-skeleton_offscreen';
 })
 class TestSkeleton {
     readonly loading = signal(false);
+}
+
+@Component({
+    selector: 'test-skeleton-nested-options',
+    imports: [KbqSkeleton],
+    template: '<kbq-skeleton />',
+    providers: [kbqSkeletonOptionsProvider({})]
+})
+class TestNestedOptions {}
+
+@Component({
+    selector: 'test-skeleton-duration',
+    imports: [KbqSkeleton],
+    template: '<kbq-skeleton [animationDuration]="duration()" />'
+})
+class TestDuration {
+    readonly duration = signal<number | string>(2000);
 }
 
 /**
@@ -92,6 +109,9 @@ const stubAnimation = (element: HTMLElement, startTime: number, animationName = 
 
 const getOffset = (element: HTMLElement): string => element.style.getPropertyValue('--kbq-skeleton-offset');
 
+const getDuration = (element: HTMLElement): string =>
+    element.style.getPropertyValue('--kbq-skeleton-animation-duration');
+
 describe(KbqSkeleton.name, () => {
     let env: ReturnType<typeof createWindow>;
 
@@ -149,6 +169,83 @@ describe(KbqSkeleton.name, () => {
 
         expect(skeletons.length).toBe(2);
         skeletons.forEach((element) => expect(element.classList).toContain('kbq-animations-disabled'));
+    });
+
+    it('should run the wave for 1200 ms without options', () => {
+        const [element] = getSkeletons(createFixture());
+
+        expect(getDuration(element)).toBe('1200ms');
+    });
+
+    it('should set the duration only while enabled', () => {
+        const fixture = createFixture();
+        const [, button] = getSkeletons(fixture);
+
+        expect(getDuration(button)).toBe('');
+
+        fixture.componentInstance.loading.set(true);
+        fixture.detectChanges();
+
+        expect(getDuration(button)).toBe('1200ms');
+
+        fixture.componentInstance.loading.set(false);
+        fixture.detectChanges();
+
+        expect(getDuration(button)).toBe('');
+    });
+
+    it('should take the duration of the wave from the options', () => {
+        TestBed.configureTestingModule({
+            providers: [kbqSkeletonOptionsProvider({ animationDuration: 3000 })]
+        });
+
+        const [element] = getSkeletons(createFixture());
+
+        expect(getDuration(element)).toBe('3000ms');
+    });
+
+    it('should keep the duration nested options leave out', () => {
+        TestBed.configureTestingModule({
+            providers: [kbqSkeletonOptionsProvider({ animationDuration: 3000 })]
+        });
+
+        const fixture = TestBed.createComponent(TestNestedOptions);
+
+        fixture.detectChanges();
+
+        expect(getDuration(getSkeletons(fixture)[0])).toBe('3000ms');
+    });
+
+    it('should let the input override the options', () => {
+        TestBed.configureTestingModule({
+            providers: [kbqSkeletonOptionsProvider({ animationDuration: 3000 })]
+        });
+
+        const fixture = TestBed.createComponent(TestDuration);
+
+        fixture.detectChanges();
+
+        const [element] = getSkeletons(fixture);
+
+        expect(getDuration(element)).toBe('2000ms');
+
+        fixture.componentInstance.duration.set('2500');
+        fixture.detectChanges();
+
+        expect(getDuration(element)).toBe('2500ms');
+    });
+
+    it('should fall back to the options for a value that is not a number', () => {
+        TestBed.configureTestingModule({
+            providers: [kbqSkeletonOptionsProvider({ animationDuration: 3000 })]
+        });
+
+        const fixture = TestBed.createComponent(TestDuration);
+
+        fixture.componentInstance.duration.set('');
+        fixture.detectChanges();
+
+        expect(getDuration(getSkeletons(fixture)[0])).toBe('3000ms');
     });
 
     it('should shift the wave by the host offset on every pass', () => {

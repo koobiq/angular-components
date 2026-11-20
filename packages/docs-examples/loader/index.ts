@@ -933,6 +933,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/sidepanel').then((m) => m.SidepanelWithDynamicConfigUpdateExample);
         case 'skeleton-accordion':
             return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonAccordionExample);
+        case 'skeleton-animation-duration':
+            return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonAnimationDurationExample);
         case 'skeleton-basic':
             return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonBasicExample);
         case 'skeleton-checkable':
