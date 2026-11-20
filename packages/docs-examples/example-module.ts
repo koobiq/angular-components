@@ -4247,10 +4247,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "input-monospace-example.ts"
     ],
-    "localImportFiles": [
-      "../../../i18n/index.ts",
-      "l10n.ts"
-    ],
+    "localImportFiles": [],
     "selector": "input-monospace-example",
     "primaryFile": "input-monospace-example.ts",
     "importPath": "components/input"
