@@ -359,7 +359,7 @@ export class KbqTreeNodeOutletContext<T> {
 }
 
 // @public (undocumented)
-export class KbqTreeNodePadding<T> implements AfterViewInit {
+export class KbqTreeNodePadding<T> {
     constructor();
     iconWidth: number;
     readonly indent: _angular_core.InputSignal<string | number>;
@@ -371,8 +371,6 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
     // (undocumented)
     get level(): number;
     set level(value: number);
-    // (undocumented)
-    ngAfterViewInit(): void;
     // (undocumented)
     paddingIndent(): string | null;
     // (undocumented)
