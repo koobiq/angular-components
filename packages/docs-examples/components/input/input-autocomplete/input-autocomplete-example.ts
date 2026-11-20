@@ -11,13 +11,25 @@ import { TRANSLATIONS } from './l10n';
     template: `
         <kbq-form-field style="width: 320px">
             <kbq-label>{{ t().withAutocomplete }}</kbq-label>
-            <input kbqInput type="email" name="email" autocomplete="email" [formControl]="withAutocomplete" />
-            <kbq-hint>admin@admin.ai</kbq-hint>
+            <input
+                kbqInput
+                type="email"
+                name="email"
+                autocomplete="email"
+                [placeholder]="t().emailPlaceholder"
+                [formControl]="withAutocomplete"
+            />
         </kbq-form-field>
 
         <kbq-form-field style="width: 320px">
             <kbq-label>{{ t().withoutAutocomplete }}</kbq-label>
-            <input kbqInput type="email" autocomplete="off" [formControl]="withoutAutocomplete" />
+            <input
+                kbqInput
+                type="email"
+                autocomplete="off"
+                [placeholder]="t().emailPlaceholder"
+                [formControl]="withoutAutocomplete"
+            />
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

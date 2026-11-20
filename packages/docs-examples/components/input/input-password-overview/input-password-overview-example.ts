@@ -32,9 +32,7 @@ const passwordMinLength =
             <kbq-label>{{ t().password }}</kbq-label>
             <input kbqInputPassword [formControl]="control" />
             <kbq-password-toggle [kbqTooltipHidden]="t().showPassword" [kbqTooltipNotHidden]="t().hidePassword" />
-            <kbq-reactive-password-hint [hasError]="control.hasError('minLength')">
-                {{ t().minLength }}
-            </kbq-reactive-password-hint>
+            <kbq-hint>{{ t().minLength }}</kbq-hint>
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

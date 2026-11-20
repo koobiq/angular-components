@@ -4,15 +4,18 @@ import type { Translations } from '@koobiq/docs-examples/i18n';
 export interface ExampleTranslation {
     withAutocomplete: string;
     withoutAutocomplete: string;
+    emailPlaceholder: string;
 }
 
 export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         withAutocomplete: 'Email (с автозаполнением)',
-        withoutAutocomplete: 'Email (без автозаполнения)'
+        withoutAutocomplete: 'Email (без автозаполнения)',
+        emailPlaceholder: 'Введите email'
     },
     default: {
         withAutocomplete: 'Email (with autocomplete)',
-        withoutAutocomplete: 'Email (without autocomplete)'
+        withoutAutocomplete: 'Email (without autocomplete)',
+        emailPlaceholder: 'Enter email'
     }
 };
