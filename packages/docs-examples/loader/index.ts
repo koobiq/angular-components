@@ -1231,6 +1231,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectCustomMatcherWithInputExample);
         case 'tree-select-custom-matcher':
             return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectCustomMatcherExample);
+        case 'tree-select-custom-tag-content':
+            return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectCustomTagContentExample);
         case 'tree-select-custom-trigger':
             return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectCustomTriggerExample);
         case 'tree-select-deleted-nodes':
@@ -1249,8 +1251,12 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectLocaleConfigurationExample);
         case 'tree-select-multiple-overview':
             return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectMultipleOverviewExample);
+        case 'tree-select-no-variants':
+            return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectNoVariantsExample);
         case 'tree-select-overview':
             return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectOverviewExample);
+        case 'tree-select-scroll-strategy':
+            return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectScrollStrategyExample);
         case 'tree-select-scrolling-and-layering-page':
             return import('@koobiq/docs-examples/components/tree-select').then((m) => m.TreeSelectScrollingAndLayeringPageExample);
         case 'tree-select-scrolling-and-layering':
