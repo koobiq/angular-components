@@ -279,6 +279,12 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
 }
 
 // @public
+export type KbqPasswordToggleControl = {
+    readonly elementType: Signal<'text' | 'password'>;
+    toggleType: () => void;
+};
+
+// @public
 export class KbqPrefix {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPrefix, "[kbqPrefix]", ["kbqPrefix"], {}, {}, never, never, true, never>;
@@ -302,8 +308,9 @@ export class KbqReactivePasswordHint extends KbqHint {
 // @public
 export class KbqStepper {
     constructor();
-    // Warning: (ae-forgotten-export) The symbol "KbqStepperControl" needs to be exported by the entry point koobiq-components-form-field.d.ts
-    protected readonly control: Signal<KbqStepperControl>;
+    protected readonly control: Signal<KbqStepperControl & {
+        readonly controlType: "input-number";
+    }>;
     protected readonly inactive: Signal<boolean>;
     protected readonly mouseUp: Subject<void>;
     onStepDown(event: MouseEvent): void;
@@ -316,6 +323,15 @@ export class KbqStepper {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqStepper, never>;
 }
+
+// @public
+export type KbqStepperControl = {
+    readonly disabled: boolean;
+    readonly readonly: Signal<boolean>;
+    readonly step: Signal<number>;
+    stepUp: (step: number) => void;
+    stepDown: (step: number) => void;
+};
 
 // @public
 export class KbqSuffix {

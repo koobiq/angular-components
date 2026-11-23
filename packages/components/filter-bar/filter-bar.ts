@@ -19,6 +19,7 @@ import { BehaviorSubject } from 'rxjs';
 import { KbqLocaleOverridesDirective, KbqStateSaving } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import {
+    KBQ_FILTER_BAR,
     KBQ_FILTER_BAR_HOST,
     KBQ_FILTER_BAR_LOCALE_CONFIGURATION,
     type KbqFilter,
@@ -33,7 +34,6 @@ import {
     type KbqFilterBarNameResolver
 } from './filter-bar-name';
 import { KbqFilterReset } from './filter-reset';
-// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqFilters } from './filters';
 import { getId } from './pipes/base-pipe';
 
@@ -87,7 +87,10 @@ const normalizeFilterBarState = (parsed: unknown): KbqFilterBarState | null => {
         </div>
     `,
     styleUrls: ['./filter-bar-tokens.scss', './filter-bar.scss'],
-    providers: [{ provide: KBQ_FILTER_BAR_HOST, useExisting: forwardRef(() => KbqFilterBar) }],
+    providers: [
+        { provide: KBQ_FILTER_BAR_HOST, useExisting: forwardRef(() => KbqFilterBar) },
+        { provide: KBQ_FILTER_BAR, useExisting: forwardRef(() => KbqFilterBar) }
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

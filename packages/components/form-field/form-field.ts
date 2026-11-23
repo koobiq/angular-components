@@ -34,15 +34,13 @@ import { KBQ_CONNECTED_OVERLAY_ORIGIN, KBQ_FORM_FIELD_REF, KbqColorDirective } f
 import { kbqIconErrorStateContextFactoryProvider } from '@koobiq/components/icon';
 import { KbqCleaner, kbqCleanerFactoryProvider } from './cleaner';
 import { KbqError } from './error';
+import { KBQ_FORM_FIELD } from './form-field.types';
 import { KbqFormFieldControl, kbqSetDescribedByIds } from './form-field-control';
 import { KbqHint, kbqHintParentFactoryProvider } from './hint';
 import { KbqLabel } from './label';
-// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqPasswordToggle } from './password-toggle';
 import { KbqPrefix } from './prefix';
-// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqReactivePasswordHint } from './reactive-password-hint';
-// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqStepper } from './stepper';
 import { KbqSuffix } from './suffix';
 
@@ -50,13 +48,6 @@ import { KbqSuffix } from './suffix';
 export function getKbqFormFieldMissingControlError(): Error {
     return Error('kbq-form-field must contain a KbqFormFieldControl');
 }
-
-/**
- * Injection token used to access the owning `KbqFormField`.
- *
- * @docs-private
- */
-export const KBQ_FORM_FIELD = new InjectionToken<KbqFormField>('KbqFormField');
 
 /**
  * Default options for the kbq-form-field that can be configured using the `KBQ_FORM_FIELD_DEFAULT_OPTIONS`

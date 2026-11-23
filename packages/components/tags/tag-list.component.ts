@@ -45,7 +45,6 @@ import {
     runClearPredicate
 } from '@koobiq/components/core';
 import { KbqCleaner, kbqCleanerFactoryProvider, KbqFormFieldControl } from '@koobiq/components/form-field';
-// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import {
     KbqTag,
     type KbqTagDragData,
@@ -54,6 +53,7 @@ import {
     type KbqTagFocusEvent
 } from './tag.component';
 import type { KbqTagTextControl } from './tag-text-control';
+import { KBQ_TAG_LIST } from './tags.types';
 
 /** Change event object that is emitted when the tag list value has changed. */
 export class KbqTagListChange {
@@ -83,6 +83,7 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
     styleUrls: ['./tag-list.scss', './tag-tokens.scss'],
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqTagList },
+        { provide: KBQ_TAG_LIST, useExisting: KbqTagList },
         kbqCleanerFactoryProvider(() => {
             const tagList = inject(KbqTagList);
 

@@ -27,9 +27,9 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
-import { KbqFilterBar } from './filter-bar';
+import type { KbqFilterBar } from './filter-bar';
 import {
+    KBQ_FILTER_BAR,
     KBQ_FILTERS,
     type KbqFilter,
     type KbqSaveFilterError,
@@ -77,7 +77,7 @@ export class KbqFilters implements OnInit {
     protected readonly placements = PopUpPlacements;
 
     /** KbqFilterBar instance */
-    protected readonly filterBar = inject(KbqFilterBar);
+    protected readonly filterBar: KbqFilterBar = inject(KBQ_FILTER_BAR);
 
     /** @docs-private */
     protected readonly mainButton = viewChild.required<KbqButton>('mainButton');

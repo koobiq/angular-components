@@ -16,11 +16,9 @@ import {
     untracked
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
-import { KbqAccordion, type KbqAccordionOrientation } from './accordion';
-// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
+import type { KbqAccordion, KbqAccordionOrientation } from './accordion';
+import { KBQ_ACCORDION, KBQ_ACCORDION_ITEM } from './accordion.types';
 import { KbqAccordionContentDirective } from './accordion-content.directive';
-// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqAccordionTrigger } from './accordion-trigger';
 import { KbqAccordionTriggerDirective } from './accordion-trigger.directive';
 
@@ -30,6 +28,7 @@ export type KbqAccordionItemState = 'open' | 'closed';
 
 @Directive({
     selector: 'kbq-accordion-item, [kbq-accordion-item]',
+    providers: [{ provide: KBQ_ACCORDION_ITEM, useExisting: forwardRef(() => KbqAccordionItem) }],
     host: {
         class: 'kbq-accordion-item',
         '[attr.data-state]': 'dataState',
@@ -42,7 +41,7 @@ export class KbqAccordionItem implements OnChanges, OnInit, OnDestroy {
      * The accordion this item belongs to — always the nearest one, because it is injected.
      * The accordion reads it back to tell its own items apart from a nested accordion's.
      */
-    readonly accordion = inject(KbqAccordion);
+    readonly accordion: KbqAccordion = inject(KBQ_ACCORDION);
     /** @docs-private */
     protected readonly expansionDispatcher = inject(UniqueSelectionDispatcher);
 

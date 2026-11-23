@@ -20,7 +20,7 @@ import {
     KbqErrorStateTracker,
     kbqInjectAutofilled
 } from '@koobiq/components/core';
-import { KbqFormFieldControl } from '@koobiq/components/form-field';
+import { KbqFormFieldControl, type KbqPasswordToggleControl } from '@koobiq/components/form-field';
 import { KBQ_INPUT_VALUE_ACCESSOR } from './input-value-accessor';
 
 const isObject = (value: unknown): value is object => typeof value === 'object' && value !== null;
@@ -50,7 +50,9 @@ const isObject = (value: unknown): value is object => typeof value === 'object' 
     },
     exportAs: 'kbqInputPassword'
 })
-export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanUpdateErrorState {
+export class KbqInputPassword
+    implements KbqFormFieldControl<any>, KbqPasswordToggleControl, DoCheck, CanUpdateErrorState
+{
     protected elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     ngControl = inject(NgControl, { optional: true, self: true });
     parentForm = inject(NgForm, { optional: true });

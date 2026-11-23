@@ -13,31 +13,38 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { concatMap, fromEvent, interval, Subject, take, takeUntil, timer } from 'rxjs';
 import { KbqIconModule } from '@koobiq/components/icon';
-// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
-import { KBQ_FORM_FIELD } from './form-field';
+import { KBQ_FORM_FIELD } from './form-field.types';
 
 /**
- * Narrow structural contract for `KbqNumberInput`, duck-typed here to avoid a circular dependency between
- * `@koobiq/components/form-field` and `@koobiq/components/input`. It is not the form field control: that is
- * `KbqInput` on the same element.
+ * What `kbq-stepper` needs from the number input of its form field, implemented by `KbqNumberInput`. Declared here,
+ * since `@koobiq/components/input` depends on the form field and not the other way round. It is not the form field
+ * control: that is `KbqInput` on the same element.
+ *
+ * @docs-private
  */
-type KbqStepperControl = {
-    readonly controlType: 'input-number';
-    /** Read by the template, so it has to be backed by a signal for the stepper to follow it. */
+export type KbqStepperControl = {
+    /**
+     * Whether the input is disabled. Read by the template, so it has to be backed by a signal for the stepper to
+     * follow it.
+     */
     readonly disabled: boolean;
     /** Whether the field is read-only: the stepper stays visible but does not step. */
     readonly readonly: Signal<boolean>;
-    /** A signal since the input review: `step` is an `input()` on `KbqNumberInput`. */
+    /** The value a click on the stepper adds or subtracts. */
     readonly step: Signal<number>;
+    /** Increases the value by `step`. */
     stepUp: (step: number) => void;
     /** Decreases the value by `step`. */
     stepDown: (step: number) => void;
 };
 
 /**
- * Checks whether the given value structurally matches `KbqStepperControl`.
+ * Checks whether the given value is the number input: its `controlType` is `input-number`, and it matches
+ * `KbqStepperControl`.
  */
-const isStepperControl = (control: unknown): control is KbqStepperControl => {
+const isStepperControl = (
+    control: unknown
+): control is KbqStepperControl & { readonly controlType: 'input-number' } => {
     return (
         !!control &&
         typeof control === 'object' &&
@@ -138,7 +145,7 @@ export class KbqStepper {
      *
      * @docs-private
      */
-    protected readonly control = computed<KbqStepperControl>(() => {
+    protected readonly control = computed(() => {
         const control = this.formField?.control();
         // `formFieldControl` here is `KbqInput` (it owns the `KbqFormFieldControl` provider on
         // `<input kbqNumberInput>`), not the number-input itself: `stepUp`/`stepDown`/`step`

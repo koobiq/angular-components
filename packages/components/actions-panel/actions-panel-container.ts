@@ -26,8 +26,7 @@ import {
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
-import { KbqActionsPanel } from './actions-panel';
+import { KBQ_ACTIONS_PANEL } from './actions-panel.types';
 import { KbqActionsPanelConfig } from './actions-panel-config';
 
 /** Localization configuration provider. */
@@ -138,7 +137,7 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
      */
     protected readonly config = inject(KbqActionsPanelConfig);
 
-    private readonly actionsPanel = inject(KbqActionsPanel);
+    private readonly actionsPanel = inject(KBQ_ACTIONS_PANEL);
     private readonly renderer = inject(Renderer2);
 
     /**
