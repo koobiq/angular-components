@@ -125,7 +125,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     readonly panelWidth: i0.InputSignal<KbqPanelWidth>;
     parent: KbqDropdownPanel | undefined;
     resetActiveItem(): void;
-    resetAnimation(panelElement?: HTMLElement): void;
+    resetAnimation(): void;
     restoreFocus(): boolean;
     readonly safeArea: i0.InputSignalWithTransform<boolean, unknown>;
     setPositionClasses(posX?: KbqDropdownPositionX, posY?: KbqDropdownPositionY): void;
