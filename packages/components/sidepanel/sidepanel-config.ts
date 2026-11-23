@@ -62,12 +62,13 @@ export class KbqSidepanelConfig<D = any> {
 
     backdropClass?: string;
 
-    /** Whether the user can use escape or clicking outside to close the sidepanel. */
+    /** Whether the user can close the sidepanel by any UI action: escape, clicking outside or the close button. */
     disableClose?: boolean = false;
 
     /**
      * Guard intercepting every close attempt, including the programmatic `close()`.
      * Returning `true` closes the panel, `false` keeps it open; async decisions are awaited.
+     * Defaults to no guard: every close attempt is allowed.
      */
     canClose?: KbqCanClose;
 

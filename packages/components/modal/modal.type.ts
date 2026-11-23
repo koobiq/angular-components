@@ -185,6 +185,7 @@ export interface KbqModalConfig<C = any, R = any> extends ModalOptions<C, R> {
     /**
      * Guard intercepting every close attempt, including the programmatic `close()`.
      * Returning `true` closes the dialog, `false` keeps it open; async decisions are awaited.
+     * Defaults to no guard: every close attempt is allowed.
      */
     canClose?: KbqCanClose;
 }

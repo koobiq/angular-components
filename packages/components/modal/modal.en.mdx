@@ -177,17 +177,10 @@ A toast notification will briefly report the result of an operation or show a co
 
 **The "Undo changes" pattern.** Instead of a "Are you sure?" modal dialog, it is often better to immediately perform the operation — and give the ability to undo it.
 
-## Close interception (canClose)
+## Close interception
 
-The `canClose` config option is a guard modeled after the router's `CanDeactivate`: it runs on every close attempt and returns `boolean | Promise<boolean> | Observable<boolean>`. `true` closes the dialog, `false` keeps it open. While an async decision is pending, repeated close attempts are ignored. The guard can be assigned or replaced after opening via `modalRef.canClose`, which takes precedence over the config.
+Any close attempt — a backdrop click, Escape, the close button, or a call from code — can be intercepted to ask for confirmation before unsaved changes are lost. The guard can be asynchronous: while the decision is pending, repeated close attempts are ignored.
 
-The guard receives the close reason:
+You can set the guard when the dialog opens or replace it afterwards — the latter takes precedence. It works alongside the existing close veto from the button click handlers: either mechanism can keep the dialog open. Programmatic closing goes through the guard too: it sees the close reason and can, for example, ask no confirmation when the dialog is closed from code. When closing by backdrop or Escape is disabled, the matching trigger never reaches the guard.
 
-| Reason           | Triggered by                    |
-| ---------------- | ------------------------------- |
-| `'backdrop'`     | Backdrop click                  |
-| `'escape'`       | Escape key                      |
-| `'close'`        | X button, Cancel and OK buttons |
-| `'programmatic'` | `close()` call from code        |
-
-The guard works alongside the existing `kbqOkClick`/`kbqCancelClick` veto — either mechanism can keep the dialog open. Programmatic closing goes through the guard too: a typical guard returns `true` for `'programmatic'` right away, so closing after a successful save asks no confirmation. When `kbqMaskClosable` or `kbqCloseByESC` is disabled, the matching trigger never reaches the guard.
+<Example id="modal-keep-open-on-error" />
