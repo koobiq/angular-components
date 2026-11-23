@@ -129,7 +129,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     restoreFocus(): boolean;
     readonly safeArea: i0.InputSignalWithTransform<boolean, unknown>;
     setPositionClasses(posX?: KbqDropdownPositionX, posY?: KbqDropdownPositionY): void;
-    startAnimation(): void;
+    startAnimation(panelElement?: HTMLElement): void;
     templateRef: TemplateRef<any>;
     // @deprecated (undocumented)
     triggerWidth: string;
