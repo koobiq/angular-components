@@ -9,13 +9,13 @@ import { TRANSLATIONS } from './l10n';
     selector: 'input-disabled-example',
     imports: [KbqInputModule, ReactiveFormsModule],
     template: `
-        <span class="kbq-text-normal" style="width: 320px">{{ t().empty }}</span>
         <kbq-form-field style="width: 320px">
+            <kbq-label>{{ t().empty }}</kbq-label>
             <input kbqInput [placeholder]="t().name" [formControl]="emptyControl" />
         </kbq-form-field>
 
-        <span class="kbq-text-normal" style="width: 320px">{{ t().filled }}</span>
         <kbq-form-field style="width: 320px">
+            <kbq-label>{{ t().filled }}</kbq-label>
             <input kbqInput [formControl]="filledControl" />
         </kbq-form-field>
     `,

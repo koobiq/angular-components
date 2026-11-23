@@ -9,13 +9,13 @@ import { TRANSLATIONS } from './l10n';
     selector: 'input-validation-example',
     imports: [KbqInputModule, ReactiveFormsModule],
     template: `
-        <span class="kbq-text-normal" style="width: 320px">{{ t().valid }}</span>
         <kbq-form-field style="width: 320px">
+            <kbq-label>{{ t().valid }}</kbq-label>
             <input kbqInput [placeholder]="t().name" [formControl]="validControl" />
         </kbq-form-field>
 
-        <span class="kbq-text-normal" style="width: 320px">{{ t().invalid }}</span>
         <kbq-form-field style="width: 320px">
+            <kbq-label>{{ t().invalid }}</kbq-label>
             <input kbqInput [placeholder]="t().name" [formControl]="invalidControl" />
             <kbq-error>{{ t().required }}</kbq-error>
         </kbq-form-field>
