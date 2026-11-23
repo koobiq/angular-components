@@ -1,3 +1,4 @@
+import { DOWN_ARROW } from '@angular/cdk/keycodes';
 import {
     Component,
     type DebugElement,
@@ -11,12 +12,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter, RouterLink } from '@angular/router';
 import { KbqButtonModule } from '@koobiq/components/button';
-import {
-    dispatchEvent,
-    DOWN_ARROW,
-    kbqA11yLocaleConfigurationProvider,
-    type KbqDefaultSizes
-} from '@koobiq/components/core';
+import { dispatchEvent, kbqA11yLocaleConfigurationProvider, type KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqOverflowItem, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
 import { KbqTitleDirective } from '@koobiq/components/title';

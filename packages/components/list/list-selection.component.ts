@@ -2,6 +2,19 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CDK_DRAG_HANDLE, CdkDrag, type CdkDragDrop, CdkDragPreview, CdkDropList } from '@angular/cdk/drag-drop';
+import {
+    DOWN_ARROW,
+    END,
+    ENTER,
+    HOME,
+    LEFT_ARROW,
+    PAGE_DOWN,
+    PAGE_UP,
+    RIGHT_ARROW,
+    SPACE,
+    TAB,
+    UP_ARROW
+} from '@angular/cdk/keycodes';
 import { _getFocusedElementPierceShadowDom, Platform } from '@angular/cdk/platform';
 import { CdkVirtualForOf } from '@angular/cdk/scrolling';
 import {
@@ -51,14 +64,10 @@ import {
     take
 } from 'rxjs';
 import {
-    DOWN_ARROW,
-    END,
-    ENTER,
     FocusKeyManager,
     getKbqSelectNonFunctionValueError,
     getSelectAllState,
     hasModifierKey,
-    HOME,
     type IFocusableOption,
     isCopy,
     isSelectAll,
@@ -82,17 +91,10 @@ import {
     type KbqSelectAllAdapter,
     kbqSelectAllHandlerTransform,
     type KbqTitleTextRef,
-    LEFT_ARROW,
     MultipleMode,
-    PAGE_DOWN,
-    PAGE_UP,
     resolveMultipleMode,
-    RIGHT_ARROW,
     runCompareWith,
-    SPACE,
-    TAB,
-    toggleSelectAll,
-    UP_ARROW
+    toggleSelectAll
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';

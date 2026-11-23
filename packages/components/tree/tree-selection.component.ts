@@ -2,6 +2,20 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
+import {
+    DOWN_ARROW,
+    END,
+    ENTER,
+    hasModifierKey,
+    HOME,
+    LEFT_ARROW,
+    PAGE_DOWN,
+    PAGE_UP,
+    RIGHT_ARROW,
+    SPACE,
+    TAB,
+    UP_ARROW
+} from '@angular/cdk/keycodes';
 import { Platform } from '@angular/cdk/platform';
 import {
     type AfterContentInit,
@@ -36,14 +50,9 @@ import { delay, filter, map, merge, type Observable, Subject, type Subscription 
 // eslint-disable-next-line rxjs-x/no-internal -- the published tree module provides the scheduler under this token
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import {
-    DOWN_ARROW,
-    END,
-    ENTER,
     FocusKeyManager,
     getKbqSelectNonArrayValueError,
     getSelectAllState,
-    hasModifierKey,
-    HOME,
     isCopy,
     isSelectAll,
     isVerticalMovement,
@@ -59,16 +68,9 @@ import {
     type KbqSelectAllAdapter,
     kbqSelectAllHandlerTransform,
     KbqStateSaving,
-    LEFT_ARROW,
     MultipleMode,
-    PAGE_DOWN,
-    PAGE_UP,
     resolveMultipleMode,
-    RIGHT_ARROW,
-    SPACE,
-    TAB,
-    toggleSelectAll,
-    UP_ARROW
+    toggleSelectAll
 } from '@koobiq/components/core';
 import { KBQ_FORM_FIELD } from '@koobiq/components/form-field';
 import type { FlatTreeControl } from './control/flat-tree-control';

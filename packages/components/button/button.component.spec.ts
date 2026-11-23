@@ -1,4 +1,5 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
+import { DOWN_ARROW, ENTER, SPACE } from '@angular/cdk/keycodes';
 import { Component, ElementRef, type Provider, type Type, viewChild, viewChildren } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -6,13 +7,10 @@ import { provideRouter, RouterLink } from '@angular/router';
 import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
-    DOWN_ARROW,
-    ENTER,
     KbqComponentColors,
     type KbqOrientation,
     leftIconClassName,
-    rightIconClassName,
-    SPACE
+    rightIconClassName
 } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';

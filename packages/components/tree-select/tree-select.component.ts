@@ -1,6 +1,21 @@
 import { CdkMonitorFocus } from '@angular/cdk/a11y';
 import { SelectionModel } from '@angular/cdk/collections';
 import {
+    DOWN_ARROW,
+    END,
+    ENTER,
+    ESCAPE,
+    hasModifierKey,
+    HOME,
+    LEFT_ARROW,
+    PAGE_DOWN,
+    PAGE_UP,
+    RIGHT_ARROW,
+    SPACE,
+    TAB,
+    UP_ARROW
+} from '@angular/cdk/keycodes';
+import {
     CdkConnectedOverlay,
     CdkOverlayOrigin,
     type ConnectedPosition,
@@ -68,15 +83,9 @@ import {
 import {
     type CanUpdateErrorState,
     defaultOffsetY,
-    DOWN_ARROW,
-    END,
-    ENTER,
     ErrorStateMatcher,
-    ESCAPE,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
-    hasModifierKey,
-    HOME,
     isInput,
     isSelectAll,
     isUndefined,
@@ -106,16 +115,9 @@ import {
     KbqSelectTrigger,
     type KbqSiblingPopup,
     kbqSiblingPopupProvider,
-    LEFT_ARROW,
     MultipleMode,
-    PAGE_DOWN,
-    PAGE_UP,
-    RIGHT_ARROW,
     runClearPredicate,
-    shouldSelectSearchText,
-    SPACE,
-    TAB,
-    UP_ARROW
+    shouldSelectSearchText
 } from '@koobiq/components/core';
 import {
     KBQ_FORM_FIELD,

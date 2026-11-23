@@ -1,4 +1,5 @@
 ﻿import { Directionality } from '@angular/cdk/bidi';
+import { DOWN_ARROW, ENTER, ESCAPE, LEFT_ARROW, ONE, SPACE, UP_ARROW } from '@angular/cdk/keycodes';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {
     ChangeDetectionStrategy,
@@ -46,10 +47,7 @@ import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
-    DOWN_ARROW,
-    ENTER,
     ErrorStateMatcher,
-    ESCAPE,
     KBQ_DATE_FORMATS,
     KBQ_DATE_LOCALE,
     KbqDateTimezoneService,
@@ -57,12 +55,8 @@ import {
     kbqLocaleIDProvider,
     kbqLocaleServiceProvider,
     KbqOverlayLayer,
-    LEFT_ARROW,
-    ONE,
     ShowOnControlDirtyErrorStateMatcher,
-    ShowOnFormSubmitErrorStateMatcher,
-    SPACE,
-    UP_ARROW
+    ShowOnFormSubmitErrorStateMatcher
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';

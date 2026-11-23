@@ -1,7 +1,8 @@
-﻿import type { OverlayRef } from '@angular/cdk/overlay';
+﻿import { ESCAPE } from '@angular/cdk/keycodes';
+import type { OverlayRef } from '@angular/cdk/overlay';
 import { signal, untracked } from '@angular/core';
 import { filter, merge, type Observable, Subject, take, tap } from 'rxjs';
-import { ESCAPE, isHtmlElement, type KbqOverflowShadowState } from '@koobiq/components/core';
+import { isHtmlElement, type KbqOverflowShadowState } from '@koobiq/components/core';
 import { KbqSidepanelAnimationState } from './sidepanel-animations';
 import type { KbqSidepanelConfig } from './sidepanel-config';
 import type { KbqSidepanelContainerComponent } from './sidepanel-container.component';

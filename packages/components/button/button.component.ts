@@ -1,4 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { DOWN_ARROW, ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE } from '@angular/cdk/keycodes';
 import { CdkObserveContent } from '@angular/cdk/observers';
 import {
     type AfterContentInit,
@@ -28,8 +29,6 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {
-    DOWN_ARROW,
-    ENTER,
     getContentNodes,
     KBQ_TITLE_TEXT_REF,
     KbqColorDirective,
@@ -37,11 +36,8 @@ import {
     type KbqEnumValues,
     kbqOptionalNumberAttribute,
     type KbqTitleTextRef,
-    LEFT_ARROW,
     leftIconClassName,
-    RIGHT_ARROW,
     rightIconClassName,
-    SPACE,
     supportsNativeDisabled
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';

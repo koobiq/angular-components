@@ -1,6 +1,20 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { type Direction, Directionality } from '@angular/cdk/bidi';
 import {
+    A,
+    B,
+    DOWN_ARROW,
+    END,
+    ENTER,
+    ESCAPE,
+    HOME,
+    LEFT_ARROW,
+    RIGHT_ARROW,
+    SPACE,
+    TAB,
+    UP_ARROW
+} from '@angular/cdk/keycodes';
+import {
     FlexibleConnectedPositionStrategy,
     Overlay,
     OverlayContainer,
@@ -28,8 +42,6 @@ import { By } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
 import type { MockInstance } from 'vitest';
 import {
-    A,
-    B,
     createKeyboardEvent,
     createMouseEvent,
     defaultOffsetY,
@@ -37,21 +49,11 @@ import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
-    DOWN_ARROW,
-    END,
-    ENTER,
-    ESCAPE,
-    HOME,
     KbqOverlayLayer,
     type KbqOverlayOrigin,
     type KbqPanelWidth,
-    LEFT_ARROW,
     patchElementFocus,
-    RIGHT_ARROW,
-    ruRULocaleData,
-    SPACE,
-    TAB,
-    UP_ARROW
+    ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqFormField, kbqFormFieldDefaultOptionsProvider, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';

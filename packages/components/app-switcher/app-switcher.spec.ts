@@ -1,4 +1,16 @@
 import { Directionality } from '@angular/cdk/bidi';
+import {
+    DOWN_ARROW,
+    END,
+    ENTER,
+    ESCAPE,
+    HOME,
+    LEFT_ARROW,
+    RIGHT_ARROW,
+    SPACE,
+    TAB,
+    UP_ARROW
+} from '@angular/cdk/keycodes';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { IMAGE_LOADER, type ImageLoaderConfig } from '@angular/common';
 import { Component, type Provider, type Type } from '@angular/core';
@@ -9,18 +21,8 @@ import {
     createKeyboardEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
-    DOWN_ARROW,
-    END,
-    ENTER,
-    ESCAPE,
-    HOME,
     type KbqPopUpPlacementValues,
-    LEFT_ARROW,
-    PopUpPlacements,
-    RIGHT_ARROW,
-    SPACE,
-    TAB,
-    UP_ARROW
+    PopUpPlacements
 } from '@koobiq/components/core';
 import { NESTED_HOVER_SWITCH_DELAY } from '@koobiq/components/dropdown';
 import { defaultOffsetYWithArrow } from '@koobiq/components/popover';

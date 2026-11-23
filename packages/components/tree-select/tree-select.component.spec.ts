@@ -1,5 +1,18 @@
 ﻿import { Directionality } from '@angular/cdk/bidi';
 import type { SelectionModel } from '@angular/cdk/collections';
+import {
+    A,
+    DOWN_ARROW,
+    END,
+    ENTER,
+    ESCAPE,
+    HOME,
+    LEFT_ARROW,
+    RIGHT_ARROW,
+    SPACE,
+    TAB,
+    UP_ARROW
+} from '@angular/cdk/keycodes';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ScrollDispatcher, ViewportRuler } from '@angular/cdk/scrolling';
 import {
@@ -36,19 +49,13 @@ import {
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, map, type Observable, of, Subject, timer } from 'rxjs';
 import {
-    A,
     createKeyboardEvent,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
-    DOWN_ARROW,
-    END,
-    ENTER,
     ErrorStateMatcher,
-    ESCAPE,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
-    HOME,
     KBQ_LOCALE_SERVICE,
     KbqComponentColors,
     kbqErrorStateMatcherProvider,
@@ -60,15 +67,10 @@ import {
     KbqPseudoCheckbox,
     KbqPseudoCheckboxModule,
     type KbqPseudoCheckboxState,
-    LEFT_ARROW,
     MultipleMode,
-    RIGHT_ARROW,
     ruRULocaleData,
     ShowOnControlDirtyErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher,
-    SPACE,
-    TAB,
-    UP_ARROW,
     wrappedErrorMessage
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormFieldModule } from '@koobiq/components/form-field';

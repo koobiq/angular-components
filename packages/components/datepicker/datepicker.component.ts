@@ -1,5 +1,6 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { ESCAPE } from '@angular/cdk/keycodes';
 import {
     Overlay,
     OverlayConfig,
@@ -33,7 +34,6 @@ import {
 } from '@angular/core';
 import { filter, merge, Subject, Subscription, take } from 'rxjs';
 import {
-    ESCAPE,
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
     KBQ_OVERLAY_LAYERS,

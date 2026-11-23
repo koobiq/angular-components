@@ -1,5 +1,24 @@
 ﻿import { coerceNumberProperty, type NumberInput } from '@angular/cdk/coercion';
 import {
+    BACKSPACE,
+    DASH,
+    DELETE,
+    DOWN_ARROW,
+    END,
+    ENTER,
+    ESCAPE,
+    FF_MINUS,
+    HOME,
+    LEFT_ARROW,
+    NUMPAD_MINUS,
+    RIGHT_ARROW,
+    TAB,
+    UP_ARROW,
+    V,
+    X,
+    Z
+} from '@angular/cdk/keycodes';
+import {
     booleanAttribute,
     computed,
     DestroyRef,
@@ -20,17 +39,8 @@ import {
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subject } from 'rxjs';
 import {
-    BACKSPACE,
     checkAndNormalizeLocalizedNumber,
-    DASH,
-    DELETE,
-    DOWN_ARROW,
-    END,
-    ENTER,
-    ESCAPE,
-    FF_MINUS,
     formatNumberWithLocale,
-    HOME,
     isCopy,
     isFunctionKey,
     isNumberKey,
@@ -45,16 +55,8 @@ import {
     kbqLocaleConfigurationOverrideProvider,
     KbqLocaleOverridesDirective,
     type KbqLocaleService,
-    LEFT_ARROW,
     normalizeNumber,
-    NUMPAD_MINUS,
-    RIGHT_ARROW,
-    ruRUFormattersData,
-    TAB,
-    UP_ARROW,
-    V,
-    X,
-    Z
+    ruRUFormattersData
 } from '@koobiq/components/core';
 
 /**

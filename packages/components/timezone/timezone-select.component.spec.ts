@@ -1,3 +1,4 @@
+import { DOWN_ARROW, ESCAPE, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@angular/cdk/keycodes';
 import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
 import { AsyncPipe } from '@angular/common';
 import {
@@ -19,9 +20,7 @@ import {
     dispatchEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
-    DOWN_ARROW,
     enUSLocaleData,
-    ESCAPE,
     KBQ_LOCALE_SERVICE,
     KBQ_PANEL_DEFAULT_MIN_WIDTH,
     KbqComponentColors,
@@ -38,10 +37,7 @@ import {
     KbqSelectFooter,
     KbqSelectMatcher,
     KbqSelectSearch,
-    LEFT_ARROW,
-    RIGHT_ARROW,
-    ruRULocaleData,
-    UP_ARROW
+    ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';

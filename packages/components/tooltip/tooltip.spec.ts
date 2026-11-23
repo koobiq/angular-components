@@ -1,5 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceElement } from '@angular/cdk/coercion';
+import { ENTER, ESCAPE, TAB } from '@angular/cdk/keycodes';
 import {
     type ConnectedOverlayPositionChange,
     type FlexibleConnectedPositionStrategy,
@@ -17,14 +18,11 @@ import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
-    ENTER,
-    ESCAPE,
     KBQ_PARENT_POPUP,
     type KbqParentPopup,
     type KbqPopUpPlacementValues,
     type KbqSiblingPopup,
-    kbqSiblingPopupProvider,
-    TAB
+    kbqSiblingPopupProvider
 } from '@koobiq/components/core';
 import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';

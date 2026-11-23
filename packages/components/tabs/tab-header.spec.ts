@@ -1,20 +1,12 @@
 import { type Direction, Directionality } from '@angular/cdk/bidi';
+import { END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { PortalModule } from '@angular/cdk/portal';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { Component, Injectable, viewChild } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { type Observable, Subject } from 'rxjs';
-import {
-    dispatchKeyboardEvent,
-    END,
-    ENTER,
-    HOME,
-    KBQ_ANIMATIONS_CONFIG,
-    LEFT_ARROW,
-    RIGHT_ARROW,
-    SPACE
-} from '@koobiq/components/core';
+import { dispatchKeyboardEvent, KBQ_ANIMATIONS_CONFIG } from '@koobiq/components/core';
 import { KbqPaginatedTabHeader } from './paginated-tab-header';
 import { KbqTabHeader } from './tab-header.component';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';

@@ -1,6 +1,7 @@
 import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
 import { type BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import type { Point } from '@angular/cdk/drag-drop';
+import { ESCAPE } from '@angular/cdk/keycodes';
 import { Overlay, type OverlayConfig, type OverlayRef, type ScrollStrategy } from '@angular/cdk/overlay';
 import { NgTemplateOutlet } from '@angular/common';
 import {
@@ -32,7 +33,6 @@ import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-int
 import { EMPTY, filter, merge } from 'rxjs';
 import {
     applyPopupMargins,
-    ESCAPE,
     KBQ_PARENT_POPUP,
     KBQ_SIBLING_POPUP,
     type KbqCaretRect,

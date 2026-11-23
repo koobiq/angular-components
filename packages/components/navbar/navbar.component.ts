@@ -1,4 +1,5 @@
 import { FocusMonitor, type FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
+import { LEFT_ARROW, RIGHT_ARROW, TAB } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
@@ -54,10 +55,7 @@ import {
     type KbqOverflowFitSubject,
     kbqOverflowRecalculationTriggers,
     KbqOverlayLayerExclude,
-    kbqQueryListFrom,
-    LEFT_ARROW,
-    RIGHT_ARROW,
-    TAB
+    kbqQueryListFrom
 } from '@koobiq/components/core';
 import { KbqDropdown, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';

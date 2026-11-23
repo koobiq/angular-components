@@ -1,6 +1,6 @@
+import { A, DOWN_ARROW, END, HOME, LEFT_ARROW, NINE, RIGHT_ARROW, TAB, UP_ARROW, Z, ZERO } from '@angular/cdk/keycodes';
 import { QueryList, type Signal } from '@angular/core';
 import { debounceTime, filter, map, Subject, Subscription, tap } from 'rxjs';
-import { A, DOWN_ARROW, END, HOME, LEFT_ARROW, NINE, RIGHT_ARROW, TAB, UP_ARROW, Z, ZERO } from '../../keycodes';
 
 // This interface is for items that can be passed to a ListKeyManager.
 export interface ListKeyManagerOption {
