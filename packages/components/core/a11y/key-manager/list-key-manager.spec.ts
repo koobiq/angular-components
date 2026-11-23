@@ -95,6 +95,25 @@ describe('Key managers', () => {
             expect(keyManager.activeItem).toBeNull();
         });
 
+        describe('isActiveItemStale', () => {
+            it('should not report an active item that is still in the list', () => {
+                expect(keyManager.isActiveItemStale()).toBe(false);
+            });
+
+            it('should report an active item that has left the list', () => {
+                itemList.reset(itemList.toArray().slice(1));
+                itemList.notifyOnChanges();
+
+                expect(keyManager.isActiveItemStale()).toBe(true);
+            });
+
+            it('should report a list without an active item', () => {
+                keyManager.setActiveItem(-1);
+
+                expect(keyManager.isActiveItemStale()).toBe(true);
+            });
+        });
+
         describe('Key events', () => {
             it('should emit tabOut when the tab key is pressed', () => {
                 const fn = vi.fn();

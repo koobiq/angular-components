@@ -1,18 +1,7 @@
-import { type AfterContentInit, Directive, inject } from '@angular/core';
-import {
-    ESCAPE,
-    kbqInjectA11yLocaleConfiguration,
-    kbqInjectNativeElement,
-    kbqSyncSearchFieldA11y,
-    LEFT_ARROW,
-    RIGHT_ARROW
-} from '@koobiq/components/core';
-import { KBQ_FORM_FIELD, KBQ_FORM_FIELD_DEFAULT_OPTIONS } from '@koobiq/components/form-field';
+import { Directive, inject } from '@angular/core';
+import { KbqSearchFieldBase, type KbqSearchFieldPopup, LEFT_ARROW, RIGHT_ARROW } from '@koobiq/components/core';
+import { KBQ_FORM_FIELD_DEFAULT_OPTIONS } from '@koobiq/components/form-field';
 import { KBQ_DROPDOWN_PANEL } from './dropdown.types';
-import {
-    throwKbqDropdownSearchMissingInputError,
-    throwKbqDropdownSearchMissingNgControlError
-} from './dropdown-errors';
 
 /**
  * Marks a `kbq-form-field` projected into a `kbq-dropdown` as the panel's search field.
@@ -34,13 +23,12 @@ import {
         }
     ],
     host: {
-        '(click)': 'handleClick($event)',
-        '(keydown)': 'handleKeydown($event)'
+        '(click)': 'handleClick($event)'
     },
     exportAs: 'kbqDropdownSearch'
 })
-export class KbqDropdownSearch implements AfterContentInit {
-    private readonly formField = inject(KBQ_FORM_FIELD);
+export class KbqDropdownSearch extends KbqSearchFieldBase {
+    protected readonly directiveName = 'kbqDropdownSearch';
 
     /**
      * Panel this field searches. A nested panel declared inside its parent's content shares the view with
@@ -50,44 +38,9 @@ export class KbqDropdownSearch implements AfterContentInit {
      */
     readonly panel = inject(KBQ_DROPDOWN_PANEL, { optional: true });
 
-    constructor() {
-        const localeConfiguration = kbqInjectA11yLocaleConfiguration();
-
-        kbqSyncSearchFieldA11y(
-            kbqInjectNativeElement(),
-            () => this.panel?.searchFieldPopup,
-            () => localeConfiguration().search
-        );
-    }
-
-    /** The form control the query is bound to. */
-    get ngControl() {
-        return this.formField.control().ngControl;
-    }
-
-    ngAfterContentInit(): void {
-        if (this.formField.control().controlType !== 'input') {
-            throwKbqDropdownSearchMissingInputError();
-        }
-
-        if (!this.ngControl) {
-            throwKbqDropdownSearchMissingNgControlError();
-        }
-    }
-
-    /** Focuses the search field. */
-    focus(): void {
-        this.formField.focus();
-    }
-
-    /** Clears the search query. */
-    reset(): void {
-        this.ngControl?.reset();
-    }
-
-    /** The current search query. */
-    value(): string {
-        return this.formField.control().value();
+    /** The current text of the dropdown's search input. */
+    override value(): string {
+        return super.value() as string;
     }
 
     /** @docs-private */
@@ -95,27 +48,15 @@ export class KbqDropdownSearch implements AfterContentInit {
         event.stopPropagation();
     }
 
-    /** @docs-private */
-    protected handleKeydown(event: KeyboardEvent): void {
-        // The panel owns ESCAPE: the first press clears the query, the second closes the dropdown. This
-        // handler runs before the cleaner's own listener on the same element, so the field is already
-        // empty by the time the cleaner looks at the key.
-        if (event.keyCode === ESCAPE && this.value()) {
-            this.reset();
-            event.stopPropagation();
-
-            return;
-        }
-
-        // A nested panel closes on the horizontal arrow that points back at its trigger, so the key is
-        // only kept while the caret still has somewhere to go — the top-level panel ignores it anyway.
-        if (this.movesCaret(event)) {
-            event.stopPropagation();
-        }
+    protected getSearchFieldPopup(): KbqSearchFieldPopup | undefined {
+        return this.panel?.searchFieldPopup;
     }
 
-    /** Whether the key still has caret to travel inside the field, rather than acting on the panel. */
-    private movesCaret(event: KeyboardEvent): boolean {
+    /**
+     * A nested panel closes on the horizontal arrow that points back at its trigger, so the key is only kept while
+     * the caret still has somewhere to go — the top-level panel ignores it anyway.
+     */
+    protected keepsKey(event: KeyboardEvent): boolean {
         const { keyCode, target } = event;
 
         if (keyCode !== LEFT_ARROW && keyCode !== RIGHT_ARROW) return false;

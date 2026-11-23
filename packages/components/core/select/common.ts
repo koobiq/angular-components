@@ -1,6 +1,5 @@
 ﻿import type { CdkConnectedOverlay, ConnectedPosition } from '@angular/cdk/overlay';
 import {
-    type AfterContentInit,
     booleanAttribute,
     ChangeDetectorRef,
     Directive,
@@ -15,10 +14,8 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, fromEvent, Subscription } from 'rxjs';
-import { type KbqSearchFieldPopup, kbqSyncSearchFieldA11y } from '../a11y';
-import { KBQ_FORM_FIELD_REF, type KbqFormFieldRef } from '../form-field';
-import { END, ESCAPE, HOME, SPACE } from '../keycodes';
-import { kbqInjectA11yLocaleConfiguration } from '../locales';
+import type { KbqSearchFieldPopup } from '../a11y';
+import { END, HOME, SPACE } from '../keycodes';
 import {
     KBQ_PANEL_DEFAULT_MAX_HEIGHT,
     type KbqPanelSpaceContext,
@@ -33,8 +30,8 @@ import {
     kbqResolvePanelWidth
 } from '../overlay/panel-width';
 import { KBQ_CONNECTED_OVERLAY_OVERLAP_CLASS } from '../pop-up/constants';
+import { KbqSearchFieldBase } from '../search/search-field-base';
 import { KBQ_WINDOW } from '../tokens';
-import { kbqInjectNativeElement } from '../utils';
 import { KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD, SELECT_PANEL_VIEWPORT_PADDING } from './constants';
 
 @Directive({
@@ -81,15 +78,15 @@ export class KbqSelectFooterItem {}
  */
 export const KBQ_SELECT_SEARCH_POPUP = new InjectionToken<KbqSearchFieldPopup>('KBQ_SELECT_SEARCH_POPUP');
 
+/** Marks a `kbq-form-field` projected into a `kbq-select` or a `kbq-tree-select` as the panel's search field. */
 @Directive({
     selector: '[kbqSelectSearch]',
-    host: {
-        '(keydown)': 'handleKeydown($event)'
-    },
     exportAs: 'kbqSelectSearch'
 })
-export class KbqSelectSearch implements AfterContentInit {
-    protected formField = inject<KbqFormFieldRef>(KBQ_FORM_FIELD_REF, { optional: true })!;
+export class KbqSelectSearch extends KbqSearchFieldBase {
+    protected readonly directiveName = 'kbqSelectSearch';
+
+    private readonly popup = inject(KBQ_SELECT_SEARCH_POPUP, { optional: true });
 
     /**
      * Captured here rather than built where it is used: `takeUntilDestroyed()` reads the current
@@ -102,23 +99,6 @@ export class KbqSelectSearch implements AfterContentInit {
 
     isSearchChanged: boolean = false;
 
-    get ngControl() {
-        return this.formField.control().ngControl;
-    }
-
-    constructor() {
-        this.formField.inOverlay.set(true);
-
-        const popup = inject(KBQ_SELECT_SEARCH_POPUP, { optional: true });
-        const localeConfiguration = kbqInjectA11yLocaleConfiguration();
-
-        kbqSyncSearchFieldA11y(
-            kbqInjectNativeElement(),
-            () => popup,
-            () => localeConfiguration().search
-        );
-    }
-
     setPlaceholder(value: string): void {
         const placeholder = this.formField.control().placeholder;
 
@@ -128,26 +108,8 @@ export class KbqSelectSearch implements AfterContentInit {
         }
     }
 
-    focus(): void {
-        this.formField.focus();
-    }
-
-    reset(): void {
-        this.ngControl?.reset();
-    }
-
-    value() {
-        return this.formField.control().value();
-    }
-
-    ngAfterContentInit(): void {
-        if (this.formField.control().controlType !== 'input') {
-            throw Error('KbqSelectSearch does not work without kbqInput');
-        }
-
-        if (!this.ngControl) {
-            throw Error('KbqSelectSearch does not work without ngControl');
-        }
+    override ngAfterContentInit(): void {
+        super.ngAfterContentInit();
 
         // The subscription is deferred, so the directive can be destroyed before it even exists —
         // the captured operator owns it either way, while an `ngOnDestroy` unsubscribe would not.
@@ -159,17 +121,12 @@ export class KbqSelectSearch implements AfterContentInit {
         });
     }
 
-    handleKeydown(event: KeyboardEvent) {
-        if (event.keyCode === ESCAPE) {
-            if (this.value()) {
-                this.reset();
-                event.stopPropagation();
-            }
-        }
+    protected getSearchFieldPopup(): KbqSearchFieldPopup | null {
+        return this.popup;
+    }
 
-        if ([SPACE, HOME, END].includes(event.keyCode)) {
-            event.stopPropagation();
-        }
+    protected keepsKey(event: KeyboardEvent): boolean {
+        return [SPACE, HOME, END].includes(event.keyCode);
     }
 }
 
@@ -621,5 +578,19 @@ export abstract class KbqAbstractSelect {
 
     protected resolveSearchMinOptionsThreshold(value?: 'auto' | number) {
         return value === 'auto' ? KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD : value;
+    }
+
+    /**
+     * Whether the panel shows the search field: without a threshold, from the threshold on, and while a query is
+     * typed, so that a query filtering the options below the threshold does not hide its own field.
+     *
+     * @docs-private
+     */
+    protected isSearchVisible(
+        threshold: number | undefined,
+        search: KbqSelectSearch | undefined,
+        optionsCount: number
+    ): boolean {
+        return threshold === undefined || !!search?.value() || optionsCount >= threshold;
     }
 }

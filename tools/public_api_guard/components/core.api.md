@@ -8,7 +8,6 @@ import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import * as _angular_forms from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
@@ -2755,6 +2754,7 @@ export abstract class KbqAbstractSelect {
     protected getOverlayRect(): DOMRect;
     protected isListHeightPinnedToCap(): boolean;
     protected abstract isPanelOpen(): boolean;
+    protected isSearchVisible(threshold: number | undefined, search: KbqSelectSearch | undefined, optionsCount: number): boolean;
     protected lockOverlayWidthForSearch(panel: ElementRef<HTMLElement> | undefined): void;
     protected abstract readonly multiline: Signal<boolean>;
     protected readonly multilineMatchList: Signal<ElementRef<HTMLElement> | undefined>;
@@ -4424,6 +4424,26 @@ export type KbqSearchExpandableLocaleConfiguration = {
 };
 
 // @public
+export abstract class KbqSearchFieldBase implements AfterContentInit {
+    constructor();
+    protected abstract readonly directiveName: string;
+    focus(): void;
+    protected readonly formField: KbqFormFieldRef;
+    protected abstract getSearchFieldPopup(): KbqSearchFieldPopup | null | undefined;
+    handleKeydown(event: KeyboardEvent): void;
+    protected abstract keepsKey(event: KeyboardEvent): boolean;
+    // (undocumented)
+    ngAfterContentInit(): void;
+    get ngControl(): NgControl | null;
+    reset(): void;
+    value(): unknown;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSearchFieldBase, never, never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSearchFieldBase, never>;
+}
+
+// @public
 export interface KbqSearchFieldPopup {
     activeDescendant(): HTMLElement | null | undefined;
     readonly comboboxPopupRole: 'listbox' | 'tree' | null;
@@ -4490,29 +4510,22 @@ export class KbqSelectMatcher {
 // @public
 export function kbqSelectScrollStrategyProviderFactory(scrollDispatcher: ScrollDispatcher): () => ScrollStrategy;
 
-// @public (undocumented)
-export class KbqSelectSearch implements AfterContentInit {
-    constructor();
+// @public
+export class KbqSelectSearch extends KbqSearchFieldBase {
     // (undocumented)
     readonly changes: EventEmitter<string>;
     // (undocumented)
-    focus(): void;
+    protected readonly directiveName = "kbqSelectSearch";
     // (undocumented)
-    protected formField: KbqFormFieldRef;
-    // (undocumented)
-    handleKeydown(event: KeyboardEvent): void;
+    protected getSearchFieldPopup(): KbqSearchFieldPopup | null;
     // (undocumented)
     isSearchChanged: boolean;
     // (undocumented)
+    protected keepsKey(event: KeyboardEvent): boolean;
+    // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
-    get ngControl(): _angular_forms.NgControl | null;
-    // (undocumented)
-    reset(): void;
-    // (undocumented)
     setPlaceholder(value: string): void;
-    // (undocumented)
-    value(): unknown;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectSearch, "[kbqSelectSearch]", ["kbqSelectSearch"], {}, {}, never, never, true, never>;
     // (undocumented)
@@ -4941,6 +4954,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
     // (undocumented)
     get activeItemIndex(): number;
     change: Subject<number>;
+    isActiveItemStale(): boolean;
     isTyping(): boolean;
     onKeydown(event: KeyboardEvent): void;
     // (undocumented)

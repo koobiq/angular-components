@@ -88,7 +88,6 @@ import {
     HOME,
     isInput,
     isSelectAll,
-    isUndefined,
     KBQ_A11Y_LOCALE_CONFIGURATION,
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
@@ -1474,7 +1473,7 @@ export class KbqSelect
                 // options, and with no options the panel itself opens with a delay, so search changes
                 // can land while the panel is still closed. Moving the highlight then is read as
                 // keyboard navigation of a closed select and silently overwrites the value.
-                filter(() => this.panelOpen && this.isActiveItemStale())
+                filter(() => this.panelOpen && this.keyManager.isActiveItemStale())
             )
             .subscribe(() => this.keyManager.setFirstItemActive());
 
@@ -2133,11 +2132,7 @@ export class KbqSelect
 
     /** @docs-private */
     protected shouldShowSearch(): boolean {
-        return (
-            isUndefined(this.searchMinOptionsThreshold()) ||
-            !!this.search()?.value() ||
-            this.options.length >= this.searchMinOptionsThreshold()!
-        );
+        return this.isSearchVisible(this.searchMinOptionsThreshold(), this.search(), this.options?.length ?? 0);
     }
 
     /**
@@ -2387,13 +2382,6 @@ export class KbqSelect
         });
     }
 
-    /** Whether the key manager has no active item, or its active item is missing from the current options list. */
-    private isActiveItemStale(): boolean {
-        const activeItem = this.keyManager.activeItem as KbqOption | null;
-
-        return !activeItem || !this.navigableOptions.some((option) => option === activeItem);
-    }
-
     /**
      * Rebuilds the key manager's list — the "select all" row first, then the projected options — and
      * re-applies the panel's initial highlight whenever the row is what just joined that list.
@@ -2465,7 +2453,11 @@ export class KbqSelect
                 // active item, keep it as is: `options.changes` re-runs this method on every
                 // appended chunk (e.g. paging), and re-activating the selected option would
                 // focus it and scroll the list back to it.
-                if (correspondingOption && !this.withVirtualScroll && (!this.panelOpen || this.isActiveItemStale())) {
+                if (
+                    correspondingOption &&
+                    !this.withVirtualScroll &&
+                    (!this.panelOpen || this.keyManager.isActiveItemStale())
+                ) {
                     this.keyManager.setActiveItem(correspondingOption);
                 }
             }
