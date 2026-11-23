@@ -12,6 +12,10 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
 
+/** Allows printable ASCII only and rejects an empty password, which Angular's pattern validator ignores. */
+const latinAndSpecialSymbols = ({ value }: AbstractControl): ValidationErrors | null =>
+    typeof value === 'string' && !/^[\x20-\x7E]+$/.test(value) ? { latinAndSpecialSymbols: true } : null;
+
 /** Template-driven forms take validators from directives, so this one hands `PasswordValidators` to `ngModel`. */
 @Directive({
     selector: '[examplePasswordRules]',
@@ -24,7 +28,7 @@ class ExamplePasswordRules implements Validator {
         PasswordValidators.minUppercase(1),
         PasswordValidators.minLowercase(1),
         PasswordValidators.minNumber(1),
-        Validators.pattern(/^[\x20-\x7E]*$/)
+        latinAndSpecialSymbols
     ]);
 
     validate(control: AbstractControl): ValidationErrors | null {
@@ -62,7 +66,7 @@ class ExamplePasswordRules implements Validator {
                 {{ t().digit }}
             </kbq-reactive-password-hint>
 
-            <kbq-reactive-password-hint [hasError]="passwordModel.hasError('pattern')">
+            <kbq-reactive-password-hint [hasError]="passwordModel.hasError('latinAndSpecialSymbols')">
                 {{ t().allowedCharacters }}
             </kbq-reactive-password-hint>
         </kbq-form-field>
