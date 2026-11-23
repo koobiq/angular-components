@@ -16,8 +16,12 @@ export function getApiLookupKey(moduleName: string, name: string) {
 
 // Declarations tagged `internal` are missing from the published typings. The Angular extractor drops such
 // members by itself, but keeps top-level entries.
-export function isPublic(entry: { jsdocTags: JsDocTagEntry[] }) {
-    return entry.jsdocTags.every((t: JsDocTagEntry) => t.name !== 'docs-private' && t.name !== 'internal');
+export function isPublic(entry: { jsdocTags: JsDocTagEntry[]; source?: { filePath: string } }) {
+    if (entry.jsdocTags.some((t: JsDocTagEntry) => t.name === 'docs-private' || t.name === 'internal')) return false;
+
+    // The docs site documents koobiq's own API; a symbol resolved into node_modules belongs to a third party
+    // and is documented by its own library (as with the keycode constants re-exported from the CDK).
+    return !entry.source?.filePath.split(/[/\\]/).includes('node_modules');
 }
 
 /** Members every class has, or a framework calls — documenting them would tell a consumer nothing. */
