@@ -126,6 +126,10 @@ export const DATA_OBJECT = {
             justify-content: center;
             padding: var(--kbq-size-l);
         }
+
+        .kbq-form-field {
+            width: 320px;
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

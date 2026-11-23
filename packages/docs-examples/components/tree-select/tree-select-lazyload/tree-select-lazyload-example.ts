@@ -198,6 +198,17 @@ export class LazyLoadDataSource<T, F> extends KbqTreeFlatDataSource<T, F> {
             </kbq-tree-select>
         </kbq-form-field>
     `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+            padding: var(--kbq-size-l);
+        }
+
+        .kbq-form-field {
+            width: 320px;
+        }
+    `,
     providers: [LazyLoadDataService],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

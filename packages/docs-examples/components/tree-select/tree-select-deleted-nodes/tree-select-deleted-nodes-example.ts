@@ -141,6 +141,17 @@ export const DATA_OBJECT = {
             }
         </kbq-form-field>
     `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+            padding: var(--kbq-size-l);
+        }
+
+        .kbq-form-field {
+            width: 320px;
+        }
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectDeletedNodesExample {
