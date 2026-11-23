@@ -14,6 +14,7 @@ import {
     KbqDlComponent,
     kbqDlOptionsProvider,
     KbqDt,
+    KbqDtCaption,
     KbqDtComponent
 } from './dl';
 import { KbqDlModule } from './dl.module';
@@ -904,12 +905,24 @@ describe(KbqDl.name, () => {
         expect(getDlElement(fixture).classList).toContain('kbq-dl_vertical-align-center');
     });
 
-    it('should provide the list, terms and descriptions through KbqDlModule', () => {
+    it('should provide the list, terms, captions and descriptions through KbqDlModule', () => {
         const fixture = createComponent(DlFromModule);
 
         expect(fixture.debugElement.query(By.directive(KbqDl))).not.toBeNull();
         expect(fixture.debugElement.query(By.directive(KbqDt)).nativeElement.classList).toContain('kbq-dt');
+        expect(fixture.debugElement.query(By.directive(KbqDtCaption)).nativeElement.classList).toContain(
+            'kbq-dt-caption'
+        );
         expect(fixture.debugElement.query(By.directive(KbqDd)).nativeElement.classList).toContain('kbq-dd');
+    });
+
+    it('should project the caption after the term text wherever the markup places it', () => {
+        const fixture = createComponent(DlWithCaptionFirst);
+        const term = fixture.debugElement.query(By.directive(KbqDt)).nativeElement as HTMLElement;
+        const caption = fixture.debugElement.query(By.directive(KbqDtCaption)).nativeElement as HTMLElement;
+
+        expect(term.firstChild?.textContent?.trim()).toBe('Incident type');
+        expect(term.lastChild).toBe(caption);
     });
 
     it('should keep the deprecated names working as the same classes', () => {
@@ -1202,12 +1215,29 @@ class ResizableDl {
     imports: [KbqDlModule],
     template: `
         <kbq-dl>
-            <kbq-dt>term</kbq-dt>
+            <kbq-dt>
+                term
+                <span kbqDtCaption>caption</span>
+            </kbq-dt>
             <kbq-dd>description</kbq-dd>
         </kbq-dl>
     `
 })
 class DlFromModule {}
+
+@Component({
+    imports: [KbqDl, KbqDt, KbqDtCaption, KbqDd],
+    template: `
+        <kbq-dl>
+            <kbq-dt>
+                <span kbqDtCaption>incident.type</span>
+                Incident type
+            </kbq-dt>
+            <kbq-dd>Malware infection</kbq-dd>
+        </kbq-dl>
+    `
+})
+class DlWithCaptionFirst {}
 
 @Component({
     imports: [KbqDlComponent, KbqDtComponent, KbqDdComponent],

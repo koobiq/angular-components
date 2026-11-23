@@ -44,6 +44,11 @@
         grid-column: 2 / span 3;
     }
 
+    .kbq-dt-caption {
+        display: block;
+        padding-top: var(--kbq-description-list-size-caption-padding-top);
+    }
+
     // Before the first resize, keep the term column at least as wide as its configured minimum so the separator
     // rests on the real column border and dragging starts from a width that already satisfies the minimum.
     &.kbq-dl_resizable:not(.kbq-dl_resized):not(.kbq-dl_vertical) {

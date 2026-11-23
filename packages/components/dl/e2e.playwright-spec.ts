@@ -31,6 +31,18 @@ test.describe('KbqDl', () => {
         });
     });
 
+    test.describe('E2eDlCaption', () => {
+        test('should draw the term captions in the horizontal and vertical layouts', async ({ page }) => {
+            await page.goto('/E2eDlCaption');
+
+            const target = page.getByTestId('e2eDlCaption').getByTestId('e2eScreenshotTarget');
+
+            await expect(target).toHaveScreenshot('03-caption-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(target).toHaveScreenshot('03-caption-dark.png');
+        });
+    });
+
     test.describe('E2eDlResizable', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eDlResizableConfigured');
         const getAutoComponent = (page: Page) => page.getByTestId('e2eDlResizableAuto');
