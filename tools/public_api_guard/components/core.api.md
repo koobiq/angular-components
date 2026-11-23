@@ -219,6 +219,9 @@ export function checkAndNormalizeLocalizedNumber(num: string | null | undefined,
 export const CLOSE_SQUARE_BRACKET = 221;
 
 // @public
+export function coerceCanCloseDecision(decision: Promise<boolean> | Observable<boolean>): Observable<boolean>;
+
+// @public
 export const COMMA = 188;
 
 // @public

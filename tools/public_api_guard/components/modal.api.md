@@ -170,7 +170,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     getElement(): HTMLElement;
     // (undocumented)
     getInstance(): KbqModalComponent;
-    protected handleCloseResult(triggerType: 'ok' | 'cancel', shouldClose: (doClose: boolean | void | {}) => boolean, reason: KbqCloseReason): void;
+    protected handleCloseResult(triggerType: 'ok' | 'cancel', shouldClose: (doClose: boolean | void | {}) => boolean, reason?: KbqCloseReason): void;
     protected get hasFooter(): boolean;
     // (undocumented)
     get hidden(): boolean;
@@ -243,7 +243,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     registerCaption(): void;
     registerFooter(): void;
     registerTitle(): void;
-    requestClose(reason: KbqCloseReason, result?: R): void;
+    requestClose(reason: KbqCloseReason, result?: R, force?: boolean): void;
     setBodyOverflow(state: KbqOverflowShadowState): void;
     setMaskEnabled(enabled: boolean): void;
     readonly titleId: string;
@@ -301,7 +301,7 @@ export abstract class KbqModalRef<C = any, R = unknown> {
     abstract afterOpen: Observable<void>;
     // (undocumented)
     abstract beforeClose: Observable<R | undefined>;
-    abstract canClose: KbqCanClose | undefined;
+    canClose: KbqCanClose | undefined;
     // (undocumented)
     abstract close(result?: R): void;
     // (undocumented)
@@ -312,7 +312,7 @@ export abstract class KbqModalRef<C = any, R = unknown> {
     abstract markForCheck(): any;
     // (undocumented)
     abstract open(): void;
-    abstract requestClose(reason: KbqCloseReason, result?: R): void;
+    requestClose(_reason: KbqCloseReason, result?: R): void;
     abstract triggerCancel(): void;
     abstract triggerOk(): void;
 }

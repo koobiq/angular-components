@@ -38,6 +38,7 @@ import {
 import { outputFromObservable } from '@angular/core/rxjs-interop';
 import { KbqButtonColor, KbqButtonModule } from '@koobiq/components/button';
 import {
+    coerceCanCloseDecision,
     ENTER,
     ESCAPE,
     KBQ_A11Y_LOCALE_CONFIGURATION,
@@ -54,7 +55,7 @@ import {
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { isObservable, Observable, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { CssUnitPipe } from './css-unit.pipe';
 import { KbqModalControlService } from './modal-control.service';
@@ -290,10 +291,10 @@ export class KbqModalComponent<T = any, R = any>
     readonly kbqOnCancelOutput = outputFromObservable(this.kbqOnCancel, { alias: 'kbqOnCancel' });
 
     /**
-     * Guard intercepting every close attempt. Seeded from the service config; assignable after
-     * the dialog was opened.
+     * Guard intercepting every close attempt. Takes precedence over the config's `canClose` and
+     * can be assigned or replaced after the dialog was opened. Defaults to the config's value.
      */
-    canClose: KbqCanClose | undefined = this.options?.canClose;
+    canClose: KbqCanClose | undefined;
 
     /** Whether an async `canClose` decision is pending. */
     private isGuarding = false;
@@ -578,13 +579,27 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     /**
-     * Asks `canClose` and closes with `result` when allowed. Repeated attempts are ignored while
-     * an async decision is pending.
+     * Asks `canClose` and closes with `result` when allowed. Closing an already closed dialog is
+     * a no-op, and repeated attempts are ignored while an async decision is pending. A
+     * `programmatic` attempt re-reads the guard instead: assigning `canClose` and calling `close()`
+     * is the way to force-close past a pending decision. `force` closes unconditionally, bypassing
+     * both the guard and the lock — reserved for teardown.
      */
-    requestClose(reason: KbqCloseReason, result?: R): void {
-        if (this.isGuarding) return;
+    requestClose(reason: KbqCloseReason, result?: R, force = false): void {
+        // Read the state untracked: `close()` is called from consumer `effect()`s, and a tracked
+        // read here would re-run that effect on every open/close.
+        if (untracked(() => !this.kbqVisible())) return;
 
-        const decision = this.canClose?.(reason) ?? true;
+        if (force) {
+            this.doClose(result);
+
+            return;
+        }
+
+        if (this.isGuarding && reason !== 'programmatic') return;
+
+        const guard = this.canClose ?? this.options?.canClose;
+        const decision = untracked(() => guard?.(reason)) ?? true;
 
         if (decision === true) {
             this.doClose(result);
@@ -596,26 +611,20 @@ export class KbqModalComponent<T = any, R = any>
 
         this.isGuarding = true;
 
-        const settle = (allow: boolean) => {
+        coerceCanCloseDecision(decision).subscribe((allow) => {
             this.isGuarding = false;
 
             if (allow) this.doClose(result);
-        };
-
-        if (isObservable(decision)) {
-            decision.pipe(take(1)).subscribe({ next: settle, error: () => settle(false) });
-        } else {
-            decision.then(settle, () => settle(false));
-        }
+        });
     }
 
     private doClose(result?: R): void {
         untracked(() => this.changeVisibleFromInside(false, result));
     }
 
-    // Destroy equals Close
+    // Destroy is teardown and bypasses the guard: a dialog whose owner is gone must not stay open.
     destroy(result?: R) {
-        this.close(result);
+        this.requestClose('programmatic', result, true);
     }
 
     markForCheck() {
@@ -758,7 +767,7 @@ export class KbqModalComponent<T = any, R = any>
         triggerType: 'ok' | 'cancel',
         // eslint-disable-next-line @typescript-eslint/no-empty-object-type
         shouldClose: (doClose: boolean | void | {}) => boolean,
-        reason: KbqCloseReason
+        reason: KbqCloseReason = 'close'
     ) {
         const handler = triggerType === 'ok' ? this.kbqOkClick() : this.kbqCancelClick();
         const emitter = triggerType === 'ok' ? this.kbqOnOk : this.kbqOnCancel;

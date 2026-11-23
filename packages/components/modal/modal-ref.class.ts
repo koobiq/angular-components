@@ -9,9 +9,9 @@ import { KbqModalComponent } from './modal.component';
 export abstract class KbqModalRef<C = any, R = unknown> {
     /**
      * Guard intercepting every close attempt. Takes precedence over the config's `canClose` and
-     * can be assigned or replaced after the dialog was opened.
+     * can be assigned or replaced after the dialog was opened. Defaults to the config's value.
      */
-    abstract canClose: KbqCanClose | undefined;
+    canClose: KbqCanClose | undefined;
 
     abstract afterOpen: Observable<void>;
     abstract beforeClose: Observable<R | undefined>;
@@ -21,8 +21,13 @@ export abstract class KbqModalRef<C = any, R = unknown> {
 
     abstract close(result?: R): void;
 
-    /** Asks `canClose` and closes with `result` when allowed. */
-    abstract requestClose(reason: KbqCloseReason, result?: R): void;
+    /**
+     * Asks `canClose` and closes with `result` when allowed. The default implementation closes
+     * unconditionally, exactly as `close()`.
+     */
+    requestClose(_reason: KbqCloseReason, result?: R): void {
+        this.close(result);
+    }
 
     abstract destroy(result?: R): void;
 

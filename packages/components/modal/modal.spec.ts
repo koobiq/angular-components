@@ -34,6 +34,7 @@ import {
     TAB
 } from '@koobiq/components/core';
 import { KbqDropdownItem, KbqDropdownModule } from '@koobiq/components/dropdown';
+import { EMPTY } from 'rxjs';
 import { KbqModalControlService } from './modal-control.service';
 import { KbqModalRef } from './modal-ref.class';
 import { KbqModalComponent } from './modal.component';
@@ -1067,6 +1068,81 @@ describe('KbqModal', () => {
                 await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
 
                 expect(modalRef.getInstance().kbqVisible()).toBe(true);
+
+                await vi.runOnlyPendingTimersAsync();
+            });
+
+            it('should fall back to the config guard when ref.canClose is reset', async () => {
+                const configGuard = vi.fn(() => false);
+                const modalRef = modalService.create({ kbqTitle: 'T', canClose: configGuard });
+
+                modalRef.canClose = () => true;
+                modalRef.canClose = undefined;
+
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                dispatchKeyboardEvent(modalRef.getElement(), 'keydown', ESCAPE);
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                expect(configGuard).toHaveBeenCalledTimes(1);
+                expect(modalRef.getInstance().kbqVisible()).toBe(true);
+
+                await vi.runOnlyPendingTimersAsync();
+            });
+
+            it('should not call canClose when closing an already closed dialog', async () => {
+                const canClose = vi.fn<KbqCanClose>(() => true);
+                const modalRef = modalService.create({ kbqTitle: 'T', canClose });
+
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                modalRef.close();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                modalRef.close();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                expect(canClose).toHaveBeenCalledTimes(1);
+                expect(modalRef.getInstance().kbqVisible()).toBe(false);
+
+                await vi.runOnlyPendingTimersAsync();
+            });
+
+            it('should veto but not lock when an observable canClose completes empty', async () => {
+                const modalRef = modalService.create({ kbqTitle: 'T', canClose: () => EMPTY });
+
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                dispatchKeyboardEvent(modalRef.getElement(), 'keydown', ESCAPE);
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                expect(modalRef.getInstance().kbqVisible()).toBe(true);
+
+                // The pending lock must be released: a new attempt consults the guard again.
+                modalRef.canClose = () => true;
+                modalRef.close();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                expect(modalRef.getInstance().kbqVisible()).toBe(false);
+
+                await vi.runOnlyPendingTimersAsync();
+            });
+
+            it('should bypass the guard on destroy', async () => {
+                const modalRef = modalService.create({ kbqTitle: 'T', canClose: () => false });
+
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                modalRef.destroy();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                expect(modalRef.getInstance().kbqVisible()).toBe(false);
 
                 await vi.runOnlyPendingTimersAsync();
             });

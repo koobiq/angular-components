@@ -12,7 +12,6 @@ import {
     untracked
 } from '@angular/core';
 import { KBQ_STATE_STORE, KbqStateSavingRef, KbqStateSavingService, KbqStateStore } from '@koobiq/components/core';
-import { take } from 'rxjs/operators';
 import { KbqSidepanelAnimationState } from './sidepanel-animations';
 import { KBQ_SIDEPANEL_DATA, KbqSidepanelConfig } from './sidepanel-config';
 import { KBQ_SIDEPANEL_WITH_INDENT, KbqSidepanelContainerComponent } from './sidepanel-container.component';
@@ -402,14 +401,10 @@ export class KbqSidepanelService implements OnDestroy {
     private closeSidepanels(sidepanels: KbqSidepanelRef[]) {
         // `reverse()` mutates, and this is called with the live stack.
         [...sidepanels].reverse().forEach((sidepanelRef: KbqSidepanelRef) => {
-            // The mark is added when the close actually starts, which is still before `afterClosed()` fires.
-            // Waiting for the real start means a vetoed close does not leave the ref flagged.
-            sidepanelRef
-                .beforeClosed()
-                .pipe(take(1))
-                .subscribe(() => this.bulkClosed.add(sidepanelRef));
-
-            sidepanelRef.close();
+            // Teardown bypasses the guard: a panel whose owner is being destroyed must not stay
+            // open, and a vetoed `beforeClosed` would otherwise never fire, losing the mark.
+            this.bulkClosed.add(sidepanelRef);
+            sidepanelRef.requestClose('programmatic', undefined, true);
         });
     }
 

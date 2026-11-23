@@ -193,7 +193,7 @@ export class KbqSidepanelRef<T = any, R = any> {
     instance: T;
     // (undocumented)
     readonly overlayRef: OverlayRef;
-    requestClose(reason: KbqCloseReason, result?: R): void;
+    requestClose(reason: KbqCloseReason, result?: R, force?: boolean): void;
 }
 
 // @public (undocumented)
