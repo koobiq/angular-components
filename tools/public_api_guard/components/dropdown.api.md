@@ -117,7 +117,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     resetActiveItem(): void;
     resetAnimation(): void;
     setPositionClasses(posX?: KbqDropdownPositionX, posY?: KbqDropdownPositionY): void;
-    startAnimation(): void;
+    startAnimation(panelElement?: HTMLElement): void;
     templateRef: TemplateRef<any>;
     // (undocumented)
     triggerWidth: string;
