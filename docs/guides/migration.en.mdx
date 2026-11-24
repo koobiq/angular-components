@@ -41,6 +41,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 - **21.1.0**: the code block loads the highlight.js core instead of the full bundle by default.
 - **21.1.0**: the content panel container becomes focusable.
 - **21.1.0**: the types of fields and getters that can be empty say so, and the events and `KbqFormFieldControl` got constructors and abstract members.
+- **21.2.0**: the keycode constants in `core` are deprecated re-exports of `@angular/cdk/keycodes` — import them from the CDK; the re-export is removed in 22.0.0.
 
 ### Upgrade to 18.5.3
 
@@ -3612,3 +3613,11 @@ Nothing. The schematic only reports where a member of the table is read, an even
 ### After the migration
 
 The migration is regex-based and does not rewrite aliased imports, local variables, or re-exports — **review the diff before committing**, rebuild the project and run your tests. The full lists of breaking changes are on the [Angular 21 breaking changes](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-21-breaking-changes.en.md) and [Angular 20 breaking changes](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-20-breaking-changes.en.md) pages.
+
+### Keycode constants deprecation (21.2.0)
+
+{/* migration-step-components(core) */}
+
+`@koobiq/components/core` no longer declares its own copy of the keycode constants (`ENTER`, `SPACE`, `TAB`, the arrows, the numpad and function keys, and the rest). The constants are re-exported from `@angular/cdk/keycodes` and marked deprecated; the re-export will be removed in 22.0.0.
+
+Nothing breaks in 21.2.0 — existing imports keep compiling. Switch them to `@angular/cdk/keycodes` at your own pace; the values are identical.
