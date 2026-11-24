@@ -3610,10 +3610,6 @@ Nothing. The schematic only reports where a member of the table is read, an even
 - **An event you create.** Pass the values to the constructor: `new KbqCheckboxChange(checkbox, true)`.
 - **A subclass of `KbqFormFieldControl` or `KbqPopUp`.** Declare the abstract members.
 
-### After the migration
-
-The migration is regex-based and does not rewrite aliased imports, local variables, or re-exports — **review the diff before committing**, rebuild the project and run your tests. The full lists of breaking changes are on the [Angular 21 breaking changes](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-21-breaking-changes.en.md) and [Angular 20 breaking changes](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-20-breaking-changes.en.md) pages.
-
 ### Keycode constants deprecation (21.2.0)
 
 {/* migration-step-components(core) */}
@@ -3621,3 +3617,20 @@ The migration is regex-based and does not rewrite aliased imports, local variabl
 `@koobiq/components/core` no longer declares its own copy of the keycode constants (`ENTER`, `SPACE`, `TAB`, the arrows, the numpad and function keys, and the rest). The constants are re-exported from `@angular/cdk/keycodes` and marked deprecated; the re-export will be removed in 22.0.0.
 
 Nothing breaks in 21.2.0 — existing imports keep compiling. Switch them to `@angular/cdk/keycodes` at your own pace; the values are identical.
+
+#### Running the migration
+
+`keycodes-import-path` is registered for 21.2.0, so an `ng update` to that version runs it:
+
+```bash
+ng g @koobiq/components:keycodes-import-path --project "<your project>"
+```
+
+It moves the keycode bindings of every `import` / `export ... from` `@koobiq/components/core` into a
+statement from `@angular/cdk/keycodes`, leaves the other bindings on `core`, and running it twice
+changes nothing. `hasModifierKey` and the koobiq-only key helpers (`isVerticalMovement`,
+`isSelectAll` and the rest) intentionally stay importable from `core`.
+
+### After the migration
+
+The migration is regex-based and does not rewrite aliased imports, local variables, or re-exports — **review the diff before committing**, rebuild the project and run your tests. The full lists of breaking changes are on the [Angular 21 breaking changes](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-21-breaking-changes.en.md) and [Angular 20 breaking changes](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-20-breaking-changes.en.md) pages.

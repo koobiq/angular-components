@@ -3617,10 +3617,6 @@ ng g @koobiq/components:uninitialized-members --project "<your project>"
 - **Создание события.** Передайте значения в конструктор: `new KbqCheckboxChange(checkbox, true)`.
 - **Наследник `KbqFormFieldControl` или `KbqPopUp`.** Объявите абстрактные члены.
 
-### После миграции
-
-Миграция работает на регулярных выражениях и не переписывает алиасные импорты, локальные переменные и ре-экспорты — **проверьте диф перед коммитом**, пересоберите проект и прогоните тесты. Полные списки ломающих изменений — на страницах [Ломающие изменения — Angular 21](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-21-breaking-changes.ru.md) и [Ломающие изменения — Angular 20](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-20-breaking-changes.ru.md).
-
 ### Устаревание констант клавиш (21.2.0)
 
 {/* migration-step-components(core) */}
@@ -3628,3 +3624,17 @@ ng g @koobiq/components:uninitialized-members --project "<your project>"
 `@koobiq/components/core` больше не объявляет собственную копию констант клавиш (`ENTER`, `SPACE`, `TAB`, стрелки, функциональные клавиши и остальные). Константы реэкспортируются из `@angular/cdk/keycodes` и помечены устаревшими; реэкспорт будет удалён в 22.0.0.
 
 В 21.2.0 ничего не ломается — прежние импорты продолжают компилироваться. Переведите их на `@angular/cdk/keycodes` в удобном темпе: значения совпадают.
+
+#### Запуск миграции
+
+Схематик `keycodes-import-path` зарегистрирован на 21.2.0, поэтому `ng update` на эту версию запустит его сам:
+
+```bash
+ng g @koobiq/components:keycodes-import-path --project "<your project>"
+```
+
+Он переносит привязки констант клавиш из каждого `import` / `export ... from` `@koobiq/components/core` в оператор из `@angular/cdk/keycodes`, оставляет остальные привязки на `core`, а повторный запуск ничего не портит. `hasModifierKey` и собственные функции для работы с клавишами (`isVerticalMovement`, `isSelectAll` и остальные) остаются импортируемыми из `core` намеренно.
+
+### После миграции
+
+Миграция работает на регулярных выражениях и не переписывает алиасные импорты, локальные переменные и ре-экспорты — **проверьте диф перед коммитом**, пересоберите проект и прогоните тесты. Полные списки ломающих изменений — на страницах [Ломающие изменения — Angular 21](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-21-breaking-changes.ru.md) и [Ломающие изменения — Angular 20](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-20-breaking-changes.ru.md).

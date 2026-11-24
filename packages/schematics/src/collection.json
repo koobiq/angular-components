@@ -154,6 +154,11 @@
             "factory": "./migrations/core-mixins-removal/index",
             "schema": "./migrations/core-mixins-removal/schema.json"
         },
+        "keycodes-import-path": {
+            "description": "Moves the keycode constants off @koobiq/components/core onto @angular/cdk/keycodes. The 119 constants (ENTER, SPACE, TAB, the arrows, the numpad and function keys, and the rest) are deprecated in core — the library imports them from the CDK from 21.2.0 on — and will be removed in 22.0.0. Splits the keycode bindings of every import/export statement from core into a statement from the CDK, leaving the other bindings on core; the values are identical, so an unmigrated import keeps compiling.",
+            "factory": "./migrations/keycodes-import-path/index",
+            "schema": "./migrations/keycodes-import-path/schema.json"
+        },
         "option-signals": {
             "description": "Migrates the signal inputs of KbqOption, KbqOptgroup, KbqOptionActionComponent and KbqTimezoneOption. The option state consumers read through events and models (value, viewValue, disabled, showCheckbox, timezone) stays a property read, so only programmatic writes are reported. A read of disabled on KbqOptgroup and KbqOptionActionComponent becomes a call. Also reports KbqOption.stateChanges, which no longer emits for disabled, the now optional textElement and the changed KbqOptionBase.",
             "factory": "./migrations/option-signals/index",
