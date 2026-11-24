@@ -20,6 +20,10 @@ jobs:
     permissions:
       contents: read # for actions/checkout to read the repository
       checks: write # for FirebaseExtended/action-hosting-deploy to create a check run
+    env:
+      # The address the site is deployed to, which its canonical links, sitemap and documentation for agents name
+      # (tools/docs-site-origin.ts). A branch that moves its docs to v<major>.koobiq.io changes it with the target.
+      KOOBIQ_DOCS_ORIGIN: https://koobiq.io
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

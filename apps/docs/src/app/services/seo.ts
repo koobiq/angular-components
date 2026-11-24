@@ -4,6 +4,7 @@ import { Meta, Title } from '@angular/platform-browser';
 import { DOCS_DEFAULT_LOCALE, DOCS_SUPPORTED_LOCALES, DocsLocale } from '../constants/locale';
 import { docsGetPageMarkdownPath, docsHasMarkdown } from '../page-paths';
 import { DOCS_SEO_DESCRIPTIONS } from '../seo-descriptions';
+import { DOCS_SITE_ORIGIN } from '../site-origin';
 import {
     docsGetItemById,
     type DocsStructureCategoryId,
@@ -15,7 +16,6 @@ import {
 import { DOCS_TRANSLATIONS, docsTranslateTemplate } from './i18n';
 
 const SITE_NAME = 'Koobiq';
-const SITE_ORIGIN = 'https://koobiq.io';
 const TITLE_SEPARATOR = '·';
 
 type DocsTwitterCard = 'summary' | 'summary_large_image';
@@ -93,7 +93,7 @@ const resolveItemImageSource = (item: DocsStructureItem): DocsSeoImageSource => 
 
 const resolveImage = (source: DocsSeoImageSource, alt: string): DocsSeoImage => {
     return {
-        url: `${SITE_ORIGIN}${source.path}`,
+        url: `${DOCS_SITE_ORIGIN}${source.path}`,
         alt,
         width: source.width,
         height: source.height,
@@ -162,16 +162,16 @@ export const docsResolveSeo = (
     const segments = path.split('/').filter(Boolean);
     const hasSupportedLocale = DOCS_SUPPORTED_LOCALES.includes(segments[0] ?? '');
     const locale = hasSupportedLocale ? (segments[0] as DocsLocale) : fallbackLocale;
-    const canonicalUrl = hasSupportedLocale ? `${SITE_ORIGIN}${path}` : null;
+    const canonicalUrl = hasSupportedLocale ? `${DOCS_SITE_ORIGIN}${path}` : null;
     const alternates = hasSupportedLocale
         ? [
               ...DOCS_SUPPORTED_LOCALES.map((alternateLocale) => ({
                   locale: alternateLocale as DocsLocale,
-                  url: `${SITE_ORIGIN}/${alternateLocale}${segments.length > 1 ? `/${segments.slice(1).join('/')}` : ''}`
+                  url: `${DOCS_SITE_ORIGIN}/${alternateLocale}${segments.length > 1 ? `/${segments.slice(1).join('/')}` : ''}`
               })),
               {
                   locale: 'x-default' as const,
-                  url: `${SITE_ORIGIN}/${DOCS_DEFAULT_LOCALE}${segments.length > 1 ? `/${segments.slice(1).join('/')}` : ''}`
+                  url: `${DOCS_SITE_ORIGIN}/${DOCS_DEFAULT_LOCALE}${segments.length > 1 ? `/${segments.slice(1).join('/')}` : ''}`
               }
           ]
         : [];

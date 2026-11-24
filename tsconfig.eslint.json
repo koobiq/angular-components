@@ -11,7 +11,8 @@
         ".commitlintrc.js",
         ".lintstagedrc.js",
         ".prettierrc.js",
-        "tools/e2e/changed-specs.mjs"
+        "tools/e2e/changed-specs.mjs",
+        "tools/firebase-hosting.mjs"
     ],
     "include": [
         "**/*.ts",

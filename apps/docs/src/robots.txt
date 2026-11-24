@@ -1,3 +1,6 @@
 Sitemap: https://koobiq.io/sitemap.xml
+
 User-agent: *
+# The documentation of an open-source library: search engines, AI answers and model training may all use it (https://contentsignals.org).
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Disallow:

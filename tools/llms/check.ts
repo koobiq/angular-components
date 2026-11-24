@@ -8,6 +8,8 @@ import { readFileSync } from 'fs';
 import { DocsLocale } from '../../apps/docs/src/app/constants/locale';
 import { docsHasMarkdown } from '../../apps/docs/src/app/page-paths';
 import { docsGetItems, docsGetItemsByCategoryId, DocsStructureCategoryId } from '../../apps/docs/src/app/structure';
+import { DOCS_SITE_ORIGIN, KOOBIQ_SITE_ORIGIN } from '../docs-site-origin';
+import { findRedirect, readHostingTarget } from '../firebase-hosting.mjs';
 import {
     COMPONENT_GUIDE_PATH,
     COMPONENT_GUIDE_RU_PATH,
@@ -18,14 +20,14 @@ import { generateLlms, LLMS_TXT_PATH } from './generate';
 import { LLMS_FULL_TXT, LLMS_TXT } from './llms-txt';
 import { findMarkdownProblems } from './markdown-problems';
 import { MAX_FILE_LENGTH } from './site-files';
-import { getMarkdownPath, KOOBIQ_SITE_ORIGIN, LLMS_SITE_ORIGIN, readRepoFile } from './sources';
+import { getMarkdownPath, readRepoFile } from './sources';
 
 /** The llms.txt of a site passes under 50,000 characters in the Agent-Friendly Docs Spec: agents read it whole. */
 const MAX_INDEX_LENGTH = 50_000;
 
 const checkLlms = async (): Promise<void> => {
     // The committed llms.txt links koobiq.io: built for another site, it would differ on every link.
-    if (LLMS_SITE_ORIGIN !== KOOBIQ_SITE_ORIGIN) {
+    if (DOCS_SITE_ORIGIN !== KOOBIQ_SITE_ORIGIN) {
         throw new Error(`the committed ${LLMS_TXT} links ${KOOBIQ_SITE_ORIGIN}: run without KOOBIQ_DOCS_ORIGIN`);
     }
 
@@ -42,6 +44,15 @@ const checkLlms = async (): Promise<void> => {
                 new Set(docsGetItems().map(({ id }) => id))
             ).map((problem) => `${path}: ${problem}`)
         );
+    }
+
+    // Hosting applies redirects before serving files.
+    const hosting = readHostingTarget('next');
+
+    for (const path of served) {
+        const redirect = findRedirect(hosting, `/${path}`);
+
+        if (redirect) errors.push(`${path}: firebase.json redirects its address to ${redirect.location}`);
     }
 
     // A checkout with Windows line endings holds the same index.
