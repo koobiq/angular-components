@@ -1,14 +1,14 @@
-import { ChangeDetectionStrategy, Component, TemplateRef, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, signal, TemplateRef, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import type { Observable } from 'rxjs';
+import { map } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqCloseReason } from '@koobiq/components/core';
+import { KBQ_WINDOW, type KbqCloseReason } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqModalService } from '@koobiq/components/modal';
-import { KbqSidepanelModule, KbqSidepanelRef, KbqSidepanelService } from '@koobiq/components/sidepanel';
+import { KbqSidepanelModule, type KbqSidepanelRef, KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { TRANSLATIONS } from './l10n';
 
 /**
@@ -18,7 +18,7 @@ import { TRANSLATIONS } from './l10n';
     selector: 'sidepanel-can-close-example',
     imports: [KbqButtonModule, KbqSidepanelModule, KbqFormFieldModule, KbqInputModule, FormsModule],
     template: `
-        <button kbq-button (click)="openSidepanel()">{{ t().open }}</button>
+        <button kbq-button type="button" (click)="openSidepanel()">{{ t().open }}</button>
 
         <ng-template>
             <kbq-sidepanel-header [closeable]="true">{{ t().title }}</kbq-sidepanel-header>
@@ -29,7 +29,7 @@ import { TRANSLATIONS } from './l10n';
             </kbq-sidepanel-body>
             <kbq-sidepanel-footer>
                 <kbq-sidepanel-actions>
-                    <button kbq-button color="contrast" (click)="save()">
+                    <button kbq-button type="button" color="contrast" (click)="save()">
                         <span>{{ t().save }}</span>
                     </button>
                 </kbq-sidepanel-actions>
@@ -43,6 +43,7 @@ export class SidepanelCanCloseExample {
 
     private readonly sidepanelService = inject(KbqSidepanelService);
     private readonly modalService = inject(KbqModalService);
+    private readonly window = inject(KBQ_WINDOW);
 
     private readonly template = viewChild.required(TemplateRef);
 
@@ -50,6 +51,19 @@ export class SidepanelCanCloseExample {
 
     value = '';
     readonly dirty = signal(false);
+
+    constructor() {
+        // Leaving the tab cannot show a Koobiq dialog: the browser shows its own confirmation
+        // while the form is dirty. The text is up to the browser and cannot be changed.
+        effect((onCleanup) => {
+            if (!this.dirty()) return;
+
+            const warnOnUnload = (event: BeforeUnloadEvent) => event.preventDefault();
+
+            this.window.addEventListener('beforeunload', warnOnUnload);
+            onCleanup(() => this.window.removeEventListener('beforeunload', warnOnUnload));
+        });
+    }
 
     openSidepanel(): void {
         this.dirty.set(false);
