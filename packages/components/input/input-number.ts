@@ -216,6 +216,12 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
      */
     readonly integer = input<boolean, unknown>(false, { transform: booleanAttribute });
 
+    /**
+     * Maximum number of fraction digits accepted during typing and shown in the field.
+     * Values are clamped to the range from 0 to 100. Non-numeric values fall back to 20.
+     */
+    readonly maxFractionDigits = input<number, NumberInput>(20, { transform: numberAttribute(20) });
+
     /** Step applied when `Shift` is held. */
     readonly bigStep = input<number, NumberInput>(BIG_STEP, { transform: numberAttribute(BIG_STEP) });
 
@@ -309,6 +315,10 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         return this.config.groupSeparator;
     }
 
+    private fractionDigitsLimit(): number {
+        return this.integer() ? 0 : Math.min(100, Math.max(0, Math.floor(this.maxFractionDigits())));
+    }
+
     private get config() {
         return this.localeConfiguration().number;
     }
@@ -352,11 +362,13 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
             if (disabled !== undefined) untracked(() => this.setDisabled(disabled));
         });
 
-        // Re-render the value in the separators of the new locale. `untracked` keeps the configuration the
-        // only dependency: formatting also reads the `withThousandSeparator` input, which must not rewrite
-        // what the user is typing on its own.
+        // Re-render the value in the separators of the new locale. `untracked` keeps the configuration,
+        // `integer` and `maxFractionDigits` from rewriting what the user is typing on their own: they only
+        // repaint the committed value.
         effect(() => {
             this.localeConfiguration();
+            this.integer();
+            this.maxFractionDigits();
 
             untracked(() => this.setViewValue(this.formatNumber(this.value)));
         });
@@ -442,7 +454,27 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
             [this.fractionSeparator, KBQ_DEFAULT_PRECISION_SEPARATOR].includes(event.key) &&
             viewValueToBeChecked.indexOf(KBQ_DEFAULT_PRECISION_SEPARATOR) !== -1;
 
-        if (shouldSkipForIntegerMode || shouldBlockMinus || isSignAndFractionSepAlreadyExists) {
+        let shouldBlockFractionDigit = false;
+
+        if (isNumberKey(event) || isNumpadKey(event)) {
+            const selectionStart = this.nativeElement.selectionStart ?? 0;
+            const selectionEnd = this.nativeElement.selectionEnd ?? selectionStart;
+            const valueAfterDigit =
+                this.viewValue.slice(0, selectionStart) + event.key + this.viewValue.slice(selectionEnd);
+            const fractionSeparator =
+                this.groupSeparator.includes(' ') && this.fractionSeparator === ',' ? /[,.]/ : this.fractionSeparator;
+            const fraction = valueAfterDigit.split(fractionSeparator)[1];
+
+            shouldBlockFractionDigit =
+                fraction !== undefined && fraction.replace(/\D/g, '').length > this.fractionDigitsLimit();
+        }
+
+        if (
+            shouldSkipForIntegerMode ||
+            shouldBlockMinus ||
+            isSignAndFractionSepAlreadyExists ||
+            shouldBlockFractionDigit
+        ) {
             event.preventDefault();
 
             return;
@@ -535,6 +567,9 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
             event.preventDefault();
 
             const parsedValue = Number.parseInt(this.valueFromPaste.toString());
+
+            // The pending `onInput` reformat must see the parsed integer, not the raw float it would round.
+            this.valueFromPaste = parsedValue;
 
             this.setViewValue(this.formatNumber(parsedValue));
             this.viewToModelUpdate(parsedValue.toString());
@@ -735,7 +770,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     private createLocalizedNumberFromParts(intPart: number, fractionPart?: string): string {
         const formatOptions = {
             useGrouping: this.withThousandSeparator(),
-            maximumFractionDigits: 20
+            maximumFractionDigits: this.fractionDigitsLimit()
         };
 
         const startFormattingFrom = this.startFormattingFrom() ?? this.config.startFormattingFrom;

@@ -6,6 +6,7 @@ export interface ExampleTranslation {
     hintBounds: string;
     numberWithSeparator: string;
     numberWithoutSeparator: string;
+    fractionDigits: string;
     integer: string;
 }
 
@@ -15,6 +16,7 @@ export const TRANSLATIONS: Translations<ExampleTranslation> = {
         hintBounds: 'От −12 000 до 12 000',
         numberWithSeparator: 'С разделителем групп разрядов',
         numberWithoutSeparator: 'Без разделителя групп разрядов',
+        fractionDigits: 'Не более двух знаков после запятой',
         integer: 'Целочисленное значение'
     },
     default: {
@@ -22,6 +24,7 @@ export const TRANSLATIONS: Translations<ExampleTranslation> = {
         hintBounds: 'From −12,000 to 12,000',
         numberWithSeparator: 'With thousand separator',
         numberWithoutSeparator: 'Without thousand separator',
+        fractionDigits: 'Up to two fraction digits',
         integer: 'Integer value'
     }
 };
