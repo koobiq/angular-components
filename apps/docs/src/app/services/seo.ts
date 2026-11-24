@@ -74,6 +74,7 @@ export type DocsResolvedSeo = {
     image: DocsSeoImage;
     locale: DocsLocale;
     noIndex: boolean;
+    isHome: boolean;
 };
 
 type SeoDescriptions = Readonly<Record<string, Partial<Record<DocsLocale, string>>>>;
@@ -183,6 +184,7 @@ export const docsResolveSeo = (
     if (item) {
         return {
             ...resolveItemSeo(item, tab, locale),
+            isHome: false,
             canonicalUrl,
             alternates,
             markdownUrl: docsHasMarkdown(item) ? docsGetPageMarkdownPath(item, tab, locale) : null,
@@ -205,6 +207,7 @@ export const docsResolveSeo = (
         markdownUrl: null,
         image: resolveImage(FALLBACK_IMAGE, DOCS_TRANSLATIONS.seoFallbackImageAlt[locale]),
         locale,
+        isHome,
         noIndex: !isHome
     };
 };
@@ -221,9 +224,51 @@ export class DocsSeoService {
         this.document.documentElement.lang = seo.locale;
         this.title.setTitle(seo.title);
         this.updateMeta(seo);
+        this.updateHomeStructuredData(seo);
         this.updateCanonical(seo.canonicalUrl);
         this.updateAlternates(seo.alternates);
         this.updateMarkdownAlternate(seo.markdownUrl);
+    }
+
+    private updateHomeStructuredData(seo: DocsResolvedSeo): void {
+        const id = 'docs-home-structured-data';
+        const existing = this.document.getElementById(id);
+
+        if (!seo.isHome) {
+            existing?.remove();
+
+            return;
+        }
+
+        const publisher = 'https://koobiq.io/#organization';
+        const script = existing ?? this.document.createElement('script');
+
+        script.id = id;
+        script.setAttribute('type', 'application/ld+json');
+        script.textContent = JSON.stringify({
+            '@context': 'https://schema.org',
+            '@graph': [
+                {
+                    '@type': 'Organization',
+                    '@id': publisher,
+                    name: SITE_NAME,
+                    url: 'https://koobiq.io',
+                    description: DOCS_TRANSLATIONS.welcomeDescription[seo.locale],
+                    logo: 'https://koobiq.io/assets/images/favicons/apple-touch-icon.png',
+                    sameAs: ['https://github.com/koobiq']
+                },
+                {
+                    '@type': 'SoftwareApplication',
+                    name: '@koobiq/components',
+                    description: seo.description,
+                    url: seo.canonicalUrl,
+                    applicationCategory: 'DeveloperApplication',
+                    publisher: { '@id': publisher }
+                }
+            ]
+        }).replace(/</g, '\\u003c');
+
+        if (!existing) this.document.head.appendChild(script);
     }
 
     private updateMeta(seo: DocsResolvedSeo): void {

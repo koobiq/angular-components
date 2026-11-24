@@ -734,6 +734,34 @@ test.describe('migration guide filter', () => {
 test.describe('prerendered SEO metadata', () => {
     test.use({ javaScriptEnabled: false });
 
+    test('identifies the library and its publisher on both home pages before hydration', async ({ page }) => {
+        for (const locale of ['en', 'ru']) {
+            await page.goto('/' + locale);
+            const data = page.locator('head script[type="application/ld+json"]');
+            const canonical = await page.locator('link[rel="canonical"]').getAttribute('href');
+            const description = await page.locator('meta[name="description"]').getAttribute('content');
+            const json = JSON.parse(await data.innerText());
+
+            expect(json['@context']).toBe('https://schema.org');
+            expect(json['@graph']).toEqual(
+                expect.arrayContaining([
+                    expect.objectContaining({
+                        '@type': 'Organization',
+                        '@id': 'https://koobiq.io/#organization',
+                        name: 'Koobiq'
+                    }),
+                    expect.objectContaining({
+                        '@type': 'SoftwareApplication',
+                        name: '@koobiq/components',
+                        url: canonical,
+                        description,
+                        publisher: { '@id': 'https://koobiq.io/#organization' }
+                    })
+                ])
+            );
+        }
+    });
+
     test('is present in the initial HTML without hydration', async ({ page }) => {
         await page.goto('/en/components/alert/overview');
 
