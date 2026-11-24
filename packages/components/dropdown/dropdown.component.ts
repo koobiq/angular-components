@@ -184,6 +184,9 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     /** Whether the dropdown is animating. */
     isAnimating: boolean;
 
+    /** The panel element this instance is currently rendered into, see `hidePanelReplacedBy`. */
+    private livePanelElement: HTMLElement | null = null;
+
     /** Parent dropdown of the current dropdown panel. */
     parent: KbqDropdownPanel | undefined;
 
@@ -372,8 +375,12 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     }
 
     /** Starts the enter animation. */
-    startAnimation() {
+    startAnimation(panelElement?: HTMLElement) {
         this.panelAnimationState = 'enter';
+
+        if (panelElement) {
+            this.hidePanelReplacedBy(panelElement);
+        }
     }
 
     /** Resets the panel animation to its initial state. */
@@ -390,6 +397,10 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     onAnimationStart(event: AnimationEvent) {
         this.isAnimating = true;
 
+        if (event.toState === 'enter') {
+            this.hidePanelReplacedBy(event.element);
+        }
+
         // Scroll the content element to the top as soon as the animation starts. This is necessary,
         // because we move focus to the first item while it's still being animated, which can throw
         // the browser off when it determines the scroll position. Alternatively we can move focus
@@ -399,6 +410,22 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
         if (event.toState === 'enter' && this.keyManager.activeItemIndex <= 0) {
             event.element.scrollTop = 0;
         }
+    }
+
+    /**
+     * Hides the panel the incoming one replaces.
+     *
+     * Several triggers can share a single `<kbq-dropdown>`, and its items reach the panel through `<ng-content>` —
+     * one set of nodes, rendered in one place. Opening the panel from a sibling trigger re-projects them into the new
+     * overlay in the same change detection flush that destroys the previous one, so the exit animation is left fading
+     * out an empty shell. `visibility` hides it because the animation player owns `opacity` until that exit completes.
+     */
+    private hidePanelReplacedBy(incoming: HTMLElement): void {
+        if (this.livePanelElement && this.livePanelElement !== incoming) {
+            this.livePanelElement.style.visibility = 'hidden';
+        }
+
+        this.livePanelElement = incoming;
     }
 
     close() {
