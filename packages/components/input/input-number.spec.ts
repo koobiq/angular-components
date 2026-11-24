@@ -2014,6 +2014,34 @@ describe('KbqNumberInput', () => {
             await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.value).toBe(`10${defaultLocaleGroupSep}000,7`);
+
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: {
+                    getData: () => '1.234.567,89,10'
+                }
+            });
+            fixture.detectChanges();
+
+            fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertFromPaste' } as any);
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe(`1${defaultLocaleGroupSep}234${defaultLocaleGroupSep}567,891`);
+
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: {
+                    getData: () => '10,000,7,8'
+                }
+            });
+            fixture.detectChanges();
+
+            fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertFromPaste' } as any);
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe(`10${defaultLocaleGroupSep}000,78`);
         });
 
         it('nothing should happen when inserting a text value', async () => {
