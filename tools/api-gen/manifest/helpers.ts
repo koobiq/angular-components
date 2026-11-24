@@ -16,6 +16,7 @@ export function getApiLookupKey(moduleName: string, name: string) {
 
 // Declarations tagged `internal` are missing from the published typings. The Angular extractor drops such
 // members by itself, but keeps top-level entries.
+// "Public" here means "documented by this site": a symbol can be public yet belong to a third party.
 export function isPublic(entry: { jsdocTags: JsDocTagEntry[]; source?: { filePath: string } }) {
     if (entry.jsdocTags.some((t: JsDocTagEntry) => t.name === 'docs-private' || t.name === 'internal')) return false;
 
