@@ -4,191 +4,73 @@
 
 ```ts
 
-import { A } from '@angular/cdk/keycodes';
 import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { ALT } from '@angular/cdk/keycodes';
 import * as _angular_forms from '@angular/forms';
-import { APOSTROPHE } from '@angular/cdk/keycodes';
-import { AT_SIGN } from '@angular/cdk/keycodes';
-import { B } from '@angular/cdk/keycodes';
-import { BACKSLASH } from '@angular/cdk/keycodes';
-import { BACKSPACE } from '@angular/cdk/keycodes';
 import { BehaviorSubject } from 'rxjs';
-import { C } from '@angular/cdk/keycodes';
-import { CAPS_LOCK } from '@angular/cdk/keycodes';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
-import { CLOSE_SQUARE_BRACKET } from '@angular/cdk/keycodes';
-import { COMMA } from '@angular/cdk/keycodes';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { ConnectionPositionPair } from '@angular/cdk/overlay';
-import { CONTEXT_MENU } from '@angular/cdk/keycodes';
-import { CONTROL } from '@angular/cdk/keycodes';
 import { ControlValueAccessor } from '@angular/forms';
-import { D } from '@angular/cdk/keycodes';
-import { DASH } from '@angular/cdk/keycodes';
 import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
 import { DateFormats } from '@koobiq/date-adapter';
 import { DateFormatter as DateFormatter_2 } from '@koobiq/date-formatter';
 import { DateTimeOptions } from '@koobiq/date-formatter';
-import { DELETE } from '@angular/cdk/keycodes';
 import { DestroyRef } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
-import { DOWN_ARROW } from '@angular/cdk/keycodes';
 import { DurationUnit } from '@koobiq/date-adapter';
-import { E } from '@angular/cdk/keycodes';
-import { EIGHT } from '@angular/cdk/keycodes';
 import { ElementRef } from '@angular/core';
-import { END } from '@angular/cdk/keycodes';
-import { ENTER } from '@angular/cdk/keycodes';
-import { EQUALS } from '@angular/cdk/keycodes';
-import { ESCAPE } from '@angular/cdk/keycodes';
 import { EventEmitter } from '@angular/core';
-import { F } from '@angular/cdk/keycodes';
-import { F1 } from '@angular/cdk/keycodes';
-import { F10 } from '@angular/cdk/keycodes';
-import { F11 } from '@angular/cdk/keycodes';
-import { F12 } from '@angular/cdk/keycodes';
-import { F2 } from '@angular/cdk/keycodes';
-import { F3 } from '@angular/cdk/keycodes';
-import { F4 } from '@angular/cdk/keycodes';
-import { F5 } from '@angular/cdk/keycodes';
-import { F6 } from '@angular/cdk/keycodes';
-import { F7 } from '@angular/cdk/keycodes';
-import { F8 } from '@angular/cdk/keycodes';
-import { F9 } from '@angular/cdk/keycodes';
-import { FF_EQUALS } from '@angular/cdk/keycodes';
-import { FF_MINUS } from '@angular/cdk/keycodes';
-import { FF_MUTE } from '@angular/cdk/keycodes';
-import { FF_SEMICOLON } from '@angular/cdk/keycodes';
-import { FF_VOLUME_DOWN } from '@angular/cdk/keycodes';
-import { FF_VOLUME_UP } from '@angular/cdk/keycodes';
-import { FIRST_MEDIA } from '@angular/cdk/keycodes';
-import { FIVE } from '@angular/cdk/keycodes';
 import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
 import { FlexibleConnectedPositionStrategyOrigin } from '@angular/cdk/overlay';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
 import { FormatterDurationTemplate } from '@koobiq/date-formatter';
 import { FormGroupDirective } from '@angular/forms';
-import { FOUR } from '@angular/cdk/keycodes';
-import { G } from '@angular/cdk/keycodes';
-import { H } from '@angular/cdk/keycodes';
-import { HOME } from '@angular/cdk/keycodes';
-import { I } from '@angular/cdk/keycodes';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { InjectOptions } from '@angular/core';
 import { Injector } from '@angular/core';
 import { InputSignal } from '@angular/core';
-import { INSERT } from '@angular/cdk/keycodes';
-import { J } from '@angular/cdk/keycodes';
-import { K } from '@angular/cdk/keycodes';
-import { L } from '@angular/cdk/keycodes';
-import { LAST_MEDIA } from '@angular/cdk/keycodes';
-import { LEFT_ARROW } from '@angular/cdk/keycodes';
-import { M } from '@angular/cdk/keycodes';
-import { MAC_ENTER } from '@angular/cdk/keycodes';
-import { MAC_META } from '@angular/cdk/keycodes';
-import { MAC_WK_CMD_LEFT } from '@angular/cdk/keycodes';
-import { MAC_WK_CMD_RIGHT } from '@angular/cdk/keycodes';
-import { META } from '@angular/cdk/keycodes';
 import { ModelSignal } from '@angular/core';
 import { MonoTypeOperatorFunction } from 'rxjs';
-import { MUTE } from '@angular/cdk/keycodes';
-import { N } from '@angular/cdk/keycodes';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { NgZone } from '@angular/core';
-import { NINE } from '@angular/cdk/keycodes';
-import { NUM_CENTER } from '@angular/cdk/keycodes';
-import { NUM_LOCK } from '@angular/cdk/keycodes';
-import { NUMPAD_DIVIDE } from '@angular/cdk/keycodes';
-import { NUMPAD_EIGHT } from '@angular/cdk/keycodes';
-import { NUMPAD_FIVE } from '@angular/cdk/keycodes';
-import { NUMPAD_FOUR } from '@angular/cdk/keycodes';
-import { NUMPAD_MINUS } from '@angular/cdk/keycodes';
-import { NUMPAD_MULTIPLY } from '@angular/cdk/keycodes';
-import { NUMPAD_NINE } from '@angular/cdk/keycodes';
-import { NUMPAD_ONE } from '@angular/cdk/keycodes';
-import { NUMPAD_PERIOD } from '@angular/cdk/keycodes';
-import { NUMPAD_PLUS } from '@angular/cdk/keycodes';
-import { NUMPAD_SEVEN } from '@angular/cdk/keycodes';
-import { NUMPAD_SIX } from '@angular/cdk/keycodes';
-import { NUMPAD_THREE } from '@angular/cdk/keycodes';
-import { NUMPAD_TWO } from '@angular/cdk/keycodes';
-import { NUMPAD_ZERO } from '@angular/cdk/keycodes';
-import { O } from '@angular/cdk/keycodes';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
-import { ONE } from '@angular/cdk/keycodes';
 import { OnInit } from '@angular/core';
-import { OPEN_SQUARE_BRACKET } from '@angular/cdk/keycodes';
 import { OutputRef } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { OverlayRef } from '@angular/cdk/overlay';
-import { P } from '@angular/cdk/keycodes';
-import { PAGE_DOWN } from '@angular/cdk/keycodes';
-import { PAGE_UP } from '@angular/cdk/keycodes';
-import { PAUSE } from '@angular/cdk/keycodes';
-import { PERIOD } from '@angular/cdk/keycodes';
 import { PipeTransform } from '@angular/core';
-import { PLUS_SIGN } from '@angular/cdk/keycodes';
-import { PRINT_SCREEN } from '@angular/cdk/keycodes';
 import { Provider } from '@angular/core';
-import { Q } from '@angular/cdk/keycodes';
 import { QueryList } from '@angular/core';
-import { QUESTION_MARK } from '@angular/cdk/keycodes';
-import { R } from '@angular/cdk/keycodes';
 import { Renderer2 } from '@angular/core';
-import { RIGHT_ARROW } from '@angular/cdk/keycodes';
-import { S } from '@angular/cdk/keycodes';
-import { SCROLL_LOCK } from '@angular/cdk/keycodes';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
-import { SEMICOLON } from '@angular/cdk/keycodes';
-import { SEVEN } from '@angular/cdk/keycodes';
-import { SHIFT } from '@angular/cdk/keycodes';
 import { Signal } from '@angular/core';
-import { SINGLE_QUOTE } from '@angular/cdk/keycodes';
-import { SIX } from '@angular/cdk/keycodes';
-import { SLASH } from '@angular/cdk/keycodes';
-import { SPACE } from '@angular/cdk/keycodes';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
-import { T } from '@angular/cdk/keycodes';
-import { TAB } from '@angular/cdk/keycodes';
 import { TemplateRef } from '@angular/core';
-import { THREE } from '@angular/cdk/keycodes';
-import { TILDE } from '@angular/cdk/keycodes';
-import { TWO } from '@angular/cdk/keycodes';
 import { Type } from '@angular/core';
-import { U } from '@angular/cdk/keycodes';
-import { UP_ARROW } from '@angular/cdk/keycodes';
-import { V } from '@angular/cdk/keycodes';
 import { ValidatorFn } from '@angular/forms';
 import { Version } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 import { ViewportRuler } from '@angular/cdk/scrolling';
-import { VOLUME_DOWN } from '@angular/cdk/keycodes';
-import { VOLUME_UP } from '@angular/cdk/keycodes';
-import { W } from '@angular/cdk/keycodes';
 import { WritableSignal } from '@angular/core';
-import { X } from '@angular/cdk/keycodes';
-import { Y } from '@angular/cdk/keycodes';
-import { Z } from '@angular/cdk/keycodes';
-import { ZERO } from '@angular/cdk/keycodes';
 
-export { A }
+// @public @deprecated (undocumented)
+export const A = 65;
 
 // @public @deprecated (undocumented)
 export class AbsoluteDateFormatterImpurePipe<D> extends AbsoluteDateFormatterPipe<D> {
@@ -276,20 +158,26 @@ export class ActiveDescendantKeyManager<T> extends ListKeyManager<Highlightable 
     setActiveItem(item: T): void;
 }
 
-export { ALT }
+// @public @deprecated (undocumented)
+export const ALT = 18;
 
-export { APOSTROPHE }
+// @public @deprecated (undocumented)
+export const APOSTROPHE = 192;
 
 // @public (undocumented)
 export const applyPopupMargins: (renderer: Renderer2, element: HTMLElement, name: string, value: string) => void;
 
-export { AT_SIGN }
+// @public @deprecated (undocumented)
+export const AT_SIGN = 64;
 
-export { B }
+// @public @deprecated (undocumented)
+export const B = 66;
 
-export { BACKSLASH }
+// @public @deprecated (undocumented)
+export const BACKSLASH = 220;
 
-export { BACKSPACE }
+// @public @deprecated (undocumented)
+export const BACKSPACE = 8;
 
 // @public @deprecated (undocumented)
 export class BaseFormatterPipe<D> {
@@ -312,7 +200,8 @@ export abstract class BaseLocaleAwareFormatterPipe<D, Value = D | string | null 
     transform(value: Value, ...args: Args): string;
 }
 
-export { C }
+// @public @deprecated (undocumented)
+export const C = 67;
 
 // @public
 export interface CanUpdateErrorState {
@@ -320,18 +209,23 @@ export interface CanUpdateErrorState {
     updateErrorState(): void;
 }
 
-export { CAPS_LOCK }
+// @public @deprecated (undocumented)
+export const CAPS_LOCK = 20;
 
 // @public
 export function checkAndNormalizeLocalizedNumber(num: string | null | undefined, locale?: string): number | null;
 
-export { CLOSE_SQUARE_BRACKET }
+// @public @deprecated (undocumented)
+export const CLOSE_SQUARE_BRACKET = 221;
 
-export { COMMA }
+// @public @deprecated (undocumented)
+export const COMMA = 188;
 
-export { CONTEXT_MENU }
+// @public @deprecated (undocumented)
+export const CONTEXT_MENU = 93;
 
-export { CONTROL }
+// @public @deprecated (undocumented)
+export const CONTROL = 17;
 
 // @public
 export function createFakeEvent(type: string, canBubble?: boolean, cancelable?: boolean): Event;
@@ -351,9 +245,11 @@ export function createTouchEvent(type: string, pageX?: number, pageY?: number): 
 // @public
 export type CrossFieldErrorScope = (errorKey: string, errorValue: unknown) => readonly string[] | null;
 
-export { D }
+// @public @deprecated (undocumented)
+export const D = 68;
 
-export { DASH }
+// @public @deprecated (undocumented)
+export const DASH = 189;
 
 // @public (undocumented)
 export abstract class DateAdapter<D> extends DateAdapter_2<D> {
@@ -376,7 +272,8 @@ export class DateFormatter<D> extends DateFormatter_2<D> {
 // @public
 export const defaultOffsetY: number;
 
-export { DELETE }
+// @public @deprecated (undocumented)
+export const DELETE = 46;
 
 // @public
 function dispatchEvent_2(node: Node | Window, event: Event): Event;
@@ -394,7 +291,8 @@ export function dispatchMouseEvent(node: Node, type: string, x?: number, y?: num
 // @public
 export function dispatchTouchEvent(node: Node, type: string, x?: number, y?: number): Event;
 
-export { DOWN_ARROW }
+// @public @deprecated (undocumented)
+export const DOWN_ARROW = 40;
 
 // @public @deprecated (undocumented)
 export class DurationLongFormatterImpurePipe<D> extends DurationLongFormatterPipe<D> {
@@ -456,9 +354,11 @@ export class DurationShortFormatterPipe<D> extends BaseFormatterPipe<D> implemen
     static ɵpipe: i0.ɵɵPipeDeclaration<DurationShortFormatterPipe<any>, "durationShort", true>;
 }
 
-export { E }
+// @public @deprecated (undocumented)
+export const E = 69;
 
-export { EIGHT }
+// @public @deprecated (undocumented)
+export const EIGHT = 56;
 
 // @public (undocumented)
 export class EmptyFocusTrapStrategy implements FocusTrapInertStrategy {
@@ -468,9 +368,11 @@ export class EmptyFocusTrapStrategy implements FocusTrapInertStrategy {
     preventFocus(): void;
 }
 
-export { END }
+// @public @deprecated (undocumented)
+export const END = 35;
 
-export { ENTER }
+// @public @deprecated (undocumented)
+export const ENTER = 13;
 
 // @public (undocumented)
 export const enUSFormattersData: {
@@ -741,7 +643,8 @@ export const enUSLocaleData: {
     };
 };
 
-export { EQUALS }
+// @public @deprecated (undocumented)
+export const EQUALS = 187;
 
 // @public
 export class ErrorStateMatcher {
@@ -753,7 +656,8 @@ export class ErrorStateMatcher {
     static ɵprov: i0.ɵɵInjectableDeclaration<ErrorStateMatcher>;
 }
 
-export { ESCAPE }
+// @public @deprecated (undocumented)
+export const ESCAPE = 27;
 
 // @public
 export function escapeRegExp(value: string): string;
@@ -1030,43 +934,62 @@ export const esLALocaleData: {
     };
 };
 
-export { F }
+// @public @deprecated (undocumented)
+export const F = 70;
 
-export { F1 }
+// @public @deprecated (undocumented)
+export const F1 = 112;
 
-export { F10 }
+// @public @deprecated (undocumented)
+export const F10 = 121;
 
-export { F11 }
+// @public @deprecated (undocumented)
+export const F11 = 122;
 
-export { F12 }
+// @public @deprecated (undocumented)
+export const F12 = 123;
 
-export { F2 }
+// @public @deprecated (undocumented)
+export const F2 = 113;
 
-export { F3 }
+// @public @deprecated (undocumented)
+export const F3 = 114;
 
-export { F4 }
+// @public @deprecated (undocumented)
+export const F4 = 115;
 
-export { F5 }
+// @public @deprecated (undocumented)
+export const F5 = 116;
 
-export { F6 }
+// @public @deprecated (undocumented)
+export const F6 = 117;
 
-export { F7 }
+// @public @deprecated (undocumented)
+export const F7 = 118;
 
-export { F8 }
+// @public @deprecated (undocumented)
+export const F8 = 119;
 
-export { F9 }
+// @public @deprecated (undocumented)
+export const F9 = 120;
 
-export { FF_EQUALS }
+// @public @deprecated (undocumented)
+export const FF_EQUALS = 61;
 
-export { FF_MINUS }
+// @public @deprecated (undocumented)
+export const FF_MINUS = 173;
 
-export { FF_MUTE }
+// @public @deprecated (undocumented)
+export const FF_MUTE = 181;
 
-export { FF_SEMICOLON }
+// @public @deprecated (undocumented)
+export const FF_SEMICOLON = 59;
 
-export { FF_VOLUME_DOWN }
+// @public @deprecated (undocumented)
+export const FF_VOLUME_DOWN = 182;
 
-export { FF_VOLUME_UP }
+// @public @deprecated (undocumented)
+export const FF_VOLUME_UP = 183;
 
 // @public
 export class FileValidators {
@@ -1077,9 +1000,11 @@ export class FileValidators {
 // @public
 export function findSearchMatchRanges(value: string, tokens: readonly string[]): Array<[number, number]>;
 
-export { FIRST_MEDIA }
+// @public @deprecated (undocumented)
+export const FIRST_MEDIA = 166;
 
-export { FIVE }
+// @public @deprecated (undocumented)
+export const FIVE = 53;
 
 // @public (undocumented)
 export class FocusKeyManager<T> extends ListKeyManager<IFocusableOption & T> {
@@ -1092,9 +1017,11 @@ export class FocusKeyManager<T> extends ListKeyManager<IFocusableOption & T> {
 // @public
 export function formatNumberWithLocale(value: unknown, formatter: Intl.NumberFormat, options?: KbqNumberFormatOptions): string;
 
-export { FOUR }
+// @public @deprecated (undocumented)
+export const FOUR = 52;
 
-export { G }
+// @public @deprecated (undocumented)
+export const G = 71;
 
 // @public
 export const getContentNodes: (element: Node) => Node[];
@@ -1129,7 +1056,8 @@ export function getSafeTriangleVertices(origin: KbqPoint, targetRect: DOMRect): 
 // @public
 export function getSelectAllState<T>(adapter: KbqSelectAllAdapter<T>): KbqPseudoCheckboxState;
 
-export { H }
+// @public @deprecated (undocumented)
+export const H = 72;
 
 // Warning: (ae-forgotten-export) The symbol "ModifierKey" needs to be exported by the entry point koobiq-components-core.d.ts
 //
@@ -1144,9 +1072,11 @@ export interface Highlightable extends ListKeyManagerOption {
     setInactiveStyles(): void;
 }
 
-export { HOME }
+// @public @deprecated (undocumented)
+export const HOME = 36;
 
-export { I }
+// @public @deprecated (undocumented)
+export const I = 73;
 
 // @public
 export interface IFocusableOption extends ListKeyManagerOption {
@@ -1154,7 +1084,8 @@ export interface IFocusableOption extends ListKeyManagerOption {
     focus(origin?: FocusOrigin): void;
 }
 
-export { INSERT }
+// @public @deprecated (undocumented)
+export const INSERT = 45;
 
 // @public @deprecated (undocumented)
 export function isBoolean(value: unknown): value is boolean;
@@ -1225,9 +1156,11 @@ export const isUndefined: (value: unknown) => value is undefined;
 // @public
 export function isVerticalMovement(input: KeyboardEvent): boolean;
 
-export { J }
+// @public @deprecated (undocumented)
+export const J = 74;
 
-export { K }
+// @public @deprecated (undocumented)
+export const K = 75;
 
 // @public
 export const KBQ_A11Y_LOCALE_CONFIGURATION: InjectionToken<KbqA11yLocaleConfiguration>;
@@ -4988,11 +4921,14 @@ export interface KeyboardNavigationHandler {
     scrollActiveOptionIntoView(): void;
 }
 
-export { L }
+// @public @deprecated (undocumented)
+export const L = 76;
 
-export { LAST_MEDIA }
+// @public @deprecated (undocumented)
+export const LAST_MEDIA = 183;
 
-export { LEFT_ARROW }
+// @public @deprecated (undocumented)
+export const LEFT_ARROW = 37;
 
 // @public (undocumented)
 export const leftIconClassName = "kbq-icon_left";
@@ -5046,17 +4982,23 @@ export interface ListKeyManagerOption {
     getLabel?(): string;
 }
 
-export { M }
+// @public @deprecated (undocumented)
+export const M = 77;
 
-export { MAC_ENTER }
+// @public @deprecated (undocumented)
+export const MAC_ENTER = 3;
 
-export { MAC_META }
+// @public @deprecated (undocumented)
+export const MAC_META = 224;
 
-export { MAC_WK_CMD_LEFT }
+// @public @deprecated (undocumented)
+export const MAC_WK_CMD_LEFT = 91;
 
-export { MAC_WK_CMD_RIGHT }
+// @public @deprecated (undocumented)
+export const MAC_WK_CMD_RIGHT = 93;
 
-export { META }
+// @public @deprecated (undocumented)
+export const META = 91;
 
 // @public
 export const MIN_OVERFLOW_IN_DEVICE_PIXELS = 0.5;
@@ -5069,11 +5011,14 @@ export enum MultipleMode {
     KEYBOARD = "keyboard"
 }
 
-export { MUTE }
+// @public @deprecated (undocumented)
+export const MUTE = 173;
 
-export { N }
+// @public @deprecated (undocumented)
+export const N = 78;
 
-export { NINE }
+// @public @deprecated (undocumented)
+export const NINE = 57;
 
 // @public
 export function normalizeNumber(value: string | null | undefined, customConfig: Pick<KbqInputNumberLocaleConfiguration, 'fractionSeparator' | 'groupSeparator'>): string;
@@ -5081,51 +5026,74 @@ export function normalizeNumber(value: string | null | undefined, customConfig: 
 // @public
 export function normalizeSearchValue(value: string): string;
 
-export { NUM_CENTER }
+// @public @deprecated (undocumented)
+export const NUM_CENTER = 12;
 
-export { NUM_LOCK }
+// @public @deprecated (undocumented)
+export const NUM_LOCK = 144;
 
-export { NUMPAD_DIVIDE }
+// @public @deprecated (undocumented)
+export const NUMPAD_DIVIDE = 111;
 
-export { NUMPAD_EIGHT }
+// @public @deprecated (undocumented)
+export const NUMPAD_EIGHT = 104;
 
-export { NUMPAD_FIVE }
+// @public @deprecated (undocumented)
+export const NUMPAD_FIVE = 101;
 
-export { NUMPAD_FOUR }
+// @public @deprecated (undocumented)
+export const NUMPAD_FOUR = 100;
 
-export { NUMPAD_MINUS }
+// @public @deprecated (undocumented)
+export const NUMPAD_MINUS = 109;
 
-export { NUMPAD_MULTIPLY }
+// @public @deprecated (undocumented)
+export const NUMPAD_MULTIPLY = 106;
 
-export { NUMPAD_NINE }
+// @public @deprecated (undocumented)
+export const NUMPAD_NINE = 105;
 
-export { NUMPAD_ONE }
+// @public @deprecated (undocumented)
+export const NUMPAD_ONE = 97;
 
-export { NUMPAD_PERIOD }
+// @public @deprecated (undocumented)
+export const NUMPAD_PERIOD = 110;
 
-export { NUMPAD_PLUS }
+// @public @deprecated (undocumented)
+export const NUMPAD_PLUS = 107;
 
-export { NUMPAD_SEVEN }
+// @public @deprecated (undocumented)
+export const NUMPAD_SEVEN = 103;
 
-export { NUMPAD_SIX }
+// @public @deprecated (undocumented)
+export const NUMPAD_SIX = 102;
 
-export { NUMPAD_THREE }
+// @public @deprecated (undocumented)
+export const NUMPAD_THREE = 99;
 
-export { NUMPAD_TWO }
+// @public @deprecated (undocumented)
+export const NUMPAD_TWO = 98;
 
-export { NUMPAD_ZERO }
+// @public @deprecated (undocumented)
+export const NUMPAD_ZERO = 96;
 
-export { O }
+// @public @deprecated (undocumented)
+export const O = 79;
 
-export { ONE }
+// @public @deprecated (undocumented)
+export const ONE = 49;
 
-export { OPEN_SQUARE_BRACKET }
+// @public @deprecated (undocumented)
+export const OPEN_SQUARE_BRACKET = 219;
 
-export { P }
+// @public @deprecated (undocumented)
+export const P = 80;
 
-export { PAGE_DOWN }
+// @public @deprecated (undocumented)
+export const PAGE_DOWN = 34;
 
-export { PAGE_UP }
+// @public @deprecated (undocumented)
+export const PAGE_UP = 33;
 
 // @public
 export class PasswordValidators {
@@ -5140,11 +5108,14 @@ export class PasswordValidators {
 // @public
 export function patchElementFocus(element: HTMLElement): void;
 
-export { PAUSE }
+// @public @deprecated (undocumented)
+export const PAUSE = 19;
 
-export { PERIOD }
+// @public @deprecated (undocumented)
+export const PERIOD = 190;
 
-export { PLUS_SIGN }
+// @public @deprecated (undocumented)
+export const PLUS_SIGN = 43;
 
 // @public (undocumented)
 export enum PopUpPlacements {
@@ -5215,7 +5186,8 @@ export const POSITION_TO_CSS_MAP: {
     [key: string]: string;
 };
 
-export { PRINT_SCREEN }
+// @public @deprecated (undocumented)
+export const PRINT_SCREEN = 44;
 
 // @public (undocumented)
 export const ptBRFormattersData: {
@@ -5485,11 +5457,14 @@ export const ptBRLocaleData: {
     };
 };
 
-export { Q }
+// @public @deprecated (undocumented)
+export const Q = 81;
 
-export { QUESTION_MARK }
+// @public @deprecated (undocumented)
+export const QUESTION_MARK = 63;
 
-export { R }
+// @public @deprecated (undocumented)
+export const R = 82;
 
 // @public @deprecated (undocumented)
 export class RangeDateFormatterImpurePipe<D> extends RangeDateFormatterPipe<D> {
@@ -5674,7 +5649,8 @@ export class RelativeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> 
 // @public
 export function resolveMultipleMode(value: KbqMultipleInput): MultipleMode | null;
 
-export { RIGHT_ARROW }
+// @public @deprecated (undocumented)
+export const RIGHT_ARROW = 39;
 
 // @public (undocumented)
 export const rightIconClassName = "kbq-icon_right";
@@ -5959,15 +5935,20 @@ export const ruRULocaleData: {
     };
 };
 
-export { S }
+// @public @deprecated (undocumented)
+export const S = 83;
 
-export { SCROLL_LOCK }
+// @public @deprecated (undocumented)
+export const SCROLL_LOCK = 145;
 
-export { SEMICOLON }
+// @public @deprecated (undocumented)
+export const SEMICOLON = 186;
 
-export { SEVEN }
+// @public @deprecated (undocumented)
+export const SEVEN = 55;
 
-export { SHIFT }
+// @public @deprecated (undocumented)
+export const SHIFT = 16;
 
 // @public
 export function shouldSelectSearchText(input: HTMLInputElement | null | undefined): boolean;
@@ -6010,24 +5991,32 @@ export class ShowRequiredOnSubmitErrorStateMatcher implements ErrorStateMatcher 
     static ɵprov: i0.ɵɵInjectableDeclaration<ShowRequiredOnSubmitErrorStateMatcher>;
 }
 
-export { SINGLE_QUOTE }
+// @public @deprecated (undocumented)
+export const SINGLE_QUOTE = 222;
 
-export { SIX }
+// @public @deprecated (undocumented)
+export const SIX = 54;
 
-export { SLASH }
+// @public @deprecated (undocumented)
+export const SLASH = 191;
 
-export { SPACE }
+// @public @deprecated (undocumented)
+export const SPACE = 32;
 
 // @public
 export const supportsNativeDisabled: (element: Element) => boolean;
 
-export { T }
+// @public @deprecated (undocumented)
+export const T = 84;
 
-export { TAB }
+// @public @deprecated (undocumented)
+export const TAB = 9;
 
-export { THREE }
+// @public @deprecated (undocumented)
+export const THREE = 51;
 
-export { TILDE }
+// @public @deprecated (undocumented)
+export const TILDE = 192;
 
 // @public (undocumented)
 export const tkTMFormattersData: {
@@ -6313,16 +6302,20 @@ export enum TransitionCheckState {
     Unchecked = "unchecked"
 }
 
-export { TWO }
+// @public @deprecated (undocumented)
+export const TWO = 50;
 
 // @public
 export function typeInElement(value: string, element: HTMLInputElement): void;
 
-export { U }
+// @public @deprecated (undocumented)
+export const U = 85;
 
-export { UP_ARROW }
+// @public @deprecated (undocumented)
+export const UP_ARROW = 38;
 
-export { V }
+// @public @deprecated (undocumented)
+export const V = 86;
 
 // @public
 export const validationTooltipHideDelay = 3000;
@@ -6333,22 +6326,29 @@ export const validationTooltipShowDelay = 10;
 // @public (undocumented)
 export const VERSION: Version;
 
-export { VOLUME_DOWN }
+// @public @deprecated (undocumented)
+export const VOLUME_DOWN = 174;
 
-export { VOLUME_UP }
+// @public @deprecated (undocumented)
+export const VOLUME_UP = 175;
 
-export { W }
+// @public @deprecated (undocumented)
+export const W = 87;
 
 // @public (undocumented)
 export function wrappedErrorMessage(e: Error): RegExp;
 
-export { X }
+// @public @deprecated (undocumented)
+export const X = 88;
 
-export { Y }
+// @public @deprecated (undocumented)
+export const Y = 89;
 
-export { Z }
+// @public @deprecated (undocumented)
+export const Z = 90;
 
-export { ZERO }
+// @public @deprecated (undocumented)
+export const ZERO = 48;
 
 // (No @packageDocumentation comment for this package)
 
