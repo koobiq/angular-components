@@ -10,16 +10,17 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
-    AbstractControl,
+    type AbstractControl,
     FormControl,
-    FormGroupDirective,
+    type FormGroupDirective,
     NgControl,
-    NgForm,
+    type NgForm,
     ReactiveFormsModule,
     Validators
 } from '@angular/forms';
+import { fromEvent, switchMap, take } from 'rxjs';
 import {
-    ErrorStateMatcher,
+    type ErrorStateMatcher,
     KbqComponentColors,
     kbqErrorStateMatcherProvider,
     PopUpPlacements
@@ -27,8 +28,6 @@ import {
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { fromEvent, switchMap } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { TRANSLATIONS } from './l10n';
 
 const IP_PATTERN =
@@ -84,10 +83,10 @@ class ExampleResetTouchedOnFirstInput {
             <input
                 kbqInput
                 exampleResetTouchedOnFirstInput
+                kbqTrigger="manual"
                 [formControl]="ipAddressControl"
                 [kbqEnterDelay]="10"
                 [kbqPlacement]="popUpPlacements.Top"
-                [kbqTrigger]="'manual'"
                 [kbqTooltip]="t().numbersAndDot"
                 [kbqTooltipColor]="colors.Error"
                 (blur)="onBlur()"

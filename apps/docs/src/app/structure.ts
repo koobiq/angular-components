@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { DocsLocale } from './constants/locale';
+import type { DocsLocale } from './constants/locale';
 
 export enum DocsStructureItemId {
     // Main
@@ -572,7 +572,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'description list',
                     hasApi: true,
                     apiId: 'dl',
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-12-03')
                 },
                 {
                     id: DocsStructureItemId.Dropdown,
@@ -679,7 +680,7 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'input',
                     hasExamples: true,
-                    isUpdated: expiresAt('2026-11-19')
+                    isUpdated: expiresAt('2026-12-03')
                 },
                 {
                     id: DocsStructureItemId.FileUpload,
@@ -824,7 +825,7 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'navbar',
                     hasExamples: true,
-                    isUpdated: expiresAt('2026-11-23')
+                    isUpdated: expiresAt('2026-12-01')
                 },
                 {
                     id: DocsStructureItemId.NotificationCenter,
@@ -982,7 +983,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'skeleton',
                     hasApi: true,
                     apiId: 'skeleton',
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-12-01')
                 },
                 {
                     id: DocsStructureItemId.Splitter,

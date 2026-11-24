@@ -1,11 +1,11 @@
-import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, OverlayConfig, type OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { ComponentRef, DestroyRef, inject, Injectable, InjectionToken, Injector, isDevMode } from '@angular/core';
-import { Observable } from 'rxjs';
-import { KbqModalControlService } from './modal-control.service';
-import { KbqModalRef } from './modal-ref.class';
+import { type ComponentRef, DestroyRef, inject, Injectable, InjectionToken, Injector, isDevMode } from '@angular/core';
+import type { Observable } from 'rxjs';
 import { KbqModalComponent } from './modal.component';
-import { ConfirmType, IModalOptionsForService, KBQ_MODAL_OPTIONS, ModalOptions } from './modal.type';
+import { type ConfirmType, type IModalOptionsForService, KBQ_MODAL_OPTIONS, type ModalOptions } from './modal.type';
+import { KbqModalControlService } from './modal-control.service';
+import type { KbqModalRef } from './modal-ref.class';
 
 /** Injection token that can be used to access the data that was passed in to a modal. */
 export const KBQ_MODAL_DATA = new InjectionToken<unknown>('KbqModalData');
@@ -28,15 +28,18 @@ export class ModalBuilderForService {
         /** Lifetime of the caller. The dialog is destroyed with it. */
         openerDestroyRef: DestroyRef | null = null
     ) {
-        this.createModal();
+        // Second line of defence behind the `DestroyRef` below: a router navigation disposes the
+        // overlay even when the dialog was opened from a longer-lived injector.
+        this.overlayRef = this.overlay.create(new OverlayConfig({ disposeOnNavigation: true }));
+        this.modalRef = this.createModal();
         this.mirrorEmitters(options);
 
         // Nobody owns the builder, so without this the dialog outlives whatever opened it: it stays
         // painted over the next view, `afterClose` never emits, and the body scroll lock is kept.
         this.detachFromOpener = openerDestroyRef?.onDestroy(() => this.destroyModal());
 
-        this.modalRef!.instance.open();
-        this.modalRef!.instance.kbqAfterClose.subscribe(() => this.destroyModal());
+        this.modalRef.instance.open();
+        this.modalRef.instance.kbqAfterClose.subscribe(() => this.destroyModal());
     }
 
     getInstance(): KbqModalComponent | null {
@@ -82,13 +85,10 @@ export class ModalBuilderForService {
     }
 
     // Create component to ApplicationRef
-    private createModal(): void {
-        // Second line of defence behind the `DestroyRef` above: a router navigation disposes the
-        // overlay even when the dialog was opened from a longer-lived injector.
-        this.overlayRef = this.overlay.create(new OverlayConfig({ disposeOnNavigation: true }));
+    private createModal(): ComponentRef<KbqModalComponent> {
         this.overlayRef.hostElement.classList.add('kbq-modal-overlay');
 
-        this.modalRef = this.overlayRef.attach(new ComponentPortal(KbqModalComponent, undefined, this.injector));
+        return this.overlayRef.attach(new ComponentPortal(KbqModalComponent, undefined, this.injector));
     }
 }
 

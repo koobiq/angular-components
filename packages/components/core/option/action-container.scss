@@ -1,43 +1,39 @@
-@use '../styles/common/squircle' as *;
-@use '../styles/common/tokens' as *;
+@use '../styles/common/squircle';
 
 .kbq-action-container {
-    box-sizing: border-box;
+    @include squircle.kbq-squircle(var(--kbq-size-xs), border-top-right-radius border-bottom-right-radius);
 
     position: absolute;
-
-    right: 0;
     top: 0;
+    right: 0;
     bottom: 0;
 
     display: none;
     align-items: center;
 
+    box-sizing: border-box;
     overflow: hidden;
 
     border: 1px solid transparent;
-    @include kbq-squircle(var(--kbq-size-xs), border-top-right-radius border-bottom-right-radius);
 }
 
 .kbq-action-container__gradient {
     display: flex;
 
-    margin-right: calc(var(--kbq-size-xs) * -1);
-
     width: var(--kbq-size-3xl);
     height: 100%;
+    margin-right: calc(var(--kbq-size-xs) * -1);
 
     background: linear-gradient(var(--kbq-option-background), var(--kbq-option-background)), var(--kbq-background-bg);
-
     mask-image: linear-gradient(to right, transparent 0%, black var(--kbq-size-xxl));
 }
 
 .kbq-action-container__box {
-    height: 100%;
-
     display: flex;
     align-items: center;
     justify-content: center;
+
+    height: 100%;
 
     background: linear-gradient(var(--kbq-option-background), var(--kbq-option-background)), var(--kbq-background-bg);
 }

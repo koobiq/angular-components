@@ -13,7 +13,7 @@ import { TRANSLATIONS } from './l10n';
         KbqButtonToggleModule,
         KbqIconModule
     ],
-    templateUrl: 'button-toggle-overview-example.html',
+    templateUrl: './button-toggle-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonToggleOverviewExample {

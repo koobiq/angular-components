@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, type OnDestroy } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqThemeConfig, KbqThemeSelector, KbqThemeService } from '@koobiq/components/core';
+import { type KbqThemeConfig, KbqThemeSelector, KbqThemeService } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
@@ -18,13 +18,15 @@ interface ExampleThemeConfig extends KbqThemeConfig {
     selector: 'theme-static-selection-example',
     imports: [KbqButtonModule, KbqDropdownModule, KbqIconModule],
     template: `
-        <button kbq-button [kbqDropdownTriggerFor]="menu">
+        <button kbq-button type="button" [kbqDropdownTriggerFor]="menu">
             {{ themeLabel() }}
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         <kbq-dropdown #menu="kbqDropdown">
             @for (option of customThemes(); track option.name) {
-                <button kbq-dropdown-item (click)="theme.selectTheme(option.name)">{{ option.label }}</button>
+                <button kbq-dropdown-item type="button" (click)="theme.selectTheme(option.name)">
+                    {{ option.label }}
+                </button>
             }
         </kbq-dropdown>
     `,

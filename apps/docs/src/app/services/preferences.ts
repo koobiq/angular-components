@@ -1,14 +1,14 @@
 import { Location } from '@angular/common';
 import {
-    EnvironmentProviders,
+    type EnvironmentProviders,
     inject,
     Injectable,
     makeEnvironmentProviders,
     provideAppInitializer
 } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { KBQ_LOCALE_SERVICE, KBQ_WINDOW, KbqThemeService } from '@koobiq/components/core';
 import { distinctUntilKeyChanged, filter, skip } from 'rxjs';
+import { KBQ_LOCALE_SERVICE, KBQ_WINDOW, KbqThemeService } from '@koobiq/components/core';
 import { DocsNavbarProperty } from '../components/navbar/navbar-property';
 import { DOCS_EXAMPLES_LANG_PARAM, DocsLocale } from '../constants/locale';
 import { DocsLocaleService } from './locale';

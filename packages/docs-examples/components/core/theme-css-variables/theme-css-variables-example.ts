@@ -13,7 +13,7 @@ import { TRANSLATIONS } from './l10n';
     template: `
         <div class="theme-css-variables-example__card">
             <p class="theme-css-variables-example__caption">{{ t().currentTheme }} {{ themeService.colorScheme() }}</p>
-            <button kbq-button (click)="themeService.toggle()">{{ t().switchTheme }}</button>
+            <button kbq-button type="button" (click)="themeService.toggle()">{{ t().switchTheme }}</button>
         </div>
     `,
     styles: `

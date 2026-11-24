@@ -1,32 +1,32 @@
 import { _IdGenerator, FocusMonitor, InputModalityDetector } from '@angular/cdk/a11y';
 import { DOCUMENT } from '@angular/common';
 import {
-    AfterContentInit,
+    type AfterContentInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     computed,
     DestroyRef,
-    DoCheck,
+    type DoCheck,
     effect,
     ElementRef,
     inject,
     Injector,
     input,
     linkedSignal,
-    OnChanges,
-    OnInit,
+    type OnChanges,
+    type OnInit,
     Renderer2,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
-    AbstractControl,
-    ControlValueAccessor,
+    type AbstractControl,
+    type ControlValueAccessor,
     FormControl,
     FormGroupDirective,
     NG_VALIDATORS,
@@ -34,8 +34,8 @@ import {
     NgControl,
     NgForm,
     ReactiveFormsModule,
-    ValidationErrors,
-    Validator
+    type ValidationErrors,
+    type Validator
 } from '@angular/forms';
 import {
     BACKSPACE,
@@ -648,6 +648,9 @@ export class KbqDatetime<D>
         if (!dateInput || !match || this.disabled()) return false;
 
         const [, dateText, hours, minutes, seconds] = match;
+
+        if (!dateText || !hours || !minutes) return false;
+
         const format = dateInput.dateInputFormat;
         const separator = format.match(/[^a-zA-Z]/)?.[0] ?? '';
         const date = this.validOrNull(this.adapter.parse(dateText.replace(/\D/g, separator), format));

@@ -1,20 +1,21 @@
 import { Component, Directive, signal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { kbqSkeletonOptionsProvider } from './skeleton';
 import {
     KBQ_SKELETON_PRESETS_CONFIGURATION,
     KbqSkeletonAccordion,
     KbqSkeletonBadge,
     KbqSkeletonButton,
     KbqSkeletonCheckable,
-    KbqSkeletonCheckableControl,
+    type KbqSkeletonCheckableControl,
     KbqSkeletonDl,
     KbqSkeletonFormField,
-    KbqSkeletonFormFieldControl,
+    type KbqSkeletonFormFieldControl,
     KbqSkeletonGroup,
-    KbqSkeletonGroupPreset,
+    type KbqSkeletonGroupPreset,
     KbqSkeletonIcon,
     KbqSkeletonLink,
-    KbqSkeletonPresetsConfiguration,
+    type KbqSkeletonPresetsConfiguration,
     kbqSkeletonPresetsConfigurationProvider,
     KbqSkeletonTable,
     KbqSkeletonTabs,
@@ -332,6 +333,21 @@ describe('KbqSkeleton presets', () => {
         fixture.detectChanges();
 
         expect(count(fixture, 'kbq-skeleton-dl > .kbq-skeleton-dl__term')).toBe(1);
+    });
+
+    it('should run the wave of every preset for the duration of the options', () => {
+        TestBed.configureTestingModule({
+            providers: [kbqSkeletonOptionsProvider({ animationDuration: 3000 })]
+        });
+
+        const skeletons: HTMLElement[] = [
+            ...createFixture(TestPresets).nativeElement.querySelectorAll('.kbq-skeleton')
+        ];
+
+        expect(skeletons.length).toBeGreaterThan(0);
+        skeletons.forEach((element) =>
+            expect(element.style.getPropertyValue('--kbq-skeleton-animation-duration')).toBe('3000ms')
+        );
     });
 
     it('should split the table into columns of equal width', () => {

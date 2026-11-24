@@ -1,6 +1,9 @@
 @use '../list/list-tokens';
 
 .kbq-dropdown__panel {
+    /* LIST THEME TOKENS */
+    @include list-tokens.list-theme-tokens;
+
     --kbq-dropdown-size-container-width-min: 200px;
     // Kept as a dropdown-specific override point; defaults to the shared panel cap.
     --kbq-dropdown-size-container-width-max: var(--kbq-panel-size-width-max, 640px);
@@ -11,6 +14,4 @@
     --kbq-dropdown-container-shadow: var(--kbq-shadow-popup);
     --kbq-dropdown-item-border-radius: var(--kbq-size-xs);
     --kbq-dropdown-item-caption-color: var(--kbq-foreground-contrast-secondary);
-    /* LIST THEME TOKENS */
-    @include list-tokens.list-theme-tokens;
 }

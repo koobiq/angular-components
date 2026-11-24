@@ -8,13 +8,20 @@ import {
     signal,
     viewChild
 } from '@angular/core';
-import { AbstractControl, FormGroupDirective, FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
-import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
-import { ErrorStateMatcher } from '@koobiq/components/core';
 import {
-    KbqFileItem,
+    type AbstractControl,
+    type FormGroupDirective,
+    FormsModule,
+    type NgForm,
+    ReactiveFormsModule
+} from '@angular/forms';
+import { BehaviorSubject } from 'rxjs';
+import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
+import type { ErrorStateMatcher } from '@koobiq/components/core';
+import {
+    type KbqFileItem,
     KbqFileUploadAllowedType,
-    KbqFileUploadAllowedTypeValues,
+    type KbqFileUploadAllowedTypeValues,
     KbqFileUploadModule,
     KbqFullScreenDropzoneService,
     KbqLocalDropzone
@@ -22,7 +29,6 @@ import {
 import { KbqHint } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { kbqScrollbarOptionsProvider } from '@koobiq/components/scrollbar';
-import { BehaviorSubject } from 'rxjs';
 
 type SingleUploadState = {
     file: KbqFileItem | null;
@@ -159,7 +165,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                         </kbq-file-upload>
                     </td>
                     <td>
-                        <kbq-file-upload [file]="indeterminateFile" [progressMode]="'indeterminate'">
+                        <kbq-file-upload progressMode="indeterminate" [file]="indeterminateFile">
                             <i kbq-icon="" [class]="iconClass.default"></i>
                         </kbq-file-upload>
                     </td>
@@ -178,14 +184,14 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                         </kbq-multiple-file-upload>
                     </td>
                     <td>
-                        <kbq-multiple-file-upload [files]="indeterminateFiles" [progressMode]="'indeterminate'">
+                        <kbq-multiple-file-upload progressMode="indeterminate" [files]="indeterminateFiles">
                             <ng-template #kbqFileIcon>
                                 <i kbq-icon="" [class]="iconClass.default"></i>
                             </ng-template>
                         </kbq-multiple-file-upload>
                     </td>
                     <td class="dev-focused-link">
-                        <kbq-multiple-file-upload [size]="'compact'" [files]="noFiles">
+                        <kbq-multiple-file-upload size="compact" [files]="noFiles">
                             <ng-template #kbqFileIcon>
                                 <i kbq-icon="" [class]="iconClass.default"></i>
                             </ng-template>

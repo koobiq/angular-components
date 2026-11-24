@@ -1,12 +1,12 @@
 import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DateTime } from 'luxon';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqDatetime } from '@koobiq/components/datetime';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { TimeFormats } from '@koobiq/components/timepicker';
-import { DateTime } from 'luxon';
 import { DatetimeExamplesModule } from 'packages/docs-examples/components/datetime';
 import { DevLocaleSelector } from '../locale-selector';
 
@@ -34,8 +34,8 @@ export class DevExamples {}
         DevLocaleSelector,
         DevExamples
     ],
-    templateUrl: 'template.html',
-    styleUrls: ['styles.scss'],
+    templateUrl: './template.html',
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

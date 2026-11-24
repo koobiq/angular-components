@@ -1,12 +1,12 @@
 @use './dl-theme' as theme;
 
 .kbq-dl {
-    display: grid;
     position: relative;
-    column-gap: var(--kbq-description-list-size-horizontal-content-gap-horizontal);
-    row-gap: var(--kbq-description-list-size-horizontal-gap-vertical);
 
+    display: grid;
     grid-template-columns: repeat(4, 1fr);
+    row-gap: var(--kbq-description-list-size-horizontal-gap-vertical);
+    column-gap: var(--kbq-description-list-size-horizontal-content-gap-horizontal);
 
     &.kbq-dl_vertical-align-center {
         align-items: center;
@@ -44,6 +44,11 @@
         grid-column: 2 / span 3;
     }
 
+    .kbq-dt-caption {
+        display: block;
+        padding-top: var(--kbq-description-list-size-caption-padding-top);
+    }
+
     // Before the first resize, keep the term column at least as wide as its configured minimum so the separator
     // rests on the real column border and dragging starts from a width that already satisfies the minimum.
     &.kbq-dl_resizable:not(.kbq-dl_resized):not(.kbq-dl_vertical) {
@@ -62,10 +67,13 @@
         position: absolute;
         inset-block: 0;
         inset-inline-start: 0;
-        grid-column: 1 / 2;
-        width: 100%;
-        pointer-events: none;
         z-index: 1;
+
+        grid-column: 1 / 2;
+
+        width: 100%;
+
+        pointer-events: none;
     }
 
     .kbq-dl__resize-handle {
@@ -78,24 +86,29 @@
                 ) /
                 -2
         );
+
         width: var(--kbq-description-list-resizer-hit-area-width);
-        pointer-events: auto;
-        touch-action: none;
         // Suppress the native focus ring: the frame is drawn solely by `.cdk-keyboard-focused` below, so a pointer
         // resize (which demotes the focus origin to mouse) leaves no `:focus-visible` outline lingering.
         outline: none;
+
+        pointer-events: auto;
+        touch-action: none;
 
         // The resize line, centered inside the hit area. Hidden until the list is hovered or the separator is focused.
         // Inset vertically by the focus-outline width so the line and its 2px focus frame stay within the list bounds
         // instead of the outline spilling past the top and bottom edges.
         &::after {
+            content: '';
+
             position: absolute;
             inset-block: var(--kbq-description-list-resizer-focus-outline-width);
             inset-inline: 0;
+
             width: var(--kbq-description-list-resizer-line-width);
             margin-inline: auto;
+
             background-color: var(--kbq-description-list-resizer-color);
-            content: '';
             opacity: 0;
         }
 
@@ -125,14 +138,6 @@
         }
     }
 
-    @media (hover: hover) and (pointer: fine) {
-        // Reveal the separator on hover of the list. Child combinators keep it to the list's own separator, not
-        // to the one of a list nested in a description.
-        &:is(:hover, .kbq-hover) > .kbq-dl__resize-track > .kbq-dl__resize-handle::after {
-            opacity: 1;
-        }
-    }
-
     &.kbq-dl_wide {
         grid-template-columns: repeat(2, 1fr);
 
@@ -155,7 +160,6 @@
 
     &.kbq-dl_vertical {
         grid-template-columns: repeat(1, 1fr);
-
         row-gap: var(--kbq-description-list-size-vertical-content-gap-vertical);
 
         > .kbq-dt,
@@ -165,6 +169,14 @@
 
         > .kbq-dd:not(:last-child) {
             margin-bottom: var(--kbq-description-list-size-vertical-gap-vertical);
+        }
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        // Reveal the separator on hover of the list. Child combinators keep it to the list's own separator, not
+        // to the one of a list nested in a description.
+        &:is(:hover, .kbq-hover) > .kbq-dl__resize-track > .kbq-dl__resize-handle::after {
+            opacity: 1;
         }
     }
 }

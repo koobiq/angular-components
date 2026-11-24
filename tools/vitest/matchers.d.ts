@@ -1,5 +1,5 @@
-import type { RunOptions } from 'axe-core';
 import 'vitest';
+import type { RunOptions } from 'axe-core';
 
 declare module 'vitest' {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars -- a merged declaration repeats the type parameters of Vitest's own

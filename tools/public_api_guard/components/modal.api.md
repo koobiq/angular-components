@@ -147,20 +147,25 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     // (undocumented)
     readonly bodyContainer: _angular_core.Signal<ViewContainerRef>;
     readonly bodyOverflow: _angular_core.WritableSignal<KbqOverflowShadowState>;
+    protected buttonColor(button: IModalButtonOptions<T>): KbqButtonColor;
     canClose: KbqCanClose | undefined;
     readonly captionId: string;
     protected readonly captionKind: _angular_core.Signal<KbqModalSlotKind>;
+    protected readonly captionTemplate: _angular_core.Signal<TemplateRef<{}> | null>;
     close(result?: R): void;
     // (undocumented)
     componentColors: typeof KbqComponentColors;
     protected readonly containerClasses: _angular_core.Signal<string>;
     protected readonly contentKind: _angular_core.Signal<KbqModalSlotKind>;
+    protected readonly contentTemplate: _angular_core.Signal<TemplateRef<{}> | null>;
     // (undocumented)
     destroy(result?: R): void;
     // (undocumented)
     protected readonly document: Document;
     protected readonly footer: _angular_core.Signal<string | TemplateRef<{}> | IModalButtonOptions<T>[] | undefined>;
+    protected readonly footerButtons: _angular_core.Signal<IModalButtonOptions<T>[]>;
     protected readonly footerKind: _angular_core.Signal<KbqModalSlotKind>;
+    protected readonly footerTemplate: _angular_core.Signal<TemplateRef<{}> | null>;
     protected getButtonCallableProp(options: IModalButtonOptions<T>, prop: string): {};
     // (undocumented)
     getContentComponent(): T;
@@ -249,6 +254,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     readonly titleId: string;
     // Warning: (ae-forgotten-export) The symbol "KbqModalSlotKind" needs to be exported by the entry point koobiq-components-modal.d.ts
     protected readonly titleKind: _angular_core.Signal<KbqModalSlotKind>;
+    protected readonly titleTemplate: _angular_core.Signal<TemplateRef<{}> | null>;
     // (undocumented)
     triggerCancel(): void;
     // (undocumented)
@@ -309,7 +315,7 @@ export abstract class KbqModalRef<C = any, R = unknown> {
     abstract getContentComponent(): C;
     abstract getElement(): HTMLElement;
     abstract getInstance(): KbqModalComponent;
-    abstract markForCheck(): any;
+    abstract markForCheck(): void;
     // (undocumented)
     abstract open(): void;
     requestClose(_reason: KbqCloseReason, result?: R): void;

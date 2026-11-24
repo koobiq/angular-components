@@ -1,6 +1,6 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
-import { AfterViewInit, computed, Directive, effect, ElementRef, inject, input, Renderer2 } from '@angular/core';
+import { computed, Directive, effect, ElementRef, inject, input, Renderer2 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqTreeBase, KbqTreeNode } from './tree-base';
 import { KbqTreeOption } from './tree-option.component';
@@ -12,7 +12,7 @@ const cssUnitPattern = /([A-Za-z%]+)$/;
     selector: '[kbqTreeNodePadding]',
     exportAs: 'kbqTreeNodePadding'
 })
-export class KbqTreeNodePadding<T> implements AfterViewInit {
+export class KbqTreeNodePadding<T> {
     protected treeNode = inject<KbqTreeNode<T>>(KbqTreeNode);
     protected tree = inject<KbqTreeBase<T>>(KbqTreeBase);
     private renderer = inject(Renderer2);
@@ -28,7 +28,7 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
         this.setLevelInput(value);
     }
 
-    private _level: number;
+    private _level = 0;
 
     /** Indentation added per nesting level. Accepts a bare number (px) or a value with CSS units. */
     readonly indent = input<number | string>(12, { alias: 'kbqTreeNodePaddingIndent' });
@@ -60,7 +60,7 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
         return this.parsedIndent().units;
     }
 
-    withIcon: boolean;
+    withIcon = false;
 
     /**
      * Horizontal room a toggle takes up in a row: its own 16px box plus the option's 8px `gap`. A node
@@ -76,16 +76,14 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
         // can sit at a different level.
         this.treeNode.refreshed.pipe(takeUntilDestroyed()).subscribe(() => this.setPadding());
 
+        // The toggle is read from the option's content queries, so the padding follows a toggle that appears or goes
+        // away later, e.g. under `@if (node.expandable)` on a row reused for a node that got or lost its children.
         effect(() => {
             this.parsedIndent();
+            this.withIcon = this.option?.isToggleInDefaultPlace ?? false;
 
             this.setPadding();
         });
-    }
-
-    ngAfterViewInit(): void {
-        this.withIcon = this.option?.isToggleInDefaultPlace ?? false;
-        this.setPadding();
     }
 
     paddingIndent(): string | null {

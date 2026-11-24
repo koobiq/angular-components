@@ -1,4 +1,4 @@
-import { KbqLocaleStringsData } from './types';
+import type { KbqLocaleStringsData } from './types';
 
 export const enUSLocaleData = {
     a11y: {
@@ -139,13 +139,15 @@ export const enUSLocaleData = {
         openText: 'Expand',
         closeText: 'Collapse',
         showMoreText: 'Show {exceededItemCount} more',
-        moreText: 'more'
+        moreText: 'more',
+        showMoreTextCompact: '{exceededItemCount} more'
     },
     navbar: {
         toggle: {
             expand: 'Expand',
             collapse: 'Collapse'
-        }
+        },
+        more: 'More'
     },
     searchExpandable: {
         tooltip: 'Search',

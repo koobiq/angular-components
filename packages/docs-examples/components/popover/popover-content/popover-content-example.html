@@ -15,7 +15,7 @@
                     </kbq-form-field>
                 </div>
                 <div class="kbq-form__row">
-                    <button kbq-button [color]="'contrast'" (click)="kbqSharePopover.hide(0)">
+                    <button kbq-button type="button" color="contrast" (click)="kbqSharePopover.hide(0)">
                         {{ t().sendInvite }}
                     </button>
                 </div>
@@ -28,14 +28,17 @@
             <div class="example-popover-content-share__list-item">
                 <div class="example-popover-content-share__list-item-left">
                     <img
-                        alt="{{ member.name }}"
-                        src="https://koobiq.io/assets/images/popover/list-member-{{ $index + 1 }}.png"
                         class="example-popover-content-share__list-item-image"
+                        width="32"
+                        height="32"
+                        [ngSrc]="`https://koobiq.io/assets/images/popover/list-member-${$index + 1}.png`"
+                        [alt]="member.name"
                     />
                     <div class="example-popover-content-share__list-item-name">{{ member.name }}</div>
                 </div>
                 <button
                     kbq-button
+                    type="button"
                     class="kbq-button_transparent"
                     [color]="componentColors.Contrast"
                     [kbqDropdownTriggerFor]="appDropdown"
@@ -46,8 +49,8 @@
             </div>
         }
         <kbq-dropdown #appDropdown="kbqDropdown" [class]="'max-width'" [navigationWithWrap]="true">
-            <button kbq-dropdown-item>{{ t().editor }}</button>
-            <button kbq-dropdown-item>{{ t().viewer }}</button>
+            <button kbq-dropdown-item type="button">{{ t().editor }}</button>
+            <button kbq-dropdown-item type="button">{{ t().viewer }}</button>
         </kbq-dropdown>
     </div>
 </ng-template>
@@ -60,7 +63,9 @@
     <div class="example-popover-content-custom__container">
         <h4 class="kbq-title">{{ t().magicTitle }}</h4>
         <p>{{ t().magicText }}</p>
-        <button kbq-button [color]="'contrast'" (click)="kbqCustomPopover.hide(0)">{{ t().doMagic }}</button>
+        <button kbq-button type="button" color="contrast" (click)="kbqCustomPopover.hide(0)">
+            {{ t().doMagic }}
+        </button>
     </div>
 </ng-template>
 
@@ -69,8 +74,9 @@
         #kbqSharePopover="kbqPopover"
         kbq-button
         kbqPopover
+        type="button"
+        kbqPopoverClass="example-popover-content-share"
         [kbqPopoverHasCloseButton]="true"
-        [kbqPopoverClass]="'example-popover-content-share'"
         [kbqPopoverContent]="shareContent"
     >
         {{ t().withoutHeaderPanel }}
@@ -79,8 +85,9 @@
         #kbqCustomPopover="kbqPopover"
         kbq-button
         kbqPopover
+        type="button"
+        kbqPopoverClass="example-popover-content-custom"
         [kbqPopoverHasCloseButton]="true"
-        [kbqPopoverClass]="'example-popover-content-custom'"
         [kbqPopoverContent]="customContent"
     >
         {{ t().customStyles }}

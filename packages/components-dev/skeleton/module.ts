@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import {
     SkeletonAccordionExample,
+    SkeletonAnimationDurationExample,
     SkeletonBasicExample,
     SkeletonCheckableExample,
     SkeletonCodeBlockExample,
@@ -23,6 +24,7 @@ import { DevSkeletonTableExample } from './examples/skeleton-table-example';
     imports: [
         SkeletonBasicExample,
         SkeletonDirectiveExample,
+        SkeletonAnimationDurationExample,
         SkeletonElementsExample,
         SkeletonTypographyExample,
         SkeletonDlExample,
@@ -42,6 +44,9 @@ import { DevSkeletonTableExample } from './examples/skeleton-table-example';
         <hr />
 
         <skeleton-directive-example />
+        <hr />
+
+        <skeleton-animation-duration-example />
         <hr />
 
         <skeleton-elements-example />

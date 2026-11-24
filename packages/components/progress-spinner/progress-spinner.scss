@@ -1,9 +1,6 @@
 @use '../core/styles/common/animation';
 @use '../core/styles/functions/timing';
-
-@use '../core/styles/common/tokens' as *;
-
-@use './progress-spinner-theme' as *;
+@use './progress-spinner-theme';
 
 @keyframes kbq-progress-spinner-indeterminate {
     100% {
@@ -18,24 +15,25 @@
 }
 
 .kbq-progress-spinner__circle {
+    @include animation.kbq-animations-off();
+
     fill: none;
     stroke: var(--stroke, var(--kbq-progress-spinner-circle-background));
     stroke-dasharray: 295%;
     stroke-width: 13%;
-    transition: stroke-dashoffset 0.3s;
-    transform-origin: center center;
 
-    @include animation.kbq-animations-off();
+    transform-origin: center center;
+    transition: stroke-dashoffset 0.3s;
 }
 
 .kbq-progress-spinner__inner {
     width: var(--kbq-progress-spinner-size-compact-size);
     height: var(--kbq-progress-spinner-size-compact-size);
 
-    transform: rotateZ(-90deg);
-
     font-size: 0;
     line-height: 0;
+
+    transform: rotateZ(-90deg);
 }
 
 .kbq-progress-spinner__content {
@@ -66,9 +64,9 @@
 }
 
 .kbq-progress-spinner_indeterminate .kbq-progress-spinner__inner {
-    animation: kbq-progress-spinner-indeterminate 1.5s timing.$ease-in-out-quad infinite;
-
     @include animation.kbq-animations-off();
+
+    animation: kbq-progress-spinner-indeterminate 1.5s timing.$ease-in-out-quad infinite;
 
     // TODO: rework this place
     .kbq-progress-spinner__circle {
@@ -76,5 +74,5 @@
     }
 }
 
-@include kbq-progress-spinner-theme();
-@include kbq-progress-spinner-typography();
+@include progress-spinner-theme.kbq-progress-spinner-theme();
+@include progress-spinner-theme.kbq-progress-spinner-typography();

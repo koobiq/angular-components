@@ -10,6 +10,7 @@ import {
     computed,
     contentChildren,
     DestroyRef,
+    Directive,
     effect,
     ElementRef,
     inject,
@@ -18,7 +19,7 @@ import {
     linkedSignal,
     numberAttribute,
     output,
-    Provider,
+    type Provider,
     signal,
     untracked,
     viewChild,
@@ -32,7 +33,12 @@ import {
     KbqLocaleOverridesDirective,
     kbqOptionalNumberAttribute
 } from '@koobiq/components/core';
-import { KbqResizable, KbqResizer, KbqResizerDirection, KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
+import {
+    KbqResizable,
+    KbqResizer,
+    type KbqResizerDirection,
+    type KbqResizerSizeChangeEvent
+} from '@koobiq/components/resizer';
 
 /** Supported alignment values for description list items. */
 export type KbqDlAlign = 'start' | 'center' | 'end';
@@ -100,10 +106,20 @@ export function kbqDlOptionsProvider(options: Partial<KbqDlOptions>): Provider {
 const optionalBooleanAttribute = (value: unknown): boolean | null | undefined =>
     value == null ? (value as null | undefined) : booleanAttribute(value);
 
-/** Term of a description list. */
+/** Caption under the text of a `kbq-dt`, such as the identifier of the parameter the term names. */
+@Directive({
+    selector: '[kbqDtCaption]',
+    host: {
+        class: 'kbq-dt-caption'
+    }
+})
+export class KbqDtCaption {}
+
+/** Term of a description list. An element marked with `kbqDtCaption` inside it is shown under the term. */
 @Component({
     selector: 'kbq-dt',
-    template: '<ng-content />',
+    // The caption has its own slot, so it stays under the term wherever the markup places it.
+    template: '<ng-content /><ng-content select="[kbqDtCaption]" />',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -161,7 +177,7 @@ export class KbqDd {}
             </div>
         }
     `,
-    styleUrls: ['dl.scss', 'dl-tokens.scss'],
+    styleUrls: ['./dl.scss', './dl-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

@@ -1,11 +1,11 @@
 import { Component, signal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KBQ_TITLE_TEXT_REF } from '@koobiq/components/core';
+import type { KbqTimezoneZone } from './timezone.models';
+import { KbqTimezoneModule } from './timezone.module';
 import { KbqTimezoneOption } from './timezone-option.component';
 import { KbqTimezoneOptionTooltip } from './timezone-option.directive';
-import { KbqTimezoneZone } from './timezone.models';
-import { KbqTimezoneModule } from './timezone.module';
 
 @Component({
     imports: [KbqTimezoneModule],

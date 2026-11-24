@@ -1,4 +1,4 @@
-import { Translations } from '@koobiq/docs-examples/i18n';
+import type { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the not-specified example; the option is worded to agree with the name of the filter. */
 export interface ExampleTranslation {

@@ -5,7 +5,7 @@ import { KbqContentPanelModule } from '@koobiq/components/content-panel';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqModalModule, KbqModalService, ModalSize } from '@koobiq/components/modal';
+import { KbqModalModule, type KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
 
@@ -32,7 +32,7 @@ import { TRANSLATIONS } from './l10n';
             [beforeClose]="confirmDiscard"
         >
             <div class="example-content-panel-container__content">
-                <button kbq-button (click)="panel.open()">{{ t().open }}</button>
+                <button kbq-button type="button" (click)="panel.open()">{{ t().open }}</button>
             </div>
 
             <kbq-content-panel>
@@ -69,7 +69,7 @@ export class ContentPanelBeforeCloseExample {
 
     protected readonly confirmDiscard = (): Promise<boolean> =>
         new Promise((resolve) => {
-            const modal = this.modal.create({
+            const modal: KbqModalRef = this.modal.create({
                 kbqAriaLabel: this.t().discardChangesLabel,
                 kbqSize: ModalSize.Small,
                 kbqContent: this.t().discardChangesContent,

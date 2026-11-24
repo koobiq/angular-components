@@ -1,6 +1,6 @@
 import {
-    DocsStructureCategory,
-    DocsStructureItem,
+    type DocsStructureCategory,
+    type DocsStructureItem,
     DocsStructureItemId,
     DocsStructureItemTab
 } from '../../apps/docs/src/app/structure';
@@ -12,7 +12,7 @@ import {
     getPageSource,
     getSiteUrl,
     LLMS_SITE_ORIGIN,
-    LlmsPageSources,
+    type LlmsPageSources,
     readRepoFile,
     resolveSiteUrl
 } from './sources';
@@ -46,7 +46,7 @@ const SUMMARY =
 const DESIGN_TOKENS_SUMMARY =
     'The global CSS custom properties (`--kbq-*`) of the themes: colors, typography, shadows, border radius and sizes.';
 
-const getMajor = (version: string): string => version.replace(/^\D*/, '').split('.')[0];
+const getMajor = (version: string): string => version.replace(/^\D*/, '').split('.')[0] ?? '';
 
 const renderPackage = ({ version, angularVersion }: LlmsHeader): string =>
     `\`@koobiq/components\` ${getMajor(version)}.x for Angular ${getMajor(angularVersion)}.`;

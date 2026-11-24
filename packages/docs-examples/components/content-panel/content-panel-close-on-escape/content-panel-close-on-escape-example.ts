@@ -15,7 +15,9 @@ import { TRANSLATIONS } from './l10n';
     template: `
         <kbq-content-panel-container maxWidth="450" minWidth="250" width="350">
             <div class="example-content-panel-container__content">
-                <button kbq-button [kbqTooltip]="t().openTooltip" (click)="panel().open()">{{ t().open }}</button>
+                <button kbq-button type="button" [kbqTooltip]="t().openTooltip" (click)="panel().open()">
+                    {{ t().open }}
+                </button>
             </div>
 
             <kbq-content-panel>

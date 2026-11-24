@@ -11,17 +11,17 @@ import { KbqLink } from '@koobiq/components/link';
     selector: 'dropdown-with-footer-example',
     imports: [KbqDropdownModule, KbqButtonModule, KbqLink, KbqIconModule],
     template: `
-        <button kbq-button [kbqDropdownTriggerFor]="appDropdown">
+        <button kbq-button type="button" [kbqDropdownTriggerFor]="appDropdown">
             Trigger
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
 
         <kbq-dropdown #appDropdown="kbqDropdown">
-            <button kbq-dropdown-item>Menu item 1</button>
-            <button kbq-dropdown-item>Menu item 2</button>
-            <button kbq-dropdown-item>Menu item 3</button>
-            <button kbq-dropdown-item [kbqDropdownTriggerFor]="submenu">Menu item 4</button>
-            <button kbq-dropdown-item>Menu item 5</button>
+            <button kbq-dropdown-item type="button">Menu item 1</button>
+            <button kbq-dropdown-item type="button">Menu item 2</button>
+            <button kbq-dropdown-item type="button">Menu item 3</button>
+            <button kbq-dropdown-item type="button" [kbqDropdownTriggerFor]="submenu">Menu item 4</button>
+            <button kbq-dropdown-item type="button">Menu item 5</button>
 
             <kbq-dropdown-footer>
                 <a
@@ -37,9 +37,9 @@ import { KbqLink } from '@koobiq/components/link';
         </kbq-dropdown>
 
         <kbq-dropdown #submenu="kbqDropdown">
-            <button kbq-dropdown-item>Menu item 1</button>
-            <button kbq-dropdown-item>Menu item 2</button>
-            <button kbq-dropdown-item>Menu item 3</button>
+            <button kbq-dropdown-item type="button">Menu item 1</button>
+            <button kbq-dropdown-item type="button">Menu item 2</button>
+            <button kbq-dropdown-item type="button">Menu item 3</button>
             <kbq-dropdown-footer class="example-submenu-footer">
                 Footer text is multiline and wraps across lines
             </kbq-dropdown-footer>

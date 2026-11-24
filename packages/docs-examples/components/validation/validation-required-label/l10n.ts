@@ -1,4 +1,4 @@
-import { Translations } from '@koobiq/docs-examples/i18n';
+import type { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Option lists of the required-label example. */
 export interface ExampleTranslation {

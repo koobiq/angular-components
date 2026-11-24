@@ -3,7 +3,7 @@ import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
 import {
-    AfterContentInit,
+    type AfterContentInit,
     afterNextRender,
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -16,14 +16,13 @@ import {
     Injector,
     input,
     Renderer2,
-    signal,
-    Signal
+    type Signal,
+    signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { debounceTime, distinctUntilChanged, EMPTY, from, map, merge, type Observable } from 'rxjs';
 import { kbqInjectNativeElement, PopUpPlacements, PopUpTriggers } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { distinctUntilChanged, EMPTY, from, map, merge, Observable } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
 import { KbqNavbarFocusableItem, KbqNavbarRectangleElement, KbqNavbarTitle } from './navbar-item.component';
 
 /** Switches the brand title to the compact two-line presentation. */
@@ -34,9 +33,7 @@ const LONG_TITLE_CLASS = 'kbq-navbar-brand_long-title';
     template: `
         <ng-content />
     `,
-    styleUrls: [
-        './navbar-brand.scss'
-    ],
+    styleUrl: './navbar-brand.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-navbar-brand',

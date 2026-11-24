@@ -1,19 +1,19 @@
-import { ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, type TemplateRef, viewChild } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateFormatter } from '@koobiq/components/core';
 import {
-    KbqFilter,
-    KbqFilterBar,
+    type KbqFilter,
+    type KbqFilterBar,
     KbqFilterBarModule,
-    KbqFilterBarNameResolver,
-    KbqPipe,
-    KbqPipeTemplate,
+    type KbqFilterBarNameResolver,
+    type KbqPipe,
+    type KbqPipeTemplate,
     KbqPipeTypes,
-    KbqSaveFilterEvent,
+    type KbqSaveFilterEvent,
     KbqSaveFilterStatuses
 } from '@koobiq/components/filter-bar';
 import { KbqLink } from '@koobiq/components/link';
-import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
+import { type KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
 
@@ -170,7 +170,7 @@ export class FilterBarSavedFiltersExample {
     filters: ExampleFilter[] = this.createFilters();
     readonly savedFilters: KbqFilter[] = this.createSavedFilters();
 
-    activeFilter: KbqFilter | null = this.createFilters()[0];
+    activeFilter: KbqFilter | null = this.createFilters()[0] ?? null;
 
     get defaultFilter(): KbqFilter | null {
         return this.getDefaultFilter();
@@ -429,7 +429,7 @@ export class FilterBarSavedFiltersExample {
      * the same name above, so the bar starts with unsaved changes to demonstrate.
      */
     createSavedFilters(): KbqFilter[] {
-        const [, saveError, deleteError] = this.createFilters();
+        const [, ...filtersWithErrors] = this.createFilters();
 
         return [
             {
@@ -469,8 +469,7 @@ export class FilterBarSavedFiltersExample {
                     }
                 ]
             },
-            structuredClone(saveError),
-            structuredClone(deleteError)
+            ...structuredClone(filtersWithErrors)
         ];
     }
 

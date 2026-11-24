@@ -1,4 +1,4 @@
-import { Translations } from '@koobiq/docs-examples/i18n';
+import type { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the file-upload-single-validation-reactive-forms-overview example. */
 export interface ExampleTranslation {

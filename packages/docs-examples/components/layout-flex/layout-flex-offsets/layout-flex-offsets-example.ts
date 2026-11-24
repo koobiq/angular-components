@@ -31,19 +31,19 @@ import { KbqSelectModule } from '@koobiq/components/select';
                 </kbq-form-field>
             </div>
             <div class="layout-row example-block  layout-margin-top-4xl">
-                <div class="{{ selectedSize }} {{ selectedOffset }} example-block">
+                <div class="example-block" [class]="[selectedSize, selectedOffset]">
                     {{ selectedSize }} {{ selectedOffset }}
                 </div>
-                <div class="{{ selectedSize }} {{ selectedOffset }} example-block">
+                <div class="example-block" [class]="[selectedSize, selectedOffset]">
                     {{ selectedSize }} {{ selectedOffset }}
                 </div>
-                <div class="{{ selectedSize }} {{ selectedOffset }} example-block">
+                <div class="example-block" [class]="[selectedSize, selectedOffset]">
                     {{ selectedSize }} {{ selectedOffset }}
                 </div>
             </div>
         </div>
     `,
-    styleUrls: ['layout-flex-offsets-example.css'],
+    styleUrl: 'layout-flex-offsets-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LayoutFlexOffsetsExample {

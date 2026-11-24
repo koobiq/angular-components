@@ -1,4 +1,4 @@
-import { expect, Page, test } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme, e2eWaitForSettledScrollbars } from '../../e2e/utils';
 
 test.describe('KbqTopBarModule', () => {

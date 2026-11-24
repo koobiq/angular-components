@@ -1,4 +1,4 @@
-import { Directive, effect, ElementRef, inject, InjectionToken, Signal } from '@angular/core';
+import { Directive, effect, ElementRef, inject, InjectionToken, type Signal } from '@angular/core';
 
 /**
  * Narrow view of `KbqDropdownItem` that `KbqDropdownItemAction` needs. Read through

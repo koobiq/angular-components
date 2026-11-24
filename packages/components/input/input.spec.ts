@@ -1,16 +1,17 @@
-﻿import { Component, Directive, ElementRef, inject, Provider, Type, viewChild } from '@angular/core';
-import { ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
+﻿import { Component, Directive, ElementRef, inject, type Provider, type Type, viewChild } from '@angular/core';
+import { type ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import {
-    AsyncValidatorFn,
+    type AsyncValidatorFn,
     FormControl,
-    FormControlStatus,
+    type FormControlStatus,
     FormGroup,
     FormsModule,
     ReactiveFormsModule,
-    ValidationErrors,
+    type ValidationErrors,
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { map, type Observable, timer } from 'rxjs';
 import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
@@ -23,7 +24,6 @@ import {
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KBQ_INPUT_VALUE_ACCESSOR, KbqInput, KbqInputModule } from '@koobiq/components/input';
-import { map, Observable, timer } from 'rxjs';
 
 function createComponent<T>(component: Type<T>, imports: any[] = [], providers: Provider[] = []): ComponentFixture<T> {
     TestBed.resetTestingModule();

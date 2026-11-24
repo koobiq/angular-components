@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { ModalCaptionExample } from './modal-caption/modal-caption-example';
-import { ModalComponentWithInjectorExample } from './modal-component-with-injector/modal-component-with-injector-example';
 import { ModalComponentExample } from './modal-component/modal-component-example';
+import { ModalComponentWithInjectorExample } from './modal-component-with-injector/modal-component-with-injector-example';
 import { ModalFullCustomExample } from './modal-full-custom/modal-full-custom-example';
 import { ModalKeepOpenOnErrorExample } from './modal-keep-open-on-error/modal-keep-open-on-error-example';
 import { ModalMultipleExample } from './modal-multiple/modal-multiple-example';

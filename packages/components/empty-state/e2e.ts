@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButton, KbqButtonCssStyler, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors, KbqDefaultSizes } from '@koobiq/components/core';
+import { KbqComponentColors, type KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqIconItem } from '@koobiq/components/icon';
 import {
     KbqEmptyState,

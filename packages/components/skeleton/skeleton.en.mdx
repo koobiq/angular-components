@@ -106,6 +106,25 @@ The `kbqSkeleton` directive turns rendered elements and their content into place
 
 <Example id="skeleton-directive" />
 
+### Animation speed
+
+The `animationDuration` attribute of the `kbq-skeleton` element and the `kbqSkeleton` directive sets the duration of one animation cycle in milliseconds: the longer it is, the slower the animation. The animation speed of the presets is set in the global options.
+
+<Example id="skeleton-animation-duration" />
+
+### Global options
+
+The `kbqSkeletonOptionsProvider` function sets the default options of every skeleton in the application or in a specific injector.
+
+```ts
+import { ApplicationConfig } from '@angular/core';
+import { kbqSkeletonOptionsProvider } from '@koobiq/components/skeleton';
+
+export const appConfig: ApplicationConfig = {
+    providers: [kbqSkeletonOptionsProvider({ animationDuration: 3000 })]
+};
+```
+
 ### Usage examples
 
 #### Code block

@@ -3,16 +3,16 @@ import {
     ApplicationRef,
     ChangeDetectionStrategy,
     Component,
-    DebugElement,
+    type DebugElement,
     effect,
     signal,
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { dispatchFakeEvent, ErrorStateMatcher, KbqComponentColors } from '@koobiq/components/core';
+import { dispatchFakeEvent, type ErrorStateMatcher, KbqComponentColors } from '@koobiq/components/core';
 import { KbqError, KbqFormFieldModule, KbqHint } from '@koobiq/components/form-field';
 import { KbqRadioButton, KbqRadioGroup, KbqRadioModule } from './index';
 
@@ -1068,8 +1068,8 @@ const EFFECT_RUN_LIMIT = 10;
     imports: [KbqRadioModule],
     template: `
         <kbq-radio-group aria-label="Pokemon">
-            <kbq-radio-button [value]="'fire'">Charmander</kbq-radio-button>
-            <kbq-radio-button [value]="'water'">Squirtle</kbq-radio-button>
+            <kbq-radio-button value="fire">Charmander</kbq-radio-button>
+            <kbq-radio-button value="water">Squirtle</kbq-radio-button>
         </kbq-radio-group>
     `
 })
@@ -1108,11 +1108,9 @@ class RadioGroupDrivenByEffect {
             [required]="isGroupRequired"
             [value]="groupValue"
         >
-            <kbq-radio-button [value]="'fire'" [disabled]="isFirstDisabled" [color]="color">
-                Charmander
-            </kbq-radio-button>
-            <kbq-radio-button [value]="'water'" [color]="color">Squirtle</kbq-radio-button>
-            <kbq-radio-button [value]="'leaf'" [color]="color">Bulbasaur</kbq-radio-button>
+            <kbq-radio-button value="fire" [disabled]="isFirstDisabled" [color]="color">Charmander</kbq-radio-button>
+            <kbq-radio-button value="water" [color]="color">Squirtle</kbq-radio-button>
+            <kbq-radio-button value="leaf" [color]="color">Bulbasaur</kbq-radio-button>
         </kbq-radio-group>
     `
 })
@@ -1132,7 +1130,7 @@ class RadiosInsideRadioGroup {
     imports: [KbqRadioModule],
     template: `
         <kbq-radio-group [value]="groupValue" [selected]="selected">
-            <kbq-radio-button [value]="'fire'" [labelPosition]="labelPosition" [name]="name" [tabIndex]="tabIndex">
+            <kbq-radio-button value="fire" [labelPosition]="labelPosition" [name]="name" [tabIndex]="tabIndex">
                 Charmander
             </kbq-radio-button>
             <kbq-radio-button [value]="secondValue">Squirtle</kbq-radio-button>
@@ -1185,8 +1183,8 @@ class NamedStandaloneRadioButtons {}
     imports: [KbqRadioModule],
     template: `
         <kbq-radio-group>
-            <kbq-radio-button [value]="'option_1'">One</kbq-radio-button>
-            <kbq-radio-button [value]="'option_2'">Two</kbq-radio-button>
+            <kbq-radio-button value="option_1">One</kbq-radio-button>
+            <kbq-radio-button value="option_2">Two</kbq-radio-button>
         </kbq-radio-group>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -1197,8 +1195,8 @@ class OnPushRadioGroupHost {}
     imports: [KbqRadioModule],
     template: `
         <kbq-radio-group>
-            <kbq-radio-button name="custom" [value]="'fire'">Charmander</kbq-radio-button>
-            <kbq-radio-button [value]="'water'">Squirtle</kbq-radio-button>
+            <kbq-radio-button name="custom" value="fire">Charmander</kbq-radio-button>
+            <kbq-radio-button value="water">Squirtle</kbq-radio-button>
         </kbq-radio-group>
     `
 })
@@ -1209,8 +1207,8 @@ class RadioGroupWithNamedButton {}
     template: `
         <form>
             <kbq-radio-group name="answer">
-                <kbq-radio-button [value]="'fire'">Charmander</kbq-radio-button>
-                <kbq-radio-button [value]="'water'">Squirtle</kbq-radio-button>
+                <kbq-radio-button value="fire">Charmander</kbq-radio-button>
+                <kbq-radio-button value="water">Squirtle</kbq-radio-button>
             </kbq-radio-group>
         </form>
     `
@@ -1222,8 +1220,8 @@ class RadioGroupInsideForm {}
     template: `
         <div id="pokemon-label" class="group-label">Pokemon</div>
         <kbq-radio-group aria-labelledby="pokemon-label">
-            <kbq-radio-button [value]="'fire'">Charmander</kbq-radio-button>
-            <kbq-radio-button [value]="'water'">Squirtle</kbq-radio-button>
+            <kbq-radio-button value="fire">Charmander</kbq-radio-button>
+            <kbq-radio-button value="water">Squirtle</kbq-radio-button>
         </kbq-radio-group>
     `
 })
@@ -1234,7 +1232,7 @@ class LabelledRadioGroup {}
     template: `
         <div id="lawyers-label">Lawyers</div>
         <kbq-radio-group aria-labelledby="lawyers-label">
-            <kbq-radio-button [value]="'option_1'">
+            <kbq-radio-button value="option_1">
                 William Anderson
                 <kbq-hint>Lawyer</kbq-hint>
             </kbq-radio-button>
@@ -1247,9 +1245,9 @@ class RadioButtonWithHint {}
     imports: [KbqRadioModule, FormsModule],
     template: `
         <kbq-radio-group aria-label="Pokemon" [(ngModel)]="model">
-            <kbq-radio-button [value]="'fire'">Charmander</kbq-radio-button>
-            <kbq-radio-button [value]="'water'">Squirtle</kbq-radio-button>
-            <kbq-radio-button [value]="'leaf'">Bulbasaur</kbq-radio-button>
+            <kbq-radio-button value="fire">Charmander</kbq-radio-button>
+            <kbq-radio-button value="water">Squirtle</kbq-radio-button>
+            <kbq-radio-button value="leaf">Bulbasaur</kbq-radio-button>
         </kbq-radio-group>
     `
 })
@@ -1261,9 +1259,9 @@ class RadioGroupWithNgModel {
     imports: [KbqRadioModule, ReactiveFormsModule],
     template: `
         <kbq-radio-group aria-label="Pokemon" [formControl]="control">
-            <kbq-radio-button [value]="'fire'">Charmander</kbq-radio-button>
-            <kbq-radio-button [value]="'water'">Squirtle</kbq-radio-button>
-            <kbq-radio-button [value]="'leaf'">Bulbasaur</kbq-radio-button>
+            <kbq-radio-button value="fire">Charmander</kbq-radio-button>
+            <kbq-radio-button value="water">Squirtle</kbq-radio-button>
+            <kbq-radio-button value="leaf">Bulbasaur</kbq-radio-button>
         </kbq-radio-group>
     `
 })
@@ -1281,8 +1279,8 @@ class RadioGroupWithFormControl {
                 [errorStateMatcher]="errorStateMatcher"
                 [labelPosition]="labelPosition"
             >
-                <kbq-radio-button [value]="'courier'">Courier</kbq-radio-button>
-                <kbq-radio-button [value]="'pickup'">Pickup</kbq-radio-button>
+                <kbq-radio-button value="courier">Courier</kbq-radio-button>
+                <kbq-radio-button value="pickup">Pickup</kbq-radio-button>
                 <kbq-hint>Courier delivery takes a day</kbq-hint>
                 <kbq-error>Choose a delivery method</kbq-error>
             </kbq-radio-group>
@@ -1300,7 +1298,7 @@ class RadioGroupWithErrorState {
     template: `
         <p id="delivery-note">Delivery takes a day</p>
         <kbq-radio-group aria-describedby="delivery-note" aria-label="Delivery" [formControl]="control">
-            <kbq-radio-button [value]="'courier'">Courier</kbq-radio-button>
+            <kbq-radio-button value="courier">Courier</kbq-radio-button>
             <kbq-error>Choose a delivery method</kbq-error>
         </kbq-radio-group>
     `
@@ -1314,7 +1312,7 @@ class RadioGroupWithDescriptionAndError {
     template: `
         <p id="delivery-note">Delivery takes a day</p>
         <kbq-radio-group aria-label="Delivery" [attr.aria-describedby]="description" [formControl]="control">
-            <kbq-radio-button [value]="'courier'">Courier</kbq-radio-button>
+            <kbq-radio-button value="courier">Courier</kbq-radio-button>
             <kbq-error>Choose a delivery method</kbq-error>
         </kbq-radio-group>
     `
@@ -1328,7 +1326,7 @@ class RadioGroupWithBoundDescription {
     imports: [KbqRadioModule, ReactiveFormsModule],
     template: `
         <kbq-radio-group aria-label="Delivery" [formControl]="control">
-            <kbq-radio-button [value]="'courier'">Courier</kbq-radio-button>
+            <kbq-radio-button value="courier">Courier</kbq-radio-button>
         </kbq-radio-group>
     `
 })
@@ -1341,8 +1339,8 @@ class RadioGroupWithoutErrorMessage {
     template: `
         <form>
             <kbq-radio-group aria-label="Delivery" name="delivery" required [(ngModel)]="model">
-                <kbq-radio-button [value]="'courier'">Courier</kbq-radio-button>
-                <kbq-radio-button [value]="'pickup'">Pickup</kbq-radio-button>
+                <kbq-radio-button value="courier">Courier</kbq-radio-button>
+                <kbq-radio-button value="pickup">Pickup</kbq-radio-button>
             </kbq-radio-group>
         </form>
     `

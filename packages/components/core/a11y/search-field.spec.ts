@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { kbqInjectNativeElement } from '../utils';
-import { KbqSearchFieldPopup, kbqSyncSearchFieldA11y } from './search-field';
+import { type KbqSearchFieldPopup, kbqSyncSearchFieldA11y } from './search-field';
 
 @Component({
     selector: 'search-field-host',

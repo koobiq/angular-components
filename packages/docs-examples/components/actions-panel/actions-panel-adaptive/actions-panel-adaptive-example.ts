@@ -8,7 +8,7 @@ import {
     TemplateRef,
     viewChild
 } from '@angular/core';
-import { KbqActionsPanel, KbqActionsPanelRef } from '@koobiq/components/actions-panel';
+import { KbqActionsPanel, type KbqActionsPanelRef } from '@koobiq/components/actions-panel';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -34,7 +34,7 @@ type ExampleAction = {
         KbqDividerModule
     ],
     template: `
-        <button kbq-button (click)="open()">{{ t().open }}</button>
+        <button kbq-button type="button" (click)="open()">{{ t().open }}</button>
 
         <ng-template let-data>
             <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
@@ -45,6 +45,7 @@ type ExampleAction = {
 
                 @for (action of actions(); track action.id) {
                     <button
+                        type="button"
                         color="contrast"
                         kbq-button
                         [kbqOverflowItem]="action.id"
@@ -61,6 +62,7 @@ type ExampleAction = {
                 @if (hiddenItemIDs.size > 1) {
                     <button
                         kbqOverflowItemsResult
+                        type="button"
                         color="contrast"
                         kbq-button
                         [attr.aria-label]="t().more"
@@ -76,7 +78,7 @@ type ExampleAction = {
 
                     @for (action of actions(); track action.id) {
                         @if (hiddenItemIDs.has(action.id)) {
-                            <button kbq-dropdown-item (click)="onAction(action)">
+                            <button kbq-dropdown-item type="button" (click)="onAction(action)">
                                 <i [kbq-icon]="action.icon"></i>
                                 {{ action.label }}
                             </button>
@@ -130,7 +132,7 @@ export class ExampleActionsPanel {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly templateRef = viewChild.required(TemplateRef);
-    private actionsPanelRef: KbqActionsPanelRef | null;
+    private actionsPanelRef: KbqActionsPanelRef | null = null;
     private readonly toast = inject(KbqToastService);
 
     protected readonly actions = computed<ExampleAction[]>(() => [

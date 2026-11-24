@@ -1,7 +1,7 @@
-import { Rule } from '@angular-devkit/schematics';
+import type { Rule } from '@angular-devkit/schematics';
 import { replacementMigrationRule } from '../../utils/replacement-driver';
 import { scssReplacements, templateReplacements, tsReplacements, warnPatterns } from './data';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 export default function v20Upgrade(options: Schema): Rule {
     return replacementMigrationRule(

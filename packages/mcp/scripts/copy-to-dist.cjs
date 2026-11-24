@@ -1,3 +1,4 @@
+// eslint-disable-next-line @angular-eslint/no-experimental -- `fs.cpSync` is stable since Node 22.3, @types/node still marks it experimental
 const { copyFileSync, cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } = require('fs');
 const { resolve } = require('path');
 
@@ -24,6 +25,7 @@ copyFileSync(resolve(pkg, 'README.md'), resolve(out, 'README.md'));
 
 if (existsSync(resolve(root, 'LICENSE'))) copyFileSync(resolve(root, 'LICENSE'), resolve(out, 'LICENSE'));
 
+// eslint-disable-next-line @angular-eslint/no-experimental -- `fs.cpSync` is stable since Node 22.3, @types/node still marks it experimental
 cpSync(resolve(pkg, 'data'), resolve(out, 'data'), { recursive: true });
 
 const server = resolve(out, 'dist', 'server.js');

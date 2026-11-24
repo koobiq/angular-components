@@ -22,20 +22,20 @@ import { TRANSLATIONS } from './l10n';
     template: `
         <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="readonly">{{ t().readonly }}</kbq-toggle>
 
-        <kbq-form-field class="layout-margin-bottom-m">
+        <kbq-form-field style="width: 320px" class="layout-margin-bottom-m">
             <kbq-label>{{ t().text }}</kbq-label>
             <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
             <input kbqInput [placeholder]="t().placeholder" [readonly]="readonly()" [(ngModel)]="textValue" />
             <kbq-cleaner />
         </kbq-form-field>
 
-        <kbq-form-field class="layout-margin-bottom-m">
+        <kbq-form-field style="width: 320px" class="layout-margin-bottom-m">
             <kbq-label>{{ t().number }}</kbq-label>
             <input kbqNumberInput [placeholder]="t().placeholder" [readonly]="readonly()" [(ngModel)]="number" />
             <kbq-stepper />
         </kbq-form-field>
 
-        <kbq-form-field>
+        <kbq-form-field style="width: 320px">
             <kbq-label>{{ t().password }}</kbq-label>
             <input kbqInputPassword [readonly]="readonly()" [(ngModel)]="password" />
             <kbq-password-toggle [kbqTooltipHidden]="t().showPassword" [kbqTooltipNotHidden]="t().hidePassword" />
@@ -43,7 +43,7 @@ import { TRANSLATIONS } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'layout-margin-xl layout-column'
+        class: 'layout-margin-5xl layout-column layout-align-center-center'
     }
 })
 export class InputReadonlyExample {

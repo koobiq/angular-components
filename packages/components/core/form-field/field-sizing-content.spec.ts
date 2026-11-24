@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, Type } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, type Type } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqFieldSizingContent } from './field-sizing-content';
 
@@ -42,6 +42,6 @@ describe(KbqFieldSizingContent.name, () => {
         const fixture = createComponent(TestFieldSizingContent);
         const input = getInputNativeElement(fixture);
 
-        expect(input.style['fieldSizing']).toBe('content');
+        expect((input.style as CSSStyleDeclaration & { fieldSizing: string }).fieldSizing).toBe('content');
     });
 });

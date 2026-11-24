@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqTabsModule } from '@koobiq/components/tabs';
-import { DocsLocale } from 'src/app/constants/locale';
+import type { DocsLocale } from 'src/app/constants/locale';
 import { DOCS_TRANSLATIONS } from 'src/app/services/i18n';
 import { DocsStructureTokensTab } from '../../structure';
 import { DocsComponentViewerComponent } from '../component-viewer/component-viewer.component';
@@ -37,7 +37,7 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
             <router-outlet />
         </div>
     `,
-    styleUrls: ['../component-viewer/component-viewer.scss'],
+    styleUrl: '../component-viewer/component-viewer.scss',
     providers: [KbqSidepanelService],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -47,10 +47,6 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     }
 })
 export class DocsDesignTokensViewer extends DocsComponentViewerComponent {
-    constructor() {
-        super();
-    }
-
     readonly links: Array<{ title: Record<DocsLocale, string>; value: string }> = [
         { title: DOCS_TRANSLATIONS.tokensTabColors, value: DocsStructureTokensTab.Colors },
         { title: DOCS_TRANSLATIONS.tokensTabTypography, value: DocsStructureTokensTab.Typography },

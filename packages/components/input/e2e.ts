@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { AbstractControl, FormGroupDirective, FormsModule, NgForm } from '@angular/forms';
-import { ErrorStateMatcher, KbqNormalizeWhitespace } from '@koobiq/components/core';
+import { type AbstractControl, type FormGroupDirective, FormsModule, type NgForm } from '@angular/forms';
+import { type ErrorStateMatcher, KbqNormalizeWhitespace } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from './input.module';
 
@@ -57,9 +57,9 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                                     <input
                                         kbqInput
                                         kbqInputMonospace
+                                        placeholder="Inp@t M0n0"
                                         [errorStateMatcher]="errorStateMatcher(cell.state)"
                                         [disabled]="cell.state.includes('disabled')"
-                                        [placeholder]="'Inp@t M0n0'"
                                         [ngModel]="cell.state.join().includes('placeholder') ? '' : inputMonoValue()"
                                         (ngModelChange)="inputMonoValue.set($event)"
                                     />

@@ -1,9 +1,9 @@
-import { CdkScrollable, Overlay, OverlayModule, OverlayRef, ScrollDispatcher } from '@angular/cdk/overlay';
+import { type CdkScrollable, Overlay, OverlayModule, type OverlayRef, ScrollDispatcher } from '@angular/cdk/overlay';
 import { ComponentPortal, PortalModule } from '@angular/cdk/portal';
 import { Component, ElementRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { KbqRepositionScrollStrategy, KbqRepositionScrollStrategyConfig } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
+import { KbqRepositionScrollStrategy, type KbqRepositionScrollStrategyConfig } from '@koobiq/components/core';
 
 @Component({
     template: '<p>Reposition</p>'

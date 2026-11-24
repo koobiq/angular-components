@@ -1,5 +1,5 @@
-import { Component, inject, signal, Type } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, inject, signal, type Type } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqFileUploadModule } from '@koobiq/components/file-upload';

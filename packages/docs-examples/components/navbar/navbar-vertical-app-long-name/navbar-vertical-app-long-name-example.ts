@@ -18,7 +18,7 @@ import { TRANSLATIONS } from './l10n';
         KbqToolTipModule,
         KbqIconModule
     ],
-    templateUrl: 'navbar-vertical-app-long-name-example.html',
+    templateUrl: './navbar-vertical-app-long-name-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarVerticalAppLongNameExample {

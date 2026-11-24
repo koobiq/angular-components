@@ -1,4 +1,13 @@
-import { Directive, ElementRef, inject, input, linkedSignal, Signal, signal, WritableSignal } from '@angular/core';
+import {
+    Directive,
+    ElementRef,
+    inject,
+    input,
+    linkedSignal,
+    type Signal,
+    signal,
+    type WritableSignal
+} from '@angular/core';
 
 export enum KbqComponentColors {
     Theme = 'theme',
@@ -10,6 +19,7 @@ export enum KbqComponentColors {
     Warning = 'warning',
     Success = 'success',
 
+    // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values -- a published alias of `Contrast`
     Default = 'contrast',
     Empty = 'empty'
 }

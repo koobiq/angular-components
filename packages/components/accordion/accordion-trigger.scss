@@ -6,15 +6,12 @@
     align-items: center;
 
     & .kbq-accordion-trigger__icon {
-        box-sizing: initial;
+        @include animation.kbq-animations-off();
 
         align-self: flex-start;
-
+        box-sizing: initial;
         padding: var(--kbq-size-xxs);
-
         transition: transform 300ms ease-out;
-
-        @include animation.kbq-animations-off();
     }
 
     & .kbq-accordion-trigger__badge,
@@ -34,7 +31,6 @@
     &.kbq-accordion-trigger_hug {
         flex-direction: row-reverse;
         justify-content: flex-end;
-
         padding: var(--kbq-accordion-size-item-header-variant-hug-padding);
 
         &[data-state='open'] > .kbq-accordion-trigger__icon {
@@ -45,7 +41,6 @@
     &.kbq-accordion-trigger_hug-space-between {
         flex-direction: row-reverse;
         justify-content: space-between;
-
         padding: var(--kbq-accordion-size-item-header-variant-hug-padding);
 
         &[data-state='open'] > .kbq-accordion-trigger__icon {

@@ -2,6 +2,18 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+    BehaviorSubject,
+    catchError,
+    map,
+    type Observable,
+    of,
+    race,
+    startWith,
+    switchMap,
+    throwError,
+    timer
+} from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqHighlightBackgroundPipe, KbqVirtualOption } from '@koobiq/components/core';
@@ -13,8 +25,6 @@ import {
     minimumTimeToDisplayLoading
 } from '@koobiq/components/select';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { BehaviorSubject, catchError, Observable, of, race, switchMap, throwError, timer } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { TRANSLATIONS } from './l10n';
 
 type Option = {
@@ -77,7 +87,7 @@ export class SelectFacade {
                 map((data) =>
                     data.length === 0 ? ({ status: 'empty' } as const) : ({ status: 'success', data } as const)
                 ),
-                catchError((error: any) => of({ status: 'error', error } as const))
+                catchError((error: unknown) => of({ status: 'error', error } as const))
             );
 
             return race(
@@ -159,8 +169,9 @@ export class SelectFacade {
                                     <span kbq-select-error-text>{{ t().loadFailedRecords }}</span>
                                     <button
                                         kbq-button
-                                        [kbqStyle]="'transparent'"
-                                        [color]="'theme'"
+                                        type="button"
+                                        kbqStyle="transparent"
+                                        color="theme"
                                         (click)="reloadOptions()"
                                     >
                                         <i kbq-icon="kbq-arrow-rotate-left_16"></i>

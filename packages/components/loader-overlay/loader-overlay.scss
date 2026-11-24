@@ -1,58 +1,54 @@
-@use '../core/styles/common/squircle' as *;
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/squircle';
 @use '../core/styles/common/vendor-prefixes';
-
-@use './loader-overlay-theme' as *;
+@use './loader-overlay-theme';
 
 .kbq-loader-overlay_parent {
-    position: relative;
-
     // Text placed straight in the parent is not an element, so `inert` cannot reach it.
     @include vendor-prefixes.user-select(none);
+
+    position: relative;
 }
 
 .kbq-loader-overlay-text,
 .kbq-loader-overlay-caption {
     max-width: 90%;
-
     text-align: center;
 }
 
 .kbq-loader-overlay {
+    @include vendor-prefixes.user-select(text);
+    @include squircle.kbq-squircle-inherit();
+
     --padding-horizontal: var(--kbq-size-3xl);
     --loader-margin-bottom: var(--kbq-size-xxl);
     --content-gap-vertical: var(--kbq-size-l);
 
     position: absolute;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-    @include kbq-squircle-inherit();
-    @include vendor-prefixes.user-select(text);
 
     // todo
     z-index: 10;
 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding-right: var(--padding-horizontal);
+    padding-left: var(--padding-horizontal);
+
     .kbq-loader-overlay__container {
         display: flex;
         flex-direction: column;
-
-        justify-content: center;
         align-items: center;
+        justify-content: center;
 
         width: 80%;
         max-width: 80%;
     }
-
-    padding-left: var(--padding-horizontal);
-    padding-right: var(--padding-horizontal);
 
     .kbq-progress-spinner:has(+ .kbq-loader-overlay-text, + .kbq-loader-overlay-caption) {
         margin-bottom: var(--loader-margin-bottom);
@@ -81,5 +77,5 @@
     }
 }
 
-@include kbq-loader-overlay-theme();
-@include kbq-loader-overlay-typography();
+@include loader-overlay-theme.kbq-loader-overlay-theme();
+@include loader-overlay-theme.kbq-loader-overlay-typography();

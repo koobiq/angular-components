@@ -5,6 +5,7 @@ import {
     KBQ_OPTION_ACTION_PARENT,
     KBQ_OPTION_PARENT_COMPONENT,
     KbqOptgroup,
+    KbqOptgroupLabel,
     KbqOption,
     KbqOptionActionComponent,
     KbqOptionModule
@@ -41,8 +42,8 @@ class OptionWithOwnRole {}
 @Component({
     imports: [KbqOptionModule],
     template: `
-        <kbq-optgroup [label]="'Meat'">
-            <kbq-option [value]="'steak-0'">Steak</kbq-option>
+        <kbq-optgroup label="Meat">
+            <kbq-option value="steak-0">Steak</kbq-option>
         </kbq-optgroup>
     `
 })
@@ -51,14 +52,53 @@ class OptgroupWithLabel {}
 @Component({
     imports: [KbqOptionModule],
     template: `
-        <kbq-optgroup [label]="'Meat'" [disabled]="groupDisabled()">
-            <kbq-option [value]="'steak'">Steak</kbq-option>
+        <kbq-optgroup label="Meat" [disabled]="groupDisabled()">
+            <kbq-option value="steak">Steak</kbq-option>
         </kbq-optgroup>
     `
 })
 class OptionInGroup {
     readonly groupDisabled = signal(true);
 }
+
+@Component({
+    imports: [KbqOptionModule],
+    template: `
+        <kbq-optgroup label="Meat">
+            <div kbq-optgroup-label>
+                Meat
+                <span class="count">{{ group().selectedCount }}</span>
+            </div>
+            <kbq-option value="steak">Steak</kbq-option>
+            <kbq-option value="pizza">Pizza</kbq-option>
+        </kbq-optgroup>
+    `
+})
+class OptgroupWithProjectedLabel {
+    readonly group = viewChild.required(KbqOptgroup);
+}
+
+@Component({
+    imports: [KbqOptionModule],
+    template: `
+        <kbq-optgroup label="Meat">
+            <div kbq-optgroup-label>One</div>
+            <div kbq-optgroup-label>Two</div>
+        </kbq-optgroup>
+    `
+})
+class OptgroupWithTwoLabels {}
+
+// `KbqOptgroup` only: no `KbqOptgroupLabel` in scope, the way a standalone consumer misses the import.
+@Component({
+    imports: [KbqOptgroup],
+    template: `
+        <kbq-optgroup label="Meat">
+            <div kbq-optgroup-label>Custom</div>
+        </kbq-optgroup>
+    `
+})
+class OptgroupWithLabelWithoutDirective {}
 
 @Component({
     imports: [KbqOptionModule],
@@ -74,7 +114,7 @@ class ActionWithDisable {
 @Component({
     imports: [KbqOptionModule],
     template: `
-        <kbq-option [value]="'steak'">Steak</kbq-option>
+        <kbq-option value="steak">Steak</kbq-option>
     `,
     providers: [{ provide: KBQ_OPTION_PARENT_COMPONENT, useValue: { multiSelection: true } }]
 })
@@ -413,7 +453,13 @@ describe('KbqOptionActionComponent', () => {
 describe('KbqOptgroup component', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqOptionModule, OptgroupWithLabel]
+            imports: [
+                KbqOptionModule,
+                OptgroupWithLabel,
+                OptgroupWithProjectedLabel,
+                OptgroupWithTwoLabels,
+                OptgroupWithLabelWithoutDirective
+            ]
         }).compileComponents();
     });
 
@@ -440,5 +486,92 @@ describe('KbqOptgroup component', () => {
 
         expect(label.tagName).toBe('SPAN');
         expect(label.textContent!.trim()).toBe('Meat');
+    });
+
+    it('should replace the label input with the projected kbq-optgroup-label', () => {
+        const fixture = TestBed.createComponent(OptgroupWithProjectedLabel);
+
+        fixture.detectChanges();
+
+        const label: HTMLElement = fixture.debugElement.query(By.css('.kbq-optgroup-label')).nativeElement;
+
+        expect(label.textContent!.replace(/\s+/g, ' ').trim()).toBe('Meat 0');
+    });
+
+    it('should name the group by the label that carries the projected content', () => {
+        const fixture = TestBed.createComponent(OptgroupWithProjectedLabel);
+
+        fixture.detectChanges();
+
+        const group: HTMLElement = fixture.debugElement.query(By.directive(KbqOptgroup)).nativeElement;
+        const label: HTMLElement = fixture.debugElement.query(By.css('.kbq-optgroup-label')).nativeElement;
+        const content: HTMLElement = fixture.debugElement.query(By.directive(KbqOptgroupLabel)).nativeElement;
+
+        expect(content.closest('.kbq-optgroup-label')).toBe(label);
+        expect(group.getAttribute('aria-labelledby')).toBe(label.id);
+    });
+
+    it('should count the selected options of the group', () => {
+        const fixture = TestBed.createComponent(OptgroupWithProjectedLabel);
+
+        fixture.detectChanges();
+
+        const options = fixture.debugElement.queryAll(By.directive(KbqOption)).map((o) => o.injector.get(KbqOption));
+        const count = () => fixture.debugElement.query(By.css('.count'))!.nativeElement.textContent!.trim();
+
+        expect(count()).toBe('0');
+
+        options[0].select();
+        options[1].select();
+        fixture.detectChanges();
+
+        expect(count()).toBe('2');
+
+        options[0].deselect();
+        fixture.detectChanges();
+
+        expect(count()).toBe('1');
+    });
+
+    it('should report zero selected options in a group without options', () => {
+        const fixture = TestBed.createComponent(OptgroupWithLabel);
+
+        fixture.detectChanges();
+
+        const group: KbqOptgroup = fixture.debugElement.query(By.directive(KbqOptgroup)).injector.get(KbqOptgroup);
+
+        expect(group.selectedCount).toBe(0);
+    });
+
+    it('should warn once about more than one projected label', () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+        try {
+            const fixture = TestBed.createComponent(OptgroupWithTwoLabels);
+
+            fixture.detectChanges();
+            fixture.detectChanges();
+
+            expect(warn).toHaveBeenCalledTimes(1);
+        } finally {
+            warn.mockRestore();
+        }
+    });
+
+    // The selector alone projects the element, but only the directive makes it replace the `label` input.
+    it('should warn when the projected label renders next to the label input', () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+        try {
+            const fixture = TestBed.createComponent(OptgroupWithLabelWithoutDirective);
+
+            fixture.detectChanges();
+            fixture.detectChanges();
+
+            expect(warn).toHaveBeenCalledTimes(1);
+            expect(warn).toHaveBeenCalledWith(expect.stringContaining('KbqOptgroupLabel'));
+        } finally {
+            warn.mockRestore();
+        }
     });
 });

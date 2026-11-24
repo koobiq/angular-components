@@ -1,4 +1,4 @@
-import { Translations } from '@koobiq/docs-examples/i18n';
+import type { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Markdown source of the examples, keyed by example. */
 export interface ExampleTranslation {

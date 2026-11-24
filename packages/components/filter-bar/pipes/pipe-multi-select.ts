@@ -1,11 +1,11 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     computed,
-    OnInit,
-    Signal,
+    type OnInit,
+    type Signal,
     signal,
     untracked,
     viewChild,
@@ -14,13 +14,14 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { map, startWith } from 'rxjs';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KbqHighlightModule,
     KbqOption,
     KbqPseudoCheckboxModule,
-    KbqPseudoCheckboxState,
+    type KbqPseudoCheckboxState,
     tokenizeSearchQuery
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -28,9 +29,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { startWith } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { KbqSelectValue } from '../filter-bar.types';
+import type { KbqSelectValue } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
 import { KbqMultiSelectPipeState } from './multi-select-pipe-state';
 import { KbqPipeButton } from './pipe-button';
@@ -55,8 +54,8 @@ import { kbqFilterSelectValueNameKey, kbqFilterSelectValuesBySearch } from './se
         KbqPseudoCheckboxModule,
         KbqHighlightModule
     ],
-    templateUrl: 'pipe-multi-select.html',
-    styleUrls: ['base-pipe.scss', 'pipe-multiselect.scss'],
+    templateUrl: './pipe-multi-select.html',
+    styleUrls: ['./base-pipe.scss', './pipe-multiselect.scss'],
     providers: [
         {
             provide: KbqBasePipe,
@@ -115,7 +114,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     }
 
     /** Whether the current pipe is empty. */
-    get isEmpty(): boolean {
+    override get isEmpty(): boolean {
         return this.multiSelect.isEmpty(super.isEmpty);
     }
 
@@ -138,7 +137,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
     /** Number of options the "select all" action would toggle right now — template-only. */
     protected get selectAllCount(): number {
-        const options = this.searchControl.value ? this.filteredOptions() : this.values;
+        const options: KbqSelectValue[] | undefined = this.searchControl.value ? this.filteredOptions() : this.values;
 
         return options?.filter((option) => !this.isLocked(option)).length ?? 0;
     }
@@ -252,7 +251,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     }
 
     /** @docs-private */
-    onClear() {
+    override onClear() {
         this.data.value = this.multiSelect.clearedValue();
 
         this.multiSelect.updateInternalSelected();

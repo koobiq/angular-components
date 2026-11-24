@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
+import { KbqPopoverModule, type KbqPopoverTrigger } from '@koobiq/components/popover';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
 
@@ -12,7 +12,7 @@ import { TRANSLATIONS } from './l10n';
 @Component({
     selector: 'popover-placement-center-example',
     imports: [KbqInputModule, KbqButtonModule, KbqPopoverModule],
-    templateUrl: 'popover-placement-center-example.html',
+    templateUrl: './popover-placement-center-example.html',
     styles: `
         .popover-placement-center-example {
             display: flex;
@@ -40,5 +40,5 @@ export class PopoverPlacementCenterExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
 
     placements = PopUpPlacements;
-    activePopover: KbqPopoverTrigger;
+    activePopover?: KbqPopoverTrigger;
 }

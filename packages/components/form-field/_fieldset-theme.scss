@@ -1,4 +1,4 @@
 // Kept for back-compatibility: the 21.0 migration points the stylesheet imports of consumers to this file.
-/* stylelint-disable-next-line block-no-empty */
+/* stylelint-disable-next-line block-no-empty -- an empty mixin that consumers still include */
 @mixin kbq-fieldset-theme {
 }

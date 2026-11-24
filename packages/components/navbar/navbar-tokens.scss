@@ -1,5 +1,8 @@
+// The `__more-content` panel renders in the overlay, outside the navbar's DOM subtree, so it carries the
+// tokens the items moved into it are styled with.
 .kbq-navbar,
-.kbq-vertical-navbar {
+.kbq-vertical-navbar,
+.kbq-navbar__more-content {
     --kbq-navbar-item-size-content-border-radius: var(--kbq-size-border-radius);
     /* SIZE TOKENS */
     /* 40px of content plus the 1px gap that keeps the focus ring of adjacent items apart. */
@@ -10,6 +13,8 @@
     --kbq-navbar-vertical-size-expanded-width: 240px;
     --kbq-navbar-brand-vertical-size-title-max-width: 200px;
     --kbq-navbar-toggle-size-circle: 28px;
+    /* The «Ещё» panel of a horizontal navbar, a menu of the items hidden by overflow. */
+    --kbq-navbar-more-panel-size-min-width: 200px;
     /* LAYER TOKENS */
     /* The navbar is page chrome: it sits above the page content and the `kbqOverlayLayer` layer (980), but
        below every other CDK overlay (1000). The toggle overhangs the navbar's edge, so it needs one layer

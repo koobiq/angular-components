@@ -20,7 +20,7 @@ import { TRANSLATIONS } from './l10n';
                     }
                 </kbq-optgroup>
             }
-            <kbq-list-option [value]="'rbac-11'">Role-Based Access Control (RBAC)</kbq-list-option>
+            <kbq-list-option value="rbac-11">Role-Based Access Control (RBAC)</kbq-list-option>
         </kbq-list-selection>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

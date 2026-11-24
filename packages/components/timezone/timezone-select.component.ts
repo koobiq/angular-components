@@ -8,18 +8,18 @@ import {
     effect,
     inject,
     InjectionToken,
-    Provider,
+    type Provider,
     ViewEncapsulation
 } from '@angular/core';
 import {
     KBQ_OPTION_PARENT_COMPONENT,
     KBQ_SELECT_SEARCH_POPUP,
-    KbqDeepPartial,
+    type KbqDeepPartial,
     kbqLocaleConfigurationOverrideProvider,
     KbqLocaleOverridesDirective,
     KbqSelectSearch,
     kbqSiblingPopupProvider,
-    KbqTimezoneLocaleConfiguration,
+    type KbqTimezoneLocaleConfiguration,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { kbqCleanerFactoryProvider, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -76,12 +76,12 @@ export const kbqTimezoneLocaleConfigurationProvider = (
         KbqIconModule,
         KbqScrollbarViewport
     ],
-    templateUrl: 'timezone-select.component.html',
+    templateUrl: './timezone-select.component.html',
     styleUrls: [
         '../select/select.scss',
         '../select/select-tokens.scss',
-        'timezone-select.component.scss',
-        'timezone-option-tokens.scss'
+        './timezone-select.component.scss',
+        './timezone-option-tokens.scss'
     ],
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqTimezoneSelect },
@@ -111,7 +111,7 @@ export const kbqTimezoneLocaleConfigurationProvider = (
     exportAs: 'kbqTimezoneSelect'
 })
 export class KbqTimezoneSelect extends KbqSelect {
-    readonly customTrigger = contentChild(KbqTimezoneSelectTrigger);
+    override readonly customTrigger = contentChild(KbqTimezoneSelectTrigger);
 
     /** Strings currently rendered by the select. */
     readonly timezoneLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(

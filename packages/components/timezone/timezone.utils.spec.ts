@@ -1,4 +1,4 @@
-import { KbqTimezoneGroup, KbqTimezoneZone } from './timezone.models';
+import type { KbqTimezoneGroup, KbqTimezoneZone } from './timezone.models';
 import {
     collapseOtherCountries,
     filterCitiesBySearchString,

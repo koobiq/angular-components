@@ -17,7 +17,7 @@ export const docsGetVersionSitemapUrl = (versionUrl: string): string => resolveI
 export const docsParseSitemapPaths = (xml: string): Set<string> =>
     new Set(
         Array.from(xml.matchAll(/<loc>\s*([^<\s]+)\s*<\/loc>/g), ([, loc]) =>
-            trimTrailingSlash(new URL(loc, CANONICAL_ORIGIN).pathname)
+            trimTrailingSlash(new URL(loc!, CANONICAL_ORIGIN).pathname)
         )
     );
 

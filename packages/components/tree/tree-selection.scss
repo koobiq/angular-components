@@ -1,8 +1,8 @@
-@use './tree-theme' as *;
+@use './tree-theme';
 
 .kbq-tree-selection {
     display: block;
 }
 
-@include kbq-tree-theme();
-@include kbq-tree-typography();
+@include tree-theme.kbq-tree-theme();
+@include tree-theme.kbq-tree-typography();

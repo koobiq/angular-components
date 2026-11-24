@@ -12,6 +12,7 @@
             kbqTabLabelWrapper
             class="kbq-tab-label"
             role="tab"
+            kbqTrigger="hover, focus"
             [attr.aria-controls]="getTabContentId($index)"
             [attr.aria-selected]="selectedIndex === $index"
             [attr.tabindex]="getTabIndex(tab, tabHeader, $index)"
@@ -26,7 +27,6 @@
             [kbqPlacement]="tab.tooltipPlacement()"
             [kbqTooltip]="tab.tooltipTitle"
             [kbqTooltipDisabled]="!tab.empty() && !tab.isOverflown"
-            [kbqTrigger]="'hover, focus'"
             [tab]="tab"
             (click)="handleClick(tab, tabHeader, $index)"
         >
@@ -52,10 +52,10 @@
             [attr.aria-labelledby]="getTabLabelId($index)"
             [attr.tabindex]="selectedIndex === $index ? 0 : null"
             [class.kbq-tab-body__active]="selectedIndex === $index"
-            [content]="tab.content!"
+            [content]="tab.content"
             [id]="getTabContentId($index)"
-            [origin]="tab.origin!"
-            [position]="tab.position!"
+            [origin]="tab.origin ?? undefined"
+            [position]="tab.position ?? undefined"
             (onCentered)="removeTabBodyWrapperHeight()"
             (onCentering)="setTabBodyWrapperHeight($event)"
         />

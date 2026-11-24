@@ -9,10 +9,10 @@ import {
     KBQ_THEME_STORE,
     KbqThemeCookieStore,
     KbqThemeLocalStorageStore,
-    KbqThemeMode,
+    type KbqThemeMode,
     kbqThemeProvider,
     KbqThemeService,
-    KbqThemeStore
+    type KbqThemeStore
 } from './theme.service';
 
 /** Minimal fake `MediaQueryList` that lets tests flip `matches` and trigger the `change` listener. */

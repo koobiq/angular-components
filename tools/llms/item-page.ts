@@ -5,7 +5,7 @@ import {
     docsGetItemById,
     docsGetItems,
     DocsStructureCategoryId,
-    DocsStructureItem,
+    type DocsStructureItem,
     DocsStructureItemId,
     DocsStructureItemTab
 } from '../../apps/docs/src/app/structure';
@@ -25,7 +25,7 @@ import {
     getSectionsPath,
     getSiteUrl,
     getTokensPath,
-    LlmsPageSources,
+    type LlmsPageSources,
     readApiManifest,
     readExample,
     readRepoFile,
@@ -82,9 +82,9 @@ const renderExample = (item: DocsStructureItem, id: string, files: Map<string, s
 
 /** Whether an example lives in the directory of the item: `components/select/…` is an example of the select. */
 export const ownsExample = (item: DocsStructureItem, id: string): boolean => {
-    const directory = EXAMPLE_COMPONENTS[id].packagePath.split('/')[1];
+    const directory = EXAMPLE_COMPONENTS[id]?.packagePath.split('/')[1];
 
-    return [item.id, item.apiId, item.path && posix.basename(item.path)].includes(directory);
+    return !!directory && [item.id, item.apiId, item.path && posix.basename(item.path)].includes(directory);
 };
 
 /**

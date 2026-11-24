@@ -1,4 +1,4 @@
-import { Translations } from '@koobiq/docs-examples/i18n';
+import type { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Security categories of the groups example. */
 export interface ExampleTranslation {

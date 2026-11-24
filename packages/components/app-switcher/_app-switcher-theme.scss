@@ -1,4 +1,4 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-app-switcher-theme() {
     .kbq-app-switcher {
@@ -17,14 +17,14 @@
 @mixin kbq-app-switcher-typography() {
     .kbq-app-switcher,
     .kbq-app-switcher__empty-search-result {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
     .kbq-app-switcher-group-header__text {
-        @include kbq-typography-level-to-styles-css-variables(typography, caps-compact-strong);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, caps-compact-strong);
     }
 
     .kbq-app-switcher-group-header__badge {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-compact-medium);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact-medium);
     }
 }

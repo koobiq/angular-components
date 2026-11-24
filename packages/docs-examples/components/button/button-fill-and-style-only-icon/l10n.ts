@@ -1,4 +1,4 @@
-import { Translations } from '@koobiq/docs-examples/i18n';
+import type { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the button-fill-and-style-only-icon example. */
 export interface ExampleTranslation {

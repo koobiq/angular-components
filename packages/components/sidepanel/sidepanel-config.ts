@@ -1,6 +1,6 @@
-import { ScrollStrategy } from '@angular/cdk/overlay';
-import { InjectionToken, Injector } from '@angular/core';
-import { KbqCanClose } from '@koobiq/components/core';
+import type { ScrollStrategy } from '@angular/cdk/overlay';
+import { InjectionToken, type Injector } from '@angular/core';
+import type { KbqCanClose } from '@koobiq/components/core';
 
 /** Injection token that can be used to access the data that was passed in to a sidepanel. */
 export const KBQ_SIDEPANEL_DATA = new InjectionToken<any>('KbqSidepanelData');

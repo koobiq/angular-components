@@ -1,11 +1,11 @@
 import { afterNextRender, ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import type { DateTime } from 'luxon';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { DateTime } from 'luxon';
 import { TRANSLATIONS } from './l10n';
 
 /** @title Timepicker field validation */

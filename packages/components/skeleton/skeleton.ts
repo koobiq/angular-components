@@ -1,15 +1,18 @@
 import { _CdkPrivateStyleLoader } from '@angular/cdk/private';
 import {
+    afterRenderEffect,
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     Directive,
-    Injectable,
-    NgZone,
-    ViewEncapsulation,
-    afterRenderEffect,
-    booleanAttribute,
     inject,
-    input
+    Injectable,
+    InjectionToken,
+    input,
+    NgZone,
+    numberAttribute,
+    type Provider,
+    ViewEncapsulation
 } from '@angular/core';
 import { KBQ_WINDOW, kbqAnimationsDisabled, kbqInjectNativeElement } from '@koobiq/components/core';
 
@@ -27,7 +30,7 @@ const findWave = (host: HTMLElement): Animation | undefined =>
 @Component({
     selector: 'skeleton-style-loader',
     template: '',
-    styleUrls: ['skeleton.scss', 'skeleton-presets.scss', 'skeleton-tokens.scss'],
+    styleUrls: ['./skeleton.scss', './skeleton-presets.scss', './skeleton-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -140,6 +143,41 @@ class SkeletonWave {
     }
 }
 
+/** Default options of every skeleton in an application or a part of it. */
+export type KbqSkeletonOptions = {
+    /**
+     * Default of the `animationDuration` input of `kbq-skeleton` and `kbqSkeleton`, in milliseconds. Defaults to
+     * `1200`.
+     */
+    animationDuration: number;
+};
+
+const KBQ_SKELETON_DEFAULT_OPTIONS: KbqSkeletonOptions = {
+    animationDuration: 1200
+};
+
+/**
+ * Default options of the skeletons, which `kbqSkeletonOptionsProvider` provides.
+ *
+ * @docs-private
+ */
+export const KBQ_SKELETON_OPTIONS = new InjectionToken<KbqSkeletonOptions>('KBQ_SKELETON_OPTIONS', {
+    factory: () => KBQ_SKELETON_DEFAULT_OPTIONS
+});
+
+/**
+ * Utility provider for the default options of the skeletons, for an application or a part of it. The keys it
+ * leaves out keep the values of the closest provider above.
+ */
+export const kbqSkeletonOptionsProvider = (options: Partial<KbqSkeletonOptions>): Provider => ({
+    provide: KBQ_SKELETON_OPTIONS,
+    useFactory: (): KbqSkeletonOptions => ({
+        ...KBQ_SKELETON_DEFAULT_OPTIONS,
+        ...inject(KBQ_SKELETON_OPTIONS, { skipSelf: true, optional: true }),
+        ...options
+    })
+});
+
 /**
  * Directive representing a skeleton placeholder.
  *
@@ -152,7 +190,8 @@ class SkeletonWave {
         class: 'kbq-skeleton',
         '[class.kbq-skeleton_disabled]': '!enabled()',
         '[class.kbq-animations-disabled]': 'animationsDisabled',
-        '[attr.inert]': 'enabled() || null'
+        '[attr.inert]': 'enabled() || null',
+        '[style.--kbq-skeleton-animation-duration.ms]': 'enabled() ? animationDuration() : null'
     },
     exportAs: 'kbqSkeleton'
 })
@@ -160,9 +199,19 @@ export class KbqSkeleton {
     private readonly styleLoader = inject(_CdkPrivateStyleLoader);
     private readonly element = kbqInjectNativeElement();
     private readonly wave = inject(SkeletonWave);
+    private readonly options = inject(KBQ_SKELETON_OPTIONS);
 
     /** Whether the skeleton is enabled. */
     readonly enabled = input(true, { transform: booleanAttribute, alias: 'kbqSkeleton' });
+
+    /**
+     * Duration of one pass of the wave, in milliseconds: the longer it is, the slower the wave. A value that is not
+     * a number keeps the default. Defaults to `animationDuration` of `kbqSkeletonOptionsProvider`, `1200`.
+     */
+    readonly animationDuration = input(this.options.animationDuration, {
+        transform: (value: number | string | null | undefined): number =>
+            numberAttribute(value, this.options.animationDuration)
+    });
 
     /**
      * Whether the fill stands still, without the wave.

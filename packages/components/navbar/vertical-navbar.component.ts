@@ -1,6 +1,6 @@
 import { CdkMonitorFocus } from '@angular/cdk/a11y';
 import {
-    AfterContentInit,
+    type AfterContentInit,
     ChangeDetectionStrategy,
     Component,
     contentChild,
@@ -8,10 +8,8 @@ import {
     effect,
     forwardRef,
     inject,
-    InjectionToken,
     input,
     model,
-    Provider,
     untracked,
     ViewEncapsulation
 } from '@angular/core';
@@ -19,46 +17,30 @@ import {
     DOWN_ARROW,
     isHorizontalMovement,
     isVerticalMovement,
-    KbqDeepPartial,
-    kbqLocaleConfigurationOverrideProvider,
     KbqLocaleOverridesDirective,
-    KbqNavbarLocaleConfiguration,
+    type KbqNavbarLocaleConfiguration,
     KbqOverlayLayerExclude,
-    ruRULocaleData,
     TAB,
     UP_ARROW
 } from '@koobiq/components/core';
-import { KbqNavbarBento, KbqNavbarItem, KbqNavbarRectangleElement } from './navbar-item.component';
-import { kbqNavbarTooltipOptionsProvider } from './navbar-tooltip-defaults';
 import { KbqFocusableComponent } from './navbar.component';
+import { KbqNavbarBento, KbqNavbarItem, KbqNavbarRectangleElement } from './navbar-item.component';
+import { KBQ_NAVBAR_LOCALE_CONFIGURATION } from './navbar-locale';
+import { kbqNavbarTooltipOptionsProvider } from './navbar-tooltip-defaults';
+
+// Re-exported so that the names this package's own token is typed with resolve from this package too:
+// they used to be declared here, and the migrations rename them in place.
+export {
+    KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION,
+    KBQ_NAVBAR_LOCALE_CONFIGURATION,
+    KBQ_VERTICAL_NAVBAR_CONFIGURATION,
+    KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION,
+    kbqNavbarLocaleConfigurationProvider
+} from './navbar-locale';
 
 // Re-exported so that the name this package's own token is typed with resolves from this package too:
 // `KbqVerticalNavbarConfiguration` used to be declared here, and the migration renames it in place.
 export type { KbqNavbarLocaleConfiguration };
-
-/** default configuration of navbar */
-/** @docs-private */
-export const KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION: KbqNavbarLocaleConfiguration = ruRULocaleData.navbar;
-
-/** Injection Token for providing configuration of navbar */
-/** @docs-private */
-export const KBQ_NAVBAR_LOCALE_CONFIGURATION = new InjectionToken<KbqNavbarLocaleConfiguration>(
-    'KbqNavbarLocaleConfiguration',
-    { factory: () => KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION }
-);
-
-/**
- * Utility provider for `KBQ_NAVBAR_LOCALE_CONFIGURATION`. Only the strings you pass are overridden; the
- * rest keep following the active locale.
- */
-export const kbqNavbarLocaleConfigurationProvider = (
-    configuration: KbqDeepPartial<KbqNavbarLocaleConfiguration>
-): Provider => kbqLocaleConfigurationOverrideProvider('navbar', configuration);
-
-/** @deprecated Use {@link KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION}. Will be removed in 22.0.0. */
-export const KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION = KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION;
-/** @deprecated Use {@link KBQ_NAVBAR_LOCALE_CONFIGURATION}. Will be removed in 22.0.0. */
-export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = KBQ_NAVBAR_LOCALE_CONFIGURATION;
 
 @Component({
     selector: 'kbq-vertical-navbar',
@@ -158,7 +140,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     }
 
     /** @docs-private */
-    ngAfterContentInit(): void {
+    override ngAfterContentInit(): void {
         super.ngAfterContentInit();
 
         this.keyManager.withVerticalOrientation(true);

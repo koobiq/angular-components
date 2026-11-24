@@ -1,23 +1,23 @@
-import { SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
-import { TemplateTransformFn } from './angular-parsing';
+import type { TemplateTransformFn } from './angular-parsing';
 import {
-    Attribute,
-    Block,
-    Element,
+    type Attribute,
+    type Block,
+    type Element,
     getClassBindingToken,
     getSimpleAttributeName,
     replaceTokenList,
-    TokenLookup,
+    type TokenLookup,
     visitAll,
-    Visitor
+    type Visitor
 } from './ast';
 import {
     collectInlineTemplateRanges,
     forEachClass,
     forEachStringLiteral,
     parseTemplate,
-    TransformTemplateAttributesResult
+    type TransformTemplateAttributesResult
 } from './typescript';
 
 export type TokenReplacement = { from: string; to: string };

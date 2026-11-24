@@ -1,9 +1,8 @@
 import { DOCUMENT } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, SecurityContext } from '@angular/core';
-import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
-import { defer, Observable, of, throwError } from 'rxjs';
-import { catchError, finalize, map, share } from 'rxjs/operators';
+import { DomSanitizer, type SafeHtml, type SafeResourceUrl } from '@angular/platform-browser';
+import { catchError, defer, finalize, map, type Observable, of, share, throwError } from 'rxjs';
 import { KBQ_ICON_RESOLVER, KBQ_ICONS_CONFIG } from './icon-registry-providers';
 
 export interface KbqIconOptions {
@@ -245,11 +244,13 @@ export class KbqIconRegistry {
             .map((set) => this.loadIconSet(set));
 
         const tryNext = (index: number): Observable<SVGElement> => {
-            if (index >= sources.length) {
+            const source = sources[index];
+
+            if (!source) {
                 return throwError(() => Error(`KbqIconRegistry: icon "${name}" not found in any registered icon set.`));
             }
 
-            return sources[index].pipe(
+            return source.pipe(
                 map((setElement) => {
                     const icon = this.extractIconFromSet(name, setElement);
 

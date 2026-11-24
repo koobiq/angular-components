@@ -1,8 +1,8 @@
-import { FocusMonitor, FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
+import { FocusMonitor, type FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
 import { DOCUMENT } from '@angular/common';
 import {
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectorRef,
     computed,
     DestroyRef,
@@ -13,18 +13,21 @@ import {
     TemplateRef
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { isMac, KbqFilterBarLocaleConfiguration, KbqPanelMaxHeight } from '@koobiq/components/core';
-import { Subject } from 'rxjs';
-import { filter, skip } from 'rxjs/operators';
-import { KBQ_FILTER_BAR_NAME_RESOLVER, KbqFilterBarNameContext, KbqFilterBarNameKind } from '../filter-bar-name';
+import { filter, skip, Subject } from 'rxjs';
+import { isMac, type KbqFilterBarLocaleConfiguration, type KbqPanelMaxHeight } from '@koobiq/components/core';
 import {
     KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
     KBQ_FILTER_BAR_HOST,
-    KbqPipeData,
-    KbqPipeTemplate,
-    KbqPipeType,
-    KbqSelectValue
+    type KbqPipeData,
+    type KbqPipeTemplate,
+    type KbqPipeType,
+    type KbqSelectValue
 } from '../filter-bar.types';
+import {
+    KBQ_FILTER_BAR_NAME_RESOLVER,
+    type KbqFilterBarNameContext,
+    type KbqFilterBarNameKind
+} from '../filter-bar-name';
 
 /** Injection Token for providing configuration of filter-bar */
 export const KBQ_PIPE_DATA = new InjectionToken('KBQ_PIPE_DATA');
@@ -77,7 +80,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     protected destroyed = false;
 
     /** values to select from the pipe template */
-    protected values;
+    protected values: any;
     /** TemplateRef for selecting an option */
     protected valueTemplate?: TemplateRef<any> | string;
 
@@ -225,7 +228,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     }
 
     /** templateRef checker utility */
-    isTemplateRef(value: unknown): boolean {
+    isTemplateRef<C>(value: unknown): value is TemplateRef<C> {
         return value instanceof TemplateRef;
     }
 
@@ -390,7 +393,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         const templates = this.filterBar?.pipeTemplates() ?? [];
         const matches = templates.filter((t) => getId(t) === getId(this.data) && t.type === this.data.type);
 
-        return matches.length === 1 ? matches[0].nameKey : undefined;
+        return matches.length === 1 ? matches[0]!.nameKey : undefined;
     }
 
     /**

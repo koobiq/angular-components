@@ -14,11 +14,13 @@ import { TRANSLATIONS } from './l10n';
         KbqToolTipModule
     ],
     template: `
-        <button kbq-button [kbqTooltip]="t().tooltip">{{ t().default }}</button>
-        <button kbq-button [kbqTooltip]="t().tooltip" [kbqTooltipArrow]="true">{{ t().defaultWithArrow }}</button>
-        <button kbq-button [kbqTooltip]="t().tooltip" [kbqTooltipOffset]="0">0px</button>
-        <button kbq-button [kbqTooltip]="t().tooltip" [kbqTooltipOffset]="32">32px</button>
-        <button kbq-button [kbqTooltip]="t().tooltip" [kbqTooltipOffset]="-8">-8px</button>
+        <button kbq-button type="button" [kbqTooltip]="t().tooltip">{{ t().default }}</button>
+        <button kbq-button type="button" [kbqTooltip]="t().tooltip" [kbqTooltipArrow]="true">
+            {{ t().defaultWithArrow }}
+        </button>
+        <button kbq-button type="button" [kbqTooltip]="t().tooltip" [kbqTooltipOffset]="0">0px</button>
+        <button kbq-button type="button" [kbqTooltip]="t().tooltip" [kbqTooltipOffset]="32">32px</button>
+        <button kbq-button type="button" [kbqTooltip]="t().tooltip" [kbqTooltipOffset]="-8">-8px</button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {

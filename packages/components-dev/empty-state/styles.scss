@@ -5,12 +5,12 @@
 }
 
 .dev-box {
-    width: 500px;
-    height: 500px;
-
-    margin: 4px;
-    border: 1px solid red;
-
     display: flex;
     flex-direction: column;
+
+    width: 500px;
+    height: 500px;
+    margin: 4px;
+
+    border: 1px solid red;
 }

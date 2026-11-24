@@ -22,7 +22,7 @@ import { TRANSLATIONS } from './l10n';
         KbqBadgeModule,
         KbqIconModule
     ],
-    templateUrl: 'navbar-overview-example.html',
+    templateUrl: './navbar-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarOverviewExample {

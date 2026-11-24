@@ -1,7 +1,7 @@
-import { Path } from '@angular-devkit/core';
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Path } from '@angular-devkit/core';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
-import { visitAll, Visitor } from '../../utils/ast';
+import { visitAll, type Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
@@ -16,7 +16,7 @@ import {
     SUFFIX_ATTR,
     TOGGLE_ELEMENT
 } from './data';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 const TS_EXT = '.ts';
 const HTML_EXT = '.html';
@@ -103,7 +103,7 @@ function projectedNodes(host: Node): { nodes: Node[]; ambiguous: boolean } {
         if (isBlock(child)) {
             const inner = (child.children ?? []).filter((node) => !isInsignificant(node));
 
-            if (inner.length === 1 && isElement(inner[0])) {
+            if (inner.length === 1 && inner[0] && isElement(inner[0])) {
                 nodes.push(inner[0]);
             } else if (inner.length > 0) {
                 nodes.push(child);
@@ -193,7 +193,7 @@ async function migrateTemplate(template: string): Promise<{ content: string; cha
             [nodes[0], PREFIX_ATTR],
             [nodes[nodes.length - 1], SUFFIX_ATTR]
         ] as const) {
-            if (!isIcon(node) || hasAttr(node, PREFIX_ATTR) || hasAttr(node, SUFFIX_ATTR)) continue;
+            if (!node || !isIcon(node) || hasAttr(node, PREFIX_ATTR) || hasAttr(node, SUFFIX_ATTR)) continue;
 
             const offset = attributeInsertOffset(node);
 

@@ -1,18 +1,18 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { AgGridModule } from 'ag-grid-angular';
+import { AllCommunityModule, type ColDef, ModuleRegistry } from 'ag-grid-community';
 import {
     KBQ_AG_GRID_COLUMN_MENU_LABELS_EN,
     KBQ_AG_GRID_SETTINGS_MENU_LABELS_EN,
     kbqAgGridColumnMenuLabelsProvider,
     kbqAgGridSettingsMenuColumnsItem,
-    KbqAgGridSettingsMenuItems,
+    type KbqAgGridSettingsMenuItems,
     kbqAgGridSettingsMenuLabelsProvider,
     kbqAgGridSettingsMenuSeparator,
     kbqAgGridSettingsMenuSortItem,
     KbqAgGridThemeModule
 } from '@koobiq/ag-grid-angular-theme';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { AgGridModule } from 'ag-grid-angular';
-import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -53,7 +53,7 @@ export class AgGridSettingsMenuExample {
         { id: 'normal', label: this.t().normal, rowHeight: 40 }
     ]);
 
-    protected readonly density = signal(this.densities()[1]);
+    protected readonly density = signal(this.densities()[1]!);
 
     protected readonly settingsMenuItems = computed<KbqAgGridSettingsMenuItems>(() => [
         kbqAgGridSettingsMenuColumnsItem(),

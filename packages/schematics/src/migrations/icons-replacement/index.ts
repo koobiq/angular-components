@@ -1,13 +1,13 @@
-import { Path } from '@angular-devkit/core';
-import { SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { logging, Path } from '@angular-devkit/core';
+import type { SchematicContext, Tree } from '@angular-devkit/schematics';
 import path from 'path';
 import { readCustomIconMapping } from '../../utils/custom-data';
 import { logMessage } from '../../utils/messages';
 import { resolveTargetDir } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
-import { Replacement, TransformTemplateAttributesResult } from '../../utils/typescript';
+import type { Replacement, TransformTemplateAttributesResult } from '../../utils/typescript';
 import { iconReplacementData } from './data';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -23,8 +23,18 @@ export const replaceIcons = (contentToBeUpdated: string, replacementData: Replac
     return res;
 };
 
-export const logReplacement = ({ logger, replacementData, contentToBeUpdated, filePath }): void => {
-    const foundIcons = replacementData.filter(({ from }) => iconNameRegExp(from).test(contentToBeUpdated!));
+export const logReplacement = ({
+    logger,
+    replacementData,
+    contentToBeUpdated,
+    filePath
+}: {
+    logger: logging.LoggerApi;
+    replacementData: Replacement[];
+    contentToBeUpdated: string;
+    filePath: string;
+}): void => {
+    const foundIcons = replacementData.filter(({ from }) => iconNameRegExp(from).test(contentToBeUpdated));
 
     if (foundIcons.length) {
         const parsedFilePath = path.relative(__dirname, `.${filePath}`).replace(/\\/g, '/');
@@ -43,9 +53,15 @@ export const processIconReplacement = ({
     fix,
     logger,
     replacementData
+}: {
+    fileContent: string;
+    filePath: string;
+    fix: boolean;
+    logger: logging.LoggerApi;
+    replacementData: Replacement[];
 }): TransformTemplateAttributesResult => {
     if (fix) {
-        const updatedContent = replaceIcons(fileContent!, replacementData);
+        const updatedContent = replaceIcons(fileContent, replacementData);
 
         return { fileContent: updatedContent, changed: updatedContent !== fileContent, errors: [] };
     } else {

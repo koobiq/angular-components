@@ -1,4 +1,4 @@
-import { expect, Locator, Page, test } from '@playwright/test';
+import { expect, type Locator, type Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme } from '../../e2e/utils';
 
 test.describe('KbqDl', () => {
@@ -28,6 +28,18 @@ test.describe('KbqDl', () => {
             await expect(target).toHaveScreenshot('02-light.png');
             await e2eEnableDarkTheme(page);
             await expect(target).toHaveScreenshot('02-dark.png');
+        });
+    });
+
+    test.describe('E2eDlCaption', () => {
+        test('should draw the term captions in the horizontal and vertical layouts', async ({ page }) => {
+            await page.goto('/E2eDlCaption');
+
+            const target = page.getByTestId('e2eDlCaption').getByTestId('e2eScreenshotTarget');
+
+            await expect(target).toHaveScreenshot('03-caption-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(target).toHaveScreenshot('03-caption-dark.png');
         });
     });
 

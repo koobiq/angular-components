@@ -1,6 +1,6 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
-@mixin _icon($left-icon, $right-icon) {
+@mixin -icon($left-icon, $right-icon) {
     .kbq-icon.kbq-empty {
         color: $left-icon;
 
@@ -17,11 +17,11 @@
 @mixin kbq-button-type($type, $sub-type) {
     $base-path: button-#{$type}-#{$sub-type};
 
-    border-color: var(--kbq-#{$base-path}-border);
+    @include -icon(var(--kbq-#{$base-path}-left-icon), var(--kbq-#{$base-path}-right-icon));
+
     color: var(--kbq-#{$base-path}-foreground);
     background: var(--kbq-#{$base-path}-background);
-
-    @include _icon(var(--kbq-#{$base-path}-left-icon), var(--kbq-#{$base-path}-right-icon));
+    border-color: var(--kbq-#{$base-path}-border);
 
     &:hover:not(.kbq-disabled),
     &.kbq-hover:not(.kbq-disabled) {
@@ -34,14 +34,14 @@
     }
 
     &.kbq-disabled {
-        color: var(--kbq-#{$base-path}-states-disabled-foreground);
-        background: var(--kbq-#{$base-path}-states-disabled-background);
-        border-color: var(--kbq-#{$base-path}-states-disabled-border);
-
-        @include _icon(
+        @include -icon(
             var(--kbq-#{$base-path}-states-disabled-left-icon),
             var(--kbq-#{$base-path}-states-disabled-right-icon)
         );
+
+        color: var(--kbq-#{$base-path}-states-disabled-foreground);
+        background: var(--kbq-#{$base-path}-states-disabled-background);
+        border-color: var(--kbq-#{$base-path}-states-disabled-border);
     }
 }
 
@@ -103,8 +103,9 @@
             // not blur it), and FocusMonitor stays attached for the whole component lifetime.
             &.cdk-keyboard-focused:not(.kbq-disabled) {
                 $focused-color: var(--kbq-states-line-focus-theme);
-                outline: 1px solid $focused-color;
+
                 border-color: $focused-color;
+                outline: 1px solid $focused-color;
             }
         }
     }
@@ -113,6 +114,6 @@
 @mixin kbq-button-typography() {
     .kbq-button,
     .kbq-button-icon {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
     }
 }

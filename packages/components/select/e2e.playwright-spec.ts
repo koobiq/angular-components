@@ -1,4 +1,4 @@
-import { expect, Locator, Page, test } from '@playwright/test';
+import { expect, type Locator, type Page, test } from '@playwright/test';
 import {
     e2eDisableResizeObserver,
     e2eEnableDarkTheme,
@@ -277,6 +277,35 @@ test.describe('KbqSelectModule', () => {
             await expect(getComponent(page)).toHaveScreenshot('02-light.png');
             await e2eEnableDarkTheme(page);
             await expect(getComponent(page)).toHaveScreenshot('02-dark.png');
+        });
+    });
+
+    test.describe('E2eSelectWithGroupsLabel', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eSelectWithGroupsLabel');
+        const getSelect = (locator: Locator) => locator.getByTestId('e2eSelect');
+
+        test('projected group label with a counter badge', async ({ page }) => {
+            await page.goto('/E2eSelectWithGroupsLabel');
+            const screenshotTarget = getComponent(page);
+            const select = getSelect(screenshotTarget);
+
+            await select.click();
+            await settlePanelScrollbar(page);
+
+            // The panel opens into an overlay at body level, painted over the screenshot target.
+            const overlay = page.locator('.cdk-overlay-pane');
+
+            // Two options of the first group arrive selected: the counter follows the selection live.
+            const grassBadge = overlay.locator('kbq-optgroup').first().locator('.kbq-badge');
+
+            await expect(grassBadge).toHaveText('2');
+
+            await overlay.locator('kbq-option').first().click();
+            await expect(grassBadge).toHaveText('1');
+
+            await expect(getComponent(page)).toHaveScreenshot('10-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(getComponent(page)).toHaveScreenshot('10-dark.png');
         });
     });
 

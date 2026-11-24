@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject, TemplateRef, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, type TemplateRef, viewChild } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqFormattersModule } from '@koobiq/components/core';
@@ -24,7 +24,7 @@ import { TRANSLATIONS } from './l10n';
         LuxonDateModule,
         KbqFormattersModule
     ],
-    templateUrl: 'notification-center-popover-example.html',
+    templateUrl: './notification-center-popover-example.html',
     styles: `
         :host {
             display: block;

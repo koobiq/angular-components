@@ -13,10 +13,10 @@
     </ng-template>
 </kbq-dropdown>
 
-<button #confirmButton kbq-button style="margin-right: 16px" [kbqTooltip]="'Tooltip text'" (click)="showConfirm()">
+<button #confirmButton kbq-button style="margin-right: 16px" kbqTooltip="Tooltip text" (click)="showConfirm()">
     Confirm
 </button>
-<button #deleteButton kbq-button [kbqTooltip]="'Tooltip text'" (click)="showDeleteConfirm()">Delete</button>
+<button #deleteButton kbq-button kbqTooltip="Tooltip text" (click)="showDeleteConfirm()">Delete</button>
 
 <p class="kbq-headline">Modal from service</p>
 <button kbq-button [color]="componentColors.Contrast" (click)="createTplModal(tplContent, tplTitle, tplFooter)">
@@ -63,11 +63,11 @@
 <p class="kbq-headline">Non-service (declarative) modal</p>
 <button kbq-button [color]="componentColors.Contrast" (click)="htmlModalVisible = true">Open</button>
 <kbq-modal
-    [kbqCancelText]="'Cancel'"
+    kbqCancelText="Cancel"
+    kbqOkText="Accept"
+    kbqTitle="Non-service html modal"
     [kbqMask]="true"
     [kbqMaskClosable]="true"
-    [kbqOkText]="'Accept'"
-    [kbqTitle]="'Non-service html modal'"
     [(kbqVisible)]="htmlModalVisible"
 >
     This is a non-service html modal

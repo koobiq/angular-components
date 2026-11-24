@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
-import { KbqDd, KbqDl, KbqDt } from './dl';
+import { KbqDd, KbqDl, KbqDt, KbqDtCaption } from './dl';
 
 const COMPONENTS = [
     KbqDl,
     KbqDt,
+    KbqDtCaption,
     KbqDd
 ];
 

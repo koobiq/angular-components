@@ -1,180 +1,180 @@
-@use '../common/tokens' as *;
+@use '../common/tokens';
 
 @mixin kbq-base-typography() {
     .kbq-headline {
-        @include kbq-typography-level-to-styles-css-variables(typography, headline);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, headline);
     }
 
     .kbq-subheading {
-        @include kbq-typography-level-to-styles-css-variables(typography, subheading);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, subheading);
     }
 
     .kbq-title {
-        @include kbq-typography-level-to-styles-css-variables(typography, title);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, title);
     }
 
     .kbq-display-big {
-        @include kbq-typography-level-to-styles-css-variables(typography, display-big);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, display-big);
     }
 
     .kbq-display-big-strong {
-        @include kbq-typography-level-to-styles-css-variables(typography, display-big-strong);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, display-big-strong);
     }
 
     .kbq-display-normal {
-        @include kbq-typography-level-to-styles-css-variables(typography, display-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, display-normal);
     }
 
     .kbq-display-normal-strong {
-        @include kbq-typography-level-to-styles-css-variables(typography, display-normal-strong);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, display-normal-strong);
     }
 
     .kbq-display-compact {
-        @include kbq-typography-level-to-styles-css-variables(typography, display-compact);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, display-compact);
     }
 
     .kbq-display-compact-strong {
-        @include kbq-typography-level-to-styles-css-variables(typography, display-compact-strong);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, display-compact-strong);
     }
 
     .kbq-text-big {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-big);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
     }
 
     .kbq-text-big-strong {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-big-strong);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big-strong);
     }
 
     .kbq-text-big-medium {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-big-medium);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big-medium);
     }
 
     .kbq-text-normal {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
     .kbq-text-normal-strong {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal-strong);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-strong);
     }
 
     .kbq-text-normal-medium {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
     }
 
     .kbq-text-compact {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
     }
 
     .kbq-text-compact-strong {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-compact-strong);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact-strong);
     }
 
     .kbq-text-compact-medium {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-compact-medium);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact-medium);
     }
 
     .kbq-caps-big {
-        @include kbq-typography-level-to-styles-css-variables(typography, caps-big);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, caps-big);
     }
 
     .kbq-caps-big-strong {
-        @include kbq-typography-level-to-styles-css-variables(typography, caps-big-strong);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, caps-big-strong);
     }
 
     .kbq-caps-normal {
-        @include kbq-typography-level-to-styles-css-variables(typography, caps-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, caps-normal);
     }
 
     .kbq-caps-normal-strong {
-        @include kbq-typography-level-to-styles-css-variables(typography, caps-normal-strong);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, caps-normal-strong);
     }
 
     .kbq-caps-compact {
-        @include kbq-typography-level-to-styles-css-variables(typography, caps-compact);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, caps-compact);
     }
 
     .kbq-caps-compact-strong {
-        @include kbq-typography-level-to-styles-css-variables(typography, caps-compact-strong);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, caps-compact-strong);
     }
 
     .kbq-mono-big {
-        @include kbq-typography-level-to-styles-css-variables(typography, mono-big);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-big);
     }
 
     .kbq-mono-big-strong {
-        @include kbq-typography-level-to-styles-css-variables(typography, mono-big-strong);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-big-strong);
     }
 
     .kbq-mono-normal {
-        @include kbq-typography-level-to-styles-css-variables(typography, mono-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-normal);
     }
 
     .kbq-mono-normal-strong {
-        @include kbq-typography-level-to-styles-css-variables(typography, mono-normal-strong);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-normal-strong);
     }
 
     .kbq-mono-normal-medium {
-        @include kbq-typography-level-to-styles-css-variables(typography, mono-normal-medium);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-normal-medium);
     }
 
     .kbq-mono-compact {
-        @include kbq-typography-level-to-styles-css-variables(typography, mono-compact);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-compact);
     }
 
     .kbq-mono-compact-strong {
-        @include kbq-typography-level-to-styles-css-variables(typography, mono-compact-strong);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-compact-strong);
     }
 
     .kbq-mono-codeblock {
-        @include kbq-typography-level-to-styles-css-variables(typography, mono-codeblock);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-codeblock);
     }
 
     .kbq-tabular-big {
-        @include kbq-typography-level-to-styles-css-variables(typography, tabular-big);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, tabular-big);
     }
 
     .kbq-tabular-big-strong {
-        @include kbq-typography-level-to-styles-css-variables(typography, tabular-big-strong);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, tabular-big-strong);
     }
 
     .kbq-tabular-normal {
-        @include kbq-typography-level-to-styles-css-variables(typography, tabular-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, tabular-normal);
     }
 
     .kbq-tabular-normal-strong {
-        @include kbq-typography-level-to-styles-css-variables(typography, tabular-normal-strong);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, tabular-normal-strong);
     }
 
     .kbq-tabular-compact {
-        @include kbq-typography-level-to-styles-css-variables(typography, tabular-compact);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, tabular-compact);
     }
 
     .kbq-tabular-compact-strong {
-        @include kbq-typography-level-to-styles-css-variables(typography, tabular-compact-strong);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, tabular-compact-strong);
     }
 
     .kbq-italic-big {
-        @include kbq-typography-level-to-styles-css-variables(typography, italic-big);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, italic-big);
     }
 
     .kbq-italic-big-strong {
-        @include kbq-typography-level-to-styles-css-variables(typography, italic-big-strong);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, italic-big-strong);
     }
 
     .kbq-italic-normal {
-        @include kbq-typography-level-to-styles-css-variables(typography, italic-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, italic-normal);
     }
 
     .kbq-italic-normal-strong {
-        @include kbq-typography-level-to-styles-css-variables(typography, italic-normal-strong);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, italic-normal-strong);
     }
 
     .kbq-italic-compact {
-        @include kbq-typography-level-to-styles-css-variables(typography, italic-compact);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, italic-compact);
     }
 
     .kbq-italic-compact-strong {
-        @include kbq-typography-level-to-styles-css-variables(typography, italic-compact-strong);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, italic-compact-strong);
     }
 }
 
@@ -182,27 +182,27 @@
     // h1, h2, h3, h4, h5, h6
     @for $i from 1 through 6 {
         .kbq-md-h#{$i} {
-            @include kbq-typography-level-to-styles-css-variables(md-typography, md-h#{$i});
+            @include tokens.kbq-typography-level-to-styles-css-variables(md-typography, md-h#{$i});
         }
     }
 
     .kbq-md-body {
-        @include kbq-typography-level-to-styles-css-variables(md-typography, md-body);
+        @include tokens.kbq-typography-level-to-styles-css-variables(md-typography, md-body);
     }
 
     .kbq-md-body-mono {
-        @include kbq-typography-level-to-styles-css-variables(md-typography, md-body-mono);
+        @include tokens.kbq-typography-level-to-styles-css-variables(md-typography, md-body-mono);
     }
 
     .kbq-md-caption {
-        @include kbq-typography-level-to-styles-css-variables(md-typography, md-caption);
+        @include tokens.kbq-typography-level-to-styles-css-variables(md-typography, md-caption);
     }
 
     .kbq-md-table-cell {
-        @include kbq-typography-level-to-styles-css-variables(md-typography, md-table-cell);
+        @include tokens.kbq-typography-level-to-styles-css-variables(md-typography, md-table-cell);
     }
 
     .kbq-md-table-header {
-        @include kbq-typography-level-to-styles-css-variables(md-typography, md-table-header);
+        @include tokens.kbq-typography-level-to-styles-css-variables(md-typography, md-table-header);
     }
 }

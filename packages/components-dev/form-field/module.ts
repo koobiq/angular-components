@@ -22,16 +22,14 @@ import {
     FormFieldHorizontalExample,
     FormFieldOverviewExample,
     FormFieldPasswordOverviewExample,
-    FormFieldWithCleanerExample,
     FormFieldWithCustomErrorStateMatcherSetByAttributeExample,
     FormFieldWithCustomErrorStateMatcherSetByDependencyInjectionProviderExample,
     FormFieldWithErrorExample,
     FormFieldWithHintExample,
     FormFieldWithLabelExample,
-    FormFieldWithoutBordersExample,
     FormFieldWithPrefixAndSuffixExample
 } from 'packages/docs-examples/components/form-field';
-import { FormFieldsetWithButtonExample } from 'packages/docs-examples/components/forms/form-fieldset-with-button/form-fieldset-with-button-example';
+import { FormFieldsetWithButtonExample } from 'packages/docs-examples/components/forms';
 import { DevThemeToggle } from '../theme-toggle';
 import { DevFileFlatNode, DevFileNode } from '../tree/module';
 
@@ -39,14 +37,12 @@ import { DevFileFlatNode, DevFileNode } from '../tree/module';
     selector: 'dev-examples',
     imports: [
         FormFieldPasswordOverviewExample,
-        FormFieldWithCleanerExample,
         FormFieldWithCustomErrorStateMatcherSetByAttributeExample,
         FormFieldWithCustomErrorStateMatcherSetByDependencyInjectionProviderExample,
         FormFieldWithErrorExample,
         FormFieldWithHintExample,
         FormFieldWithLabelExample,
         FormFieldOverviewExample,
-        FormFieldWithoutBordersExample,
         FormFieldWithPrefixAndSuffixExample,
         FormFieldHorizontalExample,
         FormFieldsetWithButtonExample
@@ -64,11 +60,7 @@ import { DevFileFlatNode, DevFileNode } from '../tree/module';
         <hr />
         <form-field-with-error-example />
         <hr />
-        <form-field-with-cleaner-example />
-        <hr />
         <form-field-with-prefix-and-suffix-example />
-        <hr />
-        <form-field-without-borders-example />
         <hr />
         <form-field-with-custom-error-state-matcher-set-by-attribute-example />
         <hr />
@@ -183,7 +175,7 @@ const DATA_OBJECT = {
         DevThemeToggle
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -276,7 +268,7 @@ export class DevApp {
         return node.expandable;
     };
 
-    private getChildren = (node: DevFileNode): DevFileNode[] => {
+    private getChildren = (node: DevFileNode): DevFileNode[] | undefined => {
         return node.children;
     };
 

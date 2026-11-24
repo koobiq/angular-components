@@ -1,18 +1,16 @@
-@use './notification-center-theme' as *;
-@use '../core/styles/common/squircle' as *;
+@use './notification-center-theme';
+@use '../core/styles/common/squircle';
 
 .kbq-notification-center {
     position: relative;
+    z-index: 1;
 
     display: flex;
     flex-direction: column;
 
+    box-sizing: border-box;
     width: var(--kbq-notification-center-size-container-width);
     height: var(--kbq-notification-center-popover-height, 100vh);
-
-    box-sizing: border-box;
-
-    z-index: 1;
 
     &:not(.kbq-notification-center_popover) {
         border-right: 1px solid;
@@ -20,16 +18,14 @@
     }
 
     &.kbq-notification-center_popover {
-        margin-top: var(--kbq-size-xxs);
-        margin-bottom: var(--kbq-size-xxs);
-
-        @include kbq-squircle(var(--kbq-notification-center-size-container-border-radius));
+        @include squircle.kbq-squircle(var(--kbq-notification-center-size-container-border-radius));
 
         height: var(
             --kbq-notification-center-popover-height,
             calc(100vh - var(--kbq-notification-center-size-navbar-height))
         );
-
+        margin-top: var(--kbq-size-xxs);
+        margin-bottom: var(--kbq-size-xxs);
         box-shadow: var(--kbq-notification-center-container-shadow);
     }
 }
@@ -43,25 +39,20 @@
 .kbq-notification-center-header {
     display: flex;
     flex-direction: row;
-
     justify-content: space-between;
-
     padding: var(--kbq-size-m) var(--kbq-size-xl) var(--kbq-size-xxs) var(--kbq-size-xxl);
 }
 
 .kbq-notification-center-title {
     display: flex;
     flex-direction: row;
-
-    align-items: center;
-
     gap: var(--kbq-size-xxs);
+    align-items: center;
 }
 
 .kbq-notification-center-toolbar {
     display: flex;
     flex-direction: row;
-
     align-items: center;
 
     & .kbq-divider.kbq-divider_vertical {
@@ -91,7 +82,6 @@
 
     & .kbq-notification-center-sub-header__button {
         position: absolute;
-
         top: 0;
         right: var(--kbq-size-xl);
 
@@ -101,6 +91,7 @@
         // the sub-header holds nothing else focusable, `:focus-within` could never become true from the
         // keyboard - the button was unreachable without a mouse.
         opacity: 0;
+
         pointer-events: none;
     }
 
@@ -112,20 +103,14 @@
 }
 
 .kbq-notification-center-container {
+    @include squircle.kbq-squircle-inherit();
     // Keeps the scrollbar track above the sticky sub-header; the two values are a pair and only make
     // sense together.
     --kbq-scrollbar-track-z-index: calc(var(--kbq-notification-center-sub-header-z-index) + 1);
 
     height: 100%;
-
-    overflow: auto;
-
-    @include kbq-squircle-inherit();
-
     padding-bottom: var(--kbq-size-xl);
-
-    // Keeps a control scrolled into view clear of the sticky sub-header that would otherwise cover it.
-    scroll-padding-top: var(--kbq-notification-center-size-sub-header-height);
+    overflow: auto;
 
     // Smoothly reveal the just-appended "load more" spinner / error row. The row is scrolled into
     // view via KbqScrollbarViewport.scrollTo(), which calls a behavior-less scroll on this element
@@ -133,32 +118,32 @@
     // `kbq-animations-off()` does not cover scrolling, so both of its switches are repeated here.
     scroll-behavior: smooth;
 
+    // Keeps a control scrolled into view clear of the sticky sub-header that would otherwise cover it.
+    scroll-padding-top: var(--kbq-notification-center-size-sub-header-height);
+
     &.kbq-animations-disabled {
         scroll-behavior: auto;
+    }
+
+    & .kbq-loader-overlay_parent {
+        @include squircle.kbq-squircle-inherit();
     }
 
     @media (prefers-reduced-motion: reduce) {
         scroll-behavior: auto;
     }
-
-    & .kbq-loader-overlay_parent {
-        @include kbq-squircle-inherit();
-    }
 }
 
 .kbq-notification-center-load-more {
     display: flex;
-
     align-items: center;
     justify-content: center;
-
     padding: var(--kbq-notification-center-size-load-more-padding-vertical) 0;
 }
 
 .kbq-notification-center-load-more-error {
     display: flex;
     flex-direction: column;
-
     align-items: center;
     justify-content: center;
 
@@ -175,7 +160,6 @@
 .kbq-notification-center-error-container {
     display: flex;
     flex-direction: column;
-
     align-items: center;
     justify-content: center;
 
@@ -190,5 +174,5 @@
     }
 }
 
-@include kbq-notification-center-theme();
-@include kbq-notification-center-typography();
+@include notification-center-theme.kbq-notification-center-theme();
+@include notification-center-theme.kbq-notification-center-typography();

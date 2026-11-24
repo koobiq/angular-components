@@ -1,9 +1,8 @@
 .dev-column-container {
     display: flex;
     flex-direction: column;
-
-    margin-left: 15px;
-    margin-right: 15px;
-
     gap: 16px;
+
+    margin-right: 15px;
+    margin-left: 15px;
 }

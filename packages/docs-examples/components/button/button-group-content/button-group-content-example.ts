@@ -16,7 +16,7 @@ import { TRANSLATIONS } from './l10n';
     template: `
         <div kbq-button-group>
             @for (item of data(); track item) {
-                <button kbq-button class="kbq-dropdown-trigger">
+                <button kbq-button class="kbq-dropdown-trigger" type="button">
                     <i kbqButtonPrefix kbq-icon="kbq-diamond_16"></i>
                     {{ item }}
                     <i kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
@@ -26,7 +26,7 @@ import { TRANSLATIONS } from './l10n';
 
         <div kbq-button-group>
             @for (item of data(); track item) {
-                <button kbq-button>
+                <button kbq-button type="button">
                     <i kbqButtonPrefix kbq-icon="kbq-diamond_16"></i>
                     {{ item }}
                 </button>
@@ -35,7 +35,7 @@ import { TRANSLATIONS } from './l10n';
 
         <div kbq-button-group>
             @for (item of data(); track item) {
-                <button kbq-button>
+                <button kbq-button type="button">
                     {{ item }}
                 </button>
             }
@@ -43,7 +43,7 @@ import { TRANSLATIONS } from './l10n';
 
         <div kbq-button-group>
             @for (item of data(); track item) {
-                <button kbq-button class="kbq-dropdown-trigger" [attr.aria-label]="t().diamondOptions">
+                <button kbq-button class="kbq-dropdown-trigger" type="button" [attr.aria-label]="t().diamondOptions">
                     <i kbq-icon="kbq-diamond_16"></i>
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
@@ -52,7 +52,7 @@ import { TRANSLATIONS } from './l10n';
 
         <div kbq-button-group>
             @for (item of data(); track item) {
-                <button kbq-button [attr.aria-label]="t().diamond">
+                <button kbq-button type="button" [attr.aria-label]="t().diamond">
                     <i kbq-icon="kbq-diamond_16"></i>
                 </button>
             }

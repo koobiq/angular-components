@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
-import { KbqFileItem, KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
+import { type KbqFileItem, KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
@@ -26,8 +26,8 @@ import { TRANSLATIONS } from './l10n';
                 #kbqFileUpload
                 class="layout-margin-bottom-s"
                 formControlName="fileUpload"
+                progressMode="indeterminate"
                 [errorStateMatcher]="customErrorStateMatcher"
-                [progressMode]="'indeterminate'"
             >
                 <i kbq-icon="kbq-file-o_16"></i>
 

@@ -1,33 +1,24 @@
-import { Translations } from '@koobiq/docs-examples/i18n';
+import type { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the input-password-overview example. */
 export interface ExampleTranslation {
+    password: string;
     showPassword: string;
     hidePassword: string;
-    from8to15: string;
-    uppercaseLatin: string;
-    lowercaseLatin: string;
-    latinOnly: string;
-    digit: string;
+    minLength: string;
 }
 
 export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
+        password: 'Пароль',
         showPassword: 'Показать пароль',
         hidePassword: 'Скрыть пароль',
-        from8to15: 'От 8 до 15 символов',
-        uppercaseLatin: 'Заглавная латинская буква',
-        lowercaseLatin: 'Строчная латинская буква',
-        latinOnly: 'Только латинские буквы, цифры, пробелы и спецсимволы',
-        digit: 'Цифра'
+        minLength: 'Не меньше 16 символов'
     },
     default: {
+        password: 'Password',
         showPassword: 'Show password',
         hidePassword: 'Hide password',
-        from8to15: '8 to 15 characters',
-        uppercaseLatin: 'An uppercase letter',
-        lowercaseLatin: 'A lowercase letter',
-        latinOnly: 'Only latin letters, digits, spaces and special characters',
-        digit: 'Digit'
+        minLength: 'At least 16 characters'
     }
 };

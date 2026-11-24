@@ -8,7 +8,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import {
     KBQ_CUSTOM_TIME_RANGE_TYPES,
     KBQ_DEFAULT_TIME_RANGE_TYPES,
-    KbqCustomTimeRangeType,
+    type KbqCustomTimeRangeType,
     KbqTimeRangeModule
 } from '@koobiq/components/time-range';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
@@ -84,7 +84,7 @@ export function customTypesFactory<D>(adapter: DateAdapter<D>): KbqCustomTimeRan
                         {{ context.type | titlecase }}
                     }
                 </kbq-time-range-title-as-control>
-                <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix [color]="'contrast-fade'"></i>
+                <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix color="contrast-fade"></i>
             </kbq-form-field>
         </ng-template>
 

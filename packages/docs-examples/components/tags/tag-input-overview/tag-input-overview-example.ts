@@ -5,10 +5,10 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import {
-    KbqTagEvent,
+    type KbqTagEvent,
     KbqTagInput,
-    KbqTagInputEvent,
-    KbqTagListDroppedEvent,
+    type KbqTagInputEvent,
+    type KbqTagListDroppedEvent,
     KbqTagsModule
 } from '@koobiq/components/tags';
 

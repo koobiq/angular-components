@@ -8,10 +8,16 @@
                 {{ t().linkText }}
                 <span kbqLinkSuffix>.</span>
             </a>
-            <button kbq-alert-control kbq-button class="example-overview__button" [color]="colors.Contrast">
+            <button
+                kbq-alert-control
+                kbq-button
+                class="example-overview__button"
+                type="button"
+                [color]="colors.Contrast"
+            >
                 {{ t().chooseAnotherFile }}
             </button>
-            <button kbq-alert-control kbq-button [color]="colors.Theme" [kbqStyle]="'transparent'">
+            <button kbq-alert-control kbq-button type="button" kbqStyle="transparent" [color]="colors.Theme">
                 {{ t().replace }}
             </button>
         </kbq-alert>
@@ -25,10 +31,16 @@
                 {{ t().linkText }}
                 <span kbqLinkSuffix>.</span>
             </a>
-            <button kbq-alert-control kbq-button class="example-overview__button" [color]="colors.Contrast">
+            <button
+                kbq-alert-control
+                kbq-button
+                class="example-overview__button"
+                type="button"
+                [color]="colors.Contrast"
+            >
                 {{ t().chooseAnotherFile }}
             </button>
-            <button kbq-alert-control kbq-button [color]="colors.Theme" [kbqStyle]="'transparent'">
+            <button kbq-alert-control kbq-button type="button" kbqStyle="transparent" [color]="colors.Theme">
                 {{ t().replace }}
             </button>
         </kbq-alert>
@@ -41,8 +53,8 @@
             <i aria-hidden="true" kbq-icon-item="kbq-circle-info_16"></i>
             {{ t().updateAgentFailed }}
             <span class="kbq-text-normal-strong">ekb-mail-server</span>
-            <button kbq-alert-control kbq-button [kbqStyle]="'transparent'">{{ t().retry }}</button>
-            <button kbq-alert-control kbq-button [kbqStyle]="'transparent'">
+            <button kbq-alert-control kbq-button type="button" kbqStyle="transparent">{{ t().retry }}</button>
+            <button kbq-alert-control kbq-button type="button" kbqStyle="transparent">
                 {{ t().installDifferentVersion }}
             </button>
         </kbq-alert>
@@ -52,8 +64,8 @@
             <i aria-hidden="true" kbq-icon="kbq-circle-info_16"></i>
             {{ t().updateAgentFailed }}
             <span class="kbq-text-normal-strong">ekb-mail-server</span>
-            <button kbq-alert-control kbq-button [kbqStyle]="'transparent'">{{ t().retry }}</button>
-            <button kbq-alert-control kbq-button [kbqStyle]="'transparent'">
+            <button kbq-alert-control kbq-button type="button" kbqStyle="transparent">{{ t().retry }}</button>
+            <button kbq-alert-control kbq-button type="button" kbqStyle="transparent">
                 {{ t().installDifferentVersion }}
             </button>
         </kbq-alert>
@@ -73,6 +85,7 @@
                 <a href="https://koobiq.io" kbqLink>{{ t().hypervisors }}</a>
                 <button
                     kbq-alert-close-button
+                    type="button"
                     kbq-icon-button="kbq-xmark-s_16"
                     [attr.aria-label]="t().close"
                     [color]="colors.ContrastFade"
@@ -93,6 +106,7 @@
                 <a href="https://koobiq.io" kbqLink>{{ t().hypervisors }}</a>
                 <button
                     kbq-alert-close-button
+                    type="button"
                     kbq-icon-button="kbq-xmark-s_16"
                     [attr.aria-label]="t().close"
                     [color]="colors.ContrastFade"

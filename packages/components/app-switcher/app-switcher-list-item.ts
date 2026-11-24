@@ -12,7 +12,7 @@ import {
 import { KBQ_TITLE_TEXT_REF, KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqDropdownItem } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqAppSwitcherApp } from './app-switcher';
+import type { KbqAppSwitcherApp } from './app-switcher';
 import { KbqAppSwitcherIconSanitizer } from './app-switcher-icon-sanitizer';
 
 /** @docs-private */
@@ -44,11 +44,11 @@ import { KbqAppSwitcherIconSanitizer } from './app-switcher-icon-sanitizer';
 
         @if (toggle()) {
             <div class="kbq-app-switcher-list-item__toggle" [class.kbq-expanded]="!collapsed()">
-                <i kbq-icon="kbq-chevron-down-s_16" aria-hidden="true" [color]="'contrast-fade'"></i>
+                <i kbq-icon="kbq-chevron-down-s_16" aria-hidden="true" color="contrast-fade"></i>
             </div>
         }
     `,
-    styleUrls: ['app-switcher-list-item.scss'],
+    styleUrl: 'app-switcher-list-item.scss',
     providers: [
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqAppSwitcherListItem },
         { provide: KbqDropdownItem, useExisting: KbqAppSwitcherListItem }

@@ -1,7 +1,7 @@
 import { DOCS_SUPPORTED_LOCALES } from './constants/locale';
 import {
     docsGetItems,
-    DocsStructureItem,
+    type DocsStructureItem,
     DocsStructureItemId,
     DocsStructureItemTab,
     DocsStructureTokensTab

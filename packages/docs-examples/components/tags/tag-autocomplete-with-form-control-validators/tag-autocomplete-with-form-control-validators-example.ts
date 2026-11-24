@@ -1,18 +1,18 @@
 import { ChangeDetectionStrategy, Component, computed, ElementRef, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
-    AbstractControl,
+    type AbstractControl,
     FormControl,
     ReactiveFormsModule,
-    ValidationErrors,
-    ValidatorFn,
+    type ValidationErrors,
+    type ValidatorFn,
     Validators
 } from '@angular/forms';
-import { KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
+import { KbqAutocompleteModule, type KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { KbqTagInput, type KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 
 const MAX_TAG_COUNT = 5;
 const LATIN_PATTERN = /^[a-zA-Z]+$/;

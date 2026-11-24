@@ -1,30 +1,26 @@
-@use '../../styles/common/squircle' as *;
-@use '../../styles/common/tokens' as *;
-
-@use './pseudo-checkbox-theme' as *;
+@use '../../styles/common/squircle';
+@use './pseudo-checkbox-theme';
 
 .kbq-pseudo-checkbox {
-    position: relative;
-    display: inline-flex;
-    box-sizing: border-box;
+    @include squircle.kbq-squircle(var(--kbq-checkbox-size-normal-border-radius));
 
+    position: relative;
+
+    display: inline-flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
 
+    box-sizing: border-box;
     width: var(--kbq-checkbox-size-normal-width);
     height: var(--kbq-checkbox-size-normal-width);
 
-    border: {
-        width: var(--kbq-checkbox-size-normal-border-width);
-        style: solid;
-    }
+    vertical-align: middle;
 
-    @include kbq-squircle(var(--kbq-checkbox-size-normal-border-radius));
+    border-width: var(--kbq-checkbox-size-normal-border-width);
+    border-style: solid;
 
     cursor: pointer;
-
-    vertical-align: middle;
-    flex-shrink: 0;
 
     .kbq-checkbox-checkmark,
     .kbq-checkbox-mixedmark {
@@ -49,11 +45,11 @@
 }
 
 .kbq-pseudo-checkbox.kbq-pseudo-checkbox_big {
+    @include squircle.kbq-squircle(var(--kbq-checkbox-size-big-border-radius));
+
     width: var(--kbq-checkbox-size-big-width);
     height: var(--kbq-checkbox-size-big-width);
-
     border-width: var(--kbq-checkbox-size-big-border-width);
-    @include kbq-squircle(var(--kbq-checkbox-size-big-border-radius));
 }
 
-@include kbq-pseudo-checkbox-theme();
+@include pseudo-checkbox-theme.kbq-pseudo-checkbox-theme();

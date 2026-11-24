@@ -60,7 +60,7 @@ import { TRANSLATIONS } from './l10n';
             </kbq-tab-group>
         </div>
     `,
-    styleUrls: ['tabs-empty-label-example.css'],
+    styleUrl: 'tabs-empty-label-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

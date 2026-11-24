@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { map } from 'rxjs';
 import { KbqInputModule } from '@koobiq/components/input';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { map } from 'rxjs';
 import { TRANSLATIONS } from './l10n';
 
 /** @title Form field with kbq-hint */

@@ -1,5 +1,5 @@
 import { isDevMode } from '@angular/core';
-import { KbqEnumValues } from '../utils';
+import type { KbqEnumValues } from '../utils';
 
 export enum MultipleMode {
     CHECKBOX = 'checkbox',

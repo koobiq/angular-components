@@ -1,13 +1,13 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, inject as inject_1 } from '@angular/core';
-import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import type { DateTime } from 'luxon';
 import { KbqLuxonDateModule, LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, ruRULocaleData } from '@koobiq/components/core';
 import { KbqSelect } from '@koobiq/components/select';
-import { DateTime } from 'luxon';
-import { KbqCalendarHeader } from './calendar-header.component';
 import { KbqCalendar } from './calendar.component';
+import { KbqCalendarHeader } from './calendar-header.component';
 import { KbqDatepickerModule } from './datepicker-module';
 
 describe('KbqCalendarHeader', () => {

@@ -15,7 +15,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
             [class]="{ 'kbq-select': false, 'my-custom-select': true }"
             [(value)]="selected"
         >
-            <button kbq-button kbq-select-matcher>
+            <button kbq-button kbq-select-matcher type="button">
                 {{ select.triggerValue }}
 
                 <i class="layout-padding-left-3xs" kbq-icon="kbq-chevron-down-s_16"></i>

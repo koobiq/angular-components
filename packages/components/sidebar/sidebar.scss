@@ -2,14 +2,14 @@
 
 .kbq-sidebar {
     display: inline-block;
-
     height: 100%;
-
     overflow: hidden;
 
     // Only between the opened and closed states: the initial width and one written from outside, such as by a
     // splitter, apply at once.
     &.kbq-sidebar_toggling {
+        @include animation.kbq-animations-off();
+
         transition:
             min-width 100ms,
             width 100ms,
@@ -21,8 +21,6 @@
         &.kbq-sidebar_opened {
             transition-duration: 200ms;
         }
-
-        @include animation.kbq-animations-off();
     }
 }
 

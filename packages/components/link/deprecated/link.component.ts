@@ -1,8 +1,8 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { ContentObserver } from '@angular/cdk/observers';
 import {
-    AfterViewChecked,
-    AfterViewInit,
+    type AfterViewChecked,
+    type AfterViewInit,
     booleanAttribute,
     computed,
     contentChildren,
@@ -14,7 +14,7 @@ import {
     input,
     linkedSignal,
     numberAttribute,
-    OnDestroy,
+    type OnDestroy,
     Renderer2,
     untracked
 } from '@angular/core';
@@ -163,7 +163,7 @@ export class KbqLink implements AfterViewInit, AfterViewChecked, OnDestroy {
     private printedUrl: string | undefined;
 
     ngAfterViewInit(): void {
-        this.focusMonitor.monitor(this.nativeElement, true);
+        void this.focusMonitor.monitor(this.nativeElement, true);
     }
 
     /**

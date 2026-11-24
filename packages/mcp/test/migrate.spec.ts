@@ -1,7 +1,7 @@
 import { loadCatalog } from '../src/catalog';
 import { parseGuide } from '../src/indexer/parse-guide';
 import { compare } from '../src/semver';
-import { changesFor, meaningful, migrationSections, summarise, type ApiHistory } from '../src/sources/history';
+import { type ApiHistory, changesFor, meaningful, migrationSections, summarise } from '../src/sources/history';
 import { toolMigrate, toolSearch } from '../src/tools';
 import type { Guide } from '../src/types';
 import { componentsAvailable, CONSUMER } from './project';

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, TemplateRef, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
@@ -11,7 +11,7 @@ import { TRANSLATIONS } from './l10n';
 @Component({
     selector: 'sidepanel-overview-example',
     imports: [KbqSelectModule, KbqButtonModule, KbqSidepanelModule],
-    templateUrl: 'sidepanel-overview-example.html',
+    templateUrl: './sidepanel-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelOverviewExample {

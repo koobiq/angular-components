@@ -8,7 +8,7 @@
 // dividing a length by a length, which some browsers that support `corner-shape` cannot do. Browsers without
 // `corner-shape` keep the radius as given.
 
-@function _kbq-squircle-corner($radius) {
+@function -kbq-squircle-corner($radius) {
     @if meta.type-of($radius) == number {
         @if math.is-unitless($radius) and $radius == 0 {
             @return $radius;
@@ -29,26 +29,28 @@
     $result: ();
 
     @each $value in $radius {
-        $result: list.append($result, _kbq-squircle-corner($value), space);
+        $result: list.append($result, -kbq-squircle-corner($value), space);
     }
 
     @return $result;
 }
 
 // Sets `$radius` on `$properties` and, where `corner-shape` is supported, a squircle with the scaled radius.
-// Pass corner longhands as `$properties` to round only some corners.
+// Pass corner longhands as `$properties` to round only some corners. The scaled radius reaches `$properties`
+// through a custom property that only the `@supports` branch sets, so the mixin works wherever it stands in a block,
+// and a radius the block declares itself still overrides it.
 @mixin kbq-squircle($radius, $properties: border-radius) {
     @each $property in $properties {
-        #{$property}: $radius;
+        #{$property}: var(--kbq-squircle-#{$property}, #{$radius});
     }
 
     @supports (corner-shape: squircle) {
         & {
-            corner-shape: squircle;
-
             @each $property in $properties {
-                #{$property}: kbq-squircle-radius($radius);
+                --kbq-squircle-#{$property}: #{kbq-squircle-radius($radius)};
             }
+
+            corner-shape: squircle;
         }
     }
 }

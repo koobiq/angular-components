@@ -1,9 +1,9 @@
-﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+﻿import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { BACKSPACE, DELETE, ENTER, ESCAPE, F2, SPACE } from '@angular/cdk/keycodes';
 import {
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -20,19 +20,20 @@ import {
     Injector,
     input,
     numberAttribute,
-    OnChanges,
-    OnDestroy,
+    type OnChanges,
+    type OnDestroy,
     output,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subject } from 'rxjs';
 import {
     hasModifierKey,
-    IFocusableOption,
+    type IFocusableOption,
     isNull,
     KBQ_TITLE_TEXT_REF,
     kbqAnimationsDisabled,
@@ -41,10 +42,10 @@ import {
     KbqFieldSizingContent,
     kbqInjectA11yLocaleConfiguration,
     KbqLocaleOverridesDirective,
-    KbqTitleTextRef
+    type KbqTitleTextRef
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
-import { Subject } from 'rxjs';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqTagList } from './tag-list.component';
 
 /**
@@ -224,7 +225,7 @@ export class KbqTagEditInput {
             <ng-content select="[kbqTagSuffix]" />
         </div>
     `,
-    styleUrls: ['./tag.scss'],
+    styleUrl: './tag.scss',
     providers: [{ provide: KBQ_TITLE_TEXT_REF, useExisting: KbqTag }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -269,7 +270,7 @@ export class KbqTag
     private readonly injector = inject(Injector);
 
     /** @docs-private */
-    readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    override readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
     /**
      * Emits when the tag is focused.
@@ -553,22 +554,19 @@ export class KbqTag
      * @docs-private
      */
     addClassModificatorForIcons(): void {
-        const icons = this.contentChildren().map((item) => item.elementRef.nativeElement);
+        const [firstIconElement, secondIconElement] = this.contentChildren().map(
+            (item) => item.elementRef.nativeElement
+        );
 
-        if (icons.length === 1) {
-            const iconElement = icons[0];
-
-            if (iconElement.classList.contains('kbq-tag-remove')) {
-                iconElement.classList.add('kbq-icon_right');
+        if (firstIconElement && !secondIconElement) {
+            if (firstIconElement.classList.contains('kbq-tag-remove')) {
+                firstIconElement.classList.add('kbq-icon_right');
                 this.nativeElement.classList.add('kbq-right-icon');
             } else {
-                iconElement.classList.add('kbq-icon_left');
+                firstIconElement.classList.add('kbq-icon_left');
                 this.nativeElement.classList.add('kbq-left-icon');
             }
-        } else if (icons.length > 1) {
-            const firstIconElement = icons[0];
-            const secondIconElement = icons[1];
-
+        } else if (firstIconElement && secondIconElement) {
             firstIconElement.classList.add('kbq-icon_left');
             secondIconElement.classList.add('kbq-icon_right');
         }

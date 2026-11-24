@@ -1,8 +1,9 @@
 .example-fill-and-style__button-group {
     display: inline-flex;
     flex-direction: row;
-    gap: 32px;
     flex-wrap: wrap;
+    gap: 32px;
+
     max-width: 480px;
 }
 

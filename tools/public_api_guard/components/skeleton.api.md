@@ -9,15 +9,19 @@ import { InjectionToken } from '@angular/core';
 import { Provider } from '@angular/core';
 
 // @public
+export const KBQ_SKELETON_OPTIONS: InjectionToken<KbqSkeletonOptions>;
+
+// @public
 export const KBQ_SKELETON_PRESETS_CONFIGURATION: InjectionToken<KbqSkeletonPresetsConfiguration>;
 
 // @public
 export class KbqSkeleton {
     constructor();
+    readonly animationDuration: _angular_core.InputSignalWithTransform<number, string | number | null | undefined>;
     protected readonly animationsDisabled: boolean;
     readonly enabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqSkeleton, "kbq-skeleton, [kbqSkeleton]", ["kbqSkeleton"], { "enabled": { "alias": "kbqSkeleton"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqSkeleton, "kbq-skeleton, [kbqSkeleton]", ["kbqSkeleton"], { "enabled": { "alias": "kbqSkeleton"; "required": false; "isSignal": true; }; "animationDuration": { "alias": "animationDuration"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSkeleton, never>;
 }
@@ -140,6 +144,14 @@ export class KbqSkeletonModule {
 }
 
 // @public
+export type KbqSkeletonOptions = {
+    animationDuration: number;
+};
+
+// @public
+export const kbqSkeletonOptionsProvider: (options: Partial<KbqSkeletonOptions>) => Provider;
+
+// @public
 export interface KbqSkeletonPresetsConfiguration {
     accordionRows: number;
     checkableRows: number;
@@ -200,6 +212,7 @@ export class KbqSkeletonTree {
     // (undocumented)
     protected readonly childList: _angular_core.Signal<number[]>;
     readonly children: _angular_core.InputSignalWithTransform<number, string | number>;
+    protected nodeClass(index: number): string;
     // (undocumented)
     protected readonly rowList: _angular_core.Signal<number[]>;
     readonly rows: _angular_core.InputSignalWithTransform<number, string | number>;

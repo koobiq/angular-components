@@ -1,5 +1,5 @@
-import { Path } from '@angular-devkit/core';
-import { DirEntry, FileEntry } from '@angular-devkit/schematics';
+import type { Path } from '@angular-devkit/core';
+import type { DirEntry, FileEntry } from '@angular-devkit/schematics';
 
 /** Installed packages, build output, the Angular CLI cache and VCS metadata: never a consumer's source. */
 const SKIPPED_DIRECTORIES: ReadonlySet<string> = new Set(['node_modules', 'dist', '.angular', '.git']);

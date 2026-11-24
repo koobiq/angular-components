@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTagEvent, KbqTagListDroppedEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { type KbqTagEvent, type KbqTagListDroppedEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
 const getTags = () => Array.from({ length: 6 }, (_, id) => ({ id, value: `Draggable tag ${id}` }));

@@ -7,7 +7,7 @@
 <h5>draggable — reorder within one list</h5>
 <label>
     dragPreview:
-    <select (change)="dragPreview.set($any($event.target).value)">
+    <select #dragPreviewSelect (change)="setDragPreview(dragPreviewSelect.value)">
         <option value="text">text</option>
         <option value="full">full</option>
     </select>
@@ -64,9 +64,10 @@
 <h5>compareWith — object model matched against option values</h5>
 <label>
     <input
+        #byReference
         type="checkbox"
         [checked]="comparatorByReference()"
-        (change)="comparatorByReference.set($any($event.target).checked)"
+        (change)="comparatorByReference.set(byReference.checked)"
     />
     compare by reference
 </label>
@@ -85,25 +86,25 @@
 
 <h5>single selection</h5>
 <kbq-list-selection [(ngModel)]="selected" (onCopy)="onCopy($event)">
-    <kbq-list-option [disabled]="true" [value]="'Disabled'">
+    <kbq-list-option value="Disabled" [disabled]="true">
         <i kbq-icon="kbq-play_16"></i>
         Disabled
     </kbq-list-option>
-    <kbq-list-option [showCheckbox]="true" [value]="'Normal'">
+    <kbq-list-option value="Normal" [showCheckbox]="true">
         <i kbq-icon="kbq-play_16"></i>
         Normal
         <kbq-option-action
+            kbqTooltip="Tooltip text"
             [kbqDropdownTriggerFor]="dropdown"
             [kbqPlacement]="popUpPlacements.Right"
-            [kbqTooltip]="'Tooltip text'"
         />
     </kbq-list-option>
-    <kbq-list-option class="kbq-hovered" [value]="'Hovered'">
+    <kbq-list-option class="kbq-hovered" value="Hovered">
         Hovered
         <div kbq-list-option-caption>kbq-list-option-caption</div>
     </kbq-list-option>
-    <kbq-list-option class="kbq-focused" [value]="'Focused'">Focused</kbq-list-option>
-    <kbq-list-option class="kbq-selected" [value]="'Selected'">Selected</kbq-list-option>
+    <kbq-list-option class="kbq-focused" value="Focused">Focused</kbq-list-option>
+    <kbq-list-option class="kbq-selected" value="Selected">Selected</kbq-list-option>
 </kbq-list-selection>
 <br />
 <div>selected: {{ selected }}</div>
@@ -139,18 +140,18 @@
     [(ngModel)]="multipleSelected"
     (selectionChange)="onSelectionChange($event)"
 >
-    <kbq-list-option [value]="'Normal'">Normal</kbq-list-option>
-    <kbq-list-option [value]="'Hovered'">Hovered</kbq-list-option>
-    <kbq-list-option [value]="'Focused'">Focused</kbq-list-option>
-    <kbq-list-option [value]="'Disabled'">Disabled</kbq-list-option>
-    <kbq-list-option [value]="'Selected'">Selected</kbq-list-option>
-    <kbq-list-option [value]="'Selected1'">Selected</kbq-list-option>
-    <kbq-list-option [value]="'Selected2'">Selected</kbq-list-option>
-    <kbq-list-option [value]="'Selected3'">Selected</kbq-list-option>
-    <kbq-list-option [value]="'Selected4'">Selected</kbq-list-option>
-    <kbq-list-option [value]="'Selected5'">Selected</kbq-list-option>
-    <kbq-list-option [value]="'Selected6'">Selected</kbq-list-option>
-    <kbq-list-option [value]="'Selected7'">Selected</kbq-list-option>
+    <kbq-list-option value="Normal">Normal</kbq-list-option>
+    <kbq-list-option value="Hovered">Hovered</kbq-list-option>
+    <kbq-list-option value="Focused">Focused</kbq-list-option>
+    <kbq-list-option value="Disabled">Disabled</kbq-list-option>
+    <kbq-list-option value="Selected">Selected</kbq-list-option>
+    <kbq-list-option value="Selected1">Selected</kbq-list-option>
+    <kbq-list-option value="Selected2">Selected</kbq-list-option>
+    <kbq-list-option value="Selected3">Selected</kbq-list-option>
+    <kbq-list-option value="Selected4">Selected</kbq-list-option>
+    <kbq-list-option value="Selected5">Selected</kbq-list-option>
+    <kbq-list-option value="Selected6">Selected</kbq-list-option>
+    <kbq-list-option value="Selected7">Selected</kbq-list-option>
 </kbq-list-selection>
 <br />
 <div>multipleSelected: {{ multipleSelected }}</div>
@@ -185,48 +186,48 @@
     [(ngModel)]="multipleSelectedCheckbox"
     (selectionChange)="onSelectionChange($event)"
 >
-    <kbq-list-option [value]="'Normal'">
+    <kbq-list-option value="Normal">
         Normal
         <kbq-option-action
+            kbqTooltip="Tooltip text"
             [kbqDropdownTriggerFor]="dropdown"
             [kbqPlacement]="popUpPlacements.Right"
-            [kbqTooltip]="'Tooltip text'"
         />
     </kbq-list-option>
-    <kbq-list-option [value]="'Hovered'">
+    <kbq-list-option value="Hovered">
         Hovered
 
         <kbq-option-action
+            kbqTooltip="Tooltip text"
             [kbqDropdownTriggerFor]="dropdown"
             [kbqPlacement]="popUpPlacements.Right"
-            [kbqTooltip]="'Tooltip text'"
         />
     </kbq-list-option>
-    <kbq-list-option [value]="'Focused'">
+    <kbq-list-option value="Focused">
         Focused
 
         <kbq-option-action
+            kbqTooltip="Tooltip text"
             [kbqDropdownTriggerFor]="dropdown"
             [kbqPlacement]="popUpPlacements.Right"
-            [kbqTooltip]="'Tooltip text'"
         />
     </kbq-list-option>
-    <kbq-list-option [value]="'Disabled'">
+    <kbq-list-option value="Disabled">
         Disabled
 
         <kbq-option-action
+            kbqTooltip="Tooltip text"
             [kbqDropdownTriggerFor]="dropdown"
             [kbqPlacement]="popUpPlacements.Right"
-            [kbqTooltip]="'Tooltip text'"
         />
     </kbq-list-option>
-    <kbq-list-option [value]="'Selected'">
+    <kbq-list-option value="Selected">
         Selected
 
         <kbq-option-action
+            kbqTooltip="Tooltip text"
             [kbqDropdownTriggerFor]="dropdown"
             [kbqPlacement]="popUpPlacements.Right"
-            [kbqTooltip]="'Tooltip text'"
         />
     </kbq-list-option>
 </kbq-list-selection>
@@ -278,11 +279,11 @@
     (onCopy)="onCopy($event)"
     (selectionChange)="onSelectionChange($event)"
 >
-    <kbq-list-option [value]="'Normal'">Normal</kbq-list-option>
-    <kbq-list-option [value]="'Hovered'">Hovered</kbq-list-option>
-    <kbq-list-option [value]="'Focused'">Focused</kbq-list-option>
-    <kbq-list-option [value]="'Disabled'">Disabled</kbq-list-option>
-    <kbq-list-option [value]="'Selected'">Selected</kbq-list-option>
+    <kbq-list-option value="Normal">Normal</kbq-list-option>
+    <kbq-list-option value="Hovered">Hovered</kbq-list-option>
+    <kbq-list-option value="Focused">Focused</kbq-list-option>
+    <kbq-list-option value="Disabled">Disabled</kbq-list-option>
+    <kbq-list-option value="Selected">Selected</kbq-list-option>
 </kbq-list-selection>
 <br />
 <div>singleSelected: {{ singleSelected }}</div>
@@ -298,11 +299,11 @@
     (onCopy)="onCopy($event)"
     (selectionChange)="onSelectionChange($event)"
 >
-    <kbq-list-option [value]="'Normal'">Normal</kbq-list-option>
-    <kbq-list-option [value]="'Hovered'">Hovered</kbq-list-option>
-    <kbq-list-option [value]="'Focused'">Focused</kbq-list-option>
-    <kbq-list-option [value]="'Disabled'">Disabled</kbq-list-option>
-    <kbq-list-option kbq-title [value]="'Selected'">Selected and long long and long long text</kbq-list-option>
+    <kbq-list-option value="Normal">Normal</kbq-list-option>
+    <kbq-list-option value="Hovered">Hovered</kbq-list-option>
+    <kbq-list-option value="Focused">Focused</kbq-list-option>
+    <kbq-list-option value="Disabled">Disabled</kbq-list-option>
+    <kbq-list-option kbq-title value="Selected">Selected and long long and long long text</kbq-list-option>
 </kbq-list-selection>
 <br />
 <div>singleSelected: {{ singleSelected }}</div>

@@ -1381,7 +1381,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Custom checkbox block",
     "componentName": "BlockCheckboxExample",
     "files": [
-      "block-checkbox-example.ts"
+      "block-checkbox-example.ts",
+      "block-checkbox-example.css"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -2019,6 +2020,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "selector": "dl-alignment-example",
     "primaryFile": "dl-alignment-example.ts",
+    "importPath": "components/dl"
+  },
+  "dl-caption": {
+    "packagePath": "components/dl/dl-caption",
+    "title": "Description list caption",
+    "componentName": "DlCaptionExample",
+    "files": [
+      "dl-caption-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "dl-caption-example",
+    "primaryFile": "dl-caption-example.ts",
     "importPath": "components/dl"
   },
   "dl-dt-width": {
@@ -3526,21 +3542,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "form-field-password-overview-example.ts",
     "importPath": "components/form-field"
   },
-  "form-field-with-cleaner": {
-    "packagePath": "components/form-field/form-field-with-cleaner",
-    "title": "Form field with kbq-cleaner",
-    "componentName": "FormFieldWithCleanerExample",
-    "files": [
-      "form-field-with-cleaner-example.ts"
-    ],
-    "localImportFiles": [
-      "../../../i18n/index.ts",
-      "l10n.ts"
-    ],
-    "selector": "form-field-with-cleaner-example",
-    "primaryFile": "form-field-with-cleaner-example.ts",
-    "importPath": "components/form-field"
-  },
   "form-field-with-custom-error-state-matcher-set-by-attribute": {
     "packagePath": "components/form-field/form-field-with-custom-error-state-matcher-set-by-attribute",
     "title": "Form field with CustomErrorStateMatcher which set by `errorStateMatcher` attribute",
@@ -3629,21 +3630,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "selector": "form-field-with-prefix-and-suffix-example",
     "primaryFile": "form-field-with-prefix-and-suffix-example.ts",
-    "importPath": "components/form-field"
-  },
-  "form-field-without-borders": {
-    "packagePath": "components/form-field/form-field-without-borders",
-    "title": "Form field without borders",
-    "componentName": "FormFieldWithoutBordersExample",
-    "files": [
-      "form-field-without-borders-example.ts"
-    ],
-    "localImportFiles": [
-      "../../../i18n/index.ts",
-      "l10n.ts"
-    ],
-    "selector": "form-field-without-borders-example",
-    "primaryFile": "form-field-without-borders-example.ts",
     "importPath": "components/form-field"
   },
   "form-fieldset-invalid": {
@@ -4224,6 +4210,63 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "inline-edit-without-label-example.ts",
     "importPath": "components/inline-edit"
   },
+  "input-autocomplete": {
+    "packagePath": "components/input/input-autocomplete",
+    "title": "Input autocomplete",
+    "componentName": "InputAutocompleteExample",
+    "files": [
+      "input-autocomplete-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "input-autocomplete-example",
+    "primaryFile": "input-autocomplete-example.ts",
+    "importPath": "components/input"
+  },
+  "input-disabled": {
+    "packagePath": "components/input/input-disabled",
+    "title": "Disabled input",
+    "componentName": "InputDisabledExample",
+    "files": [
+      "input-disabled-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "input-disabled-example",
+    "primaryFile": "input-disabled-example.ts",
+    "importPath": "components/input"
+  },
+  "input-label-and-hint": {
+    "packagePath": "components/input/input-label-and-hint",
+    "title": "Input with label and hint",
+    "componentName": "InputLabelAndHintExample",
+    "files": [
+      "input-label-and-hint-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "input-label-and-hint-example",
+    "primaryFile": "input-label-and-hint-example.ts",
+    "importPath": "components/input"
+  },
+  "input-monospace": {
+    "packagePath": "components/input/input-monospace",
+    "title": "Monospace input",
+    "componentName": "InputMonospaceExample",
+    "files": [
+      "input-monospace-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "input-monospace-example",
+    "primaryFile": "input-monospace-example.ts",
+    "importPath": "components/input"
+  },
   "input-number-overview": {
     "packagePath": "components/input/input-number-overview",
     "title": "Input number",
@@ -4246,10 +4289,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "input-overview-example.ts"
     ],
-    "localImportFiles": [
-      "../../../i18n/index.ts",
-      "l10n.ts"
-    ],
+    "localImportFiles": [],
     "selector": "input-overview-example",
     "primaryFile": "input-overview-example.ts",
     "importPath": "components/input"
@@ -4299,6 +4339,48 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "input-readonly-example.ts",
     "importPath": "components/input"
   },
+  "input-search": {
+    "packagePath": "components/input/input-search",
+    "title": "Search input",
+    "componentName": "InputSearchExample",
+    "files": [
+      "input-search-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "input-search-example",
+    "primaryFile": "input-search-example.ts",
+    "importPath": "components/input"
+  },
+  "input-validation": {
+    "packagePath": "components/input/input-validation",
+    "title": "Input validation",
+    "componentName": "InputValidationExample",
+    "files": [
+      "input-validation-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "input-validation-example",
+    "primaryFile": "input-validation-example.ts",
+    "importPath": "components/input"
+  },
+  "input-with-cleaner": {
+    "packagePath": "components/input/input-with-cleaner",
+    "title": "Input with cleaner",
+    "componentName": "InputWithCleanerExample",
+    "files": [
+      "input-with-cleaner-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "input-with-cleaner-example",
+    "primaryFile": "input-with-cleaner-example.ts",
+    "importPath": "components/input"
+  },
   "input-with-mask": {
     "packagePath": "components/input/input-with-mask",
     "title": "Input with mask",
@@ -4312,6 +4394,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "selector": "input-with-mask-example",
     "primaryFile": "input-with-mask-example.ts",
+    "importPath": "components/input"
+  },
+  "input-without-borders": {
+    "packagePath": "components/input/input-without-borders",
+    "title": "Input without borders",
+    "componentName": "InputWithoutBordersExample",
+    "files": [
+      "input-without-borders-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "input-without-borders-example",
+    "primaryFile": "input-without-borders-example.ts",
     "importPath": "components/input"
   },
   "layout-flex-alignment": {
@@ -4649,7 +4746,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "ListIntermediateStateExample",
     "files": [
       "list-intermediate-state-example.ts",
-      "./list-intermediate-state-example.html"
+      "list-intermediate-state-example.html"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -4842,7 +4939,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownArticleExample",
     "files": [
       "markdown-article-example.ts",
-      "./markdown-article-example.html"
+      "markdown-article-example.html"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -4858,7 +4955,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownCodeBlockExample",
     "files": [
       "markdown-code-block-example.ts",
-      "./markdown-code-block-example.html"
+      "markdown-code-block-example.html"
     ],
     "localImportFiles": [],
     "selector": "markdown-code-block-example",
@@ -4871,7 +4968,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownCodeExample",
     "files": [
       "markdown-code-example.ts",
-      "./markdown-code-example.html"
+      "markdown-code-example.html"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -4887,7 +4984,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownDividerExample",
     "files": [
       "markdown-divider-example.ts",
-      "./markdown-divider-example.html"
+      "markdown-divider-example.html"
     ],
     "localImportFiles": [],
     "selector": "markdown-divider-example",
@@ -4900,7 +4997,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownHeadersCombinationsExample",
     "files": [
       "markdown-headers-combinations-example.ts",
-      "./markdown-headers-combinations-example.html"
+      "markdown-headers-combinations-example.html"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -4916,7 +5013,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownImageExample",
     "files": [
       "markdown-image-example.ts",
-      "./markdown-image-example.html"
+      "markdown-image-example.html"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -4947,7 +5044,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownLineBreakExample",
     "files": [
       "markdown-line-break-example.ts",
-      "./markdown-line-break-example.html"
+      "markdown-line-break-example.html"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -4963,7 +5060,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownLinkExample",
     "files": [
       "markdown-link-example.ts",
-      "./markdown-link-example.html"
+      "markdown-link-example.html"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -4979,7 +5076,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownListExample",
     "files": [
       "markdown-list-example.ts",
-      "./markdown-list-example.html"
+      "markdown-list-example.html"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -4995,7 +5092,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownOverviewExample",
     "files": [
       "markdown-overview-example.ts",
-      "./markdown-overview-example.html"
+      "markdown-overview-example.html"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -5011,7 +5108,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownParagraphExample",
     "files": [
       "markdown-paragraph-example.ts",
-      "./markdown-paragraph-example.html"
+      "markdown-paragraph-example.html"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -5027,7 +5124,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownQuoteExample",
     "files": [
       "markdown-quote-example.ts",
-      "./markdown-quote-example.html"
+      "markdown-quote-example.html"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -5056,7 +5153,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownTableExample",
     "files": [
       "markdown-table-example.ts",
-      "./markdown-table-example.html"
+      "markdown-table-example.html"
     ],
     "localImportFiles": [],
     "selector": "markdown-table-example",
@@ -6211,6 +6308,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-footer-example.ts",
     "importPath": "components/select"
   },
+  "select-groups-label": {
+    "packagePath": "components/select/select-groups-label",
+    "title": "Select group label",
+    "componentName": "SelectGroupsLabelExample",
+    "files": [
+      "select-groups-label-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "select-groups-label-example",
+    "primaryFile": "select-groups-label-example.ts",
+    "importPath": "components/select"
+  },
   "select-groups": {
     "packagePath": "components/select/select-groups",
     "title": "Select groups",
@@ -6689,7 +6801,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "SidepanelOverlayedExample",
     "files": [
       "sidepanel-overlayed-example.ts",
-      "./sidepanel-overlayed-example.html"
+      "sidepanel-overlayed-example.html"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -6789,6 +6901,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "selector": "skeleton-accordion-example",
     "primaryFile": "skeleton-accordion-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-animation-duration": {
+    "packagePath": "components/skeleton/skeleton-animation-duration",
+    "title": "Skeleton animation duration",
+    "componentName": "SkeletonAnimationDurationExample",
+    "files": [
+      "skeleton-animation-duration-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-animation-duration-example",
+    "primaryFile": "skeleton-animation-duration-example.ts",
     "importPath": "components/skeleton"
   },
   "skeleton-basic": {
@@ -7309,7 +7433,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TabsAddTabVerticalExample",
     "files": [
       "tabs-add-tab-vertical-example.ts",
-      "./tabs-add-tab-vertical-example.css"
+      "tabs-add-tab-vertical-example.css"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -7325,7 +7449,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TabsAddTabExample",
     "files": [
       "tabs-add-tab-example.ts",
-      "./tabs-add-tab-example.css"
+      "tabs-add-tab-example.css"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -8171,7 +8295,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TitleCustomContentExample",
     "files": [
       "title-custom-content-example.ts",
-      "./title-custom-content-example.css"
+      "title-custom-content-example.css"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -8187,7 +8311,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TitleListOptionExample",
     "files": [
       "title-list-option-example.ts",
-      "./title-list-option-example.css"
+      "title-list-option-example.css"
     ],
     "localImportFiles": [],
     "selector": "title-list-option-example",
@@ -8200,7 +8324,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TitleMultipleTextExample",
     "files": [
       "title-multiple-text-example.ts",
-      "./title-multiple-text-example.css"
+      "title-multiple-text-example.css"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -8216,7 +8340,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TitleOverviewExample",
     "files": [
       "title-overview-example.ts",
-      "./title-overview-example.css"
+      "title-overview-example.css"
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
@@ -8232,7 +8356,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TitleVerticalOverflowExample",
     "files": [
       "title-vertical-overflow-example.ts",
-      "./title-vertical-overflow-example.css"
+      "title-vertical-overflow-example.css"
     ],
     "localImportFiles": [],
     "selector": "title-vertical-overflow-example",
@@ -9740,6 +9864,7 @@ export type LiveExampleId =
   | 'divider-overview'
   | 'divider-vertical'
   | 'dl-alignment'
+  | 'dl-caption'
   | 'dl-dt-width'
   | 'dl-long-text'
   | 'dl-min-width'
@@ -9847,14 +9972,12 @@ export type LiveExampleId =
   | 'form-field-horizontal'
   | 'form-field-overview'
   | 'form-field-password-overview'
-  | 'form-field-with-cleaner'
   | 'form-field-with-custom-error-state-matcher-set-by-attribute'
   | 'form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider'
   | 'form-field-with-error'
   | 'form-field-with-hint'
   | 'form-field-with-label'
   | 'form-field-with-prefix-and-suffix'
-  | 'form-field-without-borders'
   | 'form-fieldset-invalid'
   | 'form-fieldset-overview'
   | 'form-fieldset-with-button'
@@ -9894,12 +10017,20 @@ export type LiveExampleId =
   | 'inline-edit-validation'
   | 'inline-edit-vertical-list'
   | 'inline-edit-without-label'
+  | 'input-autocomplete'
+  | 'input-disabled'
+  | 'input-label-and-hint'
+  | 'input-monospace'
   | 'input-number-overview'
   | 'input-overview'
   | 'input-password-overview'
   | 'input-password-template-driven'
   | 'input-readonly'
+  | 'input-search'
+  | 'input-validation'
+  | 'input-with-cleaner'
   | 'input-with-mask'
+  | 'input-without-borders'
   | 'layout-flex-alignment'
   | 'layout-flex-behaviour-modifiers'
   | 'layout-flex-offsets'
@@ -10029,6 +10160,7 @@ export type LiveExampleId =
   | 'select-custom-trigger'
   | 'select-disabled'
   | 'select-footer'
+  | 'select-groups-label'
   | 'select-groups'
   | 'select-height'
   | 'select-icon'
@@ -10069,6 +10201,7 @@ export type LiveExampleId =
   | 'sidepanel-with-custom-injector'
   | 'sidepanel-with-dynamic-config-update'
   | 'skeleton-accordion'
+  | 'skeleton-animation-duration'
   | 'skeleton-basic'
   | 'skeleton-checkable'
   | 'skeleton-code-block'

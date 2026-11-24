@@ -1,8 +1,12 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-dl-theme() {
     .kbq-dt {
         color: var(--kbq-description-list-term-color);
+    }
+
+    .kbq-dt-caption {
+        color: var(--kbq-description-list-caption-color);
     }
 
     .kbq-dd {
@@ -13,11 +17,15 @@
 @mixin kbq-dl-typography() {
     .kbq-dl {
         & .kbq-dt {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        }
+
+        & .kbq-dt-caption {
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
         }
 
         & .kbq-dd {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
         }
     }
 }

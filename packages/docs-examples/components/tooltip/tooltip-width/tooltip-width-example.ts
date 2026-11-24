@@ -15,8 +15,8 @@ import { TRANSLATIONS } from './l10n';
         KbqToolTipModule
     ],
     template: `
-        <button kbq-button [kbqTooltip]="t().tooltip">Tooltip</button>
-        <button kbq-button [kbqTooltip]="t().longTooltip">Max Width</button>
+        <button kbq-button type="button" [kbqTooltip]="t().tooltip">Tooltip</button>
+        <button kbq-button type="button" [kbqTooltip]="t().longTooltip">Max Width</button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {

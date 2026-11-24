@@ -559,12 +559,14 @@ export const enUSLocaleData: {
         closeText: string;
         showMoreText: string;
         moreText: string;
+        showMoreTextCompact: string;
     };
     navbar: {
         toggle: {
             expand: string;
             collapse: string;
         };
+        more: string;
     };
     searchExpandable: {
         tooltip: string;
@@ -848,12 +850,14 @@ export const esLALocaleData: {
         closeText: string;
         showMoreText: string;
         moreText: string;
+        showMoreTextCompact: string;
     };
     navbar: {
         toggle: {
             expand: string;
             collapse: string;
         };
+        more: string;
     };
     searchExpandable: {
         tooltip: string;
@@ -1384,12 +1388,14 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             closeText: string;
             showMoreText: string;
             moreText: string;
+            showMoreTextCompact: string;
         };
         navbar: {
             toggle: {
                 expand: string;
                 collapse: string;
             };
+            more: string;
         };
         searchExpandable: {
             tooltip: string;
@@ -1648,12 +1654,14 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             closeText: string;
             showMoreText: string;
             moreText: string;
+            showMoreTextCompact: string;
         };
         navbar: {
             toggle: {
                 expand: string;
                 collapse: string;
             };
+            more: string;
         };
         searchExpandable: {
             tooltip: string;
@@ -1908,12 +1916,14 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             closeText: string;
             showMoreText: string;
             moreText: string;
+            showMoreTextCompact: string;
         };
         navbar: {
             toggle: {
                 expand: string;
                 collapse: string;
             };
+            more: string;
         };
         searchExpandable: {
             tooltip: string;
@@ -2174,12 +2184,14 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             closeText: string;
             showMoreText: string;
             moreText: string;
+            showMoreTextCompact: string;
         };
         navbar: {
             toggle: {
                 expand: string;
                 collapse: string;
             };
+            more: string;
         };
         searchExpandable: {
             tooltip: string;
@@ -2436,12 +2448,14 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             closeText: string;
             showMoreText: string;
             moreText: string;
+            showMoreTextCompact: string;
         };
         navbar: {
             toggle: {
                 expand: string;
                 collapse: string;
             };
+            more: string;
         };
         searchExpandable: {
             tooltip: string;
@@ -2536,6 +2550,9 @@ export const KBQ_FORM_FIELD_REF: InjectionToken<KbqFormFieldRef>;
 
 // @public
 export const KBQ_FORMATTERS_LOCALE_CONFIGURATION: InjectionToken<KbqFormattersLocaleConfiguration>;
+
+// @public
+export const KBQ_GROUP_OPTION: InjectionToken<KbqGroupOption>;
 
 // @public (undocumented)
 export const KBQ_INVALID_VALUE_ERROR = "Argument \"value\" must be a finite number!";
@@ -2758,7 +2775,7 @@ export abstract class KbqAbstractSelect {
     // (undocumented)
     protected setOverlayPosition(): void;
     protected subscribeToPanelResize(): void;
-    protected abstract triggerRect: DOMRect;
+    protected abstract triggerRect: DOMRect | undefined;
     protected unsubscribeFromPanelResize(): void;
     protected updateOverlayWidth(panelWidth: KbqPanelWidth, panelMinWidth: KbqPanelMinWidth, origin: KbqPanelWidthOrigin): void;
     protected updatePanelAnchor(): boolean;
@@ -2908,6 +2925,7 @@ export type KbqClampedTextLocaleConfiguration = {
     openText: string;
     closeText: string;
     showMoreText: string;
+    showMoreTextCompact?: string;
     moreText: string;
 };
 
@@ -3302,6 +3320,11 @@ export const kbqGetSelectionRect: (element: KbqTextAnchor) => KbqCaretRect | nul
 export const kbqGetTextQuery: (value: string, caret: number, input?: KbqTextQueryOptions) => KbqTextQuery | null;
 
 // @public
+export interface KbqGroupOption {
+    readonly selected: boolean;
+}
+
+// @public
 export const kbqHasScrollOverflow: (element: Element, axis?: KbqScrollAxis) => boolean;
 
 // @public (undocumented)
@@ -3380,6 +3403,9 @@ export type KbqInputNumberLocaleConfiguration = {
 
 // @public
 export const kbqIsElementOrigin: (origin: KbqOverlayOrigin) => boolean;
+
+// @public
+export function kbqIsEventPreventHide(event: object): boolean;
 
 // @public
 export const kbqIsTextLaidOutFromStart: (computedStyle: CSSStyleDeclaration) => boolean;
@@ -3545,6 +3571,9 @@ export class KbqLocalStorageStateStore extends KbqWebStorageStateStore {
 }
 
 // @public
+export function kbqMarkEventPreventHide(event: Event): void;
+
+// @public
 export enum KbqMeasurementSystem {
     // (undocumented)
     IEC = "IEC",
@@ -3589,6 +3618,7 @@ export type KbqNavbarLocaleConfiguration = {
         expand: string;
         collapse: string;
     };
+    more?: string;
 };
 
 // @public (undocumented)
@@ -3637,15 +3667,26 @@ export interface KbqNumericPipe {
 }
 
 // @public
-export class KbqOptgroup {
+export class KbqOptgroup implements AfterContentInit {
     readonly disabled: i0.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
-    // (undocumented)
+    protected readonly hasProjectedLabel: i0.Signal<boolean>;
     readonly label: i0.InputSignal<string>;
     labelId: string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptgroup, "kbq-optgroup", ["kbqOptgroup"], { "label": { "alias": "label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, never, ["kbq-option, kbq-list-option, kbq-timezone-option, ng-container"], true, never>;
+    ngAfterContentInit(): void;
+    get selectedCount(): number;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptgroup, "kbq-optgroup", ["kbqOptgroup"], { "label": { "alias": "label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, ["projectedLabels", "projectedOptions"], ["kbq-optgroup-label, [kbq-optgroup-label]", "kbq-option, kbq-list-option, kbq-timezone-option, ng-container"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptgroup, never>;
+}
+
+// @public
+export class KbqOptgroupLabel {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOptgroupLabel, "kbq-optgroup-label, [kbq-optgroup-label]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptgroupLabel, never>;
 }
 
 // @public
@@ -3722,9 +3763,9 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
-    onClick($event: any): void;
+    onClick(event: Event): void;
     // (undocumented)
-    onKeyDown($event: any): void;
+    onKeyDown(event: KeyboardEvent): void;
     protected get resolvedAriaLabel(): string;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptionActionComponent, "kbq-option-action", ["kbqOptionAction"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, never, ["[kbq-icon]"], true, [{ directive: typeof KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
@@ -3774,7 +3815,7 @@ export class KbqOptionModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqOptionModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqOptionModule, never, [typeof KbqPseudoCheckbox, typeof KbqOption, typeof KbqOptgroup, typeof KbqOptionActionComponent], [typeof KbqOption, typeof KbqOptgroup, typeof KbqOptionActionComponent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqOptionModule, never, [typeof KbqPseudoCheckbox, typeof KbqOption, typeof KbqOptgroup, typeof KbqOptgroupLabel, typeof KbqOptionActionComponent], [typeof KbqOption, typeof KbqOptgroup, typeof KbqOptgroupLabel, typeof KbqOptionActionComponent]>;
 }
 
 // @public
@@ -3801,6 +3842,84 @@ export class KbqOptionSelectionChange<T = KbqOption> {
 
 // @public
 export type KbqOrientation = 'horizontal' | 'vertical';
+
+// @public
+export interface KbqOverflowAxisConfig {
+    // (undocumented)
+    borderEnd: 'borderRightWidth' | 'borderBottomWidth';
+    // (undocumented)
+    borderStart: 'borderLeftWidth' | 'borderTopWidth';
+    // (undocumented)
+    flexDirection: 'row' | 'column';
+    // (undocumented)
+    gap: 'columnGap' | 'rowGap';
+    // (undocumented)
+    isCrossAxisExceeded: (element: HTMLElement) => boolean;
+    // (undocumented)
+    marginEnd: 'marginRight' | 'marginBottom';
+    // (undocumented)
+    marginStart: 'marginLeft' | 'marginTop';
+    // (undocumented)
+    paddingEnd: 'paddingRight' | 'paddingBottom';
+    // (undocumented)
+    paddingStart: 'paddingLeft' | 'paddingTop';
+    // (undocumented)
+    size: 'width' | 'height';
+}
+
+// @public
+export class KbqOverflowFitEngine {
+    constructor(window: Window);
+    containerSubject(container: HTMLElement, orientation: KbqOrientation, wrap: KbqFlexWrap): KbqOverflowFitSubject;
+    deviceThreshold(): number;
+    hasContainerOverflown(container: HTMLElement, orientation: KbqOrientation, wrap: KbqFlexWrap): boolean;
+    hideOverflownItems(items: ReadonlyArray<KbqOverflowFitItem>, subject: KbqOverflowFitSubject, result?: KbqOverflowFitResult, wrap?: KbqFlexWrap): ReadonlyArray<KbqOverflowFitItem>;
+    laidOutChildren(element: Element): Array<{
+        element: Element;
+        style: CSSStyleDeclaration;
+    }>;
+    measureContainer(container: HTMLElement, orientation: KbqOrientation): {
+        overflow: number;
+        sizes: ReadonlyMap<Element, number>;
+    };
+    readonly orientationConfig: Record<KbqOrientation, KbqOverflowAxisConfig>;
+    showAll(items: ReadonlyArray<KbqOverflowFitItem>, result?: KbqOverflowFitResult): void;
+}
+
+// @public
+export interface KbqOverflowFitItem {
+    readonly alwaysVisible: () => boolean;
+    readonly element: Element;
+    readonly hidden: () => boolean;
+    hide(): void;
+    show(): void;
+}
+
+// @public
+export interface KbqOverflowFitResult {
+    // (undocumented)
+    hide(): void;
+    // (undocumented)
+    show(): void;
+}
+
+// @public
+export interface KbqOverflowFitSubject {
+    hasOverflown(): boolean;
+    measure(): {
+        overflow: number;
+        sizes: ReadonlyMap<Element, number>;
+    };
+}
+
+// @public
+export function kbqOverflowRecalculationTriggers(options: {
+    element?: Element;
+    targets?: readonly Element[];
+    additionalTargets: Signal<Element | Element[]>;
+    debounceTime: Signal<number>;
+    extra?: Array<Observable<void>>;
+}): Observable<void>;
 
 // @public
 export class KbqOverflowShadowBottom {
@@ -3948,7 +4067,7 @@ export abstract class KbqPopUp implements OnDestroy {
     hide(delay: number): void;
     readonly hovered: Signal<boolean>;
     // (undocumented)
-    isTemplateRef(value: any): boolean;
+    isTemplateRef<C>(value: unknown): value is TemplateRef<C>;
     // (undocumented)
     isVisible(): boolean;
     // (undocumented)
@@ -3957,7 +4076,7 @@ export abstract class KbqPopUp implements OnDestroy {
     offset: number | null;
     protected readonly onHideSubject: Subject<void>;
     // (undocumented)
-    protected prefix: string;
+    protected abstract prefix: string;
     // (undocumented)
     protected readonly renderer: Renderer2;
     protected setHovered(value: boolean): void;
@@ -3966,7 +4085,7 @@ export abstract class KbqPopUp implements OnDestroy {
     // (undocumented)
     show(delay: number): void;
     // (undocumented)
-    trigger: KbqPopUpTrigger<unknown>;
+    trigger: KbqPopUpTrigger<unknown> | undefined;
     updateArrowPosition(): void;
     // (undocumented)
     updateClassMap(placement: string, customClass: string, classMap?: any): void;
@@ -3994,7 +4113,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
         [key: string]: ConnectionPositionPair;
     };
     protected clearListeners(): void;
-    abstract closingActions(): Observable<any>;
+    abstract closingActions(): Observable<unknown>;
     protected closingActionsSubscription: Subscription;
     container: HTMLElement | undefined;
     abstract content: string | TemplateRef<unknown>;
@@ -4009,7 +4128,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected _disabled: boolean;
     protected readonly elementRef: ElementRef<HTMLElement>;
     enterDelay: number;
-    protected externalNativeElement: HTMLElement;
+    protected externalNativeElement: HTMLElement | undefined;
     focus(): void;
     protected getActiveOrigin(): FlexibleConnectedPositionStrategyOrigin;
     protected getAdjustedPositions(): ConnectionPositionPair[];
@@ -4058,7 +4177,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected placement: KbqPopUpPlacementValues;
     abstract placementChange: EventEmitter<KbqPopUpPlacementValues>;
     protected placementPriority: string | string[] | null;
-    protected portal: ComponentPortal<T>;
+    protected portal: ComponentPortal<T> | undefined;
     protected preventClose: boolean;
     resetOrigin(): void;
     protected readonly scrollable: CdkScrollable | null;
@@ -4069,7 +4188,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected setOrigin(origin: FlexibleConnectedPositionStrategyOrigin | null): void;
     show(delay?: number): void;
     stickToWindow: KbqStickToWindowPlacementValues | undefined;
-    protected strategy: FlexibleConnectedPositionStrategy;
+    protected strategy: FlexibleConnectedPositionStrategy | undefined;
     touchendHandler(): void;
     abstract trigger: string;
     triggerName: string;
@@ -4077,7 +4196,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     abstract updateData(): void;
     updateOrigin(origin: KbqOverlayOrigin | null): void;
     updatePlacement(value: KbqPopUpPlacementValues): void;
-    updatePlacementPriority(value: any): void;
+    updatePlacementPriority(value: string | string[] | null | undefined): void;
     updatePosition(reapplyPosition?: boolean): void;
     updateVisible(externalValue: boolean): void;
     protected readonly viewportRuler: ViewportRuler;
@@ -4890,6 +5009,9 @@ export const MAC_WK_CMD_RIGHT = 93;
 // @public
 export const META = 91;
 
+// @public
+export const MIN_OVERFLOW_IN_DEVICE_PIXELS = 0.5;
+
 // @public (undocumented)
 export enum MultipleMode {
     // (undocumented)
@@ -5257,12 +5379,14 @@ export const ptBRLocaleData: {
         closeText: string;
         showMoreText: string;
         moreText: string;
+        showMoreTextCompact: string;
     };
     navbar: {
         toggle: {
             expand: string;
             collapse: string;
         };
+        more: string;
     };
     searchExpandable: {
         tooltip: string;
@@ -5733,12 +5857,14 @@ export const ruRULocaleData: {
         closeText: string;
         showMoreText: string;
         moreText: string;
+        showMoreTextCompact: string;
     };
     navbar: {
         toggle: {
             expand: string;
             collapse: string;
         };
+        more: string;
     };
     searchExpandable: {
         tooltip: string;
@@ -6084,12 +6210,14 @@ export const tkTMLocaleData: {
         closeText: string;
         showMoreText: string;
         moreText: string;
+        showMoreTextCompact: string;
     };
     navbar: {
         toggle: {
             expand: string;
             collapse: string;
         };
+        more: string;
     };
     searchExpandable: {
         tooltip: string;

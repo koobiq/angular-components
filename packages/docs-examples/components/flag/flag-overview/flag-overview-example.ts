@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import * as flags3x2 from 'country-flag-icons/string/3x2';
 import { KbqFlag } from '@koobiq/components/flag';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import * as flags3x2 from 'country-flag-icons/string/3x2';
 import { TRANSLATIONS } from './l10n';
 
 /**
@@ -36,7 +36,21 @@ export class FlagOverviewExample {
 
     // A mix of flags, including several that are prone to blending into light or dark backgrounds.
     // Subdivision codes are exported with underscores (GB-ENG → GB_ENG).
-    private readonly countryCodes = ['BR', 'BG', 'ID', 'MF', 'UY', 'YT', 'PK', 'IL', 'GB_ENG', 'FI', 'BE', 'CW', 'KR'];
+    private readonly countryCodes = [
+        'BR',
+        'BG',
+        'ID',
+        'MF',
+        'UY',
+        'YT',
+        'PK',
+        'IL',
+        'GB_ENG',
+        'FI',
+        'BE',
+        'CW',
+        'KR'
+    ] as const;
 
     protected readonly countries = computed(() =>
         this.countryCodes.map((code, index) => ({

@@ -1,4 +1,4 @@
-import { Version } from './parse-version';
+import type { Version } from './parse-version';
 
 export type VersionType = 'major' | 'minor' | 'patch';
 

@@ -1,4 +1,4 @@
-import { callRule, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { callRule, type Rule, type SchematicContext, type Tree } from '@angular-devkit/schematics';
 import { firstValueFrom } from 'rxjs';
 import { logMessage } from './messages';
 
@@ -10,6 +10,7 @@ import { logMessage } from './messages';
 export function safeRule(rule: Rule, fallbackMessage: string[]): Rule {
     return async (tree: Tree, context: SchematicContext) => {
         try {
+            // eslint-disable-next-line rxjs-x/no-ignored-default-value -- `callRule` emits the tree once or fails
             await firstValueFrom(callRule(rule, tree, context));
         } catch {
             logMessage(context.logger, fallbackMessage);

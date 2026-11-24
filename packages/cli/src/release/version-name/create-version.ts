@@ -1,5 +1,5 @@
-import { Version } from './parse-version';
-import { VersionType } from './publish-branches';
+import type { Version } from './parse-version';
+import type { VersionType } from './publish-branches';
 
 /** Type of a new release */
 export type ReleaseType = VersionType | 'stable-release' | 'bump-prerelease';

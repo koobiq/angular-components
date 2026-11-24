@@ -1,6 +1,7 @@
 @for (anchor of anchors; track anchor) {
     <div
-        class="docs-anchors__element docs-anchors__element_{{ anchor.level }}"
+        class="docs-anchors__element"
+        [class]="`docs-anchors__element_${anchor.level}`"
         [class.docs-anchors__element_active]="anchor.active"
     >
         <a

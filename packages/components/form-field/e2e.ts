@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, signal, ViewEncapsulation } from '@
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { ErrorStateMatcher } from '@koobiq/components/core';
+import type { ErrorStateMatcher } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -55,7 +55,7 @@ import { KbqTimepickerModule } from '@koobiq/components/timepicker';
             </div>
         </div>
     `,
-    styleUrls: ['../core/styles/common/_groups.scss'],
+    styleUrl: '../core/styles/common/_groups.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

@@ -12,7 +12,7 @@ import { TRANSLATIONS } from './l10n';
     selector: 'scrollbar-virtual-scroll-example',
     imports: [KbqScrollbarViewport, ScrollingModule, KbqButtonModule],
     template: `
-        <button kbq-button (click)="addItems()">{{ t().addItems }}</button>
+        <button kbq-button type="button" (click)="addItems()">{{ t().addItems }}</button>
 
         <cdk-virtual-scroll-viewport kbqScrollbarViewport class="example-scrollbar" itemSize="32">
             <div *cdkVirtualFor="let item of items()" class="example-item">{{ item }}</div>

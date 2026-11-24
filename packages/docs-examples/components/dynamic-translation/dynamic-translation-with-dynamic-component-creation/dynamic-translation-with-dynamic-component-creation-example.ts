@@ -2,7 +2,7 @@ import {
     ApplicationRef,
     ChangeDetectionStrategy,
     Component,
-    ComponentRef,
+    type ComponentRef,
     createComponent,
     effect,
     ElementRef,
@@ -10,7 +10,10 @@ import {
     Renderer2,
     viewChild
 } from '@angular/core';
-import { KbqDynamicTranslationHelper, KbqDynamicTranslationHelperSlot } from '@koobiq/components/dynamic-translation';
+import {
+    KbqDynamicTranslationHelper,
+    type KbqDynamicTranslationHelperSlot
+} from '@koobiq/components/dynamic-translation';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
 

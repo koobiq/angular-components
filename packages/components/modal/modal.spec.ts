@@ -1,4 +1,4 @@
-import { FocusOrigin } from '@angular/cdk/a11y';
+import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {
     Component,
@@ -10,13 +10,15 @@ import {
     Injectable,
     Injector,
     NgModule,
-    Provider,
+    PLATFORM_ID,
+    type Provider,
     signal,
-    Type,
+    type Type,
     viewChild
 } from '@angular/core';
-import { ComponentFixture, TestBed, inject as testingInject } from '@angular/core/testing';
+import { type ComponentFixture, inject as testingInject, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { EMPTY } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     createKeyboardEvent,
@@ -28,19 +30,18 @@ import {
     ESCAPE,
     KBQ_ANIMATIONS_CONFIG,
     KBQ_WINDOW,
-    KbqCanClose,
+    type KbqCanClose,
     KbqComponentColors,
     ruRULocaleData,
     TAB
 } from '@koobiq/components/core';
 import { KbqDropdownItem, KbqDropdownModule } from '@koobiq/components/dropdown';
-import { EMPTY } from 'rxjs';
-import { KbqModalControlService } from './modal-control.service';
-import { KbqModalRef } from './modal-ref.class';
 import { KbqModalComponent } from './modal.component';
 import { KbqModalModule } from './modal.module';
 import { KbqModalService } from './modal.service';
-import { IModalOptionsForService, MODAL_ANIMATE_DURATION, ModalSize } from './modal.type';
+import { type IModalOptionsForService, MODAL_ANIMATE_DURATION, ModalSize } from './modal.type';
+import { KbqModalControlService } from './modal-control.service';
+import type { KbqModalRef } from './modal-ref.class';
 
 const ANIMATION_DURATION = MODAL_ANIMATE_DURATION * 2;
 
@@ -247,7 +248,9 @@ describe('KbqModal', () => {
             modalService.afterAllClose.subscribe(spy);
 
             fixture.componentInstance.nonServiceModalVisible = true; // Show non-service modal
-            modalMethods.forEach((method) => modalService[method]({ kbqWrapClassName: uniqueId(method) })); // Service modals
+            modalMethods.forEach((method) =>
+                modalService[method as 'create' | 'delete' | 'success']({ kbqWrapClassName: uniqueId(method) })
+            ); // Service modals
 
             fixture.detectChanges();
             await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
@@ -1763,6 +1766,23 @@ describe('KbqModal', () => {
             expect(fixture.componentInstance.runs.cancel).toBe(1);
         });
     });
+
+    describe('server-side rendering', () => {
+        it('should not run browser-only focus paths when opening a visible modal on the server', async () => {
+            await TestBed.configureTestingModule({
+                imports: [SsrModalComponent],
+                providers: [{ provide: PLATFORM_ID, useValue: 'server' }]
+            }).compileComponents();
+
+            const focusMonitor = TestBed.inject(FocusMonitor);
+            const monitorSpy = vi.spyOn(focusMonitor, 'monitor');
+
+            const fixture = TestBed.createComponent(SsrModalComponent);
+
+            expect(() => fixture.detectChanges()).not.toThrow();
+            expect(monitorSpy).not.toHaveBeenCalled();
+        });
+    });
 });
 
 @Injectable()
@@ -1936,7 +1956,7 @@ class ModalWithoutModuleComponent {
     selector: 'modal-driven-by-effects',
     imports: [KbqModalModule],
     template: `
-        <kbq-modal [kbqTitle]="'Declarative title'" [(kbqVisible)]="visible">Declarative content</kbq-modal>
+        <kbq-modal kbqTitle="Declarative title" [(kbqVisible)]="visible">Declarative content</kbq-modal>
     `
 })
 class ModalDrivenByEffectsComponent {
@@ -1989,12 +2009,12 @@ class ModalDrivenByEffectsComponent {
     template: `
         <button #trigger kbq-button (click)="visible = true">Open</button>
         <kbq-modal
-            [kbqCancelText]="'Cancel'"
+            kbqCancelText="Cancel"
+            kbqOkText="Ok"
+            kbqTitle="Declarative title"
             [kbqCloseByESC]="closeByESC"
             [kbqMask]="true"
             [kbqMaskClosable]="true"
-            [kbqOkText]="'Ok'"
-            [kbqTitle]="'Declarative title'"
             [(kbqVisible)]="visible"
             (kbqOnCancel)="cancelCount = cancelCount + 1"
             (kbqOnOk)="okCount = okCount + 1"
@@ -2053,10 +2073,19 @@ class ModalOpenerHostComponent {
     selector: 'never-opened-modal',
     imports: [KbqModalModule],
     template: `
-        <kbq-modal [kbqTitle]="'Never shown'" />
+        <kbq-modal kbqTitle="Never shown" />
     `
 })
 class NeverOpenedModalComponent {}
+
+@Component({
+    selector: 'ssr-modal',
+    imports: [KbqModalModule],
+    template: `
+        <kbq-modal [kbqVisible]="true">SSR content</kbq-modal>
+    `
+})
+class SsrModalComponent {}
 
 const TEST_DIRECTIVES = [
     ModalByServiceComponent,

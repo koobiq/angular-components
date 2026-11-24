@@ -1,6 +1,6 @@
-import { Direction } from '@angular/cdk/bidi';
-import { Overlay, ScrollStrategy } from '@angular/cdk/overlay';
-import { ElementRef, InjectionToken, Injector, Provider } from '@angular/core';
+import type { Direction } from '@angular/cdk/bidi';
+import type { Overlay, ScrollStrategy } from '@angular/cdk/overlay';
+import { type ElementRef, InjectionToken, type Injector, type Provider } from '@angular/core';
 
 /** Injection token that can be used to specify default actions panel config. */
 export const KBQ_ACTIONS_PANEL_DEFAULT_CONFIG = new InjectionToken<KbqActionsPanelConfig>(

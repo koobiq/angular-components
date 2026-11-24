@@ -1,4 +1,4 @@
-import { KbqLocaleStringsData } from './types';
+import type { KbqLocaleStringsData } from './types';
 
 export const ptBRLocaleData = {
     a11y: {
@@ -141,13 +141,15 @@ export const ptBRLocaleData = {
         openText: 'Expandir',
         closeText: 'Recolher',
         showMoreText: 'Mostrar mais {exceededItemCount}',
-        moreText: 'mais'
+        moreText: 'mais',
+        showMoreTextCompact: '{exceededItemCount} mais'
     },
     navbar: {
         toggle: {
             expand: 'Expandir',
             collapse: 'Colapso'
-        }
+        },
+        more: 'Mais'
     },
     searchExpandable: {
         tooltip: 'Pesquisar',

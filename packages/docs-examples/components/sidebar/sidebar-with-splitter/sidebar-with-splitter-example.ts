@@ -27,10 +27,10 @@ import { TRANSLATIONS } from './l10n';
             <main kbq-splitter-area>
                 <div>{{ t().mainContent }}</div>
                 <div>
-                    <button kbq-button (click)="toggle()">{{ t().toggleModel }}</button>
+                    <button kbq-button type="button" (click)="toggle()">{{ t().toggleModel }}</button>
                 </div>
                 <div>
-                    <button kbq-button (click)="sidebar.toggle()">{{ t().toggle }}</button>
+                    <button kbq-button type="button" (click)="sidebar.toggle()">{{ t().toggle }}</button>
                 </div>
             </main>
         </kbq-splitter>

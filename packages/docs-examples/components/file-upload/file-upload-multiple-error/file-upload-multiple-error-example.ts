@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, Injectable } from '@angular/core';
 import {
-    AbstractControl,
+    type AbstractControl,
     FormControl,
-    FormGroupDirective,
-    NgForm,
+    type FormGroupDirective,
+    type NgForm,
     ReactiveFormsModule,
     Validators
 } from '@angular/forms';
-import { ErrorStateMatcher, kbqErrorStateMatcherProvider } from '@koobiq/components/core';
-import { KbqFileItem, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
+import { type ErrorStateMatcher, kbqErrorStateMatcherProvider } from '@koobiq/components/core';
+import { type KbqFileItem, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
 
 @Injectable()

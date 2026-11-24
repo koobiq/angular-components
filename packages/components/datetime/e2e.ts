@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { DateTime } from 'luxon';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { TimeFormats } from '@koobiq/components/timepicker';
-import { DateTime } from 'luxon';
 import { KbqDatetime } from './datetime';
 
 const imports = [KbqFormFieldModule, KbqDatepickerModule, KbqDatetime, ReactiveFormsModule, KbqLuxonDateModule];

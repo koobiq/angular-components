@@ -1,13 +1,13 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import type { DateTime } from 'luxon';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTimeRangeModule, KbqTimeRangeRange } from '@koobiq/components/time-range';
+import { KbqTimeRangeModule, type KbqTimeRangeRange } from '@koobiq/components/time-range';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { DateTime } from 'luxon';
 import { TRANSLATIONS } from './l10n';
 
 /**
@@ -44,7 +44,7 @@ import { TRANSLATIONS } from './l10n';
                 <kbq-time-range-title-as-control>
                     <ng-container *ngTemplateOutlet="titleValue; context: { $implicit: context }" />
                 </kbq-time-range-title-as-control>
-                <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix [color]="'contrast-fade'"></i>
+                <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix color="contrast-fade"></i>
                 <kbq-hint>{{ t().withPresets }}</kbq-hint>
             </kbq-form-field>
         </ng-template>
@@ -54,7 +54,7 @@ import { TRANSLATIONS } from './l10n';
                 <kbq-time-range-title-as-control>
                     <ng-container *ngTemplateOutlet="titleValue; context: { $implicit: context }" />
                 </kbq-time-range-title-as-control>
-                <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix [color]="'contrast-fade'"></i>
+                <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix color="contrast-fade"></i>
                 <kbq-hint>{{ t().withoutPresets }}</kbq-hint>
             </kbq-form-field>
         </ng-template>

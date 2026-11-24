@@ -17,7 +17,7 @@ import { TRANSLATIONS } from './l10n';
             </div>
         </div>
     `,
-    styleUrls: ['./title-multiple-text-example.css'],
+    styleUrl: './title-multiple-text-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleMultipleTextExample {

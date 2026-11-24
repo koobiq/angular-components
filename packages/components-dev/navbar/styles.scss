@@ -9,7 +9,6 @@ body {
 .dev-vertical-navbar-container {
     display: flex;
     flex-direction: row;
-
     height: 700px;
 }
 
@@ -23,15 +22,13 @@ body {
     height: 32px;
     margin: 4px;
 
-    border-radius: var(--kbq-size-xs);
-
     background: linear-gradient(135deg, #ec2fa2, #b026ff);
+    border-radius: var(--kbq-size-xs);
 }
 
 .dev-navbar-custom-content-logo_full {
     width: 40px;
     height: 40px;
     margin: 0;
-
     border-radius: 0;
 }

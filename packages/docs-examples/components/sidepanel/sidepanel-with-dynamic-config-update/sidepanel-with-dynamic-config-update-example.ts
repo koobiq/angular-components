@@ -26,11 +26,11 @@ type ExampleComponentData = {
         </kbq-sidepanel-body>
         <kbq-sidepanel-footer>
             <kbq-sidepanel-actions>
-                <button kbq-button color="contrast" (click)="open()">
+                <button kbq-button color="contrast" type="button" (click)="open()">
                     <span>{{ t().openAnother }}</span>
                 </button>
 
-                <button kbq-button kbq-sidepanel-close>
+                <button kbq-button kbq-sidepanel-close type="button">
                     <span>{{ t().close }}</span>
                 </button>
             </kbq-sidepanel-actions>
@@ -63,7 +63,7 @@ export class ExampleSidepanelComponent {
     selector: 'sidepanel-with-dynamic-config-update-example',
     imports: [FormsModule, KbqButtonModule],
     template: `
-        <button kbq-button (click)="open()">
+        <button kbq-button type="button" (click)="open()">
             <span>{{ t().open }}</span>
         </button>
     `,

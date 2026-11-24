@@ -1,19 +1,21 @@
-﻿import { ChangeDetectionStrategy, Component, inject, input, TemplateRef, ViewEncapsulation } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, inject, input, type TemplateRef, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KBQ_MODAL_DATA, KbqModalModule, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { ModalCaptionExample } from 'packages/docs-examples/components/modal/modal-caption/modal-caption-example';
-import { ModalComponentWithInjectorExample } from 'packages/docs-examples/components/modal/modal-component-with-injector/modal-component-with-injector-example';
-import { ModalComponentExample } from 'packages/docs-examples/components/modal/modal-component/modal-component-example';
-import { ModalFullCustomExample } from 'packages/docs-examples/components/modal/modal-full-custom/modal-full-custom-example';
-import { ModalMultipleExample } from 'packages/docs-examples/components/modal/modal-multiple/modal-multiple-example';
-import { ModalOverviewExample } from 'packages/docs-examples/components/modal/modal-overview/modal-overview-example';
-import { ModalScrollExample } from 'packages/docs-examples/components/modal/modal-scroll/modal-scroll-example';
-import { ModalSizesExample } from 'packages/docs-examples/components/modal/modal-sizes/modal-sizes-example';
-import { ModalTemplateExample } from 'packages/docs-examples/components/modal/modal-template/modal-template-example';
+import {
+    ModalCaptionExample,
+    ModalComponentExample,
+    ModalComponentWithInjectorExample,
+    ModalFullCustomExample,
+    ModalMultipleExample,
+    ModalOverviewExample,
+    ModalScrollExample,
+    ModalSizesExample,
+    ModalTemplateExample
+} from 'packages/docs-examples/components/modal';
 
 @Component({
     selector: 'dev-examples',
@@ -93,7 +95,7 @@ export class DevModalCustomComponent {
 
     componentColors = KbqComponentColors;
 
-    data = inject<{ title?: string; subtitle?: string; myData?: string }>(KBQ_MODAL_DATA, { optional: true })!;
+    data = inject<{ title?: string; subtitle?: string; myData?: string }>(KBQ_MODAL_DATA, { optional: true });
     constructor() {
         console.log('data: ', this.data);
     }
@@ -130,6 +132,7 @@ export class DevModalCustomComponent {
 
         <div kbq-modal-footer>
             <button kbq-button [color]="componentColors.Contrast">Save</button>
+            <!-- eslint-disable-next-line @angular-eslint/template/no-autofocus -- the dialog moves the focus to the element marked autofocus when it opens -->
             <button kbq-button autofocus (click)="destroyModal()">Close</button>
         </div>
     `,
@@ -159,7 +162,7 @@ export class DevModalFullCustomComponent {
         DevDocsExamples
     ],
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -169,7 +172,7 @@ export class DevApp {
     componentColors = KbqComponentColors;
 
     isVisible = false;
-    tplModal: KbqModalRef;
+    tplModal?: KbqModalRef;
     htmlModalVisible = false;
 
     isLoading = false;
@@ -232,7 +235,7 @@ export class DevApp {
     }
 
     createModalWithLongTitle() {
-        const ref = this.modalService.create({
+        const ref: KbqModalRef<DevModalLongCustomComponent> = this.modalService.create({
             kbqTitle: 'Modal Title Modal Title Modal Title Modal Title Modal Title Modal Title',
             kbqContent: DevModalLongCustomComponent,
             kbqOkText: 'Yes',
@@ -314,7 +317,7 @@ export class DevApp {
     openAndCloseAll() {
         let pos = 0;
 
-        ['create', 'delete', 'success'].forEach((method) =>
+        (['create', 'delete', 'success'] as const).forEach((method) =>
             this.modalService[method]({
                 kbqOkText: 'Confirm',
                 kbqCancelText: 'Cancel',
@@ -332,6 +335,6 @@ export class DevApp {
     }
 
     destroyTplModal() {
-        this.tplModal.destroy();
+        this.tplModal?.destroy();
     }
 }

@@ -3,7 +3,6 @@
 .kbq-tab-group {
     display: flex;
     flex-direction: column;
-
     box-sizing: border-box;
     text-align: left;
 
@@ -20,9 +19,9 @@
     }
 
     .kbq-tab-body__wrapper {
+        position: relative;
         display: flex;
         overflow: hidden;
-        position: relative;
     }
 
     .kbq-tab-body {
@@ -33,12 +32,12 @@
 
         &.kbq-tab-body__active {
             position: relative;
+            z-index: 1;
+
+            flex-grow: 1;
 
             overflow-x: hidden;
             overflow-y: auto;
-
-            z-index: 1;
-            flex-grow: 1;
         }
 
         .kbq-tab-group.kbq-tab-group_dynamic-height &.kbq-tab-body__active {

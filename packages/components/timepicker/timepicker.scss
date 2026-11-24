@@ -1,8 +1,13 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 .kbq-timepicker {
     // @TODO define --kbq-timepicker-size-padding-right in design-tokens; fallback keeps spacing meanwhile
     padding-right: var(--kbq-timepicker-size-padding-right, var(--kbq-size-s));
+}
+
+// tabular digits keep the field width stable when the value changes via stepper or keyboard
+.kbq-input.kbq-timepicker {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, tabular-normal);
 }
 
 .kbq-form-field-type-timepicker {

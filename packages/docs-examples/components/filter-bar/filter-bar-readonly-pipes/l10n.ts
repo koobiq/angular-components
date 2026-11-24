@@ -1,4 +1,4 @@
-import { Translations } from '@koobiq/docs-examples/i18n';
+import type { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the readonly-pipes example: it has no counterpart in the library's locale data. */
 export interface ExampleTranslation {

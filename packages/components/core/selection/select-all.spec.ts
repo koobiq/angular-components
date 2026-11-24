@@ -1,6 +1,6 @@
 import {
     getSelectAllState,
-    KbqSelectAllAdapter,
+    type KbqSelectAllAdapter,
     kbqSelectAllHandlerTransform,
     shouldSelectSearchText,
     toggleSelectAll

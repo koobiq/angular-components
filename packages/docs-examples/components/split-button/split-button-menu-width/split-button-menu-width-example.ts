@@ -19,16 +19,16 @@ import { TRANSLATIONS } from './l10n';
     ],
     template: `
         <kbq-split-button [panelAutoWidth]="true">
-            <button kbq-button>{{ t().splitButton }}</button>
-            <button kbq-button [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
+            <button kbq-button type="button">{{ t().splitButton }}</button>
+            <button kbq-button type="button" [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </kbq-split-button>
 
-        <kbq-dropdown #dropdown="kbqDropdown" [panelWidth]="'auto'" [panelMinWidth]="0">
-            <button kbq-dropdown-item>Extra Action 1</button>
-            <button kbq-dropdown-item>Extra Action 2</button>
-            <button kbq-dropdown-item>Extra Action 3</button>
+        <kbq-dropdown #dropdown="kbqDropdown" panelWidth="auto" [panelMinWidth]="0">
+            <button kbq-dropdown-item type="button">Extra Action 1</button>
+            <button kbq-dropdown-item type="button">Extra Action 2</button>
+            <button kbq-dropdown-item type="button">Extra Action 3</button>
         </kbq-dropdown>
     `,
     styles: `

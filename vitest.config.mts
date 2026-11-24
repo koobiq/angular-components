@@ -1,5 +1,5 @@
-import angular from '@analogjs/vite-plugin-angular';
 import { resolve } from 'node:path';
+import angular from '@analogjs/vite-plugin-angular';
 import ts from 'typescript';
 import { defineConfig } from 'vitest/config';
 
@@ -20,7 +20,7 @@ if (tsconfig.error) {
 }
 
 /** The `paths` of the root tsconfig, so specs import entry points by name the way the library does. */
-const tsconfigPaths: Record<string, string[]> = tsconfig.config.compilerOptions.paths;
+const tsconfigPaths: Record<string, [string, ...string[]]> = tsconfig.config.compilerOptions.paths;
 
 // Exact-match aliases: a prefix match would send `@koobiq/components/scrollbar/deprecated` to the
 // `scrollbar` entry point.

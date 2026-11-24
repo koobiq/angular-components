@@ -1,10 +1,17 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, effect, TemplateRef, viewChild } from '@angular/core';
+import {
+    type AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    effect,
+    type TemplateRef,
+    viewChild
+} from '@angular/core';
 import { KbqHighlightBackgroundPipe, tokenizeSearchQuery } from '@koobiq/components/core';
-import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
+import { type KbqFilter, KbqFilterBarModule, type KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 import {
     kbqBuildUsernameText,
     kbqInjectUsernameFormatter,
-    KbqUserInfo,
+    type KbqUserInfo,
     KbqUsernameModule
 } from '@koobiq/components/username';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
@@ -99,10 +106,10 @@ export class UsernameFilterBarOptionExample implements AfterViewInit {
         effect(() => {
             const assignee = this.t().assignee;
 
-            this.activeFilter.pipes[0].name = assignee;
+            this.activeFilter.pipes[0]!.name = assignee;
 
             if (this.pipeTemplates.length) {
-                this.pipeTemplates[0].name = assignee;
+                this.pipeTemplates[0]!.name = assignee;
             }
         });
     }

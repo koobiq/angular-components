@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
-import { KbqDefaultSizes } from '@koobiq/components/core';
+import type { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqLink } from '@koobiq/components/link';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';

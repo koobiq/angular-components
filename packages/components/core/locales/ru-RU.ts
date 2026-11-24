@@ -1,4 +1,4 @@
-import { KbqLocaleStringsData } from './types';
+import type { KbqLocaleStringsData } from './types';
 
 export const ruRULocaleData = {
     a11y: {
@@ -138,14 +138,16 @@ export const ruRULocaleData = {
     clampedText: {
         openText: 'Развернуть',
         closeText: 'Свернуть',
-        showMoreText: 'Показать еще {exceededItemCount}',
-        moreText: 'еще'
+        showMoreText: 'Еще {exceededItemCount}',
+        moreText: 'еще',
+        showMoreTextCompact: 'Еще {exceededItemCount}'
     },
     navbar: {
         toggle: {
             expand: 'Развернуть',
             collapse: 'Свернуть'
-        }
+        },
+        more: 'Ещё'
     },
     searchExpandable: {
         tooltip: 'Поиск',

@@ -1,19 +1,19 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, type OnInit } from '@angular/core';
 import {
-    AbstractControl,
+    type AbstractControl,
     FormBuilder,
-    FormGroup,
+    type FormGroup,
     ReactiveFormsModule,
-    ValidationErrors,
-    ValidatorFn,
+    type ValidationErrors,
+    type ValidatorFn,
     Validators
 } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { kbqErrorStateMatcherProvider, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { type KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
@@ -51,7 +51,7 @@ const latinValidator = (): ValidatorFn => {
         >
             <kbq-form-field class="layout-margin-bottom-l">
                 <kbq-tag-list #inputTagList formControlName="reactiveTypeaheadValue">
-                    @for (tag of reactiveForm.controls['reactiveTypeaheadValue'].value; track tag) {
+                    @for (tag of tags.value; track tag) {
                         <kbq-tag [value]="tag" (removed)="reactiveInputOnRemoveTag(tag)">
                             {{ tag }}
                             <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
@@ -93,30 +93,29 @@ const latinValidator = (): ValidatorFn => {
 export class ValidationTagListExample implements OnInit {
     protected readonly t = injectTranslation(TRANSLATIONS);
 
-    protected readonly reactiveForm: FormGroup;
-    protected readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-
-    protected get tags(): AbstractControl {
-        return this.reactiveForm.controls['reactiveTypeaheadValue'];
-    }
-
     private readonly formBuilder = inject(FormBuilder);
 
-    constructor() {
-        this.reactiveForm = this.formBuilder.group({
-            reactiveTypeaheadValue: this.formBuilder.control([], [Validators.required, latinValidator()])
-        });
+    protected readonly reactiveForm = this.formBuilder.group({
+        reactiveTypeaheadValue: this.formBuilder.nonNullable.control<string[]>(
+            [],
+            [Validators.required, latinValidator()]
+        )
+    });
+    protected readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+
+    protected get tags() {
+        return this.reactiveForm.controls.reactiveTypeaheadValue;
     }
 
     ngOnInit(): void {
         setTimeout(() => {
-            this.reactiveForm.controls['reactiveTypeaheadValue'].setValue(['asd', 'efd']);
+            this.tags.setValue(['asd', 'efd']);
         });
     }
 
     reactiveInputOnCreate({ input, value }: KbqTagInputEvent): void {
-        const control = this.reactiveForm.controls.reactiveTypeaheadValue;
-        const updatedControlValue: string[] = control.value.slice();
+        const control = this.tags;
+        const updatedControlValue = control.value.slice();
 
         if ((value || '').trim()) {
             updatedControlValue.push(value.trim());
@@ -130,8 +129,8 @@ export class ValidationTagListExample implements OnInit {
     }
 
     reactiveInputOnRemoveTag(tag: string): void {
-        const control = this.reactiveForm.controls['reactiveTypeaheadValue'];
-        const controlValue: string[] = control.value.slice();
+        const control = this.tags;
+        const controlValue = control.value.slice();
         const index = controlValue.indexOf(tag);
 
         if (index >= 0) {

@@ -27,7 +27,7 @@ import { TRANSLATIONS } from './l10n';
             </div>
         </div>
     `,
-    styleUrls: ['badge-list-example.css'],
+    styleUrl: 'badge-list-example.css',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BadgeListExample {

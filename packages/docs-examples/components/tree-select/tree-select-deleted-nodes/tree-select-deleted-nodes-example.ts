@@ -17,20 +17,20 @@ import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
 
 export class FileNode {
-    id: string;
-    children: FileNode[];
-    name: string;
+    id = '';
+    children?: FileNode[];
+    name = '';
     type: any;
 }
 
 /** Flat node with expandable and level information. */
 export class FileFlatNode {
-    id: string;
-    name: string;
+    id = '';
+    name = '';
     type: any;
-    level: number;
-    expandable: boolean;
-    parent: FileFlatNode | null;
+    level = 0;
+    expandable = false;
+    parent: FileFlatNode | null = null;
 }
 
 /**
@@ -243,7 +243,7 @@ export class TreeSelectDeletedNodesExample {
 
     private isExpandable = (node: FileFlatNode) => node.expandable;
 
-    private getChildren = (node: FileNode): FileNode[] => node.children;
+    private getChildren = (node: FileNode): FileNode[] | undefined => node.children;
 
     // Identity is the stable id, not the display name.
     private getValue = (node: FileFlatNode): string => node.id;

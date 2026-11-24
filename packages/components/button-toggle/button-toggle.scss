@@ -1,27 +1,40 @@
 @use '../core/styles/common/list';
-
-@use '../core/styles/common/tokens' as *;
-
-@use './button-toggle-theme' as *;
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/tokens';
+@use './button-toggle-theme';
+@use '../core/styles/common/squircle';
 
 .kbq-button-toggle-group {
-    box-sizing: border-box;
+    @include squircle.kbq-squircle(var(--kbq-button-toggle-size-container-border-radius));
+
     display: inline-flex;
     flex-direction: row;
+    gap: var(--kbq-button-toggle-size-container-content-gap-horizontal);
     align-items: center;
 
-    gap: var(--kbq-button-toggle-size-container-content-gap-horizontal);
-
-    @include kbq-squircle(var(--kbq-button-toggle-size-container-border-radius));
-
+    box-sizing: border-box;
     padding: var(--kbq-button-toggle-size-container-padding-vertical)
         var(--kbq-button-toggle-size-container-padding-horizontal);
 
     .kbq-button-toggle {
+        @include squircle.kbq-squircle(var(--kbq-button-toggle-size-item-border-radius));
+
         display: flex;
-        justify-content: flex-start;
         align-items: center;
+        justify-content: flex-start;
+
+        // Content-box on purpose, and load-bearing. `--kbq-button-toggle-size-item-height` is 22px,
+        // not the 24px of the design's `--kbq-size-xxl`: DS-3136 subtracted the border it added here
+        // from the token rather than from the rendered box, so the item only reaches its designed
+        // 24px while the border sits outside the declared height. A global `border-box` reset in a
+        // consuming application would pull the border back inside and leave the item 2px short —
+        // and the inner button, which is sized from the same token, would then spill past it.
+        box-sizing: content-box;
+
+        // What that clip used to give for free: a flex item's automatic minimum size is zero only while
+        // its `overflow` is non-`visible`, and that is what lets the label truncate.
+        min-width: 0;
+        height: var(--kbq-button-toggle-size-item-height);
+        min-height: var(--kbq-button-toggle-size-item-height);
 
         // Must not clip: the button's hit area below reaches outside this box. Not `overflow: clip` with
         // an `overflow-clip-margin` — Chromium rejects math functions there, so the margin cannot follow
@@ -35,22 +48,6 @@
         // whose `::before` this exists for, and the label box, which would clip its own descenders.
         overflow: visible;
 
-        // What that clip used to give for free: a flex item's automatic minimum size is zero only while
-        // its `overflow` is non-`visible`, and that is what lets the label truncate.
-        min-width: 0;
-
-        // Content-box on purpose, and load-bearing. `--kbq-button-toggle-size-item-height` is 22px,
-        // not the 24px of the design's `--kbq-size-xxl`: DS-3136 subtracted the border it added here
-        // from the token rather than from the rendered box, so the item only reaches its designed
-        // 24px while the border sits outside the declared height. A global `border-box` reset in a
-        // consuming application would pull the border back inside and leave the item 2px short —
-        // and the inner button, which is sized from the same token, would then spill past it.
-        box-sizing: content-box;
-
-        height: var(--kbq-button-toggle-size-item-height);
-        min-height: var(--kbq-button-toggle-size-item-height);
-
-        @include kbq-squircle(var(--kbq-button-toggle-size-item-border-radius));
         border: var(--kbq-size-border-width) solid transparent;
 
         // `border-color` is the theme's to set, from the same token — declaring it here as well
@@ -61,19 +58,19 @@
 
         > .kbq-button,
         > .kbq-button-icon {
+            @include squircle.kbq-squircle(var(--kbq-button-toggle-size-item-border-radius));
+
             height: inherit;
             min-height: inherit;
-            @include kbq-squircle(var(--kbq-button-toggle-size-item-border-radius));
-            border-width: 0;
-
-            padding: kbq-difference-series-css-variables(
+            padding: tokens.kbq-difference-series-css-variables(
                     [button-toggle-size-item-padding-vertical,
                     button-toggle-size-item-focus-outline-width]
                 )
-                kbq-difference-series-css-variables(
+                tokens.kbq-difference-series-css-variables(
                     [button-toggle-size-item-padding-horizontal,
                     button-toggle-size-item-focus-outline-width]
                 );
+            border-width: 0;
 
             // Hit area over the gutters the group's `gap` and `padding` leave around the pill this button
             // paints, so the highlight does not drop out between segments. On the button, not the item
@@ -85,7 +82,7 @@
             // reusable here: the mixin claims a fixed strip on one side of a plain vertical list, with
             // no gap to tile between two neighbours, no group padding at the ends, and no orientation
             // to swap the axes for.
-            &:before {
+            &::before {
                 content: '';
                 position: absolute;
             }
@@ -96,12 +93,11 @@
 
             .kbq-button-toggle-wrapper {
                 display: inline-flex;
-                justify-content: center;
+                gap: var(--kbq-button-toggle-size-item-content-gap-horizontal);
                 align-items: center;
+                justify-content: center;
 
                 width: 100%;
-
-                gap: var(--kbq-button-toggle-size-item-content-gap-horizontal);
 
                 // The button's base styles space its own slots with the button token; inside a toggle
                 // the row's `gap` is the whole spacing. Physical properties on purpose, so they
@@ -135,9 +131,8 @@
                 // label (e.g. inside a projected badge) does not also give the ellipsis up.
                 &:has(> .kbq-icon) {
                     display: flex;
-                    align-items: center;
-
                     gap: var(--kbq-button-toggle-size-item-content-gap-horizontal);
+                    align-items: center;
                 }
             }
 
@@ -162,20 +157,19 @@
             > .kbq-button,
             > .kbq-button-icon {
                 max-width: 100%;
-
                 height: var(--kbq-button-toggle-size-item-height);
 
-                &:before {
+                &::before {
                     inset-block: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-vertical));
                     inset-inline: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-gap));
                 }
             }
 
-            &:first-of-type > :is(.kbq-button, .kbq-button-icon):before {
+            &:first-of-type > :is(.kbq-button, .kbq-button-icon)::before {
                 inset-inline-start: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-horizontal));
             }
 
-            &:last-of-type > :is(.kbq-button, .kbq-button-icon):before {
+            &:last-of-type > :is(.kbq-button, .kbq-button-icon)::before {
                 inset-inline-end: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-horizontal));
             }
         }
@@ -185,17 +179,17 @@
         .kbq-button-toggle {
             > .kbq-button,
             > .kbq-button-icon {
-                &:before {
-                    inset-inline: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-horizontal));
+                &::before {
                     inset-block: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-gap));
+                    inset-inline: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-horizontal));
                 }
             }
 
-            &:first-of-type > :is(.kbq-button, .kbq-button-icon):before {
+            &:first-of-type > :is(.kbq-button, .kbq-button-icon)::before {
                 inset-block-start: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-vertical));
             }
 
-            &:last-of-type > :is(.kbq-button, .kbq-button-icon):before {
+            &:last-of-type > :is(.kbq-button, .kbq-button-icon)::before {
                 inset-block-end: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-vertical));
             }
         }
@@ -209,8 +203,8 @@
 
             > .kbq-button,
             > .kbq-button-icon {
-                width: 100%;
                 flex: 1;
+                width: 100%;
 
                 .kbq-button-wrapper {
                     justify-content: center;
@@ -252,5 +246,5 @@
     }
 }
 
-@include kbq-button-toggle-theme();
-@include kbq-button-toggle-typography();
+@include button-toggle-theme.kbq-button-toggle-theme();
+@include button-toggle-theme.kbq-button-toggle-typography();
