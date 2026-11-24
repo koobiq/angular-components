@@ -431,7 +431,12 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         const viewValueToBeChecked = normalizeNumber(this.viewValue, this.config);
 
         const shouldSkipForIntegerMode = this.integer() && this.isPeriod(event);
-        const shouldBlockMinus = minuses.includes(keyCode) && (this.viewValue.includes(event.key) || this.min() >= 0);
+        const selectionStart = this.nativeElement.selectionStart ?? 0;
+        const selectionEnd = this.nativeElement.selectionEnd ?? selectionStart;
+        const valueOutsideSelection = this.viewValue.slice(0, selectionStart) + this.viewValue.slice(selectionEnd);
+        const shouldBlockMinus =
+            minuses.includes(keyCode) &&
+            (this.min() >= 0 || selectionStart !== 0 || valueOutsideSelection.includes(event.key));
         const isSignAndFractionSepAlreadyExists =
             this.isPeriod(event) &&
             [this.fractionSeparator, KBQ_DEFAULT_PRECISION_SEPARATOR].includes(event.key) &&

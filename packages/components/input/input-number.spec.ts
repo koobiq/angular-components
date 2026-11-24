@@ -1676,6 +1676,73 @@ describe('KbqNumberInput', () => {
 
                 expect(preventDefaultSpyFn).toHaveBeenCalledTimes(minuses.length);
             });
+
+            it('should prevent minus in the middle without clearing the value', async () => {
+                fixture.componentInstance.min = -5;
+                fixture.componentInstance.value = 1;
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                inputElement.value = '1';
+                inputElement.setSelectionRange(1, 1);
+                fixture.detectChanges();
+
+                const event = { key: '-', keyCode: DASH, preventDefault: vi.fn() };
+
+                inputElementDebug.triggerEventHandler('keydown', event);
+
+                expect(event.preventDefault).toHaveBeenCalled();
+                expect(inputElement.value).toBe('1');
+                expect(fixture.componentInstance.value).not.toBeNull();
+            });
+
+            it('should allow minus at the start and when replacing an existing sign', async () => {
+                fixture.componentInstance.min = -5;
+                fixture.detectChanges();
+
+                inputElement.value = '-5';
+                inputElement.setSelectionRange(0, 1);
+                fixture.detectChanges();
+
+                const event = { key: '-', keyCode: DASH, preventDefault: vi.fn() };
+
+                inputElementDebug.triggerEventHandler('keydown', event);
+
+                expect(event.preventDefault).not.toHaveBeenCalled();
+            });
+
+            it('should block repeated minus outside selection for all minus keys', async () => {
+                fixture.componentInstance.min = -5;
+                fixture.detectChanges();
+
+                inputElement.value = '-1';
+                inputElement.setSelectionRange(2, 2);
+                fixture.detectChanges();
+
+                const minuses = [NUMPAD_MINUS, DASH, FF_MINUS];
+
+                for (const minus of minuses) {
+                    const event = { key: '-', keyCode: minus, preventDefault: vi.fn() };
+
+                    inputElementDebug.triggerEventHandler('keydown', event);
+                    expect(event.preventDefault).toHaveBeenCalled();
+                }
+            });
+
+            it('should block minus at the start when min >= 0', async () => {
+                fixture.componentInstance.min = 0;
+                fixture.detectChanges();
+
+                inputElement.value = '1';
+                inputElement.setSelectionRange(0, 0);
+                fixture.detectChanges();
+
+                const event = { key: '-', keyCode: DASH, preventDefault: vi.fn() };
+
+                inputElementDebug.triggerEventHandler('keydown', event);
+
+                expect(event.preventDefault).toHaveBeenCalled();
+            });
         });
     });
 
