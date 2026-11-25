@@ -89,6 +89,7 @@ import {
     isInput,
     isSelectAll,
     isUndefined,
+    KBQ_A11Y_LOCALE_CONFIGURATION,
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
     KBQ_OVERLAY_LAYERS,
@@ -446,6 +447,10 @@ export class KbqTreeSelect<T = any, K = T>
         }
     };
 
+    private readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'a11y',
+        KBQ_A11Y_LOCALE_CONFIGURATION
+    );
     private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'select',
         KBQ_SELECT_LOCALE_CONFIGURATION
@@ -1596,6 +1601,11 @@ export class KbqTreeSelect<T = any, K = T>
      */
     onContainerClick() {
         this.focus();
+    }
+
+    /** Accessible name of the control that removes a selected value from the trigger. */
+    protected removeItemAriaLabel(option: KbqTreeSelectTriggerValue): string {
+        return `${this.a11yLocaleConfiguration().remove} ${option.viewValue}`.trim();
     }
 
     /** Removes an option from the selection through the trailing icon of its tag in the trigger. */
