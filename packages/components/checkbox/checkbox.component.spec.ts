@@ -40,6 +40,25 @@ describe('KbqCheckbox', () => {
         }).compileComponents();
     });
 
+    it('should bind checked in both directions and emit once per user change', () => {
+        const fixture = TestBed.createComponent(CheckboxWithTwoWayChecked);
+
+        fixture.detectChanges();
+
+        const host = fixture.componentInstance;
+        const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+
+        host.checked = true;
+        fixture.detectChanges();
+        expect(input.checked).toBe(true);
+        expect(host.changes).toEqual([]);
+
+        input.click();
+        fixture.detectChanges();
+        expect(host.checked).toBe(false);
+        expect(host.changes).toEqual([false]);
+    });
+
     describe('basic behaviors', () => {
         let checkboxDebugElement: DebugElement;
         let checkboxNativeElement: HTMLElement;
@@ -58,6 +77,25 @@ describe('KbqCheckbox', () => {
             testComponent = fixture.debugElement.componentInstance;
             inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
             labelElement = <HTMLLabelElement>checkboxNativeElement.querySelector('label');
+        });
+
+        it('should keep a click on a one-way binding until the bound value changes', () => {
+            testComponent.isChecked = 0;
+            fixture.detectChanges();
+            expect(inputElement.checked).toBe(true);
+
+            inputElement.click();
+            fixture.detectChanges();
+            expect(testComponent.isChecked).toBe(0);
+            expect(inputElement.checked).toBe(false);
+
+            testComponent.isChecked = 1;
+            fixture.detectChanges();
+            expect(inputElement.checked).toBe(true);
+
+            testComponent.isChecked = 'false';
+            fixture.detectChanges();
+            expect(inputElement.checked).toBe(false);
         });
 
         it('should add and remove the checked state', () => {
@@ -184,6 +222,17 @@ describe('KbqCheckbox', () => {
             expect(inputElement.checked).toBe(true);
         });
 
+        it('should toggle programmatically without emitting checkedChange', () => {
+            const checkedChange = vi.fn();
+
+            checkboxInstance.checkedChange.subscribe(checkedChange);
+            checkboxInstance.toggle();
+            fixture.detectChanges();
+
+            expect(inputElement.checked).toBe(true);
+            expect(checkedChange).not.toHaveBeenCalled();
+        });
+
         it('should toggle checked state on click', () => {
             expect(checkboxInstance.checked).toBe(false);
 
@@ -258,11 +307,16 @@ describe('KbqCheckbox', () => {
         });
 
         it('should not toggle `checked` state upon interaction while disabled', () => {
+            const checkedChange = vi.fn();
+
+            checkboxInstance.checkedChange.subscribe(checkedChange);
+
             testComponent.isDisabled = true;
             fixture.detectChanges();
 
-            checkboxNativeElement.click();
+            inputElement.dispatchEvent(new MouseEvent('click', { bubbles: true }));
             expect(checkboxInstance.checked).toBe(false);
+            expect(checkedChange).not.toHaveBeenCalled();
         });
 
         it('should overwrite indeterminate state when clicked', async () => {
@@ -511,10 +565,15 @@ describe('KbqCheckbox', () => {
                 clickActionFixture.componentInstance.clickAction.set('noop');
                 clickActionFixture.detectChanges();
 
+                const checkedChange = vi.fn();
+
+                checkboxInstance.checkedChange.subscribe(checkedChange);
+
                 inputElement.click();
                 clickActionFixture.detectChanges();
 
                 expect(checkboxInstance.checked).toBe(true);
+                expect(checkedChange).not.toHaveBeenCalled();
             });
         });
 
@@ -842,6 +901,18 @@ describe('KbqCheckbox', () => {
             checkboxInstance = checkboxDebugElement.componentInstance;
             testComponent = fixture.debugElement.componentInstance;
             inputElement = <HTMLInputElement>checkboxDebugElement.nativeElement.querySelector('input');
+        });
+
+        it('should update checked silently when the form writes a value', () => {
+            const checkedChange = vi.fn();
+
+            checkboxInstance.checkedChange.subscribe(checkedChange);
+
+            testComponent.formControl.setValue(true);
+            fixture.detectChanges();
+
+            expect(inputElement.checked).toBe(true);
+            expect(checkedChange).not.toHaveBeenCalled();
         });
 
         it('should toggle the disabled state', () => {
@@ -1256,7 +1327,7 @@ class CheckboxDrivenByEffect {
 })
 class SingleCheckbox {
     labelPos: 'before' | 'after' = 'after';
-    isChecked: boolean = false;
+    isChecked: boolean | number | string = false;
     isRequired: boolean = false;
     isIndeterminate: boolean = false;
     isDisabled: boolean = false;
@@ -1458,3 +1529,14 @@ class CheckboxWithValuelessAttributes {}
     `
 })
 class CheckboxWithNullId {}
+
+@Component({
+    imports: [KbqCheckbox],
+    template: `
+        <kbq-checkbox [(checked)]="checked" (checkedChange)="changes.push($event)" />
+    `
+})
+class CheckboxWithTwoWayChecked {
+    checked = false;
+    readonly changes: boolean[] = [];
+}
