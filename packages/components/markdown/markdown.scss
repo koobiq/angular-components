@@ -74,13 +74,14 @@
         padding: 0;
         list-style: decimal outside;
 
-        // Size the marker column with the last number, including the space in the native decimal marker.
+        // Reserve a leading inset plus the full native marker, including its trailing space.
         &::after {
             content: counter(list-item) '. ';
 
             grid-area: 1 / 1;
 
             height: 0;
+            padding-inline-start: var(--kbq-size-s);
 
             white-space: pre;
             font-variant-numeric: tabular-nums;
