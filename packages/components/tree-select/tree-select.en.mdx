@@ -97,28 +97,6 @@ Use search when the tree has more than 10 nodes. Search splits a multi-word quer
 
 <Example id="tree-select-search-overview" />
 
-#### Search for short lists
-
-When there are only a few nodes, the search can be hidden automatically. This feature is off by default.
-Use the `searchMinOptionsThreshold` attribute to configure it.
-
-Possible values:
-
-- `'auto'` – hides the search if there are fewer than 10 nodes (the default threshold).
-- `<number>` – hides the search if there are fewer nodes than the specified number.
-
-To configure this for all tree-selects in a module with consistent display rules, use the `kbqTreeSelectOptionsProvider` provider:
-
-```ts
-import { kbqTreeSelectOptionsProvider } from '@koobiq/components/tree-select';
-
-@NgModule({
-    providers: [
-        kbqTreeSelectOptionsProvider({ searchMinOptionsThreshold: 'auto' })
-    ]
-})
-```
-
 #### Select all
 
 In multiple selection mode all the nodes can be selected at once. The feature is off by default — turn it on with the `selectAll` attribute, and a master checkbox appears above the tree.
@@ -147,6 +125,28 @@ Once everything is selected, the control can show a label of its own instead of 
 `Ctrl`/`Cmd` + `A` selects all nodes in multiple selection mode. By default a repeated press keeps them selected; `selectAllToggle` makes it deselect them instead. With `selectAll` the shortcut always toggles both ways, so it and the master checkbox cannot disagree.
 
 Inside a non-empty search field the first press selects the text of the field; the next one falls through to the nodes. The behaviour can be replaced wholesale with the `selectAllHandler` input.
+
+#### Search for short lists
+
+When there are only a few nodes, the search can be hidden automatically. This feature is off by default.
+Use the `searchMinOptionsThreshold` attribute to configure it.
+
+Possible values:
+
+- `'auto'` – hides the search if there are fewer than 10 nodes (the default threshold).
+- `<number>` – hides the search if there are fewer nodes than the specified number.
+
+To configure this for all tree-selects in a module with consistent display rules, use the `kbqTreeSelectOptionsProvider` provider:
+
+```ts
+import { kbqTreeSelectOptionsProvider } from '@koobiq/components/tree-select';
+
+@NgModule({
+    providers: [
+        kbqTreeSelectOptionsProvider({ searchMinOptionsThreshold: 'auto' })
+    ]
+})
+```
 
 #### Lazy loading
 

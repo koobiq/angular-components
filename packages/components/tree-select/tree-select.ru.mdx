@@ -36,7 +36,7 @@ Tree-select работает и с реактивными, и с шаблонн�
 
 <Example id="tree-select-multiple-overview" />
 
-### Многострочный tree-select (multiline)
+### Множественный выбор (многострочный)
 
 <Example id="tree-select-with-multiline-matcher" />
 
@@ -96,27 +96,6 @@ class Example {
 
 <Example id="tree-select-search-overview" />
 
-#### Поиск при малом количестве узлов
-
-При малом количестве узлов поиск может автоматически скрываться. По умолчанию такая возможность отключена.
-
-Для настройки используйте атрибут `searchMinOptionsThreshold` со значением:
-
-- `auto`. Поиск будет скрыт, если количество узлов меньше 10 (порог по умолчанию).
-- `<число>`. Выключение поиска, если количество узлов меньше указанного числа.
-
-Используйте `kbqTreeSelectOptionsProvider`, чтобы настроить все поля в модуле по единым правилам:
-
-```ts
-import { kbqTreeSelectOptionsProvider } from '@koobiq/components/tree-select';
-
-@NgModule({
-    providers: [
-        kbqTreeSelectOptionsProvider({ searchMinOptionsThreshold: 'auto' })
-    ]
-})
-```
-
 #### Выбрать все
 
 В режиме мультивыбора есть возможность выбрать все узлы сразу. Эта функция отключена по умолчанию — включите её атрибутом `selectAll`, и над деревом появится мастер-чекбокс.
@@ -145,6 +124,27 @@ import { kbqTreeSelectOptionsProvider } from '@koobiq/components/tree-select';
 `Ctrl`/`Cmd` + `A` выбирает все узлы при множественном выборе. По умолчанию повторное нажатие оставляет их выбранными; атрибут `selectAllToggle` заставляет его снимать выделение. При включённом `selectAll` сочетание всегда работает как переключатель — так оно не может разойтись с мастер-чекбоксом.
 
 Внутри непустого поля поиска первое нажатие выделяет текст поля, следующее переходит к узлам. Поведение можно полностью заменить через инпут `selectAllHandler`.
+
+#### Поиск при малом количестве узлов
+
+При малом количестве узлов поиск может автоматически скрываться. По умолчанию такая возможность отключена.
+
+Для настройки используйте атрибут `searchMinOptionsThreshold` со значением:
+
+- `auto`. Поиск будет скрыт, если количество узлов меньше 10 (порог по умолчанию).
+- `<число>`. Выключение поиска, если количество узлов меньше указанного числа.
+
+Используйте `kbqTreeSelectOptionsProvider`, чтобы настроить все поля в модуле по единым правилам:
+
+```ts
+import { kbqTreeSelectOptionsProvider } from '@koobiq/components/tree-select';
+
+@NgModule({
+    providers: [
+        kbqTreeSelectOptionsProvider({ searchMinOptionsThreshold: 'auto' })
+    ]
+})
+```
 
 #### Ленивая загрузка
 

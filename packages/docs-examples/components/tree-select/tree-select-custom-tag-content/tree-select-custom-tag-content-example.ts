@@ -64,17 +64,14 @@ export class FileFlatNode {
         </kbq-form-field>
     `,
     styles: `
-        :host {
-            display: flex;
-            justify-content: center;
-            padding: var(--kbq-size-l);
-        }
-
         .kbq-form-field {
             width: 320px;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-column layout-align-center-center'
+    }
 })
 export class TreeSelectCustomTagContentExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
