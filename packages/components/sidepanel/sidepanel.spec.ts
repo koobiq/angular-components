@@ -1,3 +1,4 @@
+import { ESCAPE } from '@angular/cdk/keycodes';
 import { Overlay, OverlayContainer } from '@angular/cdk/overlay';
 import { NgTemplateOutlet } from '@angular/common';
 import {
@@ -18,7 +19,6 @@ import { EMPTY, of } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     dispatchKeyboardEvent,
-    ESCAPE,
     KBQ_STATE_STORE,
     type KbqCanClose,
     KbqStateSavingService,

@@ -1,9 +1,9 @@
+import { ESCAPE } from '@angular/cdk/keycodes';
 import type { OverlayRef } from '@angular/cdk/overlay';
 import { signal, untracked } from '@angular/core';
 import { filter, merge, type Observable, Subject, take, tap } from 'rxjs';
 import {
     coerceCanCloseDecision,
-    ESCAPE,
     isHtmlElement,
     type KbqCanClose,
     type KbqCloseReason,

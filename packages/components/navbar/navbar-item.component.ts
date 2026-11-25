@@ -1,4 +1,5 @@
 import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
+import { DOWN_ARROW, ENTER, RIGHT_ARROW, SPACE } from '@angular/cdk/keycodes';
 import { ContentObserver } from '@angular/cdk/observers';
 import { _getFocusedElementPierceShadowDom, Platform } from '@angular/cdk/platform';
 import {
@@ -32,17 +33,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subject } from 'rxjs';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import {
-    DOWN_ARROW,
-    ENTER,
     type IFocusableOption,
     KBQ_WINDOW,
     kbqAnimationsDisabled,
     kbqInjectNativeElement,
     type KbqOverflowFitItem,
     PopUpPlacements,
-    PopUpTriggers,
-    RIGHT_ARROW,
-    SPACE
+    PopUpTriggers
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField } from '@koobiq/components/form-field';

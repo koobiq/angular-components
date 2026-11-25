@@ -1,4 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { ESCAPE } from '@angular/cdk/keycodes';
 import {
     Component,
     type DebugElement,
@@ -27,7 +28,6 @@ import {
     dispatchFakeEvent,
     dispatchMouseEvent,
     type ErrorStateMatcher,
-    ESCAPE,
     KBQ_FORM_FIELD_REF,
     KBQ_PARENT_POPUP,
     type KbqParentPopup,

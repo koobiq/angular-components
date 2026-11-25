@@ -1,4 +1,5 @@
 import { CdkTrapFocus, FocusMonitor, type FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
+import { ENTER, ESCAPE } from '@angular/cdk/keycodes';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { _getFocusedElementPierceShadowDom, Platform } from '@angular/cdk/platform';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
@@ -40,8 +41,6 @@ import { type Observable, type Subscription, take } from 'rxjs';
 import { type KbqButtonColor, KbqButtonModule } from '@koobiq/components/button';
 import {
     coerceCanCloseDecision,
-    ENTER,
-    ESCAPE,
     KBQ_A11Y_LOCALE_CONFIGURATION,
     kbqAnimationsDisabled,
     type KbqCanClose,

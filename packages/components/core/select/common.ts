@@ -1,4 +1,5 @@
-﻿import type { CdkConnectedOverlay, ConnectedPosition } from '@angular/cdk/overlay';
+﻿import { END, ESCAPE, HOME, SPACE } from '@angular/cdk/keycodes';
+import type { CdkConnectedOverlay, ConnectedPosition } from '@angular/cdk/overlay';
 import {
     type AfterContentInit,
     booleanAttribute,
@@ -17,7 +18,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, fromEvent, Subscription } from 'rxjs';
 import { type KbqSearchFieldPopup, kbqSyncSearchFieldA11y } from '../a11y';
 import { KBQ_FORM_FIELD_REF, type KbqFormFieldRef } from '../form-field';
-import { END, ESCAPE, HOME, SPACE } from '../keycodes';
 import { kbqInjectA11yLocaleConfiguration } from '../locales';
 import {
     KBQ_PANEL_DEFAULT_MAX_HEIGHT,

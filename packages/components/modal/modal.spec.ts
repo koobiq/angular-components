@@ -1,4 +1,5 @@
 import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
+import { ENTER, ESCAPE, TAB } from '@angular/cdk/keycodes';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {
     Component,
@@ -26,14 +27,11 @@ import {
     dispatchEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
-    ENTER,
-    ESCAPE,
     KBQ_ANIMATIONS_CONFIG,
     KBQ_WINDOW,
     type KbqCanClose,
     KbqComponentColors,
-    ruRULocaleData,
-    TAB
+    ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqDropdownItem, KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqModalComponent } from './modal.component';

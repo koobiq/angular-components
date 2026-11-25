@@ -1,6 +1,24 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { CdkDrag, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import {
+    A,
+    C,
+    D,
+    DOWN_ARROW,
+    END,
+    ENTER,
+    ESCAPE,
+    HOME,
+    LEFT_ARROW,
+    PAGE_DOWN,
+    PAGE_UP,
+    RIGHT_ARROW,
+    S,
+    SPACE,
+    TAB,
+    UP_ARROW
+} from '@angular/cdk/keycodes';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import {
     ChangeDetectionStrategy,
@@ -21,33 +39,17 @@ import { FormControl, FormsModule, NgModel, ReactiveFormsModule, UntypedFormCont
 import { By } from '@angular/platform-browser';
 import type { MockInstance } from 'vitest';
 import {
-    A,
-    C,
     createKeyboardEvent,
     createMouseEvent,
-    D,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
-    DOWN_ARROW,
-    END,
-    ENTER,
-    ESCAPE,
     type FocusKeyManager,
-    HOME,
     type KbqMultipleInput,
     KbqOptionActionComponent,
     KbqOptionModule,
     kbqSelectLocaleConfigurationProvider,
-    LEFT_ARROW,
-    MultipleMode,
-    PAGE_DOWN,
-    PAGE_UP,
-    RIGHT_ARROW,
-    S,
-    SPACE,
-    TAB,
-    UP_ARROW
+    MultipleMode
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';

@@ -1,4 +1,5 @@
-﻿import { Overlay, type OverlayRef } from '@angular/cdk/overlay';
+﻿import { DELETE, TAB } from '@angular/cdk/keycodes';
+import { Overlay, type OverlayRef } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import {
     ChangeDetectorRef,
@@ -26,7 +27,6 @@ import { BehaviorSubject, map, Observable, timer } from 'rxjs';
 import {
     createFakeEvent,
     createMouseEvent,
-    DELETE,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
@@ -37,8 +37,7 @@ import {
     type KbqDefaultSizes,
     kbqLocaleServiceProvider,
     type KbqPartialLocaleData,
-    ruRULocaleData,
-    TAB
+    ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqProgressSpinner } from '@koobiq/components/progress-spinner';

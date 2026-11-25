@@ -1,4 +1,5 @@
 import { CdkMonitorFocus } from '@angular/cdk/a11y';
+import { DOWN_ARROW, TAB, UP_ARROW } from '@angular/cdk/keycodes';
 import {
     type AfterContentInit,
     ChangeDetectionStrategy,
@@ -14,14 +15,11 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {
-    DOWN_ARROW,
     isHorizontalMovement,
     isVerticalMovement,
     KbqLocaleOverridesDirective,
     type KbqNavbarLocaleConfiguration,
-    KbqOverlayLayerExclude,
-    TAB,
-    UP_ARROW
+    KbqOverlayLayerExclude
 } from '@koobiq/components/core';
 import { KbqFocusableComponent } from './navbar.component';
 import { KbqNavbarBento, KbqNavbarItem, KbqNavbarRectangleElement } from './navbar-item.component';

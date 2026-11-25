@@ -1,5 +1,5 @@
 ﻿import { Directionality } from '@angular/cdk/bidi';
-import { DASH } from '@angular/cdk/keycodes';
+import { BACKSPACE, COMMA, DASH, ENTER, ESCAPE, SEMICOLON, SPACE, TAB } from '@angular/cdk/keycodes';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { PlatformModule } from '@angular/cdk/platform';
 import {
@@ -30,17 +30,10 @@ import {
     KbqAutocompleteTrigger
 } from '@koobiq/components/autocomplete';
 import {
-    BACKSPACE,
-    COMMA,
     createKeyboardEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
-    ENTER,
-    ErrorStateMatcher,
-    ESCAPE,
-    SEMICOLON,
-    SPACE,
-    TAB
+    ErrorStateMatcher
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqTagsModule } from './index';
