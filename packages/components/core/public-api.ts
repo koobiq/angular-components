@@ -13,6 +13,7 @@ export * from './option/index';
 export * from './overflow-fit-engine/overflow-fit-engine';
 export * from './overflow-shadow/index';
 export * from './overlay/auto-hide-scroll-strategy';
+export * from './overlay/can-close';
 export * from './overlay/overlay-layer';
 export * from './overlay/overlay-origin';
 export * from './overlay/overlay-position-map';

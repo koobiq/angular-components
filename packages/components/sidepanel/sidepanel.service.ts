@@ -404,11 +404,10 @@ export class KbqSidepanelService implements OnDestroy {
     private closeSidepanels(sidepanels: KbqSidepanelRef[]) {
         // `reverse()` mutates, and this is called with the live stack.
         [...sidepanels].reverse().forEach((sidepanelRef: KbqSidepanelRef) => {
-            // Marked before closing rather than around the loop: `afterClosed()` only fires once the exit
-            // animation is done, by which time a flag held for the duration of this call would be gone.
+            // Teardown bypasses the guard: a panel whose owner is being destroyed must not stay
+            // open, and a vetoed `beforeClosed` would otherwise never fire, losing the mark.
             this.bulkClosed.add(sidepanelRef);
-
-            sidepanelRef.close();
+            sidepanelRef.requestClose('programmatic', undefined, true);
         });
     }
 

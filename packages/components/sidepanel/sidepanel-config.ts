@@ -1,5 +1,6 @@
 import type { ScrollStrategy } from '@angular/cdk/overlay';
 import { InjectionToken, type Injector } from '@angular/core';
+import type { KbqCanClose } from '@koobiq/components/core';
 
 /** Injection token that can be used to access the data that was passed in to a sidepanel. */
 export const KBQ_SIDEPANEL_DATA = new InjectionToken<any>('KbqSidepanelData');
@@ -61,8 +62,15 @@ export class KbqSidepanelConfig<D = any> {
 
     backdropClass?: string;
 
-    /** Whether the user can use escape or clicking outside to close the sidepanel. */
+    /** Whether the user can close the sidepanel by any UI action: escape, clicking outside or the close button. */
     disableClose?: boolean = false;
+
+    /**
+     * Guard intercepting every close attempt, including the programmatic `close()`.
+     * Returning `true` closes the panel, `false` keeps it open; async decisions are awaited.
+     * Defaults to no guard: every close attempt is allowed.
+     */
+    canClose?: KbqCanClose;
 
     /** Custom class for the overlay pane. */
     overlayPanelClass?: string | string[] = '';

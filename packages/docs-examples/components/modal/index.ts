@@ -4,6 +4,7 @@ import { ModalCaptionExample } from './modal-caption/modal-caption-example';
 import { ModalComponentExample } from './modal-component/modal-component-example';
 import { ModalComponentWithInjectorExample } from './modal-component-with-injector/modal-component-with-injector-example';
 import { ModalFullCustomExample } from './modal-full-custom/modal-full-custom-example';
+import { ModalKeepOpenOnErrorExample } from './modal-keep-open-on-error/modal-keep-open-on-error-example';
 import { ModalMultipleExample } from './modal-multiple/modal-multiple-example';
 import { ModalOverviewExample } from './modal-overview/modal-overview-example';
 import { ModalScrollExample } from './modal-scroll/modal-scroll-example';
@@ -16,6 +17,7 @@ export {
     ModalComponentExample,
     ModalComponentWithInjectorExample,
     ModalFullCustomExample,
+    ModalKeepOpenOnErrorExample,
     ModalMultipleExample,
     ModalOverviewExample,
     ModalScrollExample,
@@ -33,7 +35,8 @@ const EXAMPLES = [
     ModalSizesExample,
     ModalMultipleExample,
     ModalFullCustomExample,
-    ModalButtonLoadingExample
+    ModalButtonLoadingExample,
+    ModalKeepOpenOnErrorExample
 ];
 
 @NgModule({

@@ -218,6 +218,9 @@ export function checkAndNormalizeLocalizedNumber(num: string | null | undefined,
 // @public @deprecated (undocumented)
 export const CLOSE_SQUARE_BRACKET = 221;
 
+// @public
+export function coerceCanCloseDecision(decision: Promise<boolean> | Observable<boolean>): Observable<boolean>;
+
 // @public @deprecated (undocumented)
 export const COMMA = 188;
 
@@ -2864,6 +2867,9 @@ export interface KbqBaseFileUploadLocaleConfiguration {
 }
 
 // @public
+export type KbqCanClose = (reason: KbqCloseReason) => boolean | Promise<boolean> | Observable<boolean>;
+
+// @public
 export interface KbqCaretRect {
     height: number;
     width: number;
@@ -2922,6 +2928,9 @@ export type KbqClampedTextLocaleConfiguration = {
     showMoreTextCompact?: string;
     moreText: string;
 };
+
+// @public
+export type KbqCloseReason = 'backdrop' | 'escape' | 'close' | 'programmatic';
 
 // @public
 export type KbqCodeBlockLocaleConfiguration = {

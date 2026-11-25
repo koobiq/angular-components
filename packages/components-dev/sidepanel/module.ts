@@ -20,6 +20,7 @@ import {
 } from '@koobiq/components/sidepanel';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import {
+    SidepanelCanCloseExample,
     SidepanelDisableCloseExample,
     SidepanelNormalModeExample,
     SidepanelOverlayedExample,
@@ -40,7 +41,8 @@ import {
         SidepanelSizesExample,
         SidepanelStateSavingExample,
         SidepanelWithCustomInjectorExample,
-        SidepanelDisableCloseExample
+        SidepanelDisableCloseExample,
+        SidepanelCanCloseExample
     ],
     template: `
         <sidepanel-state-saving-example />
@@ -58,6 +60,8 @@ import {
         <sidepanel-with-custom-injector-example />
         <hr />
         <sidepanel-disable-close-example />
+        <hr />
+        <sidepanel-can-close-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

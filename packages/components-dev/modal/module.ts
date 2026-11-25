@@ -11,6 +11,7 @@ import {
     ModalComponentExample,
     ModalComponentWithInjectorExample,
     ModalFullCustomExample,
+    ModalKeepOpenOnErrorExample,
     ModalMultipleExample,
     ModalOverviewExample,
     ModalScrollExample,
@@ -30,7 +31,8 @@ import {
         ModalSizesExample,
         ModalMultipleExample,
         ModalCaptionExample,
-        ModalFullCustomExample
+        ModalFullCustomExample,
+        ModalKeepOpenOnErrorExample
     ],
     template: `
         <modal-overview-example />
@@ -52,6 +54,8 @@ import {
         <modal-caption-example />
         <hr />
         <modal-full-custom-example />
+        <hr />
+        <modal-keep-open-on-error-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

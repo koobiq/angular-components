@@ -40,8 +40,11 @@ import { outputFromObservable } from '@angular/core/rxjs-interop';
 import { type Observable, type Subscription, take } from 'rxjs';
 import { type KbqButtonColor, KbqButtonModule } from '@koobiq/components/button';
 import {
+    coerceCanCloseDecision,
     KBQ_A11Y_LOCALE_CONFIGURATION,
     kbqAnimationsDisabled,
+    type KbqCanClose,
+    type KbqCloseReason,
     KbqComponentColors,
     KbqLocaleOverridesDirective,
     KbqOverflowShadowBottom,
@@ -59,8 +62,8 @@ import {
     KBQ_MODAL_OPTIONS,
     type KbqModal,
     type KbqModalAutoFocus,
+    type KbqModalConfig,
     MODAL_ANIMATE_DURATION,
-    type ModalOptions,
     ModalSize,
     type ModalType,
     type OnClickCallback
@@ -161,7 +164,7 @@ export class KbqModalComponent<T = any, R = any>
      * takes its initial value from here: a service-created dialog carries no template bindings, so
      * an input it does not bind keeps that initial value for the dialog's whole life.
      */
-    private readonly options = inject(KBQ_MODAL_OPTIONS, { optional: true }) as ModalOptions<T, R> | null;
+    private readonly options = inject(KBQ_MODAL_OPTIONS, { optional: true }) as KbqModalConfig<T, R> | null;
 
     componentColors = KbqComponentColors;
 
@@ -291,6 +294,15 @@ export class KbqModalComponent<T = any, R = any>
     readonly kbqOnCancel = new EventEmitter<T>();
     /** @docs-private */
     readonly kbqOnCancelOutput = outputFromObservable(this.kbqOnCancel, { alias: 'kbqOnCancel' });
+
+    /**
+     * Guard intercepting every close attempt. Takes precedence over the config's `canClose` and
+     * can be assigned or replaced after the dialog was opened. Defaults to the config's value.
+     */
+    override canClose: KbqCanClose | undefined;
+
+    /** Whether an async `canClose` decision is pending. */
+    private isGuarding = false;
 
     readonly modalContainer = viewChild.required<ElementRef>('modalContainer');
     readonly bodyContainer = viewChild.required('bodyContainer', { read: ViewContainerRef });
@@ -583,12 +595,56 @@ export class KbqModalComponent<T = any, R = any>
      * Closing an already closed dialog is a no-op: `afterClose` emits once per actual transition.
      */
     close(result?: R) {
+        this.requestClose('programmatic', result);
+    }
+
+    /**
+     * Asks `canClose` and closes with `result` when allowed. Closing an already closed dialog is
+     * a no-op, and repeated attempts are ignored while an async decision is pending. A
+     * `programmatic` attempt re-reads the guard instead: assigning `canClose` and calling `close()`
+     * is the way to force-close past a pending decision. `force` closes unconditionally, bypassing
+     * both the guard and the lock — reserved for teardown.
+     */
+    override requestClose(reason: KbqCloseReason, result?: R, force = false): void {
+        // Read the state untracked: `close()` is called from consumer `effect()`s, and a tracked
+        // read here would re-run that effect on every open/close.
+        if (untracked(() => !this.kbqVisible())) return;
+
+        if (force) {
+            this.doClose(result);
+
+            return;
+        }
+
+        if (this.isGuarding && reason !== 'programmatic') return;
+
+        const guard = this.canClose ?? this.options?.canClose;
+        const decision = untracked(() => guard?.(reason)) ?? true;
+
+        if (decision === true) {
+            this.doClose(result);
+
+            return;
+        }
+
+        if (decision === false) return;
+
+        this.isGuarding = true;
+
+        coerceCanCloseDecision(decision).subscribe((allow) => {
+            this.isGuarding = false;
+
+            if (allow) this.doClose(result);
+        });
+    }
+
+    private doClose(result?: R): void {
         untracked(() => this.changeVisibleFromInside(false, result));
     }
 
-    // Destroy equals Close
+    // Destroy is teardown and bypasses the guard: a dialog whose owner is gone must not stay open.
     destroy(result?: R) {
-        this.close(result);
+        this.requestClose('programmatic', result, true);
     }
 
     markForCheck() {
@@ -685,7 +741,7 @@ export class KbqModalComponent<T = any, R = any>
             ($event.target as HTMLElement).classList.contains('kbq-modal-wrap') &&
             this.kbqVisible()
         ) {
-            this.onClickOkCancel('cancel');
+            this.onClickOkCancel('cancel', 'backdrop');
         }
     }
 
@@ -704,7 +760,7 @@ export class KbqModalComponent<T = any, R = any>
             // the dialog, so it cannot be the keystroke that opened it. Escape is the Cancel
             // button, veto included.
             if (this.kbqCloseByESC() && this.kbqVisible()) {
-                this.onClickOkCancel('cancel');
+                this.onClickOkCancel('cancel', 'escape');
                 event.preventDefault();
             }
 
@@ -723,19 +779,24 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     /** @docs-private */
-    protected onClickOkCancel(type: 'ok' | 'cancel') {
-        this.handleCloseResult(type, (doClose) => doClose !== false);
+    protected onClickOkCancel(type: 'ok' | 'cancel', reason: KbqCloseReason = 'close') {
+        this.handleCloseResult(type, (doClose) => doClose !== false, reason);
     }
 
     /** @docs-private */
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-    protected handleCloseResult(triggerType: 'ok' | 'cancel', canClose: (doClose: boolean | void | {}) => boolean) {
+    protected handleCloseResult(
+        triggerType: 'ok' | 'cancel',
+        // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+        shouldClose: (doClose: boolean | void | {}) => boolean,
+        reason: KbqCloseReason = 'close'
+    ) {
         const handler = triggerType === 'ok' ? this.kbqOkClick() : this.kbqCancelClick();
         const emitter = triggerType === 'ok' ? this.kbqOnOk : this.kbqOnCancel;
         const loading = triggerType === 'ok' ? this.okLoading : this.cancelLoading;
         // Users can return "false" to prevent closing by default
         // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-        const caseClose = (doClose: boolean | void | {}) => canClose(doClose) && this.close(doClose as R);
+        const caseClose = (doClose: boolean | void | {}) =>
+            shouldClose(doClose) && this.requestClose(reason, doClose as R);
 
         if (!handler) {
             emitter.emit(this.getContentComponent());

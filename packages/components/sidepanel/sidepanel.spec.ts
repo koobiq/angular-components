@@ -1,4 +1,4 @@
-﻿import { ESCAPE } from '@angular/cdk/keycodes';
+import { ESCAPE } from '@angular/cdk/keycodes';
 import { Overlay, OverlayContainer } from '@angular/cdk/overlay';
 import { NgTemplateOutlet } from '@angular/common';
 import {
@@ -15,10 +15,12 @@ import {
 } from '@angular/core';
 import { type ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { EMPTY, of } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     dispatchKeyboardEvent,
     KBQ_STATE_STORE,
+    type KbqCanClose,
     KbqStateSavingService,
     type KbqStateStore
 } from '@koobiq/components/core';
@@ -1215,6 +1217,240 @@ describe('KbqSidepanelService', () => {
 
             expect(sidepanelService.openedSidepanels.length).toBe(1);
             expect(fixture.componentInstance.runs.close).toBe(1);
+        });
+    });
+
+    describe('canClose', () => {
+        it('should keep the sidepanel open when canClose returns false', async () => {
+            vi.useFakeTimers();
+
+            sidepanelService.open(SimpleSidepanelExample, { canClose: () => false });
+            rootComponentFixture.detectChanges();
+
+            overlayContainerElement.querySelector<HTMLElement>('.cdk-overlay-backdrop')!.click();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).not.toBeNull();
+        });
+
+        it('should close the sidepanel when canClose returns true', async () => {
+            vi.useFakeTimers();
+
+            sidepanelService.open(SimpleSidepanelExample, { canClose: () => true });
+            rootComponentFixture.detectChanges();
+
+            overlayContainerElement.querySelector<HTMLElement>('.cdk-overlay-backdrop')!.click();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).toBeNull();
+        });
+
+        it('should pass the close reason to canClose', async () => {
+            vi.useFakeTimers();
+
+            const canClose = vi.fn<KbqCanClose>(() => false);
+            const ref = sidepanelService.open(ComponentForSidepanel, { canClose });
+
+            rootComponentFixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            overlayContainerElement.querySelector<HTMLElement>('.cdk-overlay-backdrop')!.click();
+            dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+            overlayContainerElement
+                .querySelector<HTMLButtonElement>('kbq-sidepanel-header button[kbq-sidepanel-close]')!
+                .click();
+            ref.close();
+
+            await vi.advanceTimersByTimeAsync(0);
+
+            expect(canClose.mock.calls.map(([reason]) => reason)).toEqual([
+                'backdrop',
+                'escape',
+                'close',
+                'programmatic'
+            ]);
+        });
+
+        it('should await an async canClose decision', async () => {
+            vi.useFakeTimers();
+
+            let resolve!: (allow: boolean) => void;
+            const canClose = () => new Promise<boolean>((_resolve) => (resolve = _resolve));
+
+            sidepanelService.open(SimpleSidepanelExample, { canClose });
+            rootComponentFixture.detectChanges();
+
+            overlayContainerElement.querySelector<HTMLElement>('.cdk-overlay-backdrop')!.click();
+            await vi.advanceTimersByTimeAsync(0);
+
+            expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).not.toBeNull();
+
+            resolve(true);
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).toBeNull();
+        });
+
+        it('should ignore repeated triggers while an async canClose decision is pending', async () => {
+            vi.useFakeTimers();
+
+            const canClose = vi.fn(() => new Promise<boolean>(() => {}));
+
+            sidepanelService.open(SimpleSidepanelExample, { canClose });
+            rootComponentFixture.detectChanges();
+
+            overlayContainerElement.querySelector<HTMLElement>('.cdk-overlay-backdrop')!.click();
+            dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+
+            await vi.advanceTimersByTimeAsync(0);
+
+            expect(canClose).toHaveBeenCalledTimes(1);
+        });
+
+        it('should prefer ref.canClose over config.canClose', async () => {
+            vi.useFakeTimers();
+
+            const configGuard = vi.fn(() => false);
+            const refGuard = vi.fn(() => true);
+
+            const ref = sidepanelService.open(SimpleSidepanelExample, { canClose: configGuard });
+
+            ref.canClose = refGuard;
+            rootComponentFixture.detectChanges();
+
+            overlayContainerElement.querySelector<HTMLElement>('.cdk-overlay-backdrop')!.click();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(configGuard).not.toHaveBeenCalled();
+            expect(refGuard).toHaveBeenCalledTimes(1);
+        });
+
+        it('should not call canClose for user triggers when disableClose is set', async () => {
+            vi.useFakeTimers();
+
+            const canClose = vi.fn(() => true);
+
+            sidepanelService.open(SimpleSidepanelExample, { canClose, disableClose: true });
+            rootComponentFixture.detectChanges();
+
+            overlayContainerElement.querySelector<HTMLElement>('.cdk-overlay-backdrop')!.click();
+            dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+
+            await vi.advanceTimersByTimeAsync(0);
+
+            expect(canClose).not.toHaveBeenCalled();
+            expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).not.toBeNull();
+        });
+
+        it('should support an observable canClose decision', async () => {
+            vi.useFakeTimers();
+
+            sidepanelService.open(SimpleSidepanelExample, { canClose: () => of(false) });
+            rootComponentFixture.detectChanges();
+
+            overlayContainerElement.querySelector<HTMLElement>('.cdk-overlay-backdrop')!.click();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).not.toBeNull();
+        });
+
+        it('should fall back to config.canClose when ref.canClose is reset', async () => {
+            vi.useFakeTimers();
+
+            const configGuard = vi.fn(() => false);
+            const ref = sidepanelService.open(SimpleSidepanelExample, { canClose: configGuard });
+
+            ref.canClose = () => true;
+            ref.canClose = undefined;
+            rootComponentFixture.detectChanges();
+
+            overlayContainerElement.querySelector<HTMLElement>('.cdk-overlay-backdrop')!.click();
+            await vi.advanceTimersByTimeAsync(0);
+
+            expect(configGuard).toHaveBeenCalledTimes(1);
+            expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).not.toBeNull();
+        });
+
+        it('should veto but not lock when an observable canClose completes empty', async () => {
+            vi.useFakeTimers();
+
+            const ref = sidepanelService.open(SimpleSidepanelExample, { canClose: () => EMPTY });
+
+            rootComponentFixture.detectChanges();
+
+            overlayContainerElement.querySelector<HTMLElement>('.cdk-overlay-backdrop')!.click();
+            await vi.advanceTimersByTimeAsync(0);
+
+            expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).not.toBeNull();
+
+            // The pending lock must be released: a new attempt consults the guard again.
+            ref.canClose = () => true;
+            ref.close();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).toBeNull();
+        });
+
+        it('should let a programmatic close replace a pending guard decision', async () => {
+            vi.useFakeTimers();
+
+            const ref = sidepanelService.open(SimpleSidepanelExample, {
+                canClose: () => new Promise<boolean>(() => {})
+            });
+
+            rootComponentFixture.detectChanges();
+
+            overlayContainerElement.querySelector<HTMLElement>('.cdk-overlay-backdrop')!.click();
+            await vi.advanceTimersByTimeAsync(0);
+
+            ref.canClose = () => true;
+            ref.close();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).toBeNull();
+        });
+
+        it('should not call canClose when closing an already closed sidepanel', async () => {
+            vi.useFakeTimers();
+
+            const canClose = vi.fn<KbqCanClose>(() => true);
+            const ref = sidepanelService.open(SimpleSidepanelExample, { canClose });
+
+            rootComponentFixture.detectChanges();
+
+            ref.close();
+            await vi.runOnlyPendingTimersAsync();
+
+            ref.close();
+            await vi.advanceTimersByTimeAsync(0);
+
+            expect(canClose).toHaveBeenCalledTimes(1);
+        });
+
+        it('should not close on the close button when disableClose is set', async () => {
+            vi.useFakeTimers();
+
+            sidepanelService.open(ComponentForSidepanel, { disableClose: true });
+            rootComponentFixture.detectChanges();
+
+            overlayContainerElement
+                .querySelector<HTMLButtonElement>('kbq-sidepanel-header button[kbq-sidepanel-close]')!
+                .click();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).not.toBeNull();
+        });
+
+        it('should bypass the guard on closeAll', async () => {
+            vi.useFakeTimers();
+
+            sidepanelService.open(SimpleSidepanelExample, { canClose: () => false });
+            rootComponentFixture.detectChanges();
+
+            sidepanelService.closeAll();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).toBeNull();
         });
     });
 });

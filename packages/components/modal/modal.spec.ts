@@ -19,6 +19,7 @@ import {
 } from '@angular/core';
 import { type ComponentFixture, inject as testingInject, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { EMPTY } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     createKeyboardEvent,
@@ -28,6 +29,7 @@ import {
     dispatchMouseEvent,
     KBQ_ANIMATIONS_CONFIG,
     KBQ_WINDOW,
+    type KbqCanClose,
     KbqComponentColors,
     ruRULocaleData
 } from '@koobiq/components/core';
@@ -961,6 +963,190 @@ describe('KbqModal', () => {
             expect(modalRef.getInstance().kbqVisible()).toBe(true);
 
             await vi.runOnlyPendingTimersAsync();
+        });
+
+        describe('canClose', () => {
+            it('should keep the modal open when canClose vetoes a mask click', async () => {
+                const modalRef = modalService.create({ kbqMaskClosable: true, canClose: () => false });
+
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                const mask = modalRef.getElement().querySelector<HTMLElement>('.kbq-modal-wrap')!;
+
+                dispatchMouseEvent(mask, 'mousedown', 0, 0, createMouseEvent('mousedown', 0, 0, 0));
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                expect(modalService.openModals.length).toBe(1);
+
+                await vi.runOnlyPendingTimersAsync();
+            });
+
+            it('should pass the close reason to canClose', async () => {
+                const canClose = vi.fn<KbqCanClose>(() => false);
+                const modalRef = modalService.create({ kbqTitle: 'T', kbqMaskClosable: true, canClose });
+
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                const mask = modalRef.getElement().querySelector<HTMLElement>('.kbq-modal-wrap')!;
+
+                dispatchMouseEvent(mask, 'mousedown', 0, 0, createMouseEvent('mousedown', 0, 0, 0));
+                dispatchKeyboardEvent(modalRef.getElement(), 'keydown', ESCAPE);
+                modalRef.getElement().querySelector<HTMLButtonElement>('.kbq-modal-close')!.click();
+                modalRef.close();
+
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(0);
+
+                expect(canClose.mock.calls.map(([reason]) => reason)).toEqual([
+                    'backdrop',
+                    'escape',
+                    'close',
+                    'programmatic'
+                ]);
+
+                await vi.runOnlyPendingTimersAsync();
+            });
+
+            it('should await an async canClose decision and ignore repeated triggers while pending', async () => {
+                let allowClose!: (allow: boolean) => void;
+                const canClose = vi.fn(() => new Promise<boolean>((resolve) => (allowClose = resolve)));
+                const modalRef = modalService.create({ kbqTitle: 'T', canClose });
+
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                dispatchKeyboardEvent(modalRef.getElement(), 'keydown', ESCAPE);
+                dispatchKeyboardEvent(modalRef.getElement(), 'keydown', ESCAPE);
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(0);
+
+                expect(canClose).toHaveBeenCalledTimes(1);
+                expect(modalRef.getInstance().kbqVisible()).toBe(true);
+
+                allowClose(true);
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                expect(modalRef.getInstance().kbqVisible()).toBe(false);
+
+                await vi.runOnlyPendingTimersAsync();
+            });
+
+            it('should prefer ref.canClose over the config guard', async () => {
+                const configGuard = vi.fn(() => false);
+                const modalRef = modalService.create({ kbqTitle: 'T', canClose: configGuard });
+
+                modalRef.canClose = () => true;
+
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                dispatchKeyboardEvent(modalRef.getElement(), 'keydown', ESCAPE);
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                expect(configGuard).not.toHaveBeenCalled();
+                expect(modalRef.getInstance().kbqVisible()).toBe(false);
+
+                await vi.runOnlyPendingTimersAsync();
+            });
+
+            it('should keep the kbqCancelClick veto working alongside canClose', async () => {
+                const modalRef = modalService.create({
+                    kbqTitle: 'T',
+                    canClose: () => true,
+                    kbqCancelClick: () => false
+                });
+
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                dispatchKeyboardEvent(modalRef.getElement(), 'keydown', ESCAPE);
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                expect(modalRef.getInstance().kbqVisible()).toBe(true);
+
+                await vi.runOnlyPendingTimersAsync();
+            });
+
+            it('should fall back to the config guard when ref.canClose is reset', async () => {
+                const configGuard = vi.fn(() => false);
+                const modalRef = modalService.create({ kbqTitle: 'T', canClose: configGuard });
+
+                modalRef.canClose = () => true;
+                modalRef.canClose = undefined;
+
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                dispatchKeyboardEvent(modalRef.getElement(), 'keydown', ESCAPE);
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                expect(configGuard).toHaveBeenCalledTimes(1);
+                expect(modalRef.getInstance().kbqVisible()).toBe(true);
+
+                await vi.runOnlyPendingTimersAsync();
+            });
+
+            it('should not call canClose when closing an already closed dialog', async () => {
+                const canClose = vi.fn<KbqCanClose>(() => true);
+                const modalRef = modalService.create({ kbqTitle: 'T', canClose });
+
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                modalRef.close();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                modalRef.close();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                expect(canClose).toHaveBeenCalledTimes(1);
+                expect(modalRef.getInstance().kbqVisible()).toBe(false);
+
+                await vi.runOnlyPendingTimersAsync();
+            });
+
+            it('should veto but not lock when an observable canClose completes empty', async () => {
+                const modalRef = modalService.create({ kbqTitle: 'T', canClose: () => EMPTY });
+
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                dispatchKeyboardEvent(modalRef.getElement(), 'keydown', ESCAPE);
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                expect(modalRef.getInstance().kbqVisible()).toBe(true);
+
+                // The pending lock must be released: a new attempt consults the guard again.
+                modalRef.canClose = () => true;
+                modalRef.close();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                expect(modalRef.getInstance().kbqVisible()).toBe(false);
+
+                await vi.runOnlyPendingTimersAsync();
+            });
+
+            it('should bypass the guard on destroy', async () => {
+                const modalRef = modalService.create({ kbqTitle: 'T', canClose: () => false });
+
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                modalRef.destroy();
+                await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+                expect(modalRef.getInstance().kbqVisible()).toBe(false);
+
+                await vi.runOnlyPendingTimersAsync();
+            });
         });
 
         it('should build the dialog class list from the class name, the size and the animation', async () => {
