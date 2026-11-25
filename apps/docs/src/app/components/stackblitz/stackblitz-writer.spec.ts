@@ -248,6 +248,14 @@ describe(DocsStackblitzWriter.name, () => {
         expect(behind).toEqual([]);
     });
 
+    it('installs the runtime peers of the Angular Luxon adapter explicitly', async () => {
+        const { dependencies } = JSON.parse((await buildProject())['package.json']);
+        const adapterManifest = join(REPOSITORY_ROOT, 'packages/angular-luxon-adapter/package.json');
+        const { peerDependencies } = JSON.parse(readFileSync(adapterManifest, 'utf8'));
+
+        expect(Object.keys(dependencies)).toEqual(expect.arrayContaining(Object.keys(peerDependencies)));
+    });
+
     it('locks every dependency of the template; run docs:update-stackblitz-lock to update', () => {
         const template = JSON.parse(readTemplateFile('package.json').replace(/\${ngVersion}/g, `^${VERSION.major}`));
         const lock = JSON.parse(readTemplateFile('package-lock.json'));
