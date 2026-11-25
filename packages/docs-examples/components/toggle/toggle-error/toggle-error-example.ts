@@ -11,7 +11,7 @@ import { TRANSLATIONS } from './l10n';
     selector: 'toggle-error-example',
     imports: [KbqToggleModule],
     template: `
-        <kbq-toggle [checked]="value()" [color]="color" (change)="value.set($event.checked)">
+        <kbq-toggle [color]="color" [(checked)]="vibrationEnabled">
             {{ t().vibration }}
         </kbq-toggle>
     `,
@@ -23,6 +23,6 @@ import { TRANSLATIONS } from './l10n';
 export class ToggleErrorExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
 
-    protected readonly value = signal(false);
+    protected readonly vibrationEnabled = signal(false);
     protected readonly color = KbqComponentColors.Error;
 }
