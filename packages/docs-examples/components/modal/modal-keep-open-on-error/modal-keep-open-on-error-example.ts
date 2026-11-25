@@ -45,7 +45,7 @@ export class ExamplePasswordForm {
     selector: 'modal-keep-open-on-error-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="openModal()">{{ t().changePassword }}</button>
+        <button kbq-button type="button" (click)="openModal()">{{ t().changePassword }}</button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -1,5 +1,4 @@
-import { from, isObservable, Observable, of } from 'rxjs';
-import { catchError, defaultIfEmpty, take } from 'rxjs/operators';
+import { catchError, defaultIfEmpty, from, isObservable, type Observable, of, take } from 'rxjs';
 
 /** The way the close of an overlay-based component (sidepanel, modal) was attempted. */
 export type KbqCloseReason = 'backdrop' | 'escape' | 'close' | 'programmatic';
