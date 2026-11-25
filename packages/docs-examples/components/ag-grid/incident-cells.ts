@@ -116,6 +116,7 @@ export class ExampleIncidentLink {
         this.modal.create({
             kbqTitle: incident.id + ' · ' + incident.event,
             kbqContent: ExampleIncidentDialog,
+            kbqMaskClosable: true,
             data: { incident, headers: this.headers() } satisfies IncidentDetails,
             kbqFooter: []
         });
