@@ -6,6 +6,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KBQ_MODAL_DATA, KbqModalModule, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import {
+    ModalButtonLoadingExample,
     ModalCaptionExample,
     ModalComponentExample,
     ModalComponentWithInjectorExample,
@@ -21,6 +22,7 @@ import {
     selector: 'dev-examples',
     imports: [
         ModalOverviewExample,
+        ModalButtonLoadingExample,
         ModalComponentExample,
         ModalComponentWithInjectorExample,
         ModalTemplateExample,
@@ -32,6 +34,8 @@ import {
     ],
     template: `
         <modal-overview-example />
+        <hr />
+        <modal-button-loading-example />
         <hr />
         <modal-component-example />
         <hr />
