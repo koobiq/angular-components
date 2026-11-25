@@ -16,6 +16,8 @@ import {
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { exampleIncidentColumns } from '../incident-columns';
+import { EXAMPLE_INCIDENT_COUNT, exampleGetIncidents } from '../security-incidents';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -70,12 +72,7 @@ export class AgGridLoadingOverlayExample {
     protected readonly loading = model(true);
     protected readonly datasource = signal<IDatasource | undefined>(undefined);
 
-    protected readonly columnDefs = computed<ColDef[]>(() =>
-        Array.from({ length: 6 }, (_, i) => ({
-            field: 'column' + i,
-            headerName: this.t().headerText
-        }))
-    );
+    protected readonly columnDefs = computed(() => exampleIncidentColumns(this.t().headers));
 
     protected readonly defaultColDef: ColDef = {
         cellRendererSelector: ({ data }: ICellRendererParams) =>
@@ -89,18 +86,7 @@ export class AgGridLoadingOverlayExample {
 
         this.datasource.set({
             getRows: ({ startRow, endRow, successCallback }: IGetRowsParams) => {
-                setTimeout(
-                    () =>
-                        successCallback(
-                            Array.from({ length: endRow - startRow }, (_, i) =>
-                                Object.fromEntries(
-                                    Array.from({ length: 6 }, (_, c) => ['column' + c, 'Text ' + (startRow + i)])
-                                )
-                            ),
-                            1000
-                        ),
-                    1500
-                );
+                setTimeout(() => successCallback(exampleGetIncidents(startRow, endRow), EXAMPLE_INCIDENT_COUNT), 1500);
             }
         });
     }

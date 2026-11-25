@@ -2,7 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
-import { kbqLocaleServiceProvider, kbqThemeProvider } from '@koobiq/components/core';
+import { kbqLocaleIDProvider, kbqLocaleServiceProvider, kbqThemeProvider } from '@koobiq/components/core';
 import { docsMountHeader } from './docs-header/mount';
 import { KoobiqDocsExample } from './example/koobiq-docs-example';
 
@@ -11,6 +11,7 @@ bootstrapApplication(KoobiqDocsExample, {
         provideZonelessChangeDetection(),
         provideHttpClient(),
         provideRouter([]),
+        kbqLocaleIDProvider('${exampleLocale}'),
         kbqLocaleServiceProvider(),
         kbqThemeProvider({ storageKey: 'docs_theme' })
     ]

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { AgGridModule } from 'ag-grid-angular';
-import { AllCommunityModule, type ColDef, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import {
     KBQ_AG_GRID_COLUMN_MENU_LABELS_EN,
     KBQ_AG_GRID_SETTINGS_MENU_LABELS_EN,
@@ -13,6 +13,8 @@ import {
     KbqAgGridThemeModule
 } from '@koobiq/ag-grid-angular-theme';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { exampleIncidentColumns } from '../incident-columns';
+import { exampleGetIncidents } from '../security-incidents';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -34,7 +36,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
             [rowHeight]="density().rowHeight"
             [style.height.px]="400"
             [columnDefs]="columnDefs()"
-            [rowData]="rowData()"
+            [rowData]="rowData"
         />
     `,
     providers: [
@@ -76,30 +78,19 @@ export class AgGridSettingsMenuExample {
         }
     ]);
 
-    protected readonly columnDefs = computed<ColDef[]>(() => [
-        {
-            field: 'incidentId',
-            headerName: this.t().incidentId,
-            pinned: 'left',
-            lockVisible: true,
-            lockPinned: true,
-            width: 120
-        },
-        { field: 'severity', headerName: this.t().severity, width: 110 },
-        { field: 'status', headerName: this.t().status, width: 120 },
-        { field: 'attackType', headerName: this.t().attackType, width: 170 },
-        { field: 'sourceIp', headerName: this.t().sourceIp, hide: true, width: 150 },
-        { field: 'affectedHost', headerName: this.t().affectedHost, hide: true, width: 150 }
-    ]);
-
-    protected readonly rowData = computed(() =>
-        Array.from({ length: 30 }, (_, index) => ({
-            incidentId: `INC-${1001 + index}`,
-            severity: this.t().severities[index % this.t().severities.length],
-            status: this.t().statuses[index % this.t().statuses.length],
-            attackType: this.t().attackTypes[index % this.t().attackTypes.length],
-            sourceIp: `192.0.2.${index + 1}`,
-            affectedHost: `srv-0${(index % 9) + 1}`
-        }))
+    protected readonly columnDefs = computed(() =>
+        exampleIncidentColumns(
+            this.t().headers,
+            { field: 'id', pinned: 'left', lockVisible: true, lockPinned: true },
+            'connection',
+            'severity',
+            'status',
+            'category',
+            { field: 'assignee', hide: true },
+            { field: 'sourceIp', hide: true },
+            { field: 'affectedHost', hide: true }
+        )
     );
+
+    protected readonly rowData = exampleGetIncidents(0, 30);
 }

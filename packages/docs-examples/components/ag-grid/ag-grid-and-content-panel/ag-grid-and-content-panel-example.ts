@@ -1,4 +1,3 @@
-import { ENTER } from '@angular/cdk/keycodes';
 import { ChangeDetectionStrategy, Component, computed, inject, model, output, signal } from '@angular/core';
 import { AgGridModule } from 'ag-grid-angular';
 import {
@@ -13,19 +12,19 @@ import {
     type RowSelectionOptions
 } from 'ag-grid-community';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
-import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqContentPanelModule } from '@koobiq/components/content-panel';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLink } from '@koobiq/components/link';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { ExampleIncidentBadge, ExampleIncidentLink } from '../incident-cells';
+import { exampleIncidentColumns } from '../incident-columns';
+import { ExampleIncidentDetails } from '../incident-details';
+import { exampleGetIncidents, type ExampleSecurityIncident } from '../security-incidents';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
-
-type ExampleRowData = Record<string, string>;
 
 @Component({
     selector: 'example-grid',
@@ -43,7 +42,7 @@ type ExampleRowData = Record<string, string>;
             [style.height]="'100%'"
             [columnDefs]="columnDefs()"
             [defaultColDef]="defaultColDef"
-            [rowData]="rowData()"
+            [rowData]="rowData"
             (firstDataRendered)="onFirstDataRendered($event)"
             (cellClicked)="cellClicked.emit($event)"
             (cellFocused)="cellFocused.emit($event)"
@@ -55,6 +54,7 @@ type ExampleRowData = Record<string, string>;
 export class ExampleGrid {
     protected readonly t = injectTranslation(TRANSLATIONS);
 
+    readonly incidentOpened = output<ExampleSecurityIncident>();
     readonly cellClicked = output<CellClickedEvent>();
     readonly cellFocused = output<CellFocusedEvent>();
     readonly cellKeyDown = output<CellKeyDownEvent | FullWidthCellKeyDownEvent>();
@@ -72,22 +72,31 @@ export class ExampleGrid {
         hideDisabledCheckboxes: false
     };
 
-    protected readonly columnDefs = computed<ColDef[]>(() =>
-        Array.from({ length: 20 }, (_, index) => ({
-            headerName: this.t().headerText,
-            field: 'column' + index
-        }))
+    protected readonly columnDefs = computed(() =>
+        exampleIncidentColumns(
+            this.t().headers,
+            {
+                field: 'id',
+                cellRendererParams: {
+                    headers: this.t().headers,
+                    openIncident: (row: ExampleSecurityIncident) => this.incidentOpened.emit(row)
+                }
+            },
+            'event',
+            'severity',
+            'status',
+            'affectedHost',
+            'sourceIp',
+            'destinationIp',
+            'protocol',
+            'port',
+            'process',
+            'pid',
+            'filePath'
+        )
     );
 
-    protected readonly rowData = computed<ExampleRowData[]>(() =>
-        Array.from({ length: 100 }, (_, index) => {
-            return this.columnDefs().reduce((prev, _cur, i) => {
-                prev['column' + i] = `${this.t().headerText} ${index}`;
-
-                return prev;
-            }, {} as ExampleRowData);
-        })
-    );
+    protected readonly rowData = exampleGetIncidents();
 
     protected onFirstDataRendered({ api }: FirstDataRenderedEvent): void {
         api.forEachNode((node) => {
@@ -102,8 +111,9 @@ export class ExampleGrid {
     selector: 'example-content-panel',
     imports: [
         KbqButtonModule,
-        KbqBadgeModule,
-        KbqLink,
+        ExampleIncidentBadge,
+        ExampleIncidentLink,
+        ExampleIncidentDetails,
         KbqIconModule,
         KbqContentPanelModule,
         KbqModalModule,
@@ -130,10 +140,12 @@ export class ExampleGrid {
         <kbq-modal-body class="example-modal-body">
             <kbq-content-panel-container class="example-content-panel-container" [(opened)]="opened">
                 <example-grid
+                    (incidentOpened)="openIncident($event)"
                     (cellClicked)="onGridCellClicked($event)"
                     (cellFocused)="onGridCellFocused($event)"
                     (cellKeyDown)="onGridCellKeyDown($event)"
                 />
+                @let row = selectedIncident();
                 <kbq-content-panel>
                     <kbq-content-panel-aside>
                         @for (_i of [0, 1, 2, 3]; track $index) {
@@ -151,9 +163,11 @@ export class ExampleGrid {
                     </kbq-content-panel-aside>
                     <kbq-content-panel-header>
                         <div class="example-content-header-title" kbqContentPanelHeaderTitle>
-                            <span>{{ t().selectedRow(selectedRowIndex()) }}</span>
-                            <kbq-badge [badgeColor]="badgeColors.FadeError">8,6</kbq-badge>
-                            <a kbqLink pseudo>July 21, 2025 2:29 PM</a>
+                            @if (row) {
+                                <example-incident-link [incident]="row" [headers]="t().headers" />
+                                <span>{{ row.event }}</span>
+                                <example-incident-badge [value]="row.severity" />
+                            }
                         </div>
                         <div class="example-content-header-actions" kbqContentPanelHeaderActions>
                             <button
@@ -184,7 +198,11 @@ export class ExampleGrid {
                                 <i kbq-icon="kbq-ellipsis-vertical_16"></i>
                             </button>
                         </div>
-                        <div class="example-content-header-caption">{{ t().caption }}</div>
+                        <div class="example-content-header-caption">
+                            @if (row) {
+                                <example-incident-badge [value]="row.status" />
+                            }
+                        </div>
                         <div class="example-content-header-buttons">
                             <button kbq-button type="button" [color]="componentColors.ContrastFade">
                                 <i kbq-icon="kbq-pencil_16"></i>
@@ -200,9 +218,9 @@ export class ExampleGrid {
                             </button>
                         </div>
                     </kbq-content-panel-header>
-                    <kbq-content-panel-body class="example-content-panel-body">
-                        @for (_i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; track $index) {
-                            <p>{{ t().dosText($index) }}</p>
+                    <kbq-content-panel-body>
+                        @if (row) {
+                            <example-incident-details [incident]="row" [headers]="t().headers" />
                         }
                     </kbq-content-panel-body>
                     <kbq-content-panel-footer>
@@ -267,17 +285,12 @@ export class ExampleGrid {
             gap: var(--kbq-size-s);
         }
 
-        .example-content-header-title > span,
-        .example-content-header-title > a {
+        .example-content-header-title > span {
             display: -webkit-box;
             -webkit-box-orient: vertical;
             -webkit-line-clamp: 1;
             overflow: hidden;
             text-overflow: ellipsis;
-        }
-
-        .example-content-panel-body > p {
-            margin-top: 0;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -289,25 +302,32 @@ export class ExampleContentPanel {
 
     protected readonly componentColors = KbqComponentColors;
     protected readonly buttonStyles = KbqButtonStyles;
-    protected readonly badgeColors = KbqBadgeColors;
 
-    protected readonly selectedRowIndex = signal(0);
+    protected readonly selectedIncident = signal<ExampleSecurityIncident | undefined>(undefined);
     protected readonly opened = model(false);
 
-    protected onGridCellClicked({ rowIndex }: CellClickedEvent): void {
-        this.selectedRowIndex.set(rowIndex!);
-        this.opened.set(true);
+    protected onGridCellClicked({ data }: CellClickedEvent<ExampleSecurityIncident>): void {
+        if (data) this.openIncident(data);
     }
 
-    protected onGridCellFocused(event: CellFocusedEvent): void {
-        if (this.opened()) this.selectedRowIndex.set(event.rowIndex!);
-    }
+    protected onGridCellFocused({ api, rowIndex }: CellFocusedEvent<ExampleSecurityIncident>): void {
+        if (this.opened() && rowIndex !== null) {
+            const row = api.getDisplayedRowAtIndex(rowIndex)?.data;
 
-    protected onGridCellKeyDown({ rowIndex, event }: CellKeyDownEvent | FullWidthCellKeyDownEvent): void {
-        if (event instanceof KeyboardEvent && event.keyCode === ENTER) {
-            this.selectedRowIndex.set(rowIndex!);
-            this.opened.set(true);
+            if (row) this.selectedIncident.set(row);
         }
+    }
+
+    protected onGridCellKeyDown({
+        data,
+        event
+    }: CellKeyDownEvent<ExampleSecurityIncident> | FullWidthCellKeyDownEvent<ExampleSecurityIncident>): void {
+        if (data && event instanceof KeyboardEvent && event.key === 'Enter') this.openIncident(data);
+    }
+
+    protected openIncident(row: ExampleSecurityIncident): void {
+        this.selectedIncident.set(row);
+        this.opened.set(true);
     }
 }
 

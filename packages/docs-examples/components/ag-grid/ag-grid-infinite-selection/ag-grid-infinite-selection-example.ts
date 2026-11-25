@@ -20,6 +20,8 @@ import {
     KbqAgGridThemeModule
 } from '@koobiq/ag-grid-angular-theme';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { exampleIncidentColumns } from '../incident-columns';
+import { EXAMPLE_INCIDENT_COUNT, exampleGetIncidents, type ExampleSecurityIncident } from '../security-incidents';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -98,38 +100,25 @@ type SelectionDto = {
 export class AgGridInfiniteSelectionExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
 
-    protected readonly columnDefs = computed<ColDef[]>(() => [
-        { field: 'column0', headerName: this.t().projectName, pinned: 'left', width: 130 },
-        ...Array.from({ length: 5 }, (_, i) => ({
-            field: 'column' + (i + 1),
-            headerName: this.t().headerText,
-            width: 130
-        }))
-    ]);
+    protected readonly columnDefs = computed(() =>
+        exampleIncidentColumns(
+            this.t().headers,
+            { field: 'id', pinned: 'left' },
+            'event',
+            'severity',
+            'status',
+            'affectedHost',
+            'sourceIp'
+        )
+    );
     // The row id is the selection identity: it stays the same in every locale.
     protected readonly datasource: IDatasource = {
-        rowCount: 1000,
+        rowCount: EXAMPLE_INCIDENT_COUNT,
         getRows: ({ startRow, endRow, successCallback }: IGetRowsParams) => {
-            setTimeout(
-                () =>
-                    successCallback(
-                        Array.from({ length: endRow - startRow }, (_, i) => ({
-                            id: 'ProjectName' + (startRow + i),
-                            column0: 'Project name ' + (startRow + i),
-                            ...Object.fromEntries(
-                                Array.from({ length: 5 }, (_, c) => [
-                                    'column' + (c + 1),
-                                    'Text ' + (startRow + i)
-                                ])
-                            )
-                        })),
-                        1000
-                    ),
-                500
-            );
+            setTimeout(() => successCallback(exampleGetIncidents(startRow, endRow), EXAMPLE_INCIDENT_COUNT), 500);
         }
     };
-    protected readonly getRowId: GetRowIdFunc = ({ data }) => data.id;
+    protected readonly getRowId: GetRowIdFunc<ExampleSecurityIncident> = ({ data }) => data.id;
     protected readonly defaultColDef: ColDef = {
         cellRendererSelector: ({ data }: ICellRendererParams) =>
             data === undefined ? { component: KbqAgGridSkeletonCellRenderer } : undefined
