@@ -6,6 +6,7 @@ export interface ExampleTranslation {
     title: string;
     name: string;
     save: string;
+    cancel: string;
     confirmTitle: string;
     confirmContent: string;
     discard: string;
@@ -18,6 +19,7 @@ export const TRANSLATIONS: Translations<ExampleTranslation> = {
         title: 'Редактирование',
         name: 'Имя',
         save: 'Сохранить',
+        cancel: 'Отмена',
         confirmTitle: 'Несохранённые изменения',
         confirmContent: 'Закрыть без сохранения?',
         discard: 'Закрыть без сохранения',
@@ -28,6 +30,7 @@ export const TRANSLATIONS: Translations<ExampleTranslation> = {
         title: 'Editing',
         name: 'Name',
         save: 'Save',
+        cancel: 'Cancel',
         confirmTitle: 'Unsaved changes',
         confirmContent: 'Close without saving?',
         discard: 'Close without saving',

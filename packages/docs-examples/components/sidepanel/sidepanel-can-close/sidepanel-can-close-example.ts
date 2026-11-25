@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, effect, inject, signal, TemplateRef, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import type { Observable } from 'rxjs';
-import { map } from 'rxjs';
+import { map, take } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KBQ_WINDOW, type KbqCloseReason } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -24,13 +24,22 @@ import { TRANSLATIONS } from './l10n';
             <kbq-sidepanel-header [closeable]="true">{{ t().title }}</kbq-sidepanel-header>
             <kbq-sidepanel-body style="padding-top: 8px">
                 <kbq-form-field>
-                    <input kbqInput [placeholder]="t().name" [(ngModel)]="value" (ngModelChange)="dirty.set(true)" />
+                    <input
+                        id="can-close-name"
+                        kbqInput
+                        [placeholder]="t().name"
+                        [(ngModel)]="value"
+                        (ngModelChange)="dirty.set(true)"
+                    />
                 </kbq-form-field>
             </kbq-sidepanel-body>
             <kbq-sidepanel-footer>
                 <kbq-sidepanel-actions>
                     <button kbq-button type="button" color="contrast" (click)="save()">
                         <span>{{ t().save }}</span>
+                    </button>
+                    <button kbq-button type="button" (click)="cancel()">
+                        <span>{{ t().cancel }}</span>
                     </button>
                 </kbq-sidepanel-actions>
             </kbq-sidepanel-footer>
@@ -71,10 +80,25 @@ export class SidepanelCanCloseExample {
         this.sidepanelRef = this.sidepanelService.open(this.template(), {
             canClose: (reason) => this.canClose(reason)
         });
+
+        // The trap captures focus into the panel, but lands it on the header close button: move it
+        // into the field the panel was opened for.
+        this.sidepanelRef
+            .afterOpened()
+            .pipe(take(1))
+            .subscribe(() => {
+                this.window.document.getElementById('can-close-name')?.focus();
+            });
     }
 
     /** Successful save: the programmatic close passes the guard without a confirmation. */
     save(): void {
+        this.dirty.set(false);
+        this.sidepanelRef?.close();
+    }
+
+    /** Cancel is an explicit discard: it closes without the confirmation, like Save. */
+    cancel(): void {
         this.dirty.set(false);
         this.sidepanelRef?.close();
     }
