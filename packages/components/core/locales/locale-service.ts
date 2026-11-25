@@ -308,11 +308,11 @@ export function numberByParts(
 
     if (numberByParts.length > 2) {
         const lastPartIndex = numberByParts.length - 1;
-        const firstGroup = numberByParts[0].replace(/\D/g, '');
+        const firstGroup = (numberByParts[0] ?? '').replace(/\D/g, '');
         let integerPartsCount = 1;
 
         if (firstGroup.length >= 1 && firstGroup.length <= 3) {
-            while (integerPartsCount < lastPartIndex && /^\d{3}$/.test(numberByParts[integerPartsCount])) {
+            while (integerPartsCount < lastPartIndex && /^\d{3}$/.test(numberByParts[integerPartsCount] ?? '')) {
                 integerPartsCount++;
             }
         }
