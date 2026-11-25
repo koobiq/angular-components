@@ -80,7 +80,7 @@ class Example {
     <kbq-tag [selectable]="false" [disabled]="option.disabled || select.disabled()">
         {{ option.viewValue }}
         @if (!option.disabled && !select.disabled()) {
-            <i kbq-icon="kbq-xmark-s_16" kbqTagRemove (click)="select.onRemoveSelectedOption(option, $event)"></i>
+            <i kbq-icon="kbq-xmark-s_16" kbqTagRemove [tabIndex]="0" [aria-label]="removeItem(option.viewValue)" (click)="select.onRemoveSelectedOption(option, $event)"></i>
         }
     </kbq-tag>
 </ng-template>
@@ -257,7 +257,7 @@ import { kbqTreeSelectOptionsProvider } from '@koobiq/components/tree-select';
 
 С клавиатуры `Escape` и `Alt` + стрелка закрывают список и возвращают фокус на контрол, а `Tab` закрывает его и переходит к следующему контролу — так же, как везде.
 
-В режиме мультивыбора у каждого тега есть свой элемент удаления: `button`, срабатывающий по `Enter` и `Space`, с именем из a11y-локали (`remove`) — в собственном шаблоне тега задайте `aria-label` на иконке удаления, чтобы назвать его по значению. Место в порядке табуляции получают только теги, которые триггер действительно показывает: те, за которые отвечает счётчик «+N», обрезаны и не видны, и остановка табуляции увела бы фокус на невидимое. Свой шаблон `#kbqSelectTagContent` заменяет эту разметку целиком — воспроизведите элемент удаления, если оставляете удаление тегов.
+В режиме мультивыбора у каждого тега есть свой элемент удаления: `button`, срабатывающий по `Enter` и `Space`, с именем из a11y-локали (`remove`) — в собственном шаблоне тега задайте `aria-label` на иконке удаления, чтобы назвать его по значению. Свой шаблон `#kbqSelectTagContent` заменяет эту разметку целиком — воспроизведите элемент удаления, включая его opting-in в порядок табуляции через `tabIndex`, если оставляете удаление тегов.
 
 Когда операционная система просит уменьшить анимацию, панель открывается и закрывается без плавного появления.
 

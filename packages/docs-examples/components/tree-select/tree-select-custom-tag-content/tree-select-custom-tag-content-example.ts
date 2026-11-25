@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -10,11 +10,13 @@ import { TRANSLATIONS } from './l10n';
 
 export class FileNode {
     children?: FileNode[];
+    id = '';
     name = '';
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
+    id = '';
     name = '';
     level = 0;
     expandable = false;
@@ -47,6 +49,8 @@ export class FileFlatNode {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
+                                [tabIndex]="0"
+                                [aria-label]="t().removeItem(option.viewValue)"
                                 (click)="select.onRemoveSelectedOption(option, $event)"
                             ></i>
                         }
@@ -78,17 +82,22 @@ export class TreeSelectCustomTagContentExample {
 
     /**
      * Per-value tag appearance — the built-in markup paints every tag with the same color.
-     * Only these four colors are themed for `kbq-tag`.
+     * Only these four colors are themed for `kbq-tag`. The ids are locale-independent, so the
+     * selection and the styling survive switching the examples language.
      */
-    readonly severities = computed<Record<string, { color: KbqComponentColors; icon: string }>>(() => ({
-        [this.t().severities[0]!]: { color: KbqComponentColors.Error, icon: 'kbq-circle-xmark_16' },
-        [this.t().severities[1]!]: { color: KbqComponentColors.Warning, icon: 'kbq-triangle-exclamation_16' },
-        [this.t().severities[2]!]: { color: KbqComponentColors.Theme, icon: 'kbq-circle-info_16' },
-        [this.t().severities[3]!]: { color: KbqComponentColors.ContrastFade, icon: 'kbq-circle-info_16' }
-    }));
+    readonly severities = computed<Record<string, { name: string; color: KbqComponentColors; icon: string }>>(() => {
+        const [critical, major, minor, info] = this.t().severities;
 
-    /** Selected values; not readonly, because the field is bound with `[(ngModel)]`. */
-    selected = this.t().severities.slice(0, 3);
+        return {
+            critical: { name: critical!, color: KbqComponentColors.Error, icon: 'kbq-circle-xmark_16' },
+            major: { name: major!, color: KbqComponentColors.Warning, icon: 'kbq-triangle-exclamation_16' },
+            minor: { name: minor!, color: KbqComponentColors.Theme, icon: 'kbq-circle-info_16' },
+            info: { name: info!, color: KbqComponentColors.ContrastFade, icon: 'kbq-circle-info_16' }
+        };
+    });
+
+    /** Selected severity ids; not readonly, because the field is bound with `[(ngModel)]`. */
+    selected = ['critical', 'major', 'minor'];
 
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
@@ -106,19 +115,24 @@ export class TreeSelectCustomTagContentExample {
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-        // A leaf per severity: the tree matches a node by its value, the tags look theirs up in `severities`.
-        this.dataSource.data = this.t().severities.map((name) => {
-            const node = new FileNode();
+        // A leaf per severity: the node id is the value the selection and the `severities` lookup use,
+        // the name is the translated label — rebuilt when the examples language changes.
+        effect(() => {
+            this.dataSource.data = Object.entries(this.severities()).map(([id, severity]) => {
+                const node = new FileNode();
 
-            node.name = name;
+                node.id = id;
+                node.name = severity.name;
 
-            return node;
+                return node;
+            });
         });
     }
 
     private readonly transformer = (node: FileNode, level: number, parent: any) => {
         const flatNode = new FileFlatNode();
 
+        flatNode.id = node.id;
         flatNode.name = node.name;
         flatNode.parent = parent;
         flatNode.level = level;
@@ -140,7 +154,7 @@ export class TreeSelectCustomTagContentExample {
     };
 
     private readonly getValue = (node: FileFlatNode): string => {
-        return node.name;
+        return node.id;
     };
 
     private readonly getViewValue = (node: FileFlatNode): string => {
