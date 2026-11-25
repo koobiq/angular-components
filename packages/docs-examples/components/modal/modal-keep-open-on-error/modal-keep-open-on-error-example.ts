@@ -100,8 +100,6 @@ export class ModalKeepOpenOnErrorExample {
             kbqOkText: this.t().save,
             kbqCancelText: this.t().cancel,
             kbqOkClick: (instance) => this.save(instance),
-            // Cancel is an explicit discard: it closes without the confirmation, like Save.
-            kbqCancelClick: (instance) => instance.markSaved(),
             canClose: (reason) => this.canClose(reason)
         });
     }
