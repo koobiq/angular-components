@@ -1,4 +1,5 @@
-﻿import { Overlay, OverlayContainer } from '@angular/cdk/overlay';
+﻿import { ESCAPE } from '@angular/cdk/keycodes';
+import { Overlay, OverlayContainer } from '@angular/cdk/overlay';
 import { NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectionStrategy,
@@ -17,7 +18,6 @@ import { By } from '@angular/platform-browser';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     dispatchKeyboardEvent,
-    ESCAPE,
     KBQ_STATE_STORE,
     KbqStateSavingService,
     type KbqStateStore

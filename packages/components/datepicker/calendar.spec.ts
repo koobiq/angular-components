@@ -1,9 +1,10 @@
-﻿import { Component, inject as inject_1, LOCALE_ID } from '@angular/core';
+﻿import { ENTER } from '@angular/cdk/keycodes';
+import { Component, inject as inject_1, LOCALE_ID } from '@angular/core';
 import { type ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import type { DateTime } from 'luxon';
 import { LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter, dispatchFakeEvent, dispatchKeyboardEvent, ENTER } from '@koobiq/components/core';
+import { DateAdapter, dispatchFakeEvent, dispatchKeyboardEvent } from '@koobiq/components/core';
 import { KbqCalendar } from './calendar.component';
 import { KbqDatepickerModule } from './datepicker-module';
 

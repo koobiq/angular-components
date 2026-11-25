@@ -1,4 +1,5 @@
 ﻿import { Directionality } from '@angular/cdk/bidi';
+import { DOWN_ARROW, ENTER, ESCAPE, hasModifierKey, RIGHT_ARROW, TAB, UP_ARROW } from '@angular/cdk/keycodes';
 import {
     type ConnectedPosition,
     type FlexibleConnectedPositionStrategy,
@@ -57,10 +58,6 @@ import {
 } from 'rxjs';
 import {
     defaultOffsetY,
-    DOWN_ARROW,
-    ENTER,
-    ESCAPE,
-    hasModifierKey,
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
     KBQ_OVERLAY_LAYERS,
@@ -83,10 +80,7 @@ import {
     kbqSiblingPopupProvider,
     type KbqTextMirror,
     type KbqTextQuery,
-    type KeyboardNavigationHandler,
-    RIGHT_ARROW,
-    TAB,
-    UP_ARROW
+    type KeyboardNavigationHandler
 } from '@koobiq/components/core';
 import { KBQ_FORM_FIELD, KbqFormFieldControl } from '@koobiq/components/form-field';
 import type { KbqAutocomplete } from './autocomplete.component';

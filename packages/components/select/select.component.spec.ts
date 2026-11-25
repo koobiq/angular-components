@@ -1,4 +1,17 @@
 ﻿import { Directionality } from '@angular/cdk/bidi';
+import {
+    A,
+    DOWN_ARROW,
+    END,
+    ENTER,
+    ESCAPE,
+    HOME,
+    LEFT_ARROW,
+    RIGHT_ARROW,
+    SPACE,
+    TAB,
+    UP_ARROW
+} from '@angular/cdk/keycodes';
 import { CloseScrollStrategy, Overlay, OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { AsyncPipe } from '@angular/common';
@@ -36,21 +49,15 @@ import { By } from '@angular/platform-browser';
 import { map, merge, type Observable, of, Subject, type Subscription, take, timer } from 'rxjs';
 import type { MockInstance } from 'vitest';
 import {
-    A,
     createKeyboardEvent,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
-    DOWN_ARROW,
-    END,
-    ENTER,
     ErrorStateMatcher,
-    ESCAPE,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
     getKbqSelectNonFunctionValueError,
-    HOME,
     KBQ_LOCALE_SERVICE,
     KBQ_SELECT_SCROLL_STRATEGY,
     KbqComponentColors,
@@ -66,14 +73,9 @@ import {
     type KbqPartialLocaleData,
     KbqRepositionScrollStrategy,
     KbqVirtualOption,
-    LEFT_ARROW,
-    RIGHT_ARROW,
     ruRULocaleData,
     ShowOnControlDirtyErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher,
-    SPACE,
-    TAB,
-    UP_ARROW,
     wrappedErrorMessage
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';

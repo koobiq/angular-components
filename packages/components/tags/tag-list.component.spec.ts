@@ -1,7 +1,7 @@
 ﻿import { CdkMonitorFocus, FocusMonitor } from '@angular/cdk/a11y';
 import { type Direction, Directionality } from '@angular/cdk/bidi';
 import { CdkDrag } from '@angular/cdk/drag-drop';
-import { A } from '@angular/cdk/keycodes';
+import { A, BACKSPACE, DELETE, END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, TAB } from '@angular/cdk/keycodes';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -32,24 +32,15 @@ import { By } from '@angular/platform-browser';
 import { map, type Observable, Subject, timer } from 'rxjs';
 import { KbqAutocompleteModule, KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
 import {
-    BACKSPACE,
     createKeyboardEvent,
-    DELETE,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
-    END,
-    ENTER,
     ErrorStateMatcher,
     type FocusKeyManager,
-    HOME,
     KBQ_ANIMATIONS_CONFIG,
     kbqErrorStateMatcherProvider,
-    LEFT_ARROW,
-    RIGHT_ARROW,
     ShowOnControlDirtyErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher,
-    SPACE,
-    TAB,
     typeInElement
 } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';

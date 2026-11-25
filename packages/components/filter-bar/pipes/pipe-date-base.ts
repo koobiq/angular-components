@@ -1,9 +1,10 @@
 import { _IdGenerator } from '@angular/cdk/a11y';
+import { ENTER } from '@angular/cdk/keycodes';
 import { type AfterViewInit, Directive, ElementRef, inject, signal, untracked, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, type ValidatorFn } from '@angular/forms';
 import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
-import { DateAdapter, DateFormatter, ENTER, KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
+import { DateAdapter, DateFormatter, KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqListSelection } from '@koobiq/components/list';
 import type { KbqPopoverTrigger } from '@koobiq/components/popover';
 import type { KbqDateTimeValue, KbqPipeTemplate } from '../filter-bar.types';

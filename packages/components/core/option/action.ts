@@ -1,4 +1,5 @@
 ﻿import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
+import { ENTER, SPACE, TAB } from '@angular/cdk/keycodes';
 import {
     type AfterViewInit,
     booleanAttribute,
@@ -15,7 +16,6 @@ import {
     type WritableSignal
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ENTER, SPACE, TAB } from '../keycodes';
 import { KBQ_A11Y_LOCALE_CONFIGURATION, KbqLocaleOverridesDirective } from '../locales';
 import { kbqInjectNativeElement } from '../utils';
 

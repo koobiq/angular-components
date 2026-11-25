@@ -1,5 +1,6 @@
 import { FocusTrap } from '@angular/cdk/a11y';
 import { coerceElement } from '@angular/cdk/coercion';
+import { ENTER, ESCAPE, SPACE } from '@angular/cdk/keycodes';
 import {
     type ConnectedOverlayPositionChange,
     type ConnectionPositionPair,
@@ -29,9 +30,7 @@ import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
-    ENTER,
     enUSLocaleData,
-    ESCAPE,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
     KbqOverlayLayer,
@@ -39,8 +38,7 @@ import {
     type KbqPopUpPlacementValues,
     type KbqStickToWindowPlacementValues,
     POSITION_TO_CSS_MAP,
-    ruRULocaleData,
-    SPACE
+    ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqModalService } from '@koobiq/components/modal';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';

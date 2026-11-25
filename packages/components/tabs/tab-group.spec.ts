@@ -1,3 +1,4 @@
+import { LEFT_ARROW } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { AsyncPipe } from '@angular/common';
 import {
@@ -22,8 +23,7 @@ import {
     KBQ_PARENT_ANIMATION_COMPONENT,
     KBQ_STATE_STORE,
     KbqStateSavingService,
-    type KbqStateStore,
-    LEFT_ARROW
+    type KbqStateStore
 } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqTab } from './tab.component';

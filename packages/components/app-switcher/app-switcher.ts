@@ -1,5 +1,6 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { DOWN_ARROW, ENTER, ESCAPE, LEFT_ARROW, RIGHT_ARROW, SPACE, TAB, UP_ARROW } from '@angular/cdk/keycodes';
 import { CdkScrollable, Overlay, type OverlayConfig, type ScrollStrategy } from '@angular/cdk/overlay';
 import {
     type AfterContentInit,
@@ -34,9 +35,6 @@ import { auditTime, distinctUntilChanged, filter, merge, startWith } from 'rxjs'
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import {
     applyPopupMargins,
-    DOWN_ARROW,
-    ENTER,
-    ESCAPE,
     FocusKeyManager,
     type KbqAppSwitcherLocaleConfiguration,
     type KbqDeepPartial,
@@ -50,16 +48,11 @@ import {
     KbqPopUpTrigger,
     kbqQueryListFrom,
     kbqSiblingPopupProvider,
-    LEFT_ARROW,
     PopUpPlacements,
     PopUpSizes,
     PopUpTriggers,
     POSITION_TO_CSS_MAP,
-    RIGHT_ARROW,
-    ruRULocaleData,
-    SPACE,
-    TAB,
-    UP_ARROW
+    ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { type KbqDropdown, KbqDropdownItem, KbqDropdownModule } from '@koobiq/components/dropdown';
