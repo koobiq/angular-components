@@ -20,7 +20,7 @@ export class FileFlatNode {
 }
 
 /**
- * @title tree-select-no-variants
+ * @title Tree-select no variants
  */
 @Component({
     selector: 'tree-select-no-variants-example',

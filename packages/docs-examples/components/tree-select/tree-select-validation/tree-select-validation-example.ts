@@ -1,102 +1,11 @@
 import { ChangeDetectionStrategy, Component, type OnInit } from '@angular/core';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { buildFileTree, DATA_OBJECT, FileFlatNode, FileNode } from '../tree-select-data';
 import { TRANSLATIONS } from './l10n';
-
-export class FileNode {
-    children?: FileNode[];
-    name = '';
-    type: any;
-}
-
-/** Flat node with expandable and level information */
-export class FileFlatNode {
-    name = '';
-    type: any;
-    level = 0;
-    expandable = false;
-    parent: any;
-}
-
-/**
- * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
- * The return value is the list of `FileNode`.
- */
-export function buildFileTree(value: any, level: number): FileNode[] {
-    const data: any[] = [];
-
-    for (const k of Object.keys(value)) {
-        const v = value[k];
-        const node = new FileNode();
-
-        node.name = `${k}`;
-
-        if (v === null || v === undefined) {
-            // no action
-        } else if (typeof v === 'object') {
-            node.children = buildFileTree(v, level + 1);
-        } else {
-            node.type = v;
-        }
-
-        data.push(node);
-    }
-
-    return data;
-}
-
-export const DATA_OBJECT = {
-    docs: 'app',
-    src: {
-        cdk: {
-            a11ly: {
-                'aria describer': {
-                    'aria-describer': 'ts',
-                    'aria-describer.spec': 'ts',
-                    'aria-reference': 'ts',
-                    'aria-reference.spec': 'ts'
-                },
-                'focus monitor': {
-                    'focus-monitor': 'ts',
-                    'focus-monitor.spec': 'ts'
-                }
-            }
-        },
-        documentation: {
-            source: '',
-            tools: ''
-        },
-        mosaic: {
-            autocomplete: '',
-            button: '',
-            'button-toggle': '',
-            index: 'ts',
-            package: 'json',
-            version: 'ts'
-        },
-        'components-dev': {
-            alert: '',
-            badge: ''
-        },
-        'koobiq-examples': '',
-        'koobiq-moment-adapter': '',
-        README: 'md',
-        'tsconfig.build': 'json'
-    },
-    scripts: {
-        deploy: {
-            'cleanup-preview': 'ts',
-            'publish-artifacts': 'sh',
-            'publish-docs': 'sh',
-            'publish-docs-preview': 'ts'
-        },
-        'tsconfig.deploy': 'json'
-    },
-    tests: ''
-};
 
 /** The leaf of the empty choice: it carries no value, its label follows the active locale. */
 const NONE_NODE = 'none';
@@ -106,12 +15,12 @@ const NONE_NODE = 'none';
  */
 @Component({
     selector: 'tree-select-validation-example',
-    imports: [ReactiveFormsModule, KbqTreeModule, KbqTreeSelectModule, KbqIconModule],
+    imports: [FormsModule, ReactiveFormsModule, KbqTreeModule, KbqTreeSelectModule, KbqIconModule],
     template: `
         <div class="kbq-form-vertical layout-column">
             <div class="kbq-form__label">{{ t().valid }}</div>
             <kbq-form-field>
-                <kbq-tree-select [placeholder]="t().placeholder">
+                <kbq-tree-select [placeholder]="t().placeholder" [(ngModel)]="validSelected">
                     <kbq-tree-selection [dataSource]="validDataSource" [treeControl]="validTreeControl">
                         <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                             {{ validTreeControl.getViewValue(node) }}
@@ -166,6 +75,9 @@ const NONE_NODE = 'none';
 })
 export class TreeSelectValidationExample implements OnInit {
     protected readonly t = injectTranslation(TRANSLATIONS);
+
+    /** The first field is template-driven; the second is reactive. */
+    protected validSelected: string | null = null;
 
     readonly invalidControl = new FormControl(null, Validators.required);
 

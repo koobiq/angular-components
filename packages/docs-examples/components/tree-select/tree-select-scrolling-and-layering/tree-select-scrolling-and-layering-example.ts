@@ -15,12 +15,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
             style="border: none"
         ></iframe>
     `,
-    styles: `
-        :host {
-            display: flex;
-            margin: -20px;
-        }
-    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectScrollingAndLayeringExample {}

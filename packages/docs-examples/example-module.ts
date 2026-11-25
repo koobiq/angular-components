@@ -8924,6 +8924,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
+      "../tree-select-data.ts",
       "l10n.ts"
     ],
     "selector": "tree-select-disabled-example",
@@ -8964,7 +8965,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-select-icon-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../tree-select-data.ts"
+    ],
     "selector": "tree-select-icon-example",
     "primaryFile": "tree-select-icon-example.ts",
     "importPath": "components/tree-select"
@@ -8990,6 +8993,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
+      "../tree-select-data.ts",
       "l10n.ts"
     ],
     "selector": "tree-select-locale-configuration-example",
@@ -9010,7 +9014,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tree-select-no-variants": {
     "packagePath": "components/tree-select/tree-select-no-variants",
-    "title": "tree-select-no-variants",
+    "title": "Tree-select no variants",
     "componentName": "TreeSelectNoVariantsExample",
     "files": [
       "tree-select-no-variants-example.ts"
@@ -9044,6 +9048,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
+      "../tree-select-data.ts",
       "l10n.ts"
     ],
     "selector": "tree-select-scroll-strategy-example",
@@ -9059,6 +9064,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
+      "../tree-select-data.ts",
       "l10n.ts"
     ],
     "selector": "tree-select-scrolling-and-layering-page-example",
@@ -9158,6 +9164,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
+      "../tree-select-data.ts",
       "l10n.ts"
     ],
     "selector": "tree-select-validation-example",

@@ -1212,7 +1212,7 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'tree-select',
                     hasExamples: true,
-                    isUpdated: expiresAt('2026-12-04')
+                    isUpdated: expiresAt('2026-12-09')
                 },
                 {
                     id: DocsStructureItemId.Username,

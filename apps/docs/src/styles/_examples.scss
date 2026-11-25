@@ -32,6 +32,13 @@
         --docs-live-example-example-padding: 0;
     }
 
+    // The layering wrapper is a fixed-size iframe: the frame's own padding is pulled back here rather
+    // than inside the example, so the iframe sits flush with the frame.
+    tree-select-scrolling-and-layering-example {
+        display: block;
+        margin: calc(-1 * var(--kbq-size-xl));
+    }
+
     // A navbar is page chrome, so these examples sit flush with the frame: the frame's own padding is pulled
     // back here rather than inside the example, and the corners follow its radius.
     navbar-overview-example,
