@@ -1,4 +1,4 @@
-/** Host the sitemap of every version names, whatever host serves that version. */
+/** Base for the addresses of the pages a sitemap lists: only their paths count, whichever host each version names. */
 const CANONICAL_ORIGIN = 'https://koobiq.io';
 
 const trimTrailingSlash = (path: string): string => (path.length > 1 ? path.replace(/\/+$/, '') : path);

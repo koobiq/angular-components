@@ -9,11 +9,13 @@ import { mkdirSync, rmSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { format, resolveConfig } from 'prettier';
 import { DocsLocale } from '../../apps/docs/src/app/constants/locale';
+import { docsGetItemPagePaths, docsGetPageMarkdownPath, docsHasMarkdown } from '../../apps/docs/src/app/page-paths';
 import { docsGetCategories, docsGetItems, type DocsStructureItem } from '../../apps/docs/src/app/structure';
 import { COMPONENT_GUIDE_PATH, parseComponentGuide, renderComponentGuide } from './component-guide';
 import { renderItemMarkdown } from './item-markdown';
 import { renderItemPage, type SiteFilesContext } from './item-page';
 import { LLMS_FULL_TXT, type LlmsCategory, type LlmsHeader, renderLlmsFullTxt, renderLlmsTxt } from './llms-txt';
+import { addFile } from './site-files';
 import {
     collectPageSources,
     getIconsVersion,
@@ -87,6 +89,19 @@ export const generateLlms = async (): Promise<LlmsOutput> => {
     );
 
     for (const [path, text] of [...context.files, ...guide]) files.set(path, `${text}\n`);
+
+    for (const item of docsGetItems().filter(docsHasMarkdown)) {
+        for (const path of docsGetItemPagePaths(item)) {
+            for (const locale of Object.values(DocsLocale)) {
+                const source = docsGetPageMarkdownPath(item, path.split('/')[2], locale).slice(1);
+                const text = files.get(source);
+
+                if (text === undefined) throw new Error(`No Markdown at ${source} for ${path}`);
+
+                addFile(files, `${locale}/${path}.md`, text);
+            }
+        }
+    }
 
     files.set(LLMS_FULL_TXT, renderLlmsFullTxt(fullItems, header));
 

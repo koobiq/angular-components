@@ -65,6 +65,7 @@ const GITHUB_REPO_TREE_URL = `https://github.com/koobiq/angular-components/tree/
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-component-viewer',
+        role: 'main',
         '[attr.data-docsearch-lvl0]': 'searchGroup()'
     },
     // Panels of the live examples slide under the site header while the article scrolls.
