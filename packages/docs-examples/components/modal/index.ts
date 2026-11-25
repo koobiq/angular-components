@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { ModalButtonLoadingExample } from './modal-button-loading/modal-button-loading-example';
 import { ModalCaptionExample } from './modal-caption/modal-caption-example';
 import { ModalComponentExample } from './modal-component/modal-component-example';
 import { ModalComponentWithInjectorExample } from './modal-component-with-injector/modal-component-with-injector-example';
@@ -11,6 +12,7 @@ import { ModalSizesExample } from './modal-sizes/modal-sizes-example';
 import { ModalTemplateExample } from './modal-template/modal-template-example';
 
 export {
+    ModalButtonLoadingExample,
     ModalCaptionExample,
     ModalComponentExample,
     ModalComponentWithInjectorExample,
@@ -33,6 +35,7 @@ const EXAMPLES = [
     ModalSizesExample,
     ModalMultipleExample,
     ModalFullCustomExample,
+    ModalButtonLoadingExample,
     ModalKeepOpenOnErrorExample
 ];
 
