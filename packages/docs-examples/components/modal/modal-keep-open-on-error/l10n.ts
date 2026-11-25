@@ -10,6 +10,10 @@ export interface ExampleTranslation {
     cancel: string;
     wrongPassword: string;
     demoHint: string;
+    confirmTitle: string;
+    confirmContent: string;
+    discard: string;
+    keepEditing: string;
 }
 
 export const TRANSLATIONS: Translations<ExampleTranslation> = {
@@ -21,7 +25,11 @@ export const TRANSLATIONS: Translations<ExampleTranslation> = {
         save: 'Сохранить',
         cancel: 'Отмена',
         wrongPassword: 'Неверный текущий пароль',
-        demoHint: 'Для демо правильный текущий пароль — «password»'
+        demoHint: 'Для демо правильный текущий пароль — «password»',
+        confirmTitle: 'Несохранённые изменения',
+        confirmContent: 'Закрыть без сохранения?',
+        discard: 'Закрыть без сохранения',
+        keepEditing: 'Продолжить редактирование'
     },
     default: {
         changePassword: 'Change password',
@@ -31,6 +39,10 @@ export const TRANSLATIONS: Translations<ExampleTranslation> = {
         save: 'Save',
         cancel: 'Cancel',
         wrongPassword: 'Incorrect current password',
-        demoHint: 'For the demo, the correct current password is "password"'
+        demoHint: 'For the demo, the correct current password is "password"',
+        confirmTitle: 'Unsaved changes',
+        confirmContent: 'Close without saving?',
+        discard: 'Close without saving',
+        keepEditing: 'Keep editing'
     }
 };
