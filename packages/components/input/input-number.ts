@@ -370,7 +370,17 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
             this.integer();
             this.maxFractionDigits();
 
-            untracked(() => this.setViewValue(this.formatNumber(this.value)));
+            untracked(() => {
+                const formattedValue = this.formatNumber(this.value);
+                const trailingSeparator =
+                    formattedValue !== null &&
+                    this.fractionDigitsLimit() > 0 &&
+                    this.viewValue.endsWith(this.fractionSeparator)
+                        ? this.fractionSeparator
+                        : '';
+
+                this.setViewValue(formattedValue === null ? null : `${formattedValue}${trailingSeparator}`);
+            });
         });
 
         this.destroyRef.onDestroy(() => {
@@ -454,18 +464,16 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
             [this.fractionSeparator, KBQ_DEFAULT_PRECISION_SEPARATOR].includes(event.key) &&
             viewValueToBeChecked.indexOf(KBQ_DEFAULT_PRECISION_SEPARATOR) !== -1;
 
-        let shouldBlockFractionDigit = false;
+        let shouldBlockFractionInput = false;
 
-        if (isNumberKey(event) || isNumpadKey(event)) {
-            const selectionStart = this.nativeElement.selectionStart ?? 0;
-            const selectionEnd = this.nativeElement.selectionEnd ?? selectionStart;
-            const valueAfterDigit =
+        if (isNumberKey(event) || isNumpadKey(event) || this.isPeriod(event)) {
+            const valueAfterInput =
                 this.viewValue.slice(0, selectionStart) + event.key + this.viewValue.slice(selectionEnd);
             const fractionSeparator =
                 this.groupSeparator.includes(' ') && this.fractionSeparator === ',' ? /[,.]/ : this.fractionSeparator;
-            const fraction = valueAfterDigit.split(fractionSeparator)[1];
+            const fraction = valueAfterInput.split(fractionSeparator)[1];
 
-            shouldBlockFractionDigit =
+            shouldBlockFractionInput =
                 fraction !== undefined && fraction.replace(/\D/g, '').length > this.fractionDigitsLimit();
         }
 
@@ -473,7 +481,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
             shouldSkipForIntegerMode ||
             shouldBlockMinus ||
             isSignAndFractionSepAlreadyExists ||
-            shouldBlockFractionDigit
+            shouldBlockFractionInput
         ) {
             event.preventDefault();
 

@@ -2256,6 +2256,20 @@ describe('KbqNumberInput', () => {
             expect(preventDefault).toHaveBeenCalled();
         });
 
+        it('should block a fraction separator that would put existing digits past the limit', () => {
+            fixture.componentInstance.maxFractionDigits = 2;
+            fixture.detectChanges();
+
+            inputElement.value = '1234';
+            inputElement.setSelectionRange(1, 1);
+
+            const preventDefault = vi.fn();
+
+            inputElementDebug.triggerEventHandler('keydown', { preventDefault, keyCode: COMMA, key: ',' });
+
+            expect(preventDefault).toHaveBeenCalled();
+        });
+
         it('should allow replacing the selected fraction with one digit', async () => {
             vi.useFakeTimers();
 
@@ -2394,6 +2408,34 @@ describe('KbqNumberInput', () => {
 
             expect(inputElement.value).toBe('1,24');
             expect(fixture.componentInstance.value).toBe(1.239);
+        });
+
+        it('should preserve a trailing separator when the limit changes during input', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.maxFractionDigits = 2;
+            fixture.componentInstance.value = 1;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            inputElement.value = '1,';
+            inputElement.setSelectionRange(2, 2);
+            fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertText' } as InputEvent);
+            await vi.runOnlyPendingTimersAsync();
+
+            fixture.componentInstance.maxFractionDigits = 3;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe('1,');
+
+            inputElement.value = `${inputElement.value}2`;
+            inputElement.setSelectionRange(inputElement.value.length, inputElement.value.length);
+            fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertText' } as InputEvent);
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe('1,2');
+            expect(fixture.componentInstance.value).toBe(1.2);
         });
 
         it('should keep 20 fraction digits by default and for a NaN limit', async () => {
