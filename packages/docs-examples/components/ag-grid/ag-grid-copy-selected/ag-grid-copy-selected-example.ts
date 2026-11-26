@@ -19,6 +19,8 @@ import {
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToastService } from '@koobiq/components/toast';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { exampleIncidentCellOptions } from '../incident-columns';
+import { exampleGetIncidents, exampleTechniqueLabel } from '../security-incidents';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -27,7 +29,12 @@ const customCopyFormatterWithHeaderRow: KbqAgGridCopyFormatter = (api) => {
     const columns = api.getAllDisplayedColumns().filter((col) => col.getColId() !== 'ag-Grid-SelectionColumn');
     const headerRow = columns.map((col) => col.getColDef().headerName ?? col.getColId()).join('\t');
 
-    return `${headerRow}\n${kbqAgGridCopyFormatterTsv(api)}`;
+    const rows = api.getSelectedNodes().sort((a, b) => (a.rowIndex ?? 0) - (b.rowIndex ?? 0));
+
+    return [
+        headerRow,
+        ...rows.map((rowNode) => columns.map((colKey) => api.getCellValue({ rowNode, colKey }) ?? '').join('\t'))
+    ].join('\n');
 };
 
 /**
@@ -116,21 +123,26 @@ export class AgGridCopySelectedExample {
         hideDisabledCheckboxes: false
     };
 
-    protected readonly columnDefs = computed<ColDef[]>(() => [
-        {
-            field: 'column0',
-            headerName: this.t().projectName,
-            width: 180
-        },
-        ...Array.from({ length: 9 }, (_, i) => ({
-            field: 'column' + (i + 1),
-            headerName: this.t().headerText
-        }))
-    ]);
+    private readonly incidents = exampleGetIncidents();
 
-    protected readonly rowData = Array.from({ length: 100 }, (_, index) => ({
-        column0: 'Project name ' + index,
-        ...Object.fromEntries(Array.from({ length: 9 }, (_, i) => ['column' + (i + 1), 'Text ' + index]))
+    protected readonly columnDefs = computed(() => {
+        const headers = this.t().headers;
+
+        return (['id', 'event', 'severity', 'status', 'filePath', 'techniques'] as const).map((field) => ({
+            ...exampleIncidentCellOptions(field, headers, (id) => this.incidents.find((row) => row.id === id)),
+            field,
+            headerName: headers[field],
+            width: field === 'event' || field === 'techniques' || field === 'filePath' ? 240 : 140
+        }));
+    });
+
+    protected readonly rowData = this.incidents.map(({ id, event, severity, status, filePath, techniques }) => ({
+        id,
+        event,
+        severity,
+        status,
+        filePath: filePath ?? '',
+        techniques: techniques.map(exampleTechniqueLabel).join('; ')
     }));
 
     protected onFirstDataRendered({ api }: FirstDataRenderedEvent): void {

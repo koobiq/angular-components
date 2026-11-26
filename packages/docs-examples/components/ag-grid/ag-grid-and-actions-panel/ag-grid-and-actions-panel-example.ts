@@ -33,6 +33,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToastService } from '@koobiq/components/toast';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { exampleIncidentColumns } from '../incident-columns';
+import { exampleGetIncidents, type ExampleSecurityIncident } from '../security-incidents';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -46,8 +48,6 @@ type ExampleAction = {
     label: string;
     divider?: boolean;
 };
-
-type ExampleTableItem = unknown;
 
 @Component({
     selector: 'example-grid',
@@ -111,7 +111,7 @@ export class ExampleGrid {
 
     readonly panelOpened = input(false);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private api: GridApi<ExampleTableItem> | null = null;
+    private api: GridApi<ExampleSecurityIncident> | null = null;
 
     protected readonly defaultColDef: ColDef = {
         sortable: true,
@@ -127,18 +127,18 @@ export class ExampleGrid {
         checkboxes: true,
         hideDisabledCheckboxes: false
     };
-    protected readonly columnDefs = computed<ColDef[]>(() => [
-        { field: 'column0', headerName: this.t().projectName, pinned: true },
-        ...Array.from({ length: 4 }, (_, i) => ({
-            field: 'column' + (i + 1),
-            headerName: this.t().headerText
-        }))
-    ]);
-    protected readonly rowData = Array.from({ length: 33 }, (_, index) => ({
-        column0: 'Project name ' + index,
-        ...Object.fromEntries(Array.from({ length: 4 }, (_, i) => ['column' + (i + 1), 'Text ' + index]))
-    }));
-    readonly selectedItems = output<ExampleTableItem[]>();
+    protected readonly columnDefs = computed(() =>
+        exampleIncidentColumns(
+            this.t().headers,
+            { field: 'id', pinned: true },
+            'event',
+            'severity',
+            'status',
+            'affectedHost'
+        )
+    );
+    protected readonly rowData = exampleGetIncidents(0, 33);
+    readonly selectedItems = output<ExampleSecurityIncident[]>();
 
     constructor() {
         effect(() => {
@@ -189,7 +189,7 @@ export class ExampleGrid {
         this.api = api;
     }
 
-    protected onSelectionChanged({ api }: SelectionChangedEvent<ExampleTableItem>): void {
+    protected onSelectionChanged({ api }: SelectionChangedEvent<ExampleSecurityIncident>): void {
         this.selectedItems.emit(api.getSelectedRows());
     }
 }
@@ -307,7 +307,7 @@ export class ExampleActionsPanel {
         { id: 'Remove', icon: 'kbq-trash_16', label: this.t().remove, divider: true }
     ]);
     protected readonly action = { Counter: 'counter' };
-    protected readonly data = inject<Signal<ExampleTableItem[]>>(KBQ_ACTIONS_PANEL_DATA);
+    protected readonly data = inject<Signal<ExampleSecurityIncident[]>>(KBQ_ACTIONS_PANEL_DATA);
     protected readonly actionsPanelRef = inject(KbqActionsPanelRef);
     private readonly toast = inject(KbqToastService);
 
@@ -339,11 +339,11 @@ export class AgGridAndActionsPanelExample {
     private readonly container = viewChild.required(ExampleGrid, { read: ElementRef });
     private readonly grid = viewChild.required(ExampleGrid);
     private actionsPanelRef: KbqActionsPanelRef<ExampleActionsPanel> | null = null;
-    private readonly data = signal<ExampleTableItem[]>([]);
+    private readonly data = signal<ExampleSecurityIncident[]>([]);
     private readonly destroyRef = inject(DestroyRef);
     protected readonly panelOpened = signal(false);
 
-    protected toggleActionsPanel(selectedItems: ExampleTableItem[]): void {
+    protected toggleActionsPanel(selectedItems: ExampleSecurityIncident[]): void {
         if (selectedItems.length === 0) return this.actionsPanel.close();
 
         this.data.set(selectedItems);

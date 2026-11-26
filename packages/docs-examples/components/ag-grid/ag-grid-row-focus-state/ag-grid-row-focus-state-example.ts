@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { AgGridModule } from 'ag-grid-angular';
-import { AllCommunityModule, type ColDef, type GetRowIdParams, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, type GetRowIdParams, ModuleRegistry } from 'ag-grid-community';
 import {
     KbqAgGridRowFocusStateLocalStorageStore,
     kbqAgGridRowFocusStateStoreProvider,
@@ -8,6 +8,8 @@ import {
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { exampleIncidentColumns } from '../incident-columns';
+import { exampleGetIncidents, type ExampleSecurityIncident } from '../security-incidents';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -25,10 +27,10 @@ ModuleRegistry.registerModules([AllCommunityModule]);
             #rowFocusState="kbqAgGridRowFocusState"
             kbqAgGridTheme
             kbqAgGridThemeDisableCellFocusStyles
-            kbqAgGridRowFocusState="example-ag-grid-row-focus-state"
+            kbqAgGridRowFocusState="example-ag-grid-incidents-row-focus-state"
             [getRowId]="getRowId"
             [rowData]="rowData"
-            [columnDefs]="columnDefs"
+            [columnDefs]="columnDefs()"
             [style.height.px]="300"
             [style.width.%]="100"
         />
@@ -49,13 +51,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 export class AgGridRowFocusStateExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
 
-    protected readonly getRowId = (params: GetRowIdParams): string => params.data.column0;
-    protected readonly columnDefs: ColDef[] = Array.from({ length: 5 }, (_, i) => ({
-        field: 'column' + i,
-        headerName: 'Column ' + i,
-        width: 130
-    }));
-    protected readonly rowData = Array.from({ length: 100 }, (_, index) =>
-        Object.fromEntries(Array.from({ length: 5 }, (_, i) => ['column' + i, 'Text ' + index]))
-    );
+    protected readonly getRowId = (params: GetRowIdParams<ExampleSecurityIncident>): string => params.data.id;
+    protected readonly columnDefs = computed(() => exampleIncidentColumns(this.t().headers));
+    protected readonly rowData = exampleGetIncidents();
 }

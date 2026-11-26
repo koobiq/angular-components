@@ -10,6 +10,8 @@ import {
 } from 'ag-grid-community';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { exampleIncidentColumns } from '../incident-columns';
+import { EXAMPLE_INCIDENT_COUNT, exampleGetIncidents } from '../security-incidents';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -54,7 +56,7 @@ export class AgGridLoadTextExampleLoadingText implements ICellRendererAngularCom
             kbqAgGridThemeDisableCellFocusStyles
             rowModelType="infinite"
             [columnDefs]="columnDefs()"
-            [datasource]="datasource()"
+            [datasource]="datasource"
             [rowSelection]="rowSelection"
             [isFullWidthRow]="isFullWidthRow"
             [fullWidthCellRenderer]="loadingTextRenderer"
@@ -75,34 +77,15 @@ export class AgGridLoadTextExample {
 
     protected readonly loadingTextRenderer = AgGridLoadTextExampleLoadingText;
 
-    protected readonly columnDefs = computed(() =>
-        Array.from({ length: 3 }, (_, i) => ({
-            field: 'column' + i,
-            headerName: this.t().headerText
-        }))
-    );
+    protected readonly columnDefs = computed(() => exampleIncidentColumns(this.t().headers, 'id', 'event', 'status'));
 
     protected readonly rowSelection: RowSelectionOptions = { mode: 'multiRow', headerCheckbox: false };
 
-    protected readonly datasource = computed<IDatasource>(() => ({
+    protected readonly datasource: IDatasource = {
         getRows: ({ startRow, endRow, successCallback }: IGetRowsParams) => {
-            setTimeout(
-                () =>
-                    successCallback(
-                        Array.from({ length: endRow - startRow }, (_, i) =>
-                            Object.fromEntries(
-                                Array.from({ length: 3 }, (_, c) => [
-                                    'column' + c,
-                                    this.t().headerText + ' ' + (startRow + i)
-                                ])
-                            )
-                        ),
-                        endRow >= 1000 ? 1000 : -1
-                    ),
-                1000
-            );
+            setTimeout(() => successCallback(exampleGetIncidents(startRow, endRow), EXAMPLE_INCIDENT_COUNT), 1000);
         }
-    }));
+    };
 
     protected readonly isFullWidthRow = ({ rowNode }: IsFullWidthRowParams): boolean => rowNode.data === undefined;
 }

@@ -1,53 +1,35 @@
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
-import { AgGridModule, type ICellRendererAngularComp } from 'ag-grid-angular';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
     type ColDef,
     type FirstDataRenderedEvent,
-    type ICellRendererParams,
     ModuleRegistry,
     type RowSelectionOptions,
     type SelectionColumnDef
 } from 'ag-grid-community';
+import { DateTime } from 'luxon';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
-import { KbqLink } from '@koobiq/components/link';
+import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import { DateFormatter, KbqFormattersModule } from '@koobiq/components/core';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { exampleIncidentColumns } from '../incident-columns';
+import { exampleGetIncidents } from '../security-incidents';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
-
-@Component({
-    selector: 'example-link-cell-renderer',
-    imports: [KbqLink],
-    template: `
-        <a kbqLink href="https://koobiq.io/en/components/ag-grid" target="_blank">{{ cellValue }}</a>
-    `,
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
-    cellValue = '';
-
-    agInit(params: ICellRendererParams): void {
-        this.cellValue = this.getValueToDisplay(params);
-    }
-
-    refresh(params: ICellRendererParams): boolean {
-        this.cellValue = this.getValueToDisplay(params);
-
-        return true;
-    }
-
-    private getValueToDisplay(params: ICellRendererParams): string {
-        return params.valueFormatted ? params.valueFormatted : params.value;
-    }
-}
 
 /**
  * @title AG Grid overview
  */
 @Component({
     selector: 'ag-grid-overview-example',
-    imports: [AgGridModule, KbqAgGridThemeModule],
+    imports: [
+        AgGridModule,
+        KbqAgGridThemeModule,
+        LuxonDateModule,
+        KbqFormattersModule
+    ],
     template: `
         <ag-grid-angular
             kbqAgGridTheme
@@ -62,7 +44,7 @@ export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
             [style.height.px]="300"
             [columnDefs]="columnDefs()"
             [defaultColDef]="defaultColDef"
-            [rowData]="rowData()"
+            [rowData]="rowData"
             (firstDataRendered)="onFirstDataRendered($event)"
         />
     `,
@@ -70,6 +52,8 @@ export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
 })
 export class AgGridOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
+
+    private readonly dateFormatter = inject<DateFormatter<DateTime>>(DateFormatter);
 
     protected readonly defaultColDef: ColDef = {
         sortable: true,
@@ -88,25 +72,27 @@ export class AgGridOverviewExample {
         hideDisabledCheckboxes: false
     };
 
-    protected readonly columnDefs = computed<ColDef[]>(() => [
-        {
-            field: 'column0',
-            headerName: this.t().link,
-            cellRenderer: ExampleLinkCellRenderer,
-            pinned: true
-        },
-        ...Array.from({ length: 9 }, (_, i) => ({
-            field: 'column' + (i + 1),
-            headerName: this.t().headerText
-        }))
-    ]);
-
-    protected readonly rowData = computed(() =>
-        Array.from({ length: 100 }, (_, index) => ({
-            column0: this.t().linkN(index),
-            ...Object.fromEntries(Array.from({ length: 9 }, (_, i) => ['column' + (i + 1), 'Text ' + index]))
-        }))
+    protected readonly columnDefs = computed(() =>
+        exampleIncidentColumns(
+            this.t().headers,
+            { field: 'id', pinned: 'left' },
+            'connection',
+            'aiVerdict',
+            'event',
+            'severity',
+            'status',
+            'assignee',
+            'affectedHost',
+            {
+                field: 'detectedAt',
+                width: 190,
+                valueFormatter: ({ data }) =>
+                    data ? this.dateFormatter.absoluteShortDateTime(DateTime.fromISO(data.detectedAt)) : ''
+            }
+        )
     );
+
+    protected readonly rowData = exampleGetIncidents();
 
     protected onFirstDataRendered({ api }: FirstDataRenderedEvent): void {
         api.forEachNode((node) => {

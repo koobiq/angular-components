@@ -9,6 +9,8 @@ import {
 } from 'ag-grid-community';
 import { KBQ_AG_GRID_STATUS_BAR_PARAMS, KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { exampleIncidentColumns } from '../incident-columns';
+import { exampleGetIncidents } from '../security-incidents';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -104,22 +106,9 @@ export class AgGridStatusBarExample {
         hideDisabledCheckboxes: false
     };
 
-    protected readonly columnDefs = computed<ColDef[]>(() => [
-        {
-            field: 'column0',
-            headerName: this.t().projectName,
-            width: 180
-        },
-        ...Array.from({ length: 9 }, (_, i) => ({
-            field: 'column' + (i + 1),
-            headerName: this.t().headerText
-        }))
-    ]);
+    protected readonly columnDefs = computed(() => exampleIncidentColumns(this.t().headers));
 
-    protected readonly rowData = Array.from({ length: 100 }, (_, index) => ({
-        column0: 'Project name ' + index,
-        ...Object.fromEntries(Array.from({ length: 9 }, (_, i) => ['column' + (i + 1), 'Text ' + index]))
-    }));
+    protected readonly rowData = exampleGetIncidents();
 
     protected onFirstDataRendered({ api }: FirstDataRenderedEvent): void {
         api.forEachNode((node) => {

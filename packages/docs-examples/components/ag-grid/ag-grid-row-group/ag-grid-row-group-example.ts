@@ -1,20 +1,42 @@
-import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, model } from '@angular/core';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, type ColDef, ModuleRegistry, type RowSelectionOptions } from 'ag-grid-community';
 import {
     type KbqAgGridRowGroup,
+    type KbqAgGridRowGroupCellContent,
     KbqAgGridRowGroupCollapsedStateLocalStorageStore,
     kbqAgGridRowGroupCollapsedStateStoreProvider,
     kbqAgGridRowGroupColOptionsProvider,
+    type KbqAgGridRowGroupInfo,
     KbqAgGridRowGroupSelectionStateLocalStorageStore,
     kbqAgGridRowGroupSelectionStateStoreProvider,
     KbqAgGridThemeModule
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { ExampleIncidentBadge } from '../incident-cells';
+import { exampleIncidentColumns } from '../incident-columns';
+import { exampleGetIncidents, exampleIncidentStatuses } from '../security-incidents';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
+
+@Component({
+    selector: 'example-incident-group-label',
+    imports: [ExampleIncidentBadge],
+    template: `
+        @if (status(); as value) {
+            <example-incident-badge compact [value]="value" />
+        } @else {
+            {{ group().key }}
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class ExampleIncidentGroupLabel implements KbqAgGridRowGroupCellContent {
+    readonly group = input.required<KbqAgGridRowGroupInfo>();
+    protected readonly status = computed(() => exampleIncidentStatuses.find((status) => status === this.group().key));
+}
 
 /**
  * @title AG Grid with `KbqAgGridRowGroup` directive
@@ -35,9 +57,10 @@ ModuleRegistry.registerModules([AllCommunityModule]);
             kbqAgGridTheme
             kbqAgGridThemeDisableCellFocusStyles
             kbqAgGridRowGroup
-            kbqAgGridRowGroupCollapsedState="example-ag-grid-row-group-collapsed-state"
-            kbqAgGridRowGroupSelectionState="example-ag-grid-row-group-selection-state"
-            [kbqAgGridRowGroupRowData]="rowData()"
+            kbqAgGridRowGroupCollapsedState="example-ag-grid-incidents-row-group-collapsed-state"
+            kbqAgGridRowGroupSelectionState="example-ag-grid-incidents-row-group-selection-state"
+            [kbqAgGridRowGroupCellContent]="groupLabel"
+            [kbqAgGridRowGroupRowData]="rowData"
             [kbqAgGridRowGroupRowId]="rowId"
             [rowSelection]="rowSelection"
             [columnDefs]="columnDefs()"
@@ -70,7 +93,8 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 export class AgGridRowGroupExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
 
-    protected readonly groupCols = model(['category', 'severity']);
+    protected readonly groupLabel = ExampleIncidentGroupLabel;
+    protected readonly groupCols = model(['status']);
     protected readonly rowId = (row: Record<string, unknown>): string => row['id'] as string;
     protected readonly defaultColDef: ColDef = {
         sortable: true,
@@ -82,33 +106,24 @@ export class AgGridRowGroupExample {
         headerCheckbox: true,
         checkboxes: true
     };
-    protected readonly columnDefs = computed<ColDef[]>(() => [
-        { field: 'column0', headerName: 'Column 0', width: 130 },
-        { field: 'category', headerName: this.t().category, width: 130 },
-        { field: 'severity', headerName: this.t().severity, width: 130 },
-        ...Array.from({ length: 4 }, (_, i) => ({
-            field: 'column' + (i + 3),
-            headerName: 'Column ' + (i + 3),
-            width: 130
-        }))
-    ]);
-
-    protected readonly rowData = computed(() =>
-        Array.from({ length: 24 }, (_, index) => ({
-            id: String(index),
-            column0: 'Text ' + index,
-            category: this.t().categories[index % this.t().categories.length],
-            severity: this.t().severities[index % this.t().severities.length],
-            column3: 'Text ' + index,
-            column4: 'Text ' + index,
-            column5: 'Text ' + index,
-            column6: 'Text ' + index
-        }))
+    protected readonly columnDefs = computed(() =>
+        exampleIncidentColumns(
+            this.t().headers,
+            'status',
+            'id',
+            'severity',
+            'aiVerdict',
+            'assignee',
+            'event',
+            'affectedHost'
+        )
     );
+
+    protected readonly rowData = exampleGetIncidents(0, 24);
 
     /** Deselects every data row, including rows hidden inside a collapsed group. */
     protected clearSelectionState(rowGroup: KbqAgGridRowGroup): void {
-        for (const row of this.rowData()) {
+        for (const row of this.rowData) {
             rowGroup.setRowSelected(row.id, false);
         }
     }
