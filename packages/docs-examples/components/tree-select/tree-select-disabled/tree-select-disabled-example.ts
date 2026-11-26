@@ -87,10 +87,8 @@ const DISABLED_NODE_NAMES = ['mosaic', 'README', 'tests'];
 })
 export class TreeSelectDisabledExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     selectedForSelect = 'docs';
     selectedForOptions = 'scripts';
-
     readonly forSelectTreeControl: FlatTreeControl<FileFlatNode>;
     readonly forSelectDataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
     readonly forOptionsTreeControl: FlatTreeControl<FileFlatNode>;

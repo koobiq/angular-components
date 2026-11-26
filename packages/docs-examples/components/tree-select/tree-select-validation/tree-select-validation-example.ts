@@ -78,9 +78,7 @@ export class TreeSelectValidationExample implements OnInit {
 
     /** The first field is template-driven; the second is reactive. */
     protected validSelected: string | null = null;
-
     readonly invalidControl = new FormControl(null, Validators.required);
-
     readonly validTreeControl: FlatTreeControl<FileFlatNode>;
     readonly validDataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
     readonly invalidTreeControl: FlatTreeControl<FileFlatNode>;

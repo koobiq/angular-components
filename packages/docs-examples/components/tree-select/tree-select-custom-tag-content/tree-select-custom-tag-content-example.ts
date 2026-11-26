@@ -98,10 +98,8 @@ export class TreeSelectCustomTagContentExample {
 
     /** Selected severity ids; not readonly, because the field is bound with `[(ngModel)]`. */
     selected = ['critical', 'major', 'minor'];
-
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {

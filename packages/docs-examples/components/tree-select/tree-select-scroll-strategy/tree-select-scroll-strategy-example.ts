@@ -87,17 +87,15 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectScrollStrategyExample implements AfterViewInit {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
-    selected = 'docs';
-
-    treeControl: FlatTreeControl<FileFlatNode>;
-    treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
-    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
+    private readonly destroyRef = inject(DestroyRef);
 
     private readonly select = viewChild.required(KbqTreeSelect);
-    private readonly destroyRef = inject(DestroyRef);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
+    selected = 'docs';
+    treeControl: FlatTreeControl<FileFlatNode>;
+    treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
+    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);

@@ -59,10 +59,8 @@ export class FileFlatNode {
 })
 export class TreeSelectNoVariantsExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {
