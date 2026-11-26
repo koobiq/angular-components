@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
+import { FocusMonitor, InputModalityDetector } from '@angular/cdk/a11y';
+import { afterNextRender, ChangeDetectionStrategy, Component, effect, inject, Injector, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { map, type Observable } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -18,13 +19,16 @@ import { TRANSLATIONS } from './l10n';
                 <div class="kbq-form__row">
                     <label class="kbq-form__label" for="keep-open-current">{{ t().currentPassword }}</label>
                     <kbq-form-field class="kbq-form__control">
-                        <input id="keep-open-current" kbqInput type="password" formControlName="current" />
+                        <!-- eslint-disable-next-line @angular-eslint/template/no-autofocus -- the dialog focuses the marked field when it opens -->
+                        <input id="keep-open-current" kbqInputPassword autofocus formControlName="current" />
+                        <kbq-password-toggle />
                     </kbq-form-field>
                 </div>
                 <div class="kbq-form__row">
                     <label class="kbq-form__label" for="keep-open-next">{{ t().newPassword }}</label>
                     <kbq-form-field class="kbq-form__control">
-                        <input id="keep-open-next" kbqInput type="password" formControlName="next" />
+                        <input id="keep-open-next" kbqInputPassword formControlName="next" />
+                        <kbq-password-toggle />
                     </kbq-form-field>
                 </div>
             </div>
@@ -89,8 +93,12 @@ export class ModalKeepOpenOnErrorExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
 
     private readonly modalService = inject(KbqModalService);
+    private readonly focusMonitor = inject(FocusMonitor);
+    private readonly inputModalityDetector = inject(InputModalityDetector);
+    private readonly injector = inject(Injector);
 
     private modalRef?: KbqModalRef<ExamplePasswordForm>;
+    private savePending = false;
 
     openModal(): void {
         this.modalRef = this.modalService.create<ExamplePasswordForm>({
@@ -105,25 +113,50 @@ export class ModalKeepOpenOnErrorExample {
     }
 
     private canClose(reason: KbqCloseReason): boolean | Observable<boolean> {
+        // The pending save owns the close decision: another guard could outlive it and block its result.
+        if (this.savePending) return false;
+
         const instance = this.modalRef?.getContentComponent();
 
         if (reason === 'programmatic' || !instance?.dirty()) return true;
 
-        return this.modalService
-            .confirm({
-                kbqTitle: this.t().confirmTitle,
-                kbqContent: this.t().confirmContent,
-                kbqOkText: this.t().discard,
-                kbqCancelText: this.t().keepEditing,
-                kbqOkClick: () => 'ok'
-            })
-            .afterClose.pipe(map((result) => result === 'ok'));
+        const confirmRef = this.modalService.confirm({
+            kbqTitle: this.t().confirmTitle,
+            kbqContent: this.t().confirmContent,
+            kbqOkText: this.t().discard,
+            kbqCancelText: this.t().keepEditing,
+            kbqOkClick: () => 'ok',
+            kbqAutoFocus: false
+        });
+
+        // The confirmation focuses OK by default; move focus to the safe action instead.
+        afterNextRender(
+            () => {
+                const keepEditingButton = confirmRef
+                    .getElement()
+                    .querySelector<HTMLElement>('.kbq-confirm-footer button:last-child');
+
+                if (keepEditingButton) {
+                    this.focusMonitor.focusVia(
+                        keepEditingButton,
+                        this.inputModalityDetector.mostRecentModality ?? 'program'
+                    );
+                }
+            },
+            { injector: this.injector }
+        );
+
+        return confirmRef.afterClose.pipe(map((result) => result === 'ok'));
     }
 
     /** Simulated backend call: rejects any current password except «password». */
     private save(instance: ExamplePasswordForm): Promise<false | void> {
+        this.savePending = true;
+
         return new Promise((resolve) =>
             setTimeout(() => {
+                this.savePending = false;
+
                 if (instance.form.controls.current.value === 'password') {
                     // The dialog closes; anything but `false` means close.
                     instance.markClean();
