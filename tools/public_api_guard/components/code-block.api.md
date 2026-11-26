@@ -22,6 +22,7 @@ import { TemplateRef } from '@angular/core';
 export const KBQ_CODE_BLOCK_DEFAULT_OPTIONS: InjectionToken<Partial<{
     alwaysShowActionbar: boolean;
     lineNumbers: boolean;
+    canSelectLines: boolean;
 }>>;
 
 // @public
@@ -57,6 +58,7 @@ export class KbqCodeBlock implements AfterViewInit {
     readonly canCopy: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly canDownload: _angular_core.WritableSignal<boolean>;
     readonly canDownloadInput: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly canSelectLines: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     readonly canToggleSoftWrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected readonly componentColor: typeof KbqComponentColors;
     protected readonly contentExceedsMaxHeight: _angular_core.WritableSignal<boolean | undefined>;
@@ -64,6 +66,7 @@ export class KbqCodeBlock implements AfterViewInit {
     protected downloadCode(): void;
     protected readonly fallbackFileName: string;
     readonly files: _angular_core.WritableSignal<KbqCodeBlockFile[]>;
+    readonly filesChange: _angular_core.OutputEmitterRef<KbqCodeBlockFile[]>;
     readonly filesInput: _angular_core.InputSignal<KbqCodeBlockFile[]>;
     readonly filled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly hideTabs: _angular_core.WritableSignal<boolean>;
@@ -75,6 +78,8 @@ export class KbqCodeBlock implements AfterViewInit {
     // (undocumented)
     ngAfterViewInit(): void;
     readonly noBorder: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    protected onCodeClick(event: MouseEvent): void;
+    protected onCodeMousedown(event: MouseEvent): void;
     protected onSelectedTabChange(index: number): void;
     protected onViewAllEnterKeydown(event: Event): void;
     protected openLink(): void;
@@ -91,7 +96,7 @@ export class KbqCodeBlock implements AfterViewInit {
     readonly viewAllChange: _angular_core.OutputEmitterRef<boolean>;
     readonly viewAllInput: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqCodeBlock, "kbq-code-block", ["kbqCodeBlock"], { "lineNumbers": { "alias": "lineNumbers"; "required": false; "isSignal": true; }; "filled": { "alias": "filled"; "required": false; "isSignal": true; }; "canToggleSoftWrap": { "alias": "canToggleSoftWrap"; "required": false; "isSignal": true; }; "softWrapInput": { "alias": "softWrap"; "required": false; "isSignal": true; }; "viewAllInput": { "alias": "viewAll"; "required": false; "isSignal": true; }; "maxHeight": { "alias": "maxHeight"; "required": false; "isSignal": true; }; "canDownloadInput": { "alias": "canDownload"; "required": false; "isSignal": true; }; "canCopy": { "alias": "canCopy"; "required": false; "isSignal": true; }; "alwaysShowActionbar": { "alias": "alwaysShowActionbar"; "required": false; "isSignal": true; }; "filesInput": { "alias": "files"; "required": false; "isSignal": true; }; "activeFileIndexInput": { "alias": "activeFileIndex"; "required": false; "isSignal": true; }; "noBorder": { "alias": "noBorder"; "required": false; "isSignal": true; }; "hideTabsInput": { "alias": "hideTabs"; "required": false; "isSignal": true; }; }, { "softWrapChange": "softWrapChange"; "viewAllChange": "viewAllChange"; "activeFileIndexChange": "activeFileIndexChange"; "hideTabsChange": "hideTabsChange"; }, ["tabLinkTemplate"], never, true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqCodeBlock, "kbq-code-block", ["kbqCodeBlock"], { "lineNumbers": { "alias": "lineNumbers"; "required": false; "isSignal": true; }; "canSelectLines": { "alias": "canSelectLines"; "required": false; "isSignal": true; }; "filled": { "alias": "filled"; "required": false; "isSignal": true; }; "canToggleSoftWrap": { "alias": "canToggleSoftWrap"; "required": false; "isSignal": true; }; "softWrapInput": { "alias": "softWrap"; "required": false; "isSignal": true; }; "viewAllInput": { "alias": "viewAll"; "required": false; "isSignal": true; }; "maxHeight": { "alias": "maxHeight"; "required": false; "isSignal": true; }; "canDownloadInput": { "alias": "canDownload"; "required": false; "isSignal": true; }; "canCopy": { "alias": "canCopy"; "required": false; "isSignal": true; }; "alwaysShowActionbar": { "alias": "alwaysShowActionbar"; "required": false; "isSignal": true; }; "filesInput": { "alias": "files"; "required": false; "isSignal": true; }; "activeFileIndexInput": { "alias": "activeFileIndex"; "required": false; "isSignal": true; }; "noBorder": { "alias": "noBorder"; "required": false; "isSignal": true; }; "hideTabsInput": { "alias": "hideTabs"; "required": false; "isSignal": true; }; }, { "softWrapChange": "softWrapChange"; "viewAllChange": "viewAllChange"; "filesChange": "filesChange"; "activeFileIndexChange": "activeFileIndexChange"; "hideTabsChange": "hideTabsChange"; }, ["tabLinkTemplate"], never, true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqCodeBlock, never>;
 }
@@ -100,6 +105,7 @@ export class KbqCodeBlock implements AfterViewInit {
 export type KbqCodeBlockDefaultOptions = Partial<{
     alwaysShowActionbar: boolean;
     lineNumbers: boolean;
+    canSelectLines: boolean;
 }>;
 
 // @public
@@ -117,6 +123,8 @@ export type KbqCodeBlockFile = {
     filename?: string;
     language?: string;
     link?: string;
+    markedLines?: KbqCodeBlockLineMark[];
+    markedText?: KbqCodeBlockTextMark[];
 };
 
 // @public
@@ -148,6 +156,9 @@ export type KbqCodeBlockHighlightJsConfig = Partial<{
 export const kbqCodeBlockHighlightJsConfigProvider: (options: KbqCodeBlockHighlightJsConfig) => Provider;
 
 // @public
+export type KbqCodeBlockLineMark = number | [start: number, end: number] | string | RegExp;
+
+// @public
 export const kbqCodeBlockLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqCodeBlockLocaleConfiguration>) => Provider;
 
 // @public (undocumented)
@@ -167,6 +178,9 @@ export class KbqCodeBlockTabLinkContent {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqCodeBlockTabLinkContent, never>;
 }
+
+// @public
+export type KbqCodeBlockTextMark = string | RegExp;
 
 // @public
 export type KbqTabLinkTemplateContext = {

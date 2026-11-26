@@ -23,6 +23,12 @@ export default class DocsAlertOverviewEnPage {
         }
     ] as const satisfies readonly KbqCodeBlockFile[];
     protected readonly examples = { AlertStatusExample, ButtonOverviewExample, AlertOverviewExample, AgGridOverviewExample: { load: () => import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridOverviewExample) } };
+    protected readonly exampleMarks = [
+        [
+            "[lineNumbers]",
+            "maxHeight=\\"200\\""
+        ]
+    ] as const;
 }
 "
 `;

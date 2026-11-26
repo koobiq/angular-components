@@ -32,6 +32,11 @@ export interface CompiledPage {
     /** Examples the page renders on the server as well, in the order they first appear. */
     examples: LiveExample[];
     /**
+     * Code `<Example marks>` marks in the source of an example, which the template binds by its index, so code never
+     * becomes template text.
+     */
+    exampleMarks: string[][];
+    /**
      * Examples that render only in the browser, in the order they first appear. The page loads them once it has
      * rendered, so neither the route nor hydration waits for their code.
      */
@@ -49,6 +54,8 @@ export interface CompilePageOptions {
     path: string;
     /** Catalogue that `<Example id>` is resolved against. */
     examples: Record<string, LiveExample>;
+    /** Reads the files of an example the viewer shows, which `<Example marks>` has to find its code in. */
+    readExampleSources?: (example: LiveExample) => string[];
     /** URL of the page, which links to its own fragments resolve against; `null` when no route renders it. */
     url: string | null;
     /**
@@ -123,6 +130,8 @@ export const HTML_ELEMENTS = {
 type HtmlElement = keyof typeof HTML_ELEMENTS;
 
 const isHtmlElement = (tag: string): tag is HtmlElement => Object.hasOwn(HTML_ELEMENTS, tag);
+
+const EXAMPLE_ATTRIBUTES_ERROR = '<Example> takes the string attributes id and, to mark code in its source, marks';
 
 /** Markdown that renders as a block element, which the browser would move out of `<p>` as well. */
 const BLOCK_NODES = new Set(['blockquote', 'code', 'heading', 'list', 'paragraph', 'table', 'thematicBreak']);
@@ -215,9 +224,9 @@ const isComment = (expression: string): boolean => /^\s*\/\*(?:[^*]|\*(?!\/))*\*
 /** Compiles the MDX source of a documentation page. Throws on anything the site cannot render yet. */
 export function compilePage(
     source: string,
-    { path, examples, url, layout, headingDepth, output = 'template' }: CompilePageOptions
+    { path, examples, readExampleSources, url, layout, headingDepth, output = 'template' }: CompilePageOptions
 ): CompiledPage {
-    const page: CompiledPage = { template: '', codeBlocks: [], examples: [], browserExamples: [] };
+    const page: CompiledPage = { template: '', codeBlocks: [], examples: [], exampleMarks: [], browserExamples: [] };
 
     const isTemplate = output === 'template';
     const escapeText = isTemplate ? escapeTemplateText : escapeHtml;
@@ -324,28 +333,46 @@ export function compilePage(
     const renderExample = (element: MdxJsxFlowElement): string => {
         if (element.children.length > 0) return fail(element, '<Example> does not take content');
 
-        const [attribute, ...rest] = element.attributes;
+        const attributes = new Map<string, string>();
 
-        if (
-            attribute?.type !== 'mdxJsxAttribute' ||
-            attribute.name !== 'id' ||
-            typeof attribute.value !== 'string' ||
-            rest.length > 0
-        ) {
-            return fail(element, '<Example> takes a single string attribute: id');
+        for (const attribute of element.attributes) {
+            if (
+                attribute.type !== 'mdxJsxAttribute' ||
+                (attribute.name !== 'id' && attribute.name !== 'marks') ||
+                typeof attribute.value !== 'string' ||
+                attributes.has(attribute.name)
+            ) {
+                return fail(element, EXAMPLE_ATTRIBUTES_ERROR);
+            }
+
+            attributes.set(attribute.name, attribute.value);
         }
 
-        const id = attribute.value;
+        const id = attributes.get('id');
+
+        if (id === undefined) return fail(element, EXAMPLE_ATTRIBUTES_ERROR);
 
         const example = Object.hasOwn(examples, id) ? examples[id] : undefined;
 
         if (!example) return fail(element, `there is no example "${id}" in packages/docs-examples`);
 
+        // Code has no spaces between the tokens a reader is pointed at, such as `[lineNumbers]` or `markedLines:`.
+        const marks = attributes.get('marks')?.split(/\s+/).filter(Boolean);
+
+        if (marks?.length === 0) return fail(element, '<Example marks> names no code to mark');
+
+        const sources = marks && readExampleSources?.(example);
+        const missingMark = sources && marks.find((mark) => !sources.some((source) => source.includes(mark)));
+
+        if (missingMark) return fail(element, `the source of the example "${id}" has no "${missingMark}" to mark`);
+
         const pageExamples = canRenderExampleOnServer(id, example) ? page.examples : page.browserExamples;
 
         if (!pageExamples.includes(example)) pageExamples.push(example);
 
-        return `<docs-live-example-viewer example="${escapeText(id)}" [component]="examples.${example.componentName}" />`;
+        const marksBinding = marks ? ` [marks]="exampleMarks[${page.exampleMarks.push(marks) - 1}]"` : '';
+
+        return `<docs-live-example-viewer example="${escapeText(id)}"${marksBinding} [component]="examples.${example.componentName}" />`;
     };
 
     /** An HTML element written in the page, with the classes of the documentation typography. */

@@ -2,7 +2,7 @@
     @if (!tabsHidden()) {
         <div class="kbq-code-block__header-tabs">
             <div kbqTabNavBar transparent [tabNavPanel]="tabPanel">
-                @for (file of files(); track file) {
+                @for (file of files(); track $index) {
                     <!-- Mark tab-link as readonly if only single file present -->
                     <div
                         kbqTabLink
@@ -109,10 +109,14 @@
     [style.max-height.px]="calculatedMaxHeight()"
 >
     @if (activeFile(); as file) {
-        <pre
-            #codeBlockPre
-            class="kbq-code-block__pre"
-        ><code #codeBlockCode kbqCodeBlockHighlight class="kbq-code-block__code" [file]="file"></code></pre>
+        <pre #codeBlockPre class="kbq-code-block__pre"><code
+            #codeBlockCode
+            kbqCodeBlockHighlight
+            class="kbq-code-block__code"
+            [file]="file"
+            (click)="onCodeClick($event)"
+            (mousedown)="onCodeMousedown($event)"
+        ></code></pre>
     }
 
     @if (contentExceedsMaxHeight()) {

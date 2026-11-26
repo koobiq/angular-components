@@ -25,6 +25,7 @@ describe(emitPage.name, () => {
                 example('ButtonOverviewExample', 'components/button'),
                 example('AlertOverviewExample', 'components/alert')
             ],
+            exampleMarks: [['[lineNumbers]', 'maxHeight="200"']],
             browserExamples: [example('AgGridOverviewExample', 'components/ag-grid')]
         };
         const { modulePath, component, template } = emitPage(page, alertOverview(DocsLocale.En));
@@ -39,6 +40,7 @@ describe(emitPage.name, () => {
             template: '<p class="kbq-markdown__p">Intro</p>',
             codeBlocks: [],
             examples: [],
+            exampleMarks: [],
             browserExamples: []
         };
 

@@ -47,13 +47,25 @@ providers: [
 
 Numbering lines is useful for referencing a specific location in the document. Line numbers are disabled by default and can be enabled using the `lineNumbers` attribute, or for all code blocks in the [default settings](#default-settings).
 
-<Example id="code-block-line-numbers" />
+<Example id="code-block-line-numbers" marks="[lineNumbers]" />
+
+### Marking lines and text
+
+To mark lines, pass their numbers, `[start, end]` ranges or text from those lines, a string or a regular expression, in the `markedLines` field of a file. To mark a piece of text, pass a string or a regular expression in the `markedText` field. If the expression has groups, only what they capture is marked.
+
+<Example id="code-block-with-marks" marks="markedLines: markedText:" />
+
+### Selecting lines
+
+To select lines by clicking their numbers, turn on `canSelectLines` and `lineNumbers`. To select several lines in a row, click the number of the first one, then Shift-click the number of the last one. The selected lines go to the `markedLines` field of the file and come back through `[(files)]`.
+
+<Example id="code-block-with-line-selection" marks="canSelectLines [(files)]" />
 
 ### Header with title
 
 In the header, you can specify the document name or define the syntax. A shadow appears in the header when scrolling.
 
-<Example id="code-block-header-pinned" />
+<Example id="code-block-header-pinned" marks="kbqCodeBlockTabLinkContent" />
 
 ### Changing the block height
 
@@ -61,7 +73,7 @@ The block can expand to fill the available screen area if reviewing the code is 
 
 For compactness, it can be useful to show a portion of the document with the option to expand everything, using the `viewAll` attribute. The block will increase in height and all the code will be visible, avoiding double scrolling. In the collapsed state, there is no scrolling. If you change the wrap mode and then collapse and expand the code, the setting is preserved.
 
-<Example id="code-block-with-max-height" />
+<Example id="code-block-with-max-height" marks='maxHeight="200" [(viewAll)]' />
 
 ### Soft line wrap
 
@@ -69,7 +81,7 @@ By default, lines do not wrap. The wrap mode can be configured in advance using 
 
 The icon in the button represents the future state after activation; the icon changes after the wrap mode is toggled.
 
-<Example id="code-block-with-soft-wrap" />
+<Example id="code-block-with-soft-wrap" marks="canToggleSoftWrap [(softWrap)]" />
 
 ### Displaying multiple documents
 
@@ -77,7 +89,7 @@ Multiple documents are placed in the block within tabs. The tab title is formed 
 
 Tabs are hidden automatically for a single document with an empty `filename`.
 
-<Example id="code-block-with-tabs" />
+<Example id="code-block-with-tabs" marks="filename: [hideTabs] [activeFileIndex]" />
 
 The tab header block is displayed without a shadow by default. If content extends beyond the area, a shadow appears under the tab header block when the code block content is scrolled.
 
@@ -87,13 +99,13 @@ The tab header block is displayed without a shadow by default. If content extend
 
 Two visual styles are available for the block: with a border or with a background contrasting to the page background. The contrasting background prevents the block from getting lost on a screen with varied content, and is configured using the `filled` attribute.
 
-<Example id="code-block-with-filled" />
+<Example id="code-block-with-filled" marks="[filled]" />
 
 ### Without borders
 
 When the code block should fill an entire container or screen, it is best to use a style without a border and background, configured using the `noBorder` attribute.
 
-<Example id="code-block-with-no-border" />
+<Example id="code-block-with-no-border" marks="noBorder" />
 
 ### Action panel
 
@@ -139,7 +151,7 @@ The user can copy the document text; this option is enabled by default and can b
 
 The address is taken from the `link` field. The link opens in a new tab.
 
-<Example id="code-block-with-link" />
+<Example id="code-block-with-link" marks="link:" />
 
 ### Default settings
 

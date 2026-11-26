@@ -499,7 +499,7 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'code-block',
                     hasExamples: true,
-                    isUpdated: expiresAt('2026-11-16')
+                    isUpdated: expiresAt('2026-12-03')
                 },
                 {
                     id: DocsStructureItemId.ContentPanel,

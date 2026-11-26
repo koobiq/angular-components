@@ -8,7 +8,7 @@ import {
 import { KbqSidepanelModule, KbqSidepanelService } from '@koobiq/components/sidepanel';
 
 /**
- * @title Code-block with noBorder attribute
+ * @title Code-block without borders
  */
 @Component({
     selector: 'code-block-with-no-border-example',

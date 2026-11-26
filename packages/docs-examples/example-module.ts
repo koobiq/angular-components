@@ -1785,6 +1785,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "code-block-with-filled-example.ts",
     "importPath": "components/code-block"
   },
+  "code-block-with-line-selection": {
+    "packagePath": "components/code-block/code-block-with-line-selection",
+    "title": "Code-block with line selection",
+    "componentName": "CodeBlockWithLineSelectionExample",
+    "files": [
+      "code-block-with-line-selection-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "code-block-with-line-selection-example",
+    "primaryFile": "code-block-with-line-selection-example.ts",
+    "importPath": "components/code-block"
+  },
   "code-block-with-link": {
     "packagePath": "components/code-block/code-block-with-link",
     "title": "Code-block with link",
@@ -1795,6 +1807,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "code-block-with-link-example",
     "primaryFile": "code-block-with-link-example.ts",
+    "importPath": "components/code-block"
+  },
+  "code-block-with-marks": {
+    "packagePath": "components/code-block/code-block-with-marks",
+    "title": "Code-block with marks",
+    "componentName": "CodeBlockWithMarksExample",
+    "files": [
+      "code-block-with-marks-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "code-block-with-marks-example",
+    "primaryFile": "code-block-with-marks-example.ts",
     "importPath": "components/code-block"
   },
   "code-block-with-max-height": {
@@ -1814,7 +1838,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "code-block-with-no-border": {
     "packagePath": "components/code-block/code-block-with-no-border",
-    "title": "Code-block with noBorder attribute",
+    "title": "Code-block without borders",
     "componentName": "CodeBlockWithNoBorderExample",
     "files": [
       "code-block-with-no-border-example.ts"
@@ -10031,7 +10055,9 @@ export type LiveExampleId =
   | 'code-block-overview'
   | 'code-block-with-custom-locale-configuration'
   | 'code-block-with-filled'
+  | 'code-block-with-line-selection'
   | 'code-block-with-link'
+  | 'code-block-with-marks'
   | 'code-block-with-max-height'
   | 'code-block-with-no-border'
   | 'code-block-with-soft-wrap'

@@ -51,7 +51,7 @@ import { type KbqScrollbarScrollToOptions, KbqScrollbarViewport } from '@koobiq/
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqToolTipModule, type KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqCodeBlockHighlight } from './code-block-highlight';
-import type { KbqCodeBlockFile, KbqTabLinkTemplateContext } from './types';
+import type { KbqCodeBlockFile, KbqCodeBlockLineMark, KbqTabLinkTemplateContext } from './types';
 
 /** Localization configuration provider. */
 export const KBQ_CODE_BLOCK_LOCALE_CONFIGURATION = new InjectionToken<KbqCodeBlockLocaleConfiguration>(
@@ -85,6 +85,9 @@ export type KbqCodeBlockDefaultOptions = Partial<{
 
     /** Whether to display line numbers. Defaults to `false`. */
     lineNumbers: boolean;
+
+    /** Whether the reader can mark lines by clicking their numbers. Defaults to `false`. */
+    canSelectLines: boolean;
 }>;
 
 /** Injection token used to configure the default options for all `kbq-code-block` components. */
@@ -131,6 +134,7 @@ export class KbqCodeBlockTabLinkContent {}
         '[class.kbq-code-block_filled]': 'filled()',
         '[class.kbq-code-block_outline]': '!filled()',
         '[class.kbq-code-block_hide-line-numbers]': '!lineNumbers()',
+        '[class.kbq-code-block_can-select-lines]': 'canSelectLines() && lineNumbers()',
         '[class.kbq-code-block_hide-tabs]': 'tabsHidden()',
         '[class.kbq-code-block_no-border]': 'noBorder() || filled()',
         '[class.kbq-code-block_show-actionbar]': 'actionbarVisible()',
@@ -173,6 +177,17 @@ export class KbqCodeBlock implements AfterViewInit {
 
     /** Whether to display line numbers. Defaults to `lineNumbers` of `KBQ_CODE_BLOCK_DEFAULT_OPTIONS`, or `false`. */
     readonly lineNumbers = input(this.defaultOptions?.lineNumbers ?? false, { transform: booleanAttribute });
+
+    /**
+     * Whether the reader can mark lines by clicking their numbers, which `lineNumbers` shows. A click marks a line or
+     * unmarks it, a click with Shift marks the lines from the one clicked before. The lines are written to
+     * `markedLines` of the active file, in place of its marks, and `[(files)]` gets them back. Defaults to
+     * `canSelectLines` of `KBQ_CODE_BLOCK_DEFAULT_OPTIONS`, or `false`.
+     */
+    readonly canSelectLines = input<boolean, boolean | string | null | undefined>(
+        this.defaultOptions?.canSelectLines ?? false,
+        { transform: booleanAttribute }
+    );
 
     /** Whether the code block should be filled. */
     readonly filled = input<boolean, unknown>(false, { transform: booleanAttribute });
@@ -265,6 +280,12 @@ export class KbqCodeBlock implements AfterViewInit {
     /** Files to display. */
     // TODO: mark as `required`.
     readonly files = linkedSignal(() => this.filesInput());
+
+    /** Output to support two-way binding on `[(files)]` property. */
+    readonly filesChange = output<KbqCodeBlockFile[]>();
+
+    /** The line a click without Shift marked last, which a click with Shift marks the lines from. */
+    private lineSelectionStart: { fileIndex: number; line: number } | null = null;
 
     /**
      * Backing input of `activeFileIndex`. `numberAttribute` yields NaN for anything not cleanly numeric,
@@ -494,6 +515,83 @@ export class KbqCodeBlock implements AfterViewInit {
             this.activeFileIndexChange.emit(index);
             this.scrollTo({ top: 0, behavior: 'instant' });
         }
+    }
+
+    /**
+     * Keeps a press on a line number from selecting the text, and a press with Shift from extending its selection.
+     *
+     * @docs-private
+     */
+    protected onCodeMousedown(event: MouseEvent): void {
+        if (this.lineNumberAt(event)) event.preventDefault();
+    }
+
+    /**
+     * Marks the line whose number is clicked, or the lines from the one clicked before with Shift.
+     *
+     * @docs-private
+     */
+    protected onCodeClick(event: MouseEvent): void {
+        const line = this.lineNumberAt(event);
+
+        // The second click of a double click would unmark the line the first one has marked.
+        if (!line || event.detail > 1) return;
+
+        const fileIndex = this.renderedFileIndex();
+        const start =
+            event.shiftKey && this.lineSelectionStart?.fileIndex === fileIndex ? this.lineSelectionStart.line : null;
+        let markedLines: KbqCodeBlockLineMark[];
+
+        if (start === null) {
+            markedLines = this.isOnlyMarkedLine(line) ? [] : [line];
+            this.lineSelectionStart = { fileIndex, line };
+        } else {
+            markedLines = start === line ? [line] : [[Math.min(start, line), Math.max(start, line)]];
+        }
+
+        const files = this.files().map((file, index) => (index === fileIndex ? { ...file, markedLines } : file));
+
+        this.files.set(files);
+        this.filesChange.emit(files);
+    }
+
+    /**
+     * Number of the line whose number the pointer is on, or `null`. The numbers are drawn by the lines themselves, so
+     * the pointer is on one when it is in its line before the start of the text: on the number, the padding before it
+     * or the gap after it.
+     */
+    private lineNumberAt(event: MouseEvent): number | null {
+        const code = this.codeElementRef()?.nativeElement;
+
+        if (
+            !this.canSelectLines() ||
+            !this.lineNumbers() ||
+            event.button !== 0 ||
+            !code?.classList.contains('kbq-code-block__code_line-numbers')
+        ) {
+            return null;
+        }
+
+        const line = (event.target as Element).closest('.kbq-code-block__line');
+
+        if (!line || line.parentElement !== code) return null;
+
+        const { left, right } = line.getBoundingClientRect();
+        const { direction, paddingLeft, paddingRight } = this.window.getComputedStyle(line);
+        const isRtl = direction === 'rtl';
+        const offset = isRtl ? right - event.clientX : event.clientX - left;
+
+        return offset < parseFloat(isRtl ? paddingRight : paddingLeft)
+            ? Array.from(code.children).indexOf(line) + 1
+            : null;
+    }
+
+    /** Whether the line is the only one marked, which a click unmarks. */
+    private isOnlyMarkedLine(line: number): boolean {
+        const code = this.codeElementRef()?.nativeElement;
+        const marked = code?.querySelectorAll(':scope > .kbq-code-block__line_marked');
+
+        return marked?.length === 1 && marked[0] === code?.children[line - 1];
     }
 
     /** Tracks hover when tabs are hidden and `alwaysShowActionbar` is disabled. */
