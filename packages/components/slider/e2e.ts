@@ -1,4 +1,4 @@
-import { Dir } from '@angular/cdk/bidi';
+import { Dir, type Direction } from '@angular/cdk/bidi';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqInputSlider } from './input-slider';
@@ -199,7 +199,7 @@ export class E2eSliderStateAndStyle {
     host: { 'data-testid': 'e2eSliderInteraction' }
 })
 export class E2eSliderInteraction {
-    protected readonly direction = signal<'ltr' | 'rtl'>('ltr');
+    protected readonly direction = signal<Direction>('ltr');
     protected readonly value = signal(30);
     protected readonly commits = signal<KbqSliderCommit[]>([]);
     protected readonly collision = signal<KbqSliderCollision>('none');

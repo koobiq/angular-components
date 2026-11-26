@@ -33,6 +33,7 @@ import type {
     KbqSliderSelection,
     KbqSliderValue
 } from './slider.types';
+import { KBQ_SLIDER_OPTIONS } from './slider-options';
 import { sliderBounds, sliderEqual, sliderGap, sliderMove, sliderNormalize, sliderSnap } from './slider-value';
 
 /**
@@ -44,6 +45,9 @@ import { sliderBounds, sliderEqual, sliderGap, sliderMove, sliderNormalize, slid
 export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
     implements ControlValueAccessor, DoCheck, OnChanges
 {
+    /** Defaults inherited from the current injector. @docs-private */
+    protected readonly options = inject(KBQ_SLIDER_OPTIONS);
+
     /** Selected number or ordered range. Defaults to `0`. */
     readonly valueInput = input<T>(undefined, { alias: 'value' });
     private readonly current = signal<KbqSliderValue>(0);
@@ -52,26 +56,26 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
     /** Emits a new selection when the user edits the control. */
     readonly valueChange = output<KbqSliderSelection<T>>();
     /** Lower bound of the scale. Defaults to `0`. */
-    readonly min = input<number, NumberInput>(0, { transform: numberAttribute });
+    readonly min = input<number, NumberInput>(this.options.min, { transform: numberAttribute });
     /** Upper bound of the scale. Defaults to `100`. */
-    readonly max = input<number, NumberInput>(100, { transform: numberAttribute });
+    readonly max = input<number, NumberInput>(this.options.max, { transform: numberAttribute });
     /** Positive step anchored at `min`, or `null` to select only marks. Defaults to `1`. */
-    readonly step = input<number | null, NumberInput>(1, {
+    readonly step = input<number | null, NumberInput>(this.options.step, {
         transform: (value: NumberInput) => (value === null ? null : numberAttribute(value))
     });
     /** Visual marks, independent of the numeric step. Defaults to an empty list. */
-    readonly marks = input<readonly KbqSliderMark[]>([]);
+    readonly marks = input<readonly KbqSliderMark[]>(this.options.marks);
     /** Minimum separation of range bounds in value units. Defaults to `0`. */
-    readonly minDistance = input<number, NumberInput>(0, { transform: numberAttribute });
+    readonly minDistance = input<number, NumberInput>(this.options.minDistance, { transform: numberAttribute });
     /** Range collision strategy for pointer, keyboard and numeric input. Defaults to `'none'`. */
-    readonly collision = input<KbqSliderCollision>('none');
+    readonly collision = input<KbqSliderCollision>(this.options.collision);
     /** Whether user input is disabled. Defaults to `false`. */
-    readonly disabledInput = input<boolean, BooleanInput>(false, {
+    readonly disabledInput = input<boolean, BooleanInput>(this.options.disabled, {
         alias: 'disabled',
         transform: booleanAttribute
     });
     /** Whether the value is read-only while the thumbs remain focusable. Defaults to `false`. */
-    readonly readonly = input<boolean, BooleanInput>(false, { transform: booleanAttribute });
+    readonly readonly = input<boolean, BooleanInput>(this.options.readonly, { transform: booleanAttribute });
     /** Controls when Angular validation errors appear. Defaults to the injected matcher. */
     readonly errorStateMatcher = input<ErrorStateMatcher>();
     /** Accessible name, used when no labelled-by reference is supplied. Defaults to the active locale. */
@@ -84,7 +88,7 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
     readonly thumbLabels = input<readonly string[]>([]);
     protected readonly defaultFormat = (value: number): string => String(value);
     /** Formats the tooltip and accessible value text. Defaults to the numeric string. */
-    readonly displayWith = input<(value: number) => string>(this.defaultFormat);
+    readonly displayWith = input<(value: number) => string>(this.options.displayWith ?? this.defaultFormat);
     /** Base name used to serialize the value; range bounds use `name[0]` and `name[1]`. Defaults to `null`. */
     readonly name = input<string | null>(null);
     private readonly uid = inject(_IdGenerator).getId('kbq-slider-');
@@ -113,7 +117,10 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
     /** @docs-private */
     readonly empty = signal(false);
     /** @docs-private */
-    readonly requiredInput = input<boolean, BooleanInput>(false, { alias: 'required', transform: booleanAttribute });
+    readonly requiredInput = input<boolean, BooleanInput>(this.options.required, {
+        alias: 'required',
+        transform: booleanAttribute
+    });
     private readonly requiredValidator = signal(false);
     /** Whether a value is required by the field or its Angular validator. */
     readonly required = computed(() => this.requiredInput() || this.requiredValidator());

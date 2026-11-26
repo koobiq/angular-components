@@ -1,5 +1,16 @@
-import { InputModalityDetector } from '@angular/cdk/a11y';
+import { FocusMonitor, type FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
+import {
+    DOWN_ARROW,
+    END,
+    ESCAPE,
+    HOME,
+    LEFT_ARROW,
+    PAGE_DOWN,
+    PAGE_UP,
+    RIGHT_ARROW,
+    UP_ARROW
+} from '@angular/cdk/keycodes';
 import { Overlay } from '@angular/cdk/overlay';
 import { Platform } from '@angular/cdk/platform';
 import {
@@ -28,17 +39,32 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_WINDOW, kbqAnimationsDisabled, KbqLocaleOverridesDirective } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import type { KbqSliderFill, KbqSliderScale, KbqSliderValue } from './slider.types';
+import type {
+    KbqSliderFill,
+    KbqSliderScale,
+    KbqSliderSelection,
+    KbqSliderThumbAlignment,
+    KbqSliderValue
+} from './slider.types';
 import { KbqSliderBase } from './slider-base';
 import { sliderEqual, sliderGap, sliderMove, sliderSnap, sliderStops } from './slider-value';
 
-interface SliderMarkAnimation {
+type SliderPointerGesture = {
+    id: number;
+    start: KbqSliderValue;
+    offset: number;
+    overlapped: boolean;
+};
+
+type SliderMarkAnimation = {
     index: number;
     animations: Animation[];
     fillSizes: { element: HTMLElement; property: string }[];
     render?: AfterRenderRef;
     frame?: number;
-}
+};
+
+const NAVIGATION_KEYS = new Set<number>([RIGHT_ARROW, LEFT_ARROW, UP_ARROW, DOWN_ARROW, HOME, END, PAGE_UP, PAGE_DOWN]);
 
 const MARK_ANIMATION_TIMING: KeyframeAnimationOptions = {
     duration: 120,
@@ -72,33 +98,43 @@ const MARK_ANIMATION_TIMING: KeyframeAnimationOptions = {
     hostDirectives: [{ directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }],
     exportAs: 'kbqSlider'
 })
-export class KbqSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSliderBase<T> {
+export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
+    extends KbqSliderBase<T>
+    implements KbqFormFieldControl<KbqSliderSelection<T>>
+{
     /** Vertical layout, increasing from bottom to top. Defaults to `false`. */
-    readonly vertical = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
+    readonly vertical = input<boolean, boolean | string | null | undefined>(this.options.vertical, {
+        transform: booleanAttribute
+    });
     /** Reverses the scale direction. Defaults to `false`. */
-    readonly reversed = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
+    readonly reversed = input<boolean, boolean | string | null | undefined>(this.options.reversed, {
+        transform: booleanAttribute
+    });
     /** Keeps thumbs within the control, or centres them on its endpoints. Defaults to `'contain'`. */
-    readonly thumbAlignment = input<'contain' | 'center'>('contain');
+    readonly thumbAlignment = input<KbqSliderThumbAlignment>(this.options.thumbAlignment);
     /** Highlighted portion of the scale. Ranges fill between their bounds unless set to `'outside'`. Defaults to `'start'`. */
-    readonly fill = input<KbqSliderFill>('start');
+    readonly fill = input<KbqSliderFill>(this.options.fill);
     /** Origin of the `'origin'` fill, in value units. Defaults to `0`. */
-    readonly fillOrigin = input(0);
+    readonly fillOrigin = input(this.options.fillOrigin);
     /** Optional mapping for a non-linear scale. Defaults to a linear scale. */
-    readonly scale = input<KbqSliderScale>();
+    readonly scale = input<KbqSliderScale | undefined>(this.options.scale);
     /** Shows the value on focus, hover and drag. Defaults to `false`. */
-    readonly showTooltip = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
+    readonly showTooltip = input<boolean, boolean | string | null | undefined>(this.options.showTooltip, {
+        transform: booleanAttribute
+    });
     /** Shows the value on focus even when `showTooltip` is off. Defaults to `false`. */
-    readonly tooltipOnFocus = input<boolean, boolean | string | null | undefined>(false, {
+    readonly tooltipOnFocus = input<boolean, boolean | string | null | undefined>(this.options.tooltipOnFocus, {
         transform: booleanAttribute
     });
     /** Number of steps advanced by Page Up/Down. Defaults to `10`. */
-    readonly pageStep = input(10);
+    readonly pageStep = input(this.options.pageStep);
     /** @docs-private */
     readonly controlType = 'slider';
 
     private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly platform = inject(Platform);
     private readonly injector = inject(Injector);
+    private readonly focusMonitor = inject(FocusMonitor);
     private readonly modality = inject(InputModalityDetector);
     private readonly overlay = inject(Overlay);
     protected readonly tooltipScrollStrategy = () => this.overlay.scrollStrategies.reposition();
@@ -106,6 +142,7 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSli
     private readonly direction = signal(this.directionality?.value ?? 'ltr');
     private readonly renderer = inject(Renderer2);
     private readonly window = inject(KBQ_WINDOW);
+    private readonly thumbInputs = viewChildren<ElementRef<HTMLInputElement>>('thumbInput');
     private readonly rail = viewChild<ElementRef<HTMLElement>>('rail');
     private readonly surface = viewChild<ElementRef<HTMLElement>>('surface');
     protected readonly animationsDisabled = kbqAnimationsDisabled();
@@ -157,7 +194,7 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSli
             };
         })
     );
-    private pointer: { id: number; start: KbqSliderValue; offset: number; overlapped: boolean } | null = null;
+    private pointer: SliderPointerGesture | null = null;
     private keyboardStart: KbqSliderValue | null = null;
     private readonly tooltips = viewChildren(KbqTooltipTrigger);
     protected readonly dragging = signal(false);
@@ -209,7 +246,13 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSli
 
     /** Focuses a thumb by its stable lower/upper index. Defaults to the first thumb. */
     override focus(options?: FocusOptions, index = 0): void {
-        this.element.nativeElement.querySelectorAll<HTMLInputElement>('.kbq-slider__input')[index]?.focus(options);
+        this.focusThumb(index, this.modality.mostRecentModality ?? 'program', options);
+    }
+
+    private focusThumb(index: number, origin: FocusOrigin, options?: FocusOptions): void {
+        const input = this.thumbInputs()[index];
+
+        if (input) this.focusMonitor.focusVia(input, origin, options);
     }
 
     /** @docs-private */
@@ -261,7 +304,9 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSli
 
         event.preventDefault();
         this.activeIndex.set(index);
-        this.focus({ preventScroll: true }, index);
+        const origin = event.pointerType === 'touch' ? 'touch' : 'mouse';
+
+        this.focusThumb(index, origin, { preventScroll: true });
         if (this.readonly()) return;
         this.finishKeyboard();
         this.pointer = {
@@ -273,20 +318,21 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSli
         this.dragging.set(true);
         this.revealTooltip(index);
         this.surface()?.nativeElement.setPointerCapture(event.pointerId);
-        if (!thumb) this.updateFromPointer(next);
+        if (!thumb) this.updateFromPointer(next, origin);
     }
 
     protected onPointerMove(event: PointerEvent): void {
         if (this.pointer?.id !== event.pointerId) return;
         const next = this.valueAt(event, this.pointer.offset);
+        const origin = event.pointerType === 'touch' ? 'touch' : 'mouse';
 
         if (this.pointer.overlapped && sliderSnap(next, this.settings()) !== this.thumbValue(0)) {
             this.activeIndex.set(next < this.thumbValue(0) ? 0 : 1);
-            this.focus({ preventScroll: true }, this.activeIndex());
+            this.focusThumb(this.activeIndex(), origin, { preventScroll: true });
             this.pointer.overlapped = false;
         }
 
-        this.updateFromPointer(next);
+        this.updateFromPointer(next, origin);
     }
 
     protected onPointerUp(event: PointerEvent): void {
@@ -302,7 +348,9 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSli
     }
 
     protected onKeyDown(event: KeyboardEvent, index: number): void {
-        if (event.key === 'Escape') {
+        const { keyCode } = event;
+
+        if (keyCode === ESCAPE) {
             if (this.tooltipIndex() !== null || this.markAnimation || this.pointer || this.keyboardStart !== null) {
                 event.stopPropagation();
                 event.preventDefault();
@@ -318,24 +366,25 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSli
             return;
         }
 
-        const keys = ['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown'];
-
-        if (!keys.includes(event.key) || event.altKey || event.ctrlKey || event.metaKey) return;
+        if (!NAVIGATION_KEYS.has(keyCode) || event.altKey || event.ctrlKey || event.metaKey) return;
         event.preventDefault();
         if (this.disabled() || this.readonly() || this.pointer) return;
         this.finishMarkAnimation();
         this.keyboardStart ??= this.value();
         this.activeIndex.set(index);
-        let direction = event.key === 'ArrowRight' || event.key === 'ArrowUp' || event.key === 'PageUp' ? 1 : -1;
+        let direction = keyCode === RIGHT_ARROW || keyCode === UP_ARROW || keyCode === PAGE_UP ? 1 : -1;
 
-        if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+        if (keyCode === RIGHT_ARROW || keyCode === LEFT_ARROW) {
             if (!this.vertical() && this.direction() === 'rtl') direction *= -1;
             if (this.reversed()) direction *= -1;
-        } else if (this.vertical() && this.reversed() && (event.key === 'ArrowUp' || event.key === 'ArrowDown')) {
+        } else if (this.vertical() && this.reversed() && (keyCode === UP_ARROW || keyCode === DOWN_ARROW)) {
             direction *= -1;
         }
 
-        const page = event.key.startsWith('Page') || event.shiftKey ? Math.max(1, Math.floor(this.pageStep())) : 1;
+        const page =
+            keyCode === PAGE_UP || keyCode === PAGE_DOWN || event.shiftKey
+                ? Math.max(1, Math.floor(this.pageStep()))
+                : 1;
         let next = this.thumbValue(index) + direction * this.bounds().step * page;
 
         if (this.step() === null) {
@@ -345,12 +394,12 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSli
             next = stops[Math.max(0, Math.min(stops.length - 1, current + direction * page))] ?? this.bounds().min;
         }
 
-        if (event.key === 'Home') next = this.thumbMin(index);
-        if (event.key === 'End') next = this.thumbMax(index);
+        if (keyCode === HOME) next = this.thumbMin(index);
+        if (keyCode === END) next = this.thumbMax(index);
         const nextIndex = this.move(index, this.keyboardTarget(index, next));
 
         this.activeIndex.set(nextIndex);
-        if (nextIndex !== index) this.focus({ preventScroll: true }, nextIndex);
+        if (nextIndex !== index) this.focusThumb(nextIndex, 'keyboard', { preventScroll: true });
         this.revealTooltip(nextIndex);
     }
 
@@ -372,10 +421,7 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSli
     }
 
     protected onKeyUp(event: KeyboardEvent): void {
-        if (
-            ['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key)
-        )
-            this.finishKeyboard();
+        if (NAVIGATION_KEYS.has(event.keyCode)) this.finishKeyboard();
     }
 
     protected onNativeInput(event: Event, index: number): void {
@@ -465,12 +511,12 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSli
         );
     }
 
-    private updateFromPointer(value: number): void {
+    private updateFromPointer(value: number, origin: FocusOrigin): void {
         const index = this.activeIndex();
         const nextIndex = this.move(index, value);
 
         this.activeIndex.set(nextIndex);
-        if (nextIndex !== index) this.focus({ preventScroll: true }, nextIndex);
+        if (nextIndex !== index) this.focusThumb(nextIndex, origin, { preventScroll: true });
         this.revealTooltip(nextIndex);
     }
 

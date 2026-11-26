@@ -11,14 +11,20 @@ import { ControlValueAccessor } from '@angular/forms';
 import { DoCheck } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
 import * as i1 from '@koobiq/components/core';
+import { InjectionToken } from '@angular/core';
+import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import * as _koobiq_components_slider from '@koobiq/components/slider';
 import { NgControl } from '@angular/forms';
 import { NumberInput } from '@angular/cdk/coercion';
 import { OnChanges } from '@angular/core';
+import { Provider } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 
 // @public
-export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSliderBase<T> {
+export const KBQ_SLIDER_OPTIONS: InjectionToken<KbqSliderOptions>;
+
+// @public
+export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSliderBase<T> implements KbqFormFieldControl<KbqSliderSelection<T>> {
     constructor();
     // (undocumented)
     protected beginEdit(index: number): void;
@@ -60,7 +66,7 @@ export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue> extends K
 }
 
 // @public
-export class KbqSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSliderBase<T> {
+export class KbqSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSliderBase<T> implements KbqFormFieldControl<KbqSliderSelection<T>> {
     constructor();
     // (undocumented)
     protected readonly activeIndex: _angular_core.WritableSignal<number>;
@@ -116,7 +122,7 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSli
     // (undocumented)
     protected selectMark(value: number): void;
     readonly showTooltip: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
-    readonly thumbAlignment: _angular_core.InputSignal<"contain" | "center">;
+    readonly thumbAlignment: _angular_core.InputSignal<KbqSliderThumbAlignment>;
     // (undocumented)
     protected readonly tooltipIndex: _angular_core.WritableSignal<number | null>;
     readonly tooltipOnFocus: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
@@ -186,6 +192,7 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue> i
     abstract onContainerClick(event: MouseEvent): void;
     // (undocumented)
     protected onTouched: () => void;
+    protected readonly options: _koobiq_components_slider.KbqSliderOptions;
     readonly placeholder: _angular_core.WritableSignal<null>;
     readonly readonly: _angular_core.InputSignalWithTransform<boolean, BooleanInput>;
     registerOnChange(fn: (value: KbqSliderValue) => void): void;
@@ -231,19 +238,22 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue> i
 export type KbqSliderCollision = 'none' | 'push' | 'swap';
 
 // @public
-export interface KbqSliderCommit {
-    source: 'pointer' | 'keyboard' | 'input';
+export type KbqSliderCommit = {
     value: KbqSliderValue;
-}
+    source: KbqSliderCommitSource;
+};
+
+// @public
+export type KbqSliderCommitSource = 'pointer' | 'keyboard' | 'input';
 
 // @public
 export type KbqSliderFill = 'start' | 'end' | 'outside' | 'origin' | 'none';
 
 // @public
-export interface KbqSliderMark {
-    label?: string;
+export type KbqSliderMark = {
     value: number;
-}
+    label?: string;
+};
 
 // @public
 export class KbqSliderModule {
@@ -256,13 +266,44 @@ export class KbqSliderModule {
 }
 
 // @public
-export interface KbqSliderScale {
+export type KbqSliderOptions = {
+    min: number;
+    max: number;
+    step: number | null;
+    marks: readonly KbqSliderMark[];
+    minDistance: number;
+    collision: KbqSliderCollision;
+    disabled: boolean;
+    readonly: boolean;
+    required: boolean;
+    displayWith?: (value: number) => string;
+    vertical: boolean;
+    reversed: boolean;
+    thumbAlignment: KbqSliderThumbAlignment;
+    fill: KbqSliderFill;
+    fillOrigin: number;
+    scale?: KbqSliderScale;
+    showTooltip: boolean;
+    tooltipOnFocus: boolean;
+    pageStep: number;
+    unit: string;
+    showStepper: boolean;
+};
+
+// @public
+export function kbqSliderOptionsProvider(options: Partial<KbqSliderOptions>): Provider;
+
+// @public
+export type KbqSliderScale = {
     toPosition: (value: number) => number;
     toValue: (position: number) => number;
-}
+};
 
 // @public
 export type KbqSliderSelection<T extends KbqSliderValue> = T extends number ? number : [number, number];
+
+// @public
+export type KbqSliderThumbAlignment = 'contain' | 'center';
 
 // @public
 export type KbqSliderValue = number | readonly [number, number];

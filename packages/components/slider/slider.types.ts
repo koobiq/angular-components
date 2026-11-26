@@ -10,26 +10,32 @@ export type KbqSliderCollision = 'none' | 'push' | 'swap';
 /** The portion of the scale highlighted by the slider. */
 export type KbqSliderFill = 'start' | 'end' | 'outside' | 'origin' | 'none';
 
+/** How the thumbs align with the ends of the track. */
+export type KbqSliderThumbAlignment = 'contain' | 'center';
+
 /** A visual mark. Marks become selectable stops only when `step` is `null`. */
-export interface KbqSliderMark {
+export type KbqSliderMark = {
     /** Position in value units. */
     value: number;
     /** Optional caption below the scale. */
     label?: string;
-}
+};
 
 /** Monotonic, mutually inverse mappings for a non-linear scale. */
-export interface KbqSliderScale {
+export type KbqSliderScale = {
     /** Maps a value to a fraction between zero and one. */
     toPosition: (value: number) => number;
     /** Maps a fraction between zero and one to a value. */
     toValue: (position: number) => number;
-}
+};
+
+/** Input method that completed a slider interaction. */
+export type KbqSliderCommitSource = 'pointer' | 'keyboard' | 'input';
 
 /** A completed user interaction. Programmatic writes and cancelled gestures do not emit it. */
-export interface KbqSliderCommit {
+export type KbqSliderCommit = {
     /** Final selected value. */
     value: KbqSliderValue;
     /** Input method that completed the change. */
-    source: 'pointer' | 'keyboard' | 'input';
-}
+    source: KbqSliderCommitSource;
+};

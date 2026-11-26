@@ -1,3 +1,5 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { END, ESCAPE, HOME, LEFT_ARROW, PAGE_DOWN, PAGE_UP, RIGHT_ARROW } from '@angular/cdk/keycodes';
 import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import {
@@ -10,6 +12,7 @@ import {
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import {
+    dispatchKeyboardEvent,
     type ErrorStateMatcher,
     kbqErrorStateMatcherProvider,
     ShowOnControlDirtyErrorStateMatcher,
@@ -19,6 +22,7 @@ import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field'
 import { KbqInputSlider } from './input-slider';
 import { KbqSlider } from './slider';
 import type { KbqSliderValue } from './slider.types';
+import { kbqSliderOptionsProvider } from './slider-options';
 
 @Component({
     imports: [KbqSlider, KbqInputSlider, ReactiveFormsModule, FormsModule, KbqFormFieldModule],
@@ -66,6 +70,90 @@ class SliderWithErrorStateMatcher {
 }
 
 describe('KbqSlider', () => {
+    describe('kbqSliderOptionsProvider', () => {
+        it('applies partial defaults and gives explicit slider inputs precedence', () => {
+            TestBed.configureTestingModule({
+                providers: [
+                    kbqSliderOptionsProvider({
+                        step: null,
+                        marks: [{ value: 10 }, { value: 50 }],
+                        thumbAlignment: 'center',
+                        showTooltip: true
+                    })
+                ]
+            });
+            const fixture = TestBed.createComponent(KbqSlider);
+            const slider = fixture.componentInstance;
+
+            fixture.detectChanges();
+            expect(slider.max()).toBe(100);
+            expect(slider.step()).toBeNull();
+            expect(slider.value()).toBe(10);
+            expect(slider.thumbAlignment()).toBe('center');
+            expect(slider.showTooltip()).toBe(true);
+
+            fixture.componentRef.setInput('step', '2');
+            fixture.componentRef.setInput('showTooltip', false);
+            fixture.detectChanges();
+            expect(slider.step()).toBe(2);
+            expect(slider.value()).toBe(0);
+            expect(slider.showTooltip()).toBe(false);
+        });
+
+        it('inherits application defaults and scopes overrides to the input slider subtree', async () => {
+            @Component({
+                imports: [KbqInputSlider],
+                template: `
+                    <kbq-input-slider [value]="20" />
+                `,
+                providers: [kbqSliderOptionsProvider({ unit: 'kg', showStepper: false })]
+            })
+            class LocalSliderOptions {}
+
+            TestBed.configureTestingModule({
+                providers: [kbqSliderOptionsProvider({ step: 5, vertical: true, unit: 'g' })]
+            });
+            const local = TestBed.createComponent(LocalSliderOptions);
+            const sibling = TestBed.createComponent(KbqInputSlider);
+
+            await local.whenStable();
+            const inputSlider = local.debugElement.query(By.directive(KbqInputSlider)).injector.get(KbqInputSlider);
+            const track = local.debugElement.query(By.directive(KbqSlider)).injector.get(KbqSlider);
+
+            expect(inputSlider.step()).toBe(5);
+            expect(track.step()).toBe(5);
+            expect(track.vertical()).toBe(false);
+            expect(local.nativeElement.querySelector('[kbqSuffix]').textContent.trim()).toBe('kg');
+            expect(local.nativeElement.querySelector('kbq-stepper')).toBeNull();
+            expect(local.nativeElement.querySelector('input[type=range]').getAttribute('aria-valuetext')).toBe('20 kg');
+            expect(sibling.componentInstance.unit()).toBe('g');
+            expect(sibling.componentInstance.showStepper()).toBe(true);
+            expect(TestBed.createComponent(KbqSlider).componentInstance.vertical()).toBe(true);
+        });
+
+        it('uses input slider bindings for both the editor and the thumb', async () => {
+            TestBed.configureTestingModule({
+                providers: [kbqSliderOptionsProvider({ step: 5, unit: 'kg', showStepper: true })]
+            });
+            const fixture = TestBed.createComponent(KbqInputSlider);
+
+            fixture.componentRef.setInput('step', 2);
+            fixture.componentRef.setInput('value', 6);
+            fixture.componentRef.setInput('unit', 'g');
+            fixture.componentRef.setInput('showStepper', false);
+            await fixture.whenStable();
+
+            const thumb: HTMLInputElement = fixture.nativeElement.querySelector('input[type=range]');
+            const editor: HTMLInputElement = fixture.nativeElement.querySelector('input.kbq-input');
+
+            expect(editor.value).toBe('6');
+            expect(thumb.value).toBe('6');
+            expect(thumb.step).toBe('2');
+            expect(thumb.getAttribute('aria-valuetext')).toBe('6 g');
+            expect(fixture.nativeElement.querySelector('kbq-stepper')).toBeNull();
+        });
+    });
+
     describe('slider behavior', () => {
         let fixture: ComponentFixture<KbqSlider>;
 
@@ -75,22 +163,18 @@ describe('KbqSlider', () => {
             fixture.detectChanges();
         });
 
-        const key = (input: HTMLInputElement, key: string, type = 'keydown'): void => {
-            input.dispatchEvent(new KeyboardEvent(type, { key, bubbles: true, cancelable: true }));
-        };
-
         it('emits one commit after a repeated keyboard interaction', () => {
             const commits = vi.fn();
 
             fixture.componentInstance.valueCommit.subscribe(commits);
             const input = fixture.nativeElement.querySelector('input');
 
-            key(input, 'ArrowRight');
-            key(input, 'ArrowRight');
+            dispatchKeyboardEvent(input, 'keydown', RIGHT_ARROW);
+            dispatchKeyboardEvent(input, 'keydown', RIGHT_ARROW);
             fixture.detectChanges();
             expect(fixture.componentInstance.value()).toBe(2);
             expect(commits).not.toHaveBeenCalled();
-            key(input, 'ArrowRight', 'keyup');
+            dispatchKeyboardEvent(input, 'keyup', RIGHT_ARROW);
             expect(commits).toHaveBeenCalledExactlyOnceWith({ value: 2, source: 'keyboard' });
         });
 
@@ -100,9 +184,9 @@ describe('KbqSlider', () => {
             fixture.componentInstance.valueCommit.subscribe(commits);
             const input = fixture.nativeElement.querySelector('input');
 
-            key(input, 'ArrowRight');
-            key(input, 'Escape');
-            key(input, 'ArrowRight', 'keyup');
+            dispatchKeyboardEvent(input, 'keydown', RIGHT_ARROW);
+            dispatchKeyboardEvent(input, 'keydown', ESCAPE);
+            dispatchKeyboardEvent(input, 'keyup', RIGHT_ARROW);
             expect(fixture.componentInstance.value()).toBe(0);
             expect(commits).not.toHaveBeenCalled();
         });
@@ -118,13 +202,15 @@ describe('KbqSlider', () => {
                 ['0', '50', 'Minimum price'],
                 ['30', '100', 'Maximum price']
             ]);
-            key(inputs[0], 'End');
+            dispatchKeyboardEvent(inputs[0], 'keydown', END);
             fixture.detectChanges();
             expect(fixture.componentInstance.value()).toEqual([50, 60]);
             expect(fixture.nativeElement.querySelector('input')).toBe(inputs[0]);
         });
 
         it('swaps a range across its minimum gap with one arrow step in either direction', () => {
+            const focusVia = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
+
             fixture.componentRef.setInput('value', [25, 35]);
             fixture.componentRef.setInput('collision', 'swap');
             fixture.componentRef.setInput('minDistance', 10);
@@ -132,10 +218,13 @@ describe('KbqSlider', () => {
             const [lower, upper] = fixture.nativeElement.querySelectorAll('input[type=range]');
 
             lower.focus();
-            key(lower, 'ArrowRight');
+            dispatchKeyboardEvent(lower, 'keydown', RIGHT_ARROW);
             expect(fixture.componentInstance.value()).toEqual([35, 45]);
             expect(document.activeElement).toBe(upper);
-            key(upper, 'ArrowLeft');
+            expect(focusVia).toHaveBeenCalledWith(expect.objectContaining({ nativeElement: upper }), 'keyboard', {
+                preventScroll: true
+            });
+            dispatchKeyboardEvent(upper, 'keydown', LEFT_ARROW);
             expect(fixture.componentInstance.value()).toEqual([25, 35]);
             expect(document.activeElement).toBe(lower);
         });
@@ -143,8 +232,21 @@ describe('KbqSlider', () => {
         it('uses a numeric step supplied as a text attribute', () => {
             fixture.componentRef.setInput('step', '5');
             fixture.detectChanges();
-            key(fixture.nativeElement.querySelector('input'), 'ArrowRight');
+            dispatchKeyboardEvent(fixture.nativeElement.querySelector('input'), 'keydown', RIGHT_ARROW);
             expect(fixture.componentInstance.value()).toBe(5);
+        });
+
+        it('moves by the configured page step in both directions', () => {
+            fixture.componentRef.setInput('step', 2);
+            fixture.componentRef.setInput('pageStep', 3);
+            fixture.detectChanges();
+            const input = fixture.nativeElement.querySelector('input');
+
+            dispatchKeyboardEvent(input, 'keydown', PAGE_UP);
+            expect(fixture.componentInstance.value()).toBe(6);
+            dispatchKeyboardEvent(input, 'keyup', PAGE_UP);
+            dispatchKeyboardEvent(input, 'keydown', PAGE_DOWN);
+            expect(fixture.componentInstance.value()).toBe(0);
         });
 
         it('uses Home/End and navigates a discrete mark set', () => {
@@ -153,11 +255,11 @@ describe('KbqSlider', () => {
             fixture.detectChanges();
             const input = fixture.nativeElement.querySelector('input');
 
-            key(input, 'ArrowRight');
+            dispatchKeyboardEvent(input, 'keydown', RIGHT_ARROW);
             expect(fixture.componentInstance.value()).toBe(15);
-            key(input, 'End');
+            dispatchKeyboardEvent(input, 'keydown', END);
             expect(fixture.componentInstance.value()).toBe(70);
-            key(input, 'Home');
+            dispatchKeyboardEvent(input, 'keydown', HOME);
             expect(fixture.componentInstance.value()).toBe(0);
         });
 
@@ -191,7 +293,7 @@ describe('KbqSlider', () => {
             input.focus();
             input.value = '50';
             input.dispatchEvent(new Event('input', { bubbles: true }));
-            key(input, 'End');
+            dispatchKeyboardEvent(input, 'keydown', END);
             expect(input.disabled).toBe(false);
             expect(input.value).toBe('0');
             expect(fixture.componentInstance.value()).toBe(0);
@@ -205,7 +307,7 @@ describe('KbqSlider', () => {
             input.focus();
             await fixture.whenStable();
             expect(document.querySelector('.kbq-slider__tooltip')).not.toBeNull();
-            key(input, 'Escape');
+            dispatchKeyboardEvent(input, 'keydown', ESCAPE);
             await fixture.whenStable();
             await vi.waitFor(() => expect(document.querySelector('.kbq-slider__tooltip')).toBeNull());
         });
@@ -303,8 +405,8 @@ describe('KbqSlider', () => {
             await fixture.whenStable();
             const input: HTMLInputElement = fixture.nativeElement.querySelector('kbq-slider input');
 
-            input.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
-            input.dispatchEvent(new KeyboardEvent('keyup', { key: 'End', bubbles: true }));
+            dispatchKeyboardEvent(input, 'keydown', END);
+            dispatchKeyboardEvent(input, 'keyup', END);
             fixture.detectChanges();
             expect(input.value).toBe('100');
             expect(fixture.componentInstance.control.value).toBe(35);
@@ -398,18 +500,15 @@ describe('KbqSlider', () => {
             fixture.detectChanges();
             await fixture.whenStable();
             const editor: HTMLInputElement = fixture.nativeElement.querySelector('input.kbq-input');
-            const escape = () =>
-                editor.dispatchEvent(
-                    new KeyboardEvent('keydown', { key: 'Escape', keyCode: 27, bubbles: true, cancelable: true })
-                );
+            const escape = () => dispatchKeyboardEvent(editor, 'keydown', ESCAPE).defaultPrevented;
 
             editor.focus();
-            expect(escape()).toBe(true);
+            expect(escape()).toBe(false);
             editor.value = '8';
             editor.dispatchEvent(new Event('input', { bubbles: true }));
-            expect(escape()).toBe(false);
-            expect(editor.value).toBe('0');
             expect(escape()).toBe(true);
+            expect(editor.value).toBe('0');
+            expect(escape()).toBe(false);
         });
 
         it('keeps subsequent fractional text while the editor stays focused after a form write', async () => {
@@ -600,7 +699,7 @@ describe('KbqSlider', () => {
             inputs[0].blur();
             await fixture.whenStable();
             expectError(false);
-            thumb.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+            dispatchKeyboardEvent(thumb, 'keydown', RIGHT_ARROW);
             await fixture.whenStable();
             expect(host.form.controls.volume.dirty).toBe(true);
             expectError(true);

@@ -48,6 +48,7 @@
                 (pointerleave)="leave($index)"
             >
                 <input
+                    #thumbInput
                     class="kbq-slider__input"
                     type="range"
                     [step]="step() === null ? 'any' : bounds().step"

@@ -1,3 +1,5 @@
+import { FocusMonitor, type FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
+import { ENTER, ESCAPE } from '@angular/cdk/keycodes';
 import {
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -20,7 +22,7 @@ import { KbqLocaleOverridesDirective } from '@koobiq/components/core';
 import { KbqFormFieldControl, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { add, KbqInputModule, KbqNumberInput } from '@koobiq/components/input';
 import { KbqSlider } from './slider';
-import type { KbqSliderCommit, KbqSliderValue } from './slider.types';
+import type { KbqSliderCommit, KbqSliderSelection, KbqSliderValue } from './slider.types';
 import { KbqSliderBase } from './slider-base';
 import { sliderEqual, sliderMove, sliderSnap, sliderStops } from './slider-value';
 
@@ -44,13 +46,20 @@ import { sliderEqual, sliderMove, sliderSnap, sliderStops } from './slider-value
     hostDirectives: [{ directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }],
     exportAs: 'kbqInputSlider'
 })
-export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSliderBase<T> {
+export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue>
+    extends KbqSliderBase<T>
+    implements KbqFormFieldControl<KbqSliderSelection<T>>
+{
     /** Unit displayed after each numeric value. */
-    readonly unit = input('');
+    readonly unit = input(this.options.unit);
     /** Shows stepper buttons for a single value. Defaults to `true`. */
-    readonly showStepper = input<boolean, boolean | string | null | undefined>(true, { transform: booleanAttribute });
+    readonly showStepper = input<boolean, boolean | string | null | undefined>(this.options.showStepper, {
+        transform: booleanAttribute
+    });
     /** @docs-private */
     readonly controlType = 'input-slider';
+    private readonly focusMonitor = inject(FocusMonitor);
+    private readonly modality = inject(InputModalityDetector);
     private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly slider = viewChild(KbqSlider);
     private readonly inputs = viewChildren(KbqNumberInput);
@@ -89,7 +98,13 @@ export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue> extends K
 
     /** Focuses the first numeric input. */
     override focus(options?: FocusOptions): void {
-        this.element.nativeElement.querySelector<HTMLInputElement>('input.kbq-input')?.focus(options);
+        this.focusEditor(0, this.modality.mostRecentModality ?? 'program', options);
+    }
+
+    private focusEditor(index: number, origin: FocusOrigin, options?: FocusOptions): void {
+        const editor = this.inputs()[index];
+
+        if (editor) this.focusMonitor.focusVia(editor.nativeElement, origin, options);
     }
     /** @docs-private */
     onContainerClick(event: MouseEvent): void {
@@ -138,16 +153,16 @@ export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue> extends K
     }
 
     protected onEditorKey(event: KeyboardEvent, index: number): void {
-        if (event.key === 'Enter') {
+        if (event.keyCode === ENTER) {
             const active = this.finishEdit(index);
 
             if (active === index) this.beginEdit(index);
-            else this.element.nativeElement.querySelectorAll<HTMLInputElement>('input.kbq-input')[active]?.focus();
+            else this.focusEditor(active, 'keyboard');
 
             return;
         }
 
-        if (event.key !== 'Escape' || this.editStart === null) return;
+        if (event.keyCode !== ESCAPE || this.editStart === null) return;
         event.preventDefault();
         this.changeValue(this.editStart);
         this.editStart = null;

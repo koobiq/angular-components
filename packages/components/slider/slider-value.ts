@@ -1,13 +1,15 @@
 import type { KbqSliderCollision, KbqSliderMark, KbqSliderValue } from './slider.types';
 
+type SliderSnapDirection = -1 | 0 | 1;
+
 /** @internal */
-export interface SliderSettings {
+export type SliderSettings = {
     min: number;
     max: number;
     step: number | null;
     marks: readonly KbqSliderMark[];
     minDistance: number;
-}
+};
 
 const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
 
@@ -36,7 +38,7 @@ export function sliderStops(settings: SliderSettings): number[] {
 }
 
 /** @internal */
-export function sliderSnap(value: number, settings: SliderSettings, direction: -1 | 0 | 1 = 0): number {
+export function sliderSnap(value: number, settings: SliderSettings, direction: SliderSnapDirection = 0): number {
     const { min, max, step } = sliderBounds(settings);
     const safeValue = clamp(Number.isFinite(value) ? value : min, min, max);
 

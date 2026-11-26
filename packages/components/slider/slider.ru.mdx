@@ -8,6 +8,19 @@
 
 <Example id="slider-settings" />
 
+### Настройки по умолчанию
+
+Добавьте `kbqSliderOptionsProvider` в `providers` приложения или модуля, чтобы задать настройки для `kbq-slider` и `kbq-input-slider`. Провайдер на компоненте позволяет переопределить отдельные настройки для его поддерева. Явно заданное свойство слайдера имеет приоритет.
+
+```ts
+import type { ApplicationConfig } from '@angular/core';
+import { kbqSliderOptionsProvider } from '@koobiq/components/slider';
+
+export const appConfig: ApplicationConfig = {
+    providers: [kbqSliderOptionsProvider({ step: 5, thumbAlignment: 'center', showStepper: false })]
+};
+```
+
 ### Шаг и ограничения
 
 `min` и `max` ограничивают шкалу, `step` задаёт положительный шаг от `min`. По умолчанию используются 0, 100 и 1. Дробные значения поддерживаются. Наибольшее доступное значение лежит на сетке шага: при `min=0`, `max=10`, `step=3` это 9.

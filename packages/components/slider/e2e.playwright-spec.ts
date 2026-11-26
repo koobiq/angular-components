@@ -1,5 +1,18 @@
+import { END, ENTER, ESCAPE, HOME, LEFT_ARROW, RIGHT_ARROW, TAB, UP_ARROW } from '@angular/cdk/keycodes';
 import { expect, type Locator, type Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme } from '../../e2e/utils';
+
+// Playwright sends native keyboard input by key name.
+const keyName = {
+    [TAB]: 'Tab',
+    [RIGHT_ARROW]: 'ArrowRight',
+    [LEFT_ARROW]: 'ArrowLeft',
+    [UP_ARROW]: 'ArrowUp',
+    [END]: 'End',
+    [HOME]: 'Home',
+    [ENTER]: 'Enter',
+    [ESCAPE]: 'Escape'
+};
 
 test.describe('Slider appearance', () => {
     test.beforeEach(async ({ page }) => {
@@ -41,7 +54,7 @@ test.describe('Slider appearance', () => {
 
         await target.scrollIntoViewIfNeeded();
         await thumbs.first().focus();
-        await page.keyboard.press('Tab');
+        await page.keyboard.press(keyName[TAB]);
         await expect(thumbs.last()).toBeFocused();
         await expect(page.locator('.kbq-slider__tooltip')).toBeVisible();
         await capture(page, target, '06-focus-and-tooltip');
@@ -66,12 +79,12 @@ test.describe('Slider interactions', () => {
         await expect(input).toHaveAttribute('aria-valuenow', '77');
         await expect(page.getByTestId('commits')).toHaveText('1');
         await input.focus();
-        await page.keyboard.down('ArrowRight');
-        await page.keyboard.down('ArrowRight');
-        await page.keyboard.down('ArrowRight');
+        await page.keyboard.down(keyName[RIGHT_ARROW]);
+        await page.keyboard.down(keyName[RIGHT_ARROW]);
+        await page.keyboard.down(keyName[RIGHT_ARROW]);
         await expect(input).toHaveAttribute('aria-valuenow', '80');
         await expect(page.getByTestId('commits')).toHaveText('1');
-        await page.keyboard.up('ArrowRight');
+        await page.keyboard.up(keyName[RIGHT_ARROW]);
         await expect(page.getByTestId('commits')).toHaveText('2');
     });
 
@@ -126,16 +139,16 @@ test.describe('Slider interactions', () => {
     test('applies none, push and swap and retains keyboard focus', async ({ page }) => {
         const thumbs = page.getByTestId('range').getByRole('slider');
 
-        await thumbs.nth(0).press('End');
+        await thumbs.nth(0).press(keyName[END]);
         await expect(thumbs.nth(0)).toHaveAttribute('aria-valuenow', '65');
         await page.getByRole('button', { name: 'Push', exact: true }).click();
         await expect(thumbs.nth(0)).toHaveAttribute('max', '90');
-        await thumbs.nth(0).press('End');
+        await thumbs.nth(0).press(keyName[END]);
         await expect(thumbs.nth(0)).toHaveAttribute('aria-valuenow', '90');
         await expect(thumbs.nth(1)).toHaveAttribute('aria-valuenow', '100');
         await page.getByRole('button', { name: 'Swap', exact: true }).click();
         await expect(page.getByTestId('range')).toHaveAttribute('data-collision', 'swap');
-        await thumbs.nth(1).press('Home');
+        await thumbs.nth(1).press(keyName[HOME]);
         await expect(thumbs.nth(0)).toHaveAttribute('aria-valuenow', '0');
         await expect(thumbs.nth(0)).toBeFocused();
     });
@@ -147,7 +160,7 @@ test.describe('Slider interactions', () => {
         await expect(vertical.getByRole('slider')).toHaveAttribute('aria-valuenow', '100');
         const readonly = page.getByTestId('readonly').getByRole('slider');
 
-        await readonly.press('End');
+        await readonly.press(keyName[END]);
         await expect(readonly).toBeFocused();
         await expect(readonly).toHaveAttribute('aria-valuenow', '30');
         await expect(page.getByTestId('disabled').getByRole('slider')).toBeDisabled();
@@ -158,7 +171,7 @@ test.describe('Slider interactions', () => {
 
         await slider.getByText('70', { exact: true }).click();
         await expect(slider.getByRole('slider')).toHaveAttribute('aria-valuenow', '70');
-        await slider.getByRole('slider').press('ArrowLeft');
+        await slider.getByRole('slider').press(keyName[LEFT_ARROW]);
         await expect(slider.getByRole('slider')).toHaveAttribute('aria-valuenow', '15');
     });
 
@@ -192,7 +205,7 @@ test.describe('Slider interactions', () => {
         await upper.click();
         await expect(upper).toBeFocused();
         await upper.fill('82');
-        await upper.press('Enter');
+        await upper.press(keyName[ENTER]);
         await expect(hybrid.getByRole('slider').last()).toHaveAttribute('aria-valuenow', '82');
     });
 
@@ -202,7 +215,7 @@ test.describe('Slider interactions', () => {
 
         await page.getByRole('button', { name: 'RTL', exact: true }).click();
         await expect(slider.locator('.kbq-slider__thumb')).toHaveAttribute('style', /70%/);
-        await input.press('ArrowRight');
+        await input.press(keyName[RIGHT_ARROW]);
         await expect(input).toHaveAttribute('aria-valuenow', '29');
         await slider.click({ position: { x: 14, y: 16 } });
         await expect(input).toHaveAttribute('aria-valuenow', '100');
@@ -215,18 +228,18 @@ test.describe('Slider interactions', () => {
         await input.fill('42');
         await expect(hybrid.getByRole('slider')).toHaveAttribute('aria-valuenow', '42');
         await input.fill('');
-        await input.press('Tab');
+        await input.press(keyName[TAB]);
         await expect(input).toHaveValue('42');
-        await hybrid.getByRole('slider').press('End');
+        await hybrid.getByRole('slider').press(keyName[END]);
         await expect(input).toHaveValue('100');
         const range = page.getByTestId('hybrid-range');
 
         await range.getByRole('spinbutton').nth(0).fill('99');
-        await range.getByRole('spinbutton').nth(0).press('Tab');
+        await range.getByRole('spinbutton').nth(0).press(keyName[TAB]);
         await expect(range.getByRole('spinbutton').nth(0)).toHaveValue('75');
         const reactive = page.getByTestId('reactive').getByRole('slider');
 
-        await reactive.press('End');
+        await reactive.press(keyName[END]);
         await page.getByRole('button', { name: 'Reset', exact: true }).click();
         await expect(reactive).toHaveAttribute('aria-valuenow', '35');
     });
@@ -237,7 +250,7 @@ test.describe('Slider interactions', () => {
         const editor = hybrid.getByRole('spinbutton');
         const thumb = hybrid.getByRole('slider');
 
-        await thumb.press('End');
+        await thumb.press(keyName[END]);
         await expect(editor).toHaveValue('100');
         await page.getByRole('button', { name: 'Reset native', exact: true }).click();
 
@@ -266,15 +279,15 @@ test.describe('Slider interactions', () => {
             const thumb = hybrid.getByRole('slider');
 
             await thumb.focus();
-            await page.keyboard.down('ArrowRight');
+            await page.keyboard.down(keyName[RIGHT_ARROW]);
             await expect(thumb).toHaveValue('71');
 
             await page
                 .getByRole('button', { name: buttonName, exact: true })
                 .evaluate((button) => (button as HTMLButtonElement).click());
             await expect(thumb).toHaveValue(expected);
-            await page.keyboard.press('Escape');
-            await page.keyboard.up('ArrowRight');
+            await page.keyboard.press(keyName[ESCAPE]);
+            await page.keyboard.up(keyName[RIGHT_ARROW]);
             await expect(thumb).toHaveValue(expected);
             await expect(hybrid.getByRole('spinbutton')).toHaveValue(expected);
         });
@@ -311,7 +324,7 @@ test.describe('Slider interactions', () => {
         const hybrid = page.getByTestId('hybrid-marks');
         const editor = hybrid.getByRole('spinbutton');
 
-        await editor.press('ArrowUp');
+        await editor.press(keyName[UP_ARROW]);
         await expect(editor).toHaveValue('15');
         await expect(hybrid.getByRole('slider')).toHaveValue('15');
         await hybrid.getByText('70', { exact: true }).click();

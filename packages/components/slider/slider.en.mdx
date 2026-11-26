@@ -8,6 +8,19 @@ Use a slider for quick adjustments within known bounds. Show the selected value 
 
 <Example id="slider-settings" />
 
+### Application defaults
+
+Register `kbqSliderOptionsProvider` in the application or module `providers` to set defaults for `kbq-slider` and `kbq-input-slider`. A provider on a component can override individual options for its subtree. An explicit input on a slider takes precedence.
+
+```ts
+import type { ApplicationConfig } from '@angular/core';
+import { kbqSliderOptionsProvider } from '@koobiq/components/slider';
+
+export const appConfig: ApplicationConfig = {
+    providers: [kbqSliderOptionsProvider({ step: 5, thumbAlignment: 'center', showStepper: false })]
+};
+```
+
 ### Step and bounds
 
 `min` and `max` bound the scale; `step` defines a positive step anchored at `min`. Defaults are 0, 100 and 1. Fractional values are supported. The greatest selectable value lies on the step grid: with `min=0`, `max=10`, `step=3`, it is 9.
