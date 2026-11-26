@@ -11,37 +11,33 @@ import type { KbqSliderCollision, KbqSliderCommit, KbqSliderValue } from './slid
     template: `
         <main data-testid="e2eScreenshotTarget" class="e2e-slider-matrix">
             @for (state of states; track state) {
-                <div>{{ state }}</div>
                 <kbq-slider
                     aria-label="Value"
                     [value]="30"
                     [disabled]="state === 'Disabled'"
                     [readonly]="state === 'Read-only'"
-                    [invalid]="state === 'Invalid'"
+                    [errorStateMatcher]="state === 'Invalid' ? invalidMatcher : undefined"
                 />
                 <kbq-slider
                     [thumbLabels]="['Lower', 'Upper']"
                     [value]="[25, 75]"
                     [disabled]="state === 'Disabled'"
                     [readonly]="state === 'Read-only'"
-                    [invalid]="state === 'Invalid'"
+                    [errorStateMatcher]="state === 'Invalid' ? invalidMatcher : undefined"
                 />
             }
-            <div>Marks</div>
             <kbq-slider aria-label="Value" [value]="50" [marks]="marks" />
             <kbq-slider aria-label="Value" class="e2e-slider-round" [value]="50" [marks]="marks" />
-            <div>Input</div>
             <kbq-input-slider aria-label="Value" [value]="70" />
             <kbq-input-slider [value]="[25, 75]" [thumbLabels]="['Lower', 'Upper']" />
-            <div>Vertical</div>
             <kbq-slider vertical aria-label="Value" [value]="30" />
             <kbq-slider vertical [value]="[25, 75]" [thumbLabels]="['Lower', 'Upper']" />
         </main>
     `,
     styles: `
         .e2e-slider-matrix {
-            display: grid;
-            grid-template-columns: 100px 320px 320px;
+            display: inline-grid;
+            grid-template-columns: repeat(2, 240px);
             gap: 24px;
             padding: 24px;
             align-items: center;
@@ -56,6 +52,7 @@ import type { KbqSliderCollision, KbqSliderCommit, KbqSliderValue } from './slid
     host: { 'data-testid': 'e2eSliderStateAndStyle' }
 })
 export class E2eSliderStateAndStyle {
+    protected readonly invalidMatcher = { isErrorState: () => true };
     protected readonly states = ['Normal', 'Invalid', 'Disabled', 'Read-only'];
     protected readonly marks = [0, 25, 50, 75, 100].map((value) => ({ value, label: `${value}%` }));
 }
@@ -120,6 +117,7 @@ export class E2eSliderStateAndStyle {
                 aria-label="Reactive editor"
                 [formControl]="editorControl"
             />
+            <button type="button" (click)="editorControl.reset(editorControl.value)">Reset current</button>
             <button type="button" (click)="editorControl.setValue(42)">Write 42</button>
             <kbq-input-slider data-testid="hybrid-marks" aria-label="Discrete" [step]="null" [marks]="marks" />
             <kbq-slider data-testid="range-tooltip" showTooltip [value]="[25, 75]" />
@@ -130,11 +128,11 @@ export class E2eSliderStateAndStyle {
 })
 export class E2eSliderInteraction {
     protected readonly direction = signal<'ltr' | 'rtl'>('ltr');
-    protected readonly value = signal<KbqSliderValue>(30);
+    protected readonly value = signal(30);
     protected readonly commits = signal<KbqSliderCommit[]>([]);
     protected readonly collision = signal<KbqSliderCollision>('none');
     protected readonly control = new FormControl<KbqSliderValue>(35, { nonNullable: true });
-    protected readonly nativeValue = signal<KbqSliderValue>(70);
+    protected readonly nativeValue = signal(70);
     protected readonly editorControl = new FormControl<KbqSliderValue>(70, { nonNullable: true });
     protected readonly marks = [
         { value: 0, label: '0' },

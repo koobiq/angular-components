@@ -1,6 +1,9 @@
 /** A single value or the ordered lower and upper bounds of a range. */
 export type KbqSliderValue = number | readonly [number, number];
 
+/** Shape of an edited selection, with numeric literals widened to values on the scale. */
+export type KbqSliderSelection<T extends KbqSliderValue> = T extends number ? number : [number, number];
+
 /** How a range thumb behaves when it reaches its neighbour. */
 export type KbqSliderCollision = 'none' | 'push' | 'swap';
 

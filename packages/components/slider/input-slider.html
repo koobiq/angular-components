@@ -19,6 +19,7 @@
                 [attr.aria-invalid]="errorState() || null"
                 (ngModelChange)="edit($event, $index)"
                 (focus)="beginEdit($index)"
+                (input)="startDraft()"
                 (blur)="finishEdit($index)"
                 (keydown)="onEditorKey($event, $index)"
             />
@@ -45,7 +46,7 @@
     [collision]="collision()"
     [disabled]="disabled()"
     [readonly]="readonly()"
-    [invalid]="errorState()"
+    [errorStateMatcher]="numberErrorMatcher"
     [thumbLabels]="thumbLabels()"
     [aria-label]="ariaLabel()"
     [aria-labelledby]="labelledBy()"

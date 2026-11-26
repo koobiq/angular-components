@@ -16,7 +16,7 @@ import { TRANSLATIONS } from './l10n';
         <button kbq-button kbqPopover type="button" [kbqPopoverContent]="settings">{{ t().settings }}</button>
         <ng-template #settings>
             <div class="example-settings">
-                <kbq-button-toggle-group stretched [attr.aria-label]="t().period" [(ngModel)]="period">
+                <kbq-button-toggle-group [attr.aria-label]="t().period" [(ngModel)]="period">
                     @for (item of t().periods; track $index) {
                         <kbq-button-toggle [value]="$index">{{ item }}</kbq-button-toggle>
                     }
@@ -45,7 +45,6 @@ import { TRANSLATIONS } from './l10n';
             display: grid;
             position: relative;
             gap: 16px;
-            width: min(256px, 65vw);
         }
         output {
             position: absolute;

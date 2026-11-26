@@ -13,7 +13,7 @@ export const TRANSLATIONS: Translations<ExampleTranslation> = {
     default: {
         locale: 'ru-RU',
         zoom: 'Масштаб карты',
-        tiles: 'Масштаб загруженных тайлов',
+        tiles: 'Масштаб загруженных фрагментов карты',
         overview: 'Обзор города',
         streets: 'Улицы',
         blocks: 'Кварталы'

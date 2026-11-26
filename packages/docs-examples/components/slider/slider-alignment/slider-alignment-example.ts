@@ -20,19 +20,16 @@ import { TRANSLATIONS } from './l10n';
     `,
     styles: `
         :host {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
             width: 100%;
             max-width: 320px;
             margin: 0 auto;
             padding-inline: 14px;
-            justify-content: center;
             min-height: 96px;
             font-variant-numeric: tabular-nums;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { class: 'layout-column layout-align-center-stretch layout-gap-s' }
 })
 export class SliderAlignmentExample {
     protected readonly marks = [

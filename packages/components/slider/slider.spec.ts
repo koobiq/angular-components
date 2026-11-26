@@ -12,7 +12,7 @@ import type { KbqSliderValue } from './slider.types';
     template: `
         <kbq-form-field>
             <kbq-label>Volume</kbq-label>
-            <kbq-slider [formControl]="control" />
+            <kbq-slider id="" [formControl]="control" />
             <kbq-hint>Percent</kbq-hint>
             <kbq-error>At least 40</kbq-error>
         </kbq-form-field>
@@ -84,6 +84,29 @@ describe('KbqSlider', () => {
         fixture.detectChanges();
         expect(fixture.componentInstance.value()).toEqual([50, 60]);
         expect(fixture.nativeElement.querySelector('input')).toBe(inputs[0]);
+    });
+
+    it('swaps a range across its minimum gap with one arrow step in either direction', () => {
+        fixture.componentRef.setInput('value', [25, 35]);
+        fixture.componentRef.setInput('collision', 'swap');
+        fixture.componentRef.setInput('minDistance', 10);
+        fixture.detectChanges();
+        const [lower, upper] = fixture.nativeElement.querySelectorAll('input[type=range]');
+
+        lower.focus();
+        key(lower, 'ArrowRight');
+        expect(fixture.componentInstance.value()).toEqual([35, 45]);
+        expect(document.activeElement).toBe(upper);
+        key(upper, 'ArrowLeft');
+        expect(fixture.componentInstance.value()).toEqual([25, 35]);
+        expect(document.activeElement).toBe(lower);
+    });
+
+    it('uses a numeric step supplied as a text attribute', () => {
+        fixture.componentRef.setInput('step', '5');
+        fixture.detectChanges();
+        key(fixture.nativeElement.querySelector('input'), 'ArrowRight');
+        expect(fixture.componentInstance.value()).toBe(5);
     });
 
     it('uses Home/End and navigates a discrete mark set', () => {
@@ -165,6 +188,16 @@ describe('KbqSlider', () => {
         expect(input.value).toBe('70');
     });
 
+    it('uses the disabled input until the form supplies its own state', () => {
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
+        expect(fixture.componentInstance.disabled()).toBe(true);
+        fixture.componentInstance.setDisabledState(false);
+        expect(fixture.componentInstance.disabled()).toBe(false);
+        fixture.componentInstance.setDisabledState(true);
+        expect(fixture.componentInstance.disabled()).toBe(true);
+    });
+
     it('normalizes display without committing a programmatic form write', () => {
         const commits = vi.fn();
 
@@ -214,6 +247,9 @@ describe('Slider forms', () => {
         fixture.componentInstance.control.disable();
         fixture.detectChanges();
         expect(input.disabled).toBe(true);
+        fixture.componentInstance.control.enable();
+        fixture.detectChanges();
+        expect(input.disabled).toBe(false);
     });
 
     it('links a form label, hint and validation error to the thumb', async () => {
@@ -225,6 +261,7 @@ describe('Slider forms', () => {
         const input: HTMLInputElement = fixture.nativeElement.querySelector('kbq-slider input');
         const label = fixture.nativeElement.querySelector('.kbq-form-field__label');
 
+        expect(label.id).toMatch(/^kbq-slider-.+-label$/);
         expect(input.getAttribute('aria-labelledby')).toBe(label.id);
         expect(input.getAttribute('aria-invalid')).toBe('true');
         const ids = input.getAttribute('aria-describedby')!.split(' ');
@@ -232,6 +269,26 @@ describe('Slider forms', () => {
         expect(ids).toContain(fixture.nativeElement.querySelector('kbq-hint').id);
         expect(ids).toContain(fixture.nativeElement.querySelector('kbq-error').id);
         await expect(fixture.nativeElement).toHaveNoViolations();
+    });
+
+    it('applies per-instance accessible labels to both parts of the input slider', async () => {
+        @Component({
+            imports: [KbqInputSlider],
+            template: `
+                <kbq-input-slider [value]="[20, 30]" [localeOverrides]="{ a11y: { sliderStart: 'Budget floor' } }" />
+            `
+        })
+        class LocalizedSlider {}
+
+        const fixture = TestBed.createComponent(LocalizedSlider);
+
+        fixture.detectChanges();
+        await fixture.whenStable();
+        const editors = fixture.nativeElement.querySelectorAll('input.kbq-input');
+        const thumbs = fixture.nativeElement.querySelectorAll('input[type=range]');
+
+        expect(editors[0].getAttribute('aria-label')).toBe('Budget floor');
+        expect(thumbs[0].getAttribute('aria-label')).toBe('Budget floor');
     });
 
     it('calculates every push draft from the range at the start of editing', async () => {
@@ -254,6 +311,26 @@ describe('Slider forms', () => {
 
         editor.blur();
         expect(fixture.componentInstance.value()).toEqual([15, 15]);
+    });
+
+    it('consumes Escape only while the numeric editor has a draft', async () => {
+        const fixture = TestBed.createComponent(KbqInputSlider);
+
+        fixture.detectChanges();
+        await fixture.whenStable();
+        const editor: HTMLInputElement = fixture.nativeElement.querySelector('input.kbq-input');
+        const escape = () =>
+            editor.dispatchEvent(
+                new KeyboardEvent('keydown', { key: 'Escape', keyCode: 27, bubbles: true, cancelable: true })
+            );
+
+        editor.focus();
+        expect(escape()).toBe(true);
+        editor.value = '8';
+        editor.dispatchEvent(new Event('input', { bubbles: true }));
+        expect(escape()).toBe(false);
+        expect(editor.value).toBe('0');
+        expect(escape()).toBe(true);
     });
 
     it('keeps subsequent fractional text while the editor stays focused after a form write', async () => {

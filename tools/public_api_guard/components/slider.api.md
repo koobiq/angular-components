@@ -10,7 +10,7 @@ import { BooleanInput } from '@angular/cdk/coercion';
 import { ControlValueAccessor } from '@angular/forms';
 import { DoCheck } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
-import * as _koobiq_components_core from '@koobiq/components/core';
+import * as i1 from '@koobiq/components/core';
 import * as _koobiq_components_slider from '@koobiq/components/slider';
 import { NgControl } from '@angular/forms';
 import { NumberInput } from '@angular/cdk/coercion';
@@ -18,7 +18,7 @@ import { OnChanges } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 
 // @public
-export class KbqInputSlider extends KbqSliderBase {
+export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSliderBase<T> {
     constructor();
     // (undocumented)
     protected beginEdit(index: number): void;
@@ -47,18 +47,20 @@ export class KbqInputSlider extends KbqSliderBase {
     protected onSliderValue(value: KbqSliderValue): void;
     readonly showStepper: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     // (undocumented)
+    protected startDraft(): KbqSliderValue;
+    // (undocumented)
     protected readonly stepValue: (value: number, delta: number) => number;
     readonly unit: _angular_core.InputSignal<string>;
     // (undocumented)
     writeValue(value: KbqSliderValue | null): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqInputSlider, "kbq-input-slider", ["kbqInputSlider"], { "unit": { "alias": "unit"; "required": false; "isSignal": true; }; "showStepper": { "alias": "showStepper"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqInputSlider<any>, "kbq-input-slider", ["kbqInputSlider"], { "unit": { "alias": "unit"; "required": false; "isSignal": true; }; "showStepper": { "alias": "showStepper"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqInputSlider, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqInputSlider<any>, never>;
 }
 
 // @public
-export class KbqSlider extends KbqSliderBase {
+export class KbqSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSliderBase<T> {
     constructor();
     // (undocumented)
     protected readonly activeIndex: _angular_core.WritableSignal<number>;
@@ -126,13 +128,13 @@ export class KbqSlider extends KbqSliderBase {
     // (undocumented)
     writeValue(value: KbqSliderValue | null): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSlider, "kbq-slider", ["kbqSlider"], { "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; "reversed": { "alias": "reversed"; "required": false; "isSignal": true; }; "thumbAlignment": { "alias": "thumbAlignment"; "required": false; "isSignal": true; }; "fill": { "alias": "fill"; "required": false; "isSignal": true; }; "fillOrigin": { "alias": "fillOrigin"; "required": false; "isSignal": true; }; "scale": { "alias": "scale"; "required": false; "isSignal": true; }; "showTooltip": { "alias": "showTooltip"; "required": false; "isSignal": true; }; "tooltipOnFocus": { "alias": "tooltipOnFocus"; "required": false; "isSignal": true; }; "pageStep": { "alias": "pageStep"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSlider<any>, "kbq-slider", ["kbqSlider"], { "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; "reversed": { "alias": "reversed"; "required": false; "isSignal": true; }; "thumbAlignment": { "alias": "thumbAlignment"; "required": false; "isSignal": true; }; "fill": { "alias": "fill"; "required": false; "isSignal": true; }; "fillOrigin": { "alias": "fillOrigin"; "required": false; "isSignal": true; }; "scale": { "alias": "scale"; "required": false; "isSignal": true; }; "showTooltip": { "alias": "showTooltip"; "required": false; "isSignal": true; }; "tooltipOnFocus": { "alias": "tooltipOnFocus"; "required": false; "isSignal": true; }; "pageStep": { "alias": "pageStep"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSlider, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSlider<any>, never>;
 }
 
 // @public
-export abstract class KbqSliderBase implements ControlValueAccessor, DoCheck, OnChanges {
+export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue> implements ControlValueAccessor, DoCheck, OnChanges {
     constructor();
     readonly ariaDescribedby: _angular_core.InputSignal<string | null>;
     readonly ariaLabel: _angular_core.InputSignal<string>;
@@ -160,15 +162,15 @@ export abstract class KbqSliderBase implements ControlValueAccessor, DoCheck, On
     readonly errorStateMatcher: _angular_core.InputSignal<ErrorStateMatcher | undefined>;
     abstract focus(options?: FocusOptions): void;
     readonly focused: _angular_core.WritableSignal<boolean>;
-    readonly id: _angular_core.InputSignal<string>;
+    readonly id: _angular_core.Signal<string>;
+    readonly idInput: _angular_core.InputSignal<string | undefined>;
     // (undocumented)
     protected inputName(index: number): string | null;
-    readonly invalid: _angular_core.InputSignalWithTransform<boolean, BooleanInput>;
     readonly isNativeLabelSupported = false;
     // (undocumented)
     protected readonly labelledBy: _angular_core.Signal<string | null>;
     // (undocumented)
-    protected readonly locale: _angular_core.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
+    protected readonly locale: _angular_core.Signal<i1.KbqA11yLocaleConfiguration>;
     readonly marks: _angular_core.InputSignal<readonly KbqSliderMark[]>;
     readonly max: _angular_core.InputSignalWithTransform<number, NumberInput>;
     readonly min: _angular_core.InputSignalWithTransform<number, NumberInput>;
@@ -200,7 +202,7 @@ export abstract class KbqSliderBase implements ControlValueAccessor, DoCheck, On
         marks: readonly KbqSliderMark[];
         minDistance: number;
     }>;
-    readonly step: _angular_core.InputSignal<number | null>;
+    readonly step: _angular_core.InputSignalWithTransform<number | null, NumberInput>;
     // (undocumented)
     protected thumbLabel(index: number): string;
     // (undocumented)
@@ -212,17 +214,17 @@ export abstract class KbqSliderBase implements ControlValueAccessor, DoCheck, On
     protected thumbMin(index: number): number;
     // (undocumented)
     protected thumbValue(index: number): number;
-    readonly value: _angular_core.Signal<KbqSliderValue>;
-    readonly valueChange: _angular_core.OutputEmitterRef<KbqSliderValue>;
+    readonly value: _angular_core.Signal<KbqSliderSelection<T>>;
+    readonly valueChange: _angular_core.OutputEmitterRef<KbqSliderSelection<T>>;
     readonly valueCommit: _angular_core.OutputEmitterRef<KbqSliderCommit>;
-    readonly valueInput: _angular_core.InputSignal<KbqSliderValue>;
+    readonly valueInput: _angular_core.InputSignal<T | undefined>;
     // (undocumented)
     protected readonly values: _angular_core.Signal<readonly [number, number] | readonly [number]>;
     writeValue(value: KbqSliderValue | null): void;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqSliderBase, never, never, { "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "min": { "alias": "min"; "required": false; "isSignal": true; }; "max": { "alias": "max"; "required": false; "isSignal": true; }; "step": { "alias": "step"; "required": false; "isSignal": true; }; "marks": { "alias": "marks"; "required": false; "isSignal": true; }; "minDistance": { "alias": "minDistance"; "required": false; "isSignal": true; }; "collision": { "alias": "collision"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "invalid": { "alias": "invalid"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "ariaDescribedby": { "alias": "aria-describedby"; "required": false; "isSignal": true; }; "thumbLabels": { "alias": "thumbLabels"; "required": false; "isSignal": true; }; "displayWith": { "alias": "displayWith"; "required": false; "isSignal": true; }; "name": { "alias": "name"; "required": false; "isSignal": true; }; "id": { "alias": "id"; "required": false; "isSignal": true; }; "requiredInput": { "alias": "required"; "required": false; "isSignal": true; }; }, { "valueChange": "valueChange"; "valueCommit": "valueCommit"; }, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqSliderBase<any>, never, never, { "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "min": { "alias": "min"; "required": false; "isSignal": true; }; "max": { "alias": "max"; "required": false; "isSignal": true; }; "step": { "alias": "step"; "required": false; "isSignal": true; }; "marks": { "alias": "marks"; "required": false; "isSignal": true; }; "minDistance": { "alias": "minDistance"; "required": false; "isSignal": true; }; "collision": { "alias": "collision"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "ariaDescribedby": { "alias": "aria-describedby"; "required": false; "isSignal": true; }; "thumbLabels": { "alias": "thumbLabels"; "required": false; "isSignal": true; }; "displayWith": { "alias": "displayWith"; "required": false; "isSignal": true; }; "name": { "alias": "name"; "required": false; "isSignal": true; }; "idInput": { "alias": "id"; "required": false; "isSignal": true; }; "requiredInput": { "alias": "required"; "required": false; "isSignal": true; }; }, { "valueChange": "valueChange"; "valueCommit": "valueCommit"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSliderBase, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSliderBase<any>, never>;
 }
 
 // @public
@@ -258,6 +260,9 @@ export interface KbqSliderScale {
     toPosition: (value: number) => number;
     toValue: (position: number) => number;
 }
+
+// @public
+export type KbqSliderSelection<T extends KbqSliderValue> = T extends number ? number : [number, number];
 
 // @public
 export type KbqSliderValue = number | readonly [number, number];

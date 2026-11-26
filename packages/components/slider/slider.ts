@@ -25,12 +25,12 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KBQ_WINDOW, kbqAnimationsDisabled } from '@koobiq/components/core';
+import { KBQ_WINDOW, kbqAnimationsDisabled, KbqLocaleOverridesDirective } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import type { KbqSliderFill, KbqSliderScale, KbqSliderValue } from './slider.types';
 import { KbqSliderBase } from './slider-base';
-import { sliderEqual, sliderMove, sliderSnap, sliderStops } from './slider-value';
+import { sliderEqual, sliderGap, sliderMove, sliderSnap, sliderStops } from './slider-value';
 
 interface SliderMarkAnimation {
     index: number;
@@ -69,9 +69,10 @@ const MARK_ANIMATION_TIMING: KeyframeAnimationOptions = {
         '(focusin)': 'focused.set(true)',
         '(focusout)': 'onFocusOut($event)'
     },
+    hostDirectives: [{ directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }],
     exportAs: 'kbqSlider'
 })
-export class KbqSlider extends KbqSliderBase {
+export class KbqSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSliderBase<T> {
     /** Vertical layout, increasing from bottom to top. Defaults to `false`. */
     readonly vertical = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
     /** Reverses the scale direction. Defaults to `false`. */
@@ -346,11 +347,28 @@ export class KbqSlider extends KbqSliderBase {
 
         if (event.key === 'Home') next = this.thumbMin(index);
         if (event.key === 'End') next = this.thumbMax(index);
-        const nextIndex = this.move(index, next);
+        const nextIndex = this.move(index, this.keyboardTarget(index, next));
 
         this.activeIndex.set(nextIndex);
         if (nextIndex !== index) this.focus({ preventScroll: true }, nextIndex);
         this.revealTooltip(nextIndex);
+    }
+
+    private keyboardTarget(index: number, next: number): number {
+        const values = this.values();
+
+        if (values.length !== 2 || this.collision() !== 'swap') return next;
+
+        const direction = index === 0 ? 1 : -1;
+        const current = this.thumbValue(index);
+        const neighbour = this.thumbValue(1 - index);
+        const gap = sliderGap(this.settings());
+        const limit = sliderSnap(neighbour - direction * gap, this.settings(), index === 0 ? -1 : 1);
+
+        // At the nearest legal stop, an arrow towards the neighbour must skip the minimum gap.
+        if (current !== limit || (next - current) * direction <= 0 || (next - neighbour) * direction > 0) return next;
+
+        return sliderSnap(neighbour + direction * gap, this.settings(), direction);
     }
 
     protected onKeyUp(event: KeyboardEvent): void {

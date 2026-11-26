@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqSlider, type KbqSliderValue } from '@koobiq/components/slider';
+import { KbqSlider } from '@koobiq/components/slider';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
 
@@ -37,5 +37,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class SliderLabelsExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-    protected readonly limit = signal<KbqSliderValue>(700);
+    protected readonly limit = signal(700);
 }

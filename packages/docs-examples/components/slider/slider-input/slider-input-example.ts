@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqInputSlider, KbqSlider, type KbqSliderValue } from '@koobiq/components/slider';
+import { KbqInputSlider, KbqSlider } from '@koobiq/components/slider';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
 
@@ -67,8 +67,8 @@ export class SliderInputExample {
     protected normalizeVolume(): void {
         this.draft = this.volume();
     }
-    protected setVolume(value: KbqSliderValue | null): void {
-        if (typeof value === 'number') {
+    protected setVolume(value: number | null): void {
+        if (value !== null) {
             this.volume.set(Math.max(0, Math.min(100, Math.round(value))));
             this.draft = value;
         }

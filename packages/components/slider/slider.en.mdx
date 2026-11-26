@@ -18,7 +18,7 @@ Use a slider for quick adjustments within known bounds. Show the selected value 
 
 <Example id="slider-states" />
 
-Use `invalid` when a value is within the scale bounds but breaks an additional rule. Display the reason next to the slider. In this example, the saved timeout exceeds the 45-minute limit.
+The scale allows up to 60 minutes, while `Validators.max(45)` limits the timeout that can be saved. The example uses `errorStateMatcher` to show the error immediately, including for the initial value.
 
 <Example id="slider-invalid" />
 
@@ -44,7 +44,7 @@ A range value is a pair `[start, end]`. Each thumb has an individual accessible 
 
 #### Minimum distance
 
-In this example, `minDistance` keeps the bounds at least 10 minutes apart with every `collision` strategy. Drag the lower thumb past the upper thumb to compare the strategies.
+In this example, `minDistance` keeps the bounds at least 10 apart with every `collision` strategy. Drag the lower thumb past the upper thumb to compare the strategies.
 
 <Example id="slider-distance" />
 
@@ -116,17 +116,17 @@ Use `kbq-label` inside `kbq-form-field`. Clicking the label focuses the thumb or
 
 ### Keyboard interaction
 
-| Key         | Action                                                                    |
-| ----------- | ------------------------------------------------------------------------- |
-| Tab         | Moves focus to the next range thumb or the next focusable element         |
-| Shift+Tab   | Moves focus to the previous range thumb or the previous focusable element |
-| Esc         | Cancels the current change and hides the tooltip                          |
-| →, ↑        | Increases the value by one step                                           |
-| ←, ↓        | Decreases the value by one step                                           |
-| Home        | Selects the lowest available value                                        |
-| End         | Selects the highest available value                                       |
-| PgUp, PgDn  | Changes the value by `pageStep` steps, 10 by default                      |
-| Shift+arrow | Changes the value by `pageStep` steps                                     |
+| Key                                                                                           | Action                                                                    |
+| --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| <span class="docs-hot-key-button">Tab</span>                                                  | Moves focus to the next range thumb or the next focusable element         |
+| <span class="docs-hot-key-button">Shift</span>+<span class="docs-hot-key-button">Tab</span>   | Moves focus to the previous range thumb or the previous focusable element |
+| <span class="docs-hot-key-button">Esc</span>                                                  | Cancels the current change and hides the tooltip                          |
+| <span class="docs-hot-key-button">→</span>, <span class="docs-hot-key-button">↑</span>        | Increases the value by one step                                           |
+| <span class="docs-hot-key-button">←</span>, <span class="docs-hot-key-button">↓</span>        | Decreases the value by one step                                           |
+| <span class="docs-hot-key-button">Home</span>                                                 | Selects the lowest available value                                        |
+| <span class="docs-hot-key-button">End</span>                                                  | Selects the highest available value                                       |
+| <span class="docs-hot-key-button">PgUp</span>, <span class="docs-hot-key-button">PgDn</span>  | Changes the value by `pageStep` steps, 10 by default                      |
+| <span class="docs-hot-key-button">Shift</span>+<span class="docs-hot-key-button">arrow</span> | Changes the value by `pageStep` steps                                     |
 
 `reversed` reverses the arrow keys along the scale. Home, End, PgUp and PgDn keep their numeric meaning. With `step=null`, arrows move between marks. Standard text editing commands in the numeric field are preserved.
 

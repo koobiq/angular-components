@@ -215,23 +215,28 @@ test.describe('Slider', () => {
             ]);
     });
 
-    test('keeps an external form write when the previous thumb gesture is cancelled', async ({ page }) => {
-        const hybrid = page.getByTestId('hybrid-reactive');
-        const thumb = hybrid.getByRole('slider');
+    for (const [buttonName, expected] of [
+        ['Write 42', '42'],
+        ['Reset current', '71']
+    ] as const) {
+        test(`keeps the form value after ${buttonName} cancels a thumb gesture`, async ({ page }) => {
+            const hybrid = page.getByTestId('hybrid-reactive');
+            const thumb = hybrid.getByRole('slider');
 
-        await thumb.focus();
-        await page.keyboard.down('ArrowRight');
-        await expect(thumb).toHaveValue('71');
+            await thumb.focus();
+            await page.keyboard.down('ArrowRight');
+            await expect(thumb).toHaveValue('71');
 
-        await page
-            .getByRole('button', { name: 'Write 42', exact: true })
-            .evaluate((button) => (button as HTMLButtonElement).click());
-        await expect(thumb).toHaveValue('42');
-        await page.keyboard.press('Escape');
-        await page.keyboard.up('ArrowRight');
-        await expect(thumb).toHaveValue('42');
-        await expect(hybrid.getByRole('spinbutton')).toHaveValue('42');
-    });
+            await page
+                .getByRole('button', { name: buttonName, exact: true })
+                .evaluate((button) => (button as HTMLButtonElement).click());
+            await expect(thumb).toHaveValue(expected);
+            await page.keyboard.press('Escape');
+            await page.keyboard.up('ArrowRight');
+            await expect(thumb).toHaveValue(expected);
+            await expect(hybrid.getByRole('spinbutton')).toHaveValue(expected);
+        });
+    }
 
     test('releases pointer capture when the slider value is written by its form', async ({ page }) => {
         const hybrid = page.getByTestId('hybrid-reactive');
@@ -248,7 +253,7 @@ test.describe('Slider', () => {
         await page.mouse.down();
         await page.mouse.move(x - 30, y);
         await expect(hybrid.locator('kbq-slider')).toHaveClass(/kbq-slider_dragging/);
-        await expect(hybrid.locator('.kbq-slider__thumb-shape')).toHaveCSS('outline-style', 'solid');
+        await expect(hybrid.locator('.kbq-slider__thumb-shape')).toHaveCSS('opacity', '1', { pseudo: 'after' });
         await expect(editor).not.toBeFocused();
         await page
             .getByRole('button', { name: 'Write 42', exact: true })

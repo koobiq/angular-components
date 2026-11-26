@@ -10,11 +10,13 @@ import {
     input,
     signal,
     untracked,
+    viewChild,
     viewChildren,
     ViewEncapsulation
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import type { ErrorStateMatcher } from '@koobiq/components/core';
+import { KbqLocaleOverridesDirective } from '@koobiq/components/core';
 import { KbqFormFieldControl, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { add, KbqInputModule, KbqNumberInput } from '@koobiq/components/input';
 import { KbqSlider } from './slider';
@@ -39,9 +41,10 @@ import { sliderEqual, sliderMove, sliderSnap, sliderStops } from './slider-value
         '(focusin)': 'focused.set(true)',
         '(focusout)': 'onFocusOut($event)'
     },
+    hostDirectives: [{ directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }],
     exportAs: 'kbqInputSlider'
 })
-export class KbqInputSlider extends KbqSliderBase {
+export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSliderBase<T> {
     /** Unit displayed after each numeric value. */
     readonly unit = input('');
     /** Shows stepper buttons for a single value. Defaults to `true`. */
@@ -49,6 +52,7 @@ export class KbqInputSlider extends KbqSliderBase {
     /** @docs-private */
     readonly controlType = 'input-slider';
     private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly slider = viewChild(KbqSlider);
     private readonly inputs = viewChildren(KbqNumberInput);
     protected readonly formatValue = (value: number): string =>
         this.unit() && this.displayWith() === this.defaultFormat
@@ -94,14 +98,18 @@ export class KbqInputSlider extends KbqSliderBase {
 
     protected beginEdit(index: number): void {
         this.editingIndex = index;
-        this.editStart = this.value();
+    }
+
+    protected startDraft(): KbqSliderValue {
+        return (this.editStart ??= this.value());
     }
 
     protected edit(value: number | null, index: number): void {
+        const start = this.startDraft();
+
         this.drafts.update((drafts) => drafts.map((draft, i) => (i === index ? value : draft)));
         if (value === null || !Number.isFinite(value) || this.readonly() || this.disabled()) return;
-        this.editStart ??= this.value();
-        const result = sliderMove(this.editStart, index, value, this.settings(), this.collision());
+        const result = sliderMove(start, index, value, this.settings(), this.collision());
 
         // Keep a crossing draft in its original field until the user finishes editing.
         if (result.index === index) this.changeValue(result.value);
@@ -142,14 +150,15 @@ export class KbqInputSlider extends KbqSliderBase {
         if (event.key !== 'Escape' || this.editStart === null) return;
         event.preventDefault();
         this.changeValue(this.editStart);
-        this.editStart = this.value();
+        this.editStart = null;
         this.drafts.set([...this.values()]);
         this.refreshInput(index);
     }
 
     override writeValue(value: KbqSliderValue | null): void {
         super.writeValue(value);
-        this.editStart = this.editingIndex === null ? null : this.value();
+        this.slider()?.writeValue(this.value());
+        this.editStart = null;
         this.drafts.set([...this.values()]);
         this.inputs().forEach((_, index) => this.refreshInput(index));
     }
@@ -157,7 +166,7 @@ export class KbqInputSlider extends KbqSliderBase {
     protected onSliderValue(value: KbqSliderValue): void {
         this.changeValue(value);
         this.drafts.set([...this.values()]);
-        this.editStart = this.editingIndex === null ? null : this.value();
+        this.editStart = null;
 
         if (this.editingIndex !== null) this.refreshInput(this.editingIndex);
     }
