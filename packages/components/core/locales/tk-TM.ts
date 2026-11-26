@@ -70,6 +70,18 @@ export const tkTMLocaleData = {
         }
     },
     codeBlock: {
+        copyLinkText: 'Salgyny göçürmek',
+        selectLineText: '{{ line }} setiri saýlamak',
+        lineText: 'Setir {{ start }}',
+        linesText: 'Setirler {{ start }}–{{ end }}',
+        clearSelectionText: 'Saýlawy aýyrmak',
+        selectionHiddenText: 'Saýlawyň bir bölegi gizlenen',
+        lineNavigationHint: 'Oklar fokusy geçirýär, Shift saýlawy giňeldýär, Enter salgyny göçürýär. Esc aýlamaga gaýtarýar.',
+        scrollHint: 'Kody aýlamak üçin oklary ulanyň.',
+        lineNavigationStartHint: 'Oklar kody aýlaýar. Enter setirler boýunça geçmegi işjeňleşdirýär; Esc aýlamaga gaýtarýar.',
+        manualCopyText: 'Saýlanan teksti Ctrl+C ýa-da Command+C bilen göçüriň',
+        closeText: 'Ýapmak',
+
         softWrapOnTooltip: 'Sözler boýunça geçirmäni işjeňleşdirmek',
         softWrapOffTooltip: 'Sözler boýunça geçirmäni öçürmek',
         downloadTooltip: 'Ýüklemek',

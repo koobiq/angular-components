@@ -69,6 +69,19 @@ export const ptBRLocaleData = {
         }
     },
     codeBlock: {
+        copyLinkText: 'Copiar link',
+        selectLineText: 'Selecionar linha {{ line }}',
+        lineText: 'Linha {{ start }}',
+        linesText: 'Linhas {{ start }}–{{ end }}',
+        clearSelectionText: 'Limpar seleção',
+        selectionHiddenText: 'Parte da seleção está oculta',
+        lineNavigationHint:
+            'As setas movem o foco, Shift estende a seleção e Enter copia o link. Escape retorna à rolagem.',
+        scrollHint: 'Use as setas para rolar o código.',
+        lineNavigationStartHint: 'As setas rolam o código. Enter ativa a navegação por linhas; Escape retorna à rolagem.',
+        manualCopyText: 'Copie o texto selecionado com Ctrl+C ou Command+C',
+        closeText: 'Fechar',
+
         softWrapOnTooltip: 'Ativar quebra de linha',
         softWrapOffTooltip: 'Desativar quebra de linha',
         downloadTooltip: 'Baixar',

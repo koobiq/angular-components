@@ -49,6 +49,37 @@ Numbering lines is useful for referencing a specific location in the document. L
 
 <Example id="code-block-line-numbers" />
 
+### Line links
+
+Give each file a stable `id`, unique among all code block files on the page. The gutter then provides line selection and link copying buttons. Click a number or dot to select a line; Shift-click to set the end of a continuous range. Selection also works with hidden line numbers.
+
+Links contain the current page address and a fragment such as `#request-example-L3` for a line or `#request-example-L3-L7` for a range. Following a link selects the matching tab, expands the block and focuses the action on the first line of the range. Numbers refer to the source code, including blank lines. Editing the code can change the target, so keep the `id` stable and review links when updating the material.
+
+For keyboard navigation, Tab to a line action. Up and Down move focus, Home and End go to the first and last available lines, and Page Up and Page Down move seven lines. Hold Shift to select a range. Escape clears selection; Tab preserves it. Enter or Space copies the link.
+
+<Example id="code-block-line-links" />
+
+### Author highlights
+
+Set `highlightedLines` on a file to emphasize whole lines and `highlightedRanges` to emphasize words or text fragments. Both accept multiple disjoint ranges. Author highlights remain when readers select lines or follow a link.
+
+```typescript
+const files: KbqCodeBlockFile[] = [
+    {
+        id: 'request',
+        content: 'const value = 1;\nconsole.log(value);',
+        highlightedLines: [{ start: 2, end: 2 }],
+        highlightedRanges: [
+            { start: { line: 1, offset: 6 }, end: { line: 1, offset: 11 } }
+        ]
+    }
+];
+```
+
+Both boundaries of `highlightedLines` are inclusive and line numbers start at 1. In `highlightedRanges`, lines also start at 1, while `offset` starts at 0 and counts UTF-16 code units. The end position is exclusive. A range can cross multiple lines and syntax tokens. Highlights never change copied text.
+
+Set `collapsedLineCount` to limit the initial number of lines. Blocks with **Show all** and **Show less** buttons wrap long lines and have no internal scrolling. Expanding grows the block to fit its content. Collapsing preserves the selected range and displays a message if part of it is hidden. The `viewportMaxHeight` input limits the scrollable area height only for blocks without an expand/collapse button.
+
 ### Header with title
 
 In the header, you can specify the document name or define the syntax. A shadow appears in the header when scrolling.

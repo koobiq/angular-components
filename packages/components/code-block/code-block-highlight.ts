@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import {
     booleanAttribute,
     computed,
@@ -8,6 +9,7 @@ import {
     input,
     isDevMode,
     numberAttribute,
+    output,
     PendingTasks,
     type Provider,
     Renderer2,
@@ -117,6 +119,7 @@ const LINE_BREAK = /\r\n|\r|\n/;
 export class KbqCodeBlockHighlight {
     private readonly nativeElement = kbqInjectNativeElement();
     private readonly renderer = inject(Renderer2);
+    private readonly document = inject(DOCUMENT);
     private readonly domSanitizer = inject(DomSanitizer);
     private readonly pendingTasks = inject(PendingTasks);
     private readonly loader = inject(KbqCodeBlockHighlightJsLoader);
@@ -134,6 +137,9 @@ export class KbqCodeBlockHighlight {
 
     /** The code file. */
     readonly file = input.required<KbqCodeBlockFile>();
+
+    /** Emitted after the code DOM is replaced. @docs-private */
+    readonly rendered = output<void>();
 
     constructor() {
         effect((onCleanup) => {
@@ -155,7 +161,19 @@ export class KbqCodeBlockHighlight {
                 // highlighted. Once: the file of a later run is not the one it was rendered for.
                 this.renderer.removeAttribute(this.nativeElement, HIGHLIGHTED_MARKUP_ATTRIBUTE);
             } else {
-                this.renderer.setProperty(this.nativeElement, 'textContent', file.content);
+                if (file.id || file.highlightedLines?.length || file.highlightedRanges?.length) {
+                    const escaped = file.content.replace(
+                        /[&<>]/g,
+                        (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[character]!
+                    );
+
+                    this.renderer.setProperty(this.nativeElement, 'innerHTML', this.splitIntoLines(escaped, !!file.id));
+                    this.decorate(file);
+                } else {
+                    this.renderer.setProperty(this.nativeElement, 'textContent', file.content);
+                }
+
+                this.rendered.emit();
                 this.renderer.removeAttribute(this.nativeElement, 'data-language');
             }
 
@@ -242,11 +260,20 @@ export class KbqCodeBlockHighlight {
             this.warn('[KbqCodeBlock] File content does not match the specified programming language.', file);
         }
 
-        const safeHTML = this.domSanitizer.sanitize(SecurityContext.HTML, this.splitIntoLines(highlightedHTML)) ?? '';
+        const safeHTML =
+            this.domSanitizer.sanitize(SecurityContext.HTML, this.splitIntoLines(highlightedHTML, !!file.id)) ?? '';
 
         this.renderer.setAttribute(this.nativeElement, 'data-language', highlightedLanguage!);
+        const focused = this.document.activeElement as HTMLElement | null;
+
+        if (focused && this.nativeElement.contains(focused) && focused.getAttribute('data-line')) {
+            this.renderer.setAttribute(this.nativeElement, 'data-focus-line', focused.getAttribute('data-line')!);
+        }
+
         this.renderer.setProperty(this.nativeElement, 'innerHTML', safeHTML);
         this.renderer.setAttribute(this.nativeElement, HIGHLIGHTED_MARKUP_ATTRIBUTE, '');
+        this.decorate(file);
+        this.rendered.emit();
 
         this._pending.set(false);
     }
@@ -256,7 +283,7 @@ export class KbqCodeBlockHighlight {
      * line break crosses are closed at the end of its line and opened again on the next one. The line break stays
      * inside its line, so that an empty line keeps its height and the text of the code is the text of the file.
      */
-    private splitIntoLines(html: string): string {
+    private splitIntoLines(html: string, interactive = false): string {
         const lines: string[] = [];
         const openSpans: string[] = [];
         let line = '';
@@ -287,7 +314,101 @@ export class KbqCodeBlockHighlight {
         // A line break at the end of the file starts no line, though the spans it crosses close after it.
         if (lineHasText) lines.push(line);
 
-        return lines.map((content) => `<span class="kbq-code-block__line">${content}</span>`).join('');
+        return lines
+            .map(
+                (content) =>
+                    `<span class="kbq-code-block__line">${interactive ? `<span class="kbq-code-block__line-content">${content}</span>` : content}</span>`
+            )
+            .join('');
+    }
+
+    private decorate(file: KbqCodeBlockFile): void {
+        const lines = this.nativeElement.querySelectorAll<HTMLElement>('.kbq-code-block__line');
+
+        lines.forEach((line, index) => {
+            const number = index + 1;
+
+            if (
+                file.highlightedLines?.some(
+                    ({ start, end }) =>
+                        Number.isInteger(start) &&
+                        Number.isInteger(end) &&
+                        start > 0 &&
+                        end >= start &&
+                        number >= start &&
+                        number <= end
+                )
+            ) {
+                line.classList.add('kbq-code-block__line_highlighted');
+            }
+
+            const length = (line.textContent ?? '').replace(/\n$/, '').length;
+            const intervals = (file.highlightedRanges ?? [])
+                .filter(
+                    ({ start, end }) =>
+                        [start.line, start.offset, end.line, end.offset].every(Number.isInteger) &&
+                        start.line > 0 &&
+                        end.line >= start.line &&
+                        start.offset >= 0 &&
+                        end.offset >= 0 &&
+                        (end.line > start.line || end.offset > start.offset) &&
+                        number >= start.line &&
+                        number <= end.line
+                )
+                .map(({ start, end }) => ({
+                    start: number === start.line ? Math.min(start.offset, length) : 0,
+                    end: number === end.line ? Math.min(end.offset, length) : length
+                }))
+                .filter(({ start, end }) => end > start)
+                .sort((a, b) => a.start - b.start);
+            const merged: { start: number; end: number }[] = [];
+
+            for (const interval of intervals) {
+                const last = merged[merged.length - 1];
+
+                if (last && interval.start <= last.end) last.end = Math.max(last.end, interval.end);
+                else merged.push({ ...interval });
+            }
+
+            if (!merged.length) return;
+
+            // Walk text nodes so fragments can cross syntax spans without replacing their markup.
+            const nodes: Text[] = [];
+            const collect = (parent: Node): void => {
+                for (const child of Array.from(parent.childNodes)) {
+                    if (child.nodeType === 3) nodes.push(child as Text);
+                    else collect(child);
+                }
+            };
+
+            collect(line);
+            let offset = 0;
+
+            for (const node of nodes) {
+                const text = node.data;
+                const fragment = this.document.createDocumentFragment();
+                let cursor = 0;
+
+                for (const interval of merged) {
+                    const start = Math.max(0, interval.start - offset);
+                    const end = Math.min(text.length, interval.end - offset);
+
+                    if (end <= start) continue;
+
+                    fragment.appendChild(this.document.createTextNode(text.slice(cursor, start)));
+                    const mark = this.document.createElement('mark');
+
+                    mark.className = 'kbq-code-block__highlight';
+                    mark.textContent = text.slice(start, end);
+                    fragment.appendChild(mark);
+                    cursor = end;
+                }
+
+                fragment.appendChild(this.document.createTextNode(text.slice(cursor)));
+                node.parentNode?.replaceChild(fragment, node);
+                offset += text.length;
+            }
+        });
     }
 
     /** The fallback language, or plain text, which the loader registers on every instance, if it is unknown too. */
