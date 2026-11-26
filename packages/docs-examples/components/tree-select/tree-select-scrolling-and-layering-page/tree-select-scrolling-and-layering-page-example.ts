@@ -112,9 +112,7 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TreeSelectScrollingAndLayeringPageExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     selected = 'docs';
-
     readonly treeControl: FlatTreeControl<FileFlatNode>;
     readonly dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 

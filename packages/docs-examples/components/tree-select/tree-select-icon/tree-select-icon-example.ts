@@ -46,10 +46,8 @@ import { buildFileTree, DATA_OBJECT, FileFlatNode, type FileNode } from '../tree
 })
 export class TreeSelectIconExample {
     selected = 'docs';
-
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {

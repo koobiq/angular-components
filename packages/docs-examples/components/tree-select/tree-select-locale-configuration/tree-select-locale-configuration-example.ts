@@ -82,10 +82,8 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TreeSelectLocaleConfigurationExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     defaultSelected = ['docs'];
     overriddenSelected = ['docs'];
-
     readonly defaultTreeControl: FlatTreeControl<FileFlatNode>;
     readonly defaultDataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
     readonly overriddenTreeControl: FlatTreeControl<FileFlatNode>;
