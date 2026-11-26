@@ -56,8 +56,13 @@ $-kbq-link-word-joiner: string.unquote('"\\2060"');
         padding-block: var(--kbq-link-size-multiline-hit-area-gap);
     }
 
-    // The states color the underline whatever the mode: a link underlined on hover only, or never, has no line
-    &.kbq-link_underline_hover:not(:hover, .kbq-hovered, :active, .kbq-active),
+    &.kbq-link_underline_hover:not(
+            :hover,
+            .kbq-hovered,
+            :active,
+            .kbq-active,
+            .kbq-link_pseudo:is(:focus, .cdk-keyboard-focused)
+        ),
     &.kbq-link_underline_none {
         .kbq-link__text {
             text-decoration-line: none;
