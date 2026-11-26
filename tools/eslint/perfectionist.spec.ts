@@ -27,10 +27,16 @@ const fixCode = async (code: string): Promise<string> => {
 };
 
 describe('perfectionistConfig', () => {
-    it('sorts what has no order of its own', async () => {
-        expect(await fixCode("export const a = (x: string) => ['b', 'a'].includes(x);\n")).toBe(
-            "export const a = (x: string) => ['a', 'b'].includes(x);\n"
+    it('sorts array literals used with includes in natural order', async () => {
+        expect(await fixCode("export const a = (x: string) => ['a10', 'a2'].includes(x);\n")).toBe(
+            "export const a = (x: string) => ['a2', 'a10'].includes(x);\n"
         );
+    });
+
+    it('preserves the order of decorators on the same class', async () => {
+        const code = '@Zulu()\n@Alpha()\nexport class Probe {}\n';
+
+        expect(await fixCode(code)).toBe(code);
     });
 
     it('keeps the order of objects, types, enums, imports, heritage clauses and the cases of a switch', async () => {

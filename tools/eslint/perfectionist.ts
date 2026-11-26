@@ -154,34 +154,18 @@ const memberSpacing: Rule.RuleModule = {
  * callback or a handler and goes with the methods: with `useDefineForClassFields` off, every initializer runs at the
  * start of the constructor in the order of declaration wherever the field stands. Within a group the members keep
  * their written order. An empty line separates the groups and the members with a body, and a field with a comment.
- * The rest of `recommended-natural` sorts only what has no order of its own.
  *
  * @see https://perfectionist.dev/rules/sort-classes
  */
 export const perfectionistConfig = defineConfig({
     name: 'koobiq/perfectionist',
     files: ['**/*.{ts,cts,mts}'],
-    extends: [perfectionist.configs['recommended-natural']],
     plugins: {
+        perfectionist,
         'kbq-classes': { rules: { 'member-spacing': memberSpacing } }
     },
     rules: {
-        'perfectionist/sort-heritage-clauses': 0,
-        'perfectionist/sort-variable-declarations': 0,
-        'perfectionist/sort-objects': 0,
-        'perfectionist/sort-imports': 0,
-        'perfectionist/sort-exports': 0,
-        'perfectionist/sort-named-imports': 0,
-        'perfectionist/sort-named-exports': 0,
-        'perfectionist/sort-union-types': 0,
-        'perfectionist/sort-intersection-types': 0,
-        'perfectionist/sort-interfaces': 0,
-        'perfectionist/sort-object-types': 0,
-        'perfectionist/sort-modules': 0,
-        'perfectionist/sort-enums': 0,
-        'perfectionist/sort-switch-case': 0,
-        'perfectionist/sort-sets': 0,
-        'perfectionist/sort-maps': 0,
+        'perfectionist/sort-array-includes': [2, { type: 'natural', order: 'asc' }],
         'perfectionist/sort-classes': [
             1,
             {
