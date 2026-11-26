@@ -1,7 +1,9 @@
+import { DOWN_ARROW } from '@angular/cdk/keycodes';
 import {
     Component,
     type DebugElement,
     type EnvironmentProviders,
+    getDebugNode,
     type Provider,
     type Type,
     viewChildren
@@ -10,14 +12,10 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter, RouterLink } from '@angular/router';
 import { KbqButtonModule } from '@koobiq/components/button';
-import {
-    dispatchEvent,
-    DOWN_ARROW,
-    kbqA11yLocaleConfigurationProvider,
-    type KbqDefaultSizes
-} from '@koobiq/components/core';
+import { dispatchEvent, kbqA11yLocaleConfigurationProvider, type KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqOverflowItem, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
+import { KbqTitleDirective } from '@koobiq/components/title';
 import {
     KbqBreadcrumbButton,
     KbqBreadcrumbItem,
@@ -567,16 +565,16 @@ describe(KbqBreadcrumbs.name, () => {
         });
     });
 
-    describe('max changes', () => {
-        const ITEMS = [
-            { text: 'Home', disabled: false },
-            { text: 'Library', disabled: false },
-            { text: 'Data', disabled: false },
-            { text: 'Docs', disabled: false },
-            { text: 'Articles', disabled: false },
-            { text: 'Current', disabled: false }
-        ];
+    const ITEMS = [
+        { text: 'Home', disabled: false },
+        { text: 'Library', disabled: false },
+        { text: 'Data', disabled: false },
+        { text: 'Docs', disabled: false },
+        { text: 'Articles', disabled: false },
+        { text: 'Current', disabled: false }
+    ];
 
+    describe('max changes', () => {
         function getOverflowItems(debugElement: DebugElement): KbqOverflowItem[] {
             return debugElement
                 .queryAll(By.directive(KbqOverflowItem))
@@ -725,6 +723,31 @@ describe(KbqBreadcrumbs.name, () => {
             // still has to live inside the trail, and the set must not have grown.
             expect(group.focusableItems().length).toBe(beforeOpen.length);
             group.focusableItems().forEach((item) => expect(host.contains(item)).toBe(true));
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should add a title tooltip to hidden breadcrumb items in the dropdown', async () => {
+            vi.useFakeTimers();
+
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+            const { componentInstance } = fixture;
+
+            componentInstance.items = ITEMS;
+            componentInstance.max = 4;
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(0);
+
+            fixture.debugElement.query(By.css('.kbq-breadcrumb__expand')).nativeElement.click();
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(0);
+
+            const rows = Array.from(document.querySelectorAll<HTMLElement>('[kbq-dropdown-item]'));
+
+            expect(rows.length).toBe(3);
+            rows.forEach((row) => {
+                expect(getDebugNode(row)!.injector.get(KbqTitleDirective)).toBeTruthy();
+            });
 
             await vi.runOnlyPendingTimersAsync();
         });

@@ -141,13 +141,15 @@ export const esLALocaleData = {
         openText: 'Expandir',
         closeText: 'Contraer',
         showMoreText: 'Mostrar {exceededItemCount} más',
-        moreText: 'más'
+        moreText: 'más',
+        showMoreTextCompact: '{exceededItemCount} más'
     },
     navbar: {
         toggle: {
             expand: 'Expandir',
             collapse: 'Colapsar'
-        }
+        },
+        more: 'Más'
     },
     searchExpandable: {
         tooltip: 'Búsqueda',

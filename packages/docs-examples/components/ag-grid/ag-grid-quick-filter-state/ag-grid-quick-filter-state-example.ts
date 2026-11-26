@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AgGridModule } from 'ag-grid-angular';
-import { AllCommunityModule, type ColDef, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import {
     KbqAgGridQuickFilterStateLocalStorageStore,
     kbqAgGridQuickFilterStateStoreProvider,
@@ -10,6 +10,8 @@ import {
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { exampleIncidentColumns } from '../incident-columns';
+import { exampleGetIncidents } from '../security-incidents';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -30,10 +32,10 @@ ModuleRegistry.registerModules([AllCommunityModule]);
             #quickFilterState="kbqAgGridQuickFilterState"
             kbqAgGridTheme
             kbqAgGridThemeDisableCellFocusStyles
-            kbqAgGridQuickFilterState="example-ag-grid-quick-filter-state"
+            kbqAgGridQuickFilterState="example-ag-grid-incidents-quick-filter-state"
             [alwaysMultiSort]="true"
             [rowData]="rowData"
-            [columnDefs]="columnDefs"
+            [columnDefs]="columnDefs()"
             [style.height.px]="300"
             [style.width.%]="100"
             [(kbqAgGridQuickFilterStateValue)]="filter"
@@ -56,12 +58,6 @@ export class AgGridQuickFilterStateExample {
     readonly filter = model('');
 
     protected readonly t = injectTranslation(TRANSLATIONS);
-    readonly columnDefs: ColDef[] = Array.from({ length: 6 }, (_, i) => ({
-        field: 'column' + i,
-        headerName: 'Column ' + i,
-        width: 130
-    }));
-    readonly rowData = Array.from({ length: 100 }, (_, index) =>
-        Object.fromEntries(Array.from({ length: 6 }, (_, i) => ['column' + i, 'Text ' + index]))
-    );
+    protected readonly columnDefs = computed(() => exampleIncidentColumns(this.t().headers));
+    protected readonly rowData = exampleGetIncidents();
 }

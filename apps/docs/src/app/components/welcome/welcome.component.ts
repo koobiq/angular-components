@@ -32,7 +32,8 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'docs-welcome'
+        class: 'docs-welcome',
+        role: 'main'
     },
     hostDirectives: [KbqScrollbarViewport]
 })

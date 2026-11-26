@@ -1,5 +1,20 @@
 ﻿import { _IdGenerator } from '@angular/cdk/a11y';
 import {
+    BACKSPACE,
+    DELETE,
+    DOWN_ARROW,
+    END,
+    hasModifierKey,
+    HOME,
+    LEFT_ARROW,
+    PAGE_DOWN,
+    PAGE_UP,
+    RIGHT_ARROW,
+    SPACE,
+    TAB,
+    UP_ARROW
+} from '@angular/cdk/keycodes';
+import {
     type AfterContentInit,
     booleanAttribute,
     computed,
@@ -36,14 +51,8 @@ import {
 } from '@angular/forms';
 import { noop } from 'rxjs';
 import {
-    BACKSPACE,
     DateAdapter,
-    DELETE,
-    DOWN_ARROW,
-    END,
     ErrorStateMatcher,
-    hasModifierKey,
-    HOME,
     isHorizontalMovement,
     isLetterKey,
     isVerticalMovement,
@@ -55,14 +64,7 @@ import {
     kbqRevealSelection,
     kbqSetSelectionRange,
     type KbqTimepickerLocaleConfiguration,
-    LEFT_ARROW,
-    PAGE_DOWN,
-    PAGE_UP,
-    RIGHT_ARROW,
     ruRULocaleData,
-    SPACE,
-    TAB,
-    UP_ARROW,
     validationTooltipHideDelay,
     validationTooltipShowDelay
 } from '@koobiq/components/core';

@@ -2,6 +2,21 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { type DataSource, SelectionModel } from '@angular/cdk/collections';
 import {
+    A,
+    C,
+    D,
+    DOWN_ARROW,
+    END,
+    ENTER,
+    HOME,
+    LEFT_ARROW,
+    RIGHT_ARROW,
+    SPACE,
+    T,
+    TAB,
+    UP_ARROW
+} from '@angular/cdk/keycodes';
+import {
     Component,
     type DebugElement,
     Directive,
@@ -23,18 +38,11 @@ import { BehaviorSubject, type Observable, of } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 import {
-    A,
-    C,
     createKeyboardEvent,
     createMouseEvent,
-    D,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
-    DOWN_ARROW,
-    END,
-    ENTER,
-    HOME,
     KBQ_STATE_STORE,
     type KbqMultipleInput,
     KbqOptionActionComponent,
@@ -42,13 +50,7 @@ import {
     KbqPseudoCheckbox,
     KbqStateSavingService,
     type KbqStateStore,
-    LEFT_ARROW,
     MultipleMode,
-    RIGHT_ARROW,
-    SPACE,
-    T,
-    TAB,
-    UP_ARROW,
     wrappedErrorMessage
 } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';

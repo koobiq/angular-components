@@ -1,3 +1,4 @@
+import { ESCAPE } from '@angular/cdk/keycodes';
 import {
     type AfterContentInit,
     ChangeDetectionStrategy,
@@ -13,7 +14,6 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { fromEvent } from 'rxjs';
 import {
-    ESCAPE,
     KBQ_A11Y_LOCALE_CONFIGURATION,
     KbqComponentColors,
     KbqLocaleOverridesDirective

@@ -1,20 +1,21 @@
 import type { Translations } from '@koobiq/docs-examples/i18n';
+import { EXAMPLE_INCIDENT_HEADERS, type ExampleIncidentHeaders } from '../incident-headers';
 
 /** Text of the ag-grid-load-error example. */
 export interface ExampleTranslation {
-    headerText: string;
+    headers: ExampleIncidentHeaders;
     pinnedColumns: string;
     rowDividers: string;
 }
 
 export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
-        headerText: 'Текст',
+        headers: EXAMPLE_INCIDENT_HEADERS['ru-RU'],
         pinnedColumns: 'Закреплённые колонки',
         rowDividers: 'Разделители строк'
     },
     default: {
-        headerText: 'Text',
+        headers: EXAMPLE_INCIDENT_HEADERS.default,
         pinnedColumns: 'Pinned columns',
         rowDividers: 'Row dividers'
     }

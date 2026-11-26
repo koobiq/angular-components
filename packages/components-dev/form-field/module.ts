@@ -1,8 +1,9 @@
-﻿import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+﻿import { COMMA, ENTER, SPACE, TAB } from '@angular/cdk/keycodes';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { COMMA, ENTER, KbqHighlightModule, KbqPseudoCheckboxModule, SPACE, TAB } from '@koobiq/components/core';
+import { KbqHighlightModule, KbqPseudoCheckboxModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqModalModule } from '@koobiq/components/modal';
@@ -22,13 +23,11 @@ import {
     FormFieldHorizontalExample,
     FormFieldOverviewExample,
     FormFieldPasswordOverviewExample,
-    FormFieldWithCleanerExample,
     FormFieldWithCustomErrorStateMatcherSetByAttributeExample,
     FormFieldWithCustomErrorStateMatcherSetByDependencyInjectionProviderExample,
     FormFieldWithErrorExample,
     FormFieldWithHintExample,
     FormFieldWithLabelExample,
-    FormFieldWithoutBordersExample,
     FormFieldWithPrefixAndSuffixExample
 } from 'packages/docs-examples/components/form-field';
 import { FormFieldsetWithButtonExample } from 'packages/docs-examples/components/forms';
@@ -39,14 +38,12 @@ import { DevFileFlatNode, DevFileNode } from '../tree/module';
     selector: 'dev-examples',
     imports: [
         FormFieldPasswordOverviewExample,
-        FormFieldWithCleanerExample,
         FormFieldWithCustomErrorStateMatcherSetByAttributeExample,
         FormFieldWithCustomErrorStateMatcherSetByDependencyInjectionProviderExample,
         FormFieldWithErrorExample,
         FormFieldWithHintExample,
         FormFieldWithLabelExample,
         FormFieldOverviewExample,
-        FormFieldWithoutBordersExample,
         FormFieldWithPrefixAndSuffixExample,
         FormFieldHorizontalExample,
         FormFieldsetWithButtonExample
@@ -64,11 +61,7 @@ import { DevFileFlatNode, DevFileNode } from '../tree/module';
         <hr />
         <form-field-with-error-example />
         <hr />
-        <form-field-with-cleaner-example />
-        <hr />
         <form-field-with-prefix-and-suffix-example />
-        <hr />
-        <form-field-without-borders-example />
         <hr />
         <form-field-with-custom-error-state-matcher-set-by-attribute-example />
         <hr />

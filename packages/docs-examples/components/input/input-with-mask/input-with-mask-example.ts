@@ -28,23 +28,27 @@ import { TRANSLATIONS } from './l10n';
     ],
     template: `
         <kbq-form-field>
-            <kbq-label>{{ t().ipAddress }}</kbq-label>
-            <input kbqInput placeholder="192.168.0.1" [maskito]="ipAddressMask" [formControl]="ipAddressControl" />
-            <kbq-hint>{{ t().format }} 192.168.0.1</kbq-hint>
-            <kbq-error>{{ t().invalidIp }}</kbq-error>
-            <kbq-cleaner />
+            <kbq-label>{{ t().amount }}</kbq-label>
+            <input kbqInput [maskito]="amountMask" [formControl]="amountControl" />
+            <kbq-hint>{{ t().useArrows }}</kbq-hint>
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-label>{{ t().macAddress }}</kbq-label>
-            <input
-                kbqInput
-                placeholder="AA:BB:CC:DD:EE:FF"
-                [maskito]="macAddressMask"
-                [formControl]="macAddressControl"
-            />
-            <kbq-hint>{{ t().format }} AA:BB:CC:DD:EE:FF</kbq-hint>
-            <kbq-error>{{ t().invalidMac }}</kbq-error>
+            <kbq-label>{{ t().percent }}</kbq-label>
+            <input kbqInput [placeholder]="t().placeholder" [maskito]="percentMask" [formControl]="percentControl" />
+        </kbq-form-field>
+
+        <kbq-form-field>
+            <kbq-label>{{ t().phone }}</kbq-label>
+            <input kbqInput [maskito]="phoneMask" [formControl]="phoneControl" />
+            <kbq-hint>{{ t().format }} +7 (999) 123-45-67</kbq-hint>
+        </kbq-form-field>
+
+        <kbq-form-field>
+            <kbq-label>{{ t().ipv4Address }}</kbq-label>
+            <input kbqInput placeholder="192.168.0.1" [maskito]="ipAddressMask" [formControl]="ipAddressControl" />
+            <kbq-hint>{{ t().format }} 192.168.0.1</kbq-hint>
+            <kbq-error>{{ t().invalidIp }}</kbq-error>
             <kbq-cleaner />
         </kbq-form-field>
 
@@ -58,6 +62,19 @@ import { TRANSLATIONS } from './l10n';
             />
             <kbq-hint>{{ t().format }} 2001:0db8:85a3:0000:0000:8a2e:0370:7334</kbq-hint>
             <kbq-error>{{ t().invalidIpv6 }}</kbq-error>
+            <kbq-cleaner />
+        </kbq-form-field>
+
+        <kbq-form-field>
+            <kbq-label>{{ t().macAddress }}</kbq-label>
+            <input
+                kbqInput
+                placeholder="AA:BB:CC:DD:EE:FF"
+                [maskito]="macAddressMask"
+                [formControl]="macAddressControl"
+            />
+            <kbq-hint>{{ t().format }} AA:BB:CC:DD:EE:FF</kbq-hint>
+            <kbq-error>{{ t().invalidMac }}</kbq-error>
             <kbq-cleaner />
         </kbq-form-field>
 
@@ -77,21 +94,20 @@ import { TRANSLATIONS } from './l10n';
         </kbq-form-field>
     `,
     styles: `
-        :host {
-            display: flex;
-            flex-direction: column;
-            gap: var(--kbq-size-l);
-            align-items: center;
-        }
-
         .kbq-form-field {
             width: 320px;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-column layout-gap-l layout-align-center-center'
+    }
 })
 export class InputWithMaskExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
+    readonly amountControl = new FormControl('');
+    readonly percentControl = new FormControl('');
+    readonly phoneControl = new FormControl('+7 (999) 123-45-67');
     readonly ipAddressControl = new FormControl('192.168.0.1', [this.ipAddressValidator()]);
     readonly macAddressControl = new FormControl('AA:BB:CC:DD:EE:FF', [
         Validators.pattern(/^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$/)
@@ -103,6 +119,36 @@ export class InputWithMaskExample {
     readonly licenseControl = new FormControl('ABCD-1234-EFGH-5678', [
         Validators.pattern(/^[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}$/)
     ]);
+    readonly amountMask = this.makeAmountMaskOptions();
+    readonly percentMask = maskitoNumberOptionsGenerator({
+        min: 0,
+        max: 100,
+        maximumFractionDigits: 0,
+        thousandSeparator: '',
+        postfix: '%'
+    });
+    readonly phoneMask: MaskitoOptions = {
+        mask: [
+            '+',
+            '7',
+            ' ',
+            '(',
+            /\d/,
+            /\d/,
+            /\d/,
+            ')',
+            ' ',
+            /\d/,
+            /\d/,
+            /\d/,
+            '-',
+            /\d/,
+            /\d/,
+            '-',
+            /\d/,
+            /\d/
+        ]
+    };
     readonly ipAddressMask = this.makeIPAddressMaskOptions();
     readonly macAddressMask = this.makeMACAddressMaskOptions();
     readonly ipv6AddressMask = this.makeIPv6AddressMaskOptions();
@@ -222,6 +268,29 @@ export class InputWithMaskExample {
 
             return isValid ? null : { invalidIp: true };
         };
+    }
+
+    private makeAmountMaskOptions(): MaskitoOptions {
+        const min = 0;
+        const options = maskitoNumberOptionsGenerator({ min, maximumFractionDigits: 2 });
+        const stepPlugin: MaskitoPlugin = (element) => {
+            const handler = (event: KeyboardEvent) => {
+                if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') return;
+
+                event.preventDefault();
+                const step = event.key === 'ArrowUp' ? 1 : -1;
+                const currentValue = parseFloat(element.value.replace(/\s/g, '').replace(',', '.')) || 0;
+                const newValue = Math.max(min, currentValue + step);
+
+                maskitoUpdateElement(element, String(newValue));
+            };
+
+            element.addEventListener('keydown', handler);
+
+            return () => element.removeEventListener('keydown', handler);
+        };
+
+        return { ...options, plugins: [...options.plugins, stepPlugin] };
     }
 
     private makePortMaskOptions(): MaskitoOptions {

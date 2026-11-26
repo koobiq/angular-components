@@ -1,5 +1,6 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { ENTER, ESCAPE, SPACE } from '@angular/cdk/keycodes';
 import {
     CdkScrollable,
     type ConnectedOverlayPositionChange,
@@ -32,7 +33,6 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { delay as rxDelay, distinctUntilChanged, type Observable, Subscription } from 'rxjs';
-import { ENTER, ESCAPE, SPACE } from '../keycodes';
 import { kbqGetOverlayOriginSize, type KbqOverlayOrigin, kbqResolveOverlayOrigin } from '../overlay/overlay-origin';
 import {
     EXTENDED_OVERLAY_POSITIONS,

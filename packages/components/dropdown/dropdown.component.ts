@@ -1,6 +1,6 @@
 import type { FocusOrigin } from '@angular/cdk/a11y';
 import type { Direction } from '@angular/cdk/bidi';
-import { DOWN_ARROW, ENTER, UP_ARROW } from '@angular/cdk/keycodes';
+import { DOWN_ARROW, ENTER, ESCAPE, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@angular/cdk/keycodes';
 import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
 import {
@@ -50,7 +50,6 @@ import {
 } from 'rxjs';
 import {
     ActiveDescendantKeyManager,
-    ESCAPE,
     FocusKeyManager,
     getSafeTriangleVertices,
     isExplicitPanelWidth,
@@ -63,9 +62,7 @@ import {
     type KbqPanelWidth,
     type KbqPoint,
     type KbqSearchFieldPopup,
-    LEFT_ARROW,
-    type ListKeyManager,
-    RIGHT_ARROW
+    type ListKeyManager
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';

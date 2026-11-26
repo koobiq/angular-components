@@ -286,7 +286,15 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
-      "l10n.ts"
+      "../incident-columns.ts",
+      "../security-incidents.ts",
+      "l10n.ts",
+      "../incident-cells.ts",
+      "../incident-connection.ts",
+      "../incident-headers.ts",
+      "../incident-techniques.ts",
+      "../cell-keyboard.ts",
+      "../incident-details.ts"
     ],
     "selector": "ag-grid-and-actions-panel-example",
     "primaryFile": "ag-grid-and-actions-panel-example.ts",
@@ -301,7 +309,15 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
-      "l10n.ts"
+      "../incident-cells.ts",
+      "../incident-columns.ts",
+      "../incident-details.ts",
+      "../security-incidents.ts",
+      "l10n.ts",
+      "../cell-keyboard.ts",
+      "../incident-headers.ts",
+      "../incident-connection.ts",
+      "../incident-techniques.ts"
     ],
     "selector": "ag-grid-and-content-panel-example",
     "primaryFile": "ag-grid-and-content-panel-example.ts",
@@ -316,7 +332,15 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
-      "l10n.ts"
+      "../incident-columns.ts",
+      "../security-incidents.ts",
+      "l10n.ts",
+      "../incident-cells.ts",
+      "../incident-connection.ts",
+      "../incident-headers.ts",
+      "../incident-techniques.ts",
+      "../cell-keyboard.ts",
+      "../incident-details.ts"
     ],
     "selector": "ag-grid-column-state-example",
     "primaryFile": "ag-grid-column-state-example.ts",
@@ -331,7 +355,15 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
-      "l10n.ts"
+      "../incident-columns.ts",
+      "../security-incidents.ts",
+      "l10n.ts",
+      "../incident-cells.ts",
+      "../incident-connection.ts",
+      "../incident-headers.ts",
+      "../incident-techniques.ts",
+      "../cell-keyboard.ts",
+      "../incident-details.ts"
     ],
     "selector": "ag-grid-copy-selected-example",
     "primaryFile": "ag-grid-copy-selected-example.ts",
@@ -346,7 +378,15 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
-      "l10n.ts"
+      "../incident-columns.ts",
+      "../security-incidents.ts",
+      "l10n.ts",
+      "../incident-cells.ts",
+      "../incident-connection.ts",
+      "../incident-headers.ts",
+      "../incident-techniques.ts",
+      "../cell-keyboard.ts",
+      "../incident-details.ts"
     ],
     "selector": "ag-grid-export-example",
     "primaryFile": "ag-grid-export-example.ts",
@@ -361,7 +401,15 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
-      "l10n.ts"
+      "../incident-columns.ts",
+      "../security-incidents.ts",
+      "l10n.ts",
+      "../incident-cells.ts",
+      "../incident-connection.ts",
+      "../incident-headers.ts",
+      "../incident-techniques.ts",
+      "../cell-keyboard.ts",
+      "../incident-details.ts"
     ],
     "selector": "ag-grid-external-filter-state-example",
     "primaryFile": "ag-grid-external-filter-state-example.ts",
@@ -376,7 +424,15 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
-      "l10n.ts"
+      "../incident-columns.ts",
+      "../security-incidents.ts",
+      "l10n.ts",
+      "../incident-cells.ts",
+      "../incident-connection.ts",
+      "../incident-headers.ts",
+      "../incident-techniques.ts",
+      "../cell-keyboard.ts",
+      "../incident-details.ts"
     ],
     "selector": "ag-grid-filter-state-example",
     "primaryFile": "ag-grid-filter-state-example.ts",
@@ -391,7 +447,15 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
-      "l10n.ts"
+      "../incident-columns.ts",
+      "../security-incidents.ts",
+      "l10n.ts",
+      "../incident-cells.ts",
+      "../incident-connection.ts",
+      "../incident-headers.ts",
+      "../incident-techniques.ts",
+      "../cell-keyboard.ts",
+      "../incident-details.ts"
     ],
     "selector": "ag-grid-infinite-selection-example",
     "primaryFile": "ag-grid-infinite-selection-example.ts",
@@ -406,7 +470,15 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
-      "l10n.ts"
+      "../incident-columns.ts",
+      "../security-incidents.ts",
+      "l10n.ts",
+      "../incident-cells.ts",
+      "../incident-connection.ts",
+      "../incident-headers.ts",
+      "../incident-techniques.ts",
+      "../cell-keyboard.ts",
+      "../incident-details.ts"
     ],
     "selector": "ag-grid-load-error-example",
     "primaryFile": "ag-grid-load-error-example.ts",
@@ -421,7 +493,15 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
-      "l10n.ts"
+      "../incident-columns.ts",
+      "../security-incidents.ts",
+      "l10n.ts",
+      "../incident-cells.ts",
+      "../incident-connection.ts",
+      "../incident-headers.ts",
+      "../incident-techniques.ts",
+      "../cell-keyboard.ts",
+      "../incident-details.ts"
     ],
     "selector": "ag-grid-load-text-example",
     "primaryFile": "ag-grid-load-text-example.ts",
@@ -436,7 +516,15 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
-      "l10n.ts"
+      "../incident-columns.ts",
+      "../security-incidents.ts",
+      "l10n.ts",
+      "../incident-cells.ts",
+      "../incident-connection.ts",
+      "../incident-headers.ts",
+      "../incident-techniques.ts",
+      "../cell-keyboard.ts",
+      "../incident-details.ts"
     ],
     "selector": "ag-grid-loading-overlay-example",
     "primaryFile": "ag-grid-loading-overlay-example.ts",
@@ -451,7 +539,13 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
-      "l10n.ts"
+      "../cell-keyboard.ts",
+      "../incident-cells.ts",
+      "../security-incidents.ts",
+      "l10n.ts",
+      "../incident-details.ts",
+      "../incident-headers.ts",
+      "../incident-techniques.ts"
     ],
     "selector": "ag-grid-long-cell-content-example",
     "primaryFile": "ag-grid-long-cell-content-example.ts",
@@ -466,7 +560,15 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
-      "l10n.ts"
+      "../incident-columns.ts",
+      "../security-incidents.ts",
+      "l10n.ts",
+      "../incident-cells.ts",
+      "../incident-connection.ts",
+      "../incident-headers.ts",
+      "../incident-techniques.ts",
+      "../cell-keyboard.ts",
+      "../incident-details.ts"
     ],
     "selector": "ag-grid-overview-example",
     "primaryFile": "ag-grid-overview-example.ts",
@@ -481,7 +583,15 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
-      "l10n.ts"
+      "../incident-columns.ts",
+      "../security-incidents.ts",
+      "l10n.ts",
+      "../incident-cells.ts",
+      "../incident-connection.ts",
+      "../incident-headers.ts",
+      "../incident-techniques.ts",
+      "../cell-keyboard.ts",
+      "../incident-details.ts"
     ],
     "selector": "ag-grid-quick-filter-state-example",
     "primaryFile": "ag-grid-quick-filter-state-example.ts",
@@ -496,7 +606,15 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
-      "l10n.ts"
+      "../incident-columns.ts",
+      "../security-incidents.ts",
+      "l10n.ts",
+      "../incident-cells.ts",
+      "../incident-connection.ts",
+      "../incident-headers.ts",
+      "../incident-techniques.ts",
+      "../cell-keyboard.ts",
+      "../incident-details.ts"
     ],
     "selector": "ag-grid-row-actions-example",
     "primaryFile": "ag-grid-row-actions-example.ts",
@@ -511,7 +629,15 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
-      "l10n.ts"
+      "../incident-columns.ts",
+      "../incident-details.ts",
+      "../security-incidents.ts",
+      "l10n.ts",
+      "../incident-cells.ts",
+      "../incident-connection.ts",
+      "../incident-headers.ts",
+      "../incident-techniques.ts",
+      "../cell-keyboard.ts"
     ],
     "selector": "ag-grid-row-detail-example",
     "primaryFile": "ag-grid-row-detail-example.ts",
@@ -526,7 +652,15 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
-      "l10n.ts"
+      "../incident-columns.ts",
+      "../security-incidents.ts",
+      "l10n.ts",
+      "../incident-cells.ts",
+      "../incident-connection.ts",
+      "../incident-headers.ts",
+      "../incident-techniques.ts",
+      "../cell-keyboard.ts",
+      "../incident-details.ts"
     ],
     "selector": "ag-grid-row-dragging-example",
     "primaryFile": "ag-grid-row-dragging-example.ts",
@@ -541,7 +675,15 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
-      "l10n.ts"
+      "../incident-columns.ts",
+      "../security-incidents.ts",
+      "l10n.ts",
+      "../incident-cells.ts",
+      "../incident-connection.ts",
+      "../incident-headers.ts",
+      "../incident-techniques.ts",
+      "../cell-keyboard.ts",
+      "../incident-details.ts"
     ],
     "selector": "ag-grid-row-focus-state-example",
     "primaryFile": "ag-grid-row-focus-state-example.ts",
@@ -556,7 +698,15 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
-      "l10n.ts"
+      "../incident-cells.ts",
+      "../incident-columns.ts",
+      "../security-incidents.ts",
+      "l10n.ts",
+      "../cell-keyboard.ts",
+      "../incident-details.ts",
+      "../incident-headers.ts",
+      "../incident-connection.ts",
+      "../incident-techniques.ts"
     ],
     "selector": "ag-grid-row-group-example",
     "primaryFile": "ag-grid-row-group-example.ts",
@@ -571,7 +721,15 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
-      "l10n.ts"
+      "../incident-columns.ts",
+      "../security-incidents.ts",
+      "l10n.ts",
+      "../incident-cells.ts",
+      "../incident-connection.ts",
+      "../incident-headers.ts",
+      "../incident-techniques.ts",
+      "../cell-keyboard.ts",
+      "../incident-details.ts"
     ],
     "selector": "ag-grid-row-selection-state-example",
     "primaryFile": "ag-grid-row-selection-state-example.ts",
@@ -586,7 +744,15 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
-      "l10n.ts"
+      "../incident-columns.ts",
+      "../security-incidents.ts",
+      "l10n.ts",
+      "../incident-cells.ts",
+      "../incident-connection.ts",
+      "../incident-headers.ts",
+      "../incident-techniques.ts",
+      "../cell-keyboard.ts",
+      "../incident-details.ts"
     ],
     "selector": "ag-grid-settings-menu-example",
     "primaryFile": "ag-grid-settings-menu-example.ts",
@@ -601,7 +767,15 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
-      "l10n.ts"
+      "../incident-columns.ts",
+      "../security-incidents.ts",
+      "l10n.ts",
+      "../incident-cells.ts",
+      "../incident-connection.ts",
+      "../incident-headers.ts",
+      "../incident-techniques.ts",
+      "../cell-keyboard.ts",
+      "../incident-details.ts"
     ],
     "selector": "ag-grid-skeleton-cell-renderer-example",
     "primaryFile": "ag-grid-skeleton-cell-renderer-example.ts",
@@ -616,7 +790,15 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "localImportFiles": [
       "../../../i18n/index.ts",
-      "l10n.ts"
+      "../incident-columns.ts",
+      "../security-incidents.ts",
+      "l10n.ts",
+      "../incident-cells.ts",
+      "../incident-connection.ts",
+      "../incident-headers.ts",
+      "../incident-techniques.ts",
+      "../cell-keyboard.ts",
+      "../incident-details.ts"
     ],
     "selector": "ag-grid-status-bar-example",
     "primaryFile": "ag-grid-status-bar-example.ts",
@@ -2020,6 +2202,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "selector": "dl-alignment-example",
     "primaryFile": "dl-alignment-example.ts",
+    "importPath": "components/dl"
+  },
+  "dl-caption": {
+    "packagePath": "components/dl/dl-caption",
+    "title": "Description list caption",
+    "componentName": "DlCaptionExample",
+    "files": [
+      "dl-caption-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "dl-caption-example",
+    "primaryFile": "dl-caption-example.ts",
     "importPath": "components/dl"
   },
   "dl-dt-width": {
@@ -3527,21 +3724,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "form-field-password-overview-example.ts",
     "importPath": "components/form-field"
   },
-  "form-field-with-cleaner": {
-    "packagePath": "components/form-field/form-field-with-cleaner",
-    "title": "Form field with kbq-cleaner",
-    "componentName": "FormFieldWithCleanerExample",
-    "files": [
-      "form-field-with-cleaner-example.ts"
-    ],
-    "localImportFiles": [
-      "../../../i18n/index.ts",
-      "l10n.ts"
-    ],
-    "selector": "form-field-with-cleaner-example",
-    "primaryFile": "form-field-with-cleaner-example.ts",
-    "importPath": "components/form-field"
-  },
   "form-field-with-custom-error-state-matcher-set-by-attribute": {
     "packagePath": "components/form-field/form-field-with-custom-error-state-matcher-set-by-attribute",
     "title": "Form field with CustomErrorStateMatcher which set by `errorStateMatcher` attribute",
@@ -3630,21 +3812,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "selector": "form-field-with-prefix-and-suffix-example",
     "primaryFile": "form-field-with-prefix-and-suffix-example.ts",
-    "importPath": "components/form-field"
-  },
-  "form-field-without-borders": {
-    "packagePath": "components/form-field/form-field-without-borders",
-    "title": "Form field without borders",
-    "componentName": "FormFieldWithoutBordersExample",
-    "files": [
-      "form-field-without-borders-example.ts"
-    ],
-    "localImportFiles": [
-      "../../../i18n/index.ts",
-      "l10n.ts"
-    ],
-    "selector": "form-field-without-borders-example",
-    "primaryFile": "form-field-without-borders-example.ts",
     "importPath": "components/form-field"
   },
   "form-fieldset-invalid": {
@@ -4225,6 +4392,63 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "inline-edit-without-label-example.ts",
     "importPath": "components/inline-edit"
   },
+  "input-autocomplete": {
+    "packagePath": "components/input/input-autocomplete",
+    "title": "Input autocomplete",
+    "componentName": "InputAutocompleteExample",
+    "files": [
+      "input-autocomplete-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "input-autocomplete-example",
+    "primaryFile": "input-autocomplete-example.ts",
+    "importPath": "components/input"
+  },
+  "input-disabled": {
+    "packagePath": "components/input/input-disabled",
+    "title": "Disabled input",
+    "componentName": "InputDisabledExample",
+    "files": [
+      "input-disabled-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "input-disabled-example",
+    "primaryFile": "input-disabled-example.ts",
+    "importPath": "components/input"
+  },
+  "input-label-and-hint": {
+    "packagePath": "components/input/input-label-and-hint",
+    "title": "Input with label and hint",
+    "componentName": "InputLabelAndHintExample",
+    "files": [
+      "input-label-and-hint-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "input-label-and-hint-example",
+    "primaryFile": "input-label-and-hint-example.ts",
+    "importPath": "components/input"
+  },
+  "input-monospace": {
+    "packagePath": "components/input/input-monospace",
+    "title": "Monospace input",
+    "componentName": "InputMonospaceExample",
+    "files": [
+      "input-monospace-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "input-monospace-example",
+    "primaryFile": "input-monospace-example.ts",
+    "importPath": "components/input"
+  },
   "input-number-overview": {
     "packagePath": "components/input/input-number-overview",
     "title": "Input number",
@@ -4247,10 +4471,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "input-overview-example.ts"
     ],
-    "localImportFiles": [
-      "../../../i18n/index.ts",
-      "l10n.ts"
-    ],
+    "localImportFiles": [],
     "selector": "input-overview-example",
     "primaryFile": "input-overview-example.ts",
     "importPath": "components/input"
@@ -4300,6 +4521,48 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "input-readonly-example.ts",
     "importPath": "components/input"
   },
+  "input-search": {
+    "packagePath": "components/input/input-search",
+    "title": "Search input",
+    "componentName": "InputSearchExample",
+    "files": [
+      "input-search-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "input-search-example",
+    "primaryFile": "input-search-example.ts",
+    "importPath": "components/input"
+  },
+  "input-validation": {
+    "packagePath": "components/input/input-validation",
+    "title": "Input validation",
+    "componentName": "InputValidationExample",
+    "files": [
+      "input-validation-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "input-validation-example",
+    "primaryFile": "input-validation-example.ts",
+    "importPath": "components/input"
+  },
+  "input-with-cleaner": {
+    "packagePath": "components/input/input-with-cleaner",
+    "title": "Input with cleaner",
+    "componentName": "InputWithCleanerExample",
+    "files": [
+      "input-with-cleaner-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "input-with-cleaner-example",
+    "primaryFile": "input-with-cleaner-example.ts",
+    "importPath": "components/input"
+  },
   "input-with-mask": {
     "packagePath": "components/input/input-with-mask",
     "title": "Input with mask",
@@ -4313,6 +4576,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "selector": "input-with-mask-example",
     "primaryFile": "input-with-mask-example.ts",
+    "importPath": "components/input"
+  },
+  "input-without-borders": {
+    "packagePath": "components/input/input-without-borders",
+    "title": "Input without borders",
+    "componentName": "InputWithoutBordersExample",
+    "files": [
+      "input-without-borders-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "input-without-borders-example",
+    "primaryFile": "input-without-borders-example.ts",
     "importPath": "components/input"
   },
   "layout-flex-alignment": {
@@ -5064,6 +5342,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "markdown-table-example.ts",
     "importPath": "components/markdown"
   },
+  "modal-button-loading": {
+    "packagePath": "components/modal/modal-button-loading",
+    "title": "Modal buttons in the loading state",
+    "componentName": "ModalButtonLoadingExample",
+    "files": [
+      "modal-button-loading-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "modal-button-loading-example",
+    "primaryFile": "modal-button-loading-example.ts",
+    "importPath": "components/modal"
+  },
   "modal-caption": {
     "packagePath": "components/modal/modal-caption",
     "title": "Modal with caption",
@@ -5122,6 +5415,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "selector": "modal-full-custom-example",
     "primaryFile": "modal-full-custom-example.ts",
+    "importPath": "components/modal"
+  },
+  "modal-keep-open-on-error": {
+    "packagePath": "components/modal/modal-keep-open-on-error",
+    "title": "Modal that stays open on a form error",
+    "componentName": "ModalKeepOpenOnErrorExample",
+    "files": [
+      "modal-keep-open-on-error-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "modal-keep-open-on-error-example",
+    "primaryFile": "modal-keep-open-on-error-example.ts",
     "importPath": "components/modal"
   },
   "modal-multiple": {
@@ -6197,6 +6505,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-footer-example.ts",
     "importPath": "components/select"
   },
+  "select-groups-label": {
+    "packagePath": "components/select/select-groups-label",
+    "title": "Select group label",
+    "componentName": "SelectGroupsLabelExample",
+    "files": [
+      "select-groups-label-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "select-groups-label-example",
+    "primaryFile": "select-groups-label-example.ts",
+    "importPath": "components/select"
+  },
   "select-groups": {
     "packagePath": "components/select/select-groups",
     "title": "Select groups",
@@ -6623,6 +6946,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "sidebar-with-splitter-example.ts",
     "importPath": "components/sidebar"
   },
+  "sidepanel-can-close": {
+    "packagePath": "components/sidepanel/sidepanel-can-close",
+    "title": "Sidepanel with a close guard",
+    "componentName": "SidepanelCanCloseExample",
+    "files": [
+      "sidepanel-can-close-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "sidepanel-can-close-example",
+    "primaryFile": "sidepanel-can-close-example.ts",
+    "importPath": "components/sidepanel"
+  },
   "sidepanel-disable-close": {
     "packagePath": "components/sidepanel/sidepanel-disable-close",
     "title": "Sidepanel with disabled close on backdrop click",
@@ -6760,6 +7098,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "selector": "skeleton-accordion-example",
     "primaryFile": "skeleton-accordion-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-animation-duration": {
+    "packagePath": "components/skeleton/skeleton-animation-duration",
+    "title": "Skeleton animation duration",
+    "componentName": "SkeletonAnimationDurationExample",
+    "files": [
+      "skeleton-animation-duration-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-animation-duration-example",
+    "primaryFile": "skeleton-animation-duration-example.ts",
     "importPath": "components/skeleton"
   },
   "skeleton-basic": {
@@ -9711,6 +10061,7 @@ export type LiveExampleId =
   | 'divider-overview'
   | 'divider-vertical'
   | 'dl-alignment'
+  | 'dl-caption'
   | 'dl-dt-width'
   | 'dl-long-text'
   | 'dl-min-width'
@@ -9818,14 +10169,12 @@ export type LiveExampleId =
   | 'form-field-horizontal'
   | 'form-field-overview'
   | 'form-field-password-overview'
-  | 'form-field-with-cleaner'
   | 'form-field-with-custom-error-state-matcher-set-by-attribute'
   | 'form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider'
   | 'form-field-with-error'
   | 'form-field-with-hint'
   | 'form-field-with-label'
   | 'form-field-with-prefix-and-suffix'
-  | 'form-field-without-borders'
   | 'form-fieldset-invalid'
   | 'form-fieldset-overview'
   | 'form-fieldset-with-button'
@@ -9865,12 +10214,20 @@ export type LiveExampleId =
   | 'inline-edit-validation'
   | 'inline-edit-vertical-list'
   | 'inline-edit-without-label'
+  | 'input-autocomplete'
+  | 'input-disabled'
+  | 'input-label-and-hint'
+  | 'input-monospace'
   | 'input-number-overview'
   | 'input-overview'
   | 'input-password-overview'
   | 'input-password-template-driven'
   | 'input-readonly'
+  | 'input-search'
+  | 'input-validation'
+  | 'input-with-cleaner'
   | 'input-with-mask'
+  | 'input-without-borders'
   | 'layout-flex-alignment'
   | 'layout-flex-behaviour-modifiers'
   | 'layout-flex-offsets'
@@ -9922,10 +10279,12 @@ export type LiveExampleId =
   | 'markdown-quote'
   | 'markdown-selection'
   | 'markdown-table'
+  | 'modal-button-loading'
   | 'modal-caption'
   | 'modal-component-with-injector'
   | 'modal-component'
   | 'modal-full-custom'
+  | 'modal-keep-open-on-error'
   | 'modal-multiple'
   | 'modal-overview'
   | 'modal-scroll'
@@ -9999,6 +10358,7 @@ export type LiveExampleId =
   | 'select-custom-trigger'
   | 'select-disabled'
   | 'select-footer'
+  | 'select-groups-label'
   | 'select-groups'
   | 'select-height'
   | 'select-icon'
@@ -10029,6 +10389,7 @@ export type LiveExampleId =
   | 'sidebar-overview'
   | 'sidebar-state-saving'
   | 'sidebar-with-splitter'
+  | 'sidepanel-can-close'
   | 'sidepanel-disable-close'
   | 'sidepanel-normal-mode'
   | 'sidepanel-overlayed'
@@ -10038,6 +10399,7 @@ export type LiveExampleId =
   | 'sidepanel-with-custom-injector'
   | 'sidepanel-with-dynamic-config-update'
   | 'skeleton-accordion'
+  | 'skeleton-animation-duration'
   | 'skeleton-basic'
   | 'skeleton-checkable'
   | 'skeleton-code-block'

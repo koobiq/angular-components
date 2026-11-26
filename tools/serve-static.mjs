@@ -1,7 +1,7 @@
 /**
  * The static file server behind `yarn run serve:docs` and `yarn run serve:e2e`. Both serve a
- * directory a build has already produced and answer anything it does not hold with a single-page
- * shell; what the two disagree on stays in their wrappers.
+ * directory a build has already produced and answer a client-side route it does not hold with a
+ * single-page shell; which paths are such routes, and what answers the rest, stays in their wrappers.
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { extname } from 'node:path';
@@ -27,9 +27,23 @@ export const HOST = '127.0.0.1';
  * @param {unknown} options.port
  * @param {string} [options.host]
  * @param {Function[]} [options.middleware] Handlers to run ahead of the static one.
+ * @param {(path: string) => boolean} [options.isShellRoute] Whether a path the build holds no file for gets `shell`;
+ *   by default every path without a file extension does.
+ * @param {string} [options.notFoundPage] Page inside `root` answered with a 404 for any other path.
  * @param {string} [options.suffix] Appended to the startup line.
  */
-export const serve = ({ label, root, shell, missing, port, host = HOST, middleware = [], suffix = '' }) => {
+export const serve = ({
+    label,
+    root,
+    shell,
+    missing,
+    port,
+    host = HOST,
+    middleware = [],
+    isShellRoute = (path) => !extname(path),
+    notFoundPage,
+    suffix = ''
+}) => {
     const parsed = Number(port);
 
     // `app.listen` coerces whatever it gets, so an empty or non-numeric port would surface as a bind
@@ -53,26 +67,29 @@ export const serve = ({ label, root, shell, missing, port, host = HOST, middlewa
     // reports as `js/missing-rate-limiting`, and rate-limiting a fixture nobody can reach would be
     // theatre.
     const shellHtml = readFileSync(shell, 'utf8');
+    const notFoundHtml = notFoundPage && readFileSync(notFoundPage, 'utf8');
     const app = express();
 
     for (const handler of middleware) {
         app.use(handler);
     }
 
-    app.use(express.static(root, { index: 'index.html', redirect: false }));
+    // Dot directories too, as the hosting serves them: the docs publish their Agent Skills under `/.well-known`.
+    app.use(express.static(root, { index: 'index.html', redirect: false, dotfiles: 'allow' }));
 
-    // Anything the static middleware passed on is a client-side route — unless it carries a file
-    // extension, which falls through to a 404 instead. `ng serve` drew the same line, and it is what
-    // keeps a missing chunk, icon or font legible as a failed request rather than as a 200 carrying
-    // this shell: the browser reports the type mismatch, and a Playwright trace shows the status.
+    // What the static middleware passed on gets the shell when `isShellRoute` takes it for a client-side
+    // route — by default any path without a file extension, the line `ng serve` drew — and a 404 otherwise,
+    // with `notFoundPage` as its body when there is one. That keeps a missing chunk, icon or font legible
+    // as a failed request rather than as a 200 carrying this shell: the browser reports the type mismatch,
+    // and a Playwright trace shows the status.
     app.use((request, response, next) => {
-        if (extname(request.path)) {
+        if (isShellRoute(request.path)) {
+            response.type('html').send(shellHtml);
+        } else if (notFoundHtml) {
+            response.status(404).type('html').send(notFoundHtml);
+        } else {
             next();
-
-            return;
         }
-
-        response.type('html').send(shellHtml);
     });
 
     const server = app.listen(parsed, host, () =>

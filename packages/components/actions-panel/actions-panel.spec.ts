@@ -1,4 +1,5 @@
 import { Dialog } from '@angular/cdk/dialog';
+import { ESCAPE } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { OverlayContainer, type ScrollStrategy } from '@angular/cdk/overlay';
 import { Location } from '@angular/common';
@@ -22,7 +23,6 @@ import { lastValueFrom, NEVER } from 'rxjs';
 import {
     createKeyboardEvent,
     enUSLocaleData,
-    ESCAPE,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
     ruRULocaleData

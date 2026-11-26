@@ -1,20 +1,13 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
+import { DOWN_ARROW, END, HOME, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@angular/cdk/keycodes';
 import { Component, type DebugElement, effect, signal, viewChild, viewChildren } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { EMPTY } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
-import {
-    dispatchKeyboardEvent,
-    DOWN_ARROW,
-    END,
-    HOME,
-    LEFT_ARROW,
-    RIGHT_ARROW,
-    UP_ARROW
-} from '@koobiq/components/core';
+import { dispatchKeyboardEvent } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleDirective } from '@koobiq/components/title';
 import { KbqButtonToggle, type KbqButtonToggleChange, KbqButtonToggleGroup, KbqButtonToggleModule } from './index';

@@ -9,3 +9,9 @@
 The `injector` option in `KbqSidepanelConfig` allows passing a custom `Injector` as the parent for the sidepanel content's dependency injection hierarchy. This is useful when you need to provide injection tokens that are not available in the global injector — for example, tokens from a specific component, route, or lazily loaded module.
 
 <Example id="sidepanel-with-custom-injector" />
+
+### Confirming close with unsaved changes
+
+The `canClose` option intercepts every close attempt: backdrop click, Escape, the close button and the programmatic `close()`. With no unsaved changes the guard returns `true` and the panel closes right away. With unsaved changes the guard shows a confirmation with explicit actions — "Close without saving" and "Keep editing" — and returns the user's decision.
+
+<Example id="sidepanel-can-close" />

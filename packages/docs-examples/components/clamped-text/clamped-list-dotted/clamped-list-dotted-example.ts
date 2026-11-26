@@ -47,7 +47,7 @@ import { TRANSLATIONS } from './l10n';
                 @if (clampedList.hasToggle()) {
                     <a kbqClampedListTrigger kbqLink pseudo>
                         @if (clampedList.isCollapsed()) {
-                            {{ clampedList.exceededItemCount() }} {{ clampedList.localeConfiguration().moreText }}
+                            {{ clampedList.showMoreCompactCountText() }}
                         } @else {
                             {{ clampedList.localeConfiguration().closeText }}
                         }

@@ -139,7 +139,7 @@ export class KbqToggleComponent
     });
 
     /** @docs-private */
-    readonly checkedInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+    readonly checkedInput = input<boolean | undefined, boolean | number | string | null | undefined>(undefined, {
         alias: 'checked',
         transform: booleanAttribute
     });
@@ -157,6 +157,9 @@ export class KbqToggleComponent
     readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
 
     readonly change = output<KbqToggleChange>();
+
+    /** Emits the new checked value when the user switches the toggle. Supports `[(checked)]`. */
+    readonly checkedChange = output<boolean>();
 
     /** Event emitted when the toggle's `indeterminate` value changes. */
     readonly indeterminateChange = output<boolean>();
@@ -434,7 +437,9 @@ export class KbqToggleComponent
     }
 
     private emitChangeEvent() {
-        // Note: `toggle()` already notifies the ControlValueAccessor change handler via `KbqCheckable.toggle()`.
-        this.change.emit(new KbqToggleChange(this, this.checked));
+        const checked = this.checked;
+
+        this.checkedChange.emit(checked);
+        this.change.emit(new KbqToggleChange(this, checked));
     }
 }

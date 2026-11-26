@@ -106,6 +106,25 @@ import { kbqSkeletonPresetsConfigurationProvider } from '@koobiq/components/skel
 
 <Example id="skeleton-directive" />
 
+### Скорость анимации
+
+Атрибут `animationDuration` элемента `kbq-skeleton` и директивы `kbqSkeleton` задает длительность одного цикла анимации в миллисекундах: чем она больше, тем медленнее анимация. Скорость анимации шаблонов задается в глобальных настройках.
+
+<Example id="skeleton-animation-duration" />
+
+### Глобальные настройки
+
+Функция `kbqSkeletonOptionsProvider` задает параметры по умолчанию для всех скелетонов приложения или конкретного инжектора.
+
+```ts
+import { ApplicationConfig } from '@angular/core';
+import { kbqSkeletonOptionsProvider } from '@koobiq/components/skeleton';
+
+export const appConfig: ApplicationConfig = {
+    providers: [kbqSkeletonOptionsProvider({ animationDuration: 3000 })]
+};
+```
+
 ### Примеры использования
 
 #### Блок кода

@@ -5,7 +5,6 @@ import {
     AllCommunityModule,
     type CellClickedEvent,
     type CellKeyDownEvent,
-    type ColDef,
     type FullWidthCellKeyDownEvent,
     type GetRowIdFunc,
     ModuleRegistry,
@@ -20,43 +19,21 @@ import {
     KbqAgGridThemeModule
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { exampleIncidentColumns } from '../incident-columns';
+import { ExampleIncidentDetails } from '../incident-details';
+import { exampleGetIncidents, type ExampleSecurityIncident } from '../security-incidents';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-type ExampleRowData = {
-    id: string;
-    event: string;
-    severity: string;
-    status: string;
-    sourceIp: string;
-    destinationIp: string;
-    protocol: string;
-    port: string;
-    technique: string;
-    host: string;
-    detector: string;
-    description: string;
-};
-
 @Component({
     selector: 'example-row-detail',
-    imports: [KbqButtonModule, KbqDl, KbqDt, KbqDd],
+    imports: [KbqButtonModule, ExampleIncidentDetails],
     template: `
         <div class="example-row-detail-card">
-            <kbq-dl>
-                <kbq-dt>{{ t().description }}</kbq-dt>
-                <kbq-dd>{{ data.description }}</kbq-dd>
-
-                <kbq-dt>{{ t().affectedHost }}</kbq-dt>
-                <kbq-dd>{{ data.host }}</kbq-dd>
-
-                <kbq-dt>{{ t().detectedBy }}</kbq-dt>
-                <kbq-dd>{{ data.detector }}</kbq-dd>
-            </kbq-dl>
+            <example-incident-details [incident]="data" [headers]="t().headers" />
 
             <button kbq-button type="button" (click)="params.collapse()">{{ t().collapse }}</button>
         </div>
@@ -80,7 +57,7 @@ type ExampleRowData = {
             background: var(--kbq-background-card);
         }
 
-        kbq-dl {
+        example-incident-details {
             align-self: stretch;
         }
     `,
@@ -90,7 +67,7 @@ export class ExampleRowDetailComponent {
     protected readonly params = inject(KBQ_AG_GRID_ROW_DETAIL_PARAMS);
 
     protected readonly t = injectTranslation(TRANSLATIONS);
-    protected readonly data = this.params.data as ExampleRowData;
+    protected readonly data = this.params.data as ExampleSecurityIncident;
 }
 
 /**
@@ -118,7 +95,7 @@ export class ExampleRowDetailComponent {
             [getRowId]="getRowId"
             [rowSelection]="rowSelection"
             [columnDefs]="columnDefs()"
-            [rowData]="rowData()"
+            [rowData]="rowData"
             (cellClicked)="onCellClicked($event, rowDetail)"
             (cellKeyDown)="onCellKeyDown($event, rowDetail)"
         />
@@ -156,19 +133,21 @@ export class AgGridRowDetailExample {
     };
 
     // Wider than the grid, so that scrolling it horizontally shows the expanded part staying in place.
-    protected readonly columnDefs = computed<ColDef<ExampleRowData>[]>(() => [
-        { field: 'event', headerName: this.t().event, width: 200 },
-        { field: 'severity', headerName: this.t().severity, width: 110 },
-        { field: 'status', headerName: this.t().status, width: 120 },
-        { field: 'sourceIp', headerName: this.t().sourceIp, width: 140 },
-        { field: 'destinationIp', headerName: this.t().destinationIp, width: 140 },
-        { field: 'protocol', headerName: this.t().protocol, width: 110 },
-        { field: 'port', headerName: this.t().port, width: 90 },
-        { field: 'technique', headerName: this.t().mitreTechnique, width: 150 }
-    ]);
-    protected readonly rowData = computed<ExampleRowData[]>(() => this.t().incidents);
+    protected readonly columnDefs = computed(() =>
+        exampleIncidentColumns(
+            this.t().headers,
+            'event',
+            'severity',
+            'status',
+            'sourceIp',
+            'destinationIp',
+            'protocol',
+            'port'
+        )
+    );
+    protected readonly rowData = exampleGetIncidents(0, 8);
 
-    protected readonly getRowId: GetRowIdFunc<ExampleRowData> = ({ data }) => data.id;
+    protected readonly getRowId: GetRowIdFunc<ExampleSecurityIncident> = ({ data }) => data.id;
 
     /**
      * Clicking a cell expands and collapses its row. The expanded part is not a cell, so clicking

@@ -123,12 +123,13 @@ export class KbqModalControlService {
         return this.registeredMetaMap.has(modalRef);
     }
 
-    // Close all registered opened modals
+    // Close all registered opened modals. Teardown bypasses the guard: dialogs whose owner is
+    // going away must not stay open.
     closeAll(): void {
         let i = this.openModals.length;
 
         while (i--) {
-            this.openModals[i]?.close();
+            this.openModals[i]?.destroy();
         }
     }
 

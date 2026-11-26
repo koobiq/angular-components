@@ -1,4 +1,5 @@
 ﻿import { _IdGenerator } from '@angular/cdk/a11y';
+import { COMMA, ENTER, ESCAPE, hasModifierKey, SEMICOLON, SPACE, TAB } from '@angular/cdk/keycodes';
 import {
     booleanAttribute,
     computed,
@@ -16,17 +17,7 @@ import {
     untracked
 } from '@angular/core';
 import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
-import {
-    COMMA,
-    ENTER,
-    ESCAPE,
-    hasModifierKey,
-    KbqFieldSizingContent,
-    kbqInjectAutofilled,
-    SEMICOLON,
-    SPACE,
-    TAB
-} from '@koobiq/components/core';
+import { KbqFieldSizingContent, kbqInjectAutofilled } from '@koobiq/components/core';
 import { KbqTrim } from '@koobiq/components/form-field';
 import type { KbqTagList } from './tag-list.component';
 import type { KbqTagTextControl } from './tag-text-control';

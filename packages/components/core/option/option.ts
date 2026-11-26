@@ -1,4 +1,5 @@
 ﻿import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import {
     type AfterViewChecked,
     booleanAttribute,
@@ -19,10 +20,11 @@ import {
 import { outputFromObservable } from '@angular/core/rxjs-interop';
 import { Subject } from 'rxjs';
 import type { ActiveDescendantKeyManager } from '../a11y';
-import { ENTER, hasModifierKey, SPACE } from '../keycodes';
+import { hasModifierKey } from '../keycodes';
 import { KbqPseudoCheckboxModule } from '../selection';
 import { KBQ_TITLE_TEXT_REF, type KbqTitleTextRef } from '../title';
 import { kbqFocusAndReveal, kbqGetElementHeight } from '../utils';
+import { KBQ_GROUP_OPTION } from './group-option';
 import { KbqOptgroup } from './optgroup';
 
 /**
@@ -150,6 +152,10 @@ export class KbqVirtualOption extends KbqOptionBase {
     providers: [
         {
             provide: KBQ_TITLE_TEXT_REF,
+            useExisting: KbqOption
+        },
+        {
+            provide: KBQ_GROUP_OPTION,
             useExisting: KbqOption
         }
     ],

@@ -20,3 +20,7 @@
     align-self: flex-start;
     margin-top: var(--kbq-clamped-text-size-toggle-margin, var(--kbq-size-xxs));
 }
+
+.kbq-clamped-list__trigger {
+    white-space: nowrap;
+}

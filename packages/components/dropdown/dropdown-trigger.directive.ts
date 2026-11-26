@@ -1,5 +1,6 @@
 import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
 import { type Direction, Directionality } from '@angular/cdk/bidi';
+import { DOWN_ARROW, ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE } from '@angular/cdk/keycodes';
 import {
     type FlexibleConnectedPositionStrategy,
     type FlexibleConnectedPositionStrategyOrigin,
@@ -38,8 +39,6 @@ import { outputToObservable } from '@angular/core/rxjs-interop';
 import { asapScheduler, delay, filter, map, merge, type Observable, of as observableOf, Subscription } from 'rxjs';
 import {
     defaultOffsetY,
-    DOWN_ARROW,
-    ENTER,
     KBQ_OVERLAY_LAYERS,
     kbqGetPanelWidthOrigin,
     kbqIsElementOrigin,
@@ -50,10 +49,7 @@ import {
     kbqResolveOverlayOrigin,
     kbqResolvePanelWidth,
     type KbqSiblingPopup,
-    kbqSiblingPopupProvider,
-    LEFT_ARROW,
-    RIGHT_ARROW,
-    SPACE
+    kbqSiblingPopupProvider
 } from '@koobiq/components/core';
 import { KbqDropdown } from './dropdown.component';
 import type {

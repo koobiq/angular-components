@@ -1,4 +1,5 @@
 import { CdkMonitorFocus } from '@angular/cdk/a11y';
+import { ENTER, NUMPAD_DIVIDE, SLASH, SPACE } from '@angular/cdk/keycodes';
 import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
 import {
@@ -13,15 +14,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-    ENTER,
-    KBQ_WINDOW,
-    kbqInjectNativeElement,
-    NUMPAD_DIVIDE,
-    PopUpPlacements,
-    SLASH,
-    SPACE
-} from '@koobiq/components/core';
+import { KBQ_WINDOW, kbqInjectNativeElement, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqVerticalNavbar } from './vertical-navbar.component';

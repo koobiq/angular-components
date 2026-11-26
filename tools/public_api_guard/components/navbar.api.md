@@ -14,10 +14,10 @@ import { FocusKeyManager } from '@koobiq/components/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1$1 from '@angular/cdk/a11y';
+import * as i1$1 from '@koobiq/components/core';
+import * as i1$2 from '@angular/cdk/a11y';
 import * as i1 from '@koobiq/components/tooltip';
-import * as i2$1 from '@angular/cdk/platform';
-import * as i2 from '@koobiq/components/core';
+import * as i2 from '@angular/cdk/platform';
 import * as i3 from '@koobiq/components/icon';
 import { IFocusableOption } from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
@@ -27,6 +27,7 @@ import { KbqDeepPartial } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqNavbarLocaleConfiguration } from '@koobiq/components/core';
+import { KbqOverflowFitItem } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
@@ -62,6 +63,8 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
     protected readonly elementRef: ElementRef<HTMLElement>;
     focus(): void;
     get focusableItems(): QueryList<KbqNavbarFocusableItem>;
+    protected readonly focusableItemsList: () => QueryList<KbqNavbarFocusableItem>;
+    protected readonly focusableItemsQuery: i0.Signal<readonly KbqNavbarFocusableItem[]>;
     protected readonly focusMonitor: FocusMonitor;
     getNativeElement(): HTMLElement;
     keyManager: FocusKeyManager<KbqNavbarFocusableItem>;
@@ -69,6 +72,7 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
     ngAfterContentInit(): void;
     ngAfterViewInit(): void;
     ngOnDestroy(): void;
+    protected noFocusableItems(): boolean;
     get optionBlurChanges(): Observable<KbqNavbarFocusableItemEvent>;
     get optionFocusChanges(): Observable<KbqNavbarFocusableItemEvent>;
     protected readonly renderedTabIndex: i0.Signal<number>;
@@ -81,16 +85,25 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
 }
 
 // @public (undocumented)
-export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, AfterContentInit {
+export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, AfterContentInit, AfterContentChecked {
     constructor();
+    get focusableItems(): QueryList<KbqNavbarFocusableItem>;
+    readonly localeConfiguration: i0.Signal<i1$1.KbqNavbarLocaleConfiguration>;
+    protected readonly moreAriaLabel: i0.Signal<string | null>;
+    protected readonly moreTriggerVisible: i0.WritableSignal<boolean>;
     readonly navbarItems: i0.Signal<readonly KbqNavbarItem[]>;
+    ngAfterContentChecked(): void;
     ngAfterContentInit(): void;
+    // (undocumented)
+    protected noFocusableItems(): boolean;
     protected onKeyDown(event: KeyboardEvent): void;
+    protected onMorePanelContentClick(event: MouseEvent): void;
+    protected onMorePanelKeydown(event: KeyboardEvent): void;
     readonly rectangleElements: i0.Signal<readonly KbqNavbarRectangleElement[]>;
     readonly resizeStream: Subject<Event>;
     updateExpandedStateForItems: () => void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbar, "kbq-navbar", never, {}, {}, ["rectangleElements", "navbarItems"], ["[kbq-navbar-container], kbq-navbar-container"], true, [{ directive: typeof i2.KbqOverlayLayerExclude; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbar, "kbq-navbar", never, {}, {}, ["rectangleElements", "navbarItems"], ["[kbq-navbar-container], kbq-navbar-container"], true, [{ directive: typeof i1$1.KbqOverlayLayerExclude; inputs: {}; outputs: {}; }, { directive: typeof i1$1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbar, never>;
 }
@@ -132,7 +145,7 @@ export class KbqNavbarBrand implements AfterContentInit {
 // @public (undocumented)
 export class KbqNavbarContainer {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarContainer, "kbq-navbar-container", never, {}, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarContainer, "kbq-navbar-container, [kbq-navbar-container]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarContainer, never>;
 }
@@ -201,8 +214,10 @@ export class KbqNavbarItem implements AfterContentInit {
     get hasCroppedText(): boolean;
     get hasDropDownTrigger(): boolean;
     readonly icon: Signal<KbqIcon | undefined>;
+    readonly inMorePanel: i0.WritableSignal<boolean>;
     readonly isCollapsed: Signal<boolean>;
     measureWidths(): void;
+    protected get morePanelText(): string | null;
     readonly navbarFocusableItem: KbqNavbarFocusableItem;
     ngAfterContentInit(): void;
     protected onKeyDown($event: KeyboardEvent): void;
@@ -265,7 +280,7 @@ export class KbqNavbarModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqNavbarModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqNavbarModule, never, [typeof i1$1.A11yModule, typeof i2$1.PlatformModule, typeof i3.KbqIconModule, typeof i1.KbqToolTipModule, typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento, typeof KbqNavbarItemContent, typeof KbqNavbarItemSuffix], [typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento, typeof KbqNavbarItemContent, typeof KbqNavbarItemSuffix]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqNavbarModule, never, [typeof i1$2.A11yModule, typeof i2.PlatformModule, typeof i3.KbqIconModule, typeof i1.KbqToolTipModule, typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento, typeof KbqNavbarItemContent, typeof KbqNavbarItemSuffix], [typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento, typeof KbqNavbarItemContent, typeof KbqNavbarItemSuffix]>;
 }
 
 // @public
@@ -275,22 +290,26 @@ export type KbqNavbarNestedElement = KbqButton | KbqFormField | KbqNavbarItemTri
 export type KbqNavbarOrientation = 'horizontal' | 'vertical';
 
 // @public (undocumented)
-export class KbqNavbarRectangleElement {
+export class KbqNavbarRectangleElement implements KbqOverflowFitItem {
     constructor();
+    readonly alwaysVisible: i0.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     readonly button: Signal<KbqButtonCssStyler | undefined>;
     get collapsed(): boolean;
     set collapsed(value: boolean);
     readonly collapsedState: Signal<boolean>;
+    readonly element: HTMLElement;
     getOuterElementWidth(): number;
+    readonly hidden: Signal<boolean>;
+    hide(): void;
     protected readonly isBrowser: boolean;
     readonly isHorizontal: Signal<boolean>;
     readonly isVertical: Signal<boolean>;
-    protected readonly nativeElement: HTMLElement;
     get orientation(): KbqNavbarOrientation;
     set orientation(value: KbqNavbarOrientation);
+    show(): void;
     readonly state: Subject<void>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarRectangleElement, "kbq-navbar-item, [kbq-navbar-item], kbq-navbar-divider, kbq-navbar-brand, [kbq-navbar-brand]", never, {}, {}, ["button"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarRectangleElement, "kbq-navbar-item, [kbq-navbar-item], kbq-navbar-divider, kbq-navbar-brand, [kbq-navbar-brand]", never, { "alwaysVisible": { "alias": "alwaysVisible"; "required": false; "isSignal": true; }; }, {}, ["button"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarRectangleElement, never>;
 }
@@ -319,7 +338,7 @@ export class KbqNavbarToggle implements OnDestroy {
     ngOnDestroy(): void;
     toggle(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarToggle, "kbq-navbar-toggle, [kbq-navbar-toggle]", never, {}, {}, never, ["[kbq-icon]"], true, [{ directive: typeof i1$1.CdkMonitorFocus; inputs: {}; outputs: {}; }, { directive: typeof i1.KbqTooltipTrigger; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarToggle, "kbq-navbar-toggle, [kbq-navbar-toggle]", never, {}, {}, never, ["[kbq-icon]"], true, [{ directive: typeof i1$2.CdkMonitorFocus; inputs: {}; outputs: {}; }, { directive: typeof i1.KbqTooltipTrigger; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarToggle, never>;
 }
@@ -349,7 +368,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     readonly rectangleElements: i0.Signal<readonly KbqNavbarRectangleElement[]>;
     toggle(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqVerticalNavbar, "kbq-vertical-navbar", ["KbqVerticalNavbar"], { "openOver": { "alias": "openOver"; "required": false; "isSignal": true; }; "expanded": { "alias": "expanded"; "required": false; "isSignal": true; }; }, { "expanded": "expandedChange"; }, ["rectangleElements", "items", "bento"], ["[kbq-navbar-container], kbq-navbar-container", "[kbq-navbar-toggle], kbq-navbar-toggle"], true, [{ directive: typeof i1$1.CdkMonitorFocus; inputs: {}; outputs: {}; }, { directive: typeof i2.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }, { directive: typeof i2.KbqOverlayLayerExclude; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqVerticalNavbar, "kbq-vertical-navbar", ["KbqVerticalNavbar"], { "openOver": { "alias": "openOver"; "required": false; "isSignal": true; }; "expanded": { "alias": "expanded"; "required": false; "isSignal": true; }; }, { "expanded": "expandedChange"; }, ["rectangleElements", "items", "bento"], ["[kbq-navbar-container], kbq-navbar-container", "[kbq-navbar-toggle], kbq-navbar-toggle"], true, [{ directive: typeof i1$2.CdkMonitorFocus; inputs: {}; outputs: {}; }, { directive: typeof i1$1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }, { directive: typeof i1$1.KbqOverlayLayerExclude; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqVerticalNavbar, never>;
 }

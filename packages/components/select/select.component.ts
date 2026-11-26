@@ -2,6 +2,22 @@ import { CdkMonitorFocus, InteractivityChecker } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { SelectionModel } from '@angular/cdk/collections';
 import {
+    BACKSPACE,
+    DELETE,
+    DOWN_ARROW,
+    END,
+    ENTER,
+    ESCAPE,
+    HOME,
+    LEFT_ARROW,
+    PAGE_DOWN,
+    PAGE_UP,
+    RIGHT_ARROW,
+    SPACE,
+    TAB,
+    UP_ARROW
+} from '@angular/cdk/keycodes';
+import {
     CdkConnectedOverlay,
     CdkOverlayOrigin,
     type ConnectedPosition,
@@ -72,20 +88,13 @@ import {
 } from 'rxjs';
 import {
     ActiveDescendantKeyManager,
-    BACKSPACE,
     type CanUpdateErrorState,
     defaultOffsetY,
-    DELETE,
-    DOWN_ARROW,
-    END,
-    ENTER,
     ErrorStateMatcher,
-    ESCAPE,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
     getKbqSelectNonFunctionValueError,
     getSelectAllState,
-    HOME,
     isInput,
     isSelectAll,
     isUndefined,
@@ -129,17 +138,10 @@ import {
     type KbqSiblingPopup,
     kbqSiblingPopupProvider,
     KbqVirtualOption,
-    LEFT_ARROW,
-    PAGE_DOWN,
-    PAGE_UP,
-    RIGHT_ARROW,
     runClearPredicate,
     runCompareWith,
     shouldSelectSearchText,
-    SPACE,
-    TAB,
-    toggleSelectAll,
-    UP_ARROW
+    toggleSelectAll
 } from '@koobiq/components/core';
 import {
     KBQ_FORM_FIELD,

@@ -1,6 +1,6 @@
 import { afterNextRender, ChangeDetectionStrategy, Component } from '@angular/core';
 import { kbqInjectNativeElement } from '@koobiq/components/core';
-import { KbqDd, KbqDl, KbqDt } from './dl';
+import { KbqDd, KbqDl, KbqDt, KbqDtCaption } from './dl';
 
 @Component({
     selector: 'e2e-dl-states',
@@ -164,3 +164,43 @@ export class E2eDlResizerStates {
     }
 })
 export class E2eDlResizable {}
+
+@Component({
+    selector: 'e2e-dl-caption',
+    imports: [KbqDl, KbqDt, KbqDtCaption, KbqDd],
+    template: `
+        <div class="e2e-dl-caption" data-testid="e2eScreenshotTarget">
+            <!-- Horizontal, then vertical -->
+            @for (vertical of [false, true]; track vertical) {
+                <kbq-dl [vertical]="vertical">
+                    <kbq-dt>
+                        Incident type
+                        <span kbqDtCaption>incident.type</span>
+                    </kbq-dt>
+                    <kbq-dd>Malware infection</kbq-dd>
+                    <kbq-dt>Term without caption</kbq-dt>
+                    <kbq-dd>Description</kbq-dd>
+                    <kbq-dt>
+                        Hash
+                        <span kbqDtCaption>incident.attachment.sha256_checksum</span>
+                    </kbq-dt>
+                    <kbq-dd>5cfeaa7084b508d0ea762d8cfed396b6029eed6005d381b16e725755ec801014</kbq-dd>
+                </kbq-dl>
+            }
+        </div>
+    `,
+    styles: `
+        .e2e-dl-caption {
+            display: flex;
+            flex-direction: column;
+            gap: var(--kbq-size-xl);
+            width: 480px;
+            padding: var(--kbq-size-s);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eDlCaption'
+    }
+})
+export class E2eDlCaption {}

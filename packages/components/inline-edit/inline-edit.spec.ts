@@ -1,4 +1,4 @@
-import { ENTER, SPACE } from '@angular/cdk/keycodes';
+import { ENTER, ESCAPE, SPACE, TAB } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import {
     type CdkConnectedOverlay,
@@ -26,11 +26,9 @@ import {
     createKeyboardEvent,
     dispatchEvent,
     dispatchKeyboardEvent,
-    ESCAPE,
     KbqOptionModule,
     KbqOverlayLayer,
-    ruRULocaleData,
-    TAB
+    ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqDatepicker, KbqDatepickerInput, KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';

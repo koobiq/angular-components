@@ -1,5 +1,6 @@
 import { _IdGenerator, CdkMonitorFocus, FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
+import { hasModifierKey } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
 import { ViewportRuler } from '@angular/cdk/scrolling';
@@ -29,12 +30,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { startWith } from 'rxjs';
-import {
-    hasModifierKey,
-    KBQ_WINDOW,
-    kbqInjectA11yLocaleConfiguration,
-    kbqInjectNativeElement
-} from '@koobiq/components/core';
+import { KBQ_WINDOW, kbqInjectA11yLocaleConfiguration, kbqInjectNativeElement } from '@koobiq/components/core';
 import {
     KbqResizable,
     KbqResizer,

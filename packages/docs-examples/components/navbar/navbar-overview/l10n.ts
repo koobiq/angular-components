@@ -9,6 +9,8 @@ export interface ExampleTranslation {
     dashboards: string;
     tasks: string;
     projects: string;
+    reports: string;
+    integrations: string;
     newTask: string;
     notifications: string;
     administration: string;
@@ -26,6 +28,8 @@ export const TRANSLATIONS: Translations<ExampleTranslation> = {
         dashboards: 'Дашборды',
         tasks: 'Задачи',
         projects: 'Проекты',
+        reports: 'Отчёты',
+        integrations: 'Интеграции',
         newTask: 'Новая задача',
         notifications: 'Уведомления',
         administration: 'Администрирование',
@@ -47,6 +51,8 @@ export const TRANSLATIONS: Translations<ExampleTranslation> = {
         dashboards: 'Dashboards',
         tasks: 'Tasks',
         projects: 'Projects',
+        reports: 'Reports',
+        integrations: 'Integrations',
         newTask: 'New task',
         notifications: 'Notifications',
         administration: 'Administration',

@@ -8,7 +8,7 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { KBQ_TITLE_TEXT_REF, KbqHighlightBackgroundPipe, KbqOption } from '@koobiq/components/core';
+import { KBQ_GROUP_OPTION, KBQ_TITLE_TEXT_REF, KbqHighlightBackgroundPipe, KbqOption } from '@koobiq/components/core';
 import { CitiesByFilterPipe } from './cities-by-filter.pipe';
 import type { KbqTimezoneZone } from './timezone.models';
 import { filterCitiesBySearchString, offsetFormatter, resolveZoneOffset } from './timezone.utils';
@@ -33,6 +33,10 @@ import { UtcOffsetPipe } from './utc-offset.pipe';
         // only when that subclass has no decorator of its own, and this one has.
         {
             provide: KBQ_TITLE_TEXT_REF,
+            useExisting: forwardRef(() => KbqTimezoneOption)
+        },
+        {
+            provide: KBQ_GROUP_OPTION,
             useExisting: forwardRef(() => KbqTimezoneOption)
         }
     ],

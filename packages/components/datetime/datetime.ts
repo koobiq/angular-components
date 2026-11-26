@@ -1,4 +1,5 @@
 import { _IdGenerator, FocusMonitor, InputModalityDetector } from '@angular/cdk/a11y';
+import { BACKSPACE, hasModifierKey, LEFT_ARROW, RIGHT_ARROW } from '@angular/cdk/keycodes';
 import { DOCUMENT } from '@angular/common';
 import {
     type AfterContentInit,
@@ -38,16 +39,12 @@ import {
     type Validator
 } from '@angular/forms';
 import {
-    BACKSPACE,
     DateAdapter,
     ErrorStateMatcher,
-    hasModifierKey,
     KbqErrorStateTracker,
     KbqFieldSizingContent,
     kbqInjectA11yLocaleConfiguration,
-    kbqSetSelectionRange,
-    LEFT_ARROW,
-    RIGHT_ARROW
+    kbqSetSelectionRange
 } from '@koobiq/components/core';
 import { KbqDatepicker, KbqDatepickerInput } from '@koobiq/components/datepicker';
 import { KBQ_FORM_FIELD, KbqFormFieldControl } from '@koobiq/components/form-field';

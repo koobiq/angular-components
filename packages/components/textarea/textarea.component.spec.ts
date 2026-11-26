@@ -1,4 +1,5 @@
-﻿import { Component, Directive, ElementRef, inject, type Provider, signal, type Type, viewChild } from '@angular/core';
+﻿import { ESCAPE } from '@angular/cdk/keycodes';
+import { Component, Directive, ElementRef, inject, type Provider, signal, type Type, viewChild } from '@angular/core';
 import { type ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import {
     type AsyncValidatorFn,
@@ -18,7 +19,6 @@ import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     ErrorStateMatcher,
-    ESCAPE,
     KBQ_WINDOW,
     kbqErrorStateMatcherProvider,
     ShowOnControlDirtyErrorStateMatcher,

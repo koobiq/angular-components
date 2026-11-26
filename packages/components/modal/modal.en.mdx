@@ -176,3 +176,11 @@ A toast notification will briefly report the result of an operation or show a co
 **A new page** replaces a modal window when a lot of content, a long form, or a list needs to be shown. This approach allows content to be presented fully, with focus and without loss of functionality (for example, navigation).
 
 **The "Undo changes" pattern.** Instead of a "Are you sure?" modal dialog, it is often better to immediately perform the operation — and give the ability to undo it.
+
+### Close interception
+
+Any close attempt — a backdrop click, Escape, the close button, or a call from code — can be intercepted to ask for confirmation before unsaved changes are lost. The guard can be asynchronous: while the decision is pending, repeated close attempts are ignored.
+
+You can set the guard when the dialog opens or replace it afterwards — the latter takes precedence. It works alongside the existing close veto from the button click handlers: either mechanism can keep the dialog open. Programmatic closing goes through the guard too: it sees the close reason and can, for example, ask no confirmation when the dialog is closed from code. When closing by backdrop or Escape is disabled, the matching trigger never reaches the guard.
+
+<Example id="modal-keep-open-on-error" />

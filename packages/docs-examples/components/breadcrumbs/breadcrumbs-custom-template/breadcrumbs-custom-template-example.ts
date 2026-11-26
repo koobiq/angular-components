@@ -25,6 +25,7 @@ import { TRANSLATIONS } from './l10n';
                         *kbqBreadcrumbView
                         tabindex="-1"
                         kbq-button
+                        kbq-title
                         kbqBreadcrumb
                         [focusable]="!$last"
                         [routerLink]="breadcrumb.url"

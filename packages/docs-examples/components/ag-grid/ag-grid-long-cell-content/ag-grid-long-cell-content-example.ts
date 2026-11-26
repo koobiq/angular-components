@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal, viewChild } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AgGridModule, type ICellRendererAngularComp } from 'ag-grid-angular';
 import { AllCommunityModule, type ColDef, type ICellRendererParams, ModuleRegistry } from 'ag-grid-community';
-import { filter, fromEvent } from 'rxjs';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { PopUpPlacements, PopUpSizes } from '@koobiq/components/core';
@@ -10,31 +8,23 @@ import { KbqLink } from '@koobiq/components/link';
 import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { exampleOnCellEnter } from '../cell-keyboard';
+import { ExampleIncidentBadgeCell } from '../incident-cells';
+import {
+    exampleGetIncidents,
+    type ExampleSecurityIncident,
+    type ExampleTechniqueId,
+    exampleTechniqueLabel,
+    exampleTechniqueUrl
+} from '../security-incidents';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-type ExampleRowData = {
-    event: string;
-    hosts: string[];
-    techniques: string[];
-    status: string;
-};
-
 type ExampleTechnique = {
     id: string;
     url: string;
-};
-
-// The grid keeps focus on the cell itself and Tab never reaches the controls inside it,
-// so Enter on the focused cell is handled instead.
-const onCellEnter = (cell: HTMLElement, destroyRef: DestroyRef, callback: (event: KeyboardEvent) => void): void => {
-    fromEvent<KeyboardEvent>(cell, 'keydown')
-        .pipe(
-            filter(({ key, target }) => key === 'Enter' && target === cell),
-            takeUntilDestroyed(destroyRef)
-        )
-        .subscribe(callback);
+    label: string;
 };
 
 @Component({
@@ -42,18 +32,18 @@ const onCellEnter = (cell: HTMLElement, destroyRef: DestroyRef, callback: (event
     imports: [KbqOverflowItems, KbqOverflowItem, KbqOverflowItemsResult, KbqBadgeModule, KbqLink],
     template: `
         @if (collapsed()) {
-            <div #overflow="kbqOverflowItems" kbqOverflowItems wrap="wrap" class="example-hosts example-hosts_one-row">
+            <div #overflow="kbqOverflowItems" kbqOverflowItems class="example-hosts">
                 @for (host of hosts(); track host) {
-                    <kbq-badge class="layout-margin-right-xxs" [kbqOverflowItem]="host">{{ host }}</kbq-badge>
+                    <kbq-badge compact class="layout-margin-right-xxs" [kbqOverflowItem]="host">{{ host }}</kbq-badge>
                 }
                 <a kbqLink pseudo kbqOverflowItemsResult (click)="collapsed.set(false)">
                     {{ t().moreCount(overflow.hiddenItemIDs().size) }}
                 </a>
             </div>
         } @else {
-            <div class="example-hosts">
+            <div class="example-hosts example-hosts_expanded">
                 @for (host of hosts(); track host) {
-                    <kbq-badge class="layout-margin-right-xxs">{{ host }}</kbq-badge>
+                    <kbq-badge compact class="layout-margin-right-xxs">{{ host }}</kbq-badge>
                 }
             </div>
             <a kbqLink pseudo (click)="collapsed.set(true)">{{ t().collapseLink }}</a>
@@ -67,18 +57,16 @@ const onCellEnter = (cell: HTMLElement, destroyRef: DestroyRef, callback: (event
 
         .example-hosts {
             display: flex;
-            flex-wrap: wrap;
             align-items: center;
             row-gap: var(--kbq-size-xxs);
         }
 
-        /* One row of badges: the directive hides what does not fit into it and shows the trigger instead. */
-        .example-hosts_one-row {
-            max-height: var(--kbq-size-xxl);
+        .example-hosts_expanded {
+            flex-wrap: wrap;
         }
 
-        .kbq-overflow-items-result {
-            white-space: nowrap;
+        .example-hosts > * {
+            flex-shrink: 0;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -93,9 +81,9 @@ export class ExampleOverflowBadgesCellRenderer implements ICellRendererAngularCo
     protected readonly collapsed = signal(true);
     protected readonly t = injectTranslation(TRANSLATIONS);
 
-    agInit(params: ICellRendererParams<ExampleRowData, string[]>): void {
+    agInit(params: ICellRendererParams<ExampleSecurityIncident, string[]>): void {
         this.hosts.set(params.value ?? []);
-        onCellEnter(params.eGridCell, this.destroyRef, () => {
+        exampleOnCellEnter(params.eGridCell, this.destroyRef, () => {
             // A collapsed cell with everything already visible has nothing to expand.
             if (this.collapsed() && !this.overflowItems()?.hiddenItemIDs().size) return;
 
@@ -103,7 +91,7 @@ export class ExampleOverflowBadgesCellRenderer implements ICellRendererAngularCo
         });
     }
 
-    refresh(params: ICellRendererParams<ExampleRowData, string[]>): boolean {
+    refresh(params: ICellRendererParams<ExampleSecurityIncident, string[]>): boolean {
         this.hosts.set(params.value ?? []);
 
         return true;
@@ -121,6 +109,8 @@ export class ExampleOverflowBadgesCellRenderer implements ICellRendererAngularCo
                     target="_blank"
                     rel="noopener noreferrer"
                     [kbqOverflowItem]="technique.id"
+                    [attr.aria-label]="technique.label"
+                    [title]="technique.label"
                     [href]="technique.url"
                     [class.layout-margin-right-s]="!$last"
                 >
@@ -147,7 +137,9 @@ export class ExampleOverflowBadgesCellRenderer implements ICellRendererAngularCo
         <ng-template #allTechniquesContent>
             <div class="example-all-techniques">
                 @for (technique of techniques(); track technique.id) {
-                    <a kbqLink target="_blank" rel="noopener noreferrer" [href]="technique.url">{{ technique.id }}</a>
+                    <a kbqLink target="_blank" rel="noopener noreferrer" [href]="technique.url">
+                        {{ technique.label }}
+                    </a>
                 }
             </div>
         </ng-template>
@@ -182,23 +174,22 @@ export class ExampleOverflowLinksCellRenderer implements ICellRendererAngularCom
     protected readonly popoverVisible = signal(false);
     protected readonly techniques = signal<ExampleTechnique[]>([]);
 
-    agInit(params: ICellRendererParams<ExampleRowData, string[]>): void {
+    agInit(params: ICellRendererParams<ExampleSecurityIncident, ExampleTechniqueId[]>): void {
         this.setTechniques(params.value);
-        onCellEnter(params.eGridCell, this.destroyRef, () => {
+        exampleOnCellEnter(params.eGridCell, this.destroyRef, () => {
             if (this.overflowItems().hiddenItemIDs().size) this.popoverVisible.set(true);
         });
     }
 
-    refresh(params: ICellRendererParams<ExampleRowData, string[]>): boolean {
+    refresh(params: ICellRendererParams<ExampleSecurityIncident, ExampleTechniqueId[]>): boolean {
         this.setTechniques(params.value);
 
         return true;
     }
 
-    private setTechniques(ids: string[] | null | undefined): void {
-        // A sub-technique page is nested under its parent: T1110.001 lives at /techniques/T1110/001/.
+    private setTechniques(ids: ExampleTechniqueId[] | null | undefined): void {
         this.techniques.set(
-            (ids ?? []).map((id) => ({ id, url: `https://attack.mitre.org/techniques/${id.replace('.', '/')}/` }))
+            (ids ?? []).map((id) => ({ id, url: exampleTechniqueUrl(id), label: exampleTechniqueLabel(id) }))
         );
     }
 }
@@ -215,7 +206,7 @@ export class ExampleOverflowLinksCellRenderer implements ICellRendererAngularCom
             kbqAgGridThemeDisableCellFocusStyles
             [style.height.px]="400"
             [columnDefs]="columnDefs()"
-            [rowData]="rowData()"
+            [rowData]="rowData"
         />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -223,7 +214,7 @@ export class ExampleOverflowLinksCellRenderer implements ICellRendererAngularCom
 export class AgGridLongCellContentExample {
     private readonly t = injectTranslation(TRANSLATIONS);
 
-    protected readonly columnDefs = computed<ColDef<ExampleRowData>[]>(() => [
+    protected readonly columnDefs = computed<ColDef<ExampleSecurityIncident>[]>(() => [
         {
             field: 'event',
             headerName: this.t().eventHeader,
@@ -251,18 +242,11 @@ export class AgGridLongCellContentExample {
         },
         {
             field: 'status',
+            cellRenderer: ExampleIncidentBadgeCell,
             headerName: this.t().statusHeader,
             flex: 1,
             minWidth: 120
         }
     ]);
-
-    // Repeats of the events above, enough rows to scroll and to see the grid recalculate the cells it renders.
-    protected readonly rowData = computed<ExampleRowData[]>(() =>
-        Array.from({ length: 100 }, (_, index) => {
-            const event = this.t().events[index % this.t().events.length]!;
-
-            return { ...event, event: `${event.event} ${index + 1}` };
-        })
-    );
+    protected readonly rowData = exampleGetIncidents();
 }

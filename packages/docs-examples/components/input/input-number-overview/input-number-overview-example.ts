@@ -80,10 +80,13 @@ import { TRANSLATIONS } from './l10n';
             </div>
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    }
 })
 export class InputNumberOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-    value = '';
-    integerValue = '';
+    protected value = 10000.7;
+    protected integerValue = 10000;
 }

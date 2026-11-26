@@ -1,7 +1,17 @@
 import { type FocusableOption, FocusKeyManager } from '@angular/cdk/a11y';
 import { type Direction, Directionality } from '@angular/cdk/bidi';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
-import { ENTER, hasModifierKey, SPACE } from '@angular/cdk/keycodes';
+import {
+    DOWN_ARROW,
+    END,
+    ENTER,
+    hasModifierKey,
+    HOME,
+    LEFT_ARROW,
+    RIGHT_ARROW,
+    SPACE,
+    UP_ARROW
+} from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { normalizePassiveListenerOptions, Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
@@ -40,17 +50,11 @@ import {
     timer
 } from 'rxjs';
 import {
-    DOWN_ARROW,
-    END,
-    HOME,
     KBQ_WINDOW,
     kbqAnimationsDisabled,
     kbqGetScrollOverflowTolerance,
     kbqHasScrollOverflow,
-    kbqOptionalNumberAttribute,
-    LEFT_ARROW,
-    RIGHT_ARROW,
-    UP_ARROW
+    kbqOptionalNumberAttribute
 } from '@koobiq/components/core';
 import { KBQ_SCROLLBAR_OPTIONS, type KbqScrollbarMode, type KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 

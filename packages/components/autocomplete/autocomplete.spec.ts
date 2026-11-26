@@ -1,4 +1,5 @@
 ﻿import { Directionality } from '@angular/cdk/bidi';
+import { DOWN_ARROW, ENTER, ESCAPE, RIGHT_ARROW, SPACE, TAB, UP_ARROW } from '@angular/cdk/keycodes';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import { AsyncPipe } from '@angular/common';
@@ -29,9 +30,6 @@ import {
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
-    DOWN_ARROW,
-    ENTER,
-    ESCAPE,
     KBQ_PANEL_DEFAULT_MIN_WIDTH,
     KbqLocaleServiceModule,
     KbqOption,
@@ -40,11 +38,7 @@ import {
     type KbqPanelMaxWidth,
     type KbqPanelWidth,
     type KbqTextQuery,
-    RIGHT_ARROW,
-    SPACE,
-    TAB,
-    typeInElement,
-    UP_ARROW
+    typeInElement
 } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';

@@ -69,7 +69,7 @@ import { ViewContainerRef } from '@angular/core';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import { WritableSignal } from '@angular/core';
 
-// @public
+// @public @deprecated (undocumented)
 export const A = 65;
 
 // @public @deprecated (undocumented)
@@ -158,25 +158,25 @@ export class ActiveDescendantKeyManager<T> extends ListKeyManager<Highlightable 
     setActiveItem(item: T): void;
 }
 
-// @public
+// @public @deprecated (undocumented)
 export const ALT = 18;
 
-// @public
+// @public @deprecated (undocumented)
 export const APOSTROPHE = 192;
 
 // @public (undocumented)
 export const applyPopupMargins: (renderer: Renderer2, element: HTMLElement, name: string, value: string) => void;
 
-// @public
+// @public @deprecated (undocumented)
 export const AT_SIGN = 64;
 
-// @public
+// @public @deprecated (undocumented)
 export const B = 66;
 
-// @public
+// @public @deprecated (undocumented)
 export const BACKSLASH = 220;
 
-// @public
+// @public @deprecated (undocumented)
 export const BACKSPACE = 8;
 
 // @public @deprecated (undocumented)
@@ -200,7 +200,7 @@ export abstract class BaseLocaleAwareFormatterPipe<D, Value = D | string | null 
     transform(value: Value, ...args: Args): string;
 }
 
-// @public
+// @public @deprecated (undocumented)
 export const C = 67;
 
 // @public
@@ -209,22 +209,25 @@ export interface CanUpdateErrorState {
     updateErrorState(): void;
 }
 
-// @public
+// @public @deprecated (undocumented)
 export const CAPS_LOCK = 20;
 
 // @public
 export function checkAndNormalizeLocalizedNumber(num: string | null | undefined, locale?: string): number | null;
 
-// @public
+// @public @deprecated (undocumented)
 export const CLOSE_SQUARE_BRACKET = 221;
 
 // @public
+export function coerceCanCloseDecision(decision: Promise<boolean> | Observable<boolean>): Observable<boolean>;
+
+// @public @deprecated (undocumented)
 export const COMMA = 188;
 
-// @public
+// @public @deprecated (undocumented)
 export const CONTEXT_MENU = 93;
 
-// @public
+// @public @deprecated (undocumented)
 export const CONTROL = 17;
 
 // @public
@@ -245,10 +248,10 @@ export function createTouchEvent(type: string, pageX?: number, pageY?: number): 
 // @public
 export type CrossFieldErrorScope = (errorKey: string, errorValue: unknown) => readonly string[] | null;
 
-// @public
+// @public @deprecated (undocumented)
 export const D = 68;
 
-// @public
+// @public @deprecated (undocumented)
 export const DASH = 189;
 
 // @public (undocumented)
@@ -272,7 +275,7 @@ export class DateFormatter<D> extends DateFormatter_2<D> {
 // @public
 export const defaultOffsetY: number;
 
-// @public
+// @public @deprecated (undocumented)
 export const DELETE = 46;
 
 // @public
@@ -291,7 +294,7 @@ export function dispatchMouseEvent(node: Node, type: string, x?: number, y?: num
 // @public
 export function dispatchTouchEvent(node: Node, type: string, x?: number, y?: number): Event;
 
-// @public
+// @public @deprecated (undocumented)
 export const DOWN_ARROW = 40;
 
 // @public @deprecated (undocumented)
@@ -354,10 +357,10 @@ export class DurationShortFormatterPipe<D> extends BaseFormatterPipe<D> implemen
     static ɵpipe: i0.ɵɵPipeDeclaration<DurationShortFormatterPipe<any>, "durationShort", true>;
 }
 
-// @public
+// @public @deprecated (undocumented)
 export const E = 69;
 
-// @public
+// @public @deprecated (undocumented)
 export const EIGHT = 56;
 
 // @public (undocumented)
@@ -368,10 +371,10 @@ export class EmptyFocusTrapStrategy implements FocusTrapInertStrategy {
     preventFocus(): void;
 }
 
-// @public
+// @public @deprecated (undocumented)
 export const END = 35;
 
-// @public
+// @public @deprecated (undocumented)
 export const ENTER = 13;
 
 // @public (undocumented)
@@ -556,12 +559,14 @@ export const enUSLocaleData: {
         closeText: string;
         showMoreText: string;
         moreText: string;
+        showMoreTextCompact: string;
     };
     navbar: {
         toggle: {
             expand: string;
             collapse: string;
         };
+        more: string;
     };
     searchExpandable: {
         tooltip: string;
@@ -641,7 +646,7 @@ export const enUSLocaleData: {
     };
 };
 
-// @public
+// @public @deprecated (undocumented)
 export const EQUALS = 187;
 
 // @public
@@ -654,7 +659,7 @@ export class ErrorStateMatcher {
     static ɵprov: i0.ɵɵInjectableDeclaration<ErrorStateMatcher>;
 }
 
-// @public
+// @public @deprecated (undocumented)
 export const ESCAPE = 27;
 
 // @public
@@ -845,12 +850,14 @@ export const esLALocaleData: {
         closeText: string;
         showMoreText: string;
         moreText: string;
+        showMoreTextCompact: string;
     };
     navbar: {
         toggle: {
             expand: string;
             collapse: string;
         };
+        more: string;
     };
     searchExpandable: {
         tooltip: string;
@@ -930,61 +937,61 @@ export const esLALocaleData: {
     };
 };
 
-// @public
+// @public @deprecated (undocumented)
 export const F = 70;
 
-// @public
+// @public @deprecated (undocumented)
 export const F1 = 112;
 
-// @public
+// @public @deprecated (undocumented)
 export const F10 = 121;
 
-// @public
+// @public @deprecated (undocumented)
 export const F11 = 122;
 
-// @public
+// @public @deprecated (undocumented)
 export const F12 = 123;
 
-// @public
+// @public @deprecated (undocumented)
 export const F2 = 113;
 
-// @public
+// @public @deprecated (undocumented)
 export const F3 = 114;
 
-// @public
+// @public @deprecated (undocumented)
 export const F4 = 115;
 
-// @public
+// @public @deprecated (undocumented)
 export const F5 = 116;
 
-// @public
+// @public @deprecated (undocumented)
 export const F6 = 117;
 
-// @public
+// @public @deprecated (undocumented)
 export const F7 = 118;
 
-// @public
+// @public @deprecated (undocumented)
 export const F8 = 119;
 
-// @public
+// @public @deprecated (undocumented)
 export const F9 = 120;
 
-// @public
+// @public @deprecated (undocumented)
 export const FF_EQUALS = 61;
 
-// @public
+// @public @deprecated (undocumented)
 export const FF_MINUS = 173;
 
-// @public
+// @public @deprecated (undocumented)
 export const FF_MUTE = 181;
 
-// @public
+// @public @deprecated (undocumented)
 export const FF_SEMICOLON = 59;
 
-// @public
+// @public @deprecated (undocumented)
 export const FF_VOLUME_DOWN = 182;
 
-// @public
+// @public @deprecated (undocumented)
 export const FF_VOLUME_UP = 183;
 
 // @public
@@ -996,10 +1003,10 @@ export class FileValidators {
 // @public
 export function findSearchMatchRanges(value: string, tokens: readonly string[]): Array<[number, number]>;
 
-// @public
+// @public @deprecated (undocumented)
 export const FIRST_MEDIA = 166;
 
-// @public
+// @public @deprecated (undocumented)
 export const FIVE = 53;
 
 // @public (undocumented)
@@ -1013,10 +1020,10 @@ export class FocusKeyManager<T> extends ListKeyManager<IFocusableOption & T> {
 // @public
 export function formatNumberWithLocale(value: unknown, formatter: Intl.NumberFormat, options?: KbqNumberFormatOptions): string;
 
-// @public
+// @public @deprecated (undocumented)
 export const FOUR = 52;
 
-// @public
+// @public @deprecated (undocumented)
 export const G = 71;
 
 // @public
@@ -1052,7 +1059,7 @@ export function getSafeTriangleVertices(origin: KbqPoint, targetRect: DOMRect): 
 // @public
 export function getSelectAllState<T>(adapter: KbqSelectAllAdapter<T>): KbqPseudoCheckboxState;
 
-// @public
+// @public @deprecated (undocumented)
 export const H = 72;
 
 // Warning: (ae-forgotten-export) The symbol "ModifierKey" needs to be exported by the entry point koobiq-components-core.d.ts
@@ -1068,10 +1075,10 @@ export interface Highlightable extends ListKeyManagerOption {
     setInactiveStyles(): void;
 }
 
-// @public
+// @public @deprecated (undocumented)
 export const HOME = 36;
 
-// @public
+// @public @deprecated (undocumented)
 export const I = 73;
 
 // @public
@@ -1080,7 +1087,7 @@ export interface IFocusableOption extends ListKeyManagerOption {
     focus(origin?: FocusOrigin): void;
 }
 
-// @public
+// @public @deprecated (undocumented)
 export const INSERT = 45;
 
 // @public @deprecated (undocumented)
@@ -1152,10 +1159,10 @@ export const isUndefined: (value: unknown) => value is undefined;
 // @public
 export function isVerticalMovement(input: KeyboardEvent): boolean;
 
-// @public
+// @public @deprecated (undocumented)
 export const J = 74;
 
-// @public
+// @public @deprecated (undocumented)
 export const K = 75;
 
 // @public
@@ -1381,12 +1388,14 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             closeText: string;
             showMoreText: string;
             moreText: string;
+            showMoreTextCompact: string;
         };
         navbar: {
             toggle: {
                 expand: string;
                 collapse: string;
             };
+            more: string;
         };
         searchExpandable: {
             tooltip: string;
@@ -1645,12 +1654,14 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             closeText: string;
             showMoreText: string;
             moreText: string;
+            showMoreTextCompact: string;
         };
         navbar: {
             toggle: {
                 expand: string;
                 collapse: string;
             };
+            more: string;
         };
         searchExpandable: {
             tooltip: string;
@@ -1905,12 +1916,14 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             closeText: string;
             showMoreText: string;
             moreText: string;
+            showMoreTextCompact: string;
         };
         navbar: {
             toggle: {
                 expand: string;
                 collapse: string;
             };
+            more: string;
         };
         searchExpandable: {
             tooltip: string;
@@ -2171,12 +2184,14 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             closeText: string;
             showMoreText: string;
             moreText: string;
+            showMoreTextCompact: string;
         };
         navbar: {
             toggle: {
                 expand: string;
                 collapse: string;
             };
+            more: string;
         };
         searchExpandable: {
             tooltip: string;
@@ -2433,12 +2448,14 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             closeText: string;
             showMoreText: string;
             moreText: string;
+            showMoreTextCompact: string;
         };
         navbar: {
             toggle: {
                 expand: string;
                 collapse: string;
             };
+            more: string;
         };
         searchExpandable: {
             tooltip: string;
@@ -2533,6 +2550,9 @@ export const KBQ_FORM_FIELD_REF: InjectionToken<KbqFormFieldRef>;
 
 // @public
 export const KBQ_FORMATTERS_LOCALE_CONFIGURATION: InjectionToken<KbqFormattersLocaleConfiguration>;
+
+// @public
+export const KBQ_GROUP_OPTION: InjectionToken<KbqGroupOption>;
 
 // @public (undocumented)
 export const KBQ_INVALID_VALUE_ERROR = "Argument \"value\" must be a finite number!";
@@ -2847,6 +2867,9 @@ export interface KbqBaseFileUploadLocaleConfiguration {
 }
 
 // @public
+export type KbqCanClose = (reason: KbqCloseReason) => boolean | Promise<boolean> | Observable<boolean>;
+
+// @public
 export interface KbqCaretRect {
     height: number;
     width: number;
@@ -2902,8 +2925,12 @@ export type KbqClampedTextLocaleConfiguration = {
     openText: string;
     closeText: string;
     showMoreText: string;
+    showMoreTextCompact?: string;
     moreText: string;
 };
+
+// @public
+export type KbqCloseReason = 'backdrop' | 'escape' | 'close' | 'programmatic';
 
 // @public
 export type KbqCodeBlockLocaleConfiguration = {
@@ -3293,6 +3320,11 @@ export const kbqGetSelectionRect: (element: KbqTextAnchor) => KbqCaretRect | nul
 export const kbqGetTextQuery: (value: string, caret: number, input?: KbqTextQueryOptions) => KbqTextQuery | null;
 
 // @public
+export interface KbqGroupOption {
+    readonly selected: boolean;
+}
+
+// @public
 export const kbqHasScrollOverflow: (element: Element, axis?: KbqScrollAxis) => boolean;
 
 // @public (undocumented)
@@ -3586,6 +3618,7 @@ export type KbqNavbarLocaleConfiguration = {
         expand: string;
         collapse: string;
     };
+    more?: string;
 };
 
 // @public (undocumented)
@@ -3634,15 +3667,26 @@ export interface KbqNumericPipe {
 }
 
 // @public
-export class KbqOptgroup {
+export class KbqOptgroup implements AfterContentInit {
     readonly disabled: i0.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
-    // (undocumented)
+    protected readonly hasProjectedLabel: i0.Signal<boolean>;
     readonly label: i0.InputSignal<string>;
     labelId: string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptgroup, "kbq-optgroup", ["kbqOptgroup"], { "label": { "alias": "label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, never, ["kbq-option, kbq-list-option, kbq-timezone-option, ng-container"], true, never>;
+    ngAfterContentInit(): void;
+    get selectedCount(): number;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptgroup, "kbq-optgroup", ["kbqOptgroup"], { "label": { "alias": "label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, ["projectedLabels", "projectedOptions"], ["kbq-optgroup-label, [kbq-optgroup-label]", "kbq-option, kbq-list-option, kbq-timezone-option, ng-container"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptgroup, never>;
+}
+
+// @public
+export class KbqOptgroupLabel {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOptgroupLabel, "kbq-optgroup-label, [kbq-optgroup-label]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptgroupLabel, never>;
 }
 
 // @public
@@ -3771,7 +3815,7 @@ export class KbqOptionModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqOptionModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqOptionModule, never, [typeof KbqPseudoCheckbox, typeof KbqOption, typeof KbqOptgroup, typeof KbqOptionActionComponent], [typeof KbqOption, typeof KbqOptgroup, typeof KbqOptionActionComponent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqOptionModule, never, [typeof KbqPseudoCheckbox, typeof KbqOption, typeof KbqOptgroup, typeof KbqOptgroupLabel, typeof KbqOptionActionComponent], [typeof KbqOption, typeof KbqOptgroup, typeof KbqOptgroupLabel, typeof KbqOptionActionComponent]>;
 }
 
 // @public
@@ -3798,6 +3842,84 @@ export class KbqOptionSelectionChange<T = KbqOption> {
 
 // @public
 export type KbqOrientation = 'horizontal' | 'vertical';
+
+// @public
+export interface KbqOverflowAxisConfig {
+    // (undocumented)
+    borderEnd: 'borderRightWidth' | 'borderBottomWidth';
+    // (undocumented)
+    borderStart: 'borderLeftWidth' | 'borderTopWidth';
+    // (undocumented)
+    flexDirection: 'row' | 'column';
+    // (undocumented)
+    gap: 'columnGap' | 'rowGap';
+    // (undocumented)
+    isCrossAxisExceeded: (element: HTMLElement) => boolean;
+    // (undocumented)
+    marginEnd: 'marginRight' | 'marginBottom';
+    // (undocumented)
+    marginStart: 'marginLeft' | 'marginTop';
+    // (undocumented)
+    paddingEnd: 'paddingRight' | 'paddingBottom';
+    // (undocumented)
+    paddingStart: 'paddingLeft' | 'paddingTop';
+    // (undocumented)
+    size: 'width' | 'height';
+}
+
+// @public
+export class KbqOverflowFitEngine {
+    constructor(window: Window);
+    containerSubject(container: HTMLElement, orientation: KbqOrientation, wrap: KbqFlexWrap): KbqOverflowFitSubject;
+    deviceThreshold(): number;
+    hasContainerOverflown(container: HTMLElement, orientation: KbqOrientation, wrap: KbqFlexWrap): boolean;
+    hideOverflownItems(items: ReadonlyArray<KbqOverflowFitItem>, subject: KbqOverflowFitSubject, result?: KbqOverflowFitResult, wrap?: KbqFlexWrap): ReadonlyArray<KbqOverflowFitItem>;
+    laidOutChildren(element: Element): Array<{
+        element: Element;
+        style: CSSStyleDeclaration;
+    }>;
+    measureContainer(container: HTMLElement, orientation: KbqOrientation): {
+        overflow: number;
+        sizes: ReadonlyMap<Element, number>;
+    };
+    readonly orientationConfig: Record<KbqOrientation, KbqOverflowAxisConfig>;
+    showAll(items: ReadonlyArray<KbqOverflowFitItem>, result?: KbqOverflowFitResult): void;
+}
+
+// @public
+export interface KbqOverflowFitItem {
+    readonly alwaysVisible: () => boolean;
+    readonly element: Element;
+    readonly hidden: () => boolean;
+    hide(): void;
+    show(): void;
+}
+
+// @public
+export interface KbqOverflowFitResult {
+    // (undocumented)
+    hide(): void;
+    // (undocumented)
+    show(): void;
+}
+
+// @public
+export interface KbqOverflowFitSubject {
+    hasOverflown(): boolean;
+    measure(): {
+        overflow: number;
+        sizes: ReadonlyMap<Element, number>;
+    };
+}
+
+// @public
+export function kbqOverflowRecalculationTriggers(options: {
+    element?: Element;
+    targets?: readonly Element[];
+    additionalTargets: Signal<Element | Element[]>;
+    debounceTime: Signal<number>;
+    extra?: Array<Observable<void>>;
+}): Observable<void>;
 
 // @public
 export class KbqOverflowShadowBottom {
@@ -4808,13 +4930,13 @@ export interface KeyboardNavigationHandler {
     scrollActiveOptionIntoView(): void;
 }
 
-// @public
+// @public @deprecated (undocumented)
 export const L = 76;
 
-// @public
+// @public @deprecated (undocumented)
 export const LAST_MEDIA = 183;
 
-// @public
+// @public @deprecated (undocumented)
 export const LEFT_ARROW = 37;
 
 // @public (undocumented)
@@ -4869,23 +4991,26 @@ export interface ListKeyManagerOption {
     getLabel?(): string;
 }
 
-// @public
+// @public @deprecated (undocumented)
 export const M = 77;
 
-// @public
+// @public @deprecated (undocumented)
 export const MAC_ENTER = 3;
 
-// @public
+// @public @deprecated (undocumented)
 export const MAC_META = 224;
 
-// @public
+// @public @deprecated (undocumented)
 export const MAC_WK_CMD_LEFT = 91;
 
-// @public
+// @public @deprecated (undocumented)
 export const MAC_WK_CMD_RIGHT = 93;
 
-// @public
+// @public @deprecated (undocumented)
 export const META = 91;
+
+// @public
+export const MIN_OVERFLOW_IN_DEVICE_PIXELS = 0.5;
 
 // @public (undocumented)
 export enum MultipleMode {
@@ -4895,13 +5020,13 @@ export enum MultipleMode {
     KEYBOARD = "keyboard"
 }
 
-// @public
+// @public @deprecated (undocumented)
 export const MUTE = 173;
 
-// @public
+// @public @deprecated (undocumented)
 export const N = 78;
 
-// @public
+// @public @deprecated (undocumented)
 export const NINE = 57;
 
 // @public
@@ -4910,73 +5035,73 @@ export function normalizeNumber(value: string | null | undefined, customConfig: 
 // @public
 export function normalizeSearchValue(value: string): string;
 
-// @public
+// @public @deprecated (undocumented)
 export const NUM_CENTER = 12;
 
-// @public
+// @public @deprecated (undocumented)
 export const NUM_LOCK = 144;
 
-// @public
+// @public @deprecated (undocumented)
 export const NUMPAD_DIVIDE = 111;
 
-// @public
+// @public @deprecated (undocumented)
 export const NUMPAD_EIGHT = 104;
 
-// @public
+// @public @deprecated (undocumented)
 export const NUMPAD_FIVE = 101;
 
-// @public
+// @public @deprecated (undocumented)
 export const NUMPAD_FOUR = 100;
 
-// @public
+// @public @deprecated (undocumented)
 export const NUMPAD_MINUS = 109;
 
-// @public
+// @public @deprecated (undocumented)
 export const NUMPAD_MULTIPLY = 106;
 
-// @public
+// @public @deprecated (undocumented)
 export const NUMPAD_NINE = 105;
 
-// @public
+// @public @deprecated (undocumented)
 export const NUMPAD_ONE = 97;
 
-// @public
+// @public @deprecated (undocumented)
 export const NUMPAD_PERIOD = 110;
 
-// @public
+// @public @deprecated (undocumented)
 export const NUMPAD_PLUS = 107;
 
-// @public
+// @public @deprecated (undocumented)
 export const NUMPAD_SEVEN = 103;
 
-// @public
+// @public @deprecated (undocumented)
 export const NUMPAD_SIX = 102;
 
-// @public
+// @public @deprecated (undocumented)
 export const NUMPAD_THREE = 99;
 
-// @public
+// @public @deprecated (undocumented)
 export const NUMPAD_TWO = 98;
 
-// @public
+// @public @deprecated (undocumented)
 export const NUMPAD_ZERO = 96;
 
-// @public
+// @public @deprecated (undocumented)
 export const O = 79;
 
-// @public
+// @public @deprecated (undocumented)
 export const ONE = 49;
 
-// @public
+// @public @deprecated (undocumented)
 export const OPEN_SQUARE_BRACKET = 219;
 
-// @public
+// @public @deprecated (undocumented)
 export const P = 80;
 
-// @public
+// @public @deprecated (undocumented)
 export const PAGE_DOWN = 34;
 
-// @public
+// @public @deprecated (undocumented)
 export const PAGE_UP = 33;
 
 // @public
@@ -4992,13 +5117,13 @@ export class PasswordValidators {
 // @public
 export function patchElementFocus(element: HTMLElement): void;
 
-// @public
+// @public @deprecated (undocumented)
 export const PAUSE = 19;
 
-// @public
+// @public @deprecated (undocumented)
 export const PERIOD = 190;
 
-// @public
+// @public @deprecated (undocumented)
 export const PLUS_SIGN = 43;
 
 // @public (undocumented)
@@ -5070,7 +5195,7 @@ export const POSITION_TO_CSS_MAP: {
     [key: string]: string;
 };
 
-// @public
+// @public @deprecated (undocumented)
 export const PRINT_SCREEN = 44;
 
 // @public (undocumented)
@@ -5254,12 +5379,14 @@ export const ptBRLocaleData: {
         closeText: string;
         showMoreText: string;
         moreText: string;
+        showMoreTextCompact: string;
     };
     navbar: {
         toggle: {
             expand: string;
             collapse: string;
         };
+        more: string;
     };
     searchExpandable: {
         tooltip: string;
@@ -5339,13 +5466,13 @@ export const ptBRLocaleData: {
     };
 };
 
-// @public
+// @public @deprecated (undocumented)
 export const Q = 81;
 
-// @public
+// @public @deprecated (undocumented)
 export const QUESTION_MARK = 63;
 
-// @public
+// @public @deprecated (undocumented)
 export const R = 82;
 
 // @public @deprecated (undocumented)
@@ -5531,7 +5658,7 @@ export class RelativeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> 
 // @public
 export function resolveMultipleMode(value: KbqMultipleInput): MultipleMode | null;
 
-// @public
+// @public @deprecated (undocumented)
 export const RIGHT_ARROW = 39;
 
 // @public (undocumented)
@@ -5730,12 +5857,14 @@ export const ruRULocaleData: {
         closeText: string;
         showMoreText: string;
         moreText: string;
+        showMoreTextCompact: string;
     };
     navbar: {
         toggle: {
             expand: string;
             collapse: string;
         };
+        more: string;
     };
     searchExpandable: {
         tooltip: string;
@@ -5815,19 +5944,19 @@ export const ruRULocaleData: {
     };
 };
 
-// @public
+// @public @deprecated (undocumented)
 export const S = 83;
 
-// @public
+// @public @deprecated (undocumented)
 export const SCROLL_LOCK = 145;
 
-// @public
+// @public @deprecated (undocumented)
 export const SEMICOLON = 186;
 
-// @public
+// @public @deprecated (undocumented)
 export const SEVEN = 55;
 
-// @public
+// @public @deprecated (undocumented)
 export const SHIFT = 16;
 
 // @public
@@ -5871,31 +6000,31 @@ export class ShowRequiredOnSubmitErrorStateMatcher implements ErrorStateMatcher 
     static ɵprov: i0.ɵɵInjectableDeclaration<ShowRequiredOnSubmitErrorStateMatcher>;
 }
 
-// @public
+// @public @deprecated (undocumented)
 export const SINGLE_QUOTE = 222;
 
-// @public
+// @public @deprecated (undocumented)
 export const SIX = 54;
 
-// @public
+// @public @deprecated (undocumented)
 export const SLASH = 191;
 
-// @public
+// @public @deprecated (undocumented)
 export const SPACE = 32;
 
 // @public
 export const supportsNativeDisabled: (element: Element) => boolean;
 
-// @public
+// @public @deprecated (undocumented)
 export const T = 84;
 
-// @public
+// @public @deprecated (undocumented)
 export const TAB = 9;
 
-// @public
+// @public @deprecated (undocumented)
 export const THREE = 51;
 
-// @public
+// @public @deprecated (undocumented)
 export const TILDE = 192;
 
 // @public (undocumented)
@@ -6081,12 +6210,14 @@ export const tkTMLocaleData: {
         closeText: string;
         showMoreText: string;
         moreText: string;
+        showMoreTextCompact: string;
     };
     navbar: {
         toggle: {
             expand: string;
             collapse: string;
         };
+        more: string;
     };
     searchExpandable: {
         tooltip: string;
@@ -6180,19 +6311,19 @@ export enum TransitionCheckState {
     Unchecked = "unchecked"
 }
 
-// @public
+// @public @deprecated (undocumented)
 export const TWO = 50;
 
 // @public
 export function typeInElement(value: string, element: HTMLInputElement): void;
 
-// @public
+// @public @deprecated (undocumented)
 export const U = 85;
 
-// @public
+// @public @deprecated (undocumented)
 export const UP_ARROW = 38;
 
-// @public
+// @public @deprecated (undocumented)
 export const V = 86;
 
 // @public
@@ -6204,28 +6335,28 @@ export const validationTooltipShowDelay = 10;
 // @public (undocumented)
 export const VERSION: Version;
 
-// @public
+// @public @deprecated (undocumented)
 export const VOLUME_DOWN = 174;
 
-// @public
+// @public @deprecated (undocumented)
 export const VOLUME_UP = 175;
 
-// @public
+// @public @deprecated (undocumented)
 export const W = 87;
 
 // @public (undocumented)
 export function wrappedErrorMessage(e: Error): RegExp;
 
-// @public
+// @public @deprecated (undocumented)
 export const X = 88;
 
-// @public
+// @public @deprecated (undocumented)
 export const Y = 89;
 
-// @public
+// @public @deprecated (undocumented)
 export const Z = 90;
 
-// @public
+// @public @deprecated (undocumented)
 export const ZERO = 48;
 
 // (No @packageDocumentation comment for this package)

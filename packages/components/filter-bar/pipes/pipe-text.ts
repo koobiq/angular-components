@@ -1,4 +1,5 @@
-﻿import {
+﻿import { ENTER } from '@angular/cdk/keycodes';
+import {
     type AfterViewInit,
     ChangeDetectionStrategy,
     Component,
@@ -10,7 +11,7 @@
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { ENTER, PopUpPlacements } from '@koobiq/components/core';
+import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';

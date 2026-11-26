@@ -1,4 +1,20 @@
 import {
+    BACKSPACE,
+    DELETE,
+    DOWN_ARROW,
+    END,
+    ESCAPE,
+    hasModifierKey,
+    HOME,
+    LEFT_ARROW,
+    PAGE_DOWN,
+    PAGE_UP,
+    RIGHT_ARROW,
+    SPACE,
+    TAB,
+    UP_ARROW
+} from '@angular/cdk/keycodes';
+import {
     type AfterContentInit,
     booleanAttribute,
     computed,
@@ -37,15 +53,8 @@ import {
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import {
-    BACKSPACE,
     DateAdapter,
-    DELETE,
-    DOWN_ARROW,
-    END,
     ErrorStateMatcher,
-    ESCAPE,
-    hasModifierKey,
-    HOME,
     isHorizontalMovement,
     isLetterKey,
     isVerticalMovement,
@@ -62,14 +71,7 @@ import {
     KbqLocaleOverridesDirective,
     kbqRevealSelection,
     kbqSetSelectionRange,
-    LEFT_ARROW,
-    PAGE_DOWN,
-    PAGE_UP,
-    RIGHT_ARROW,
     ruRULocaleData,
-    SPACE,
-    TAB,
-    UP_ARROW,
     validationTooltipHideDelay,
     validationTooltipShowDelay
 } from '@koobiq/components/core';

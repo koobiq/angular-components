@@ -1,3 +1,4 @@
+import { DOWN_ARROW, ESCAPE, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@angular/cdk/keycodes';
 import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
 import { AsyncPipe } from '@angular/common';
 import {
@@ -19,13 +20,12 @@ import {
     dispatchEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
-    DOWN_ARROW,
     enUSLocaleData,
-    ESCAPE,
     KBQ_LOCALE_SERVICE,
     KBQ_PANEL_DEFAULT_MIN_WIDTH,
     KbqComponentColors,
     KbqLocaleService,
+    KbqOptgroup,
     KbqOptionModule,
     KbqOptionSelectionChange,
     KbqOverlayLayer,
@@ -37,10 +37,7 @@ import {
     KbqSelectFooter,
     KbqSelectMatcher,
     KbqSelectSearch,
-    LEFT_ARROW,
-    RIGHT_ARROW,
-    ruRULocaleData,
-    UP_ARROW
+    ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -1519,6 +1516,62 @@ describe('KbqTimezoneSelect', () => {
 
             expect(select.panelOpen).toBe(false);
             expect(fixture.componentInstance.runs).toBe(1);
+        });
+    });
+
+    @Component({
+        selector: 'timezone-select-with-group-counters',
+        imports: [KbqOptionModule, KbqTimezoneModule],
+        template: `
+            <kbq-form-field>
+                <kbq-timezone-select>
+                    @for (group of groups; track group.countryName) {
+                        <kbq-optgroup [label]="group.countryName">
+                            @for (zone of group.zones; track zone) {
+                                <kbq-timezone-option [timezone]="zone" />
+                            }
+                        </kbq-optgroup>
+                    }
+                </kbq-timezone-select>
+            </kbq-form-field>
+        `
+    })
+    class TimezoneSelectWithGroupCounters {
+        readonly select = viewChild.required(KbqTimezoneSelect);
+
+        readonly groups = groupedZones;
+    }
+
+    // `KbqTimezoneOption` extends `KbqOption` and re-provides it, which is what lets the group's
+    // `contentChildren(KbqOption)` count the options of a timezone select too.
+    describe('KbqOptgroup selectedCount in a timezone select', () => {
+        it('should count the selected timezone options of the group', async () => {
+            configureTestingModule([TimezoneSelectWithGroupCounters]);
+
+            const fixture = TestBed.createComponent(TimezoneSelectWithGroupCounters);
+
+            fixture.detectChanges();
+            fixture.componentInstance.select().open();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const group = getDebugNode(overlayContainerElement.querySelector('kbq-optgroup')!)!.injector.get(
+                KbqOptgroup
+            );
+            const zones = Array.from(overlayContainerElement.querySelectorAll('kbq-timezone-option')).map((node) =>
+                getDebugNode(node)!.injector.get(KbqTimezoneOption)
+            );
+
+            // The timezone select is single-choice, so one selected option of the group is the maximum.
+            zones[0].select();
+            fixture.detectChanges();
+
+            expect(group.selectedCount).toBe(1);
+
+            zones[0].deselect();
+            fixture.detectChanges();
+
+            expect(group.selectedCount).toBe(0);
         });
     });
 });

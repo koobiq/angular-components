@@ -1,3 +1,4 @@
+import { ESCAPE } from '@angular/cdk/keycodes';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {
     Component,
@@ -17,7 +18,6 @@ import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
-    ESCAPE,
     KBQ_STATE_STORE,
     KbqStateSavingService,
     type KbqStateStore

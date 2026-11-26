@@ -1,11 +1,9 @@
+import { ESCAPE, LEFT_ARROW, RIGHT_ARROW } from '@angular/cdk/keycodes';
 import { type AfterContentInit, Directive, inject } from '@angular/core';
 import {
-    ESCAPE,
     kbqInjectA11yLocaleConfiguration,
     kbqInjectNativeElement,
-    kbqSyncSearchFieldA11y,
-    LEFT_ARROW,
-    RIGHT_ARROW
+    kbqSyncSearchFieldA11y
 } from '@koobiq/components/core';
 import { KBQ_FORM_FIELD, KBQ_FORM_FIELD_DEFAULT_OPTIONS } from '@koobiq/components/form-field';
 import { KBQ_DROPDOWN_PANEL } from './dropdown.types';

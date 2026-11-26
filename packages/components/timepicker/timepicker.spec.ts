@@ -1,3 +1,4 @@
+import { DOWN_ARROW, LEFT_ARROW, ONE, SPACE, TWO, UP_ARROW } from '@angular/cdk/keycodes';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -32,18 +33,12 @@ import {
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
-    DOWN_ARROW,
     ErrorStateMatcher,
     KBQ_LOCALE_SERVICE,
     KbqDateTimezoneService,
     kbqErrorStateMatcherProvider,
-    LEFT_ARROW,
-    ONE,
     ShowOnControlDirtyErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher,
-    SPACE,
-    TWO,
-    UP_ARROW,
     validationTooltipHideDelay
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';

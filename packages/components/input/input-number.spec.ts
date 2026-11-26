@@ -1,4 +1,5 @@
-﻿import { Component, type DebugElement, inject, type Provider, type Type, viewChild } from '@angular/core';
+﻿import { COMMA, DASH, DOWN_ARROW, FF_MINUS, NUMPAD_MINUS, UP_ARROW } from '@angular/cdk/keycodes';
+import { Component, type DebugElement, inject, type Provider, type Type, viewChild } from '@angular/core';
 import { type ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import {
     type AbstractControl,
@@ -14,22 +15,16 @@ import {
 import { By } from '@angular/platform-browser';
 import type { Mock } from 'vitest';
 import {
-    COMMA,
     createKeyboardEvent,
-    DASH,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
-    DOWN_ARROW,
     type ErrorStateMatcher,
-    FF_MINUS,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
     KbqLocaleServiceModule,
-    NUMPAD_MINUS,
     ruRUFormattersData,
-    typeInElement,
-    UP_ARROW
+    typeInElement
 } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { add, BIG_STEP, getPrecision, KbqInput, KbqInputModule, KbqNumberInput, SMALL_STEP } from './index';
