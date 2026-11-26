@@ -46,6 +46,7 @@
                                                     kbq-icon="kbq-xmark-s_16"
                                                     kbqTagRemove
                                                     [tabIndex]="0"
+                                                    [aria-label]="removeItemAriaLabel(option)"
                                                     (click)="onRemoveSelectedOption(option, $event)"
                                                 ></i>
                                             }

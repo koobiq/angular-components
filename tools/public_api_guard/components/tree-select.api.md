@@ -190,6 +190,7 @@ export class KbqTreeSelect<T = any, K = T> extends KbqAbstractSelect implements 
     positions: ConnectedPosition[];
     registerOnChange(fn: (value: any) => void): void;
     registerOnTouched(fn: () => void): void;
+    protected removeItemAriaLabel(option: KbqTreeSelectTriggerValue): string;
     readonly required: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     protected readonly resolvedAriaLabelledby: _angular_core.Signal<string | null>;
     scrollStrategy: ScrollStrategy;

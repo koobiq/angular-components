@@ -3528,6 +3528,19 @@ describe('KbqTreeSelect', () => {
                 expect(tagFor('Documents').querySelector('[kbqTagRemove]')).not.toBeNull();
             });
 
+            // A bare "Remove" would leave a screen reader unable to tell which value comes off.
+            it('should name the remove icon after the tag value', async () => {
+                const fixture = await createFixture(() => {});
+
+                const tag = Array.from<HTMLElement>(fixture.nativeElement.querySelectorAll('kbq-tag')).find((t) =>
+                    t.textContent!.includes('Documents')
+                )!;
+
+                expect(tag.querySelector('[kbqTagRemove]')!.getAttribute('aria-label')).toBe(
+                    `${ruRULocaleData.a11y.remove} Documents`
+                );
+            });
+
             it('should leave a node disabled through the tree control selected', async () => {
                 const fixture = await createFixture((instance) => (instance.disabledNodes = ['Downloads']));
 
