@@ -1,6 +1,7 @@
 import { afterNextRender, ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { enUSLocaleData } from '@koobiq/components/core';
 import { KbqLink } from '@koobiq/components/link';
+import { KbqOverflowItem, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
 import { KbqClampedList, KbqClampedListTrigger } from './clamped-list';
 import { KbqClampedText } from './clamped-text';
 import { kbqClampedTextDefaultMaxRows, kbqClampedTextLocaleConfigurationProvider } from './constants';
@@ -143,4 +144,205 @@ export class E2eClampedTextStates {
 })
 export class E2eClampedList {
     protected readonly items = Array.from({ length: 17 }, (_, index) => `Item ${index + 1}`);
+}
+
+/**
+ * Exercises `mode="overflow"` in a real browser: fixed-size items measured against a signal-driven
+ * container size, with the result directive acting as the disclosure toggle.
+ */
+@Component({
+    selector: 'e2e-clamped-list-overflow',
+    imports: [KbqClampedList, KbqClampedListTrigger, KbqOverflowItem, KbqOverflowItemsResult],
+    template: `
+        <div class="e2e-clamped-list-overflow__controls">
+            <button data-testid="narrow" type="button" (click)="size.set(narrowSize)">Narrow</button>
+            <button data-testid="widen" type="button" (click)="size.set(wideSize)">Widen</button>
+            <button data-testid="replace-items" type="button" (click)="replaceItems()">Replace items</button>
+            <label>
+                Auto width
+                <input data-testid="auto-width" type="number" [value]="autoWidth()" (input)="setAutoWidth($event)" />
+            </label>
+        </div>
+
+        <div data-testid="scroll-container" class="e2e-clamped-list-overflow__scroll">
+            <div class="e2e-clamped-list-overflow__spacer"></div>
+            <div
+                #horizontal="kbqClampedList"
+                kbqClampedList
+                mode="overflow"
+                data-testid="overflow-horizontal"
+                class="e2e-clamped-list-overflow__horizontal"
+                [items]="items()"
+                [style.width.px]="size()"
+            >
+                @for (item of horizontal.items(); track item) {
+                    <span class="e2e-clamped-list-overflow__item" [kbqOverflowItem]="$index">{{ item }}</span>
+                }
+                @if (horizontal.hasToggle()) {
+                    <span kbqClampedListTrigger kbqOverflowItemsResult class="e2e-clamped-list-overflow__item">
+                        {{
+                            horizontal.isCollapsed()
+                                ? horizontal.showMoreCountText()
+                                : horizontal.localeConfiguration().closeText
+                        }}
+                    </span>
+                }
+            </div>
+            <div class="e2e-clamped-list-overflow__spacer"></div>
+        </div>
+
+        <div
+            #vertical="kbqClampedList"
+            kbqClampedList
+            mode="overflow"
+            orientation="vertical"
+            data-testid="overflow-vertical"
+            class="e2e-clamped-list-overflow__vertical"
+            [items]="items()"
+            [style.height.px]="size()"
+        >
+            @for (item of vertical.items(); track item) {
+                <span class="e2e-clamped-list-overflow__item-vertical" [kbqOverflowItem]="$index">{{ item }}</span>
+            }
+            @if (vertical.hasToggle()) {
+                <span kbqClampedListTrigger kbqOverflowItemsResult class="e2e-clamped-list-overflow__item-vertical">
+                    {{
+                        vertical.isCollapsed() ? vertical.showMoreCountText() : vertical.localeConfiguration().closeText
+                    }}
+                </span>
+            }
+        </div>
+
+        <div
+            #autoList="kbqClampedList"
+            kbqClampedList
+            mode="overflow"
+            data-testid="overflow-auto-trigger"
+            class="e2e-clamped-list-overflow__horizontal e2e-clamped-list-overflow__auto"
+            [items]="autoItems"
+            [style.width.px]="autoWidth()"
+        >
+            @for (item of autoList.items(); track item) {
+                <span class="e2e-clamped-list-overflow__item" [kbqOverflowItem]="$index">{{ item }}</span>
+            }
+            @if (autoList.hasToggle()) {
+                <span kbqClampedListTrigger kbqOverflowItemsResult class="e2e-clamped-list-overflow__auto-result">
+                    {{
+                        autoList.isCollapsed() ? autoList.showMoreCountText() : autoList.localeConfiguration().closeText
+                    }}
+                </span>
+            }
+        </div>
+
+        <div
+            #wrapList="kbqClampedList"
+            kbqClampedList
+            mode="overflow"
+            wrap="wrap"
+            data-testid="overflow-wrap"
+            class="e2e-clamped-list-overflow__wrap"
+            [items]="items()"
+        >
+            @for (item of wrapList.items(); track item) {
+                <span class="e2e-clamped-list-overflow__item" [kbqOverflowItem]="$index">{{ item }}</span>
+            }
+            @if (wrapList.hasToggle()) {
+                <span kbqClampedListTrigger kbqOverflowItemsResult class="e2e-clamped-list-overflow__item">
+                    {{
+                        wrapList.isCollapsed() ? wrapList.showMoreCountText() : wrapList.localeConfiguration().closeText
+                    }}
+                </span>
+            }
+        </div>
+    `,
+    styles: `
+        :host {
+            display: block;
+        }
+
+        .e2e-clamped-list-overflow__controls {
+            display: flex;
+            gap: var(--kbq-size-s);
+            margin-bottom: var(--kbq-size-m);
+        }
+
+        .e2e-clamped-list-overflow__scroll {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid;
+        }
+
+        .e2e-clamped-list-overflow__spacer {
+            height: 1000px;
+        }
+
+        .e2e-clamped-list-overflow__horizontal {
+            height: 24px;
+        }
+
+        .e2e-clamped-list-overflow__vertical {
+            width: 160px;
+            margin-top: var(--kbq-size-m);
+        }
+
+        .e2e-clamped-list-overflow__auto {
+            margin-top: var(--kbq-size-m);
+        }
+
+        .e2e-clamped-list-overflow__auto-result {
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        .e2e-clamped-list-overflow__wrap {
+            width: 400px;
+            max-height: 48px;
+            margin-top: var(--kbq-size-m);
+        }
+
+        .e2e-clamped-list-overflow__item {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .e2e-clamped-list-overflow__item-vertical {
+            width: 160px;
+            height: 80px;
+            flex-shrink: 0;
+        }
+    `,
+    providers: [kbqClampedTextLocaleConfigurationProvider(enUSLocaleData.clampedText)],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eClampedListOverflow'
+    }
+})
+export class E2eClampedListOverflow {
+    /** Item box is 80px on the main axis, so 30 items need 2400px plus the toggle to fully fit. */
+    protected readonly narrowSize = 400;
+    /** Fits all 30 items and the toggle on both the horizontal and the vertical list. */
+    protected readonly wideSize = 2600;
+
+    protected readonly size = signal(this.narrowSize);
+    protected readonly items = signal(
+        Array.from({ length: 30 }, (_, index) => `Item ${String(index + 1).padStart(2, '0')}`)
+    );
+
+    protected readonly autoItems = Array.from(
+        { length: 20 },
+        (_, index) => `Auto ${String(index + 1).padStart(2, '0')}`
+    );
+    protected readonly autoWidth = signal(1000);
+
+    protected replaceItems(): void {
+        this.items.set(Array.from({ length: 30 }, (_, index) => `Entry ${String(index + 1).padStart(2, '0')}`));
+    }
+
+    protected setAutoWidth(event: Event): void {
+        this.autoWidth.set((event.target as HTMLInputElement).valueAsNumber);
+    }
 }

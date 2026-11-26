@@ -105,4 +105,186 @@ test.describe('KbqClampedText', () => {
             expect(scrollY).toBe(0);
         });
     });
+
+    test.describe('E2eClampedListOverflow', () => {
+        const hiddenItems = (block: Locator) => block.locator('.kbq-overflow-item.kbq-overflow-item-hidden');
+        const trigger = (block: Locator) => block.getByRole('button');
+
+        test('recalculates in both directions and preserves expanded state', async ({ page }) => {
+            await page.goto('/E2eClampedListOverflow');
+            const block = page.getByTestId('overflow-horizontal');
+            const hidden = block.locator('.kbq-overflow-item-hidden');
+            const initialHidden = await hidden.count();
+
+            await expect(hidden).not.toHaveCount(0);
+            await page.getByTestId('widen').click();
+            await expect(hidden).toHaveCount(0);
+
+            await page.getByTestId('narrow').click();
+            await expect(hidden).toHaveCount(initialHidden);
+
+            await block.getByRole('button').click();
+            await expect(hidden).toHaveCount(0);
+            await page.getByTestId('replace-items').click();
+            await expect(hidden).toHaveCount(0);
+            await block.getByRole('button').click();
+            await expect(hidden).toHaveCount(initialHidden);
+        });
+
+        test('recalculates vertically in both directions', async ({ page }) => {
+            await page.goto('/E2eClampedListOverflow');
+            const block = page.getByTestId('overflow-vertical');
+            const hidden = hiddenItems(block);
+            const initialHidden = await hidden.count();
+
+            await expect(hidden).not.toHaveCount(0);
+            await page.getByTestId('widen').click();
+            await expect(hidden).toHaveCount(0);
+
+            await page.getByTestId('narrow').click();
+            await expect(hidden).toHaveCount(initialHidden);
+
+            await trigger(block).click();
+            await expect(hidden).toHaveCount(0);
+            await page.getByTestId('widen').click();
+            await expect(hidden).toHaveCount(0);
+            await page.getByTestId('narrow').click();
+            await expect(hidden).toHaveCount(0);
+        });
+
+        test('clamps wrapped rows to the container height', async ({ page }) => {
+            await page.goto('/E2eClampedListOverflow');
+            const block = page.getByTestId('overflow-wrap');
+
+            await expect(hiddenItems(block)).not.toHaveCount(0);
+
+            // max-height fits exactly two 24px rows: the rendered block must not grow past it, and
+            // a recalculation bug that lets a third row leak in before hiding items shows up as a
+            // third distinct item offset. (scrollHeight cannot be used: absolutely positioned hidden
+            // items still count into it.)
+            await expect
+                .poll(() => block.evaluate((element) => Math.round(element.getBoundingClientRect().height)))
+                .toBeLessThanOrEqual(48);
+
+            const visibleRows = () =>
+                block
+                    .locator('.kbq-overflow-item:not(.kbq-overflow-item-hidden)')
+                    .evaluateAll(
+                        (elements) => new Set(elements.map((element) => element.getBoundingClientRect().top)).size
+                    );
+
+            await expect.poll(visibleRows).toBeLessThanOrEqual(2);
+        });
+
+        test('stabilizes an auto-width trigger when its counter crosses from 9 to 10', async ({ page }) => {
+            await page.goto('/E2eClampedListOverflow');
+            const block = page.getByTestId('overflow-auto-trigger');
+            const hidden = hiddenItems(block);
+
+            await expect(hidden).toHaveCount(9);
+            await expect(trigger(block)).toHaveText('Show 9 more');
+            const resultWidth = await trigger(block).evaluate((element) => element.getBoundingClientRect().width);
+
+            // Ten 80px items and the one-digit label fit with 1px to spare; the two-digit label does not.
+            // A result resize must therefore hide one more item instead of leaving physical overflow.
+            await page.getByTestId('auto-width').fill(String(800 + resultWidth + 1));
+
+            await expect(trigger(block)).toHaveText('Show 11 more');
+            await expect(hidden).toHaveCount(11);
+            await expect
+                .poll(() =>
+                    trigger(block).evaluate((element) => {
+                        const host = (element.parentElement as HTMLElement).getBoundingClientRect();
+
+                        return element.getBoundingClientRect().right - host.right;
+                    })
+                )
+                .toBeLessThanOrEqual(0.5);
+        });
+
+        test('shows the hidden-item counter and disclosure semantics on the trigger', async ({ page }) => {
+            await page.goto('/E2eClampedListOverflow');
+            const block = page.getByTestId('overflow-horizontal');
+            const initialHidden = await hiddenItems(block).count();
+
+            await expect(trigger(block)).toHaveAttribute('aria-expanded', 'false');
+            await expect(trigger(block)).toHaveText(`Show ${initialHidden} more`);
+
+            await trigger(block).click();
+
+            await expect(trigger(block)).toHaveAttribute('aria-expanded', 'true');
+            await expect(trigger(block)).toHaveText('Collapse');
+        });
+
+        test('scrolls the collapsed list into view', async ({ page }) => {
+            await page.goto('/E2eClampedListOverflow');
+            const block = page.getByTestId('overflow-horizontal');
+            const container = page.getByTestId('scroll-container');
+
+            await container.evaluate((element) => (element.scrollTop = element.scrollHeight));
+            const scrolledAway = await container.evaluate((element) => element.scrollTop);
+            // Proves the poll below cannot pass on the scrolled-away state it starts from.
+            const awayFromView = await block.evaluate(
+                (element) =>
+                    element.getBoundingClientRect().bottom <
+                    (element.parentElement as HTMLElement).getBoundingClientRect().top
+            );
+
+            expect(scrolledAway).toBeGreaterThan(0);
+            expect(awayFromView).toBe(true);
+
+            await trigger(block).click();
+            await expect(hiddenItems(block)).toHaveCount(0);
+            await trigger(block).click();
+
+            await expect
+                .poll(async () => {
+                    const box = (await container.boundingBox())!;
+                    const listBox = (await block.boundingBox())!;
+
+                    return listBox.y >= box.y && listBox.y + listBox.height <= box.y + box.height;
+                })
+                .toBe(true);
+            expect(awayFromView).toBeTruthy();
+        });
+
+        test('applies collapsed and expanded visibility immediately under reduced motion', async ({ page }) => {
+            await page.emulateMedia({ reducedMotion: 'reduce' });
+            await page.goto('/E2eClampedListOverflow');
+            const block = page.getByTestId('overflow-horizontal');
+            const container = page.getByTestId('scroll-container');
+            const hiddenByStyle = block.locator('.kbq-overflow-item[style*="visibility: hidden"]');
+            const initialHidden = await hiddenItems(block).count();
+
+            await expect(hiddenItems(block)).not.toHaveCount(0);
+
+            // No auto-retry on purpose: reduced motion must land the visibility inside the click itself,
+            // not on the next change-detection pass. The class binding needs a detection pass, so the
+            // assertion reads the inline style the visibility write sets synchronously.
+            await trigger(block).click();
+            // eslint-disable-next-line no-restricted-syntax, playwright/prefer-to-have-count -- a one-shot read is the assertion: retried expects would pass even when the change lands a tick later
+            expect(await hiddenByStyle.count()).toBe(0);
+            await expect(hiddenItems(block)).toHaveCount(0);
+
+            await trigger(block).click();
+            // eslint-disable-next-line no-restricted-syntax, playwright/prefer-to-have-count -- a one-shot read is the assertion: retried expects would pass even when the change lands a tick later
+            expect(await hiddenByStyle.count()).toBe(initialHidden);
+            await expect(hiddenItems(block)).toHaveCount(initialHidden);
+
+            // The same collapse-scroll behavior holds with motion turned off.
+            await container.evaluate((element) => (element.scrollTop = element.scrollHeight));
+            await trigger(block).click();
+            await expect(hiddenItems(block)).toHaveCount(0);
+            await trigger(block).click();
+
+            await expect
+                .poll(async () => {
+                    const box = (await container.boundingBox())!;
+                    const listBox = (await block.boundingBox())!;
+
+                    return listBox.y >= box.y && listBox.y + listBox.height <= box.y + box.height;
+                })
+                .toBe(true);
+        });
+    });
 });

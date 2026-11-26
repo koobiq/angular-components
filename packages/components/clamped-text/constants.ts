@@ -42,6 +42,9 @@ export const kbqClampedTextLocaleConfigurationProvider = (
  */
 export const KbqClampedRoot = new InjectionToken<KbqClamped>('KbqClampedRoot');
 
+/** Algorithm used to choose the visible part of a collapsed Clamped List. */
+export type KbqClampedListMode = 'count' | 'overflow';
+
 /** Contract a clamped container exposes to `KbqClampedListTrigger`. */
 export interface KbqClamped {
     /**

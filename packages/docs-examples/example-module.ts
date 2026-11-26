@@ -1480,6 +1480,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "clamped-list-dotted-example.ts",
     "importPath": "components/clamped-text"
   },
+  "clamped-list-overflow": {
+    "packagePath": "components/clamped-text/clamped-list-overflow",
+    "title": "Clamped-list with overflow-based collapse",
+    "componentName": "ClampedListOverflowExample",
+    "files": [
+      "clamped-list-overflow-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "clamped-list-overflow-example",
+    "primaryFile": "clamped-list-overflow-example.ts",
+    "importPath": "components/clamped-text"
+  },
   "clamped-list-overview": {
     "packagePath": "components/clamped-text/clamped-list-overview",
     "title": "Clamped-list vertical",
@@ -9795,6 +9810,7 @@ export type LiveExampleId =
   | 'checkbox-validation'
   | 'pseudo-checkbox'
   | 'clamped-list-dotted'
+  | 'clamped-list-overflow'
   | 'clamped-list-overview'
   | 'clamped-list'
   | 'clamped-text-external-state'
