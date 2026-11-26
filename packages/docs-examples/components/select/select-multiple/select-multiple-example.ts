@@ -35,7 +35,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class SelectMultipleExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly options = Array.from({ length: 10 }, (_, i) => 'Option #' + i);
     readonly selected = this.options.slice(0, 3);
 }

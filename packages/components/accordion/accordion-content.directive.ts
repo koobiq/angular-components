@@ -51,8 +51,14 @@ export class KbqAccordionContentDirective implements OnInit, DoCheck, AfterViewI
 
     /** @docs-private */
     protected readonly nativeElement = kbqInjectNativeElement();
+
     /** @docs-private */
     protected readonly item = inject(KbqAccordionItem);
+
+    private savedTransition = '';
+
+    /** Whether the first browser render has happened; until then a toggle only sets the initial state. */
+    private rendered = false;
 
     /**
      * Value of `data-state`.
@@ -60,6 +66,9 @@ export class KbqAccordionContentDirective implements OnInit, DoCheck, AfterViewI
      * @docs-private
      */
     protected readonly dataState = computed(() => this.item.dataState);
+
+    /** @docs-private */
+    protected readonly hidden = signal<boolean>(true);
 
     /** @docs-private */
     get contentId(): string {
@@ -70,14 +79,6 @@ export class KbqAccordionContentDirective implements OnInit, DoCheck, AfterViewI
     get triggerId(): string {
         return `${this.item.id}-trigger`;
     }
-
-    /** @docs-private */
-    protected readonly hidden = signal<boolean>(true);
-
-    private savedTransition = '';
-
-    /** Whether the first browser render has happened; until then a toggle only sets the initial state. */
-    private rendered = false;
 
     constructor() {
         // `afterNextRender` never runs on the server, so no platform check is needed here.

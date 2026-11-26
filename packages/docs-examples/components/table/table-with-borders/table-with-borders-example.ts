@@ -37,7 +37,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TableWithBordersExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly rows = computed(() => [
         { name: '000.txt', owner: 'User 1', modified: '27 May 2024', size: '17 KB' },
         { name: this.t().bigBook, owner: 'User 2', modified: '1 Dec 2023', size: '998 KB' },

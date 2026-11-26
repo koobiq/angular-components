@@ -43,5 +43,6 @@ export class SliderMarksExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly percentMarks = [0, 25, 50, 75, 100].map((value) => ({ value, label: `${value}%` }));
     protected readonly timeMarks = computed(() => this.t().times.map((label, value) => ({ value, label })));
+
     protected readonly formatTime = (value: number): string => this.t().times[value] ?? '';
 }

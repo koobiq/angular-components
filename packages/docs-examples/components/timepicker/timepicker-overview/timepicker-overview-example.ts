@@ -26,12 +26,10 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimepickerOverviewExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     timeFormats = TimeFormats;
-
     time: DateTime;
 
     constructor() {

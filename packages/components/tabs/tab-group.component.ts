@@ -170,18 +170,8 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
      * are its inputs, forwarded onto the tab group.
      */
     private readonly stateSaving = inject(KbqStateSaving);
-
-    private readonly tabsQuery = contentChildren(KbqTab);
-    private readonly tabsList = kbqQueryListFrom(this.tabsQuery);
-
-    /** The tabs of the group. */
-    get tabs(): QueryList<KbqTab> {
-        return this.tabsList();
-    }
-
-    readonly tabBodyWrapper = viewChild.required<ElementRef>('tabBodyWrapper');
-
-    readonly tabHeader = viewChild.required<KbqTabHeader>('tabHeader');
+    private readonly defaultAnimationDuration =
+        inject<KbqTabsConfig>(KBQ_TABS_CONFIG, { optional: true })?.animationDuration || '0ms';
 
     /** Whether the tab strip background should be transparent. */
     readonly transparent = input<boolean, unknown>(false, { transform: booleanAttribute });
@@ -213,6 +203,61 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
     /** @docs-private */
     readonly animationDurationInput = input<string | undefined>(undefined, { alias: 'animationDuration' });
 
+    /** Output to enable support for two-way binding on `[(selectedIndex)]` */
+    readonly selectedIndexChange = output<number>();
+
+    /** Event emitted when the tab selection has changed. */
+    readonly activeTabChange = output<string | number | KbqTab>();
+
+    /** Event emitted when focus has changed within a tab group. */
+    readonly focusChange = output<KbqTabChangeEvent>();
+
+    /** Event emitted when the body animation has completed */
+    readonly animationDone = output<void>();
+
+    /** Event emitted when the tab selection has changed. */
+    readonly selectedTabChange = output<KbqTabChangeEvent>();
+
+    private readonly tabsQuery = contentChildren(KbqTab);
+    readonly tabBodyWrapper = viewChild.required<ElementRef>('tabBodyWrapper');
+    readonly tabHeader = viewChild.required<KbqTabHeader>('tabHeader');
+
+    private readonly tabsList = kbqQueryListFrom(this.tabsQuery);
+    private readonly selectedIndexState = signal<number | undefined>(undefined);
+    private attributeToSelectBy: KbqTabSelectBy | null = null;
+
+    /**
+     * Whether anything has assigned `activeTab` or `selectedIndex`. Snapshotted while initializing, where
+     * only an input binding can have done so, and read from then on as "the application drives the
+     * selection" — which suppresses persistence.
+     */
+    private attributeWritten = false;
+    private controlled = false;
+
+    /** Whether the dev-mode warning about a tab with no `tabId` has already been logged. */
+    private warnedAboutTabId = false;
+
+    /** Snapshot of the height of the tab body wrapper before another tab is activated. */
+    private tabBodyWrapperHeight = 0;
+
+    /** Subscription to tabs being added/removed. */
+    private tabsSubscription = Subscription.EMPTY;
+
+    /** Subscription to changes in the tab labels. */
+    private tabLabelSubscription = Subscription.EMPTY;
+    private readonly groupId: number;
+
+    /** Position of the tab header. */
+    headerPosition: KbqTabHeaderPosition = 'above';
+
+    /** Duration for the tab animation. Must be a valid CSS value (e.g. 600ms). */
+    animationDuration: string;
+
+    /** The tabs of the group. */
+    get tabs(): QueryList<KbqTab> {
+        return this.tabsList();
+    }
+
     /** The index of the active tab. */
     get selectedIndex(): number {
         return this.selectedIndexState()!;
@@ -221,8 +266,6 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
     set selectedIndex(value: number) {
         this.activeTab = value;
     }
-
-    private readonly selectedIndexState = signal<number | undefined>(undefined);
 
     get activeTab(): KbqTab | null {
         switch (typeof this.attributeToSelectBy) {
@@ -252,54 +295,20 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
         this.attributeToSelectBy = value;
     }
 
-    /** Position of the tab header. */
-    headerPosition: KbqTabHeaderPosition = 'above';
-
-    /** Duration for the tab animation. Must be a valid CSS value (e.g. 600ms). */
-    animationDuration: string;
-
-    /** Output to enable support for two-way binding on `[(selectedIndex)]` */
-    readonly selectedIndexChange = output<number>();
-
-    /** Event emitted when the tab selection has changed. */
-    readonly activeTabChange = output<string | number | KbqTab>();
-
-    /** Event emitted when focus has changed within a tab group. */
-    readonly focusChange = output<KbqTabChangeEvent>();
-
-    /** Event emitted when the body animation has completed */
-    readonly animationDone = output<void>();
-
-    /** Event emitted when the tab selection has changed. */
-    readonly selectedTabChange = output<KbqTabChangeEvent>();
-
-    private attributeToSelectBy: KbqTabSelectBy | null = null;
-
     /**
-     * Whether anything has assigned `activeTab` or `selectedIndex`. Snapshotted while initializing, where
-     * only an input binding can have done so, and read from then on as "the application drives the
-     * selection" — which suppresses persistence.
+     * Whether state is currently persisted for this tab group — restored on init, or written since.
+     * Always `false` while `useStateSaving` is unset, and `false` again after `clearSavedState()`.
      */
-    private attributeWritten = false;
+    get hasSavedState(): boolean {
+        return this.stateSaving.state != null;
+    }
 
-    private controlled = false;
-
-    /** Whether the dev-mode warning about a tab with no `tabId` has already been logged. */
-    private warnedAboutTabId = false;
-
-    /** Snapshot of the height of the tab body wrapper before another tab is activated. */
-    private tabBodyWrapperHeight = 0;
-
-    /** Subscription to tabs being added/removed. */
-    private tabsSubscription = Subscription.EMPTY;
-
-    /** Subscription to changes in the tab labels. */
-    private tabLabelSubscription = Subscription.EMPTY;
-
-    private readonly groupId: number;
-
-    private readonly defaultAnimationDuration =
-        inject<KbqTabsConfig>(KBQ_TABS_CONFIG, { optional: true })?.animationDuration || '0ms';
+    /** Whether this tab group reads and writes its selection at all. */
+    private get persists(): boolean {
+        // A group that is not in the document has no stable key — the default resolver derives one from
+        // the path to `<body>` — which is the ordinary state of one projected into an overlay.
+        return this.stateSaving.useStateSaving() && !this.controlled && !!this.stateSaving.host?.isConnected;
+    }
 
     constructor() {
         this.groupId = nextId++;
@@ -555,21 +564,6 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
      */
     clearSavedState(): void {
         untracked(() => this.stateSaving.clear());
-    }
-
-    /**
-     * Whether state is currently persisted for this tab group — restored on init, or written since.
-     * Always `false` while `useStateSaving` is unset, and `false` again after `clearSavedState()`.
-     */
-    get hasSavedState(): boolean {
-        return this.stateSaving.state != null;
-    }
-
-    /** Whether this tab group reads and writes its selection at all. */
-    private get persists(): boolean {
-        // A group that is not in the document has no stable key — the default resolver derives one from
-        // the path to `<body>` — which is the ordinary state of one projected into an overlay.
-        return this.stateSaving.useStateSaving() && !this.controlled && !!this.stateSaving.host?.isConnected;
     }
 
     /** Restores the persisted selection, unless the application drives it. */

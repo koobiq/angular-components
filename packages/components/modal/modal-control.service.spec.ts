@@ -10,13 +10,13 @@ class MockModalRef extends KbqModalRef {
     // does not carry them cannot be registered at all.
     readonly kbqVisible = signal(false);
     readonly kbqMask = signal(false);
-
     afterOpen = new Subject<void>();
     beforeClose = new Subject<void>();
     afterClose = new Subject<void>();
-
+    override canClose = undefined;
     open = vi.fn();
     close = vi.fn();
+    override requestClose = vi.fn();
     destroy = vi.fn();
     triggerOk = vi.fn();
     triggerCancel = vi.fn();

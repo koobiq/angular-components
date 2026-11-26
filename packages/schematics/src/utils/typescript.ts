@@ -242,16 +242,23 @@ export class ElementCollector implements Visitor {
 
     // part of interface
     visitAttribute(_: Attribute, _1: any) {}
+
     visitText(_: any, _1: any) {}
+
     visitComment(_: any, _1: any) {}
+
     visitExpansion(_: any, _1: any) {}
+
     visitExpansionCase(_: any, _1: any) {}
+
     visitBlockParameter(_: any, _1: any) {}
+
     visitLetDeclaration(_: any, _1: any) {}
 }
 
 export class AnalyzedFile {
     private ranges: Range[] = [];
+
     sourceFile: ts.SourceFile;
     templateRanges: Range[] = [];
 

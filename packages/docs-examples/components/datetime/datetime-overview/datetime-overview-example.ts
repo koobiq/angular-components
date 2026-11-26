@@ -28,6 +28,7 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class DatetimeOverviewExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly value = model<DateTime | null>(null);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

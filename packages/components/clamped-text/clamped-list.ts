@@ -26,8 +26,12 @@ export class KbqClampedList<T> implements KbqClamped {
     private readonly nativeElement = kbqInjectNativeElement();
     private readonly animateCollapse = kbqInjectCollapseAnimation();
 
+    /** Clamped text locale configuration. */
+    readonly localeConfiguration = kbqInjectClampedTextLocaleConfiguration();
+
     /** Collapsed state: `true` = collapsed, `false` = expanded, `undefined` = expanded. */
     readonly isCollapsed = model<boolean>(true);
+
     /** The list of items to display. */
     readonly items = input<T[]>([]);
 
@@ -53,19 +57,27 @@ export class KbqClampedList<T> implements KbqClamped {
 
     /** Number of items hidden when the list is collapsed. */
     readonly exceededItemCount = computed(() => this.items().length - this.collapsedVisibleCount());
+
     /** Whether the number of hidden items meets the threshold to render the toggle trigger. */
     readonly hasToggle = computed(() => this.exceededItemCount() >= this.hiddenThreshold());
+
     /** Slice of items currently rendered — truncated to `minVisibleCount` when collapsed, a full list otherwise. */
     readonly visibleItems = computed(() =>
         this.isCollapsed() && this.hasToggle() ? this.items().slice(0, this.collapsedVisibleCount()) : this.items()
     );
+
     /** Localized "show more" label with the exceeded item count interpolated into the `{exceededItemCount}` placeholder. */
     readonly showMoreCountText = computed(() =>
         this.localeConfiguration().showMoreText.replace('{exceededItemCount}', this.exceededItemCount().toString(10))
     );
 
-    /** Clamped text locale configuration. */
-    readonly localeConfiguration = kbqInjectClampedTextLocaleConfiguration();
+    /** Localized "show more compact" label with the exceeded item count interpolated into the `{exceededItemCount}` placeholder. */
+    readonly showMoreCompactCountText = computed(() => {
+        const { showMoreTextCompact, moreText } = this.localeConfiguration();
+        const count = this.exceededItemCount().toString(10);
+
+        return showMoreTextCompact?.replace('{exceededItemCount}', count) ?? `${count} ${moreText}`;
+    });
 
     /** Toggles the collapsed state of the list. Stops event propagation. */
     toggle(event: Event) {

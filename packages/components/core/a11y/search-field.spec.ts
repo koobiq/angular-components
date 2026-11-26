@@ -23,6 +23,8 @@ import { type KbqSearchFieldPopup, kbqSyncSearchFieldA11y } from './search-field
     `
 })
 class SearchFieldHost {
+    private readonly nativeElement = kbqInjectNativeElement();
+
     readonly type = signal('text');
     readonly ariaLabel = signal<string | null>(null);
     readonly ariaLabelledby = signal<string | null>(null);
@@ -35,8 +37,6 @@ class SearchFieldHost {
     readonly itemWithId = signal<string | null>(null);
     readonly activeItem = signal<string | null>(null);
     readonly popup = signal<KbqSearchFieldPopup | null>(null);
-
-    private readonly nativeElement = kbqInjectNativeElement();
 
     constructor() {
         kbqSyncSearchFieldA11y(this.nativeElement, this.popup, this.fallbackLabel);

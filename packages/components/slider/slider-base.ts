@@ -47,97 +47,98 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
 {
     /** Defaults inherited from the current injector. @docs-private */
     protected readonly options = inject(KBQ_SLIDER_OPTIONS);
+    private readonly uid = inject(_IdGenerator).getId('kbq-slider-');
+
+    /** Associated Angular form control, if present. @docs-private */
+    readonly ngControl = inject(NgControl, { optional: true, self: true });
+    private readonly parentFormField = inject(KBQ_FORM_FIELD, { optional: true, host: true });
+    protected readonly locale = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'a11y',
+        KBQ_A11Y_LOCALE_CONFIGURATION
+    );
+    protected readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
+    protected readonly focusMonitor = inject(FocusMonitor);
+    private readonly destroyRef = inject(DestroyRef);
 
     /** Selected number or ordered range. Defaults to `0`. */
     readonly valueInput = input<T>(undefined, { alias: 'value' });
-    private readonly current = signal<KbqSliderValue>(0);
-    /** Current selection on the configured scale. */
-    readonly value = computed(() => sliderNormalize(this.current(), this.settings()) as KbqSliderSelection<T>);
-    /** Emits a new selection when the user edits the control. */
-    readonly valueChange = output<KbqSliderSelection<T>>();
+
     /** Lower bound of the scale. Defaults to `0`. */
     readonly min = input<number, NumberInput>(this.options.min, { transform: numberAttribute });
+
     /** Upper bound of the scale. Defaults to `100`. */
     readonly max = input<number, NumberInput>(this.options.max, { transform: numberAttribute });
+
     /** Positive step anchored at `min`, or `null` to select only marks. Defaults to `1`. */
     readonly step = input<number | null, NumberInput>(this.options.step, {
         transform: (value: NumberInput) => (value === null ? null : numberAttribute(value))
     });
+
     /** Visual marks, independent of the numeric step. Defaults to an empty list. */
     readonly marks = input<readonly KbqSliderMark[]>(this.options.marks);
+
     /** Minimum separation of range bounds in value units. Defaults to `0`. */
     readonly minDistance = input<number, NumberInput>(this.options.minDistance, { transform: numberAttribute });
+
     /** Range collision strategy for pointer, keyboard and numeric input. Defaults to `'none'`. */
     readonly thumbCollisionBehavior = input<KbqSliderThumbCollisionBehavior>(this.options.thumbCollisionBehavior);
+
     /** Whether user input is disabled. Defaults to `false`. */
     readonly disabledInput = input<boolean, BooleanInput>(this.options.disabled, {
         alias: 'disabled',
         transform: booleanAttribute
     });
+
     /** Whether the value is read-only while the thumbs remain focusable. Defaults to `false`. */
     readonly readonly = input<boolean, BooleanInput>(this.options.readonly, { transform: booleanAttribute });
+
     /** Controls when Angular validation errors appear. Defaults to the injected matcher. */
     readonly errorStateMatcher = input<ErrorStateMatcher>();
+
     /** Accessible name, used when no labelled-by reference is supplied. Defaults to the active locale. */
     readonly ariaLabel = input<string>('', { alias: 'aria-label' });
+
     /** Space-separated IDs of elements naming the control. Defaults to `null`. */
     readonly ariaLabelledby = input<string | null>(null, { alias: 'aria-labelledby' });
+
     /** Space-separated IDs of descriptions. Defaults to `null`. */
     readonly ariaDescribedby = input<string | null>(null, { alias: 'aria-describedby' });
+
     /** Individual accessible names of range bounds. Defaults to localized lower/upper bound names. */
     readonly thumbAriaLabels = input<readonly string[]>([]);
+
     protected readonly defaultFormat = (value: number): string => String(value);
     /** Formats the tooltip and accessible value text. Defaults to the numeric string. */
     readonly displayWith = input<(value: number) => string>(this.options.displayWith ?? this.defaultFormat);
+
     /** Base name used to serialize the value; range bounds use `name[0]` and `name[1]`. Defaults to `null`. */
     readonly name = input<string | null>(null);
-    private readonly uid = inject(_IdGenerator).getId('kbq-slider-');
+
     /** Element ID. Generated when empty or omitted. */
     readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
-    /** Effective ID used by the host and its accessible labels. */
-    readonly id = computed(() => this.idInput() || this.uid);
+
+    /** @docs-private */
+    readonly requiredInput = input<boolean, BooleanInput>(this.options.required, {
+        alias: 'required',
+        transform: booleanAttribute
+    });
+
+    /** Emits a new selection when the user edits the control. */
+    readonly valueChange = output<KbqSliderSelection<T>>();
+
     /** Emits once when a changed user interaction completes. */
     readonly valueCommit = output<KbqSliderCommit>();
 
-    /** Associated Angular form control, if present. @docs-private */
-    readonly ngControl = inject(NgControl, { optional: true, self: true });
+    private readonly current = signal<KbqSliderValue>(0);
     private readonly formDisabled = signal<boolean | undefined>(undefined);
-    /** Effective disabled state, including Angular forms. */
-    readonly disabled = computed(() => this.formDisabled() ?? this.disabledInput());
     private readonly errorTracker = new KbqErrorStateTracker(
         inject(ErrorStateMatcher),
         this.ngControl,
         inject(FormGroupDirective, { optional: true }),
         inject(NgForm, { optional: true })
     );
-    /** Whether the control displays a validation error. */
-    readonly errorState = this.errorTracker.errorState;
-    /** Whether any descendant is focused. @docs-private */
-    readonly focused = signal(false);
-    /** @docs-private */
-    readonly empty = signal(false);
-    /** @docs-private */
-    readonly requiredInput = input<boolean, BooleanInput>(this.options.required, {
-        alias: 'required',
-        transform: booleanAttribute
-    });
     private readonly requiredValidator = signal(false);
-    /** Whether a value is required by the field or its Angular validator. */
-    readonly required = computed(() => this.requiredInput() || this.requiredValidator());
-    /** @docs-private */
-    readonly placeholder = signal(null);
-    /** @docs-private */
-    readonly isNativeLabelSupported = false;
-    private readonly parentFormField = inject(KBQ_FORM_FIELD, { optional: true, host: true });
-    protected readonly labelledBy = computed(() => this.ariaLabelledby() || this.parentFormField?.labelId() || null);
-    protected readonly locale = inject(KbqLocaleOverridesDirective, { self: true }).read(
-        'a11y',
-        KBQ_A11Y_LOCALE_CONFIGURATION
-    );
-    protected readonly describedByIds = signal<string[]>([]);
-    protected readonly description = computed(
-        () => [this.ariaDescribedby(), ...this.describedByIds()].filter(Boolean).join(' ') || null
-    );
+
     protected readonly settings = computed(() => ({
         min: this.min(),
         max: this.max(),
@@ -145,25 +146,44 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
         marks: this.marks(),
         minDistance: this.minDistance()
     }));
-    protected readonly bounds = computed(() => sliderBounds(this.settings()));
 
+    /** Current selection on the configured scale. */
+    readonly value = computed(() => sliderNormalize(this.current(), this.settings()) as KbqSliderSelection<T>);
+
+    /** Effective ID used by the host and its accessible labels. */
+    readonly id = computed(() => this.idInput() || this.uid);
+
+    /** Effective disabled state, including Angular forms. */
+    readonly disabled = computed(() => this.formDisabled() ?? this.disabledInput());
+
+    /** Whether the control displays a validation error. */
+    readonly errorState = this.errorTracker.errorState;
+
+    /** Whether any descendant is focused. @docs-private */
+    readonly focused = signal(false);
+
+    /** @docs-private */
+    readonly empty = signal(false);
+
+    /** Whether a value is required by the field or its Angular validator. */
+    readonly required = computed(() => this.requiredInput() || this.requiredValidator());
+
+    /** @docs-private */
+    readonly placeholder = signal(null);
+
+    /** @docs-private */
+    readonly isNativeLabelSupported = false;
+    protected readonly labelledBy = computed(() => this.ariaLabelledby() || this.parentFormField?.labelId() || null);
+    protected readonly describedByIds = signal<string[]>([]);
+    protected readonly description = computed(
+        () => [this.ariaDescribedby(), ...this.describedByIds()].filter(Boolean).join(' ') || null
+    );
+    protected readonly bounds = computed(() => sliderBounds(this.settings()));
     protected readonly values = computed<readonly [number] | readonly [number, number]>(() => {
         const value = this.value();
 
         return typeof value === 'number' ? [value] : value;
     });
-    protected thumbValue(index: number): number {
-        const values = this.values();
-
-        return values.length === 2 && index === 1 ? values[1] : values[0];
-    }
-
-    protected readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
-    protected readonly focusMonitor = inject(FocusMonitor);
-    private readonly destroyRef = inject(DestroyRef);
-
-    protected onChange: (value: KbqSliderValue) => void = () => {};
-    protected onTouched: () => void = () => {};
 
     constructor() {
         if (this.ngControl) this.ngControl.valueAccessor = this;
@@ -171,6 +191,28 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
         this.monitorFocus();
         this.monitorNativeFormReset();
     }
+
+    /** @docs-private */
+    ngOnChanges(changes: SimpleChanges<KbqSliderBase>): void {
+        if (changes.valueInput && !this.ngControl) this.syncValueInput(this.valueInput() ?? 0);
+    }
+
+    /** @docs-private */
+    ngDoCheck(): void {
+        this.requiredValidator.set(this.ngControl?.control?.hasValidator(Validators.required) ?? false);
+        this.errorTracker.errorStateMatcher = this.errorStateMatcher();
+        this.errorTracker.updateErrorState();
+    }
+
+    protected thumbValue(index: number): number {
+        const values = this.values();
+
+        return values.length === 2 && index === 1 ? values[1] : values[0];
+    }
+
+    protected onChange: (value: KbqSliderValue) => void = () => {};
+
+    protected onTouched: () => void = () => {};
 
     private monitorFocus(): void {
         this.focusMonitor.monitor(this.element, true).subscribe((origin) => {
@@ -216,22 +258,10 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
         if (!sliderEqual(previous, this.value())) this.valueChange.emit(this.value());
     }
 
-    /** @docs-private */
-    ngOnChanges(changes: SimpleChanges<KbqSliderBase>): void {
-        if (changes.valueInput && !this.ngControl) this.syncValueInput(this.valueInput() ?? 0);
-    }
-
     private syncValueInput(value: KbqSliderValue): void {
         // A two-way binding can echo a value while a gesture or a draft is still active.
         if (sliderEqual(this.value(), sliderNormalize(value, this.settings()))) this.current.set(value);
         else this.writeValue(value);
-    }
-
-    /** @docs-private */
-    ngDoCheck(): void {
-        this.requiredValidator.set(this.ngControl?.control?.hasValidator(Validators.required) ?? false);
-        this.errorTracker.errorStateMatcher = this.errorStateMatcher();
-        this.errorTracker.updateErrorState();
     }
 
     /** Writes a form value without emitting a user change. @docs-private */
@@ -240,18 +270,22 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
             value ?? (typeof this.value() === 'number' ? this.bounds().min : [this.bounds().min, this.bounds().max])
         );
     }
+
     /** @docs-private */
     registerOnChange(fn: (value: KbqSliderValue) => void): void {
         this.onChange = fn;
     }
+
     /** @docs-private */
     registerOnTouched(fn: () => void): void {
         this.onTouched = fn;
     }
+
     /** @docs-private */
     setDisabledState(disabled: boolean): void {
         this.formDisabled.set(disabled);
     }
+
     /** @docs-private */
     setDescribedByIds(ids: string[]): void {
         this.describedByIds.set(ids);
@@ -332,6 +366,7 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
 
     /** Focuses the first interactive element. */
     abstract focus(options?: FocusOptions): void;
+
     /** @docs-private */
     abstract onContainerClick(event: MouseEvent): void;
 }

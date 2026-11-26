@@ -42,9 +42,7 @@ import { TRANSLATIONS } from './l10n';
 })
 export class ButtonGroupCustomContentExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly data = computed(() => [this.t().archive, this.t().report, this.t().snooze]);
-
     protected readonly color = KbqComponentColors.ContrastFade;
     protected readonly style = KbqButtonStyles.Filled;
 }

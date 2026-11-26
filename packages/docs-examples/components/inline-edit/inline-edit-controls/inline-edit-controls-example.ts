@@ -162,13 +162,8 @@ import { TRANSLATIONS } from './l10n';
 })
 export class InlineEditControlsExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly maxRows = 20;
-    protected get placeholder(): string {
-        return this.t().placeholder;
-    }
     protected readonly options = Array.from({ length: 10 }, (_, i) => 'Option #' + (i + 1));
-
     protected readonly form = new FormGroup({
         input: new FormControl('Spain'),
         textarea: new FormControl(
@@ -177,8 +172,11 @@ export class InlineEditControlsExample {
         selectMultiple: new FormControl(this.options.slice(0, 5)),
         select: new FormControl(this.options[0])
     });
-
     protected readonly textareaDisplayValue = signal(this.form.controls.textarea.value);
+
+    protected get placeholder(): string {
+        return this.t().placeholder;
+    }
 
     protected update() {
         this.textareaDisplayValue.set(this.form.controls.textarea.value);

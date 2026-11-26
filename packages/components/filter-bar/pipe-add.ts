@@ -72,14 +72,7 @@ import { getId } from './pipes/base-pipe';
 export class KbqPipeAdd {
     /** KbqFilterBar instance */
     protected readonly filterBar = inject(KBQ_FILTER_BAR_HOST);
-
     private readonly nameResolverFromDi = inject(KBQ_FILTER_BAR_NAME_RESOLVER);
-
-    /** @docs-private */
-    readonly select = viewChild.required(KbqSelect);
-
-    /** Event that is generated after add pipe. */
-    readonly onAddPipe = output<KbqPipeTemplate>();
 
     /** template of filter */
     readonly filterTemplate = input<KbqFilter>({
@@ -90,6 +83,12 @@ export class KbqPipeAdd {
         changed: false,
         saved: false
     });
+
+    /** Event that is generated after add pipe. */
+    readonly onAddPipe = output<KbqPipeTemplate>();
+
+    /** @docs-private */
+    readonly select = viewChild.required(KbqSelect);
 
     /**
      * Ids of the pipes already added to the current filter. Used to open an already-added pipe.

@@ -16,6 +16,7 @@
     }
 
     display: block;
+    overflow-x: auto;
 
     .kbq-markdown__input {
         display: none;
@@ -68,20 +69,29 @@
     }
 
     .kbq-markdown__ol {
-        counter-reset: li;
+        display: grid;
+        grid-template-columns: minmax(var(--kbq-size-xxl, 0px), max-content) minmax(0, 1fr);
         padding: 0;
-        list-style: none;
+        list-style: decimal outside;
+
+        // Reserve a leading inset plus the full native marker, including its trailing space.
+        &::after {
+            content: counter(list-item) '. ';
+
+            grid-area: 1 / 1;
+
+            height: 0;
+            padding-inline-start: var(--kbq-size-s);
+
+            white-space: pre;
+            font-variant-numeric: tabular-nums;
+
+            visibility: hidden;
+        }
 
         > li {
-            &::before {
-                content: counter(li) '.';
-                counter-increment: li;
-                padding-right: var(--kbq-markdown-list-size-ol-number-padding-right);
-            }
-
-            > * {
-                display: inline-block;
-            }
+            grid-column: 2;
+            padding-inline-start: var(--kbq-markdown-list-size-ol-number-padding-right);
         }
     }
 

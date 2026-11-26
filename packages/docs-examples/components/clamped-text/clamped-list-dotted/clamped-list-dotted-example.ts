@@ -47,7 +47,7 @@ import { TRANSLATIONS } from './l10n';
                 @if (clampedList.hasToggle()) {
                     <a kbqClampedListTrigger kbqLink pseudo>
                         @if (clampedList.isCollapsed()) {
-                            {{ clampedList.exceededItemCount() }} {{ clampedList.localeConfiguration().moreText }}
+                            {{ clampedList.showMoreCompactCountText() }}
                         } @else {
                             {{ clampedList.localeConfiguration().closeText }}
                         }
@@ -68,9 +68,8 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClampedListDottedExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly collapsed = model(true);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly countries = computed(() => this.t().countries);
 }

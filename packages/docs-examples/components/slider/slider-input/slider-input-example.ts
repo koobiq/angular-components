@@ -64,14 +64,16 @@ import { TRANSLATIONS } from './l10n';
 export class SliderInputExample {
     protected readonly volume = signal(70);
     protected draft: number | null = 70;
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected normalizeVolume(): void {
         this.draft = this.volume();
     }
+
     protected setVolume(value: number | null): void {
         if (value !== null) {
             this.volume.set(Math.max(0, Math.min(100, Math.round(value))));
             this.draft = value;
         }
     }
-    protected readonly t = injectTranslation(TRANSLATIONS);
 }

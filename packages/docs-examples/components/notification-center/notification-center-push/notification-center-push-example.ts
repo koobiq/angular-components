@@ -51,16 +51,14 @@ enum NavbarIcItems {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationCenterPushExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     notificationService = inject(KbqNotificationCenterService);
 
     private readonly actionsTemplate = viewChild<TemplateRef<unknown>>('actionsTemplate');
     private readonly captionTemplate = viewChild<TemplateRef<unknown>>('captionTemplate');
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected items = NavbarIcItems;
     protected selected: NavbarIcItems = NavbarIcItems.Assets;
-
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
 

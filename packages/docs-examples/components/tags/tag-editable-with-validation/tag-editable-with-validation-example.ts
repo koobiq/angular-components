@@ -64,6 +64,7 @@ const TAG = 'Editable tag with validation';
 })
 export class TagEditableWithValidationExample {
     private readonly tooltip = viewChild.required(KbqTooltipTrigger);
+
     protected readonly popUpPlacements = PopUpPlacements;
     protected readonly color = KbqComponentColors;
     protected readonly tagValue = signal(TAG);

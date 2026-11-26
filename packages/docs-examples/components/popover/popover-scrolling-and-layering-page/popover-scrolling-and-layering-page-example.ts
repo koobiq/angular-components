@@ -109,7 +109,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class PopoverScrollingAndLayeringPageExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly popoverContent =
         'Think of a popover as a lightweight, floating window that is directly tethered to the element that summoned it. Unlike a modal dialog, it doesn\'t usually block interaction with the rest of the page entirely, allowing for a faster, more "in-context" workflow. It\'s often activated by clicking a button, icon, or link, and it disappears when the user moves their focus away.';
 }

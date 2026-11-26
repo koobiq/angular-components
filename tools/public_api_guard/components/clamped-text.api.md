@@ -37,6 +37,7 @@ export class KbqClampedList<T> implements KbqClamped {
     readonly isCollapsed: _angular_core.ModelSignal<boolean>;
     readonly items: _angular_core.InputSignal<T[]>;
     readonly localeConfiguration: _angular_core.Signal<_koobiq_components_core.KbqClampedTextLocaleConfiguration>;
+    readonly showMoreCompactCountText: _angular_core.Signal<string>;
     readonly showMoreCountText: _angular_core.Signal<string>;
     toggle(event: Event): void;
     readonly visibleItems: _angular_core.Signal<T[]>;

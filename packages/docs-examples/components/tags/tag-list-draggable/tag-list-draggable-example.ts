@@ -42,6 +42,7 @@ const getTags = () => Array.from({ length: 6 }, (_, id) => ({ id, value: `Dragga
 export class TagListDraggableExample {
     protected readonly tags = model(getTags());
     protected readonly draggable = model(true);
+
     protected readonly color = KbqComponentColors;
 
     protected dropped({ previousIndex, currentIndex, tag }: KbqTagListDroppedEvent): void {

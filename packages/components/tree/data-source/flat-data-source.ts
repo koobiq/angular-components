@@ -142,10 +142,10 @@ enum KbqTreeDataSourceChangeTypes {
  * to type `F` for `KbqTree` to consume.
  */
 export class KbqTreeFlatDataSource<T, F, K = F> extends DataSource<F> {
+    private readonly _data = signal<T[]>([]);
+
     flattenedData = new BehaviorSubject<F[]>([]);
-
     expandedData = new BehaviorSubject<F[]>([]);
-
     filteredData = new BehaviorSubject<F[]>([]);
 
     get data() {
@@ -161,8 +161,6 @@ export class KbqTreeFlatDataSource<T, F, K = F> extends DataSource<F> {
         this.treeControl.dataNodes = flattened;
         this.flattenedData.next(flattened);
     }
-
-    private readonly _data = signal<T[]>([]);
 
     constructor(
         private treeControl: FlatTreeControl<F, K>,

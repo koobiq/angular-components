@@ -22,7 +22,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TabsWithScrollExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly tabs = computed(() => [
         this.t().bruteforce,
         this.t().complexAttack,

@@ -74,22 +74,22 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditDateTimeExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly adapter = inject<DateAdapter<DateTime>>(DateAdapter);
     private readonly formatter = inject<DateFormatter<DateTime>>(DateFormatter);
 
-    protected get placeholder(): string {
-        return this.t().placeholder;
-    }
-    protected readonly displayValue: WritableSignal<string>;
     protected readonly datepickerFormField = viewChild<KbqFormField>('datepickerFormField');
     protected readonly datepicker = viewChild<KbqDatepicker<DateTime>>('datepicker');
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly displayValue: WritableSignal<string>;
     protected readonly form: FormGroup<{
         date: FormControl<DateTime | null>;
         time: FormControl<DateTime | null>;
     }>;
+
+    protected get placeholder(): string {
+        return this.t().placeholder;
+    }
 
     constructor() {
         const today = this.adapter.today();

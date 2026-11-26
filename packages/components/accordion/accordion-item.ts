@@ -43,23 +43,97 @@ export class KbqAccordionItem implements OnChanges, OnInit, OnDestroy {
      * The accordion reads it back to tell its own items apart from a nested accordion's.
      */
     readonly accordion = inject(KbqAccordion);
+
     /** @docs-private */
     protected readonly expansionDispatcher = inject(UniqueSelectionDispatcher);
 
     /** @docs-private */
     readonly trigger = contentChild(KbqAccordionTriggerDirective);
+
     /** @docs-private */
     readonly triggerComponent = contentChild(KbqAccordionTrigger);
 
     /** @docs-private */
     readonly content = contentChild(forwardRef(() => KbqAccordionContentDirective));
 
+    private _id = `kbq-accordion-item-${uniqueIdCounter++}`;
+
+    /**
+     * Follows the binding at once, a static `expanded` included, while the view is created: every item of a
+     * single-mode accordion holds its bound state before the first of them reports in `ngOnInit` and collapses
+     * the others.
+     */
+    private readonly expandedState = linkedSignal(() => !!this.expandedInput());
+
+    /**
+     * The item's own `value` input. Must stay `public`: a `protected` input cannot be bound from a
+     * consumer template (TS2445 under full AOT template type-checking).
+     *
+     * @docs-private
+     */
+    readonly valueInput = input<string>('', { alias: 'value' });
+
+    /** @docs-private */
+    readonly expandedInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'expanded',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** Event emitted every time the AccordionItem is closed. */
+    readonly closed = output<void>();
+
+    /** Event emitted every time the AccordionItem is opened. */
+    readonly opened = output<void>();
+
+    /**
+     * Emits whenever the expanded state of the accordion item changes.
+     * Primarily used to facilitate two-way binding.
+     *
+     * @docs-private
+     */
+    readonly expandedChange = output<boolean>();
+
+    /** The state the item last reported, so a binding change that the state already follows is reported once. */
+    private reportedExpanded = false;
+    private initialized = false;
+    private _disabled = false;
+
+    /** Unregister function for expansionDispatcher. */
+    private removeUniqueSelectionListener: () => void;
+
+    /** Subscription to openAll/closeAll events. */
+    private openCloseAllSubscription = Subscription.EMPTY;
+
+    /**
+     * The item's effective value — its own `value`, or its position inside the accordion when none is
+     * provided.
+     *
+     * The position, rather than the id: the value is what the accordion persists, and the id carries a
+     * global instantiation counter that shifts as soon as anything else on the page is created ahead of
+     * this accordion. The prefix keeps a generated value from colliding with an author-written one.
+     */
+    readonly value = computed(() => {
+        const value = this.valueInput();
+
+        if (value) return value;
+
+        const index = this.accordion.items().indexOf(this);
+
+        // The accordion's content query has not matched this item yet. Nothing is persisted that early —
+        // the accordion suppresses writes until it has read — and the id is unique, so it stands in.
+        return index < 0 ? this.id : `kbq-item-${index}`;
+    });
+
     /** The unique AccordionItem id. */
     get id(): string {
         return this._id;
     }
-
-    private _id = `kbq-accordion-item-${uniqueIdCounter++}`;
 
     /** The current open/closed state of the item. @docs-private */
     get dataState(): KbqAccordionItemState {
@@ -89,58 +163,6 @@ export class KbqAccordionItem implements OnChanges, OnInit, OnDestroy {
         untracked(() => this.setExpanded(expanded));
     }
 
-    /** Body of the `expanded` setter. */
-    private setExpanded(expanded: boolean): void {
-        // Only emit events and update the internal value if the value changes.
-        if (this.expandedState() !== expanded) {
-            this.expandedState.set(expanded);
-
-            // Before `ngOnInit` the accordion's inputs may still be unbound, this item may not be in its `items()`
-            // and nothing listens to the outputs yet.
-            if (this.initialized) this.reportExpanded();
-        }
-    }
-
-    /**
-     * Follows the binding at once, a static `expanded` included, while the view is created: every item of a
-     * single-mode accordion holds its bound state before the first of them reports in `ngOnInit` and collapses
-     * the others.
-     */
-    private readonly expandedState = linkedSignal(() => !!this.expandedInput());
-
-    /** The state the item last reported, so a binding change that the state already follows is reported once. */
-    private reportedExpanded = false;
-
-    private initialized = false;
-
-    /**
-     * The item's own `value` input. Must stay `public`: a `protected` input cannot be bound from a
-     * consumer template (TS2445 under full AOT template type-checking).
-     *
-     * @docs-private
-     */
-    readonly valueInput = input<string>('', { alias: 'value' });
-
-    /**
-     * The item's effective value — its own `value`, or its position inside the accordion when none is
-     * provided.
-     *
-     * The position, rather than the id: the value is what the accordion persists, and the id carries a
-     * global instantiation counter that shifts as soon as anything else on the page is created ahead of
-     * this accordion. The prefix keeps a generated value from colliding with an author-written one.
-     */
-    readonly value = computed(() => {
-        const value = this.valueInput();
-
-        if (value) return value;
-
-        const index = this.accordion.items().indexOf(this);
-
-        // The accordion's content query has not matched this item yet. Nothing is persisted that early —
-        // the accordion suppresses writes until it has read — and the id is unique, so it stands in.
-        return index < 0 ? this.id : `kbq-item-${index}`;
-    });
-
     /** Whether the AccordionItem is disabled. */
     // An accessor, not a signal: `KbqAccordionItem` is a `FocusKeyManager` option, and
     // `ListKeyManagerOption.disabled` (core/a11y/key-manager) is read as a plain `boolean` — a signal
@@ -152,53 +174,6 @@ export class KbqAccordionItem implements OnChanges, OnInit, OnDestroy {
 
     set disabled(value: boolean) {
         this._disabled = value;
-    }
-
-    private _disabled = false;
-
-    /** Event emitted every time the AccordionItem is closed. */
-    readonly closed = output<void>();
-    /** Event emitted every time the AccordionItem is opened. */
-    readonly opened = output<void>();
-
-    /**
-     * Emits whenever the expanded state of the accordion item changes.
-     * Primarily used to facilitate two-way binding.
-     *
-     * @docs-private
-     */
-    readonly expandedChange = output<boolean>();
-
-    /** Unregister function for expansionDispatcher. */
-    private removeUniqueSelectionListener: () => void;
-
-    /** Subscription to openAll/closeAll events. */
-    private openCloseAllSubscription = Subscription.EMPTY;
-
-    /** @docs-private */
-    readonly expandedInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'expanded',
-        transform: booleanAttribute
-    });
-
-    /** @docs-private */
-    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'disabled',
-        transform: booleanAttribute
-    });
-
-    ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member; unbound, it leaves what code wrote.
-        // The state already follows the binding; a later change still has to be reported, once.
-        if (changes['expandedInput'] && this.initialized && this.expanded !== this.reportedExpanded) {
-            this.reportExpanded();
-        }
-
-        if (changes['disabledInput']) {
-            const disabled = this.disabledInput();
-
-            if (disabled !== undefined) this.disabled = disabled;
-        }
     }
 
     constructor() {
@@ -230,6 +205,20 @@ export class KbqAccordionItem implements OnChanges, OnInit, OnDestroy {
         this.openCloseAllSubscription = this.subscribeToOpenCloseAllActions();
     }
 
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
+        // The state already follows the binding; a later change still has to be reported, once.
+        if (changes['expandedInput'] && this.initialized && this.expanded !== this.reportedExpanded) {
+            this.reportExpanded();
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+    }
+
     ngOnInit(): void {
         this.initialized = true;
 
@@ -239,6 +228,18 @@ export class KbqAccordionItem implements OnChanges, OnInit, OnDestroy {
     ngOnDestroy() {
         this.removeUniqueSelectionListener();
         this.openCloseAllSubscription.unsubscribe();
+    }
+
+    /** Body of the `expanded` setter. */
+    private setExpanded(expanded: boolean): void {
+        // Only emit events and update the internal value if the value changes.
+        if (this.expandedState() !== expanded) {
+            this.expandedState.set(expanded);
+
+            // Before `ngOnInit` the accordion's inputs may still be unbound, this item may not be in its `items()`
+            // and nothing listens to the outputs yet.
+            if (this.initialized) this.reportExpanded();
+        }
     }
 
     /** Moves focus to the item's trigger. */

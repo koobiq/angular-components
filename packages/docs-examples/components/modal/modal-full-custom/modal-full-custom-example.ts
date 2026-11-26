@@ -31,10 +31,9 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomModalComponent {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly modalRef = inject(KbqModalRef);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     readonly items = Array.from({ length: 30 }, (_, i) => 'Item #' + i);
 }
 
@@ -50,9 +49,9 @@ export class CustomModalComponent {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalFullCustomExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly modalService = inject(KbqModalService);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     openModal(): void {
         this.modalService.open({

@@ -192,8 +192,9 @@ type ExampleAction = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopBarOverflowExample implements AfterViewInit {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly scrollable = viewChild.required(CdkScrollable);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 768px)')
@@ -203,11 +204,7 @@ export class TopBarOverflowExample implements AfterViewInit {
             ),
         { initialValue: true }
     );
-
-    protected readonly scrollable = viewChild.required(CdkScrollable);
-
     readonly hasOverflow: WritableSignal<boolean | undefined> = signal(false);
-
     readonly actions: ExampleAction[] = [
         {
             id: 'search',
@@ -220,7 +217,6 @@ export class TopBarOverflowExample implements AfterViewInit {
         { id: 'button1', text: 'Add object', color: KbqComponentColors.Contrast, style: '', alwaysVisible: true },
         { id: 'button2', text: 'Button', color: KbqComponentColors.ContrastFade, style: '' }
     ];
-
     protected readonly PopUpPlacements = PopUpPlacements;
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;

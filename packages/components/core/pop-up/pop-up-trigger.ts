@@ -1,5 +1,6 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { ENTER, ESCAPE, SPACE } from '@angular/cdk/keycodes';
 import {
     CdkScrollable,
     type ConnectedOverlayPositionChange,
@@ -32,7 +33,6 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { delay as rxDelay, distinctUntilChanged, type Observable, Subscription } from 'rxjs';
-import { ENTER, ESCAPE, SPACE } from '../keycodes';
 import { kbqGetOverlayOriginSize, type KbqOverlayOrigin, kbqResolveOverlayOrigin } from '../overlay/overlay-origin';
 import {
     EXTENDED_OVERLAY_POSITIONS,
@@ -48,6 +48,7 @@ import {
     PopUpPlacements,
     PopUpTriggers
 } from './constants';
+import { kbqIsEventPreventHide } from './event-prevent-hide';
 import type { KbqPopUp } from './pop-up';
 
 type KbqPopupTriggerOffset = Pick<ConnectionPositionPair, 'offsetX' | 'offsetY'>;
@@ -178,6 +179,27 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      */
     protected readonly scrollable = inject(CdkScrollable, { optional: true });
 
+    /** Backing signal of `isOpen`, so that the host bindings and templates reading it follow it by themselves. */
+    private readonly openState = signal(false);
+
+    /** Handle of the queued `reapplyLastPosition` task, so repeated input updates schedule it only once. */
+    private repositionTimeoutId: ReturnType<typeof setTimeout> | undefined;
+
+    /** Handle of the deferred show scheduled by the `keydown` trigger. */
+    private keydownShowTimeoutId: ReturnType<typeof setTimeout> | undefined;
+
+    /** Whether the attached pop-up hides once the pointer has left both it and the trigger (`hideWithTimeout`). */
+    private hoverHideArmed = false;
+
+    /** Whether the pointer was over the trigger or the pop-up when the hover hide last looked. */
+    private hoveredOverEither: boolean | undefined;
+
+    /** Handle of the hide the hover hide has scheduled. */
+    private hoverHideTimeoutId: ReturnType<typeof setTimeout> | undefined;
+
+    /** Origin currently applied to the position strategy; `null` follows the configured origin or host. */
+    private activeOrigin: FlexibleConnectedPositionStrategyOrigin | null = null;
+
     /**
      * Factory returning the overlay scroll strategy; provided by the concrete subclass.
      *
@@ -191,34 +213,6 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      * @docs-private
      */
     protected externalNativeElement: HTMLElement | undefined;
-
-    /** Whether the pop-up overlay is currently open. */
-    get isOpen(): boolean {
-        return this.openState();
-    }
-
-    set isOpen(value: boolean) {
-        this.openState.set(value);
-    }
-
-    /** Backing signal of `isOpen`, so that the host bindings and templates reading it follow it by themselves. */
-    private readonly openState = signal(false);
-
-    /**
-     * Whether the pop-up overlay is currently attached.
-     *
-     * Unlike `isOpen`, which follows the visibility of the pop-up component and therefore lags a task behind
-     * `show()`/`hide()`, this flips synchronously — it is the window during which the overlay (and its
-     * backdrop) is present in the DOM. Part of the {@link KbqSiblingPopup} contract.
-     */
-    get isAttached(): boolean {
-        return !!this.instance;
-    }
-
-    /** Emits `true` when the pop-up opens and `false` when it closes. Part of the {@link KbqSiblingPopup} contract. */
-    get openedChange(): Observable<boolean> {
-        return this.visibleChange;
-    }
 
     /**
      * Delay in milliseconds before the pop-up is shown.
@@ -398,16 +392,6 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      * @docs-private
      */
     protected closingActionsSubscription: Subscription = Subscription.EMPTY;
-    /** Handle of the queued `reapplyLastPosition` task, so repeated input updates schedule it only once. */
-    private repositionTimeoutId: ReturnType<typeof setTimeout> | undefined;
-    /** Handle of the deferred show scheduled by the `keydown` trigger. */
-    private keydownShowTimeoutId: ReturnType<typeof setTimeout> | undefined;
-    /** Whether the attached pop-up hides once the pointer has left both it and the trigger (`hideWithTimeout`). */
-    private hoverHideArmed = false;
-    /** Whether the pointer was over the trigger or the pop-up when the hover hide last looked. */
-    private hoveredOverEither: boolean | undefined;
-    /** Handle of the hide the hover hide has scheduled. */
-    private hoverHideTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
     /**
      * Map of placement name to its CDK connected position pair.
@@ -437,9 +421,6 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      */
     protected origin: KbqOverlayOrigin | null = null;
 
-    /** Origin currently applied to the position strategy; `null` follows the configured origin or host. */
-    private activeOrigin: FlexibleConnectedPositionStrategyOrigin | null = null;
-
     /**
      * Hide pop-up with timeout. Need if you want to show pop-up after leaving trigger
      *
@@ -454,33 +435,30 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      */
     protected preventClose: boolean = false;
 
-    /**
-     * Applies the placement (and modifier) CSS classes to the open pop-up; implemented by the subclass.
-     *
-     * @docs-private
-     */
-    abstract updateClassMap(newPlacement?: string): void;
+    /** Whether the pop-up overlay is currently open. */
+    get isOpen(): boolean {
+        return this.openState();
+    }
+
+    set isOpen(value: boolean) {
+        this.openState.set(value);
+    }
 
     /**
-     * Pushes the current inputs (content, arrow, offset, …) into the open pop-up; implemented by the subclass.
+     * Whether the pop-up overlay is currently attached.
      *
-     * @docs-private
+     * Unlike `isOpen`, which follows the visibility of the pop-up component and therefore lags a task behind
+     * `show()`/`hide()`, this flips synchronously — it is the window during which the overlay (and its
+     * backdrop) is present in the DOM. Part of the {@link KbqSiblingPopup} contract.
      */
-    abstract updateData(): void;
+    get isAttached(): boolean {
+        return !!this.instance;
+    }
 
-    /**
-     * Returns the stream of events that should close the pop-up; implemented by the subclass.
-     *
-     * @docs-private
-     */
-    abstract closingActions(): Observable<any>;
-
-    /**
-     * Returns the component type to attach as the pop-up overlay; implemented by the subclass.
-     *
-     * @docs-private
-     */
-    abstract getOverlayHandleComponentType(): Type<T>;
+    /** Emits `true` when the pop-up opens and `false` when it closes. Part of the {@link KbqSiblingPopup} contract. */
+    get openedChange(): Observable<boolean> {
+        return this.visibleChange;
+    }
 
     /** Binds the DOM event listeners for the configured triggers. */
     ngOnInit(): void {
@@ -504,6 +482,34 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
 
         this.listeners.clear();
     }
+
+    /**
+     * Applies the placement (and modifier) CSS classes to the open pop-up; implemented by the subclass.
+     *
+     * @docs-private
+     */
+    abstract updateClassMap(newPlacement?: string): void;
+
+    /**
+     * Pushes the current inputs (content, arrow, offset, …) into the open pop-up; implemented by the subclass.
+     *
+     * @docs-private
+     */
+    abstract updateData(): void;
+
+    /**
+     * Returns the stream of events that should close the pop-up; implemented by the subclass.
+     *
+     * @docs-private
+     */
+    abstract closingActions(): Observable<unknown>;
+
+    /**
+     * Returns the component type to attach as the pop-up overlay; implemented by the subclass.
+     *
+     * @docs-private
+     */
+    abstract getOverlayHandleComponentType(): Type<T>;
 
     /**
      * Sets the placement (falling back to `Top` on an unknown value) and refreshes the classes and position.
@@ -1130,11 +1136,14 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     private subscribeOnClosingActions() {
         this.closingActionsSubscription.unsubscribe();
 
+        // `rxDelay(0)` is load-bearing: the stream emits a click from CDK's capture-phase
+        // document listener, before the bubble-phase handlers that mark the event run, so the
+        // mark is only visible after the dispatch completes.
         this.closingActionsSubscription = this.closingActions()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .pipe(rxDelay(0))
             .subscribe((event) => {
-                if (event?.type === 'click' && event.kbqPopoverPreventHide) {
+                if (event instanceof Event && event.type === PopUpTriggers.Click && kbqIsEventPreventHide(event)) {
                     return;
                 }
 

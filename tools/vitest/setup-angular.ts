@@ -57,7 +57,9 @@ globalThis.ResizeObserverEntry = class {} as typeof ResizeObserverEntry;
 
 globalThis.ResizeObserver = class implements ResizeObserver {
     observe(_target: Element, _options?: ResizeObserverOptions): void {}
+
     unobserve(_target: Element): void {}
+
     disconnect(): void {}
 };
 

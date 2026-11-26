@@ -111,13 +111,13 @@ export const kbqTimezoneLocaleConfigurationProvider = (
     exportAs: 'kbqTimezoneSelect'
 })
 export class KbqTimezoneSelect extends KbqSelect {
-    override readonly customTrigger = contentChild(KbqTimezoneSelectTrigger);
-
     /** Strings currently rendered by the select. */
     readonly timezoneLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'timezone',
         KBQ_TIMEZONE_LOCALE_CONFIGURATION
     );
+
+    override readonly customTrigger = contentChild(KbqTimezoneSelectTrigger);
 
     /** Form field of the search, whose control carries the placeholder. */
     private readonly searchFormField = contentChild(KbqSelectSearch, { read: KbqFormField });

@@ -16,6 +16,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class AccordionContentExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     image: boolean = false;
 }

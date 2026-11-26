@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
@@ -18,4 +18,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class CheckboxOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly checked = signal(false);
+    protected readonly bigChecked = signal(true);
 }

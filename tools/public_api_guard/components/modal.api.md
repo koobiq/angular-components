@@ -21,6 +21,8 @@ import * as i6 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { KbqButtonColor } from '@koobiq/components/button';
+import { KbqCanClose } from '@koobiq/components/core';
+import { KbqCloseReason } from '@koobiq/components/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqOverflowShadowState } from '@koobiq/components/core';
 import * as _koobiq_components_modal from '@koobiq/components/modal';
@@ -78,7 +80,7 @@ export interface IModalButtonOptions<T = any> {
 }
 
 // @public (undocumented)
-export interface IModalOptionsForService<T = any> extends ModalOptions<T> {
+export interface IModalOptionsForService<T = any> extends KbqModalConfig<T> {
     injector?: Injector;
 }
 
@@ -146,6 +148,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     readonly bodyContainer: _angular_core.Signal<ViewContainerRef>;
     readonly bodyOverflow: _angular_core.WritableSignal<KbqOverflowShadowState>;
     protected buttonColor(button: IModalButtonOptions<T>): KbqButtonColor;
+    canClose: KbqCanClose | undefined;
     readonly captionId: string;
     protected readonly captionKind: _angular_core.Signal<KbqModalSlotKind>;
     protected readonly captionTemplate: _angular_core.Signal<TemplateRef<{}> | null>;
@@ -172,7 +175,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     getElement(): HTMLElement;
     // (undocumented)
     getInstance(): KbqModalComponent;
-    protected handleCloseResult(triggerType: 'ok' | 'cancel', canClose: (doClose: boolean | void | {}) => boolean): void;
+    protected handleCloseResult(triggerType: 'ok' | 'cancel', shouldClose: (doClose: boolean | void | {}) => boolean, reason?: KbqCloseReason): void;
     protected get hasFooter(): boolean;
     // (undocumented)
     get hidden(): boolean;
@@ -238,13 +241,14 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     // (undocumented)
     onClickCloseBtn(): void;
     protected onClickMask($event: MouseEvent): void;
-    protected onClickOkCancel(type: 'ok' | 'cancel'): void;
+    protected onClickOkCancel(type: 'ok' | 'cancel', reason?: KbqCloseReason): void;
     protected onKeyDown(event: KeyboardEvent): void;
     // (undocumented)
     open(): void;
     registerCaption(): void;
     registerFooter(): void;
     registerTitle(): void;
+    requestClose(reason: KbqCloseReason, result?: R, force?: boolean): void;
     setBodyOverflow(state: KbqOverflowShadowState): void;
     setMaskEnabled(enabled: boolean): void;
     readonly titleId: string;
@@ -259,6 +263,11 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqModalComponent<any, any>, "kbq-modal", never, { "kbqModalType": { "alias": "kbqModalType"; "required": false; "isSignal": true; }; "kbqComponent": { "alias": "kbqComponent"; "required": false; "isSignal": true; }; "kbqContent": { "alias": "kbqContent"; "required": false; "isSignal": true; }; "kbqFooter": { "alias": "kbqFooter"; "required": false; "isSignal": true; }; "kbqVisible": { "alias": "kbqVisible"; "required": false; "isSignal": true; }; "kbqWidth": { "alias": "kbqWidth"; "required": false; "isSignal": true; }; "kbqSize": { "alias": "kbqSize"; "required": false; "isSignal": true; }; "kbqWrapClassName": { "alias": "kbqWrapClassName"; "required": false; "isSignal": true; }; "kbqClassName": { "alias": "kbqClassName"; "required": false; "isSignal": true; }; "kbqStyle": { "alias": "kbqStyle"; "required": false; "isSignal": true; }; "kbqTitle": { "alias": "kbqTitle"; "required": false; "isSignal": true; }; "kbqCaption": { "alias": "kbqCaption"; "required": false; "isSignal": true; }; "kbqCloseByESC": { "alias": "kbqCloseByESC"; "required": false; "isSignal": true; }; "kbqAutoFocus": { "alias": "kbqAutoFocus"; "required": false; "isSignal": true; }; "kbqAriaLabel": { "alias": "kbqAriaLabel"; "required": false; "isSignal": true; }; "kbqClosable": { "alias": "kbqClosable"; "required": false; "isSignal": true; }; "kbqMask": { "alias": "kbqMask"; "required": false; "isSignal": true; }; "kbqMaskClosable": { "alias": "kbqMaskClosable"; "required": false; "isSignal": true; }; "kbqMaskStyle": { "alias": "kbqMaskStyle"; "required": false; "isSignal": true; }; "kbqBodyStyle": { "alias": "kbqBodyStyle"; "required": false; "isSignal": true; }; "kbqOkText": { "alias": "kbqOkText"; "required": false; "isSignal": true; }; "kbqOkType": { "alias": "kbqOkType"; "required": false; "isSignal": true; }; "kbqRestoreFocus": { "alias": "kbqRestoreFocus"; "required": false; "isSignal": true; }; "kbqOkLoading": { "alias": "kbqOkLoading"; "required": false; "isSignal": true; }; "kbqOkClick": { "alias": "kbqOkClick"; "required": false; "isSignal": true; }; "kbqCancelText": { "alias": "kbqCancelText"; "required": false; "isSignal": true; }; "kbqCancelLoading": { "alias": "kbqCancelLoading"; "required": false; "isSignal": true; }; "kbqCancelClick": { "alias": "kbqCancelClick"; "required": false; "isSignal": true; }; "kbqGetContainer": { "alias": "kbqGetContainer"; "required": false; "isSignal": true; }; }, { "kbqVisible": "kbqVisibleChange"; "kbqAfterOpenOutput": "kbqAfterOpen"; "kbqAfterCloseOutput": "kbqAfterClose"; "kbqBeforeCloseOutput": "kbqBeforeClose"; "kbqOnOkOutput": "kbqOnOk"; "kbqOnCancelOutput": "kbqOnCancel"; }, never, ["*"], true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqModalComponent<any, any>, never>;
+}
+
+// @public
+export interface KbqModalConfig<C = any, R = any> extends ModalOptions<C, R> {
+    canClose?: KbqCanClose;
 }
 
 // @public (undocumented)
@@ -298,6 +307,7 @@ export abstract class KbqModalRef<C = any, R = unknown> {
     abstract afterOpen: Observable<void>;
     // (undocumented)
     abstract beforeClose: Observable<R | undefined>;
+    canClose: KbqCanClose | undefined;
     // (undocumented)
     abstract close(result?: R): void;
     // (undocumented)
@@ -308,6 +318,7 @@ export abstract class KbqModalRef<C = any, R = unknown> {
     abstract markForCheck(): void;
     // (undocumented)
     abstract open(): void;
+    requestClose(_reason: KbqCloseReason, result?: R): void;
     abstract triggerCancel(): void;
     abstract triggerOk(): void;
 }
@@ -358,7 +369,7 @@ export class ModalBuilderForService {
     readonly options: IModalOptionsForService;
 }
 
-// @public (undocumented)
+// @public @deprecated
 export interface ModalOptions<C = any, R = any> {
     data?: unknown;
     kbqAfterClose?: EventEmitter<R>;

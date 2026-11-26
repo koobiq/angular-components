@@ -62,6 +62,7 @@ const opensElsewhere = ({ button, ctrlKey, metaKey, shiftKey, altKey }: MouseEve
 })
 export class DocsApiCodePlaceholder {
     readonly code = input.required<string>();
+
     /** Whether the block is filled, as the blocks of JSDoc are, rather than outlined, as a signature is. */
     readonly filled = input(false, { transform: booleanAttribute });
 }
@@ -93,9 +94,9 @@ export class DocsApiCodePlaceholder {
     host: { class: 'docs-api__text' }
 })
 export class DocsApiText {
-    readonly blocks = input.required<DocsApiBlock[]>();
-
     private readonly sanitizer = inject(DomSanitizer);
+
+    readonly blocks = input.required<DocsApiBlock[]>();
 
     // The HTML is compiled from the JSDoc of the repository at build time, so it is trusted rather than sanitized: the
     // sanitizer would drop the `data-docsearch-*` attributes the search crawler reads the text by.
@@ -107,7 +108,8 @@ export class DocsApiText {
 }
 
 /**
- * A type, the names of the entries documented on an API tab in it linked to their sections. Each piece of text is an
+ * A type, the names of the entries documented on an API tab in it linked to their sections, and those of Angular, its
+ * CDK and RxJS to their documentation, in a new tab as the other links leaving the site. Each piece of text is an
  * `ng-container` of its own: the whitespace of the template around it is then dropped, not kept as a space in the type.
  */
 @Component({
@@ -117,6 +119,10 @@ export class DocsApiText {
         @for (part of parts(); track $index) {
             @if (!part.link) {
                 <ng-container>{{ part.text }}</ng-container>
+            } @else if (part.link.url) {
+                <a kbqLink underline="none" target="_blank" rel="noopener noreferrer" [href]="part.link.url">
+                    <ng-container>{{ part.text }}</ng-container>
+                </a>
             } @else if (part.link.page) {
                 <a kbqLink underline="none" [fragment]="part.text" [routerLink]="getTabPath(part.link.page)">
                     <ng-container>{{ part.text }}</ng-container>
@@ -140,13 +146,14 @@ export class DocsApiText {
     encapsulation: ViewEncapsulation.None
 })
 export class DocsApiType {
-    readonly parts = input.required<DocsApiTypePart[]>();
-
-    protected readonly withoutMember = DOCS_API_WITHOUT_MEMBER;
-
     private readonly locale = inject(DOCS_API_LOCALE);
     private readonly document = inject(DOCUMENT);
+
+    readonly parts = input.required<DocsApiTypePart[]>();
+
     private readonly scrollBehavior: ScrollBehavior = kbqAnimationsDisabled() ? 'instant' : 'smooth';
+
+    protected readonly withoutMember = DOCS_API_WITHOUT_MEMBER;
 
     /** The path of another API tab, in the locale of the interface. */
     protected getTabPath(page: string): string {
@@ -191,25 +198,25 @@ export class DocsApiType {
     encapsulation: ViewEncapsulation.None
 })
 export class DocsApiLink {
+    protected readonly locale = inject(DOCS_API_LOCALE);
+    private readonly clipboard = inject(DocsClipboardService);
+
     /** What the link leads to, as its label names it. */
     readonly name = input.required<string>();
+
     /** The id of the member the link selects. */
     readonly member = input<string>();
+
     /** The id of the heading the link leads to. */
     readonly heading = input<string>();
 
-    protected readonly locale = inject(DOCS_API_LOCALE);
-
     /** The name of the link, in the language of the interface rather than of the JSDoc. */
     protected readonly label = computed(() => docsTranslateTemplate('apiCopyLink', this.locale(), this.name()));
-
     protected readonly queryParams = computed((): Params => {
         const member = this.member();
 
         return member ? { [DOCS_API_MEMBER_PARAM]: member } : DOCS_API_WITHOUT_MEMBER;
     });
-
-    private readonly clipboard = inject(DocsClipboardService);
 
     protected follow(link: HTMLAnchorElement, event: MouseEvent): void {
         if (!opensElsewhere(event)) this.clipboard.copyWithToast(link.href);
@@ -279,6 +286,7 @@ const TEMPLATE_KINDS = new Set(['component', 'directive', 'pipe']);
 })
 export class DocsApiPage extends DocsLocaleState {
     readonly entryPoint = input.required<DocsApiEntryPoint>();
+
     /** The id of the member a link points at, which the page highlights. */
     readonly selectedMember = input<string | null>(null);
 

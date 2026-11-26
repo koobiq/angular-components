@@ -1,9 +1,10 @@
 import { InputModalityDetector } from '@angular/cdk/a11y';
+import { ENTER } from '@angular/cdk/keycodes';
 import { DOCUMENT } from '@angular/common';
 import { type DebugElement, ElementRef } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { dispatchKeyboardEvent, ENTER } from '@koobiq/components/core';
+import { dispatchKeyboardEvent } from '@koobiq/components/core';
 import type { KbqFilter, KbqPipe } from '@koobiq/components/filter-bar';
 
 /**

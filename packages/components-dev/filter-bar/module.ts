@@ -156,7 +156,6 @@ export class DevDatePipesWithoutValues {
             disabled: false
         }
     ];
-
     protected readonly pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Date',
@@ -203,13 +202,6 @@ export class DevApp implements AfterViewInit {
     readonly optionTemplate = viewChild.required<TemplateRef<any>>('optionTemplate');
 
     readonly searchControl = new FormControl('');
-
-    constructor() {
-        this.searchControl.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((value) => this.onSearch(value ?? ''));
-    }
-
     filters: KbqFilter[] = [
         {
             name: 'select',
@@ -886,6 +878,12 @@ export class DevApp implements AfterViewInit {
     pipeTemplates: KbqPipeTemplate[] = [];
     defaultFilter: KbqFilter | null = this.filters[2] ?? null;
     activeFilter: KbqFilter | null = this.defaultFilter;
+
+    constructor() {
+        this.searchControl.valueChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((value) => this.onSearch(value ?? ''));
+    }
 
     ngAfterViewInit(): void {
         this.pipeTemplates = [

@@ -24,6 +24,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class PopoverHeaderExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     badgeColors = KbqBadgeColors;
 }

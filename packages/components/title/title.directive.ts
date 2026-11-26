@@ -80,6 +80,23 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
      */
     override readonly ignoreTooltipPointerEvents = input<boolean>(true);
 
+    /** Projected text elements marked with the `#kbqTitleText` template reference. */
+    private readonly childContainer: Signal<readonly ElementRef<HTMLElement>[]> = contentChildren('kbqTitleText', {
+        descendants: true,
+        read: ElementRef
+    });
+
+    /** Projected container element marked with the `#kbqTitleContainer` template reference. */
+    private readonly parentContainer: Signal<ElementRef<HTMLElement> | undefined> = contentChild('kbqTitleContainer', {
+        read: ElementRef
+    });
+
+    /** Debounce/throttle interval (ms) applied to the resize and content-observer streams. */
+    private readonly debounceInterval: number = 100;
+
+    /** Whether the host holds the keyboard focus, as the focus monitor reports it. */
+    private keyboardFocused = false;
+
     /**
      * The hint repeats text the host had to clip, so `kbqTooltipDisabled="false"` cannot conjure one for a
      * fully visible title.
@@ -171,12 +188,6 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
         return this.titleContent() || this.viewValue;
     }
 
-    /** Debounce/throttle interval (ms) applied to the resize and content-observer streams. */
-    private readonly debounceInterval: number = 100;
-
-    /** Whether the host holds the keyboard focus, as the focus monitor reports it. */
-    private keyboardFocused = false;
-
     /**
      * Whether the pointer or the keyboard focus is on the host: the only time the overflow verdict is read. The two
      * are tracked apart — `hovered` comes from the pop-up base, which binds it to the same `mouseenter`/`mouseleave`
@@ -186,17 +197,6 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
     private get entered(): boolean {
         return this.hovered() || this.keyboardFocused;
     }
-
-    /** Projected text elements marked with the `#kbqTitleText` template reference. */
-    private readonly childContainer: Signal<readonly ElementRef<HTMLElement>[]> = contentChildren('kbqTitleText', {
-        descendants: true,
-        read: ElementRef
-    });
-
-    /** Projected container element marked with the `#kbqTitleContainer` template reference. */
-    private readonly parentContainer: Signal<ElementRef<HTMLElement> | undefined> = contentChild('kbqTitleContainer', {
-        read: ElementRef
-    });
 
     constructor() {
         super();

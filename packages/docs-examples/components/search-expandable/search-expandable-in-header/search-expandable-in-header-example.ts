@@ -67,6 +67,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class SearchExpandableInHeaderExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     search: string = 'report';
 }

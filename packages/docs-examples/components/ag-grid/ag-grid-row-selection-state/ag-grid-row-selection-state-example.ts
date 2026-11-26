@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -14,6 +14,8 @@ import {
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { exampleIncidentColumns } from '../incident-columns';
+import { exampleGetIncidents, type ExampleSecurityIncident } from '../security-incidents';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -31,11 +33,11 @@ ModuleRegistry.registerModules([AllCommunityModule]);
             #rowSelectionState="kbqAgGridRowSelectionState"
             kbqAgGridTheme
             kbqAgGridThemeDisableCellFocusStyles
-            kbqAgGridRowSelectionState="example-ag-grid-row-selection-state"
+            kbqAgGridRowSelectionState="example-ag-grid-incidents-row-selection-state"
             [getRowId]="getRowId"
             [rowSelection]="rowSelection"
             [rowData]="rowData"
-            [columnDefs]="columnDefs"
+            [columnDefs]="columnDefs()"
             [style.height.px]="300"
             [style.width.%]="100"
             [defaultColDef]="defaultColDef"
@@ -56,8 +58,6 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class AgGridRowSelectionStateExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
-    protected readonly getRowId = (params: GetRowIdParams): string => params.data.column0;
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true
@@ -67,12 +67,8 @@ export class AgGridRowSelectionStateExample {
         headerCheckbox: true,
         checkboxes: true
     };
-    protected readonly columnDefs: ColDef[] = Array.from({ length: 5 }, (_, i) => ({
-        field: 'column' + i,
-        headerName: 'Column ' + i,
-        width: 130
-    }));
-    protected readonly rowData = Array.from({ length: 100 }, (_, index) =>
-        Object.fromEntries(Array.from({ length: 5 }, (_, i) => ['column' + i, 'Text ' + index]))
-    );
+    protected readonly columnDefs = computed(() => exampleIncidentColumns(this.t().headers));
+    protected readonly rowData = exampleGetIncidents();
+
+    protected readonly getRowId = (params: GetRowIdParams<ExampleSecurityIncident>): string => params.data.id;
 }

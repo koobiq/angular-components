@@ -76,14 +76,13 @@ import { TRANSLATIONS } from './l10n';
 })
 export class InlineEditVerticalListExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
-    protected get placeholder(): string {
-        return this.t().placeholder;
-    }
-
     protected readonly form = new FormGroup({
         country: new FormControl('Spain'),
         capital: new FormControl('Madrid'),
         currency: new FormControl('Euro')
     });
+
+    protected get placeholder(): string {
+        return this.t().placeholder;
+    }
 }

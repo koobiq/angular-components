@@ -3,6 +3,7 @@ import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrollin
 import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { EMPTY } from 'rxjs';
+import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -349,7 +350,6 @@ export class E2eMultilineSelectOverflow {
         value: `opt-${index}`,
         viewValue: `Option ${index}`
     }));
-
     readonly control = new UntypedFormControl(this.foods.map(({ value }) => value));
     readonly fieldWidth = signal(180);
 }
@@ -650,6 +650,9 @@ export class E2eMultiSelectNarrow {
     }
 })
 export class E2eVirtualScrollMultiSelectNarrow {
+    readonly select = viewChild.required(KbqSelect);
+    readonly viewport = viewChild.required(CdkVirtualScrollViewport);
+
     readonly itemSize = 32;
     values: string[] = [];
     readonly options = [
@@ -664,9 +667,6 @@ export class E2eVirtualScrollMultiSelectNarrow {
         'Beslan',
         'Biysk'
     ];
-
-    readonly select = viewChild.required(KbqSelect);
-    readonly viewport = viewChild.required(CdkVirtualScrollViewport);
 }
 
 @Component({
@@ -708,6 +708,7 @@ export class E2eVirtualScrollMultiSelectNarrow {
 })
 export class E2eSelectLongOptionText {
     private counter = 0;
+
     readonly changingLabel = signal(
         'Changed Long long long long Long long long long Long long long long Long long long long Long long long long Long long long long text'
     );
@@ -782,6 +783,7 @@ export class E2eSelectPanelMaxHeight {
 })
 export class E2eVirtualScrollSelectPanelMaxHeight {
     readonly itemSize = 32;
+
     // Fewer options than the cap can show, so that the pinned viewport height is observable.
     readonly options = ['Abakan', 'Almetyevsk', 'Anadyr'];
 }
@@ -921,9 +923,9 @@ export class E2eSelectScrollbarNoOverflow {}
     }
 })
 export class E2eVirtualScrollSelectScrollbar {
-    protected readonly options = Array.from({ length: 10000 }).map((_, i) => `Option ${i}`);
     protected readonly viewport = viewChild.required(CdkVirtualScrollViewport);
 
+    protected readonly options = Array.from({ length: 10000 }).map((_, i) => `Option ${i}`);
     protected selected = this.options[0];
 
     protected openedChange(isOpened: boolean): void {
@@ -977,4 +979,59 @@ export class E2eSelectFooterAction {
     // scrolling list rather than sitting under a short one.
     protected readonly options = Array.from({ length: 10 }).map((_, i) => `Option ${i}`);
     protected readonly selected = this.options[0];
+}
+
+@Component({
+    selector: 'e2e-select-with-groups-label',
+    imports: [
+        KbqSelectModule,
+        KbqBadgeModule
+    ],
+    template: `
+        <kbq-form-field [attr.data-testid]="'e2eFormField'">
+            <kbq-select data-testid="e2eSelect" multiple placeholder="Pokemon" [value]="selected">
+                @for (group of pokemonTypes; track group.name) {
+                    <kbq-optgroup #optgroup="kbqOptgroup" [label]="group.name">
+                        <div kbq-optgroup-label>
+                            {{ group.name }}
+                            <kbq-badge aria-hidden="true">{{ optgroup.selectedCount }}</kbq-badge>
+                        </div>
+                        @for (pokemon of group.pokemon; track pokemon.value) {
+                            <kbq-option [value]="pokemon.value">{{ pokemon.viewValue }}</kbq-option>
+                        }
+                    </kbq-optgroup>
+                }
+            </kbq-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 16px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eSelectWithGroupsLabel'
+    }
+})
+export class E2eSelectWithGroupsLabel {
+    readonly pokemonTypes = [
+        {
+            name: 'Grass',
+            pokemon: [
+                { value: 'bulbasaur-0', viewValue: 'Bulbasaur' },
+                { value: 'oddish-1', viewValue: 'Oddish' },
+                { value: 'bellsprout-2', viewValue: 'Bellsprout' }
+            ]
+        },
+        {
+            name: 'Water',
+            pokemon: [
+                { value: 'squirtle-3', viewValue: 'Squirtle' },
+                { value: 'psyduck-4', viewValue: 'Psyduck' }
+            ]
+        }
+    ];
+    readonly selected = ['bulbasaur-0', 'oddish-1'];
 }

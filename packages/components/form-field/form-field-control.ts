@@ -79,14 +79,14 @@ export abstract class KbqFormFieldControl<T> {
      */
     setDescribedByIds?: (ids: string[]) => void;
 
+    /** Opens control's overlay. */
+    open?: () => void;
+
     /** Handles a click on the control's container. */
     abstract onContainerClick(event: MouseEvent): void;
 
     /** Focuses the control. */
     abstract focus(options?: FocusOptions): void;
-
-    /** Opens control's overlay. */
-    open?: () => void;
 }
 
 /** Ids written by `kbqSetDescribedByIds` for a given element, so consumer-provided ids survive updates. */

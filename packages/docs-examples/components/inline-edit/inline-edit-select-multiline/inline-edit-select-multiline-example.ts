@@ -72,10 +72,7 @@ const COMMENTS: string[] = [
 })
 export class InlineEditSelectMultilineExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly notSetLabel = 'Not specified';
-
     protected readonly comments = COMMENTS;
-
     protected readonly control = new FormControl<string | null>(COMMENTS[0] ?? null);
 }

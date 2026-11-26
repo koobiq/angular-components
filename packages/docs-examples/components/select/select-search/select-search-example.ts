@@ -59,7 +59,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class SelectSearchExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly options = [
         '10.125.123.0/24 - all',
         '10.125.10.0/24 - admin',
@@ -69,13 +68,11 @@ export class SelectSearchExample {
         '192.168.1.0/24 - Йота',
         'Café Wi-Fi guest network'
     ];
-
     readonly searchControl = new FormControl();
     readonly filteredOptions = this.searchControl.valueChanges.pipe(
         startWith(''),
         map((query) => this.search(query))
     );
-
     protected searchTokens: string[] = [];
 
     private search(query: string | null): string[] {

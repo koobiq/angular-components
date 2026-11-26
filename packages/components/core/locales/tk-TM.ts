@@ -145,13 +145,15 @@ export const tkTMLocaleData = {
         openText: 'Giňelt',
         closeText: 'Ýap',
         showMoreText: 'Ýene {exceededItemCount} görkeziň',
-        moreText: 'has köp'
+        moreText: 'has köp',
+        showMoreTextCompact: '{exceededItemCount} has köp'
     },
     navbar: {
         toggle: {
             expand: 'Giňeltmek',
             collapse: 'Ýykmak'
-        }
+        },
+        more: 'Köpräk'
     },
     searchExpandable: {
         tooltip: 'Gözleg',

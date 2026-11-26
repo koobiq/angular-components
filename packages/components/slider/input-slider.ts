@@ -47,21 +47,29 @@ export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue>
     extends KbqSliderBase<T>
     implements KbqFormFieldControl<KbqSliderSelection<T>>
 {
+    private readonly modality = inject(InputModalityDetector);
+
     /** Unit displayed after each numeric value. */
     readonly unit = input(this.options.unit);
+
     /** Shows stepper buttons for a single value. Defaults to `true`. */
     readonly showStepper = input<boolean, boolean | string | null | undefined>(this.options.showStepper, {
         transform: booleanAttribute
     });
-    /** @docs-private */
-    readonly controlType = 'input-slider';
-    private readonly modality = inject(InputModalityDetector);
+
     private readonly slider = viewChild(KbqSlider);
     private readonly inputs = viewChildren(KbqNumberInput);
+
+    /** @docs-private */
+    readonly controlType = 'input-slider';
+    protected readonly bigStep = computed(() => 10 * this.bounds().step);
+    protected readonly drafts = signal<(number | null)[]>([0]);
+
     protected readonly formatValue = (value: number): string =>
         this.unit() && this.displayWith() === this.defaultFormat
             ? `${value} ${this.unit()}`
             : this.displayWith()(value);
+
     protected readonly stepValue = (value: number, delta: number): number => {
         const settings = this.settings();
         const current = sliderSnap(value, settings);
@@ -72,8 +80,6 @@ export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue>
 
         return stops[index] ?? current;
     };
-    protected readonly bigStep = computed(() => 10 * this.bounds().step);
-    protected readonly drafts = signal<(number | null)[]>([0]);
     protected readonly numberErrorMatcher: ErrorStateMatcher = { isErrorState: () => this.errorState() };
     private editingIndex: number | null = null;
     private editStart: KbqSliderValue | null = null;
@@ -101,6 +107,7 @@ export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue>
 
         if (editor) this.focusMonitor.focusVia(editor.nativeElement, origin, options);
     }
+
     /** @docs-private */
     onContainerClick(event: MouseEvent): void {
         if (!this.element.nativeElement.contains(event.target as Node)) this.focus();

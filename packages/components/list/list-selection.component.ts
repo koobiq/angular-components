@@ -2,6 +2,19 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CDK_DRAG_HANDLE, CdkDrag, type CdkDragDrop, CdkDragPreview, CdkDropList } from '@angular/cdk/drag-drop';
+import {
+    DOWN_ARROW,
+    END,
+    ENTER,
+    HOME,
+    LEFT_ARROW,
+    PAGE_DOWN,
+    PAGE_UP,
+    RIGHT_ARROW,
+    SPACE,
+    TAB,
+    UP_ARROW
+} from '@angular/cdk/keycodes';
 import { _getFocusedElementPierceShadowDom, Platform } from '@angular/cdk/platform';
 import { CdkVirtualForOf } from '@angular/cdk/scrolling';
 import {
@@ -51,14 +64,10 @@ import {
     take
 } from 'rxjs';
 import {
-    DOWN_ARROW,
-    END,
-    ENTER,
     FocusKeyManager,
     getKbqSelectNonFunctionValueError,
     getSelectAllState,
     hasModifierKey,
-    HOME,
     type IFocusableOption,
     isCopy,
     isSelectAll,
@@ -82,17 +91,10 @@ import {
     type KbqSelectAllAdapter,
     kbqSelectAllHandlerTransform,
     type KbqTitleTextRef,
-    LEFT_ARROW,
     MultipleMode,
-    PAGE_DOWN,
-    PAGE_UP,
     resolveMultipleMode,
-    RIGHT_ARROW,
     runCompareWith,
-    SPACE,
-    TAB,
-    toggleSelectAll,
-    UP_ARROW
+    toggleSelectAll
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -256,33 +258,12 @@ export class KbqListSelection<T = any>
     private changeDetectorRef = inject(ChangeDetectorRef);
     private clipboard = inject(Clipboard, { optional: true });
     protected readonly focusMonitor = inject(FocusMonitor);
-
-    keyManager: FocusKeyManager<KbqListOption<T>>;
-
-    private readonly optionsQuery = contentChildren<KbqListOption<T>>(
-        forwardRef(() => KbqListOption),
-        { descendants: true }
-    );
-    private readonly optionsList = kbqQueryListFrom(this.optionsQuery);
-
-    get options(): QueryList<KbqListOption<T>> {
-        return this.optionsList();
-    }
-
-    /** Whether `ngAfterContentInit` has run. The options are not settled before that, so nothing reads them. */
-    private contentReady = false;
-
-    readonly onSelectAll = output<KbqListSelectAllEvent<KbqListOption<T>>>();
-
-    /**
-     * Emits when the active option is copied with Ctrl/Cmd + C. Subscribing replaces the built-in clipboard
-     * copy, so the event stays an `EventEmitter`: the decision is made by reading `observed`, which
-     * `OutputEmitterRef` does not have. A template listener subscribes to it through the output below.
-     */
-    readonly onCopy = new EventEmitter<KbqListCopyEvent<KbqListOption<T>>>();
-
-    /** @docs-private */
-    readonly onCopyOutput = outputFromObservable(this.onCopy, { alias: 'onCopy' });
+    private readonly selectConfiguration = kbqInjectLocaleConfiguration('select', KBQ_SELECT_LOCALE_CONFIGURATION);
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly platform = inject(Platform);
+    private readonly ngZone = inject(NgZone);
+    private readonly window = inject(KBQ_WINDOW);
+    private readonly dropList = inject<CdkDropList<KbqListSelection>>(CdkDropList, { host: true });
 
     /** @docs-private */
     readonly autoSelectInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
@@ -290,41 +271,17 @@ export class KbqListSelection<T = any>
         transform: booleanAttribute
     });
 
-    /**
-     * Whether clicking an option clears the rest of the selection. Defaults to `true`, and to `false` for
-     * `multiple="checkbox"`, where a click is expected to toggle a single row. A bound value replaces the
-     * default derived from {@link multiple}.
-     */
-    get autoSelect(): boolean {
-        return this.autoSelectInput() ?? this.mode() !== MultipleMode.CHECKBOX;
-    }
-
     /** @docs-private */
     readonly noUnselectLastInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
         alias: 'noUnselectLast',
         transform: booleanAttribute
     });
 
-    /** Whether the last selected option can be deselected. Derived from the mode like {@link autoSelect}. */
-    get noUnselectLast(): boolean {
-        return this.noUnselectLastInput() ?? this.mode() !== MultipleMode.CHECKBOX;
-    }
-
     /** @docs-private */
     readonly draggableInput = input<boolean, boolean | string | null | undefined>(false, {
         alias: 'draggable',
         transform: booleanAttribute
     });
-
-    /**
-     * Whether options can be reordered by dragging them.
-     * Reordering never mutates the data — handle the `dropped` event and move the item yourself.
-     */
-    get draggable(): boolean {
-        return this.resolvedDraggable();
-    }
-
-    private readonly resolvedDraggable = computed(() => this.draggableInput() && !this.disabled);
 
     /**
      * Lists that options of this list can be moved into. Accepts `KbqListSelection` instances or the
@@ -346,9 +303,6 @@ export class KbqListSelection<T = any>
      */
     readonly dragCursor = input<KbqListDragCursor>('auto');
 
-    /** Emits when an option changes its position by dragging. */
-    readonly dropped = output<KbqListSelectionDroppedEvent>();
-
     /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
     readonly selectAllToggle = input(false, { transform: booleanAttribute });
 
@@ -364,6 +318,74 @@ export class KbqListSelection<T = any>
      */
     readonly selectAllEnabled = input(false, { alias: 'selectAll', transform: booleanAttribute });
 
+    /** @docs-private */
+    readonly multipleInput = input<KbqMultipleInput | undefined>(undefined, { alias: 'multiple' });
+    readonly horizontal = input<boolean, unknown>(false, { transform: booleanAttribute });
+
+    /** @docs-private */
+    readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'tabIndex',
+        transform: kbqOptionalNumberAttribute
+    });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /**
+     * Function used for comparing an option against the selected value when determining which
+     * options should appear as selected. The first argument is the value of an options. The second
+     * one is a value from the selected value. A boolean must be returned.
+     *
+     * Bind a stable reference — a field or a bound method. An expression that builds a new function on
+     * every change detection pass makes the list re-resolve every value against every option each pass.
+     */
+    readonly compareWith = input<(o1: T, o2: T) => boolean, (o1: T, o2: T) => boolean>((a1, a2) => a1 === a2, {
+        // Mirrors `KbqSelect`, which throws from its transform too: a comparator that is not callable would
+        // otherwise surface as an empty selection and a warning per option.
+        transform: (fn) => {
+            if (typeof fn !== 'function') {
+                throw getKbqSelectNonFunctionValueError();
+            }
+
+            return fn;
+        }
+    });
+
+    /** @docs-private */
+    readonly selectAllHandlerInput = input<
+        ((event: KeyboardEvent, list: KbqListSelection<T>) => void) | undefined,
+        ((event: KeyboardEvent, list: KbqListSelection<T>) => void) | undefined
+    >(undefined, {
+        alias: 'selectAllHandler',
+        transform: kbqSelectAllHandlerTransform
+    });
+
+    readonly onSelectAll = output<KbqListSelectAllEvent<KbqListOption<T>>>();
+
+    /**
+     * Emits when the active option is copied with Ctrl/Cmd + C. Subscribing replaces the built-in clipboard
+     * copy, so the event stays an `EventEmitter`: the decision is made by reading `observed`, which
+     * `OutputEmitterRef` does not have. A template listener subscribes to it through the output below.
+     */
+    readonly onCopy = new EventEmitter<KbqListCopyEvent<KbqListOption<T>>>();
+
+    /** @docs-private */
+    readonly onCopyOutput = outputFromObservable(this.onCopy, { alias: 'onCopy' });
+
+    /** Emits when an option changes its position by dragging. */
+    readonly dropped = output<KbqListSelectionDroppedEvent>();
+
+    // Emits a change event whenever the selected state of an option changes.
+    readonly selectionChange = output<KbqListSelectionChange<T>>();
+
+    private readonly optionsQuery = contentChildren<KbqListOption<T>>(
+        forwardRef(() => KbqListOption),
+        { descendants: true }
+    );
+
     /**
      * Reference to the built-in "select all" row, rendered only while `selectAll` is on.
      *
@@ -372,6 +394,60 @@ export class KbqListSelection<T = any>
      * defined, which would read it in its temporal dead zone.
      */
     readonly selectAllOption = viewChild<KbqListOption<T>>('selectAllRow');
+
+    /**
+     * The virtual scroller rendering the options, when the consumer projected one.
+     *
+     * A signal query rather than a DOM probe, mirroring `KbqSelect.cdkVirtualForOf`: it resolves on the
+     * server as well as in the browser, and it follows a viewport that appears later behind the
+     * consumer's own `@if`.
+     */
+    private readonly virtualScroll = contentChild(CdkVirtualForOf);
+
+    private readonly optionsList = kbqQueryListFrom(this.optionsQuery);
+
+    /** Whether `ngAfterContentInit` has run. The options are not settled before that, so nothing reads them. */
+    private contentReady = false;
+    private readonly resolvedDraggable = computed(() => this.draggableInput() && !this.disabled);
+
+    // A signal of its own: the template and the row's `aria-checked` host binding both read the targets in the list's
+    // view, where the `disabled` state of every option read twice would cost a scan of all that view has read so far.
+    private readonly selectAllTargetsState = computed(() => this.optionsQuery().filter((option) => !option.disabled));
+
+    /**
+     * Backing signal of {@link multipleMode}. A signal rather than a field because the mode is also written
+     * from inside the component: options read it through `multiple` and `showCheckbox`, and only a signal
+     * read re-runs their `OnPush` views and host bindings.
+     */
+    private readonly mode = signal<MultipleMode | null>(null);
+
+    /** Tab index the list holds while enabled. Also written outside any listener, hence a signal. */
+    private readonly ownTabIndex = signal(0);
+    private readonly disabledState = signal(false);
+
+    /** Gap the indicator currently marks, used as `currentIndex` when the drag is dropped here. */
+    private dropIndex: number | null = null;
+    private pendingMoveSubscription?: Subscription | null;
+    private hasWarnedOnDragContainer = false;
+
+    /** Whether a deferred {@link initializeSelection} pass is already queued for this microtask turn. */
+    private pendingSelectionInit = false;
+
+    /** Whether a form control has ever written to the list, i.e. whether {@link _value} speaks for a model. */
+    private hasWrittenValue = false;
+    private selectionModelSubscription: Subscription | null = null;
+
+    /** Whether a value report is already queued for the end of the current tick. */
+    private pendingValueReport = false;
+
+    /** The `multiple` binding the mode was last set from, see `applyMultipleInput`. */
+    private appliedMultipleInput: KbqMultipleInput | undefined;
+
+    /** The `disabled` binding the state was last set from, see `applyDisabledInput`. */
+    private appliedDisabledInput: boolean | undefined;
+    private destroyed = false;
+
+    keyManager: FocusKeyManager<KbqListOption<T>>;
 
     /**
      * The options the key manager navigates: the "select all" row first, then the projected ones.
@@ -383,15 +459,49 @@ export class KbqListSelection<T = any>
      * @docs-private
      */
     readonly navigableOptions = new QueryList<KbqListOption<T>>();
+    userTabIndex: number | null = null;
 
     /**
-     * The virtual scroller rendering the options, when the consumer projected one.
+     * Model backing the selection.
      *
-     * A signal query rather than a DOM probe, mirroring `KbqSelect.cdkVirtualForOf`: it resolves on the
-     * server as well as in the browser, and it follows a viewport that appears later behind the
-     * consumer's own `@if`.
+     * The instance is replaced whenever {@link multiple} changes the multiplicity, because CDK freezes that
+     * flag at construction. Subscribe to {@link selectionChange} rather than to `selectionModel.changed`:
+     * a subscription taken on the model directly is left behind on the discarded instance.
      */
-    private readonly virtualScroll = contentChild(CdkVirtualForOf);
+    selectionModel: SelectionModel<KbqListOption<T>>;
+    _value: T[] | null = null;
+
+    /**
+     * Distance from the list's content box to the gap the dragged option would land in, or `null`
+     * while no drag is hovering this list. Drives the insertion indicator.
+     */
+    protected readonly dropIndicatorOffset = signal<number | null>(null);
+
+    get options(): QueryList<KbqListOption<T>> {
+        return this.optionsList();
+    }
+
+    /**
+     * Whether clicking an option clears the rest of the selection. Defaults to `true`, and to `false` for
+     * `multiple="checkbox"`, where a click is expected to toggle a single row. A bound value replaces the
+     * default derived from {@link multiple}.
+     */
+    get autoSelect(): boolean {
+        return this.autoSelectInput() ?? this.mode() !== MultipleMode.CHECKBOX;
+    }
+
+    /** Whether the last selected option can be deselected. Derived from the mode like {@link autoSelect}. */
+    get noUnselectLast(): boolean {
+        return this.noUnselectLastInput() ?? this.mode() !== MultipleMode.CHECKBOX;
+    }
+
+    /**
+     * Whether options can be reordered by dragging them.
+     * Reordering never mutates the data — handle the `dropped` event and move the item yourself.
+     */
+    get draggable(): boolean {
+        return this.resolvedDraggable();
+    }
 
     /**
      * Whether the "select all" row is currently rendered.
@@ -416,8 +526,6 @@ export class KbqListSelection<T = any>
         return this.selectConfiguration().selectAll;
     }
 
-    private readonly selectConfiguration = kbqInjectLocaleConfiguration('select', KBQ_SELECT_LOCALE_CONFIGURATION);
-
     /** Whether every option "select all" can act on is selected. */
     get allOptionsSelected(): boolean {
         const targets = this.selectAllTargets;
@@ -440,23 +548,6 @@ export class KbqListSelection<T = any>
         return this.selectAllTargetsState();
     }
 
-    // A signal of its own: the template and the row's `aria-checked` host binding both read the targets in the list's
-    // view, where the `disabled` state of every option read twice would cost a scan of all that view has read so far.
-    private readonly selectAllTargetsState = computed(() => this.optionsQuery().filter((option) => !option.disabled));
-
-    /**
-     * Adapter shared by the master checkbox and the Ctrl/Cmd + A handler, so the two cannot drift apart. Takes the
-     * items, which the toggle emits as well.
-     */
-    private selectAllAdapter(items: readonly KbqListOption<T>[]): KbqSelectAllAdapter<KbqListOption<T>> {
-        return {
-            items,
-            isSelectable: () => true,
-            isSelected: (option) => option.selected,
-            setSelected: (option, selected) => option.setSelected(selected)
-        };
-    }
-
     /**
      * Selection mode of the list.
      *
@@ -472,9 +563,6 @@ export class KbqListSelection<T = any>
         return !!this.mode();
     }
 
-    /** @docs-private */
-    readonly multipleInput = input<KbqMultipleInput | undefined>(undefined, { alias: 'multiple' });
-
     /** Resolved selection mode, or `null` when only one option can be selected. */
     get multipleMode(): MultipleMode | null {
         return this.mode();
@@ -484,79 +572,19 @@ export class KbqListSelection<T = any>
         this.setMultipleMode(value);
     }
 
-    /**
-     * Backing signal of {@link multipleMode}. A signal rather than a field because the mode is also written
-     * from inside the component: options read it through `multiple` and `showCheckbox`, and only a signal
-     * read re-runs their `OnPush` views and host bindings.
-     */
-    private readonly mode = signal<MultipleMode | null>(null);
-
-    readonly horizontal = input<boolean, unknown>(false, { transform: booleanAttribute });
-
-    /** @docs-private */
-    readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
-        alias: 'tabIndex',
-        transform: kbqOptionalNumberAttribute
-    });
-
     /** Tab index of the list, `-1` while it is disabled. */
     get tabIndex(): number {
         return this.disabled ? -1 : this.ownTabIndex();
     }
-
-    /** Tab index the list holds while enabled. Also written outside any listener, hence a signal. */
-    private readonly ownTabIndex = signal(0);
-
-    /** @docs-private */
-    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'disabled',
-        transform: booleanAttribute
-    });
 
     /** Whether the list is disabled, bound with `[disabled]` or set by a form control. */
     get disabled(): boolean {
         return this.disabledState();
     }
 
-    private readonly disabledState = signal(false);
-
-    /**
-     * Function used for comparing an option against the selected value when determining which
-     * options should appear as selected. The first argument is the value of an options. The second
-     * one is a value from the selected value. A boolean must be returned.
-     *
-     * Bind a stable reference — a field or a bound method. An expression that builds a new function on
-     * every change detection pass makes the list re-resolve every value against every option each pass.
-     */
-    readonly compareWith = input<(o1: T, o2: T) => boolean, (o1: T, o2: T) => boolean>((a1, a2) => a1 === a2, {
-        // Mirrors `KbqSelect`, which throws from its transform too: a comparator that is not callable would
-        // otherwise surface as an empty selection and a warning per option.
-        transform: (fn) => {
-            if (typeof fn !== 'function') {
-                throw getKbqSelectNonFunctionValueError();
-            }
-
-            return fn;
-        }
-    });
-
-    userTabIndex: number | null = null;
-
     get showCheckbox(): boolean {
         return this.mode() === MultipleMode.CHECKBOX;
     }
-
-    // Emits a change event whenever the selected state of an option changes.
-    readonly selectionChange = output<KbqListSelectionChange<T>>();
-
-    /**
-     * Model backing the selection.
-     *
-     * The instance is replaced whenever {@link multiple} changes the multiplicity, because CDK freezes that
-     * flag at construction. Subscribe to {@link selectionChange} rather than to `selectionModel.changed`:
-     * a subscription taken on the model directly is left behind on the discarded instance.
-     */
-    selectionModel: SelectionModel<KbqListOption<T>>;
 
     // Built over the navigable list, not `options`: the "select all" row lives in this component's own
     // view, so its focus would otherwise reach nobody and leave the key manager pointing at whichever
@@ -569,45 +597,22 @@ export class KbqListSelection<T = any>
         return merge(...this.navigableOptions.map((option) => option.onBlur));
     }
 
-    _value: T[] | null = null;
-
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly platform = inject(Platform);
-    private readonly ngZone = inject(NgZone);
-    private readonly window = inject(KBQ_WINDOW);
-    private readonly dropList = inject<CdkDropList<KbqListSelection>>(CdkDropList, { host: true });
+    /**
+     * Whether a repeated toggle deselects. Keyed on {@link showSelectAll} rather than on the raw input:
+     * with no row on screen there is no checkbox for the shortcut to agree with, so the attribute must
+     * not quietly change what Ctrl/Cmd + A does.
+     */
+    private get allowSelectAllDeselect(): boolean {
+        return this.showSelectAll || this.selectAllToggle();
+    }
 
     /**
-     * Distance from the list's content box to the gap the dragged option would land in, or `null`
-     * while no drag is hovering this list. Drives the insertion indicator.
+     * Function for handling the combination Ctrl + A (select all). By default, the internal handler is used,
+     * which toggles the selection of all non-disabled options.
      */
-    protected readonly dropIndicatorOffset = signal<number | null>(null);
-
-    /** Gap the indicator currently marks, used as `currentIndex` when the drag is dropped here. */
-    private dropIndex: number | null = null;
-
-    private pendingMoveSubscription?: Subscription | null;
-
-    private hasWarnedOnDragContainer = false;
-
-    /** Whether a deferred {@link initializeSelection} pass is already queued for this microtask turn. */
-    private pendingSelectionInit = false;
-
-    /** Whether a form control has ever written to the list, i.e. whether {@link _value} speaks for a model. */
-    private hasWrittenValue = false;
-
-    private selectionModelSubscription: Subscription | null = null;
-
-    /** Whether a value report is already queued for the end of the current tick. */
-    private pendingValueReport = false;
-
-    /** The `multiple` binding the mode was last set from, see `applyMultipleInput`. */
-    private appliedMultipleInput: KbqMultipleInput | undefined;
-
-    /** The `disabled` binding the state was last set from, see `applyDisabledInput`. */
-    private appliedDisabledInput: boolean | undefined;
-
-    private destroyed = false;
+    get selectAllHandler(): (event: KeyboardEvent, list: KbqListSelection<T>) => void {
+        return this.selectAllHandlerInput() ?? this.defaultSelectAllHandler;
+    }
 
     constructor() {
         this.destroyRef.onDestroy(() => (this.destroyed = true));
@@ -673,6 +678,85 @@ export class KbqListSelection<T = any>
         });
     }
 
+    ngAfterContentInit(): void {
+        this.contentReady = true;
+        this.keyManager
+            .withVerticalOrientation(!this.horizontal())
+            .withHorizontalOrientation(this.horizontal() ? 'ltr' : null);
+
+        kbqLeaveTabOrderOnTabOut(
+            this.keyManager.tabOut,
+            this.elementRef.nativeElement,
+            () => this.tabIndex,
+            this.destroyRef
+        );
+
+        // The initial value is applied by the `options.changes` subscription below, which starts with the
+        // options already present. Applying it synchronously here instead would settle the selection after
+        // the parent view was checked and raise NG0100.
+        // Repairs each option's `_selected` mirror after the model changes on its own — single-selection
+        // mode drops the previous winner whenever another option is selected. Deliberately not moved
+        // earlier: writes that happen during input binding would flip a host binding mid-pass (NG0100).
+        // `setSelected` consults the model too, so a write that lands before this is still recoverable.
+        this.bindSelectionModel();
+
+        this.listenToOptionsFocus();
+
+        this.options.changes.pipe(startWith(null), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.syncNavigableOptions();
+            this.updateTabIndex();
+            this.initializeSelection();
+        });
+
+        if (!this.platform.isBrowser) return;
+
+        this.warnOnUnsupportedSelectAllContainer();
+        this.warnOnUnsupportedDragContainer();
+        this.updateScrollSize();
+
+        // `updateScrollSize` only feeds the key manager's page size — nothing rendered depends on it,
+        // so the listener stays outside the zone and never schedules change detection. `auditTime`
+        // collapses a resize drag into one pair of forced layout reads per interval.
+        this.ngZone.runOutsideAngular(() => {
+            fromEvent(this.window, 'resize')
+                .pipe(auditTime(RESIZE_AUDIT_TIME), takeUntilDestroyed(this.destroyRef))
+                .subscribe(() => this.updateScrollSize());
+        });
+    }
+
+    ngAfterContentChecked(): void {
+        // Syncs the list here so `changes` emits after the projected items are bound and before the host bindings.
+        this.optionsList();
+    }
+
+    ngAfterViewInit(): void {
+        // Reports the focus leaving only when it lands outside the list (or nowhere): the host hands it to an option
+        // on entry, and options hand it on to each other or to their action buttons, none of which blurs the list.
+        this.focusMonitor
+            .monitor(this.elementRef, true)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((origin) => {
+                if (!origin) this.blur();
+            });
+    }
+
+    ngOnDestroy(): void {
+        this.focusMonitor.stopMonitoring(this.elementRef);
+    }
+
+    /**
+     * Adapter shared by the master checkbox and the Ctrl/Cmd + A handler, so the two cannot drift apart. Takes the
+     * items, which the toggle emits as well.
+     */
+    private selectAllAdapter(items: readonly KbqListOption<T>[]): KbqSelectAllAdapter<KbqListOption<T>> {
+        return {
+            items,
+            isSelectable: () => true,
+            isSelected: (option) => option.selected,
+            setSelected: (option, selected) => option.setSelected(selected)
+        };
+    }
+
     /** Rebuilds {@link navigableOptions}: the "select all" row, when rendered, leads the projected options. */
     private syncNavigableOptions(): void {
         const selectAllOption = this.selectAllOption();
@@ -731,15 +815,6 @@ export class KbqListSelection<T = any>
             // targets are memoized and the event hands its array to the consumer.
             this.onSelectAll.emit(new KbqListSelectAllEvent(this, [...targets]));
         });
-    }
-
-    /**
-     * Whether a repeated toggle deselects. Keyed on {@link showSelectAll} rather than on the raw input:
-     * with no row on screen there is no checkbox for the shortcut to agree with, so the attribute must
-     * not quietly change what Ctrl/Cmd + A does.
-     */
-    private get allowSelectAllDeselect(): boolean {
-        return this.showSelectAll || this.selectAllToggle();
     }
 
     /**
@@ -862,72 +937,6 @@ export class KbqListSelection<T = any>
 
                 this.refreshSelectAllState();
             });
-    }
-
-    ngAfterContentInit(): void {
-        this.contentReady = true;
-        this.keyManager
-            .withVerticalOrientation(!this.horizontal())
-            .withHorizontalOrientation(this.horizontal() ? 'ltr' : null);
-
-        kbqLeaveTabOrderOnTabOut(
-            this.keyManager.tabOut,
-            this.elementRef.nativeElement,
-            () => this.tabIndex,
-            this.destroyRef
-        );
-
-        // The initial value is applied by the `options.changes` subscription below, which starts with the
-        // options already present. Applying it synchronously here instead would settle the selection after
-        // the parent view was checked and raise NG0100.
-        // Repairs each option's `_selected` mirror after the model changes on its own — single-selection
-        // mode drops the previous winner whenever another option is selected. Deliberately not moved
-        // earlier: writes that happen during input binding would flip a host binding mid-pass (NG0100).
-        // `setSelected` consults the model too, so a write that lands before this is still recoverable.
-        this.bindSelectionModel();
-
-        this.listenToOptionsFocus();
-
-        this.options.changes.pipe(startWith(null), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.syncNavigableOptions();
-            this.updateTabIndex();
-            this.initializeSelection();
-        });
-
-        if (!this.platform.isBrowser) return;
-
-        this.warnOnUnsupportedSelectAllContainer();
-        this.warnOnUnsupportedDragContainer();
-        this.updateScrollSize();
-
-        // `updateScrollSize` only feeds the key manager's page size — nothing rendered depends on it,
-        // so the listener stays outside the zone and never schedules change detection. `auditTime`
-        // collapses a resize drag into one pair of forced layout reads per interval.
-        this.ngZone.runOutsideAngular(() => {
-            fromEvent(this.window, 'resize')
-                .pipe(auditTime(RESIZE_AUDIT_TIME), takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => this.updateScrollSize());
-        });
-    }
-
-    ngAfterContentChecked(): void {
-        // Syncs the list here so `changes` emits after the projected items are bound and before the host bindings.
-        this.optionsList();
-    }
-
-    ngAfterViewInit(): void {
-        // Reports the focus leaving only when it lands outside the list (or nowhere): the host hands it to an option
-        // on entry, and options hand it on to each other or to their action buttons, none of which blurs the list.
-        this.focusMonitor
-            .monitor(this.elementRef, true)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((origin) => {
-                if (!origin) this.blur();
-            });
-    }
-
-    ngOnDestroy(): void {
-        this.focusMonitor.stopMonitoring(this.elementRef);
     }
 
     focus(): void {
@@ -1632,23 +1641,6 @@ export class KbqListSelection<T = any>
     // View to model callback that should be called whenever the selected options change.
     private onChange: (value: T[]) => void = () => {};
 
-    /** @docs-private */
-    readonly selectAllHandlerInput = input<
-        ((event: KeyboardEvent, list: KbqListSelection<T>) => void) | undefined,
-        ((event: KeyboardEvent, list: KbqListSelection<T>) => void) | undefined
-    >(undefined, {
-        alias: 'selectAllHandler',
-        transform: kbqSelectAllHandlerTransform
-    });
-
-    /**
-     * Function for handling the combination Ctrl + A (select all). By default, the internal handler is used,
-     * which toggles the selection of all non-disabled options.
-     */
-    get selectAllHandler(): (event: KeyboardEvent, list: KbqListSelection<T>) => void {
-        return this.selectAllHandlerInput() ?? this.defaultSelectAllHandler;
-    }
-
     private defaultSelectAllHandler(event: KeyboardEvent, list: KbqListSelection<T>): void {
         event.preventDefault();
 
@@ -1748,60 +1740,6 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     listSelection: KbqListSelection<T> = inject(KbqListSelection);
     readonly group = inject(KbqOptgroup, { optional: true });
 
-    get hasFocus(): boolean {
-        return this.focused();
-    }
-
-    set hasFocus(value: boolean) {
-        this.focused.set(value);
-    }
-
-    // A signal, as on `KbqTreeOption`: focus can arrive while a view is being checked, which a `markForCheck` misses.
-    private readonly focused = signal(false);
-
-    preventBlur: boolean = false;
-
-    readonly onFocus = new Subject<KbqOptionEvent<T>>();
-
-    readonly onBlur = new Subject<KbqOptionEvent<T>>();
-
-    readonly actionButton = contentChild(KbqOptionActionComponent);
-
-    private readonly tooltipTriggerQuery = contentChild(KbqTooltipTrigger);
-    private readonly dropdownTriggerQuery = contentChild(KbqDropdownTrigger);
-
-    // Getters rather than the signal queries themselves: `KbqOptionActionComponent` reads the triggers as
-    // directive instances through KBQ_OPTION_ACTION_PARENT — see #DS-5079.
-
-    /** Tooltip trigger projected into the option. */
-    get tooltipTrigger(): KbqTooltipTrigger | undefined {
-        return this.tooltipTriggerQuery();
-    }
-
-    /** Dropdown trigger projected into the option. */
-    get dropdownTrigger(): KbqDropdownTrigger | undefined {
-        return this.dropdownTriggerQuery();
-    }
-    readonly pseudoCheckbox = contentChild(KbqPseudoCheckbox);
-
-    /**
-     * Drag handles the consumer has projected into the option. Nothing else reads them — `CdkDrag`
-     * collects its own through DI — they only tell the option whether the whole row starts a drag.
-     */
-    private readonly dragHandles = contentChildren(CDK_DRAG_HANDLE, { descendants: true });
-
-    readonly text = viewChild.required<ElementRef>('text');
-
-    private readonly titleText = viewChild<ElementRef<HTMLElement>>('kbqTitleText');
-
-    /**
-     * Not a duplicate of {@link text}: this is the `KbqTitleTextRef` property that `title.directive.ts`
-     * reads through `KBQ_TITLE_TEXT_REF`, a plain `ElementRef` rather than a signal.
-     */
-    get textElement(): ElementRef<HTMLElement> | undefined {
-        return this.titleText();
-    }
-
     // Whether the label should appear before or after the checkbox. Defaults to 'after'
     readonly checkboxPosition = input<'before' | 'after'>(undefined!);
 
@@ -1819,26 +1757,65 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     /** @docs-private */
     readonly valueInput = input<T>(undefined!, { alias: 'value' });
 
-    /** Value of the option, reported through the list's `ControlValueAccessor`. */
-    get value(): T {
-        return this.valueInput();
-    }
-
     /** @docs-private */
     readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
         alias: 'disabled',
         transform: booleanAttribute
     });
 
-    /** Whether the option is disabled, through its own input, its group or the list. */
-    get disabled(): boolean {
-        return this.disabledState();
-    }
+    /** @docs-private */
+    readonly draggableInput = input<boolean, boolean | string | null | undefined>(true, {
+        alias: 'draggable',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly showCheckboxInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'showCheckbox',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly selectedInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'selected',
+        transform: booleanAttribute
+    });
+
+    readonly actionButton = contentChild(KbqOptionActionComponent);
+    private readonly tooltipTriggerQuery = contentChild(KbqTooltipTrigger);
+
+    // Getters rather than the signal queries themselves: `KbqOptionActionComponent` reads the triggers as
+    // directive instances through KBQ_OPTION_ACTION_PARENT — see #DS-5079.
+
+    private readonly dropdownTriggerQuery = contentChild(KbqDropdownTrigger);
+    readonly pseudoCheckbox = contentChild(KbqPseudoCheckbox);
+
+    /**
+     * Drag handles the consumer has projected into the option. Nothing else reads them — `CdkDrag`
+     * collects its own through DI — they only tell the option whether the whole row starts a drag.
+     */
+    private readonly dragHandles = contentChildren(CDK_DRAG_HANDLE, { descendants: true });
+    readonly text = viewChild.required<ElementRef>('text');
+    private readonly titleText = viewChild<ElementRef<HTMLElement>>('kbqTitleText');
+
+    // A signal, as on `KbqTreeOption`: focus can arrive while a view is being checked, which a `markForCheck` misses.
+    private readonly focused = signal(false);
 
     // A signal per option for the host bindings, since the list's and the group's are the same for all its options.
     private readonly disabledState = computed(
         () => this.listSelection.disabled || !!this.group?.disabled() || this.disabledInput()
     );
+    private readonly resolvedDraggable = computed(
+        // The "select all" row is a command, not one of the items being ordered.
+        () => !this.selectAllRow() && this.draggableInput() && this.listSelection.draggable && !this.disabled
+    );
+    private _selected = false;
+    private readonly tabIndexState = computed(() => (this.disabled ? null : -1));
+    private readonly grabCursorState = computed(() => this.draggable && this.listSelection.dragCursor() === 'grab');
+
+    preventBlur: boolean = false;
+    readonly onFocus = new Subject<KbqOptionEvent<T>>();
+    readonly onBlur = new Subject<KbqOptionEvent<T>>();
 
     /**
      * Value of `aria-disabled`: the disabled state, but a signal of its own, since `kbq-disabled` reads that one.
@@ -1847,11 +1824,43 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
      */
     protected readonly ariaDisabled = computed(() => this.disabled || null);
 
-    /** @docs-private */
-    readonly draggableInput = input<boolean, boolean | string | null | undefined>(true, {
-        alias: 'draggable',
-        transform: booleanAttribute
-    });
+    get hasFocus(): boolean {
+        return this.focused();
+    }
+
+    set hasFocus(value: boolean) {
+        this.focused.set(value);
+    }
+
+    /** Tooltip trigger projected into the option. */
+    get tooltipTrigger(): KbqTooltipTrigger | undefined {
+        // A getter rather than the signal query itself, as `dropdownTrigger` is: `KbqOptionActionComponent` reads the
+        // triggers as directive instances through KBQ_OPTION_ACTION_PARENT — see #DS-5079.
+        return this.tooltipTriggerQuery();
+    }
+
+    /** Dropdown trigger projected into the option. */
+    get dropdownTrigger(): KbqDropdownTrigger | undefined {
+        return this.dropdownTriggerQuery();
+    }
+
+    /**
+     * Not a duplicate of {@link text}: this is the `KbqTitleTextRef` property that `title.directive.ts`
+     * reads through `KBQ_TITLE_TEXT_REF`, a plain `ElementRef` rather than a signal.
+     */
+    get textElement(): ElementRef<HTMLElement> | undefined {
+        return this.titleText();
+    }
+
+    /** Value of the option, reported through the list's `ControlValueAccessor`. */
+    get value(): T {
+        return this.valueInput();
+    }
+
+    /** Whether the option is disabled, through its own input, its group or the list. */
+    get disabled(): boolean {
+        return this.disabledState();
+    }
 
     /**
      * Whether the option can be reordered by dragging. Set it to `false` to pin a single option while
@@ -1863,27 +1872,10 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
         return this.resolvedDraggable();
     }
 
-    private readonly resolvedDraggable = computed(
-        // The "select all" row is a command, not one of the items being ordered.
-        () => !this.selectAllRow() && this.draggableInput() && this.listSelection.draggable && !this.disabled
-    );
-
-    /** @docs-private */
-    readonly showCheckboxInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'showCheckbox',
-        transform: booleanAttribute
-    });
-
     /** Whether the option renders a pseudo-checkbox. Falls back to the list's own mode until bound. */
     get showCheckbox(): boolean {
         return this.showCheckboxInput() ?? this.listSelection.showCheckbox;
     }
-
-    /** @docs-private */
-    readonly selectedInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'selected',
-        transform: booleanAttribute
-    });
 
     /**
      * Whether the option is selected. The state lives in the list's `SelectionModel`, not on the option,
@@ -1897,13 +1889,9 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
         this.setSelected(value);
     }
 
-    private _selected = false;
-
     get tabIndex(): number | null {
         return this.tabIndexState();
     }
-
-    private readonly tabIndexState = computed(() => (this.disabled ? null : -1));
 
     /** `aria-selected` of the row. The "select all" row reports `aria-checked` instead. */
     protected get ariaSelected(): boolean | null {
@@ -1936,8 +1924,6 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     protected get showsGrabCursor(): boolean {
         return this.grabCursorState();
     }
-
-    private readonly grabCursorState = computed(() => this.draggable && this.listSelection.dragCursor() === 'grab');
 
     constructor() {
         effect(() => {
@@ -2025,16 +2011,6 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
         });
     }
 
-    /**
-     * Keeps the underlying `CdkDrag` in sync with the resolved `draggable` state.
-     *
-     * @docs-private
-     */
-    syncDraggableState(): void {
-        this.drag.disabled = !this.draggable;
-        this.changeDetector.markForCheck();
-    }
-
     ngOnInit(): void {
         if (this.selectAllRow()) {
             // `CdkDrag` registers itself with the enclosing drop list from its own constructor, and the
@@ -2085,6 +2061,16 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
         }
 
         this.listSelection.removeOptionFromList(this);
+    }
+
+    /**
+     * Keeps the underlying `CdkDrag` in sync with the resolved `draggable` state.
+     *
+     * @docs-private
+     */
+    syncDraggableState(): void {
+        this.drag.disabled = !this.draggable;
+        this.changeDetector.markForCheck();
     }
 
     /** Toggles the selected state of this option. */

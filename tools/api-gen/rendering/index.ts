@@ -4,7 +4,7 @@ import type { DocsApiEntryPoint } from '../../../apps/docs/src/app/components/ap
 import { docsGetItems, DocsStructureItemTab } from '../../../apps/docs/src/app/structure';
 import type { EntryCollection } from '../types';
 import { type DocEntry, EntryType } from './entities';
-import { type ApiEntryPage, getApiEntryPoint } from './entry-point';
+import { type ApiEntryPage, type ExternalApiPage, getApiEntryPoint } from './entry-point';
 
 // A sibling of `dist/docs-pages`, not a subdirectory of it: `tools/docs-pages`'s own generator recursively
 // deletes anything under its output root that its latest run did not just write, which would otherwise
@@ -94,13 +94,20 @@ function getEntryPages(entryCollections: EntryCollection<DocEntry>[]): Map<strin
 /**
  * Writes the API of each entry point as the data its `/api` tab renders, with a registry that loads it by the
  * structure item, and persists each entry point's manifest as JSON: the input `tools/check-api-docs` and
- * `tools/llms` read.
+ * `tools/llms` read. The types link to the entries and to `externalPages`.
  */
-export function generateApiPages(entryCollections: EntryCollection<DocEntry>[]): number {
+export function generateApiPages(
+    entryCollections: EntryCollection<DocEntry>[],
+    externalPages: ReadonlyMap<string, ExternalApiPage>
+): number {
     const files: Record<string, string> = {};
     const modules = new Map<string, string>();
     const manifests = new Set<string>();
-    const entryPages = getEntryPages(entryCollections);
+    // An entry of the library wins over a declaration of another library with its name.
+    const entryPages = new Map<string, ApiEntryPage | ExternalApiPage>([
+        ...externalPages,
+        ...getEntryPages(entryCollections)
+    ]);
 
     mkdirSync(MANIFEST_DIR, { recursive: true });
 

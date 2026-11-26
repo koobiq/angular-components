@@ -66,6 +66,33 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
         transform: (value) => (value == null ? undefined : booleanAttribute(value))
     });
 
+    /**
+     * Rendered size of the icon in pixels. Left unset, the size is read from the `_<px>` suffix of the
+     * icon name (`kbq-plus_16` → 16), which is the `@koobiq/icons` convention; a name without one is
+     * rendered at whatever size the surrounding styles give it.
+     */
+    readonly iconSize = input<number | undefined, number | string | null | undefined>(undefined, {
+        transform: (value) => {
+            const size = numberAttribute(value);
+
+            return Number.isNaN(size) ? undefined : size;
+        }
+    });
+
+    /** @docs-private */
+    readonly autoColorInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'autoColor',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly iconNameInput = input<string | undefined>(undefined, { alias: 'kbq-icon' });
+
+    // The host's error state through a signal of the icon's own: the host's control reads it in its host bindings, in
+    // the same reactive consumer as the icon's, where a signal read again after others costs a scan of all it has read
+    // so far.
+    private readonly hostErrorState = computed(() => !!this.errorStateContext?.errorState());
+
     /** Whether an icon of this kind is decorative when the caller says nothing. Overridden by subclasses. */
     protected readonly defaultAriaHidden: boolean = true;
 
@@ -81,19 +108,6 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     });
 
     /**
-     * Rendered size of the icon in pixels. Left unset, the size is read from the `_<px>` suffix of the
-     * icon name (`kbq-plus_16` → 16), which is the `@koobiq/icons` convention; a name without one is
-     * rendered at whatever size the surrounding styles give it.
-     */
-    readonly iconSize = input<number | undefined, number | string | null | undefined>(undefined, {
-        transform: (value) => {
-            const size = numberAttribute(value);
-
-            return Number.isNaN(size) ? undefined : size;
-        }
-    });
-
-    /**
      * Whether the icon follows the error state of the host it sits in (a form field, for one), painting
      * itself red while that host reports an error.
      */
@@ -106,20 +120,6 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     hasError: boolean = false;
 
     /**
-     * Whether `autoColor` takes the error color from the host's error state.
-     *
-     * @docs-private
-     */
-    protected get autoColorError(): boolean {
-        return this.autoColor && this.hostErrorState();
-    }
-
-    // The host's error state through a signal of the icon's own: the host's control reads it in its host bindings, in
-    // the same reactive consumer as the icon's, where a signal read again after others costs a scan of all it has read
-    // so far.
-    private readonly hostErrorState = computed(() => !!this.errorStateContext?.errorState());
-
-    /**
      * Whether `color` is the error color. A signal of its own because the color class binding already reads
      * `color`: the host bindings of every icon in a view run in that view's reactive consumer, which finds a
      * signal read a second time by scanning all it has read so far, O(N²) per check across N icons.
@@ -130,15 +130,6 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
 
     /** Name of an icon within a `@koobiq/icons`. Accepts "namespace:name" syntax. */
     iconName: string | undefined;
-
-    /** @docs-private */
-    readonly autoColorInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'autoColor',
-        transform: booleanAttribute
-    });
-
-    /** @docs-private */
-    readonly iconNameInput = input<string | undefined>(undefined, { alias: 'kbq-icon' });
 
     /**
      * Whether the host gets an inline `max-height` matching the icon size. Only the bare icon does: the
@@ -155,15 +146,6 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     // would show the font class until the async resolution catches up.
     protected readonly svgIcon = signal(!!this.findTaggedSvg());
 
-    /**
-     * Name the inline SVG is resolved for, which is `iconName` however that was set.
-     *
-     * @docs-private
-     */
-    protected get svgIconName(): string | undefined {
-        return this.iconName;
-    }
-
     /** Resolution of the inline SVG, replaced whenever the name changes. */
     private svgIconSubscription = Subscription.EMPTY;
 
@@ -173,10 +155,46 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     /** Whether the content is initialized, which is when the inline SVG is first resolved. */
     private contentInitialized = false;
 
+    /**
+     * Whether `autoColor` takes the error color from the host's error state.
+     *
+     * @docs-private
+     */
+    protected get autoColorError(): boolean {
+        return this.autoColor && this.hostErrorState();
+    }
+
+    /**
+     * Name the inline SVG is resolved for, which is `iconName` however that was set.
+     *
+     * @docs-private
+     */
+    protected get svgIconName(): string | undefined {
+        return this.iconName;
+    }
+
     constructor() {
         super();
 
         this.destroyRef.onDestroy(() => this.svgIconSubscription.unsubscribe());
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
+        // A bound `undefined` is a value as well: auto color turns off and the icon is removed.
+        if (changes['autoColorInput']) this.autoColor = this.autoColorInput() ?? false;
+
+        // A name change reaches the size through the resolution; an explicit size resolves nothing.
+        if (changes['iconSize'] && this.contentInitialized) this.applyIconSize();
+
+        if (changes['iconNameInput']) this.setIconName(this.iconNameInput() ?? '');
+    }
+
+    ngAfterContentInit(): void {
+        this.updateMaxHeight();
+
+        this.contentInitialized = true;
+        this.resolveSvgIcon();
     }
 
     getHostElement() {
@@ -215,24 +233,6 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
             // Without this the ceiling written for the previous name keeps clipping the new glyph.
             this.renderer.removeStyle(host, 'max-height');
         }
-    }
-
-    ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member; unbound, it leaves what code wrote.
-        // A bound `undefined` is a value as well: auto color turns off and the icon is removed.
-        if (changes['autoColorInput']) this.autoColor = this.autoColorInput() ?? false;
-
-        // A name change reaches the size through the resolution; an explicit size resolves nothing.
-        if (changes['iconSize'] && this.contentInitialized) this.applyIconSize();
-
-        if (changes['iconNameInput']) this.setIconName(this.iconNameInput() ?? '');
-    }
-
-    ngAfterContentInit(): void {
-        this.updateMaxHeight();
-
-        this.contentInitialized = true;
-        this.resolveSvgIcon();
     }
 
     /** Renders `svgIconName` as inline SVG when the registry knows it, dropping a resolution still pending. */

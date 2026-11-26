@@ -136,6 +136,7 @@ export class E2eCheckboxWithLabel {
 export class E2eCheckboxWithHint {
     // Each size gets a grid of its own: a big checkbox is taller than a normal one, so the two in one row never line up.
     protected readonly sizes = [false, true] as const;
+
     // The error palette has a hint color of its own, so it gets a row of its own.
     protected readonly states = ['normal', 'error', 'disabled'] as const;
     protected readonly labelPositions = ['after', 'before'] as const;

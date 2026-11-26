@@ -55,13 +55,13 @@ export class KbqMarkdown {
     private readonly contentObserver = inject(ContentObserver);
     private readonly destroyRef = inject(DestroyRef);
 
+    /** `Markdown` text. Falls back to the projected content while it is empty. */
+    readonly markdownText = input<string | null>(null);
+
     private readonly contentWrapper = viewChild.required<ElementRef<HTMLPreElement>>('contentWrapper');
 
     /** Text content projected into the component, re-read after every render that changes it. */
     private readonly projectedText = signal<string | null>(null);
-
-    /** `Markdown` text. Falls back to the projected content while it is empty. */
-    readonly markdownText = input<string | null>(null);
 
     /** @docs-private */
     protected readonly resultHtml = computed<SafeHtml | null>(() => {

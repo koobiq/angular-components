@@ -127,6 +127,13 @@ export const kbqLocaleServiceLangAttrNameProvider = (attrName: string): Provider
 
 @Injectable({ providedIn: 'root' })
 export class KbqLocaleService {
+    private readonly document = inject(DOCUMENT);
+    private readonly langAttrName = inject(KBQ_LOCALE_SERVICE_LANG_ATTR_NAME);
+
+    private readonly _localeId = signal<KbqLocaleIdLike>(KBQ_DEFAULT_LOCALE_ID);
+    private readonly _data = signal<KbqLocaleData>(DEFAULT_LOCALE_DATA);
+    private readonly _items = signal<KbqLocaleItem[]>(SHIPPED_LOCALE_DATA.items);
+
     /**
      * Emits the active locale id on every change.
      *
@@ -147,8 +154,6 @@ export class KbqLocaleService {
     /** Registered locales, for rendering a locale picker. */
     readonly items: Signal<KbqLocaleItem[]>;
 
-    private readonly document = inject(DOCUMENT);
-
     /** @deprecated Use the {@link localeId} signal. Will be removed in 22.0.0. */
     get id(): string {
         return this._localeId();
@@ -166,12 +171,6 @@ export class KbqLocaleService {
     set current(value: KbqLocaleData) {
         this._data.set(value);
     }
-
-    private readonly _localeId = signal<KbqLocaleIdLike>(KBQ_DEFAULT_LOCALE_ID);
-    private readonly _data = signal<KbqLocaleData>(DEFAULT_LOCALE_DATA);
-    private readonly _items = signal<KbqLocaleItem[]>(SHIPPED_LOCALE_DATA.items);
-
-    private readonly langAttrName = inject(KBQ_LOCALE_SERVICE_LANG_ATTR_NAME);
 
     constructor() {
         const id = inject(KBQ_LOCALE_ID, { optional: true });

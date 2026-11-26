@@ -41,7 +41,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class FileUploadIndeterminateLoadingOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     isLoading = false;
 
     onFileChange(file: KbqFileItem | null) {

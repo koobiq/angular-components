@@ -64,7 +64,6 @@ export class ContentPanelBeforeCloseExample {
     private readonly modal = inject(KbqModalService);
 
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly name = new FormControl('John Smith', { nonNullable: true });
 
     protected readonly confirmDiscard = (): Promise<boolean> =>

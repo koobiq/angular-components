@@ -39,14 +39,11 @@ import { KBQ_TOAST_STACK, KbqToastData, type KbqToastTemplateContext } from './t
 })
 export class KbqToastContainerComponent extends CdkScrollable {
     private readonly injector = inject(Injector);
-
     protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
-
     readonly service = inject(KbqToastService);
+    private readonly overlayKeyboardDispatcher = inject(OverlayKeyboardDispatcher);
 
     readonly viewContainer = viewChild.required('container', { read: ViewContainerRef });
-
-    private readonly overlayKeyboardDispatcher = inject(OverlayKeyboardDispatcher);
 
     constructor() {
         super();

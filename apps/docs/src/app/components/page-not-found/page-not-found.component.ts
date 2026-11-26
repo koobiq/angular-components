@@ -10,7 +10,7 @@ import { DocsLocaleState } from 'src/app/services/locale';
         RouterLink
     ],
     template: `
-        <div class="kbq-display-compact">{{ t('pageNotFound') }}</div>
+        <h1 class="docs-page-not-found__title kbq-display-compact">{{ t('pageNotFound') }}</h1>
 
         <a class="layout-margin-top-s" kbqLink routerLink="/">
             {{ t('goToMainPage') }}
@@ -20,7 +20,8 @@ import { DocsLocaleState } from 'src/app/services/locale';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'docs-page-not-found'
+        class: 'docs-page-not-found',
+        role: 'main'
     }
 })
 export class DocsPageNotFoundComponent extends DocsLocaleState {}

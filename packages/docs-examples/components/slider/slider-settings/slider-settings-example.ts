@@ -59,6 +59,7 @@ export class SliderSettingsExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly limits = [4, 8, 12];
     protected period = 0;
+
     protected setLimit(value: number | readonly [number, number]): void {
         if (typeof value === 'number') this.limits[this.period] = value;
     }

@@ -71,10 +71,9 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsSelectableTextExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly clipboard = inject(Clipboard, { optional: true });
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     readonly breadcrumbs = computed(() => [
         { label: this.t().informationSecurity, url: '/information-security' },
         { label: this.t().accessControl, url: '/information-security/access-control' },

@@ -4,6 +4,7 @@ import {
     DocsStructureItemId,
     DocsStructureItemTab
 } from '../../apps/docs/src/app/structure';
+import { DOCS_SITE_ORIGIN } from '../docs-site-origin';
 import { COMPONENT_GUIDE_FILE } from './component-guide';
 import { pageSummary } from './page-markdown';
 import {
@@ -11,7 +12,6 @@ import {
     getMarkdownUrl,
     getPageSource,
     getSiteUrl,
-    LLMS_SITE_ORIGIN,
     type LlmsPageSources,
     readRepoFile,
     resolveSiteUrl
@@ -93,14 +93,14 @@ export const renderLlmsTxt = (categories: LlmsCategory[], sources: LlmsPageSourc
             [`## ${category.name.en}`, items.map((item) => renderItemLink(item, sources)).join('\n')].join('\n\n')
         ),
         `## Icons\n\n${renderIconLinks(header)}`,
-        `## Optional\n\n- [Full documentation](${LLMS_SITE_ORIGIN}/${LLMS_FULL_TXT}): every item above in one file, several megabytes long: search it rather than read it whole.`
+        `## Optional\n\n- [Full documentation](${DOCS_SITE_ORIGIN}/${LLMS_FULL_TXT}): every item above in one file, several megabytes long: search it rather than read it whole.`
     ].join('\n\n') + '\n';
 
 /** Every item of the index in one file, in English: for indexing and search rather than for reading whole. */
 export const renderLlmsFullTxt = (items: string[], header: LlmsHeader): string => [
         `# ${TITLE}: full documentation`,
         `> ${SUMMARY}`,
-        `${renderPackage(header)} This file holds every item of ${LLMS_SITE_ORIGIN}/${LLMS_TXT} in English, one after another.`,
+        `${renderPackage(header)} This file holds every item of ${DOCS_SITE_ORIGIN}/${LLMS_TXT} in English, one after another.`,
         header.rules,
         ...items,
         `## Icons\n\n${renderIconLinks(header)}`

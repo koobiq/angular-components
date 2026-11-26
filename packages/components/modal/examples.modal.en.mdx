@@ -7,3 +7,15 @@ To make them available, pass the caller's `injector` to `modalService.open`; it 
 A missing dependency surfaces as `NullInjectorError: No provider for …`, thrown while the modal content is being created.
 
 <Example id="modal-component-with-injector" />
+
+### Buttons in the loading state
+
+A footer button renders a spinner and is disabled while the connection check is running. The server address is validated: on error, a hint appears under the field.
+
+<Example id="modal-button-loading" />
+
+### Modal stays open on an error
+
+The `kbqOkClick` handler decides whether the modal closes: returning `false` — or a promise resolving to `false` — keeps it open, so the entered data is not lost. This is the server-side validation scenario: the backend rejected the form, the modal stays, the user fixes the input. While the promise is pending, the OK button shows its loading state automatically.
+
+<Example id="modal-keep-open-on-error" />

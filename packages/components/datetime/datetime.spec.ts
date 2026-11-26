@@ -1,19 +1,12 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { BACKSPACE, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@angular/cdk/keycodes';
 import { ChangeDetectionStrategy, Component, signal, type Type } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { DateTime } from 'luxon';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import {
-    BACKSPACE,
-    dispatchFakeEvent,
-    dispatchKeyboardEvent,
-    KBQ_LOCALE_SERVICE,
-    LEFT_ARROW,
-    RIGHT_ARROW,
-    UP_ARROW
-} from '@koobiq/components/core';
+import { dispatchFakeEvent, dispatchKeyboardEvent, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { TimeFormats } from '@koobiq/components/timepicker';

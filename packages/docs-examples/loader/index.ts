@@ -277,6 +277,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/divider').then((m) => m.DividerVerticalExample);
         case 'dl-alignment':
             return import('@koobiq/docs-examples/components/dl').then((m) => m.DlAlignmentExample);
+        case 'dl-caption':
+            return import('@koobiq/docs-examples/components/dl').then((m) => m.DlCaptionExample);
         case 'dl-dt-width':
             return import('@koobiq/docs-examples/components/dl').then((m) => m.DlDtWidthExample);
         case 'dl-long-text':
@@ -491,8 +493,6 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/form-field').then((m) => m.FormFieldOverviewExample);
         case 'form-field-password-overview':
             return import('@koobiq/docs-examples/components/form-field').then((m) => m.FormFieldPasswordOverviewExample);
-        case 'form-field-with-cleaner':
-            return import('@koobiq/docs-examples/components/form-field').then((m) => m.FormFieldWithCleanerExample);
         case 'form-field-with-custom-error-state-matcher-set-by-attribute':
             return import('@koobiq/docs-examples/components/form-field').then((m) => m.FormFieldWithCustomErrorStateMatcherSetByAttributeExample);
         case 'form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider':
@@ -505,8 +505,6 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/form-field').then((m) => m.FormFieldWithLabelExample);
         case 'form-field-with-prefix-and-suffix':
             return import('@koobiq/docs-examples/components/form-field').then((m) => m.FormFieldWithPrefixAndSuffixExample);
-        case 'form-field-without-borders':
-            return import('@koobiq/docs-examples/components/form-field').then((m) => m.FormFieldWithoutBordersExample);
         case 'form-fieldset-invalid':
             return import('@koobiq/docs-examples/components/forms').then((m) => m.FormFieldsetInvalidExample);
         case 'form-fieldset-overview':
@@ -585,6 +583,14 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/inline-edit').then((m) => m.InlineEditVerticalListExample);
         case 'inline-edit-without-label':
             return import('@koobiq/docs-examples/components/inline-edit').then((m) => m.InlineEditWithoutLabelExample);
+        case 'input-autocomplete':
+            return import('@koobiq/docs-examples/components/input').then((m) => m.InputAutocompleteExample);
+        case 'input-disabled':
+            return import('@koobiq/docs-examples/components/input').then((m) => m.InputDisabledExample);
+        case 'input-label-and-hint':
+            return import('@koobiq/docs-examples/components/input').then((m) => m.InputLabelAndHintExample);
+        case 'input-monospace':
+            return import('@koobiq/docs-examples/components/input').then((m) => m.InputMonospaceExample);
         case 'input-number-overview':
             return import('@koobiq/docs-examples/components/input').then((m) => m.InputNumberOverviewExample);
         case 'input-overview':
@@ -595,8 +601,16 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/input').then((m) => m.InputPasswordTemplateDrivenExample);
         case 'input-readonly':
             return import('@koobiq/docs-examples/components/input').then((m) => m.InputReadonlyExample);
+        case 'input-search':
+            return import('@koobiq/docs-examples/components/input').then((m) => m.InputSearchExample);
+        case 'input-validation':
+            return import('@koobiq/docs-examples/components/input').then((m) => m.InputValidationExample);
+        case 'input-with-cleaner':
+            return import('@koobiq/docs-examples/components/input').then((m) => m.InputWithCleanerExample);
         case 'input-with-mask':
             return import('@koobiq/docs-examples/components/input').then((m) => m.InputWithMaskExample);
+        case 'input-without-borders':
+            return import('@koobiq/docs-examples/components/input').then((m) => m.InputWithoutBordersExample);
         case 'layout-flex-alignment':
             return import('@koobiq/docs-examples/components/layout-flex').then((m) => m.LayoutFlexAlignmentExample);
         case 'layout-flex-behaviour-modifiers':
@@ -699,6 +713,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/markdown').then((m) => m.MarkdownSelectionExample);
         case 'markdown-table':
             return import('@koobiq/docs-examples/components/markdown').then((m) => m.MarkdownTableExample);
+        case 'modal-button-loading':
+            return import('@koobiq/docs-examples/components/modal').then((m) => m.ModalButtonLoadingExample);
         case 'modal-caption':
             return import('@koobiq/docs-examples/components/modal').then((m) => m.ModalCaptionExample);
         case 'modal-component-with-injector':
@@ -707,6 +723,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/modal').then((m) => m.ModalComponentExample);
         case 'modal-full-custom':
             return import('@koobiq/docs-examples/components/modal').then((m) => m.ModalFullCustomExample);
+        case 'modal-keep-open-on-error':
+            return import('@koobiq/docs-examples/components/modal').then((m) => m.ModalKeepOpenOnErrorExample);
         case 'modal-multiple':
             return import('@koobiq/docs-examples/components/modal').then((m) => m.ModalMultipleExample);
         case 'modal-overview':
@@ -853,6 +871,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/select').then((m) => m.SelectDisabledExample);
         case 'select-footer':
             return import('@koobiq/docs-examples/components/select').then((m) => m.SelectFooterExample);
+        case 'select-groups-label':
+            return import('@koobiq/docs-examples/components/select').then((m) => m.SelectGroupsLabelExample);
         case 'select-groups':
             return import('@koobiq/docs-examples/components/select').then((m) => m.SelectGroupsExample);
         case 'select-height':
@@ -913,6 +933,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/sidebar').then((m) => m.SidebarStateSavingExample);
         case 'sidebar-with-splitter':
             return import('@koobiq/docs-examples/components/sidebar').then((m) => m.SidebarWithSplitterExample);
+        case 'sidepanel-can-close':
+            return import('@koobiq/docs-examples/components/sidepanel').then((m) => m.SidepanelCanCloseExample);
         case 'sidepanel-disable-close':
             return import('@koobiq/docs-examples/components/sidepanel').then((m) => m.SidepanelDisableCloseExample);
         case 'sidepanel-normal-mode':
@@ -931,6 +953,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/sidepanel').then((m) => m.SidepanelWithDynamicConfigUpdateExample);
         case 'skeleton-accordion':
             return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonAccordionExample);
+        case 'skeleton-animation-duration':
+            return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonAnimationDurationExample);
         case 'skeleton-basic':
             return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonBasicExample);
         case 'skeleton-checkable':

@@ -119,7 +119,6 @@ export class E2eSplitButtonStateAndStyle {
         { title: 'progressSecond', progressSecond: true },
         { title: 'progressAll', progress: true, progressSecond: true }
     ];
-
     private readonly styles: DevButtonStyle[] = [
         {},
         { color: KbqComponentColors.Contrast },

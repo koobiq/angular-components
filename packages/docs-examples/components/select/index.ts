@@ -8,6 +8,7 @@ import { SelectCustomTriggerExample } from './select-custom-trigger/select-custo
 import { SelectDisabledExample } from './select-disabled/select-disabled-example';
 import { SelectFooterExample } from './select-footer/select-footer-example';
 import { SelectGroupsExample } from './select-groups/select-groups-example';
+import { SelectGroupsLabelExample } from './select-groups-label/select-groups-label-example';
 import { SelectHeightExample } from './select-height/select-height-example';
 import { SelectIconExample } from './select-icon/select-icon-example';
 import { SelectLoadingExample } from './select-loading/select-loading-example';
@@ -45,6 +46,7 @@ export {
     SelectDisabledExample,
     SelectFooterExample,
     SelectGroupsExample,
+    SelectGroupsLabelExample,
     SelectHeightExample,
     SelectIconExample,
     SelectLoadingErrorCustomExample,
@@ -85,6 +87,7 @@ const EXAMPLES = [
     SelectSelectAllLabelExample,
     SelectPreselectedValuesExample,
     SelectGroupsExample,
+    SelectGroupsLabelExample,
     SelectHeightExample,
     SelectIconExample,
     SelectFooterExample,

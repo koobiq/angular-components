@@ -139,20 +139,8 @@ class ExampleSaveError extends Error {
     }
 })
 export class InlineEditSaveErrorExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
-    protected readonly takenNames = TAKEN_NAMES.join(', ');
-
-    protected readonly nameControl = new FormControl('Security team', {
-        nonNullable: true,
-        validators: [Validators.required]
-    });
-    protected readonly descriptionControl = new FormControl('Monitors incidents', { nonNullable: true });
-
-    protected readonly saveName: KbqInlineEditSaveHandler = () => this.saveNameOnServer(this.nameControl.value);
-    protected readonly saveDescription: KbqInlineEditSaveHandler = () => this.saveDescriptionOnServer();
-
     private readonly toastService = inject(KbqToastService);
+
     private readonly nameTitle = viewChild.required<TemplateRef<unknown>>('nameTitle');
     private readonly descriptionTitle = viewChild.required<TemplateRef<unknown>>('descriptionTitle');
     private readonly retryActions = viewChild.required<TemplateRef<unknown>>('retryActions');
@@ -162,6 +150,18 @@ export class InlineEditSaveErrorExample {
     /** Inline edit behind every open notification, so its buttons act on the field the notification is about. */
     private readonly failedSaves = new Map<number, KbqInlineEditSaveErrorContext<ExampleSaveError>>();
     private descriptionAttempts = 0;
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly takenNames = TAKEN_NAMES.join(', ');
+    protected readonly nameControl = new FormControl('Security team', {
+        nonNullable: true,
+        validators: [Validators.required]
+    });
+    protected readonly descriptionControl = new FormControl('Monitors incidents', { nonNullable: true });
+
+    protected readonly saveName: KbqInlineEditSaveHandler = () => this.saveNameOnServer(this.nameControl.value);
+
+    protected readonly saveDescription: KbqInlineEditSaveHandler = () => this.saveDescriptionOnServer();
 
     /** Reports a failed save the way the application does it — here, with a toast the user has to answer. */
     showSaveErrorToast(context: KbqInlineEditSaveErrorContext<ExampleSaveError>): void {

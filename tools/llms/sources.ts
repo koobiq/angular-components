@@ -19,20 +19,11 @@ import {
 import { EXAMPLE_COMPONENTS } from '../../packages/docs-examples/example-module';
 import type { DocEntry } from '../api-gen/rendering/entities';
 import { DOCS_PAGE_SOURCES, parsePageSource } from '../docs-pages/sources';
+import { DOCS_SITE_ORIGIN, KOOBIQ_SITE_ORIGIN } from '../docs-site-origin';
 import type { LlmsExample, LlmsExampleFile } from './page-markdown';
 
-/** The site of the latest major version, which the committed `llms.txt` and the skills link. */
-export const KOOBIQ_SITE_ORIGIN = 'https://koobiq.io';
-
-/**
- * The address of the site the documentation for agents is built for: every link in it leads to the same site, so an
- * agent that reads the Markdown of `next.koobiq.io` or of `v21.koobiq.io` stays on that version. The workflow that
- * deploys a site to another address sets `KOOBIQ_DOCS_ORIGIN`.
- */
-export const LLMS_SITE_ORIGIN = (process.env['KOOBIQ_DOCS_ORIGIN'] || KOOBIQ_SITE_ORIGIN).replace(/\/+$/, '');
-
 /** The address of a file of the documentation for agents, by its path under the root of the site. */
-export const getSiteUrl = (path: string): string => `${LLMS_SITE_ORIGIN}/${path}`;
+export const getSiteUrl = (path: string): string => `${DOCS_SITE_ORIGIN}/${path}`;
 
 /** An example in a file of its own, apart from the pages that show it: `examples/alert-overview.md`. */
 export const getExamplePath = (id: string): string => `examples/${id}.md`;
@@ -75,7 +66,7 @@ export const getMarkdownPath = (item: DocsStructureItem, locale: DocsLocale): st
 
 /** The address a text links the Markdown of an item by: the English one, like the text itself. */
 export const getMarkdownUrl = (item: DocsStructureItem): string =>
-    `${LLMS_SITE_ORIGIN}${docsGetMarkdownPath(item, DocsLocale.En)}`;
+    `${DOCS_SITE_ORIGIN}${docsGetMarkdownPath(item, DocsLocale.En)}`;
 
 /** Where the sections of a page too long for one file go, next to its English Markdown: `en/main/migration`. */
 export const getSectionsPath = (item: DocsStructureItem): string =>
@@ -89,7 +80,7 @@ export const getSectionPath = (item: DocsStructureItem, slugs: string[]): string
 export const getPageUrl = ({ categoryId, id }: DocsStructureItem): string => {
     const tab = id === DocsStructureItemId.DesignTokens ? DocsStructureTokensTab.Colors : DocsStructureItemTab.Overview;
 
-    return `${LLMS_SITE_ORIGIN}/${DocsLocale.En}/${categoryId}/${id}/${tab}`;
+    return `${DOCS_SITE_ORIGIN}/${DocsLocale.En}/${categoryId}/${id}/${tab}`;
 };
 
 /** A URL of its own: with a scheme, such as `https:` or `mailto:`, or on another host. */
@@ -115,7 +106,7 @@ export const resolveSiteUrl = (url: string): string => {
         docsGetItemById(id as DocsStructureItemId, categoryId as DocsStructureCategoryId);
     const target = item && docsHasMarkdown(item) ? docsGetPageMarkdownPath(item, tab, DocsLocale.En) : path;
 
-    return `${LLMS_SITE_ORIGIN}${target}${hash ? `#${hash}` : ''}`;
+    return `${DOCS_SITE_ORIGIN}${target}${hash ? `#${hash}` : ''}`;
 };
 
 /** A JSDoc holding nothing but the title the catalogue shows, which the caption of the example already carries. */

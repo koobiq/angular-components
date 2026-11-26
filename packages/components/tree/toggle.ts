@@ -37,7 +37,6 @@ export class KbqTreeNodeToggleBaseDirective<T> {
         this.tree.treeControl.filterModel.changed.pipe(map(() => this.tree.treeControl.hasActiveFilter)),
         { initialValue: false }
     );
-
     private readonly disabledState = computed(() => this.disabledInput() || this.filterDisabled());
 
     get disabled(): boolean {

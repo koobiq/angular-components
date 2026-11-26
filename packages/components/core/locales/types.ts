@@ -186,7 +186,7 @@ export type KbqTimezoneLocaleConfiguration = {
     otherCountriesLabel: string;
 };
 
-/** Locale configuration for the `kbq-vertical-navbar` collapse toggle. */
+/** Locale configuration for the navbar: the vertical collapse toggle and the horizontal «More» trigger. */
 export type KbqNavbarLocaleConfiguration = {
     toggle: {
         /** Accessible name of the toggle while the navbar is collapsed. */
@@ -194,6 +194,12 @@ export type KbqNavbarLocaleConfiguration = {
         /** Accessible name of the toggle while the navbar is expanded. */
         collapse: string;
     };
+
+    /**
+     * Accessible name of the horizontal navbar's trigger revealing the items hidden by overflow. Left out by a
+     * full custom configuration, the trigger falls back to the default locale's name.
+     */
+    more?: string;
 };
 
 /** Locale configuration for `KbqSearchExpandableModule`. */
@@ -347,7 +353,16 @@ export type KbqInputLocaleConfiguration = {
 export type KbqClampedTextLocaleConfiguration = {
     openText: string;
     closeText: string;
+    /** Collapsed trigger label for the expanded list view. Supports the `{exceededItemCount}` placeholder. */
     showMoreText: string;
+    /** Сollapsed trigger label for the inline "more" trigger. Supports the `{exceededItemCount}` placeholder; falls back to `moreText` when not set. */
+    showMoreTextCompact?: string; // TODO: will be required in the next major release
+
+    /**
+     * Short word used for the inline "more" trigger.
+     *
+     * @deprecated Use `showMoreTextCompact` instead; it supports per-locale word order and placeholders.
+     */
     moreText: string;
 };
 

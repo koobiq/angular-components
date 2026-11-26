@@ -32,14 +32,12 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimepickerFieldValidationExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly adapter = inject(DateAdapter<DateTime>);
-    protected readonly timeFormats = TimeFormats;
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly timeFormats = TimeFormats;
     protected readonly max = this.adapter.today().startOf('hour').plus({ hours: 1 });
     protected readonly min = this.adapter.today().startOf('hour').minus({ hours: 1 });
-
     protected readonly control = new FormControl<DateTime | null>(null, [Validators.required]);
 
     constructor() {

@@ -69,7 +69,6 @@ export class AutocompleteSearchSmartExample {
         "Cote d'Ivoire",
         'Costa Rica'
     ];
-
     control = new FormControl('');
     filteredOptions: Observable<string[]> = this.control.valueChanges.pipe(
         startWith(''),

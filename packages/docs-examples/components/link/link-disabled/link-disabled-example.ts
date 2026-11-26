@@ -36,7 +36,7 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LinkDisabledExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly disabled = model(true);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

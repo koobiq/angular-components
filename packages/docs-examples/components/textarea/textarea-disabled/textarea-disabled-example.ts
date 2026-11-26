@@ -25,7 +25,7 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class TextareaDisabledExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly disabled = model(true);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

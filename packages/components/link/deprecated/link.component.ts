@@ -64,6 +64,15 @@ export class KbqLink implements AfterViewInit, AfterViewChecked, OnDestroy {
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly contentObserver = inject(ContentObserver);
     private readonly nativeElement = kbqInjectNativeElement<HTMLAnchorElement>();
+    protected readonly renderer = inject(Renderer2);
+
+    /** Whether the link is disabled. */
+    readonly disabled = input(false, { transform: booleanAttribute });
+
+    private readonly icons = contentChildren(
+        forwardRef(() => KbqIcon),
+        { read: ElementRef }
+    );
 
     /**
      * `[kbq-link]` styles an `<a>` or a `<span>`, where `disabled` is not a valid attribute and means
@@ -71,16 +80,6 @@ export class KbqLink implements AfterViewInit, AfterViewChecked, OnDestroy {
      * rather than hardcoded, because the selector does not restrict the host.
      */
     private readonly hostSupportsNativeDisabled = supportsNativeDisabled(this.nativeElement);
-
-    protected readonly renderer = inject(Renderer2);
-
-    private readonly icons = contentChildren(
-        forwardRef(() => KbqIcon),
-        { read: ElementRef }
-    );
-
-    /** Whether the link is disabled. */
-    readonly disabled = input(false, { transform: booleanAttribute });
 
     /**
      * Effective disabled state, mirroring the `disabled` input. It stays writable because `kbqTooltip`
@@ -118,6 +117,9 @@ export class KbqLink implements AfterViewInit, AfterViewChecked, OnDestroy {
      * something else, or bind `null` to opt out.
      */
     readonly print = input<string | null>();
+
+    /** The URL last written to the `print` attribute. */
+    private printedUrl: string | undefined;
 
     /** @docs-private */
     protected readonly hasIcon = computed(() => this.icons().length > 0);
@@ -158,9 +160,6 @@ export class KbqLink implements AfterViewInit, AfterViewChecked, OnDestroy {
             onCleanup(() => subscription.unsubscribe());
         });
     }
-
-    /** The URL last written to the `print` attribute. */
-    private printedUrl: string | undefined;
 
     ngAfterViewInit(): void {
         void this.focusMonitor.monitor(this.nativeElement, true);

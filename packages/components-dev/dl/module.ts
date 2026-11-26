@@ -25,6 +25,8 @@ import { DevThemeToggle } from '../theme-toggle';
         <dl-width-sync-example />
         <hr />
         <dl-long-text-example />
+        <hr />
+        <dl-caption-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -1,3 +1,10 @@
+@use '../core/styles/common/tokens';
+
 .kbq-form-field-type-datepicker {
     width: 136px;
+}
+
+// tabular digits keep the field width stable when the value changes via stepper or keyboard
+.kbq-input.kbq-datepicker {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, tabular-normal);
 }

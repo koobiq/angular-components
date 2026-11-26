@@ -65,6 +65,12 @@
     display: flex;
     gap: var(--kbq-size-3xs);
     align-items: center;
+
+    .kbq-button-icon.cdk-keyboard-focused:not(.kbq-disabled) {
+        border-color: transparent;
+        outline: 2px solid var(--kbq-states-line-focus-theme);
+        outline-offset: 2px;
+    }
 }
 
 .docs-example-vertical-margin {

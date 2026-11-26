@@ -103,57 +103,55 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
     extends KbqSliderBase<T>
     implements KbqFormFieldControl<KbqSliderSelection<T>>
 {
-    /** Vertical layout, increasing from bottom to top. Defaults to `false`. */
-    readonly vertical = input<boolean, boolean | string | null | undefined>(this.options.vertical, {
-        transform: booleanAttribute
-    });
-    /** Reverses the scale direction. Defaults to `false`. */
-    readonly reversed = input<boolean, boolean | string | null | undefined>(this.options.reversed, {
-        transform: booleanAttribute
-    });
-    /** Keeps thumbs within the control, or centres them on its endpoints. Defaults to `'contain'`. */
-    readonly thumbAlignment = input<KbqSliderThumbAlignment>(this.options.thumbAlignment);
-    /** Highlighted portion of the scale. Ranges fill between their bounds unless set to `'outside'`. Defaults to `'start'`. */
-    readonly fill = input<KbqSliderFill>(this.options.fill);
-    /** Origin of the `'origin'` fill, in value units. Defaults to `0`. */
-    readonly fillOrigin = input(this.options.fillOrigin);
-    /** Optional mapping for a non-linear scale. Defaults to a linear scale. */
-    readonly scale = input<KbqSliderScale | undefined>(this.options.scale);
-    /** Shows the value on focus, hover and drag. Defaults to `false`. */
-    readonly showTooltip = input<boolean, boolean | string | null | undefined>(this.options.showTooltip, {
-        transform: booleanAttribute
-    });
-    /** Shows the value on focus even when `showTooltip` is off. Defaults to `false`. */
-    readonly showTooltipOnFocus = input<boolean, boolean | string | null | undefined>(this.options.showTooltipOnFocus, {
-        transform: booleanAttribute
-    });
-    /** Number of steps moved by Page Up, Page Down or Shift + arrow. Defaults to `10`. */
-    readonly largeStepMultiplier = input(this.options.largeStepMultiplier);
-    /** @docs-private */
-    readonly controlType = 'slider';
-
     private readonly platform = inject(Platform);
     private readonly injector = inject(Injector);
     private readonly modality = inject(InputModalityDetector);
     private readonly overlay = inject(Overlay);
-    protected readonly tooltipScrollStrategy = () => this.overlay.scrollStrategies.reposition();
     private readonly directionality = inject(Directionality, { optional: true });
-    private readonly direction = signal(this.directionality?.value ?? 'ltr');
     private readonly renderer = inject(Renderer2);
     private readonly window = inject(KBQ_WINDOW);
+
+    /** Vertical layout, increasing from bottom to top. Defaults to `false`. */
+    readonly vertical = input<boolean, boolean | string | null | undefined>(this.options.vertical, {
+        transform: booleanAttribute
+    });
+
+    /** Reverses the scale direction. Defaults to `false`. */
+    readonly reversed = input<boolean, boolean | string | null | undefined>(this.options.reversed, {
+        transform: booleanAttribute
+    });
+
+    /** Keeps thumbs within the control, or centres them on its endpoints. Defaults to `'contain'`. */
+    readonly thumbAlignment = input<KbqSliderThumbAlignment>(this.options.thumbAlignment);
+
+    /** Highlighted portion of the scale. Ranges fill between their bounds unless set to `'outside'`. Defaults to `'start'`. */
+    readonly fill = input<KbqSliderFill>(this.options.fill);
+
+    /** Origin of the `'origin'` fill, in value units. Defaults to `0`. */
+    readonly fillOrigin = input(this.options.fillOrigin);
+
+    /** Optional mapping for a non-linear scale. Defaults to a linear scale. */
+    readonly scale = input<KbqSliderScale | undefined>(this.options.scale);
+
+    /** Shows the value on focus, hover and drag. Defaults to `false`. */
+    readonly showTooltip = input<boolean, boolean | string | null | undefined>(this.options.showTooltip, {
+        transform: booleanAttribute
+    });
+
+    /** Shows the value on focus even when `showTooltip` is off. Defaults to `false`. */
+    readonly showTooltipOnFocus = input<boolean, boolean | string | null | undefined>(this.options.showTooltipOnFocus, {
+        transform: booleanAttribute
+    });
+
+    /** Number of steps moved by Page Up, Page Down or Shift + arrow. Defaults to `10`. */
+    readonly largeStepMultiplier = input(this.options.largeStepMultiplier);
+
     private readonly thumbInputs = viewChildren<ElementRef<HTMLInputElement>>('thumbInput');
     private readonly rail = viewChild<ElementRef<HTMLElement>>('rail');
     private readonly surface = viewChild<ElementRef<HTMLElement>>('surface');
-    protected readonly animationsDisabled = kbqAnimationsDisabled();
-    protected readonly animateMark = signal(false);
-    protected readonly activeIndex = signal(0);
-    protected readonly tooltipIndex = signal<number | null>(null);
-    protected readonly visibleMarks = computed(() =>
-        this.marks().filter(
-            (mark) => Number.isFinite(mark.value) && mark.value >= this.bounds().min && mark.value <= this.bounds().max
-        )
-    );
-    protected readonly hasMarkLabels = computed(() => this.visibleMarks().some((mark) => !!mark.label));
+    private readonly tooltips = viewChildren(KbqTooltipTrigger);
+
+    private readonly direction = signal(this.directionality?.value ?? 'ltr');
     private readonly filledRanges = computed<readonly (readonly [number, number])[]>(() => {
         const values = this.values();
         const { min, max } = this.bounds();
@@ -175,7 +173,23 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
 
         return [[min, values[0]]];
     });
+    private pointer: SliderPointerGesture | null = null;
+    private keyboardStart: KbqSliderValue | null = null;
+    private tooltipTimer: ReturnType<typeof setTimeout> | undefined;
+    private markAnimation?: SliderMarkAnimation;
 
+    /** @docs-private */
+    readonly controlType = 'slider';
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
+    protected readonly animateMark = signal(false);
+    protected readonly activeIndex = signal(0);
+    protected readonly tooltipIndex = signal<number | null>(null);
+    protected readonly visibleMarks = computed(() =>
+        this.marks().filter(
+            (mark) => Number.isFinite(mark.value) && mark.value >= this.bounds().min && mark.value <= this.bounds().max
+        )
+    );
+    protected readonly hasMarkLabels = computed(() => this.visibleMarks().some((mark) => !!mark.label));
     protected readonly segments = computed(() =>
         this.filledRanges().map(([a, b]) => {
             const first = this.position(a);
@@ -193,13 +207,7 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
             };
         })
     );
-    private pointer: SliderPointerGesture | null = null;
-    private keyboardStart: KbqSliderValue | null = null;
-    private readonly tooltips = viewChildren(KbqTooltipTrigger);
     protected readonly dragging = signal(false);
-
-    private tooltipTimer: ReturnType<typeof setTimeout> | undefined;
-    private markAnimation?: SliderMarkAnimation;
 
     constructor() {
         super();
@@ -212,6 +220,8 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
         afterNextRender(() => this.listenForWindowBlur(destroyRef));
         destroyRef.onDestroy(() => this.disposeInteraction());
     }
+
+    protected readonly tooltipScrollStrategy = () => this.overlay.scrollStrategies.reposition();
 
     private trackPointerMotion(destroyRef: DestroyRef): void {
         this.modality.modalityDetected

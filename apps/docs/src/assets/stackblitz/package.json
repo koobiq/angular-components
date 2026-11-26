@@ -24,6 +24,7 @@
         "@koobiq/date-adapter": "^3.4.0",
         "@koobiq/design-tokens": "^4.1.0",
         "@koobiq/icons": "^12.4.0",
+        "@koobiq/luxon-date-adapter": "^3.7.0",
         "@messageformat/core": "^3.4.0",
         "inter-ui": "^4.1.1",
         "luxon": "^3.7.2",
@@ -38,6 +39,9 @@
         "typescript": "~5.9.2"
     },
     "overrides": {
+        "@koobiq/ag-grid-angular-theme@^34": {
+            "@koobiq/design-tokens": "$@koobiq/design-tokens"
+        },
         "glob": "^14.0.2",
         "minimatch": "^11.0.1"
     }

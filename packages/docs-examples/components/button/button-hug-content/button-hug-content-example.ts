@@ -28,6 +28,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class ButtonHugContentExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     colors = KbqComponentColors;
 }

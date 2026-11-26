@@ -37,7 +37,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class SelectTwoLineOptionExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly options = computed(() => [
         'Option #0',
         'Option #1',

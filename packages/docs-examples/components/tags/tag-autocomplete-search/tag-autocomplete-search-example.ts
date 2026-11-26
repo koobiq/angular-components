@@ -79,9 +79,11 @@ const getAutocompleteOptions = () => [
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagAutocompleteSearchExample {
-    private readonly options = getAutocompleteOptions();
-    protected readonly separatorKeysCodes = [ENTER, COMMA];
     protected readonly tagInputModel = model('');
+
+    private readonly options = getAutocompleteOptions();
+
+    protected readonly separatorKeysCodes = [ENTER, COMMA];
     protected readonly tags = model(this.options.slice(0, 2));
     protected readonly searchTokens = computed(() => tokenizeSearchQuery(this.tagInputModel().trim()));
     protected readonly filteredOptions = computed(() => {

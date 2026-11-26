@@ -42,7 +42,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TabsUnderlinedExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly tabs = computed(() => [
         this.t().bruteforce,
         this.t().complexAttack,

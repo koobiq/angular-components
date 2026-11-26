@@ -155,9 +155,7 @@ export const DATA_OBJECT = [
 export class TreeSelectAndMarkExample {
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     modelValue: any = '';
 
     constructor() {

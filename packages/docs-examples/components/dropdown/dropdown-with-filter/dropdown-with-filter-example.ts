@@ -89,12 +89,12 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownWithFilterExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly groups = {
         items: ['New tab', 'New window'],
         actions: ['Action one', 'Action two', 'Action three']
     };
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly control = new FormControl('');
     protected readonly filteredGroups = toSignal(
         this.control.valueChanges.pipe(

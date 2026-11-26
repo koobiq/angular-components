@@ -27,5 +27,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class SliderTooltipExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly formatPercent = (value: number): string => `${value}%`;
 }

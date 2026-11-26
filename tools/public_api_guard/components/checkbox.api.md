@@ -35,7 +35,8 @@ export class KbqCheckbox extends KbqColorDirective implements OnChanges, DoCheck
     readonly change: _angular_core.OutputEmitterRef<KbqCheckboxChange>;
     get checked(): boolean;
     set checked(value: boolean);
-    readonly checkedInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
+    readonly checkedChange: _angular_core.OutputEmitterRef<boolean>;
+    readonly checkedInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | number | boolean | null | undefined>;
     readonly clickAction: _angular_core.InputSignal<_koobiq_components_core.KbqCheckableClickAction>;
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -75,7 +76,7 @@ export class KbqCheckbox extends KbqColorDirective implements OnChanges, DoCheck
     updateErrorState(): void;
     readonly value: _angular_core.InputSignal<string | undefined>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqCheckbox, "kbq-checkbox", ["kbqCheckbox"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; "isSignal": true; }; "big": { "alias": "big"; "required": false; "isSignal": true; }; "id": { "alias": "id"; "required": false; "isSignal": true; }; "labelPosition": { "alias": "labelPosition"; "required": false; "isSignal": true; }; "name": { "alias": "name"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "clickAction": { "alias": "clickAction"; "required": false; "isSignal": true; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; "checkedInput": { "alias": "checked"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "tabIndexInput": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "indeterminateInput": { "alias": "indeterminate"; "required": false; "isSignal": true; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, ["error", "hints"], ["*", "kbq-error", "kbq-hint"], true, [{ directive: typeof _koobiq_components_core.KbqCheckable; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqCheckbox, "kbq-checkbox", ["kbqCheckbox"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; "isSignal": true; }; "big": { "alias": "big"; "required": false; "isSignal": true; }; "id": { "alias": "id"; "required": false; "isSignal": true; }; "labelPosition": { "alias": "labelPosition"; "required": false; "isSignal": true; }; "name": { "alias": "name"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "clickAction": { "alias": "clickAction"; "required": false; "isSignal": true; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; "checkedInput": { "alias": "checked"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "tabIndexInput": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "indeterminateInput": { "alias": "indeterminate"; "required": false; "isSignal": true; }; }, { "change": "change"; "checkedChange": "checkedChange"; "indeterminateChange": "indeterminateChange"; }, ["error", "hints"], ["*", "kbq-error", "kbq-hint"], true, [{ directive: typeof _koobiq_components_core.KbqCheckable; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqCheckbox, never>;
 }

@@ -1,5 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceElement } from '@angular/cdk/coercion';
+import { ENTER, ESCAPE, TAB } from '@angular/cdk/keycodes';
 import {
     type ConnectedOverlayPositionChange,
     type FlexibleConnectedPositionStrategy,
@@ -17,14 +18,11 @@ import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
-    ENTER,
-    ESCAPE,
     KBQ_PARENT_POPUP,
     type KbqParentPopup,
     type KbqPopUpPlacementValues,
     type KbqSiblingPopup,
-    kbqSiblingPopupProvider,
-    TAB
+    kbqSiblingPopupProvider
 } from '@koobiq/components/core';
 import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
@@ -3065,7 +3063,6 @@ class TooltipUndefinedInputs {
 })
 class SiblingPopup implements KbqSiblingPopup {
     isAttached = false;
-
     readonly openedChange = new Subject<boolean>();
 
     open(): void {
@@ -3123,7 +3120,6 @@ class KbqTooltipSingleInstanceComponent {
     readonly toggleableTrigger = viewChild.required<ElementRef>('toggleableTrigger');
 
     toggleableSingleInstance = true;
-
     hoverTriggerRendered = true;
 }
 
@@ -3200,6 +3196,7 @@ class KbqTooltipDisabledComponent {
 })
 class KbqTooltipWithTemplateRefContent {
     readonly trigger = viewChild.required<ElementRef>('trigger');
+
     tooltipContext = { content: 'TestContent' };
 }
 
@@ -3351,8 +3348,9 @@ class TooltipArrowAndOffset {
     ]
 })
 class TooltipWithDefaultOptions {
-    offset: number | null | undefined = undefined;
     readonly trigger = viewChild.required(KbqTooltipTrigger);
+
+    offset: number | null | undefined = undefined;
 }
 
 @Component({
@@ -3420,15 +3418,15 @@ class TooltipRelativeToPointer {
     `
 })
 class TooltipRelativeToCaret {
-    fieldVertical: KbqCaretVerticalAnchor = 'auto';
-    wrapperVertical: KbqCaretVerticalAnchor = 'auto';
-
     readonly field = viewChild.required<ElementRef<HTMLInputElement>>('field');
     readonly textarea = viewChild.required<ElementRef<HTMLTextAreaElement>>('textarea');
     readonly plain = viewChild.required<ElementRef>('plain');
     readonly fieldTooltip = viewChild.required('field', { read: KbqTooltipTrigger });
     readonly wrapperTooltip = viewChild.required('wrapper', { read: KbqTooltipTrigger });
     readonly plainTooltip = viewChild.required('plain', { read: KbqTooltipTrigger });
+
+    fieldVertical: KbqCaretVerticalAnchor = 'auto';
+    wrapperVertical: KbqCaretVerticalAnchor = 'auto';
 }
 
 @Component({

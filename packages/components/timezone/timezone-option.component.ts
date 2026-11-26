@@ -8,7 +8,7 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { KBQ_TITLE_TEXT_REF, KbqHighlightBackgroundPipe, KbqOption } from '@koobiq/components/core';
+import { KBQ_GROUP_OPTION, KBQ_TITLE_TEXT_REF, KbqHighlightBackgroundPipe, KbqOption } from '@koobiq/components/core';
 import { CitiesByFilterPipe } from './cities-by-filter.pipe';
 import type { KbqTimezoneZone } from './timezone.models';
 import { filterCitiesBySearchString, offsetFormatter, resolveZoneOffset } from './timezone.utils';
@@ -34,6 +34,10 @@ import { UtcOffsetPipe } from './utc-offset.pipe';
         {
             provide: KBQ_TITLE_TEXT_REF,
             useExisting: forwardRef(() => KbqTimezoneOption)
+        },
+        {
+            provide: KBQ_GROUP_OPTION,
+            useExisting: forwardRef(() => KbqTimezoneOption)
         }
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,9 +48,6 @@ import { UtcOffsetPipe } from './utc-offset.pipe';
     exportAs: 'kbqTimezoneOption'
 })
 export class KbqTimezoneOption extends KbqOption {
-    readonly tooltipContentWrapper = viewChild.required<ElementRef<HTMLElement>>('tooltipContentWrapper');
-    readonly tooltipContent = viewChild.required<ElementRef<HTMLElement>>('tooltipContent');
-
     readonly highlightText = input<string | readonly string[]>(undefined!);
 
     /** Whether `highlightText` was matched with diacritic folding (e.g. via `createSearchPredicate`) — see `kbqHighlightBackground`. */
@@ -54,6 +55,9 @@ export class KbqTimezoneOption extends KbqOption {
 
     /** @docs-private */
     readonly timezoneInput = input<KbqTimezoneZone>(undefined!, { alias: 'timezone' });
+
+    readonly tooltipContentWrapper = viewChild.required<ElementRef<HTMLElement>>('tooltipContentWrapper');
+    readonly tooltipContent = viewChild.required<ElementRef<HTMLElement>>('tooltipContent');
 
     /** The time zone the option stands for. */
     get timezone(): KbqTimezoneZone {

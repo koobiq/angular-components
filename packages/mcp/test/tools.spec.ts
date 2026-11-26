@@ -1,7 +1,11 @@
-import { resolve } from 'node:path';
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, resolve } from 'node:path';
 import { indexSkew, loadCatalog } from '../src/catalog';
 import { search } from '../src/search';
 import { readIcons } from '../src/sources/icons';
+import type { PackageRef } from '../src/sources/project';
+import { readTokens } from '../src/sources/tokens';
 import { toolGetComponent, toolGetIcon, toolGetToken, toolListComponents, toolSearch } from '../src/tools';
 import { componentsAvailable, CONSUMER } from './project';
 
@@ -13,6 +17,114 @@ import { componentsAvailable, CONSUMER } from './project';
  */
 
 const catalog = loadCatalog(CONSUMER);
+
+// The resolved-value assertions (oklch, component tokens) hold for the v4 reader only.
+const tokensV4 = catalog.tokens.ok && catalog.tokens.readerMajor === 4;
+
+describe.skipIf(!tokensV4)('get_token', () => {
+    test('reports resolved theme token values without a degraded note', () => {
+        const output = toolGetToken(catalog, { name: 'background-bg' });
+
+        expect(output).toMatch(/--kbq-background-bg/);
+        expect(output).toMatch(/value \(light\): oklch/);
+        expect(output).toMatch(/value \(dark\): oklch/);
+        expect(output).not.toMatch(/Degraded:/);
+    });
+
+    test.each(['scrollbar-size-thumb-width', 'code-block-hljs-addition-background'])(
+        'finds the v4 component token %s',
+        (name) => {
+            // These live in component-tokens*.css, which only the major-4 reader opens.
+            const output = toolGetToken(catalog, { name });
+
+            expect(output).toMatch(new RegExp(`--kbq-${name}`));
+            expect(output).not.toMatch(/No token named/);
+            expect(output).not.toMatch(/Degraded:/);
+        }
+    );
+
+    test.each(['size-s', 'plt-white', 'font-family-accent'])('finds common token %s', (name) => {
+        const output = toolGetToken(catalog, { name });
+
+        expect(output).toMatch(new RegExp(`--kbq-${name}`));
+        expect(output).not.toMatch(/No token named/);
+        expect(output).not.toMatch(/Degraded:/);
+    });
+
+    test('gives no theming advice of its own', () => {
+        // The package no longer marks theme tokens as deprecated, but the tool must still avoid
+        // repeating the old house rule about redefining component tokens.
+        const output = toolGetToken(catalog, { name: 'background-bg' });
+
+        expect(!/redefining/.test(output)).toBeTruthy();
+    });
+});
+
+describe('readTokens', () => {
+    const createPackage = (root: string, major: number): PackageRef => ({
+        name: '@koobiq/design-tokens',
+        version: `${major}.0.0`,
+        root,
+        major
+    });
+
+    test('reads v3 tokens, deprecation notes and /* DEPRECATED */ comments', () => {
+        const dir = mkdtempSync(join(tmpdir(), 'kbq-tokens-v3-'));
+
+        try {
+            mkdirSync(join(dir, 'web'), { recursive: true });
+            writeFileSync(
+                join(dir, 'web/css-tokens-light.css'),
+                '--kbq-test-old: #ffffff; /* DEPRECATED: use --kbq-test-new instead */\n' + '--kbq-test-new: #000000;\n'
+            );
+            writeFileSync(
+                join(dir, 'web/css-tokens-dark.css'),
+                '--kbq-test-old: #eeeeee; /* DEPRECATED: use --kbq-test-new instead */\n' + '--kbq-test-new: #111111;\n'
+            );
+
+            const result = readTokens(createPackage(dir, 3));
+
+            expect(result.ok).toBe(true);
+            if (!result.ok) return;
+
+            const oldToken = result.data.find((token) => token.cssName === '--kbq-test-old');
+            const newToken = result.data.find((token) => token.cssName === '--kbq-test-new');
+
+            expect(oldToken).toBeTruthy();
+            expect(oldToken!.deprecated).toBe(true);
+            expect(oldToken!.deprecationNote).toBe('use --kbq-test-new instead');
+            expect(newToken).toBeTruthy();
+            expect(newToken!.deprecated).toBeUndefined();
+        } finally {
+            rmSync(dir, { recursive: true, force: true });
+        }
+    });
+
+    test('reads v4 /** */ comments and resolves var() references', () => {
+        const dir = mkdtempSync(join(tmpdir(), 'kbq-tokens-v4-'));
+
+        try {
+            mkdirSync(join(dir, 'web'), { recursive: true });
+            writeFileSync(
+                join(dir, 'web/css-tokens.css'),
+                '--kbq-palette-white: #fff;\n' + '--kbq-test-ref: var(--kbq-palette-white); /** reference token */\n'
+            );
+
+            const result = readTokens(createPackage(dir, 4));
+
+            expect(result.ok).toBe(true);
+            if (!result.ok) return;
+
+            const refToken = result.data.find((token) => token.cssName === '--kbq-test-ref');
+
+            expect(refToken).toBeTruthy();
+            expect(refToken!.value).toBe('#fff');
+            expect(refToken!.deprecated).toBeUndefined();
+        } finally {
+            rmSync(dir, { recursive: true, force: true });
+        }
+    });
+});
 
 // `unit:all` sweeps this file in `units.yml` too, which never builds the library — skipped, not
 // failed, is the honest report there. `unit:mcp:dts` runs it for real after `build:components`.
@@ -112,32 +224,6 @@ describe.skipIf(!componentsAvailable())('the live reader, and the tools built on
 
     test('get_icon accepts the name with the prefix already on it', () => {
         expect(toolGetIcon(catalog, { name: 'kbq-trash_16' })).toMatch(/kbq-icon="kbq-trash_16"/);
-    });
-
-    test('get_token reports the value and flags deprecated tokens', () => {
-        expect(toolGetToken(catalog, { name: 'background-bg' })).toMatch(/--kbq-background-bg\n {2}value: hsla/);
-        expect(toolGetToken(catalog, { name: 'theme-default' })).toMatch(/DEPRECATED/);
-    });
-
-    test('get_token passes on what the package says to use instead', () => {
-        if (!catalog.tokens.ok) throw new Error('tokens not readable');
-
-        const withNote = catalog.tokens.data.find((token) => token.deprecationNote);
-
-        expect(withNote, 'no deprecation carried a note — the comment parse regressed').toBeTruthy();
-        expect(
-            toolGetToken(catalog, { name: withNote!.cssName }),
-            'the tool is dispensing theming advice again'
-        ).toMatch(/instead: /);
-    });
-
-    test('get_token gives no theming advice of its own', () => {
-        // 1862 of 2004 tokens in 3.20.0 are deprecated, most of them component-level ones the package
-        // tells callers to replace with global tokens. Repeating the old house rule here would
-        // contradict the deprecation note printed alongside it.
-        const output = toolGetToken(catalog, { name: 'background-bg' });
-
-        expect(!/redefining/.test(output)).toBeTruthy();
     });
 
     test('an unreadable source refuses instead of answering emptily', () => {

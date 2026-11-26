@@ -129,6 +129,12 @@ export class KbqBreadcrumbView {
 })
 export class KbqBreadcrumbItem {
     /**
+     * An optional `RouterLink` instance for navigating to a specific route.
+     * Injected from the host element, if available and projecting to the hidden breadcrumb item in dropdown.
+     */
+    readonly routerLink = inject(RouterLink, { optional: true, host: true });
+
+    /**
      * The text displayed for the breadcrumb item.
      * This text will be shown if breadcrumb item is hidden in dropdown.
      */
@@ -152,12 +158,6 @@ export class KbqBreadcrumbItem {
     readonly customTemplateRef = contentChild<KbqBreadcrumbView, TemplateRef<unknown>>(KbqBreadcrumbView, {
         read: TemplateRef
     });
-
-    /**
-     * An optional `RouterLink` instance for navigating to a specific route.
-     * Injected from the host element, if available and projecting to the hidden breadcrumb item in dropdown.
-     */
-    readonly routerLink = inject(RouterLink, { optional: true, host: true });
 }
 
 @Component({
@@ -197,11 +197,18 @@ export class KbqBreadcrumbItem {
 })
 export class KbqBreadcrumbs {
     protected readonly configuration = inject(KBQ_BREADCRUMBS_CONFIGURATION);
+
     /** Accessible names of the landmark itself and of the icon-only button revealing the collapsed items. */
     protected readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'a11y',
         KBQ_A11Y_LOCALE_CONFIGURATION
     );
+
+    /**
+     * `<nav>` is a landmark already, so the role is written only onto the other host forms. Resolved once:
+     * the tag name of a host element never changes.
+     */
+    protected readonly hostRole = kbqInjectNativeElement().tagName === 'NAV' ? null : 'navigation';
 
     /**
      * Accessible name of the navigation landmark. Set it whenever a page renders more than one trail, so
@@ -245,13 +252,13 @@ export class KbqBreadcrumbs {
         KbqBreadcrumbsSeparator,
         { read: TemplateRef }
     );
-
     protected readonly items = contentChildren<KbqBreadcrumbItem>(forwardRef(() => KbqBreadcrumbItem));
-
     private readonly resultDropdownTrigger = viewChild('breadcrumbsResult', { read: KbqDropdownTrigger });
     private readonly result = viewChild(KbqOverflowItemsResult);
     private readonly overflowItems = viewChildren<KbqOverflowItem>(forwardRef(() => KbqOverflowItem));
     private readonly overflowItemsDir = viewChild(KbqOverflowItems);
+
+    private readonly maxHiddenItems = new Set<KbqOverflowItem>();
 
     /**
      * Ensures at least minimum number of breadcrumb items are shown.
@@ -259,12 +266,6 @@ export class KbqBreadcrumbs {
     protected readonly minVisibleItems = 2;
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly PopUpPlacements = PopUpPlacements;
-
-    /**
-     * `<nav>` is a landmark already, so the role is written only onto the other host forms. Resolved once:
-     * the tag name of a host element never changes.
-     */
-    protected readonly hostRole = kbqInjectNativeElement().tagName === 'NAV' ? null : 'navigation';
 
     /** Consumer-authored name of the landmark, falling back to the active locale. */
     protected readonly resolvedAriaLabel = computed(
@@ -291,8 +292,6 @@ export class KbqBreadcrumbs {
 
         return max - 1;
     });
-
-    private readonly maxHiddenItems = new Set<KbqOverflowItem>();
 
     constructor() {
         const group = inject(RdxRovingFocusGroupDirective, { self: true });

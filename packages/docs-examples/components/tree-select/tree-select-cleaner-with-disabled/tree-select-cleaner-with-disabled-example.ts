@@ -89,17 +89,24 @@ const lockedNodes = ['loadBalancer'];
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectCleanerWithDisabledExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly kept = model(['database', 'loadBalancer', 'messageQueue']);
     protected readonly cleared = model(['database', 'loadBalancer', 'messageQueue']);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     // Each tree-select needs its own control and data source: they share neither selection nor expansion.
     protected readonly keptTreeControl = new FlatTreeControl<FlatNode>(getLevel, isExpandable, getValue, getLabel);
     protected readonly clearedTreeControl = new FlatTreeControl<FlatNode>(getLevel, isExpandable, getValue, getLabel);
-
     protected readonly keptDataSource = this.createDataSource(this.keptTreeControl);
     protected readonly clearedDataSource = this.createDataSource(this.clearedTreeControl);
+
+    constructor() {
+        effect(() => {
+            // The nodes are keyed by stable ids, so a rebuild on a locale switch keeps the selection.
+            this.keptDataSource.data = getTreeData(this.t());
+            this.clearedDataSource.data = getTreeData(this.t());
+        });
+    }
 
     /** Opts out of the default, which leaves the disabled nodes selected. */
     protected readonly clearEverything = (_node: FlatNode) => true;
@@ -119,13 +126,5 @@ export class TreeSelectCleanerWithDisabledExample {
         );
 
         return dataSource;
-    }
-
-    constructor() {
-        effect(() => {
-            // The nodes are keyed by stable ids, so a rebuild on a locale switch keeps the selection.
-            this.keptDataSource.data = getTreeData(this.t());
-            this.clearedDataSource.data = getTreeData(this.t());
-        });
     }
 }

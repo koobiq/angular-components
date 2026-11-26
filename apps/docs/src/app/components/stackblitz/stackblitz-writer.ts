@@ -75,7 +75,8 @@ export const DOCS_TEMPLATE_FILES = [
     'tsconfig.json',
     'src/index.html',
     'src/main.ts',
-    'src/language-switcher.ts',
+    'src/docs-header/docs-header.ts',
+    'src/docs-header/mount.ts',
     'src/styles.scss',
     // Should be removed after next release (#DS-4881)
     'src/layout.scss'
@@ -87,7 +88,9 @@ export const DOCS_TEMPLATE_FILES = [
 @Injectable({ providedIn: 'root' })
 export class DocsStackblitzWriter {
     private readonly http = inject(HttpClient);
+
     private readonly cache = new Map<string, Promise<() => void>>();
+
     // The template is the same for every example, so its files are fetched once for all of them.
     private readonly templateFiles = new Map<string, Promise<string>>();
 
@@ -154,7 +157,9 @@ export class DocsStackblitzWriter {
             const dotIndex = data.indexFilename.lastIndexOf('.');
             const importFileName = data.indexFilename.slice(0, dotIndex === -1 ? undefined : dotIndex);
 
-            fileContent = fileContent.replace(/koobiq-docs-example/g, importFileName);
+            fileContent = fileContent
+                .replace(/koobiq-docs-example/g, importFileName)
+                .replace('${exampleLocale}', data.selectorName.startsWith('ag-grid-') ? 'en-US' : 'ru-RU');
         }
 
         return fileContent;
@@ -179,8 +184,15 @@ export class DocsStackblitzWriter {
             return content;
         }
 
-        const depth = targetPath.split('/').length - 3;
-        const relative = depth > 0 ? `${'../'.repeat(depth)}i18n` : './i18n';
+        const sourceDir = targetPath.split('/').slice(0, -1);
+        const i18nDir = ['src', 'example', 'i18n'];
+
+        while (sourceDir.length && sourceDir[0] === i18nDir[0]) {
+            sourceDir.shift();
+            i18nDir.shift();
+        }
+
+        const relative = ('../'.repeat(sourceDir.length) || './') + i18nDir.join('/');
 
         return content.replaceAll(`'${I18N_ENTRY_POINT_IMPORT}'`, `'${relative}'`);
     }

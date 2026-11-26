@@ -85,10 +85,10 @@ import { TRANSLATIONS } from './l10n';
 })
 export class SliderCommitExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
+    private readonly numberFormat = computed(() => new Intl.NumberFormat(this.t().locale));
+
     protected readonly zoom = signal(2.5);
     protected readonly renderedZoom = signal(2.5);
-    private readonly numberFormat = computed(() => new Intl.NumberFormat(this.t().locale));
-    protected readonly formatZoom = (value: number): string => `×\u00a0${this.numberFormat().format(value)}`;
     protected readonly zoomCaption = computed(() => {
         const { overview, streets, blocks } = this.t();
         const zoom = this.zoom();
@@ -96,6 +96,8 @@ export class SliderCommitExample {
         return zoom < 2 ? overview : zoom < 3 ? streets : blocks;
     });
     protected readonly tiles = Array.from({ length: 256 }, (_, index) => index);
+
+    protected readonly formatZoom = (value: number): string => `×\u00a0${this.numberFormat().format(value)}`;
 
     protected preview(value: KbqSliderValue): void {
         if (typeof value === 'number') this.zoom.set(value);

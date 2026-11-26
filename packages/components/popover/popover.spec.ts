@@ -1,5 +1,6 @@
 import { FocusTrap } from '@angular/cdk/a11y';
 import { coerceElement } from '@angular/cdk/coercion';
+import { ENTER, ESCAPE, SPACE } from '@angular/cdk/keycodes';
 import {
     type ConnectedOverlayPositionChange,
     type ConnectionPositionPair,
@@ -29,9 +30,7 @@ import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
-    ENTER,
     enUSLocaleData,
-    ESCAPE,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
     KbqOverlayLayer,
@@ -39,8 +38,7 @@ import {
     type KbqPopUpPlacementValues,
     type KbqStickToWindowPlacementValues,
     POSITION_TO_CSS_MAP,
-    ruRULocaleData,
-    SPACE
+    ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqModalService } from '@koobiq/components/modal';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -2787,6 +2785,7 @@ class PopoverShownByEffect {
 class PopoverContentFromEffect {
     readonly popoverTrigger = viewChild(KbqPopoverTrigger);
     readonly confirmTrigger = viewChild(KbqPopoverConfirmTrigger);
+
     readonly content = signal('Content');
 
     /** How many times each effect below wrote the content. */
@@ -2854,8 +2853,6 @@ class PopoverCloseOnScroll {
     `
 })
 class PopoverTestComponent {
-    popoverVisibility: boolean = false;
-
     readonly test1 = viewChild.required<ElementRef>('test1');
     readonly test2 = viewChild.required<ElementRef>('test2');
     readonly test3 = viewChild.required<ElementRef>('test3');
@@ -2864,6 +2861,8 @@ class PopoverTestComponent {
     readonly test6 = viewChild.required<ElementRef>('test6');
     readonly test7 = viewChild.required<ElementRef>('test7');
     readonly test8 = viewChild.required<ElementRef>('test8');
+
+    popoverVisibility: boolean = false;
 }
 
 @Component({
@@ -2878,13 +2877,13 @@ class PopoverTestComponent {
     `
 })
 class PopoverConfirmTestComponent {
-    confirmText = 'initial confirm text';
-
     readonly test8 = viewChild.required<ElementRef>('test8');
     readonly test9 = viewChild.required<ElementRef>('test9');
     readonly test10 = viewChild.required<ElementRef>('test10');
     readonly test11 = viewChild.required<ElementRef>('test11');
     readonly test13 = viewChild.required<ElementRef>('test13');
+
+    confirmText = 'initial confirm text';
 
     onConfirm() {
         return;
@@ -2928,6 +2927,7 @@ class PopoverConfirmWithProvidersTestComponent {
 })
 class PopoverWithTemplateRef {
     readonly trigger = viewChild.required<ElementRef>('trigger');
+
     context = { header: 'header', content: 'content', footer: 'footer' };
 }
 
@@ -2956,6 +2956,11 @@ class PopoverWithTemplateRef {
     `
 })
 class PopoverClosingBehavior {
+    readonly outside = viewChild.required<ElementRef>('outside');
+    readonly trigger = viewChild.required<ElementRef>('trigger');
+    readonly templateHeader = viewChild.required<TemplateRef<unknown>>('templateHeader');
+    readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
+
     header: string | TemplateRef<unknown> = 'HEADER';
     ariaLabel: string | undefined;
     disabled = false;
@@ -2964,11 +2969,6 @@ class PopoverClosingBehavior {
     backdropClass = 'cdk-overlay-transparent-backdrop';
     hasCloseButton = false;
     closeOnScroll: boolean | null = null;
-
-    readonly outside = viewChild.required<ElementRef>('outside');
-    readonly trigger = viewChild.required<ElementRef>('trigger');
-    readonly templateHeader = viewChild.required<TemplateRef<unknown>>('templateHeader');
-    readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
 
     onVisibleChange(_value: boolean) {
         return;
@@ -3079,6 +3079,9 @@ class PopoverBooleanInputs {
     `
 })
 class PopoverPlacement {
+    readonly trigger = viewChild.required<ElementRef>('trigger');
+    readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
+
     content = 'CONTENT';
     placement: KbqPopUpPlacementValues = 'top';
     placementPriority: KbqPopUpPlacementValues[] | null = null;
@@ -3086,9 +3089,6 @@ class PopoverPlacement {
     arrowCentered = false;
     origin: KbqOverlayOrigin | null = null;
     stickToWindow: KbqStickToWindowPlacementValues | undefined;
-
-    readonly trigger = viewChild.required<ElementRef>('trigger');
-    readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
 
     onPlacementChange(_value: KbqPopUpPlacementValues) {
         return;
@@ -3140,11 +3140,11 @@ class PopoverWithTooltip {
     `
 })
 class PopoverRelativeToPointer {
-    origin: KbqOverlayOrigin | null = null;
-    triggers = 'click, keydown';
-
     readonly trigger = viewChild.required<ElementRef>('trigger');
     readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
+
+    origin: KbqOverlayOrigin | null = null;
+    triggers = 'click, keydown';
 }
 
 @Component({
@@ -3169,12 +3169,12 @@ class PopoverRelativeToPointer {
     `
 })
 class PopoverOrigin {
+    readonly trigger = viewChild.required<ElementRef>('trigger');
+    readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
+
     autoFocus = true;
     origin: KbqOverlayOrigin | null = null;
     visible = false;
-
-    readonly trigger = viewChild.required<ElementRef>('trigger');
-    readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
 }
 
 @Component({
@@ -3196,10 +3196,10 @@ class PopoverOrigin {
     `
 })
 class PopoverInModal {
-    readonly preventClose = signal(false);
-
     readonly focusTrigger = viewChild.required<ElementRef<HTMLElement>>('focusTrigger');
     readonly layerTrigger = viewChild.required<ElementRef<HTMLElement>>('layerTrigger');
+
+    readonly preventClose = signal(false);
 }
 
 @Component({
@@ -3215,10 +3215,10 @@ class PopoverInModal {
     `
 })
 class PopoverInOverlayLayer {
-    stickToWindow?: KbqStickToWindowPlacementValues;
-
     readonly popover = viewChild.required<ElementRef>('popover');
     readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
     readonly tooltip = viewChild.required<ElementRef>('tooltip');
     readonly tooltipTrigger = viewChild.required(KbqTooltipTrigger);
+
+    stickToWindow?: KbqStickToWindowPlacementValues;
 }

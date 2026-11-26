@@ -134,13 +134,11 @@ export class E2eTooltipStates implements AfterViewInit {
     readonly trigger = viewChild.required(KbqTooltipTrigger);
     readonly customHeader = viewChild.required<TemplateRef<any>>('customHeader');
     readonly customContent = viewChild.required<TemplateRef<any>>('customContent');
-
     readonly tooltipContrast = viewChild.required<KbqTooltipComponent>('tooltipContrast');
     readonly tooltipContrastFade = viewChild.required<KbqTooltipComponent>('tooltipContrastFade');
     readonly tooltipError = viewChild.required<KbqTooltipComponent>('tooltipError');
     readonly tooltipWarning = viewChild.required<KbqTooltipComponent>('tooltipWarning');
     readonly tooltipTheme = viewChild.required<KbqTooltipComponent>('tooltipTheme');
-
     readonly tooltipNoArrow = viewChild.required<KbqTooltipComponent>('tooltipNoArrow');
     readonly tooltipTemplates = viewChild.required<KbqTooltipComponent>('tooltipTemplates');
 

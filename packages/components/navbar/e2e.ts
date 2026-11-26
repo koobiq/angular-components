@@ -548,7 +548,6 @@ export class E2eVerticalNavbarBrandAutoLongTitle {
         // The oscillation band: too wide at 18px, but would fit one line at 14px.
         { title: 'Knowledge Hub Portal', testId: 'band' }
     ];
-
     readonly horizontalBrands: readonly { title: string; testId: string }[] = [
         { title: 'Super Long Menu Title with Line Wrap and Ellipsis Truncation', testId: 'horizontal-long' },
         { title: 'Secret Notes', testId: 'horizontal-short' }
@@ -841,6 +840,88 @@ export class E2eNavbarItemSuffix {
 export class E2eNavbarCollapse {}
 
 /**
+ * The third fit stage of a horizontal navbar: items that fit neither expanded nor as icons hide under the «Ещё»
+ * trigger, and the original elements, a submenu among them, move into its panel while it is open.
+ */
+@Component({
+    selector: 'e2e-navbar-more',
+    imports: [KbqNavbarModule, KbqIconModule, KbqBadgeModule, KbqDropdownModule],
+    template: `
+        <kbq-dropdown #submenu="kbqDropdown">
+            <a kbq-dropdown-item href="#">Nested link</a>
+        </kbq-dropdown>
+
+        <!-- Tall enough to hold the open panel below the navbar: the panel renders in the overlay, and the
+             screenshot target of the panel states test is this frame, so the rows must land inside its box. -->
+        <div data-testid="e2eNavbarMoreFrame" style="width: 330px; height: 400px">
+            <div data-testid="e2eScreenshotTarget">
+                <kbq-navbar>
+                    <kbq-navbar-container>
+                        <kbq-navbar-item>
+                            <i kbq-icon="kbq-book-open_16"></i>
+                            <kbq-navbar-title>Документация</kbq-navbar-title>
+                        </kbq-navbar-item>
+
+                        <kbq-navbar-item>
+                            <i kbq-icon="kbq-folder_16"></i>
+                            <kbq-navbar-title>Проекты</kbq-navbar-title>
+                        </kbq-navbar-item>
+
+                        <kbq-navbar-item>
+                            <i kbq-icon="kbq-gear_16"></i>
+                            <kbq-navbar-title>Настройки</kbq-navbar-title>
+                        </kbq-navbar-item>
+
+                        <kbq-navbar-divider />
+
+                        <kbq-navbar-item>
+                            <i kbq-icon="kbq-chart-bar-vertical_16"></i>
+                            <kbq-navbar-title>Отчёты</kbq-navbar-title>
+                        </kbq-navbar-item>
+
+                        <kbq-navbar-item collapsedText="Уведомления" aria-label="Уведомления">
+                            <i kbq-icon="kbq-bell_16"></i>
+                        </kbq-navbar-item>
+
+                        <!-- Icon-only with a name carried by its tooltip alone: the panel row takes the label
+                             from there, and the badge rides the row's right corner. -->
+                        <kbq-navbar-item tooltipText="Поиск">
+                            <i kbq-icon="kbq-magnifying-glass_16"></i>
+                            <kbq-badge badgeColor="error" [compact]="true">2</kbq-badge>
+                        </kbq-navbar-item>
+
+                        <kbq-navbar-item>
+                            <i kbq-icon="kbq-user_16"></i>
+                            <kbq-navbar-title>Профиль</kbq-navbar-title>
+                        </kbq-navbar-item>
+
+                        <kbq-navbar-item>
+                            <i kbq-icon="kbq-puzzle-piece_16"></i>
+                            <kbq-navbar-title>Интеграции</kbq-navbar-title>
+                        </kbq-navbar-item>
+
+                        <kbq-navbar-item [kbqDropdownTriggerFor]="submenu">
+                            <i kbq-icon="kbq-circle-question_16"></i>
+                            <kbq-navbar-title>Помощь</kbq-navbar-title>
+                        </kbq-navbar-item>
+
+                        <kbq-navbar-item alwaysVisible>
+                            <i kbq-icon="kbq-circle-plus_16"></i>
+                            <kbq-navbar-title>Создать</kbq-navbar-title>
+                        </kbq-navbar-item>
+                    </kbq-navbar-container>
+                </kbq-navbar>
+            </div>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eNavbarMore'
+    }
+})
+export class E2eNavbarMore {}
+
+/**
  * An item title too long for the expanded navbar, which only a real layout can clip. Kept a separate route so it
  * owns no screenshot baseline.
  */
@@ -933,7 +1014,7 @@ export class E2eNavbarTooltipOffset {}
         <div style="padding: 160px 160px 800px">
             <kbq-navbar aria-label="Popup arrow centering">
                 <kbq-navbar-container>
-                    <kbq-navbar-item>
+                    <kbq-navbar-item alwaysVisible>
                         <button
                             type="button"
                             kbq-button
@@ -950,7 +1031,7 @@ export class E2eNavbarTooltipOffset {}
                         </button>
                     </kbq-navbar-item>
 
-                    <kbq-navbar-item>
+                    <kbq-navbar-item alwaysVisible>
                         <button
                             type="button"
                             kbq-button

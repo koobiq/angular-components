@@ -46,8 +46,9 @@ import { KbqLink, KbqLinkPrefix } from '@koobiq/components/link';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClampedListOverviewExample {
-    protected readonly collapsed = signal(true);
     protected readonly clampedListItems = viewChildren(KbqLink);
+
+    protected readonly collapsed = signal(true);
     protected items = [
         {
             id: 'T1557',

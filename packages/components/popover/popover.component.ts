@@ -51,6 +51,7 @@ import {
     KbqComponentColors,
     kbqCreateCaretOrigin,
     kbqInjectA11yLocaleConfiguration,
+    kbqMarkEventPreventHide,
     kbqOptionalNumberAttribute,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
@@ -127,20 +128,24 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     /** Accessible name for the icon-only close button. */
     protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
+    private readonly popoverElement = viewChild<ElementRef<HTMLElement>>('popover');
+    readonly cdkTrapFocus = viewChild.required(CdkTrapFocus);
+
+    /** @docs-private */
+    readonly overflowContainer = viewChild(KbqOverflowShadowContainer);
+    private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
+
     /** Debounce shared by the mutation observer and the scroll-shadow container (both expose `debounce`). */
     protected readonly contentObserverDebounce = contentObserverDebounce;
-
     override prefix = 'kbq-popover';
 
     // Safe arrow inset from popover.scss: the 24px arrow padding plus half of its 12px square.
     protected override arrowCenterInset = 30;
-
     override header: string | TemplateRef<any> = '';
     footer: string | TemplateRef<any> = '';
 
     /** The trigger that opened the panel; a panel rendered on its own has none. */
     override trigger: KbqPopoverTrigger | undefined;
-
     isTrapFocus: boolean = false;
     hasCloseButton: boolean = false;
 
@@ -149,8 +154,7 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
 
     /** Accessible name of the panel, used when there is no header to label it. Written by the trigger. */
     ariaLabel: string | undefined;
-
-    private readonly popoverElement = viewChild<ElementRef<HTMLElement>>('popover');
+    protected readonly componentColors = KbqComponentColors;
 
     /**
      * Panel element (`.kbq-popover`), not the component host.
@@ -162,11 +166,6 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     override get elementRef(): ElementRef<HTMLElement> {
         return this.popoverElement()!;
     }
-    readonly cdkTrapFocus = viewChild.required(CdkTrapFocus);
-    /** @docs-private */
-    readonly overflowContainer = viewChild(KbqOverflowShadowContainer);
-
-    private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
 
     /** Id of the header text node, referenced by the panel's `aria-labelledby`. */
     get headerId(): string {
@@ -264,8 +263,6 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     protected override afterShowAnimation(): void {
         this.scrollbarViewport()?.flashScrollIndicators();
     }
-
-    protected readonly componentColors = KbqComponentColors;
 }
 
 export const KBQ_POPOVER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-popover-scroll-strategy', {
@@ -308,13 +305,9 @@ export class KbqPopoverTrigger
     implements OnChanges, AfterContentInit, OnInit
 {
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_POPOVER_SCROLL_STRATEGY);
-
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly document = inject(DOCUMENT);
     private readonly overlayLayers = inject(KBQ_OVERLAY_LAYERS);
-
-    /** Id of the panel this trigger controls, shared with `aria-controls`. */
-    readonly panelId: string = `kbq-popover-${nextUniqueId++}`;
 
     /**
      * Input (`kbqPopoverHideIfNotInViewPort`) — whether the popover closes once its trigger scrolls out of the
@@ -325,43 +318,48 @@ export class KbqPopoverTrigger
         transform: (value) => (value == null ? true : booleanAttribute(value))
     });
 
+    /**
+     * Emits the resolved placement whenever the panel is repositioned.
+     *
+     * Declared as `string` to match the abstract member on `KbqPopUpTrigger`: `EventEmitter` is invariant,
+     * so a narrower emitter cannot override a wider one. Narrowing both is a change to the shared pop-up
+     * base and belongs to the branch that owns it.
+     */
+    readonly placementChange = new EventEmitter<KbqPopUpPlacementValues>();
+
+    /** @docs-private */
+    readonly placementChangeOutput = outputFromObservable(this.placementChange, { alias: 'kbqPopoverPlacementChange' });
+
+    /** Emits `true` when the panel opens and `false` when it closes. */
+    readonly visibleChange = new EventEmitter<boolean>();
+
+    /** @docs-private */
+    readonly visibleChangeOutput = outputFromObservable(this.visibleChange, { alias: 'kbqPopoverVisibleChange' });
+
+    private _hasBackdrop: boolean = false;
+    private _header: string | TemplateRef<any> = '';
+    private _footer: string | TemplateRef<any> = '';
+    private _trigger: string = `${PopUpTriggers.Click}, ${PopUpTriggers.Keydown}`;
+    private _size: KbqPopUpSizeValues = PopUpSizes.Medium;
+    private _context: unknown = null;
+    private _ariaLabel: string | undefined;
+    private _hasCloseButton = false;
+    private _closeOnScroll: boolean | null = null;
+    private _backdropClass: string = defaultBackdropClass;
+    private leaveDelayBound = false;
+
+    /** Whether a position re-apply is already queued for this turn. */
+    private repositionScheduled = false;
+    private pointerOffset: { x: number; y: number } | null = null;
+
+    /** Id of the panel this trigger controls, shared with `aria-controls`. */
+    readonly panelId: string = `kbq-popover-${nextUniqueId++}`;
+
     /** prevents closure by any event */
     override preventClose: boolean = false;
 
     /** Whether the header, content and footer keep their default paddings. Bound with `kbqPopoverDefaultPaddings`. */
     defaultPaddings = true;
-
-    /** Input (`kbqPopoverDefaultPaddings`) — sets {@link defaultPaddings}. */
-    set popoverDefaultPaddings(value: boolean) {
-        this.defaultPaddings = value;
-    }
-
-    /** Input (`kbqPopoverVisible`) — opens the popover when set to `true` and closes it when set to `false`. */
-    get popoverVisible(): boolean {
-        return this.visible;
-    }
-
-    set popoverVisible(value: boolean) {
-        super.updateVisible(value);
-    }
-
-    /** Input (`kbqPopoverPlacement`) — preferred placement of the panel relative to the trigger. */
-    get popoverPlacement(): KbqPopUpPlacementValues {
-        return this.placement;
-    }
-
-    set popoverPlacement(value: KbqPopUpPlacementValues) {
-        super.updatePlacement(value);
-    }
-
-    /** Input (`kbqPopoverPlacementPriority`) — ordered placements tried before the default strategy. */
-    get popoverPlacementPriority() {
-        return this.placementPriority;
-    }
-
-    set popoverPlacementPriority(value) {
-        super.updatePlacementPriority(value);
-    }
 
     /**
      * Additionally positions the element relative to the window side (Top, Right, Bottom and Left).
@@ -371,256 +369,6 @@ export class KbqPopoverTrigger
 
     /** Container for additional positioning, used with `kbqPopoverStickToWindow`. Bound with `kbqPopoverContainer`. */
     override container: HTMLElement | undefined;
-
-    /** Input (`kbqPopoverContainer`) — sets {@link container}. */
-    set popoverContainer(value: HTMLElement | undefined) {
-        this.container = value;
-    }
-
-    /**
-     * Whether a backdrop is rendered behind the panel. With a backdrop the popover closes on a backdrop click
-     * instead of on any outside pointer event. Bound with `kbqPopoverHasBackdrop`.
-     */
-    get hasBackdrop(): boolean {
-        return this._hasBackdrop;
-    }
-
-    set hasBackdrop(value: boolean) {
-        this._hasBackdrop = coerceBooleanProperty(value);
-
-        this.invalidateOverlay();
-    }
-
-    private _hasBackdrop: boolean = false;
-
-    /** Input (`kbqPopoverHasBackdrop`) — sets {@link hasBackdrop}. */
-    set popoverHasBackdrop(value: boolean) {
-        this.hasBackdrop = value;
-    }
-
-    /** Input (`kbqPopoverHeader`) — header of the panel, as a string or a template. */
-    get header(): string | TemplateRef<any> {
-        return this._header;
-    }
-
-    set header(value: string | TemplateRef<any>) {
-        this._header = value;
-
-        this.updateData();
-    }
-
-    private _header: string | TemplateRef<any> = '';
-
-    /** Input (`kbqPopoverContent`) — content of the panel, as a string or a template. */
-    get content(): string | TemplateRef<any> {
-        return this._content;
-    }
-
-    set content(value: string | TemplateRef<any>) {
-        this._content = value;
-
-        this.updateData();
-    }
-
-    /** Input (`kbqPopoverFooter`) — footer of the panel, as a string or a template. */
-    get footer(): string | TemplateRef<any> {
-        return this._footer;
-    }
-
-    set footer(value: string | TemplateRef<any>) {
-        this._footer = value;
-
-        this.updateData();
-    }
-
-    private _footer: string | TemplateRef<any> = '';
-
-    /** Input (`kbqPopoverDisabled`) — disables the trigger and closes an open popover. */
-    get disabled(): boolean {
-        return this._disabled;
-    }
-
-    set disabled(value) {
-        this._disabled = coerceBooleanProperty(value);
-
-        if (this._disabled) {
-            this.hide();
-        }
-    }
-
-    /**
-     * Input (`kbqTrigger`) with the comma-separated trigger events. An empty value resets to click + keydown
-     * and rebinds listeners. The alias is shared with `kbqTooltip`, so binding it on an element that carries
-     * both reconfigures both.
-     */
-    get trigger(): string {
-        return this._trigger;
-    }
-
-    set trigger(value: string) {
-        if (value) {
-            this._trigger = value;
-
-            if (this.trigger.includes(PopUpTriggers.Hover)) {
-                this.hideWithTimeout = true;
-            }
-        } else {
-            this._trigger = `${PopUpTriggers.Click}, ${PopUpTriggers.Keydown}`;
-        }
-
-        // Re-derived from the trigger on every change rather than applied once to an unset delay: a popover
-        // switched to `hover` later closes on the 0 it was born with otherwise, leaving no time to cross the
-        // gap between the trigger and the panel.
-        if (!this.leaveDelayBound) {
-            this.leaveDelay = this.defaultLeaveDelay;
-        }
-
-        this.initListeners();
-    }
-
-    private _trigger: string = `${PopUpTriggers.Click}, ${PopUpTriggers.Keydown}`;
-
-    /** Leave delay while `kbqLeaveDelay` is not bound. */
-    private get defaultLeaveDelay(): number {
-        return this._trigger.includes(PopUpTriggers.Hover) ? defaultHoverLeaveDelay : 0;
-    }
-
-    /** Input (`kbqPopoverSize`) — preset width of the panel. An unknown value falls back to `medium`. */
-    get size(): KbqPopUpSizeValues {
-        return this._size;
-    }
-
-    set size(value: KbqPopUpSizeValues) {
-        if ([PopUpSizes.Small, PopUpSizes.Medium, PopUpSizes.Large, PopUpSizes.Custom].includes(value as PopUpSizes)) {
-            this._size = value;
-
-            this.updateClassMap();
-        } else {
-            this._size = PopUpSizes.Medium;
-
-            // eslint-disable-next-line no-console
-            console.warn(`Unknown size: ${value}. Will use the default size: ${this._size}`);
-        }
-    }
-
-    private _size: KbqPopUpSizeValues = PopUpSizes.Medium;
-
-    /** Input (`kbqPopoverClass`) with extra CSS classes applied to the panel. */
-    get customClass() {
-        return this._customClass;
-    }
-
-    set customClass(value: string) {
-        this._customClass = value;
-
-        this.updateClassMap();
-    }
-
-    /** Context for popover templates (kbqPopoverHeader, kbqPopoverContent and kbqPopoverFooter). */
-    get context() {
-        return this._context;
-    }
-
-    set context(ctx) {
-        this._context = ctx;
-        this.updateData();
-    }
-
-    private _context: unknown = null;
-
-    /**
-     * Accessible name of the panel. Ignored while a string `kbqPopoverHeader` is set — the header labels the
-     * dialog then — and recommended for every header-less popover.
-     */
-    get ariaLabel(): string | undefined {
-        return this._ariaLabel;
-    }
-
-    set ariaLabel(value: string | undefined) {
-        this._ariaLabel = value;
-
-        this.updateData();
-    }
-
-    private _ariaLabel: string | undefined;
-
-    /** Renders the icon-only close button in the top corner of the panel. Bound with `kbqPopoverHasCloseButton`. */
-    get hasCloseButton(): boolean {
-        return this._hasCloseButton;
-    }
-
-    set hasCloseButton(value: boolean) {
-        this._hasCloseButton = value;
-        this.updateData();
-    }
-
-    private _hasCloseButton = false;
-
-    /** Input (`kbqPopoverHasCloseButton`) — sets {@link hasCloseButton}. */
-    set popoverHasCloseButton(value: boolean) {
-        this.hasCloseButton = value;
-    }
-
-    /**
-     * Controls the behavior of closing the component on scroll. Bound with `kbqPopoverCloseOnScroll`. Three
-     * states:
-     * - `null` (default) — the popover survives a scroll, except when it scrolls out of a
-     *   `.kbq-hide-nested-popup` container, which closes it;
-     * - `true` — any scroll closes the popover;
-     * - `false` — no scroll closes the popover, not even a `.kbq-hide-nested-popup` one.
-     *
-     * Use CloseScrollStrategy as alternative
-     */
-    get closeOnScroll(): boolean | null {
-        return this._closeOnScroll;
-    }
-
-    set closeOnScroll(value: boolean) {
-        this._closeOnScroll = coerceBooleanProperty(value);
-    }
-
-    private _closeOnScroll: boolean | null = null;
-
-    /** Input (`kbqPopoverCloseOnScroll`) — sets {@link closeOnScroll}. */
-    set popoverCloseOnScroll(value: boolean) {
-        this.closeOnScroll = value;
-    }
-
-    /** Whether the trigger opens the popover on click, which is also what makes it a labelled dialog opener. */
-    get hasClickTrigger(): boolean {
-        return this.trigger.includes(PopUpTriggers.Click);
-    }
-
-    /**
-     * Whether opening the popover should move the keyboard focus into the panel. Only deliberate opens
-     * (click, keyboard, programmatic) do — a hover- or focus-triggered popover must not steal focus.
-     */
-    get capturesFocusOnOpen(): boolean {
-        return this.autoFocus && (this.hasClickTrigger || this.deliberateOpen);
-    }
-
-    /** @docs-private */
-    get instanceDestroyRef(): DestroyRef {
-        return this.instance.destroyRef;
-    }
-
-    /** CSS class applied to the backdrop, when there is one. Bound with `kbqPopoverBackdropClass`. */
-    get backdropClass(): string {
-        return this._backdropClass;
-    }
-
-    set backdropClass(value: string) {
-        this._backdropClass = value;
-
-        this.invalidateOverlay();
-    }
-
-    private _backdropClass: string = defaultBackdropClass;
-
-    /** Input (`kbqPopoverBackdropClass`) — sets {@link backdropClass}. */
-    set popoverBackdropClass(value: string) {
-        this.backdropClass = value;
-    }
 
     /** Input (`kbqPopoverArrow`) — renders the arrow pointing at the trigger. */
     arrow: boolean = true;
@@ -647,62 +395,9 @@ export class KbqPopoverTrigger
      */
     relativeToPointer: boolean = false;
 
-    /**
-     * Input (`kbqPopoverOrigin`) — what the panel is positioned against: an element, or a rectangle in viewport
-     * coordinates such as the one `kbqCreateCaretOrigin` keeps on the caret. `null` anchors it to the trigger.
-     *
-     * Bind it before `kbqPopoverVisible`, which opens the panel as it is written.
-     */
-    get popoverOrigin(): KbqOverlayOrigin | null {
-        return this.origin;
-    }
-
-    set popoverOrigin(value: KbqOverlayOrigin | null) {
-        this.updateOrigin(value);
-    }
-
     /** Input (`kbqEnterDelay`) — delay before opening, in milliseconds. Defaults to `0`. */
     override enterDelay: number = 0;
-
-    /**
-     * Input (`kbqLeaveDelay`) — delay before closing, in milliseconds. Defaults to `0`, and to
-     * {@link defaultHoverLeaveDelay} when `kbqTrigger` includes `hover`.
-     */
-    // A write-only input rather than an accessor over `leaveDelay`: the base declares that member as a
-    // plain field, and TypeScript refuses to override a property with an accessor (TS2611).
-    set kbqLeaveDelay(value: number) {
-        this.leaveDelay = value;
-        // Tracked instead of comparing the delay against a sentinel: an explicit `kbqLeaveDelay="0"` and an
-        // unbound one are indistinguishable by value, and only the latter takes the hover default.
-        this.leaveDelayBound = true;
-    }
-
-    private leaveDelayBound = false;
-
-    /**
-     * Emits the resolved placement whenever the panel is repositioned.
-     *
-     * Declared as `string` to match the abstract member on `KbqPopUpTrigger`: `EventEmitter` is invariant,
-     * so a narrower emitter cannot override a wider one. Narrowing both is a change to the shared pop-up
-     * base and belongs to the branch that owns it.
-     */
-    readonly placementChange = new EventEmitter<KbqPopUpPlacementValues>();
-
-    /** @docs-private */
-    readonly placementChangeOutput = outputFromObservable(this.placementChange, { alias: 'kbqPopoverPlacementChange' });
-
-    /** Emits `true` when the panel opens and `false` when it closes. */
-    readonly visibleChange = new EventEmitter<boolean>();
-
-    /** @docs-private */
-    readonly visibleChangeOutput = outputFromObservable(this.visibleChange, { alias: 'kbqPopoverVisibleChange' });
-
     protected originSelector = '.kbq-popover';
-
-    /** Whether a position re-apply is already queued for this turn. */
-    private repositionScheduled = false;
-
-    private pointerOffset: { x: number; y: number } | null = null;
 
     private readonly pointerOrigin = kbqCreateCaretOrigin((): KbqCaretRect => {
         const { left, top } = this.getNativeElement().getBoundingClientRect();
@@ -710,29 +405,6 @@ export class KbqPopoverTrigger
 
         return { x: left + offset.x, y: top + offset.y, width: 0, height: 0 };
     });
-
-    /**
-     * Whether the open currently on screen was a deliberate one rather than a pointer or focus one.
-     *
-     * The shared base records the event that opened the pop-up in `triggerName`, but its keyboard opener is
-     * the one listener registered without that bookkeeping, and it defers the open to a task of its own —
-     * by then `triggerName` still holds whatever the pointer last did. Frozen on every `show()`, which the
-     * pointer and focus listeners reach with the name they have just written.
-     */
-    private deliberateOpen = true;
-
-    // NB: the trigger↔popover gap is a CSS `margin` on `.kbq-popover` (see `applyPopupMargins`), which sits inside
-    // this `pointer-events: auto` pane, so the gap band is already covered and not click/hover-through. This is why
-    // the connected-overlay `offsetY`→in-pane-padding fix (KBQ_CONNECTED_OVERLAY_* / --kbq-connected-overlay-gap,
-    // used by select/tree-select/autocomplete/datepicker) intentionally does NOT apply here — do not "port" it.
-    // Guarded by the "trigger↔panel gap is not click-through" e2e tests in e2e.playwright-spec.ts.
-    protected get overlayConfig(): OverlayConfig {
-        return {
-            panelClass: 'kbq-popover__panel',
-            hasBackdrop: this.hasBackdrop,
-            backdropClass: this.backdropClass
-        };
-    }
 
     /** @docs-private */
     readonly triggerInput = input<string | undefined>(undefined, { alias: 'kbqTrigger' });
@@ -874,6 +546,318 @@ export class KbqPopoverTrigger
 
     /** @docs-private */
     readonly popoverVisibleInput = input<boolean | undefined>(undefined, { alias: 'kbqPopoverVisible' });
+
+    /**
+     * Whether the open currently on screen was a deliberate one rather than a pointer or focus one.
+     *
+     * The shared base records the event that opened the pop-up in `triggerName`, but its keyboard opener is
+     * the one listener registered without that bookkeeping, and it defers the open to a task of its own —
+     * by then `triggerName` still holds whatever the pointer last did. Frozen on every `show()`, which the
+     * pointer and focus listeners reach with the name they have just written.
+     */
+    private deliberateOpen = true;
+
+    /** Input (`kbqPopoverDefaultPaddings`) — sets {@link defaultPaddings}. */
+    set popoverDefaultPaddings(value: boolean) {
+        this.defaultPaddings = value;
+    }
+
+    /** Input (`kbqPopoverVisible`) — opens the popover when set to `true` and closes it when set to `false`. */
+    get popoverVisible(): boolean {
+        return this.visible;
+    }
+
+    set popoverVisible(value: boolean) {
+        super.updateVisible(value);
+    }
+
+    /** Input (`kbqPopoverPlacement`) — preferred placement of the panel relative to the trigger. */
+    get popoverPlacement(): KbqPopUpPlacementValues {
+        return this.placement;
+    }
+
+    set popoverPlacement(value: KbqPopUpPlacementValues) {
+        super.updatePlacement(value);
+    }
+
+    /** Input (`kbqPopoverPlacementPriority`) — ordered placements tried before the default strategy. */
+    get popoverPlacementPriority() {
+        return this.placementPriority;
+    }
+
+    set popoverPlacementPriority(value) {
+        super.updatePlacementPriority(value);
+    }
+
+    /** Input (`kbqPopoverContainer`) — sets {@link container}. */
+    set popoverContainer(value: HTMLElement | undefined) {
+        this.container = value;
+    }
+
+    /**
+     * Whether a backdrop is rendered behind the panel. With a backdrop the popover closes on a backdrop click
+     * instead of on any outside pointer event. Bound with `kbqPopoverHasBackdrop`.
+     */
+    get hasBackdrop(): boolean {
+        return this._hasBackdrop;
+    }
+
+    set hasBackdrop(value: boolean) {
+        this._hasBackdrop = coerceBooleanProperty(value);
+
+        this.invalidateOverlay();
+    }
+
+    /** Input (`kbqPopoverHasBackdrop`) — sets {@link hasBackdrop}. */
+    set popoverHasBackdrop(value: boolean) {
+        this.hasBackdrop = value;
+    }
+
+    /** Input (`kbqPopoverHeader`) — header of the panel, as a string or a template. */
+    get header(): string | TemplateRef<any> {
+        return this._header;
+    }
+
+    set header(value: string | TemplateRef<any>) {
+        this._header = value;
+
+        this.updateData();
+    }
+
+    /** Input (`kbqPopoverContent`) — content of the panel, as a string or a template. */
+    get content(): string | TemplateRef<any> {
+        return this._content;
+    }
+
+    set content(value: string | TemplateRef<any>) {
+        this._content = value;
+
+        this.updateData();
+    }
+
+    /** Input (`kbqPopoverFooter`) — footer of the panel, as a string or a template. */
+    get footer(): string | TemplateRef<any> {
+        return this._footer;
+    }
+
+    set footer(value: string | TemplateRef<any>) {
+        this._footer = value;
+
+        this.updateData();
+    }
+
+    /** Input (`kbqPopoverDisabled`) — disables the trigger and closes an open popover. */
+    get disabled(): boolean {
+        return this._disabled;
+    }
+
+    set disabled(value) {
+        this._disabled = coerceBooleanProperty(value);
+
+        if (this._disabled) {
+            this.hide();
+        }
+    }
+
+    /**
+     * Input (`kbqTrigger`) with the comma-separated trigger events. An empty value resets to click + keydown
+     * and rebinds listeners. The alias is shared with `kbqTooltip`, so binding it on an element that carries
+     * both reconfigures both.
+     */
+    get trigger(): string {
+        return this._trigger;
+    }
+
+    set trigger(value: string) {
+        if (value) {
+            this._trigger = value;
+
+            if (this.trigger.includes(PopUpTriggers.Hover)) {
+                this.hideWithTimeout = true;
+            }
+        } else {
+            this._trigger = `${PopUpTriggers.Click}, ${PopUpTriggers.Keydown}`;
+        }
+
+        // Re-derived from the trigger on every change rather than applied once to an unset delay: a popover
+        // switched to `hover` later closes on the 0 it was born with otherwise, leaving no time to cross the
+        // gap between the trigger and the panel.
+        if (!this.leaveDelayBound) {
+            this.leaveDelay = this.defaultLeaveDelay;
+        }
+
+        this.initListeners();
+    }
+
+    /** Leave delay while `kbqLeaveDelay` is not bound. */
+    private get defaultLeaveDelay(): number {
+        return this._trigger.includes(PopUpTriggers.Hover) ? defaultHoverLeaveDelay : 0;
+    }
+
+    /** Input (`kbqPopoverSize`) — preset width of the panel. An unknown value falls back to `medium`. */
+    get size(): KbqPopUpSizeValues {
+        return this._size;
+    }
+
+    set size(value: KbqPopUpSizeValues) {
+        if ([PopUpSizes.Small, PopUpSizes.Medium, PopUpSizes.Large, PopUpSizes.Custom].includes(value as PopUpSizes)) {
+            this._size = value;
+
+            this.updateClassMap();
+        } else {
+            this._size = PopUpSizes.Medium;
+
+            // eslint-disable-next-line no-console
+            console.warn(`Unknown size: ${value}. Will use the default size: ${this._size}`);
+        }
+    }
+
+    /** Input (`kbqPopoverClass`) with extra CSS classes applied to the panel. */
+    get customClass() {
+        return this._customClass;
+    }
+
+    set customClass(value: string) {
+        this._customClass = value;
+
+        this.updateClassMap();
+    }
+
+    /** Context for popover templates (kbqPopoverHeader, kbqPopoverContent and kbqPopoverFooter). */
+    get context() {
+        return this._context;
+    }
+
+    set context(ctx) {
+        this._context = ctx;
+        this.updateData();
+    }
+
+    /**
+     * Accessible name of the panel. Ignored while a string `kbqPopoverHeader` is set — the header labels the
+     * dialog then — and recommended for every header-less popover.
+     */
+    get ariaLabel(): string | undefined {
+        return this._ariaLabel;
+    }
+
+    set ariaLabel(value: string | undefined) {
+        this._ariaLabel = value;
+
+        this.updateData();
+    }
+
+    /** Renders the icon-only close button in the top corner of the panel. Bound with `kbqPopoverHasCloseButton`. */
+    get hasCloseButton(): boolean {
+        return this._hasCloseButton;
+    }
+
+    set hasCloseButton(value: boolean) {
+        this._hasCloseButton = value;
+        this.updateData();
+    }
+
+    /** Input (`kbqPopoverHasCloseButton`) — sets {@link hasCloseButton}. */
+    set popoverHasCloseButton(value: boolean) {
+        this.hasCloseButton = value;
+    }
+
+    /**
+     * Controls the behavior of closing the component on scroll. Bound with `kbqPopoverCloseOnScroll`. Three
+     * states:
+     * - `null` (default) — the popover survives a scroll, except when it scrolls out of a
+     *   `.kbq-hide-nested-popup` container, which closes it;
+     * - `true` — any scroll closes the popover;
+     * - `false` — no scroll closes the popover, not even a `.kbq-hide-nested-popup` one.
+     *
+     * Use CloseScrollStrategy as alternative
+     */
+    get closeOnScroll(): boolean | null {
+        return this._closeOnScroll;
+    }
+
+    set closeOnScroll(value: boolean) {
+        this._closeOnScroll = coerceBooleanProperty(value);
+    }
+
+    /** Input (`kbqPopoverCloseOnScroll`) — sets {@link closeOnScroll}. */
+    set popoverCloseOnScroll(value: boolean) {
+        this.closeOnScroll = value;
+    }
+
+    /** Whether the trigger opens the popover on click, which is also what makes it a labelled dialog opener. */
+    get hasClickTrigger(): boolean {
+        return this.trigger.includes(PopUpTriggers.Click);
+    }
+
+    /**
+     * Whether opening the popover should move the keyboard focus into the panel. Only deliberate opens
+     * (click, keyboard, programmatic) do — a hover- or focus-triggered popover must not steal focus.
+     */
+    get capturesFocusOnOpen(): boolean {
+        return this.autoFocus && (this.hasClickTrigger || this.deliberateOpen);
+    }
+
+    /** @docs-private */
+    get instanceDestroyRef(): DestroyRef {
+        return this.instance.destroyRef;
+    }
+
+    /** CSS class applied to the backdrop, when there is one. Bound with `kbqPopoverBackdropClass`. */
+    get backdropClass(): string {
+        return this._backdropClass;
+    }
+
+    set backdropClass(value: string) {
+        this._backdropClass = value;
+
+        this.invalidateOverlay();
+    }
+
+    /** Input (`kbqPopoverBackdropClass`) — sets {@link backdropClass}. */
+    set popoverBackdropClass(value: string) {
+        this.backdropClass = value;
+    }
+
+    /**
+     * Input (`kbqPopoverOrigin`) — what the panel is positioned against: an element, or a rectangle in viewport
+     * coordinates such as the one `kbqCreateCaretOrigin` keeps on the caret. `null` anchors it to the trigger.
+     *
+     * Bind it before `kbqPopoverVisible`, which opens the panel as it is written.
+     */
+    get popoverOrigin(): KbqOverlayOrigin | null {
+        return this.origin;
+    }
+
+    set popoverOrigin(value: KbqOverlayOrigin | null) {
+        this.updateOrigin(value);
+    }
+
+    /**
+     * Input (`kbqLeaveDelay`) — delay before closing, in milliseconds. Defaults to `0`, and to
+     * {@link defaultHoverLeaveDelay} when `kbqTrigger` includes `hover`.
+     */
+    // A write-only input rather than an accessor over `leaveDelay`: the base declares that member as a
+    // plain field, and TypeScript refuses to override a property with an accessor (TS2611).
+    set kbqLeaveDelay(value: number) {
+        this.leaveDelay = value;
+        // Tracked instead of comparing the delay against a sentinel: an explicit `kbqLeaveDelay="0"` and an
+        // unbound one are indistinguishable by value, and only the latter takes the hover default.
+        this.leaveDelayBound = true;
+    }
+
+    // NB: the trigger↔popover gap is a CSS `margin` on `.kbq-popover` (see `applyPopupMargins`), which sits inside
+    // this `pointer-events: auto` pane, so the gap band is already covered and not click/hover-through. This is why
+    // the connected-overlay `offsetY`→in-pane-padding fix (KBQ_CONNECTED_OVERLAY_* / --kbq-connected-overlay-gap,
+    // used by select/tree-select/autocomplete/datepicker) intentionally does NOT apply here — do not "port" it.
+    // Guarded by the "trigger↔panel gap is not click-through" e2e tests in e2e.playwright-spec.ts.
+    protected get overlayConfig(): OverlayConfig {
+        return {
+            panelClass: 'kbq-popover__panel',
+            hasBackdrop: this.hasBackdrop,
+            backdropClass: this.backdropClass
+        };
+    }
 
     ngOnChanges(changes: SimpleChanges): void {
         // A bound input is handed to its member, a bound `undefined` restoring the
@@ -1050,7 +1034,13 @@ export class KbqPopoverTrigger
             const { left, top } = this.getNativeElement().getBoundingClientRect();
 
             this.pointerOffset = { x: pointerEvent.clientX - left, y: pointerEvent.clientY - top };
-            Object.assign(pointerEvent, { kbqPopoverPreventHide: true });
+
+            // The click that opens a closed popover is dropped by CDK's outside-click dispatcher
+            // (the overlay is not attached yet), so only the re-click that repositions an
+            // already-open popover reaches closingActions and needs the mark.
+            if (wasAttached) {
+                kbqMarkEventPreventHide(pointerEvent);
+            }
         } else if (!wasAttached) {
             this.pointerOffset = null;
         }

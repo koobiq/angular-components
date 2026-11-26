@@ -1,3 +1,4 @@
+import { ESCAPE } from '@angular/cdk/keycodes';
 import {
     type AfterContentInit,
     ChangeDetectionStrategy,
@@ -13,7 +14,6 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { fromEvent } from 'rxjs';
 import {
-    ESCAPE,
     KBQ_A11Y_LOCALE_CONFIGURATION,
     KbqComponentColors,
     KbqLocaleOverridesDirective
@@ -93,6 +93,16 @@ export function getKbqFormFieldYouCanNotUseCleanerInNumberInputError(): Error {
 })
 export class KbqCleaner extends KbqIconButton implements AfterContentInit {
     private readonly context = inject(KBQ_CLEANER_CONTEXT, { optional: true });
+    private readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'a11y',
+        KBQ_A11Y_LOCALE_CONFIGURATION
+    );
+
+    /** Accessible name of the cleaner. Defaults to the localized "Clear". */
+    readonly ariaLabel = input<string | undefined>(undefined, { alias: 'aria-label' });
+
+    /** @docs-private */
+    protected readonly accessibleName = computed(() => this.ariaLabel() || this.a11yLocaleConfiguration().clear);
 
     /**
      * Whether the cleaner can be displayed for the current control state.
@@ -108,17 +118,6 @@ export class KbqCleaner extends KbqIconButton implements AfterContentInit {
 
         return !control.disabled() && !control.readonly?.() && !control.empty() && (context.canClear?.() ?? true);
     }
-
-    private readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
-        'a11y',
-        KBQ_A11Y_LOCALE_CONFIGURATION
-    );
-
-    /** Accessible name of the cleaner. Defaults to the localized "Clear". */
-    readonly ariaLabel = input<string | undefined>(undefined, { alias: 'aria-label' });
-
-    /** @docs-private */
-    protected readonly accessibleName = computed(() => this.ariaLabel() || this.a11yLocaleConfiguration().clear);
 
     constructor() {
         super();

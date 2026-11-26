@@ -486,7 +486,6 @@ export class E2eFormFieldAutofill {
         'textarea',
         'select'
     ];
-
     protected readonly stateMatrix: AutofillState[] = [
         { name: 'default' },
         { name: 'focused', focused: true },
@@ -497,7 +496,6 @@ export class E2eFormFieldAutofill {
         { name: 'noBorders', noBorders: true },
         { name: 'inOverlay', inOverlay: true }
     ];
-
     protected readonly controlMatrix: AutofillState[] = [{ name: 'default' }, { name: 'focused', focused: true }];
 
     // Built here rather than concatenated in the template: a template literal is the lint-approved

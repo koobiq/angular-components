@@ -157,21 +157,15 @@ export const DATA_OBJECT = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectSearchSmartExample implements OnInit {
+    private lastQuery: string | null = null;
+
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     selected = '';
-
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     searchControl: FormControl = new FormControl();
-
     protected searchTokens: string[] = [];
-
-    private lastQuery: string | null = null;
-    private lastPredicate: (value: string) => boolean = () => true;
 
     constructor() {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
@@ -192,6 +186,8 @@ export class TreeSelectSearchSmartExample implements OnInit {
     ngOnInit(): void {
         this.searchControl.valueChanges.subscribe((value) => this.treeControl.applyFilter(value));
     }
+
+    private lastPredicate: (value: string) => boolean = () => true;
 
     hasChild(_: number, nodeData: FileFlatNode) {
         return nodeData.expandable;

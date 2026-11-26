@@ -29,7 +29,6 @@ import { TRANSLATIONS } from './l10n';
 export class SliderInvalidExample {
     protected readonly limit = 45;
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly timeout = new FormControl(50, { nonNullable: true, validators: Validators.max(this.limit) });
     protected readonly showError: ErrorStateMatcher = { isErrorState: (control) => !!control?.invalid };
 }

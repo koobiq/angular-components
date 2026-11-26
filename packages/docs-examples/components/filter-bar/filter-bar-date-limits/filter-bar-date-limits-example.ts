@@ -42,7 +42,6 @@ export class FilterBarDateLimitsExample {
             disabled: false
         }
     ];
-
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Date',

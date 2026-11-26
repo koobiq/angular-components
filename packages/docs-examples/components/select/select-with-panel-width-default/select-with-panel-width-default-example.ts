@@ -45,8 +45,6 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class SelectWithPanelWidthDefaultExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly options = [
         'Use of Alternate Authentication Data',
         'Use of Command-Line Interpreters and Scripts',
@@ -57,4 +55,6 @@ export class SelectWithPanelWidthDefaultExample {
 
     protected readonly valueFirst = model(this.options[0]);
     protected readonly valueSecond = model(this.options[1]);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

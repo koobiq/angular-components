@@ -1,18 +1,19 @@
 import type { Translations } from '@koobiq/docs-examples/i18n';
+import { EXAMPLE_INCIDENT_HEADERS, type ExampleIncidentHeaders } from '../incident-headers';
 
 /** Text of the load-text example. */
 export interface ExampleTranslation {
-    headerText: string;
+    headers: ExampleIncidentHeaders;
     loading: string;
 }
 
 export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
-        headerText: 'Текст',
+        headers: EXAMPLE_INCIDENT_HEADERS['ru-RU'],
         loading: 'Загрузка...'
     },
     default: {
-        headerText: 'Text',
+        headers: EXAMPLE_INCIDENT_HEADERS.default,
         loading: 'Loading...'
     }
 };

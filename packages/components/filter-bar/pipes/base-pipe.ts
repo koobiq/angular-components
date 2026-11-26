@@ -48,8 +48,6 @@ export function getId(item: KbqPipeTemplate): KbqPipeType | string | number {
     }
 })
 export abstract class KbqBasePipe<V> implements AfterViewInit {
-    /** changes of state */
-    readonly stateChanges = new Subject<void>();
     /** pipe data. Provided from subclass */
     readonly data = inject<KbqPipeData<V>>(KBQ_PIPE_DATA);
 
@@ -60,16 +58,23 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
      */
     protected readonly filterBar = inject(KBQ_FILTER_BAR_HOST, { optional: true });
     private readonly nameResolverFromDi = inject(KBQ_FILTER_BAR_NAME_RESOLVER);
+
     /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
+
     /** @docs-private */
     protected readonly focusMonitor = inject(FocusMonitor);
+
     /** @docs-private */
     protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly inputModalityDetector = inject(InputModalityDetector);
     private readonly document = inject(DOCUMENT);
+
+    /** changes of state */
+    readonly stateChanges = new Subject<void>();
 
     /**
      * Whether this pipe has been destroyed. Guards deferred (`setTimeout`) work that could otherwise
@@ -81,6 +86,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
 
     /** values to select from the pipe template */
     protected values: any;
+
     /** TemplateRef for selecting an option */
     protected valueTemplate?: TemplateRef<any> | string;
 
@@ -134,6 +140,15 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
      */
     $implicit: unknown;
 
+    /**
+     * Localized strings of the filter-bar, falling back to the defaults outside a bar.
+     *
+     * @docs-private
+     */
+    readonly localeConfiguration = computed<KbqFilterBarLocaleConfiguration>(
+        () => this.filterBar?.localeConfiguration() ?? KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION
+    );
+
     /** Whether the current pipe is empty. Used for apply style modifier */
     get isEmpty(): boolean {
         return this.data.value === null || this.data.value === undefined;
@@ -158,13 +173,31 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     }
 
     /**
-     * Localized strings of the filter-bar, falling back to the defaults outside a bar.
+     * Focus origin to hand to {@link FocusMonitor} whenever this pipe moves focus programmatically, so the
+     * `.cdk-keyboard-focused` ring is painted for keyboard navigation only and never for a mouse-driven one.
+     *
+     * `InputModalityDetector.mostRecentModality` reflects what the user is doing *right now*, and is the
+     * only source that stays correct while a panel is open: panel content lives in the CDK overlay
+     * container, which is not a DOM descendant of the pipe host, so a focus origin captured on the host
+     * itself would freeze at "how the trigger was focused" and couldn't tell a click inside the panel apart
+     * from the keypress that opened it. The detector reacts only to `keydown`/`mousedown`/`touchstart`
+     * (never to hover or scroll), so merely moving the mouse cannot strip a keyboard user's ring, and it
+     * maps a screen reader's synthetic mousedown to `keyboard`. It falls back to `'program'` only before any
+     * such interaction has ever occurred on the page — at which point no ring should be shown anyway.
      *
      * @docs-private
      */
-    readonly localeConfiguration = computed<KbqFilterBarLocaleConfiguration>(
-        () => this.filterBar?.localeConfiguration() ?? KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION
-    );
+    protected get currentFocusOrigin(): NonNullable<FocusOrigin> {
+        return this.inputModalityDetector.mostRecentModality ?? 'program';
+    }
+
+    /**
+     * Resolved display name of the pipe, delegating to `resolveName` with kind `'pipe'` and the key
+     * returned by `pipeNameKey`.
+     */
+    protected get pipeName(): string {
+        return this.resolveName(this.data, 'pipe', this.pipeNameKey());
+    }
 
     constructor() {
         this.$implicit = this;
@@ -283,25 +316,6 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     }
 
     /**
-     * Focus origin to hand to {@link FocusMonitor} whenever this pipe moves focus programmatically, so the
-     * `.cdk-keyboard-focused` ring is painted for keyboard navigation only and never for a mouse-driven one.
-     *
-     * `InputModalityDetector.mostRecentModality` reflects what the user is doing *right now*, and is the
-     * only source that stays correct while a panel is open: panel content lives in the CDK overlay
-     * container, which is not a DOM descendant of the pipe host, so a focus origin captured on the host
-     * itself would freeze at "how the trigger was focused" and couldn't tell a click inside the panel apart
-     * from the keypress that opened it. The detector reacts only to `keydown`/`mousedown`/`touchstart`
-     * (never to hover or scroll), so merely moving the mouse cannot strip a keyboard user's ring, and it
-     * maps a screen reader's synthetic mousedown to `keyboard`. It falls back to `'program'` only before any
-     * such interaction has ever occurred on the page — at which point no ring should be shown anyway.
-     *
-     * @docs-private
-     */
-    protected get currentFocusOrigin(): NonNullable<FocusOrigin> {
-        return this.inputModalityDetector.mostRecentModality ?? 'program';
-    }
-
-    /**
      * Restores focus to the pipe's trigger button after a value is chosen or the panel closes.
      * Focuses via {@link FocusMonitor} with `currentFocusOrigin` so a keyboard-driven interaction keeps
      * its focus ring, while a mouse-driven one does not.
@@ -370,14 +384,6 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         };
 
         return this.filterBar?.resolveName?.(context) ?? this.nameResolverFromDi(context) ?? fallback;
-    }
-
-    /**
-     * Resolved display name of the pipe, delegating to `resolveName` with kind `'pipe'` and the key
-     * returned by `pipeNameKey`.
-     */
-    protected get pipeName(): string {
-        return this.resolveName(this.data, 'pipe', this.pipeNameKey());
     }
 
     /**

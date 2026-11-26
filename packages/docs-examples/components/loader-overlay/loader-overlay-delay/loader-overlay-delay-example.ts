@@ -61,14 +61,17 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoaderOverlayDelayExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly destroyRef = inject(DestroyRef);
+
     protected readonly delay = model(true);
     protected readonly duration = model(200);
-    protected readonly updates = signal(0);
+
     protected readonly loading = signal(false);
+
     private readonly loading$ = toObservable(this.loading);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly updates = signal(0);
     protected readonly showOverlay = toSignal(
         toObservable(this.delay).pipe(
             switchMap((delay) => (delay ? this.loading$.pipe(kbqDelayLoadingIndicator()) : this.loading$))

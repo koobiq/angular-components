@@ -86,6 +86,7 @@ export class E2eModalStates {
 })
 class ModalFullCustomContent {
     protected readonly caption = inject<string | undefined>(KBQ_MODAL_DATA, { optional: true });
+
     protected readonly items = Array.from({ length: 30 }, (_, i) => `Item #${i}`);
 }
 
@@ -181,6 +182,7 @@ export class E2eModalScrollbar {
 })
 export class E2eModalScrollbarFlash {
     private readonly modal = inject(KbqModalService);
+
     // Handed to every modal so it resolves the scrollbar options declared above; the service would
     // otherwise build the modal from the root injector, where they are not provided.
     private readonly injector = inject(Injector);

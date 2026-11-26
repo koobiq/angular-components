@@ -212,6 +212,7 @@ export class E2eSliderInteraction {
         { value: 70, label: '70' },
         { value: 100, label: '100' }
     ];
+
     protected addCommit(event: KbqSliderCommit): (commits: KbqSliderCommit[]) => KbqSliderCommit[] {
         return (commits) => [...commits, event];
     }

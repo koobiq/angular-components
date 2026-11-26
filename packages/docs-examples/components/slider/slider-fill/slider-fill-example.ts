@@ -101,12 +101,17 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SliderFillExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
     private readonly adapter = inject<DateAdapter<DateTime>>(DateAdapter);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
     protected readonly time = (hour: number): string =>
         this.adapter.format(this.adapter.createDateTime(2020, 0, 1, hour % 24, 0, 0, 0), 'HH:mm');
+
     protected readonly quietStart = (value: KbqSliderValue) => (typeof value === 'number' ? value : value[0]);
+
     protected readonly quietEnd = (value: KbqSliderValue) => (typeof value === 'number' ? value : value[1]);
+
     protected readonly signed = (value: KbqSliderValue) =>
         typeof value === 'number' && value > 0 ? `+${value}` : String(value);
     protected readonly hours = Array.from({ length: 9 }, (_, index) => ({

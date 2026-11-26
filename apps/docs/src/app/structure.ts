@@ -463,7 +463,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'checkbox',
                     hasApi: true,
                     apiId: 'checkbox',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-12-08')
                 },
                 {
                     id: DocsStructureItemId.ClampedList,
@@ -573,7 +574,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'description list',
                     hasApi: true,
                     apiId: 'dl',
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-12-03')
                 },
                 {
                     id: DocsStructureItemId.Dropdown,
@@ -680,7 +682,7 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'input',
                     hasExamples: true,
-                    isUpdated: expiresAt('2026-11-19')
+                    isUpdated: expiresAt('2026-12-03')
                 },
                 {
                     id: DocsStructureItemId.FileUpload,
@@ -811,7 +813,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'modal',
                     hasApi: true,
                     apiId: 'modal',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-12-04')
                 },
                 {
                     id: DocsStructureItemId.Navbar,
@@ -824,7 +827,7 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'navbar',
                     hasExamples: true,
-                    isUpdated: expiresAt('2026-11-23')
+                    isUpdated: expiresAt('2026-12-01')
                 },
                 {
                     id: DocsStructureItemId.NotificationCenter,
@@ -969,7 +972,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'sidepanel',
                     hasApi: true,
                     apiId: 'sidepanel',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-12-04')
                 },
                 {
                     id: DocsStructureItemId.Skeleton,
@@ -981,7 +985,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'skeleton',
                     hasApi: true,
                     apiId: 'skeleton',
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-12-01')
                 },
                 {
                     id: DocsStructureItemId.Splitter,
@@ -1171,7 +1176,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'toggle',
                     hasApi: true,
                     apiId: 'toggle',
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-12-08')
                 },
                 {
                     id: DocsStructureItemId.Tooltip,

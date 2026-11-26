@@ -48,12 +48,13 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SliderFormsExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
     private readonly retention = new FormControl(30, { nonNullable: true });
     private readonly analysisWindow = new FormControl(14, {
         nonNullable: true,
         validators: (control) => (control.value > this.retention.value ? { retention: true } : null)
     });
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly settings = new FormGroup({ retention: this.retention, analysisWindow: this.analysisWindow });
     protected readonly saved = signal<readonly [number, number] | null>(null);
 

@@ -34,7 +34,6 @@ export class DevDocsExamples {}
 })
 export class DevApp implements OnDestroy {
     colors = KbqComponentColors;
-
     mode: ProgressSpinnerMode = 'determinate';
     percent: number = 0;
     intervalId: ReturnType<typeof setInterval>;

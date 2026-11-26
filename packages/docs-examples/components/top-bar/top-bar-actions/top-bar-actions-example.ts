@@ -113,7 +113,6 @@ type ExampleAction = {
 })
 export class TopBarActionsExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
@@ -123,7 +122,6 @@ export class TopBarActionsExample {
             ),
         { initialValue: true }
     );
-
     readonly actions: ExampleAction[] = [
         {
             id: 'refresh',
@@ -155,13 +153,12 @@ export class TopBarActionsExample {
             style: ''
         }))
     ];
+    protected readonly KbqComponentColors = KbqComponentColors;
+    protected readonly KbqButtonStyles = KbqButtonStyles;
+    protected readonly PopUpPlacements = PopUpPlacements;
 
     // only show tooltip on button icon
     canTooltipBeAppied(action: ExampleAction): boolean {
         return (!!action.text && this.isDesktop()) || (!action.icon && !!action.text);
     }
-
-    protected readonly KbqComponentColors = KbqComponentColors;
-    protected readonly KbqButtonStyles = KbqButtonStyles;
-    protected readonly PopUpPlacements = PopUpPlacements;
 }
