@@ -91,10 +91,9 @@ const latinValidator = (): ValidatorFn => {
     }
 })
 export class ValidationTagListExample implements OnInit {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly formBuilder = inject(FormBuilder);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly reactiveForm = this.formBuilder.group({
         reactiveTypeaheadValue: this.formBuilder.nonNullable.control<string[]>(
             [],

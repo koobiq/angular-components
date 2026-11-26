@@ -1,6 +1,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { SelectionModel } from '@angular/cdk/collections';
+import { DOWN_ARROW, END, HOME, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@angular/cdk/keycodes';
 import { CdkObserveContent } from '@angular/cdk/observers';
 import {
     type AfterContentInit,
@@ -31,7 +32,7 @@ import {
 } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
-import { DOWN_ARROW, END, getContentNodes, HOME, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@koobiq/components/core';
+import { getContentNodes } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTitleDirective } from '@koobiq/components/title';
 
@@ -110,62 +111,14 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
     /** Whether multiple button toggles can be selected. */
     readonly multiple = input(false, { transform: booleanAttribute });
 
-    /**
-     * Value of the toggle group: an array in multiple-selection mode, a single value otherwise.
-     *
-     * An accessor rather than a `model()`: writing it walks the toggles to find the ones that match,
-     * and reading it reports the selection. `[(value)]` works all the same.
-     *
-     * An assigned value that corresponds to no toggle is kept and reported as is, so that it applies
-     * to a toggle rendered later — the same contract as `KbqRadioGroup`. It follows that `value` can
-     * name a toggle `selected` does not hold: `selected` only ever reports toggles that exist.
-     */
-    get value(): any {
-        return this.currentValue();
-    }
+    /** @docs-private */
+    readonly valueInput = input<NonNullable<unknown> | null | undefined>(undefined, { alias: 'value' });
 
-    set value(newValue: any) {
-        // Untracked, as `emitChangeEvent()`, `syncButtonToggle()` and the toggles' `checked` setter and
-        // `onToggleClick()`: called from a consumer's `effect()`, the selection read on the way would make the effect
-        // run again whenever the user picks another toggle.
-        untracked(() => this.assignValue(newValue));
-    }
-
-    /** Body of the `value` setter. */
-    private assignValue(newValue: any): void {
-        this.setSelectionByValue(newValue);
-
-        // A write the group answers with the value it was given has nothing to announce: the binding
-        // slot already holds it, and echoing the group's own normalisation of it back over that slot
-        // — `[]` for an unset multiple-selection group — is the `NG0100` this guards.
-        if (sameValue(newValue, this.value)) {
-            this.reportedValue = this.value;
-
-            return;
-        }
-
-        this.emitValueChange();
-    }
-
-    /**
-     * Selected button toggles in the group: an array in multiple-selection mode, one toggle otherwise.
-     * Only toggles that exist, so a `value` waiting for its toggle is not represented here.
-     */
-    get selected(): KbqButtonToggle | KbqButtonToggle[] | null {
-        return this.currentSelection();
-    }
-
-    /** Child button toggle buttons. */
-    readonly buttonToggles = contentChildren<KbqButtonToggle>(forwardRef(() => KbqButtonToggle));
-
-    /** Whether the whole button toggle group is disabled. */
-    get disabled(): boolean {
-        return this._disabled();
-    }
-
-    set disabled(value: boolean) {
-        this._disabled.set(value);
-    }
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
 
     /**
      * Event that emits whenever the value of the group changes.
@@ -177,6 +130,9 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
 
     /** Event emitted when the group's value changes. */
     readonly change = output<KbqButtonToggleChange>();
+
+    /** Child button toggle buttons. */
+    readonly buttonToggles = contentChildren<KbqButtonToggle>(forwardRef(() => KbqButtonToggle));
 
     private readonly _disabled = signal(false);
     private selectionModel?: SelectionModel<KbqButtonToggle>;
@@ -194,6 +150,16 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
 
         return this.multiple() ? selected.map((toggle) => toggle.value) : selected[0]?.value;
     });
+
+    /**
+     * Value the consumer assigned, kept for as long as it is not represented by the selection: the
+     * toggle it names may be created later — behind an `@if`, or simply after the assignment, which
+     * always lands before `ngOnInit` and so before there is a selection model to apply it to.
+     *
+     * An interaction replaces it, so a value the user has moved off cannot resurface on a toggle
+     * rendered afterwards.
+     */
+    private readonly rawValue = signal<unknown>(undefined);
 
     /**
      * Computed once per selection change, so a repeated read hands back the same array reference.
@@ -217,12 +183,20 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
 
         return selected !== undefined ? selected : assigned;
     });
-
     private readonly currentSelection = computed<KbqButtonToggle | KbqButtonToggle[] | null>(() => {
         const selected = this.selectedToggles();
 
         return this.multiple() ? [...selected] : selected[0] || null;
     });
+
+    /**
+     * Whether the group has been destroyed. A selected toggle schedules its own removal from the
+     * selection on a microtask, which outlives a teardown of the whole group.
+     */
+    private destroyed = false;
+
+    /** Value last reported through `valueChange`, so that an echo of it stays silent. */
+    private reportedValue: unknown;
 
     /** ARIA role of the group: a radio group in single-selection mode, a plain grouping otherwise. */
     protected readonly role = computed(() => (this.multiple() ? 'group' : 'radiogroup'));
@@ -241,47 +215,42 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
     });
 
     /**
-     * Whether the group has been destroyed. A selected toggle schedules its own removal from the
-     * selection on a microtask, which outlives a teardown of the whole group.
+     * Value of the toggle group: an array in multiple-selection mode, a single value otherwise.
+     *
+     * An accessor rather than a `model()`: writing it walks the toggles to find the ones that match,
+     * and reading it reports the selection. `[(value)]` works all the same.
+     *
+     * An assigned value that corresponds to no toggle is kept and reported as is, so that it applies
+     * to a toggle rendered later — the same contract as `KbqRadioGroup`. It follows that `value` can
+     * name a toggle `selected` does not hold: `selected` only ever reports toggles that exist.
      */
-    private destroyed = false;
+    get value(): any {
+        return this.currentValue();
+    }
+
+    set value(newValue: any) {
+        // Untracked, as `emitChangeEvent()`, `syncButtonToggle()` and the toggles' `checked` setter and
+        // `onToggleClick()`: called from a consumer's `effect()`, the selection read on the way would make the effect
+        // run again whenever the user picks another toggle.
+        untracked(() => this.assignValue(newValue));
+    }
 
     /**
-     * Value the consumer assigned, kept for as long as it is not represented by the selection: the
-     * toggle it names may be created later — behind an `@if`, or simply after the assignment, which
-     * always lands before `ngOnInit` and so before there is a selection model to apply it to.
-     *
-     * An interaction replaces it, so a value the user has moved off cannot resurface on a toggle
-     * rendered afterwards.
+     * Selected button toggles in the group: an array in multiple-selection mode, one toggle otherwise.
+     * Only toggles that exist, so a `value` waiting for its toggle is not represented here.
      */
-    private readonly rawValue = signal<unknown>(undefined);
+    get selected(): KbqButtonToggle | KbqButtonToggle[] | null {
+        return this.currentSelection();
+    }
 
-    /** Value last reported through `valueChange`, so that an echo of it stays silent. */
-    private reportedValue: unknown;
+    /** Whether the whole button toggle group is disabled. */
+    get disabled(): boolean {
+        return this._disabled();
+    }
 
-    /**
-     * Called when the value changes. Needed to properly implement `ControlValueAccessor`.
-     * `ngModel` binding is not supported in multiple selection mode.
-     *
-     * @docs-private
-     */
-    controlValueAccessorChangeFn: (value: any) => void = () => {};
-
-    /**
-     * Called when the control is blurred. Needed to properly implement `ControlValueAccessor`.
-     *
-     * @docs-private
-     */
-    onTouched: () => void = () => {};
-
-    /** @docs-private */
-    readonly valueInput = input<NonNullable<unknown> | null | undefined>(undefined, { alias: 'value' });
-
-    /** @docs-private */
-    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'disabled',
-        transform: booleanAttribute
-    });
+    set disabled(value: boolean) {
+        this._disabled.set(value);
+    }
 
     ngOnChanges(changes: SimpleChanges): void {
         // A bound input is handed to its member, a bound `undefined` included;
@@ -304,6 +273,37 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
     ngOnDestroy() {
         this.destroyed = true;
     }
+
+    /** Body of the `value` setter. */
+    private assignValue(newValue: any): void {
+        this.setSelectionByValue(newValue);
+
+        // A write the group answers with the value it was given has nothing to announce: the binding
+        // slot already holds it, and echoing the group's own normalisation of it back over that slot
+        // — `[]` for an unset multiple-selection group — is the `NG0100` this guards.
+        if (sameValue(newValue, this.value)) {
+            this.reportedValue = this.value;
+
+            return;
+        }
+
+        this.emitValueChange();
+    }
+
+    /**
+     * Called when the value changes. Needed to properly implement `ControlValueAccessor`.
+     * `ngModel` binding is not supported in multiple selection mode.
+     *
+     * @docs-private
+     */
+    controlValueAccessorChangeFn: (value: any) => void = () => {};
+
+    /**
+     * Called when the control is blurred. Needed to properly implement `ControlValueAccessor`.
+     *
+     * @docs-private
+     */
+    onTouched: () => void = () => {};
 
     /**
      * Sets the model value. Implemented as part of ControlValueAccessor.
@@ -569,15 +569,85 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
 export class KbqButtonToggle implements OnChanges, OnInit, AfterContentInit, AfterViewInit, OnDestroy {
     /** Group the toggle belongs to, or `null` for a standalone toggle. */
     protected readonly buttonToggleGroup = inject(KbqButtonToggleGroup, { optional: true });
-
     private changeDetectorRef = inject(ChangeDetectorRef);
     private focusMonitor = inject(FocusMonitor);
     private element = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly directionality = inject(Directionality, { optional: true });
 
-    private readonly icons = contentChildren(KbqIcon, { descendants: true });
+    /** Tabindex for the toggle. `null` leaves the toggle at its default position in the tab order. */
+    readonly tabIndex = input<number | null>(null);
 
+    /** Accessible name of the toggle. Required when the toggle projects nothing but icons. */
+    readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
+
+    /** Id of the element that labels the toggle. */
+    readonly ariaLabelledby = input<string | null>(null, { alias: 'aria-labelledby' });
+
+    /** @docs-private */
+    readonly valueInput = input<NonNullable<unknown> | null | undefined>(undefined, { alias: 'value' });
+
+    /** @docs-private */
+    readonly checkedInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'checked',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** Event emitted when the group value changes. */
+    readonly change = output<KbqButtonToggleChange>();
+
+    private readonly icons = contentChildren(KbqIcon, { descendants: true });
     private readonly button = viewChild.required(KbqButton);
+
+    private readonly _value = signal<any>(undefined);
+    private readonly _checked = signal(false);
+    private readonly _disabled = signal(false);
+    private readonly _iconType = signal('');
+
+    /** Whether the missing-accessible-name warning has already been emitted for this toggle. */
+    private accessibleNameWarned = false;
+
+    /** Whether the toggle behaves like a radio button, i.e. sits in a single-selection group. */
+    private readonly isSingleSelector = computed(() => !!this.buttonToggleGroup && !this.buttonToggleGroup.multiple());
+    private readonly checkedState = computed(() =>
+        this.buttonToggleGroup ? this.buttonToggleGroup.isSelected(this) : this._checked()
+    );
+    private readonly disabledState = computed(() => this._disabled() || !!this.buttonToggleGroup?.disabled);
+
+    /**
+     * A radio group is a single tab stop: Tab reaches the selected toggle — or the first enabled one
+     * while nothing is selected — and the arrow keys move within the group from there. A
+     * multiple-selection group is a set of independent toggle buttons, so every one of them stays in
+     * the tab order.
+     */
+    protected readonly tabIndexValue = computed((): number => {
+        const own = this.tabIndex() ?? 0;
+
+        if (!this.isSingleSelector()) {
+            return own;
+        }
+
+        const toggles = this.buttonToggleGroup!.buttonToggles().filter((toggle) => !toggle.disabled);
+
+        return (toggles.find((toggle) => toggle.checked) ?? toggles[0]) === this ? own : -1;
+    });
+
+    /**
+     * A toggle in a single-selection group is a radio button; anywhere else it is a toggle button,
+     * which is what a native `<button>` already is — it only needs its pressed state.
+     */
+    protected readonly role = computed(() => (this.isSingleSelector() ? 'radio' : null));
+
+    /** Selected state of a radio; `null` outside a single-selection group, where `aria-pressed` says it. */
+    protected readonly ariaChecked = computed(() => (this.isSingleSelector() ? this.checkedState() : null));
+
+    /** Pressed state of a toggle button; `null` in a single-selection group, where `aria-checked` says it. */
+    protected readonly ariaPressed = computed(() => (this.isSingleSelector() ? null : this.checkedState()));
 
     /** Whether the button is checked. */
     get checked(): boolean {
@@ -634,15 +704,6 @@ export class KbqButtonToggle implements OnChanges, OnInit, AfterContentInit, Aft
         });
     }
 
-    /** Tabindex for the toggle. `null` leaves the toggle at its default position in the tab order. */
-    readonly tabIndex = input<number | null>(null);
-
-    /** Accessible name of the toggle. Required when the toggle projects nothing but icons. */
-    readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
-
-    /** Id of the element that labels the toggle. */
-    readonly ariaLabelledby = input<string | null>(null, { alias: 'aria-labelledby' });
-
     /** Whether the toggle is disabled. A toggle inside a disabled group is disabled as well. */
     get disabled(): boolean {
         return this.disabledState();
@@ -652,70 +713,17 @@ export class KbqButtonToggle implements OnChanges, OnInit, AfterContentInit, Aft
         this._disabled.set(value);
     }
 
-    /** Event emitted when the group value changes. */
-    readonly change = output<KbqButtonToggleChange>();
+    constructor() {
+        // The content query only tracks KbqIcon instances, while `iconType` also depends on the text
+        // nodes beside them, which the query cannot see — those are covered by the MutationObserver
+        // in the template. This effect covers icons appearing or disappearing (e.g. via @if) without
+        // waiting for the observer.
+        effect(() => {
+            this.icons();
 
-    private readonly _value = signal<any>(undefined);
-    private readonly _checked = signal(false);
-    private readonly _disabled = signal(false);
-    private readonly _iconType = signal('');
-
-    /** Whether the missing-accessible-name warning has already been emitted for this toggle. */
-    private accessibleNameWarned = false;
-
-    /** Whether the toggle behaves like a radio button, i.e. sits in a single-selection group. */
-    private readonly isSingleSelector = computed(() => !!this.buttonToggleGroup && !this.buttonToggleGroup.multiple());
-
-    private readonly checkedState = computed(() =>
-        this.buttonToggleGroup ? this.buttonToggleGroup.isSelected(this) : this._checked()
-    );
-
-    private readonly disabledState = computed(() => this._disabled() || !!this.buttonToggleGroup?.disabled);
-
-    /**
-     * A radio group is a single tab stop: Tab reaches the selected toggle — or the first enabled one
-     * while nothing is selected — and the arrow keys move within the group from there. A
-     * multiple-selection group is a set of independent toggle buttons, so every one of them stays in
-     * the tab order.
-     */
-    protected readonly tabIndexValue = computed((): number => {
-        const own = this.tabIndex() ?? 0;
-
-        if (!this.isSingleSelector()) {
-            return own;
-        }
-
-        const toggles = this.buttonToggleGroup!.buttonToggles().filter((toggle) => !toggle.disabled);
-
-        return (toggles.find((toggle) => toggle.checked) ?? toggles[0]) === this ? own : -1;
-    });
-
-    /**
-     * A toggle in a single-selection group is a radio button; anywhere else it is a toggle button,
-     * which is what a native `<button>` already is — it only needs its pressed state.
-     */
-    protected readonly role = computed(() => (this.isSingleSelector() ? 'radio' : null));
-
-    /** Selected state of a radio; `null` outside a single-selection group, where `aria-pressed` says it. */
-    protected readonly ariaChecked = computed(() => (this.isSingleSelector() ? this.checkedState() : null));
-
-    /** Pressed state of a toggle button; `null` in a single-selection group, where `aria-checked` says it. */
-    protected readonly ariaPressed = computed(() => (this.isSingleSelector() ? null : this.checkedState()));
-
-    /** @docs-private */
-    readonly valueInput = input<NonNullable<unknown> | null | undefined>(undefined, { alias: 'value' });
-
-    /** @docs-private */
-    readonly checkedInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'checked',
-        transform: booleanAttribute
-    });
-
-    /** @docs-private */
-    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'disabled',
-        transform: booleanAttribute
-    });
+            untracked(() => this.updateIconType());
+        });
+    }
 
     ngOnChanges(changes: SimpleChanges): void {
         // A bound input is handed to its member, a bound `undefined` included;
@@ -737,18 +745,6 @@ export class KbqButtonToggle implements OnChanges, OnInit, AfterContentInit, Aft
         }
     }
 
-    constructor() {
-        // The content query only tracks KbqIcon instances, while `iconType` also depends on the text
-        // nodes beside them, which the query cannot see — those are covered by the MutationObserver
-        // in the template. This effect covers icons appearing or disappearing (e.g. via @if) without
-        // waiting for the observer.
-        effect(() => {
-            this.icons();
-
-            untracked(() => this.updateIconType());
-        });
-    }
-
     ngOnInit() {
         if (this.buttonToggleGroup && this.buttonToggleGroup.isPrechecked(this)) {
             this.checked = true;
@@ -757,6 +753,22 @@ export class KbqButtonToggle implements OnChanges, OnInit, AfterContentInit, Aft
 
     ngAfterContentInit(): void {
         this.updateIconType();
+    }
+
+    ngAfterViewInit(): void {
+        void this.focusMonitor.monitor(this.element.nativeElement, true);
+    }
+
+    ngOnDestroy() {
+        const group = this.buttonToggleGroup;
+
+        this.focusMonitor.stopMonitoring(this.element.nativeElement);
+
+        // Remove the toggle from the selection once it's destroyed. Needs to happen
+        // on the next tick in order to avoid "changed after checked" errors.
+        if (group && group.isSelected(this)) {
+            void Promise.resolve().then(() => group.syncButtonToggle(this, false));
+        }
     }
 
     /**
@@ -784,22 +796,6 @@ export class KbqButtonToggle implements OnChanges, OnInit, AfterContentInit, Aft
         this._iconType.set(iconElements.length ? (nodes.length === iconElements.length ? '-icon' : '-icon-text') : '');
 
         this.warnIfIconOnlyHasNoAccessibleName();
-    }
-
-    ngAfterViewInit(): void {
-        void this.focusMonitor.monitor(this.element.nativeElement, true);
-    }
-
-    ngOnDestroy() {
-        const group = this.buttonToggleGroup;
-
-        this.focusMonitor.stopMonitoring(this.element.nativeElement);
-
-        // Remove the toggle from the selection once it's destroyed. Needs to happen
-        // on the next tick in order to avoid "changed after checked" errors.
-        if (group && group.isSelected(this)) {
-            void Promise.resolve().then(() => group.syncButtonToggle(this, false));
-        }
     }
 
     /** Focuses the button. */

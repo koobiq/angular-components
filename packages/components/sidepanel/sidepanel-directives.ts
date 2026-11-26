@@ -31,7 +31,7 @@ import { KbqSidepanelRef } from './sidepanel-ref';
     host: {
         class: 'kbq-sidepanel-close',
         // The camel-case spelling wins when a template binds both, as it did before.
-        '(click)': 'sidepanelRef.close(kbqSidepanelClose() ?? sidepanelResult())'
+        '(click)': "sidepanelRef.requestClose('close', kbqSidepanelClose() ?? sidepanelResult())"
     }
 })
 export class KbqSidepanelClose {
@@ -40,7 +40,7 @@ export class KbqSidepanelClose {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly renderer = inject(Renderer2);
 
-    /** Value handed to `KbqSidepanelRef.close()`, under the hyphenated spelling of the selector. */
+    /** Value handed to `KbqSidepanelRef.requestClose()`, under the hyphenated spelling of the selector. */
     readonly sidepanelResult = input<any>(undefined, { alias: 'kbq-sidepanel-close' });
 
     /** The same value, under the camel-case spelling. */
@@ -120,14 +120,14 @@ export class KbqSidepanelHeader {
         KBQ_A11Y_LOCALE_CONFIGURATION
     );
 
+    /** @docs-private */
+    protected sidepanelRef = inject(KbqSidepanelRef);
+
     /** Add button for close sidepanel. Default false */
     readonly closeable = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     /** Enables text truncation. Default true */
     readonly truncateText = input<boolean, unknown>(true, { transform: booleanAttribute });
-
-    /** @docs-private */
-    protected sidepanelRef = inject(KbqSidepanelRef);
 
     /** Id of the title element, which is what names the sidepanel to assistive technology. */
     protected readonly titleId = `${this.sidepanelRef.id}-title`;

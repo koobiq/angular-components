@@ -21,7 +21,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class FormFieldWithHintExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly formControl = new FormControl();
     readonly maxLength = 25;
     readonly count = toSignal(this.formControl.valueChanges.pipe(map((v) => v.length)), { initialValue: 0 });

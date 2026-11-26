@@ -48,10 +48,8 @@ import { TRANSLATIONS } from './l10n';
 })
 export class FileUploadSingleMixedValidationExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly customErrorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
     protected readonly accept: KbqFileTypeSpecifier = ['.txt'];
-
     protected readonly form = new FormGroup({
         fileUpload: new FormControl<KbqFileItem | null>(null, [
             Validators.required,

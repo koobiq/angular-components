@@ -156,14 +156,10 @@ export const DATA_OBJECT = {
 })
 export class TreeSelectSearchOverviewExample implements OnInit {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     selected = '';
-
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     searchControl: FormControl = new FormControl();
 
     constructor() {

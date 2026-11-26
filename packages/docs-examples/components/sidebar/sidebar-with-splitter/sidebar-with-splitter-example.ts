@@ -72,10 +72,8 @@ import { TRANSLATIONS } from './l10n';
 })
 export class SidebarWithSplitterExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly direction = Direction;
     readonly position = SidebarPositions;
-
     opened = true;
 
     toggle(): void {

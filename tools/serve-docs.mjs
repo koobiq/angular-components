@@ -9,6 +9,7 @@
  */
 import { existsSync, readdirSync } from 'node:fs';
 import { posix, relative, resolve, sep } from 'node:path';
+import { findRedirect, findRewrite, readHostingTarget } from './firebase-hosting.mjs';
 import { serve } from './serve-static.mjs';
 
 const DEFAULT_ROOT = 'dist/releases/koobiq-docs/browser';
@@ -21,11 +22,18 @@ if (!existsSync(root)) {
     process.exit(1);
 }
 
-// Mirrors the hosting rewrite in `firebase.json`: routes that were not prerendered fall back to the
-// client-side-render shell, NOT to `index.html` (which is the prerendered `/` redirect stub and
-// would bounce every unknown URL to the default locale).
+// Follows the hosting of the next version in `firebase.json`, which the stable one matches: its redirects first, then
+// the files and the prerendered routes, then its rewrites to the client-side-render shell — NOT to `index.html`, the
+// prerendered `/` redirect stub — and the prerendered 404 page with a 404 for anything else.
+const hosting = readHostingTarget('next');
 const csrShell = resolve(root, 'index.csr.html');
 const shell = existsSync(csrShell) ? csrShell : resolve(root, 'index.html');
+const notFoundPage = resolve(root, '404.html');
+
+if (!existsSync(notFoundPage)) {
+    console.error(`[serve-docs] No 404.html in ${root}. Run "yarn run docs:build" first.`);
+    process.exit(1);
+}
 
 // A prerendered route is a directory holding its own index.html, and the build has finished before
 // this process starts, so the whole set can be enumerated once instead of being probed per request.
@@ -42,7 +50,7 @@ for (const entry of readdirSync(root, { recursive: true, withFileTypes: true }))
 }
 
 // Malformed percent-encoding (`/%E0%`) makes `decodeURIComponent` throw. Express would turn that
-// into a 500; such a URL simply matches nothing on disk, so it belongs on the CSR shell instead.
+// into a 500; such a URL simply matches nothing on disk, so it belongs on the 404 page instead.
 const decodePath = (path) => {
     try {
         return decodeURIComponent(path);
@@ -53,8 +61,8 @@ const decodePath = (path) => {
 
 // The set holds one canonical key per directory, so a trailing slash or a doubled separator has to
 // be folded away before the lookup. `normalize` resolves `..` too, but only to build the key: a
-// route that climbs out of the tree is simply not in the set, and lands on the shell like any other
-// unknown URL.
+// route that climbs out of the tree is simply not in the set, and lands on the 404 page like any
+// other unknown URL.
 const routeKey = (path) => {
     const normalized = posix.normalize(path);
 
@@ -77,12 +85,24 @@ const addTrailingSlash = (request, _response, next) => {
     next();
 };
 
+const redirect = (request, response, next) => {
+    const found = findRedirect(hosting, request.path);
+
+    if (found) {
+        response.redirect(found.status, `${found.location}${request.url.slice(request.path.length)}`);
+    } else {
+        next();
+    }
+};
+
 serve({
     label: 'serve-docs',
     root,
     shell,
     missing: `No index.csr.html or index.html in ${root}. Run "yarn run docs:build" first.`,
     port: process.env.PORT ?? DEFAULT_PORT,
-    middleware: [addTrailingSlash],
+    middleware: [redirect, addTrailingSlash],
+    isShellRoute: (path) => findRewrite(hosting, path) !== null,
+    notFoundPage,
     suffix: ` (${prerenderedRoutes.size} prerendered routes)`
 });

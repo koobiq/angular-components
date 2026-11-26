@@ -141,9 +141,13 @@ export class IconAttributeCollector implements Visitor {
 
     // part of interface
     visitAttribute(_: Attribute, _1: any) {}
+
     visitText(_: any, _1: any) {}
+
     visitComment(_: any, _1: any) {}
+
     visitBlockParameter(_: any, _1: any) {}
+
     visitLetDeclaration(_: any, _1: any) {}
 }
 

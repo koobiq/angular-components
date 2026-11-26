@@ -45,6 +45,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TooltipDisabledForComponentExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     disableState: boolean = false;
 }

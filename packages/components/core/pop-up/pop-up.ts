@@ -29,13 +29,11 @@ import type { KbqPopUpTrigger } from './pop-up-trigger';
 export abstract class KbqPopUp implements OnDestroy {
     protected readonly renderer: Renderer2 = inject(Renderer2);
     private readonly hostElementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-
-    /** The element the pop-up measures and decorates: its host, unless a subclass renders a panel of its own. */
-    protected get elementRef(): ElementRef<HTMLElement> {
-        return this.hostElementRef;
-    }
     protected readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
     readonly destroyRef = inject(DestroyRef);
+    private readonly hostInjector = inject(Injector);
+
+    private readonly hoveredState = signal(false);
 
     /**
      * Whether the pop-up appears without motion.
@@ -44,19 +42,43 @@ export abstract class KbqPopUp implements OnDestroy {
      */
     protected readonly animationsDisabled = kbqAnimationsDisabled();
 
-    private readonly hostInjector = inject(Injector);
-
-    private readonly hoveredState = signal(false);
-
     /** Whether the pointer is over the pop-up. */
     readonly hovered: Signal<boolean> = this.hoveredState.asReadonly();
+
+    private readonly classMapState = signal({});
+    private resolvedPlacement = 'top';
+    private appliedArrowShift: { x: string; y: string } | null = null;
+    private readonly visibilityState = signal(PopUpVisibility.Initial);
+    private showTimeoutId: any;
+    private hideTimeoutId: any;
+
+    /** Handler bound on the pop-up element to hide it on `mouseleave`, or `null` while none is bound. */
+    private hideOnMouseLeave: (() => void) | null = null;
+    private showAnimation?: { destroy(): void };
 
     trigger: KbqPopUpTrigger<unknown> | undefined;
     header: string | TemplateRef<unknown> = '';
     content: string | TemplateRef<unknown> = '';
     context: { $implicit: unknown } | null = null;
+    arrow: boolean = false;
 
-    private readonly classMapState = signal({});
+    /** Whether the arrow points at the origin center while the panel keeps its placement. Defaults to `false`. */
+    arrowCentered = false;
+
+    /** Distance from a panel edge to the arrow center, in pixels. Defaults to `0`. */
+    protected arrowCenterInset = 0;
+    defaultPaddings: boolean = false;
+    offset: number | null = null;
+    visibleChange = new EventEmitter<boolean>();
+    protected abstract prefix: string;
+
+    /** Subject for notifying that the tooltip has been hidden from the view */
+    protected readonly onHideSubject = new Subject<void>();
+
+    /** The element the pop-up measures and decorates: its host, unless a subclass renders a panel of its own. */
+    protected get elementRef(): ElementRef<HTMLElement> {
+        return this.hostElementRef;
+    }
 
     /** CSS classes of the pop-up element: the placement, the custom class and the modifiers of the subclass. */
     get classMap() {
@@ -67,23 +89,6 @@ export abstract class KbqPopUp implements OnDestroy {
         this.classMapState.set(value);
     }
 
-    arrow: boolean = false;
-
-    /** Whether the arrow points at the origin center while the panel keeps its placement. Defaults to `false`. */
-    arrowCentered = false;
-
-    /** Distance from a panel edge to the arrow center, in pixels. Defaults to `0`. */
-    protected arrowCenterInset = 0;
-
-    defaultPaddings: boolean = false;
-
-    offset: number | null = null;
-
-    private resolvedPlacement = 'top';
-    private appliedArrowShift: { x: string; y: string } | null = null;
-
-    private readonly visibilityState = signal(PopUpVisibility.Initial);
-
     /** Stage of the pop-up's life: not shown yet, visible, or hidden. */
     get visibility(): PopUpVisibility {
         return this.visibilityState();
@@ -92,21 +97,6 @@ export abstract class KbqPopUp implements OnDestroy {
     set visibility(value: PopUpVisibility) {
         this.visibilityState.set(value);
     }
-
-    visibleChange = new EventEmitter<boolean>();
-
-    protected abstract prefix: string;
-
-    /** Subject for notifying that the tooltip has been hidden from the view */
-    protected readonly onHideSubject = new Subject<void>();
-
-    private showTimeoutId: any;
-    private hideTimeoutId: any;
-
-    /** Handler bound on the pop-up element to hide it on `mouseleave`, or `null` while none is bound. */
-    private hideOnMouseLeave: (() => void) | null = null;
-
-    private showAnimation?: { destroy(): void };
 
     ngOnDestroy() {
         clearTimeout(this.showTimeoutId);

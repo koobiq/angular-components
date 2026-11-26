@@ -45,9 +45,7 @@ import { TRANSLATIONS } from './l10n';
 })
 export class AutocompleteOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly options = computed(() => this.t().countries);
-
     control = new FormControl('');
     filteredOptions: Observable<string[]> = this.control.valueChanges.pipe(
         startWith(''),

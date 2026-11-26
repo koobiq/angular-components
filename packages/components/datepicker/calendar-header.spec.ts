@@ -134,7 +134,6 @@ describe('KbqCalendarHeader', () => {
 })
 class StandardCalendar {
     adapter = inject_1<DateAdapter<DateTime>>(DateAdapter);
-
     selected: DateTime;
     selectedYear: DateTime;
     selectedMonth: DateTime;

@@ -42,6 +42,11 @@ type ClampedTextState = {
 })
 export class E2eClampedTextStateAndStyle {
     protected readonly text = text;
+    protected readonly states = signal<ClampedTextState[][]>([
+        [{ rows: kbqClampedTextDefaultMaxRows }],
+        [{ rows: kbqClampedTextDefaultMaxRows }],
+        [{ rows: 3 }]
+    ]);
 
     constructor() {
         afterNextRender(() => {
@@ -52,12 +57,6 @@ export class E2eClampedTextStateAndStyle {
             ]);
         });
     }
-
-    protected readonly states = signal<ClampedTextState[][]>([
-        [{ rows: kbqClampedTextDefaultMaxRows }],
-        [{ rows: kbqClampedTextDefaultMaxRows }],
-        [{ rows: 3 }]
-    ]);
 }
 
 @Component({
@@ -94,6 +93,7 @@ export class E2eClampedTextStateAndStyle {
 export class E2eClampedTextStates {
     protected readonly text = text;
     protected readonly resizeWidth = signal(200);
+
     /**
      * Eight 80-character words. Nothing inside a word can wrap, so each one overflows the 200px
      * container on a line of its own — enough lines to exceed `rows` and collapse, while every
@@ -324,14 +324,13 @@ export class E2eClampedList {
 export class E2eClampedListOverflow {
     /** Item box is 80px on the main axis, so 30 items need 2400px plus the toggle to fully fit. */
     protected readonly narrowSize = 400;
+
     /** Fits all 30 items and the toggle on both the horizontal and the vertical list. */
     protected readonly wideSize = 2600;
-
     protected readonly size = signal(this.narrowSize);
     protected readonly items = signal(
         Array.from({ length: 30 }, (_, index) => `Item ${String(index + 1).padStart(2, '0')}`)
     );
-
     protected readonly autoItems = Array.from(
         { length: 20 },
         (_, index) => `Auto ${String(index + 1).padStart(2, '0')}`

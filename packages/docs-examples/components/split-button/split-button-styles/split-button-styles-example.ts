@@ -126,7 +126,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class SplitButtonStylesExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     buttonStyles = KbqButtonStyles;
     componentColors = KbqComponentColors;
 }

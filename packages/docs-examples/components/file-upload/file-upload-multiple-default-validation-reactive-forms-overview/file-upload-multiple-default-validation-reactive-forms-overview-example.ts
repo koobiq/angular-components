@@ -50,9 +50,7 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
 })
 export class FileUploadMultipleDefaultValidationReactiveFormsOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     maxFileSizeErrorMessage = 'The file size has exceeded the limit';
-
     fileList = new FormArray<FormControl<KbqFileItem | null>>([]);
 
     constructor() {

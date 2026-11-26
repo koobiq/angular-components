@@ -61,7 +61,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TimeRangeCustomTriggerExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly control = new FormControl<KbqTimeRangeRange | null>(
         {
             type: 'last5Minutes'

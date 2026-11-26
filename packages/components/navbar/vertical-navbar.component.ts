@@ -1,4 +1,5 @@
 import { CdkMonitorFocus } from '@angular/cdk/a11y';
+import { DOWN_ARROW, TAB, UP_ARROW } from '@angular/cdk/keycodes';
 import {
     type AfterContentInit,
     ChangeDetectionStrategy,
@@ -14,14 +15,11 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {
-    DOWN_ARROW,
     isHorizontalMovement,
     isVerticalMovement,
     KbqLocaleOverridesDirective,
     type KbqNavbarLocaleConfiguration,
-    KbqOverlayLayerExclude,
-    TAB,
-    UP_ARROW
+    KbqOverlayLayerExclude
 } from '@koobiq/components/core';
 import { KbqFocusableComponent } from './navbar.component';
 import { KbqNavbarBento, KbqNavbarItem, KbqNavbarRectangleElement } from './navbar-item.component';
@@ -98,6 +96,12 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
         KBQ_NAVBAR_LOCALE_CONFIGURATION
     );
 
+    /** Whether the expanded navbar overlays the page content instead of taking room from it. */
+    readonly openOver = input<boolean>(false);
+
+    /** Whether the navbar is expanded. */
+    readonly expanded = model<boolean>(false);
+
     /** @docs-private */
     readonly rectangleElements = contentChildren<KbqNavbarRectangleElement>(
         forwardRef(() => KbqNavbarRectangleElement),
@@ -112,12 +116,6 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
 
     /** @docs-private */
     readonly bento = contentChild<KbqNavbarBento>(forwardRef(() => KbqNavbarBento));
-
-    /** Whether the expanded navbar overlays the page content instead of taking room from it. */
-    readonly openOver = input<boolean>(false);
-
-    /** Whether the navbar is expanded. */
-    readonly expanded = model<boolean>(false);
 
     private buttonIconsRefresh?: ReturnType<typeof setTimeout>;
 

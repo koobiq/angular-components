@@ -50,9 +50,8 @@ const ATTACK_TYPES: KbqSelectValue[] = [
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarNotSpecifiedExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     /** Text the example owns; the option is worded to agree with the name of the filter. */
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     /** Objects whose attack type is not set: the first option of the list. */
     private readonly notSpecified = computed<KbqSelectValue>(() => ({

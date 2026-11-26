@@ -15,7 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.repository_owner == 'koobiq' }}
     env:
-      # The links of the documentation for agents lead to the site it is deployed to (tools/llms).
+      # The address the site is deployed to, which its canonical links, sitemap and documentation for agents name
+      # (tools/docs-site-origin.ts).
       KOOBIQ_DOCS_ORIGIN: https://next.koobiq.io
 
     steps:

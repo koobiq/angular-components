@@ -45,6 +45,11 @@ export class KbqNotificationItemComponent implements OnChanges {
     protected readonly readStateDirective = inject<KbqReadStateDirective>(KbqReadStateDirective, { host: true });
     protected readonly panel = inject(KBQ_NOTIFICATION_CENTER_PANEL);
 
+    /** @docs-private */
+    readonly dataInput = input<KbqNotificationItem | undefined>(undefined, { alias: 'data' });
+
+    private _data?: KbqNotificationItem;
+
     /** Time of day the notification happened; empty when its `date` could not be parsed. */
     protected time: string = '';
 
@@ -88,20 +93,6 @@ export class KbqNotificationItemComponent implements OnChanges {
         this.time = parsed !== null && this.adapter.isValid(parsed) ? this.adapter.format(parsed, 'HH:mm') : '';
     }
 
-    private _data?: KbqNotificationItem;
-
-    /** @docs-private */
-    readonly dataInput = input<KbqNotificationItem | undefined>(undefined, { alias: 'data' });
-
-    ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member; unbound, it leaves what code wrote.
-        if (changes['dataInput']) {
-            const data = this.dataInput();
-
-            if (data !== undefined) this.data = data;
-        }
-    }
-
     constructor() {
         this.readStateDirective.read
             .pipe(
@@ -119,6 +110,15 @@ export class KbqNotificationItemComponent implements OnChanges {
 
                 this.service.onRead.next(data);
             });
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
+        if (changes['dataInput']) {
+            const data = this.dataInput();
+
+            if (data !== undefined) this.data = data;
+        }
     }
 
     /** Removes this notification, keeping keyboard focus inside the panel once the button unmounts. */

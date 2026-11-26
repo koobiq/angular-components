@@ -49,9 +49,8 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClampedListExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly collapsed = model(true);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly countries = computed(() => this.t().countries);
 }

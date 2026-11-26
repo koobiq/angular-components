@@ -715,6 +715,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/markdown').then((m) => m.MarkdownSelectionExample);
         case 'markdown-table':
             return import('@koobiq/docs-examples/components/markdown').then((m) => m.MarkdownTableExample);
+        case 'modal-button-loading':
+            return import('@koobiq/docs-examples/components/modal').then((m) => m.ModalButtonLoadingExample);
         case 'modal-caption':
             return import('@koobiq/docs-examples/components/modal').then((m) => m.ModalCaptionExample);
         case 'modal-component-with-injector':
@@ -723,6 +725,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/modal').then((m) => m.ModalComponentExample);
         case 'modal-full-custom':
             return import('@koobiq/docs-examples/components/modal').then((m) => m.ModalFullCustomExample);
+        case 'modal-keep-open-on-error':
+            return import('@koobiq/docs-examples/components/modal').then((m) => m.ModalKeepOpenOnErrorExample);
         case 'modal-multiple':
             return import('@koobiq/docs-examples/components/modal').then((m) => m.ModalMultipleExample);
         case 'modal-overview':
@@ -931,6 +935,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/sidebar').then((m) => m.SidebarStateSavingExample);
         case 'sidebar-with-splitter':
             return import('@koobiq/docs-examples/components/sidebar').then((m) => m.SidebarWithSplitterExample);
+        case 'sidepanel-can-close':
+            return import('@koobiq/docs-examples/components/sidepanel').then((m) => m.SidepanelCanCloseExample);
         case 'sidepanel-disable-close':
             return import('@koobiq/docs-examples/components/sidepanel').then((m) => m.SidepanelDisableCloseExample);
         case 'sidepanel-normal-mode':

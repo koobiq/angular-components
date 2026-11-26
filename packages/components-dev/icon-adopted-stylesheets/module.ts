@@ -44,6 +44,11 @@ type IconMode = 'style' | 'adopted' | 'adopted-layer';
 export class DevApp implements OnInit, OnDestroy {
     private readonly document = inject(DOCUMENT);
 
+    /** kbq-icons.css text with its url() rewritten to the served asset path. */
+    private css = '';
+    private readonly sheet = new CSSStyleSheet();
+    private styleEl?: HTMLStyleElement;
+
     readonly colors = KbqComponentColors;
     readonly badgeColors = KbqBadgeColors;
 
@@ -53,13 +58,12 @@ export class DevApp implements OnInit, OnDestroy {
     /** Current icon CSS delivery mode. Defaults to `adopted` (no layer) so the bug is visible right away. */
     readonly mode = signal<IconMode>('adopted');
 
-    /** kbq-icons.css text with its url() rewritten to the served asset path. */
-    private css = '';
-    private readonly sheet = new CSSStyleSheet();
-    private styleEl?: HTMLStyleElement;
-
     ngOnInit(): void {
         void this.loadCss();
+    }
+
+    ngOnDestroy(): void {
+        this.detach();
     }
 
     private async loadCss(): Promise<void> {
@@ -70,10 +74,6 @@ export class DevApp implements OnInit, OnDestroy {
         this.css = raw.replaceAll('url("./', 'url("assets/kbq-icons/');
 
         this.apply(this.mode());
-    }
-
-    ngOnDestroy(): void {
-        this.detach();
     }
 
     apply(mode: IconMode): void {

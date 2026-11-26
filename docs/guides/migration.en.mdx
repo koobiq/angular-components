@@ -41,6 +41,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 - **21.1.0**: the code block loads the highlight.js core instead of the full bundle by default.
 - **21.1.0**: the content panel container becomes focusable.
 - **21.1.0**: the types of fields and getters that can be empty say so, and the events and `KbqFormFieldControl` got constructors and abstract members.
+- **21.2.0**: the keycode constants in `core` are deprecated re-exports of `@angular/cdk/keycodes` — import them from the CDK; the re-export is removed in 22.0.0.
 
 ### Upgrade to 18.5.3
 
@@ -3608,6 +3609,27 @@ Nothing. The schematic only reports where a member of the table is read, an even
 - **A read of a member.** Check the value, for example `select.selectionModel?.selected ?? []`, or add `!` where the code runs after the component is initialized: `!` keeps the old behavior and throws where the old code threw.
 - **An event you create.** Pass the values to the constructor: `new KbqCheckboxChange(checkbox, true)`.
 - **A subclass of `KbqFormFieldControl` or `KbqPopUp`.** Declare the abstract members.
+
+### Keycode constants deprecation (21.2.0)
+
+{/* migration-step-components(core) */}
+
+`@koobiq/components/core` no longer declares its own copy of the keycode constants (`ENTER`, `SPACE`, `TAB`, the arrows, the numpad and function keys, and the rest). The constants are re-exported from `@angular/cdk/keycodes` and marked deprecated; the re-export will be removed in 22.0.0.
+
+Nothing breaks in 21.2.0 — existing imports keep compiling. Switch them to `@angular/cdk/keycodes` at your own pace; the values are identical.
+
+#### Running the migration
+
+`keycodes-import-path` is registered for 21.2.0, so an `ng update` to that version runs it:
+
+```bash
+ng g @koobiq/components:keycodes-import-path --project "<your project>"
+```
+
+It moves the keycode bindings of every `import` / `export ... from` `@koobiq/components/core` into a
+statement from `@angular/cdk/keycodes`, leaves the other bindings on `core`, and running it twice
+changes nothing. `hasModifierKey` and the koobiq-only key helpers (`isVerticalMovement`,
+`isSelectAll` and the rest) intentionally stay importable from `core`.
 
 ### After the migration
 

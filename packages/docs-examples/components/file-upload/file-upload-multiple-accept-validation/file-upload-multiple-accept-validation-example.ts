@@ -43,13 +43,12 @@ import { TRANSLATIONS } from './l10n';
 })
 export class FileUploadMultipleAcceptValidationExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected accept: KbqFileTypeSpecifier = ['.txt'];
+    protected readonly fileList = new FormArray<FormControl<KbqFileItem | null>>([]);
+
     protected get fileExtensionMismatchErrorMessage(): string {
         return this.t().provideValidExtension;
     }
-
-    protected readonly fileList = new FormArray<FormControl<KbqFileItem | null>>([]);
 
     constructor() {
         this.fileList.statusChanges.subscribe(() => {

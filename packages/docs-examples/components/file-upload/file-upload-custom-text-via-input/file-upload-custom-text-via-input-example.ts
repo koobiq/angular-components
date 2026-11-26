@@ -118,10 +118,12 @@ const localeData: Record<string, ExampleLocaleData> & { 'en-US': ExampleLocaleDa
 })
 export class FileUploadCustomTextViaInputExample {
     private readonly exampleDefaultLocale = 'en-US';
+
     protected readonly localeId = toSignal(
         inject(KBQ_LOCALE_SERVICE, { optional: true })?.changes.pipe(skip(1)) ?? of(this.exampleDefaultLocale),
         { initialValue: this.exampleDefaultLocale }
     );
+
     // The binding takes a partial of the whole locale data, keyed by section, so the labels go under the
     // `fileUpload` section and the flavour they belong to.
     protected readonly multipleLocaleOverrides = computed(() => {
@@ -129,7 +131,6 @@ export class FileUploadCustomTextViaInputExample {
 
         return { fileUpload: { multiple: selectedLocaleData.multiple } };
     });
-
     protected readonly singleLocaleOverrides = computed(() => {
         const selectedLocaleData = localeData[this.localeId()] ?? localeData[this.exampleDefaultLocale];
 

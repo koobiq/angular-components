@@ -15,7 +15,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class AccordionStatesExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly accordionVariant: Record<'fill' | 'hug' | 'hugSpaceBetween', KbqAccordionVariant> = {
         fill: 'fill',
         hug: 'hug',

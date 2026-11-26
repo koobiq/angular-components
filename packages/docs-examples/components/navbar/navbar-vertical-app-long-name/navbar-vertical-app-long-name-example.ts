@@ -23,7 +23,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class NavbarVerticalAppLongNameExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly popUpPlacements = PopUpPlacements;
     readonly colors = KbqComponentColors;
 }

@@ -262,7 +262,6 @@ export class KbqTag
     implements IFocusableOption, OnChanges, OnDestroy, KbqTitleTextRef, AfterViewInit
 {
     changeDetectorRef = inject(ChangeDetectorRef);
-
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly tagList = inject(KbqTagList, { optional: true });
     private readonly drag: CdkDrag<KbqTagDragData> = inject(CdkDrag, { host: true });
@@ -271,6 +270,63 @@ export class KbqTag
 
     /** @docs-private */
     override readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+    /**
+     * Backing input of `editable`. Bind through the `editable` attribute; read `editable`, which falls
+     * back to the tag list's `editable` while this is unbound.
+     * `undefined` only as the default: the transform never runs on it, so a bound value is always a boolean.
+     *
+     * @docs-private
+     */
+    readonly editableInput = input<boolean | undefined, unknown>(undefined, {
+        alias: 'editable',
+        transform: booleanAttribute
+    });
+
+    /** Whether the tag edits can't be submitted. */
+    readonly preventEditSubmit = input<boolean, unknown>(false, { transform: booleanAttribute });
+
+    /**
+     * Backing input of `selected`. Bind through the `selected` attribute; read `selected`, which also
+     * reflects `select()`, `deselect()` and user interaction.
+     * A change of the binding is applied in `ngOnChanges` through `setSelectedState()`, so it emits
+     * `selectionChange` the way the old setter did - the tag list listens to it.
+     *
+     * @docs-private
+     */
+    readonly selectedInput = input(false, { alias: 'selected', transform: booleanAttribute });
+
+    /**
+     * Emits event when the tag is edited.
+     */
+    readonly editChange = output<KbqTagEditChange>();
+
+    /** Emitted when the tag is selected or deselected. */
+    readonly selectionChange = output<KbqTagSelectionChange>();
+
+    /** Emitted when the tag is destroyed and leaving the DOM. */
+    readonly destroyed = output<KbqTagEvent>();
+
+    /**
+     * Emitted when a tag is to be removed.
+     * Fires on programmatic and UI removal (click or keyboard).
+     */
+    readonly removed = output<KbqTagEvent>();
+
+    private readonly editInputElementRef = contentChild(KbqTagEditInput, { read: ElementRef });
+    private readonly textElementQuery = viewChild<ElementRef<HTMLSpanElement>>('kbqTitleText');
+
+    /** The tag avatar */
+    readonly avatar = contentChild(KbqTagAvatar);
+
+    /** The tag's trailing icon. */
+    readonly trailingIcon = contentChild(KbqTagTrailingIcon);
+
+    /** The tag's remove toggler. */
+    readonly removeIcon = contentChild(forwardRef(() => KbqTagRemove));
+
+    private readonly _hasFocus = signal(false);
+    private readonly _selected = signal(false);
 
     /**
      * Emits when the tag is focused.
@@ -289,6 +345,81 @@ export class KbqTag
     /** @docs-private */
     readonly nativeElement = this.elementRef.nativeElement;
 
+    /** Whether the tag is editable. */
+    readonly editable = computed(() => this.editableInput() ?? !!this.tagList?.editable());
+
+    /**
+     * @docs-private
+     */
+    protected readonly editing = signal(false);
+    readonly contentChildren = contentChildren_1(KbqIcon);
+
+    /** Whether the tag is selected. */
+    // Read-only rather than a `linkedSignal`: a binding change reset through a `linkedSignal` would skip
+    // `setSelectedState()` and never emit the `selectionChange` the tag list listens to.
+    readonly selected = this._selected.asReadonly();
+
+    /**
+     * Backing input of `selectable`. Bind through the `selectable` attribute; read `selectable`, which is
+     * also true while the tag list is selectable.
+     *
+     * @docs-private
+     */
+    readonly selectableInput = input(false, { alias: 'selectable', transform: booleanAttribute });
+
+    /**
+     * Backing input of `removable`. Bind through the `removable` attribute; read `removable`, which also
+     * requires the tag list to be removable.
+     *
+     * @docs-private
+     */
+    readonly removableInput = input(true, { alias: 'removable', transform: booleanAttribute });
+
+    /** @docs-private */
+    readonly valueInput = input<NonNullable<unknown> | null | undefined>(undefined, { alias: 'value' });
+
+    /** @docs-private */
+    readonly tabindexInput = input<number | null | undefined>(undefined, { alias: 'tabindex' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    private _value: any;
+    private readonly _tabindex = signal<any>(-1);
+
+    /** Whether the tag is selectable. */
+    readonly selectable = computed(() => this.selectableInput() || !!this.tagList?.selectable());
+
+    private readonly tabindexState = computed(() => {
+        if (this.disabled) return null;
+        if (this._tabindex() === -1 && this.selectable() && !this.tagList) return 0;
+
+        return this._tabindex();
+    });
+    private readonly _disabled = signal(false);
+    private readonly disabledState = computed(() => this._disabled() || (this.tagList?.disabled() ?? false));
+    private readonly draggableState = computed(() => (this.tagList?.draggable ?? false) && !this.disabled);
+
+    /** Determines whether the tag is removable. */
+    readonly removable = computed(() => this.removableInput() && (this.tagList?.removable() ?? true));
+
+    /**
+     * Value of the `disabled` attribute.
+     *
+     * @docs-private
+     */
+    protected readonly disabledAttribute = computed(() => this.disabled || null);
+
+    /**
+     * Whether the tag moves into place without motion while the list is reordered.
+     *
+     * @docs-private
+     */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
+
     /**
      * Whether the tag has focus.
      *
@@ -303,86 +434,12 @@ export class KbqTag
         this._hasFocus.set(value);
     }
 
-    private readonly _hasFocus = signal(false);
-
-    /**
-     * Backing input of `editable`. Bind through the `editable` attribute; read `editable`, which falls
-     * back to the tag list's `editable` while this is unbound.
-     * `undefined` only as the default: the transform never runs on it, so a bound value is always a boolean.
-     *
-     * @docs-private
-     */
-    readonly editableInput = input<boolean | undefined, unknown>(undefined, {
-        alias: 'editable',
-        transform: booleanAttribute
-    });
-
-    /** Whether the tag is editable. */
-    readonly editable = computed(() => this.editableInput() ?? !!this.tagList?.editable());
-
-    /** Whether the tag edits can't be submitted. */
-    readonly preventEditSubmit = input<boolean, unknown>(false, { transform: booleanAttribute });
-
-    private readonly editInputElementRef = contentChild(KbqTagEditInput, { read: ElementRef });
-
-    /**
-     * Emits event when the tag is edited.
-     */
-    readonly editChange = output<KbqTagEditChange>();
-
-    /**
-     * @docs-private
-     */
-    protected readonly editing = signal(false);
-
-    private readonly textElementQuery = viewChild<ElementRef<HTMLSpanElement>>('kbqTitleText');
-
     /**
      * @docs-private
      */
     get textElement(): ElementRef<HTMLSpanElement> {
         return this.textElementQuery()!;
     }
-
-    readonly contentChildren = contentChildren_1(KbqIcon);
-
-    /** The tag avatar */
-    readonly avatar = contentChild(KbqTagAvatar);
-
-    /** The tag's trailing icon. */
-    readonly trailingIcon = contentChild(KbqTagTrailingIcon);
-
-    /** The tag's remove toggler. */
-    readonly removeIcon = contentChild(forwardRef(() => KbqTagRemove));
-
-    /** Emitted when the tag is selected or deselected. */
-    readonly selectionChange = output<KbqTagSelectionChange>();
-
-    /** Emitted when the tag is destroyed and leaving the DOM. */
-    readonly destroyed = output<KbqTagEvent>();
-
-    /**
-     * Emitted when a tag is to be removed.
-     * Fires on programmatic and UI removal (click or keyboard).
-     */
-    readonly removed = output<KbqTagEvent>();
-
-    /**
-     * Backing input of `selected`. Bind through the `selected` attribute; read `selected`, which also
-     * reflects `select()`, `deselect()` and user interaction.
-     * A change of the binding is applied in `ngOnChanges` through `setSelectedState()`, so it emits
-     * `selectionChange` the way the old setter did - the tag list listens to it.
-     *
-     * @docs-private
-     */
-    readonly selectedInput = input(false, { alias: 'selected', transform: booleanAttribute });
-
-    private readonly _selected = signal(false);
-
-    /** Whether the tag is selected. */
-    // Read-only rather than a `linkedSignal`: a binding change reset through a `linkedSignal` would skip
-    // `setSelectedState()` and never emit the `selectionChange` the tag list listens to.
-    readonly selected = this._selected.asReadonly();
 
     /** The value of the tag. Defaults to the content inside `<kbq-tag>` tags. */
     // Stays an accessor: it falls back to the projected text content, which is DOM state.
@@ -393,30 +450,6 @@ export class KbqTag
     set value(value: any) {
         this._value = value;
     }
-
-    private _value: any;
-
-    /**
-     * Backing input of `selectable`. Bind through the `selectable` attribute; read `selectable`, which is
-     * also true while the tag list is selectable.
-     *
-     * @docs-private
-     */
-    readonly selectableInput = input(false, { alias: 'selectable', transform: booleanAttribute });
-
-    /** Whether the tag is selectable. */
-    readonly selectable = computed(() => this.selectableInput() || !!this.tagList?.selectable());
-
-    /**
-     * Backing input of `removable`. Bind through the `removable` attribute; read `removable`, which also
-     * requires the tag list to be removable.
-     *
-     * @docs-private
-     */
-    readonly removableInput = input(true, { alias: 'removable', transform: booleanAttribute });
-
-    /** Determines whether the tag is removable. */
-    readonly removable = computed(() => this.removableInput() && (this.tagList?.removable() ?? true));
 
     /**
      * Whether the user may remove this tag through the controls the tag itself offers — the remove
@@ -438,15 +471,6 @@ export class KbqTag
         this._tabindex.set(value);
     }
 
-    private readonly _tabindex = signal<any>(-1);
-
-    private readonly tabindexState = computed(() => {
-        if (this.disabled) return null;
-        if (this._tabindex() === -1 && this.selectable() && !this.tagList) return 0;
-
-        return this._tabindex();
-    });
-
     /** Whether the tag is disabled. */
     // Stays a plain boolean: the focus key manager skips items by reading `item.disabled` as a value, so a
     // signal - a function, always truthy - would skip every tag. It also folds in the tag list's form control.
@@ -458,17 +482,6 @@ export class KbqTag
         this._disabled.set(value);
     }
 
-    private readonly _disabled = signal(false);
-
-    private readonly disabledState = computed(() => this._disabled() || (this.tagList?.disabled() ?? false));
-
-    /**
-     * Value of the `disabled` attribute.
-     *
-     * @docs-private
-     */
-    protected readonly disabledAttribute = computed(() => this.disabled || null);
-
     /**
      * Whether the tag is draggable.
      *
@@ -477,27 +490,6 @@ export class KbqTag
     protected get draggable(): boolean {
         return this.draggableState();
     }
-
-    private readonly draggableState = computed(() => (this.tagList?.draggable ?? false) && !this.disabled);
-
-    /**
-     * Whether the tag moves into place without motion while the list is reordered.
-     *
-     * @docs-private
-     */
-    protected readonly animationsDisabled = kbqAnimationsDisabled();
-
-    /** @docs-private */
-    readonly valueInput = input<NonNullable<unknown> | null | undefined>(undefined, { alias: 'value' });
-
-    /** @docs-private */
-    readonly tabindexInput = input<number | null | undefined>(undefined, { alias: 'tabindex' });
-
-    /** @docs-private */
-    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'disabled',
-        transform: booleanAttribute
-    });
 
     constructor() {
         super();
@@ -885,9 +877,6 @@ export class KbqTagRemove {
     /** Accessible name of the button. Defaults to the localized "Remove". */
     readonly ariaLabel = input<string | undefined>(undefined, { alias: 'aria-label' });
 
-    /** @docs-private */
-    protected readonly accessibleName = computed(() => this.ariaLabel() || this.a11yLocaleConfiguration().remove);
-
     /**
      * Position of the control in the tab order.
      *
@@ -896,6 +885,9 @@ export class KbqTagRemove {
      * tab stop of its own, or the control is left mouse-only.
      */
     readonly tabIndex = input<number, unknown>(-1, { transform: numberAttribute });
+
+    /** @docs-private */
+    protected readonly accessibleName = computed(() => this.ariaLabel() || this.a11yLocaleConfiguration().remove);
 
     /** @docs-private */
     focus(event: FocusEvent): void {

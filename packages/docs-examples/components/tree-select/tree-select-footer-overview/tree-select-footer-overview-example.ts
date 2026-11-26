@@ -137,12 +137,9 @@ export const DATA_OBJECT = {
 })
 export class TreeSelectFooterOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     selected = '';
-
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {

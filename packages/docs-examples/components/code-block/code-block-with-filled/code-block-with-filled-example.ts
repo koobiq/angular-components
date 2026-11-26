@@ -39,15 +39,14 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CodeBlockWithFilledExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    readonly filled = model(true);
+    readonly alwaysShowActionbar = model(false);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     readonly files: KbqCodeBlockFile[] = [
         {
             language: 'bash',
             content: 'npm install @koobiq/components'
         }
     ];
-
-    readonly filled = model(true);
-    readonly alwaysShowActionbar = model(false);
 }

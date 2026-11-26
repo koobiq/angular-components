@@ -128,10 +128,8 @@ export const DATA_OBJECT = {
 })
 export class TreeSelectWithMultilineMatcherExample {
     selected = ['button-toggle', 'button', 'autocomplete', 'documentation', 'tools', 'source'];
-
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {

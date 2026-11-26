@@ -94,18 +94,15 @@ const getAutocompleteOptions = () => [
 export class TagAutocompleteOptionOperationsExample {
     protected readonly allTags = getAutocompleteOptions();
     protected readonly selectedTags = [...this.allTags.slice(0, 2)];
-    protected readonly separatorKeysCodes = [];
-
     readonly tagInput = viewChild.required<ElementRef<HTMLInputElement>>('tagInput');
     readonly tagInputDirective = viewChild.required('tagInput', { read: KbqTagInput });
 
+    protected readonly separatorKeysCodes = [];
     control = new FormControl();
-
     filteredTags: Observable<string[]> = this.control.valueChanges
         .pipe(map((e) => this.onControlValueChanges(e)))
         .pipe(startWith(this.allTags.filter((tag) => !this.selectedTags.includes(tag))));
     hasDuplicates: boolean = false;
-
     readonly kbqOptionTagName = 'KBQ-OPTION';
 
     get canCreate(): boolean {

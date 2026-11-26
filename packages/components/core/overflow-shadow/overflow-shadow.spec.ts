@@ -44,8 +44,9 @@ const setScrollMetrics = (
  * resize for a specific element to trigger the directive's `checkOverflow()`.
  */
 class MockSharedResizeObserver {
-    readonly observed: Element[] = [];
     private readonly subjects = new Map<Element, Subject<ResizeObserverEntry[]>>();
+
+    readonly observed: Element[] = [];
 
     observe(target: Element): Observable<ResizeObserverEntry[]> {
         this.observed.push(target);

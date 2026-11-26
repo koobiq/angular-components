@@ -2,6 +2,21 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { type DataSource, SelectionModel } from '@angular/cdk/collections';
 import {
+    A,
+    C,
+    D,
+    DOWN_ARROW,
+    END,
+    ENTER,
+    HOME,
+    LEFT_ARROW,
+    RIGHT_ARROW,
+    SPACE,
+    T,
+    TAB,
+    UP_ARROW
+} from '@angular/cdk/keycodes';
+import {
     Component,
     type DebugElement,
     Directive,
@@ -23,18 +38,11 @@ import { BehaviorSubject, type Observable, of } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 import {
-    A,
-    C,
     createKeyboardEvent,
     createMouseEvent,
-    D,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
-    DOWN_ARROW,
-    END,
-    ENTER,
-    HOME,
     KBQ_STATE_STORE,
     type KbqMultipleInput,
     KbqOptionActionComponent,
@@ -42,13 +50,7 @@ import {
     KbqPseudoCheckbox,
     KbqStateSavingService,
     type KbqStateStore,
-    LEFT_ARROW,
     MultipleMode,
-    RIGHT_ARROW,
-    SPACE,
-    T,
-    TAB,
-    UP_ARROW,
     wrappedErrorMessage
 } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -3717,14 +3719,12 @@ function expectFlatTreeToMatch(treeElement: Element, ...expectedTree: (string | 
     `
 })
 class SimpleKbqTreeApp {
+    readonly tree = viewChild.required(KbqTreeSelection);
+
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     treeData: FileNode[];
-
-    readonly tree = viewChild.required(KbqTreeSelection);
 
     constructor() {
         this.treeFlattener = new KbqTreeFlattener<FileNode, FileFlatNode>(
@@ -3918,20 +3918,21 @@ class TreeSelectionFocusStates extends TreeParams {}
     `
 })
 class KbqTreeAppMultiple extends TreeParams {
+    readonly tree = viewChild.required(KbqTreeSelection);
+
     modelValue: string[] = [];
     unselectableNodes: string[] = [];
     selectAllToggle: boolean = false;
     selectAllEnabled: boolean = false;
     treeDisabled: boolean = false;
     selectAllHandler: ((event: KeyboardEvent, tree: KbqTreeSelection) => void) | undefined;
-    readonly tree = viewChild.required(KbqTreeSelection);
-
     savedSelectionChangeEvent?: KbqTreeSelectionChange<KbqTreeOption>;
     savedSelectAllEvent?: KbqTreeSelectAllEvent<KbqTreeOption>;
 
     onSelectionChange(event: KbqTreeSelectionChange<KbqTreeOption>) {
         this.savedSelectionChangeEvent = event;
     }
+
     onSelectAll(event: KbqTreeSelectAllEvent<KbqTreeOption>) {
         this.savedSelectAllEvent = event;
     }
@@ -3963,8 +3964,9 @@ class KbqTreeAppMultiple extends TreeParams {
     `
 })
 class KbqTreeAppMultipleCheckbox extends TreeParams {
-    modelValue: any[] = ['Pictures'];
     readonly tree = viewChild.required(KbqTreeSelection);
+
+    modelValue: any[] = ['Pictures'];
     filterByValues: FilterByValues<FileFlatNode>;
 
     constructor() {
@@ -4008,9 +4010,10 @@ class KbqTreeAppMultipleCheckbox extends TreeParams {
     `
 })
 class TreeSelectionWithFormControl extends TreeParams {
+    readonly tree = viewChild.required<KbqTreeSelection<FileFlatNode>>(KbqTreeSelection);
+
     readonly control = new FormControl<string | null>(null);
     readonly onSelectionChange = vi.fn();
-    readonly tree = viewChild.required<KbqTreeSelection<FileFlatNode>>(KbqTreeSelection);
 }
 
 @Component({
@@ -4074,8 +4077,9 @@ export const DEEP_DATA_OBJECT = {
     `
 })
 class KbqTreeAppNonSelectableParents extends TreeParams {
-    modelValue: any = '';
     readonly tree = viewChild.required(KbqTreeSelection);
+
+    modelValue: any = '';
 
     constructor() {
         super();
@@ -4127,11 +4131,13 @@ export const DEEP_DATA_OBJECT_WITH_SIBLINGS = {
     `
 })
 class KbqTreeAppDeepData extends TreeParams {
+    readonly tree = viewChild.required(KbqTreeSelection);
+
     modelValue: any = '';
     disabledNodes: string[] = [];
+
     // disables only the toggle, leaving the option itself focusable — unlike `disabledNodes`
     disabledToggles: string[] = [];
-    readonly tree = viewChild.required(KbqTreeSelection);
 
     constructor() {
         super();
@@ -4255,7 +4261,6 @@ class TreeWithTrackBy {
     // A plain stream rather than a `KbqTreeFlatDataSource`: the nodes have to be replaced through the same
     // subscription, which is what keeps the differ — and with it the identity-change path — in play.
     readonly dataSource = new BehaviorSubject<TrackedNode[]>([]);
-
     readonly treeControl = new FlatTreeControl<TrackedNode>(
         (node) => node.level,
         (node) => node.expandable,
@@ -4263,14 +4268,14 @@ class TreeWithTrackBy {
         (node) => node.name
     );
 
-    trackById = (_: number, node: TrackedNode) => node.id;
-
     constructor() {
         this.emit([
             { id: 1, name: 'src', level: 0, expandable: false },
             { id: 2, name: 'docs', level: 1, expandable: false }
         ]);
     }
+
+    trackById = (_: number, node: TrackedNode) => node.id;
 
     emit(nodes: TrackedNode[]): void {
         this.treeControl.dataNodes = nodes;
@@ -4305,17 +4310,12 @@ class TreeWithTrackedThirdStateCheckbox {
     // A stream that keeps the objects of untouched nodes, as `TreeWithTrackBy` does: the differ then reports only the
     // rows that really changed.
     readonly dataSource = new BehaviorSubject<TrackedNode[]>([]);
-
     readonly treeControl = new FlatTreeControl<TrackedNode>(
         (node) => node.level,
         (node) => node.expandable,
         (node) => node.name,
         (node) => node.name
     );
-
-    trackById = (_: number, node: TrackedNode) => node.id;
-
-    hasChild = (_: number, node: TrackedNode) => node.expandable;
 
     constructor() {
         this.emit([
@@ -4324,6 +4324,10 @@ class TreeWithTrackedThirdStateCheckbox {
             { id: 3, name: 'sibling', level: 0, expandable: false }
         ]);
     }
+
+    trackById = (_: number, node: TrackedNode) => node.id;
+
+    hasChild = (_: number, node: TrackedNode) => node.expandable;
 
     emit(nodes: TrackedNode[]): void {
         this.treeControl.dataNodes = nodes;
@@ -4345,7 +4349,6 @@ class TreeWithKeyedControl {
     readonly tree = viewChild.required<KbqTreeSelection<TrackedNode, number>>(KbqTreeSelection);
 
     readonly dataSource = new BehaviorSubject<TrackedNode[]>([]);
-
     readonly treeControl = new FlatTreeControl<TrackedNode, number>(
         (node) => node.level,
         (node) => node.expandable,
@@ -4395,8 +4398,9 @@ class TreeWithKeyedControl {
     `
 })
 class TreeMultipleWithDisabledNodes extends TreeParams {
-    disabledNodes: string[] = [];
     readonly tree = viewChild.required<KbqTreeSelection<FileFlatNode>>(KbqTreeSelection);
+
+    disabledNodes: string[] = [];
 }
 
 @Component({
@@ -4430,15 +4434,13 @@ class TreeWithAriaLabel extends TreeParams {
     `
 })
 class KbqTreeAppWithToggle {
+    readonly tree = viewChild.required(KbqTreeSelection);
+
     toggleRecursively: boolean = true;
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     treeData: FileNode[];
-
-    readonly tree = viewChild.required(KbqTreeSelection);
 
     constructor() {
         this.treeControl = new FlatTreeControl(this.getLevel, this.isExpandable, this.getValue, this.getViewValue);
@@ -4501,14 +4503,12 @@ class KbqTreeAppWithToggle {
     `
 })
 class WhenNodeKbqTreeApp {
+    readonly tree = viewChild.required(KbqTreeSelection);
+
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     treeData: FileNode[];
-
-    readonly tree = viewChild.required(KbqTreeSelection);
 
     constructor() {
         this.treeControl = new FlatTreeControl(this.getLevel, this.isExpandable, this.getValue, this.getValue);
@@ -4565,14 +4565,12 @@ class WhenNodeKbqTreeApp {
     `
 })
 class FiltrationKbqTreeApp {
+    readonly tree = viewChild.required(KbqTreeSelection);
+
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     treeData: FileNode[];
-
-    readonly tree = viewChild.required(KbqTreeSelection);
 
     constructor() {
         this.treeFlattener = new KbqTreeFlattener<FileNode, FileFlatNode>(
@@ -4642,9 +4640,10 @@ class FiltrationKbqTreeApp {
     `
 })
 class TreeWithBoundMultiple extends TreeParams {
+    readonly tree = viewChild.required(KbqTreeSelection);
+
     multiple: KbqMultipleInput = 'checkbox';
     modelValue: string[] = [];
-    readonly tree = viewChild.required(KbqTreeSelection);
 }
 
 describe('KbqTreeSelection multiple mode', () => {
@@ -4932,8 +4931,9 @@ describe('KbqTreeSelection multiple mode, value shape and defaults', () => {
     `
 })
 class MultipleTreeWithFormControl extends TreeParams {
-    control = new FormControl<string[] | string>(['Pictures', 'Documents']);
     readonly tree = viewChild.required(KbqTreeSelection);
+
+    control = new FormControl<string[] | string>(['Pictures', 'Documents']);
 }
 
 @Component({
@@ -4956,8 +4956,9 @@ class MultipleTreeWithFormControl extends TreeParams {
     `
 })
 class MultipleTreeWithFormControlName extends TreeParams {
-    readonly form = new FormGroup({ nodes: new FormControl<string[]>(['Pictures', 'Documents']) });
     readonly tree = viewChild.required(KbqTreeSelection);
+
+    readonly form = new FormGroup({ nodes: new FormControl<string[]>(['Pictures', 'Documents']) });
 }
 
 describe('KbqTreeSelection multiple mode with a form', () => {
@@ -5057,9 +5058,10 @@ describe('KbqTreeSelection multiple mode with a form', () => {
     `
 })
 class TreeSelectionWithFormControlAndDisabledBinding extends TreeParams {
+    readonly tree = viewChild.required(KbqTreeSelection);
+
     disabled: boolean | undefined = false;
     readonly control = new FormControl<string | null>({ value: null, disabled: true });
-    readonly tree = viewChild.required(KbqTreeSelection);
 }
 
 @Component({
@@ -5083,8 +5085,9 @@ class TreeSelectionWithStaticTabIndex extends TreeParams {
     `
 })
 class TreeSelectionWithBoundTabIndex extends TreeParams {
-    tabIndex: number | null | undefined = 3;
     readonly tree = viewChild.required(KbqTreeSelection);
+
+    tabIndex: number | null | undefined = 3;
 }
 
 describe('KbqTreeSelection inputs', () => {
@@ -5298,6 +5301,7 @@ class TreeStateSaving extends TreeParams {
     readonly tree = viewChild.required(KbqTreeSelection);
 
     useStateSaving = true;
+
     /** An empty key leaves the tree on the key derived from its position in the document. */
     stateSavingKey = 'tree-key';
 }
@@ -5332,7 +5336,6 @@ class TreeKeyedExpansion extends TreeParams {
         undefined,
         { trackBy: this.getValue }
     );
-
     readonly keyedDataSource = new KbqTreeFlatDataSource(this.keyedControl, this.treeFlattener);
 
     constructor() {
@@ -5775,6 +5778,7 @@ describe('KbqTreeSelection state saving', () => {
 class TreeDrivenByEffects extends TreeParams {
     readonly tree = viewChild.required(KbqTreeSelection);
     readonly options = viewChildren(KbqTreeOption);
+
     readonly control = new FormControl<string[]>([], { nonNullable: true });
     readonly command = signal<(() => void) | null>(null);
     runs = 0;
@@ -5879,6 +5883,7 @@ class CountChecks implements DoCheck {
 class TreeWithCheckCounters extends TreeParams {
     readonly tree = viewChild.required(KbqTreeSelection);
     readonly declaringViewChecks = viewChild.required('declaringView', { read: CountChecks });
+
     selectAll = true;
     unselectableNodes = ['rootNode_1'];
     readonly control = new FormControl<string[]>(this.namesBut(this.unselectableNodes), { nonNullable: true });

@@ -45,6 +45,7 @@ export class KbqTimeRangeTitle {
     readonly timeRange = input.required<KbqTimeRangeRange | null>();
     readonly localeConfiguration = input.required<KbqTimeRangeLocaleConfiguration>();
     readonly titleTemplate = input<TemplateRef<any>>();
+
     /** Drops the built-in trigger out of the tab order. A custom `titleTemplate` owns its own state. */
     readonly disabled = input(false, { transform: booleanAttribute });
 
@@ -58,23 +59,6 @@ export class KbqTimeRangeTitle {
             ...this.timeRangeService.getTimeRangeTypeUnits(timeRange.type)
         };
     });
-
-    protected readonly titleContext = computed<KbqTimeRangeCustomizableTitleContext | undefined>(() => {
-        const context = this.context();
-        const formattedDate = this.formattedDate();
-
-        let customizableTitleContext = { formattedDate, popover: this.popover };
-
-        if (context) {
-            customizableTitleContext = { ...context, ...customizableTitleContext };
-        }
-
-        return {
-            $implicit: customizableTitleContext,
-            ...customizableTitleContext
-        };
-    });
-
     protected readonly formattedDate = computed(() => {
         const context = this.context();
         const localeConfiguration = this.localeConfiguration();
@@ -117,5 +101,20 @@ export class KbqTimeRangeTitle {
             false,
             localeConfiguration.durationTemplate.title
         );
+    });
+    protected readonly titleContext = computed<KbqTimeRangeCustomizableTitleContext | undefined>(() => {
+        const context = this.context();
+        const formattedDate = this.formattedDate();
+
+        let customizableTitleContext = { formattedDate, popover: this.popover };
+
+        if (context) {
+            customizableTitleContext = { ...context, ...customizableTitleContext };
+        }
+
+        return {
+            $implicit: customizableTitleContext,
+            ...customizableTitleContext
+        };
     });
 }

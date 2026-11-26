@@ -40,6 +40,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class IconButtonSizeExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     colors = KbqComponentColors;
 }

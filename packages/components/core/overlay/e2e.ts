@@ -180,6 +180,7 @@ export class E2eOverlayLayerStickyBar {
 })
 export class E2eOverlayLayerGlobalOverlays {
     private readonly modalService = inject(KbqModalService);
+
     private readonly modalContent = viewChild.required<TemplateRef<object>>('modalContent');
 
     protected readonly options = OPTIONS;

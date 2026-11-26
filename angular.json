@@ -88,6 +88,11 @@
                                 "glob": "**/*",
                                 "input": "dist/docs-llms",
                                 "output": "/"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "dist/docs-agent-skills",
+                                "output": "/.well-known/agent-skills"
                             }
                         ],
                         "stylePreprocessorOptions": {

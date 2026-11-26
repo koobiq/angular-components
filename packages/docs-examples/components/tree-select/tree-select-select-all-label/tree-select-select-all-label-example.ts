@@ -115,10 +115,8 @@ export const DATA_OBJECT = {
 })
 export class TreeSelectSelectAllLabelExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     /** Every node of `DATA_OBJECT`, so the example starts in the "all selected" state. */

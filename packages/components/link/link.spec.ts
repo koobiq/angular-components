@@ -1,9 +1,10 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { ChangeDetectionStrategy, Component, Directive, signal, type Type, viewChild } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter, RouterLink } from '@angular/router';
-import { dispatchKeyboardEvent, ENTER, type KbqDefaultSizes, SPACE } from '@koobiq/components/core';
+import { dispatchKeyboardEvent, type KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, kbqLinkOptionsProvider, KbqLinkPrefix, KbqLinkSuffix, type KbqLinkUnderline } from './index';
 

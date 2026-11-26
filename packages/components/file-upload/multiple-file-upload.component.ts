@@ -97,11 +97,15 @@ export class KbqMultipleFileUploadComponent
     extends KbqFileUploadBase
     implements OnChanges, AfterViewInit, ControlValueAccessor, DoCheck
 {
+    private readonly focusMonitor = inject(FocusMonitor);
+    private readonly platformId = inject(PLATFORM_ID);
+
     /**
      * A value responsible for progress spinner type.
      * Loading logic depends on selected mode
      */
     readonly progressMode = input<ProgressSpinnerMode>('determinate');
+
     /** Array of file type specifiers */
     readonly accept = input<string[]>();
     readonly size = input<'compact' | 'default'>('default');
@@ -110,27 +114,6 @@ export class KbqMultipleFileUploadComponent
      * custom ID for the file input element.
      */
     readonly inputId = input<string>(`kbq-multiple-file-upload-${nextMultipleFileUploadUniqueId++}`);
-
-    /** An object used to control the error state of the component. Defaults to the injected `ErrorStateMatcher`. */
-    errorStateMatcher: ErrorStateMatcher = this.defaultErrorStateMatcher;
-
-    /**
-     * The selected files.
-     *
-     * Writing it is the model→view direction, same as `writeValue()`: it fills the list and tells
-     * nobody. `cvaOnChange` and `(filesChange)` belong to the paths a user drives — see
-     * `onFileAdded()` and `deleteFile()` — so a `[files]` binding cannot make the form look edited.
-     */
-    // An accessor, not a `model()`: the store is `KbqFileList.list`, a model on the host directive that the template
-    // iterates and that `addArray()`, `replace()` and `removeAt()` mutate. A `model()` here would be a second store to
-    // keep in sync with that one.
-    get files(): KbqFileItem[] {
-        return this.fileList.list();
-    }
-
-    set files(currentFileList: KbqFileItem[]) {
-        this.setFileList(currentFileList);
-    }
 
     /**
      * Determines which kind of items the upload component can accept. Defaults to `'file'`.
@@ -149,6 +132,12 @@ export class KbqMultipleFileUploadComponent
      * `replace` discards the previous selection, mirroring native input file multiple behavior. Defaults to `'concat'`.
      */
     readonly addStrategy = input<KbqFileUploadAddStrategyValues>(KbqFileUploadAddStrategy.Concat);
+
+    /** @docs-private */
+    readonly errorStateMatcherInput = input<ErrorStateMatcher | undefined>(undefined, { alias: 'errorStateMatcher' });
+
+    /** @docs-private */
+    readonly filesInput = input<KbqFileItem[] | undefined>(undefined, { alias: 'files' });
 
     /** Emits an event containing an updated file list. */
     readonly filesChange = output<KbqFileItem[]>();
@@ -177,17 +166,24 @@ export class KbqMultipleFileUploadComponent
 
     /** File Icon Template */
     protected readonly customFileIcon = contentChild('kbqFileIcon', { read: TemplateRef });
-
     protected readonly fileLoader = viewChild(KbqFileLoader);
 
     /** The list's scroll viewport. Absent until there is at least one file to list. */
     private readonly listViewport = viewChild(KbqScrollbar);
 
+    /** @docs-private */
+    protected readonly hint = contentChildren(KbqHint);
+
+    /** Remove controls of the rendered rows, used to keep focus in the list after a deletion. */
+    // `read` is load-bearing: `kbq-icon-button` is a component, so a bare `#fileAction` reference
+    // would resolve to its instance rather than to the element.
+    private readonly fileActions = viewChildren('fileAction', { read: ElementRef });
+
     /** File count the scrollbar was last revealed for — see the effect in the constructor. */
     private announcedFileCount = 0;
 
-    /** @docs-private */
-    protected readonly hint = contentChildren(KbqHint);
+    /** An object used to control the error state of the component. Defaults to the injected `ErrorStateMatcher`. */
+    errorStateMatcher: ErrorStateMatcher = this.defaultErrorStateMatcher;
 
     /** @docs-private */
     protected readonly describedBy = computed(
@@ -196,11 +192,6 @@ export class KbqMultipleFileUploadComponent
                 .map((hint) => hint.id())
                 .join(' ') || null
     );
-
-    /** Remove controls of the rendered rows, used to keep focus in the list after a deletion. */
-    // `read` is load-bearing: `kbq-icon-button` is a component, so a bare `#fileAction` reference
-    // would resolve to its instance rather than to the element.
-    private readonly fileActions = viewChildren('fileAction', { read: ElementRef });
 
     /** @docs-private */
     protected readonly captionContext = computed<KbqFileUploadCaptionContext>(() => {
@@ -235,18 +226,22 @@ export class KbqMultipleFileUploadComponent
     });
 
     /**
-     * cvaOnChange function registered via registerOnChange (ControlValueAccessor).
+     * The selected files.
      *
-     * @docs-private
+     * Writing it is the model→view direction, same as `writeValue()`: it fills the list and tells
+     * nobody. `cvaOnChange` and `(filesChange)` belong to the paths a user drives — see
+     * `onFileAdded()` and `deleteFile()` — so a `[files]` binding cannot make the form look edited.
      */
-    cvaOnChange = (_: KbqFileItem[]) => {};
+    // An accessor, not a `model()`: the store is `KbqFileList.list`, a model on the host directive that the template
+    // iterates and that `addArray()`, `replace()` and `removeAt()` mutate. A `model()` here would be a second store to
+    // keep in sync with that one.
+    get files(): KbqFileItem[] {
+        return this.fileList.list();
+    }
 
-    /**
-     * onTouch function registered via registerOnTouch (ControlValueAccessor).
-     *
-     * @docs-private
-     */
-    onTouched = () => {};
+    set files(currentFileList: KbqFileItem[]) {
+        this.setFileList(currentFileList);
+    }
 
     /** @docs-private */
     get input(): ElementRef<HTMLInputElement> | undefined {
@@ -276,25 +271,6 @@ export class KbqMultipleFileUploadComponent
     /** @docs-private */
     protected get captionTextWhenSelected(): string {
         return this.localeConfiguration().multiple.captionTextWhenSelected.split('{{ browseLink }}')[0] ?? '';
-    }
-
-    private readonly focusMonitor = inject(FocusMonitor);
-    private readonly platformId = inject(PLATFORM_ID);
-
-    /** @docs-private */
-    readonly errorStateMatcherInput = input<ErrorStateMatcher | undefined>(undefined, { alias: 'errorStateMatcher' });
-
-    /** @docs-private */
-    readonly filesInput = input<KbqFileItem[] | undefined>(undefined, { alias: 'files' });
-
-    ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member; unbound, it leaves what code wrote.
-        // A bound `undefined` falls back to the default matcher and clears the files.
-        if (changes['errorStateMatcherInput']) {
-            this.errorStateMatcher = this.errorStateMatcherInput() ?? this.defaultErrorStateMatcher;
-        }
-
-        if (changes['filesInput']) this.files = this.filesInput() ?? [];
     }
 
     constructor() {
@@ -348,6 +324,16 @@ export class KbqMultipleFileUploadComponent
         });
     }
 
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
+        // A bound `undefined` falls back to the default matcher and clears the files.
+        if (changes['errorStateMatcherInput']) {
+            this.errorStateMatcher = this.errorStateMatcherInput() ?? this.defaultErrorStateMatcher;
+        }
+
+        if (changes['filesInput']) this.files = this.filesInput() ?? [];
+    }
+
     ngDoCheck() {
         if (this.ngControl) {
             // We need to re-evaluate this on every change detection cycle, because there are some
@@ -360,6 +346,20 @@ export class KbqMultipleFileUploadComponent
     ngAfterViewInit() {
         this.stateChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
     }
+
+    /**
+     * cvaOnChange function registered via registerOnChange (ControlValueAccessor).
+     *
+     * @docs-private
+     */
+    cvaOnChange = (_: KbqFileItem[]) => {};
+
+    /**
+     * onTouch function registered via registerOnTouch (ControlValueAccessor).
+     *
+     * @docs-private
+     */
+    onTouched = () => {};
 
     /**
      * Implemented as part of ControlValueAccessor.

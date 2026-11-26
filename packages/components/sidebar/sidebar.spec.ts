@@ -189,14 +189,11 @@ describe(KbqSidebarModule.name, () => {
     `
 })
 class TestSidebar {
-    showContainer: boolean = true;
-
-    position: SidebarPositions = SidebarPositions.Left;
-
-    state: boolean | undefined = true;
-
     readonly sidebar = viewChild.required(KbqSidebar);
 
+    showContainer: boolean = true;
+    position: SidebarPositions = SidebarPositions.Left;
+    state: boolean | undefined = true;
     readonly onStateChanged = vi.fn();
 }
 
@@ -237,11 +234,12 @@ class UncontrolledSidebar {
 
     position: SidebarPositions = SidebarPositions.Left;
     useStateSaving = true;
+
     /** Undefined leaves the sidebar on the `inherit` width, which is not worth persisting. */
     openedWidth: string | undefined = '200px';
+
     /** An empty key leaves the sidebar on the key derived from its position in the document. */
     stateSavingKey = 'sidebar-key';
-
     readonly onStateChanged = vi.fn();
 }
 

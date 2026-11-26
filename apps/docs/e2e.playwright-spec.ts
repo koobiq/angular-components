@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { join } from 'node:path';
 import { expect, type Page, test } from '@playwright/test';
 import { docsCompareVersions, docsParseVersion } from './src/app/components/migration-guide/migration-versions';
@@ -745,6 +746,34 @@ test.describe('migration guide filter', () => {
 test.describe('prerendered SEO metadata', () => {
     test.use({ javaScriptEnabled: false });
 
+    test('identifies the library and its publisher on both home pages before hydration', async ({ page }) => {
+        for (const locale of ['en', 'ru']) {
+            await page.goto('/' + locale);
+            const data = page.locator('head script[type="application/ld+json"]');
+            const canonical = await page.locator('link[rel="canonical"]').getAttribute('href');
+            const description = await page.locator('meta[name="description"]').getAttribute('content');
+            const json = JSON.parse(await data.innerText());
+
+            expect(json['@context']).toBe('https://schema.org');
+            expect(json['@graph']).toEqual(
+                expect.arrayContaining([
+                    expect.objectContaining({
+                        '@type': 'Organization',
+                        '@id': 'https://koobiq.io/#organization',
+                        name: 'Koobiq'
+                    }),
+                    expect.objectContaining({
+                        '@type': 'SoftwareApplication',
+                        name: '@koobiq/components',
+                        url: canonical,
+                        description,
+                        publisher: { '@id': 'https://koobiq.io/#organization' }
+                    })
+                ])
+            );
+        }
+    });
+
     test('is present in the initial HTML without hydration', async ({ page }) => {
         await page.goto('/en/components/alert/overview');
 
@@ -795,6 +824,28 @@ test.describe('prerendered SEO metadata', () => {
         await page.goto('/unknown-page');
         await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,follow');
     });
+
+    for (const [path, title, status] of [
+        ['/en', 'Koobiq design system', 200],
+        ['/en/components/alert/overview', 'Alert', 200],
+        ['/en/components/button/api', 'Button', 200],
+        ['/en/components/list/examples', /\S/, 200],
+        ['/en/main/installation/overview', /\S/, 200],
+        ['/en/main/design-tokens/colors', /\S/, 200],
+        ['/en/main/icons', /\S/, 200],
+        ['/missing-page', /Страница не найдена/i, 404]
+    ] as const) {
+        test(`renders one first-level heading inside the main landmark at ${path}`, async ({ page }) => {
+            const response = await page.goto(path);
+
+            expect(response?.status()).toBe(status);
+            await expect(page.locator('h1')).toHaveCount(1);
+            const main = page.getByRole('main');
+
+            await expect(main).toHaveCount(1);
+            await expect(main.getByRole('heading', { level: 1 })).toHaveText(title);
+        });
+    }
 });
 
 // The Algolia crawler reads the records of the search off a page by the `data-docsearch-*` attributes its configuration
@@ -918,10 +969,96 @@ test.describe('documentation for agents', () => {
         expect(text).toContain('\n## Button\n');
     });
 
+    test('serves Markdown directly at the tab URL in both locales', async ({ request }) => {
+        for (const [tab, source] of [
+            ['/en/components/button/overview.md', '/en/components/button.md'],
+            ['/ru/components/button-group/api.md', '/api/button.md']
+        ]) {
+            const page = await request.get(tab, { maxRedirects: 0 });
+            const original = await request.get(source, { maxRedirects: 0 });
+
+            expect(page.status()).toBe(200);
+            expect(original.status()).toBe(200);
+            expect(page.headers()['content-type']).toContain('text/markdown');
+            const text = await page.text();
+            const expected = await original.text();
+
+            expect(text).toBe(expected);
+        }
+    });
+
+    test('serves standalone examples and their nested breadcrumb links', async ({ request }) => {
+        for (const path of [
+            '/examples/alert-overview',
+            '/examples/breadcrumbs-overview/main/sections',
+            '/examples/top-bar-breadcrumbs/dashboards/dashboard123'
+        ]) {
+            const page = await request.get(path, { maxRedirects: 0 });
+
+            expect(page.status(), path).toBe(200);
+            expect(page.headers()['content-type']).toContain('text/html');
+        }
+    });
+
     test('answers a Markdown file it does not have with a 404 rather than the app', async ({ request }) => {
         const response = await request.get('/en/components/missing.md');
 
         expect(response.status()).toBe(404);
+    });
+
+    test('answers an address without a page with a 404 and the 404 page rather than the app', async ({ request }) => {
+        for (const path of [
+            '/en/components/alert/missing',
+            '/.well-known/api-catalog',
+            '/en/components/alert/colors.md',
+            '/examples/definitely-not-an-example'
+        ]) {
+            const response = await request.get(path, { maxRedirects: 0 });
+            const body = await response.text();
+
+            expect(response.status(), path).toBe(404);
+            expect(body, path).toContain('Страница не найдена');
+        }
+    });
+
+    // The router redirects these in the browser only: the prerender leaves a page with a meta refresh for each.
+    test('redirects the addresses the router redirects with HTTP', async ({ request }) => {
+        for (const [path, location] of [
+            ['/', '/ru'],
+            ['/en/components/alert', '/en/components/alert/overview'],
+            ['/en/main/installation', '/en/main/installation/overview'],
+            ['/en/main/design-tokens', '/en/main/design-tokens/colors']
+        ]) {
+            const response = await request.get(path, { maxRedirects: 0 });
+
+            expect([301, 302], path).toContain(response.status());
+            expect(response.headers()['location'], path).toBe(location);
+        }
+    });
+
+    test('lists the Agent Skills in their discovery index, each with the digest of the file it serves', async ({
+        request
+    }) => {
+        const index = await request.get('/.well-known/agent-skills/index.json');
+
+        expect(index.status()).toBe(200);
+        expect(index.headers()['content-type']).toContain('application/json');
+
+        const { skills } = (await index.json()) as { skills: Array<{ name: string; url: string; digest: string }> };
+
+        expect(skills.map(({ name }) => name)).toEqual(
+            expect.arrayContaining(['koobiq-angular', 'koobiq-angular-setup', 'koobiq-angular-upgrade'])
+        );
+
+        for (const { url, digest } of skills) {
+            const skill = await request.get(url);
+            const hash = createHash('sha256')
+                .update(await skill.body())
+                .digest('hex');
+
+            expect(skill.status(), url).toBe(200);
+            expect(`sha256:${hash}`, url).toBe(digest);
+        }
     });
 
     test('points every page of an item at the English Markdown at its own address, on the host that serves it', async ({

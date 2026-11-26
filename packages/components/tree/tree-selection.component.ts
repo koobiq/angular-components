@@ -2,6 +2,20 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
+import {
+    DOWN_ARROW,
+    END,
+    ENTER,
+    hasModifierKey,
+    HOME,
+    LEFT_ARROW,
+    PAGE_DOWN,
+    PAGE_UP,
+    RIGHT_ARROW,
+    SPACE,
+    TAB,
+    UP_ARROW
+} from '@angular/cdk/keycodes';
 import { Platform } from '@angular/cdk/platform';
 import {
     type AfterContentInit,
@@ -36,14 +50,9 @@ import { delay, filter, map, merge, type Observable, Subject, type Subscription 
 // eslint-disable-next-line rxjs-x/no-internal -- the published tree module provides the scheduler under this token
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import {
-    DOWN_ARROW,
-    END,
-    ENTER,
     FocusKeyManager,
     getKbqSelectNonArrayValueError,
     getSelectAllState,
-    hasModifierKey,
-    HOME,
     isCopy,
     isSelectAll,
     isVerticalMovement,
@@ -59,16 +68,9 @@ import {
     type KbqSelectAllAdapter,
     kbqSelectAllHandlerTransform,
     KbqStateSaving,
-    LEFT_ARROW,
     MultipleMode,
-    PAGE_DOWN,
-    PAGE_UP,
     resolveMultipleMode,
-    RIGHT_ARROW,
-    SPACE,
-    TAB,
-    toggleSelectAll,
-    UP_ARROW
+    toggleSelectAll
 } from '@koobiq/components/core';
 import { KBQ_FORM_FIELD } from '@koobiq/components/form-field';
 import type { FlatTreeControl } from './control/flat-tree-control';
@@ -208,9 +210,7 @@ export class KbqTreeSelection<T = any, K = T>
      * wrapper (e.g. the filter-bar pipes render the tree-select bare).
      */
     inSelect = !!inject(KBQ_FORM_FIELD, { optional: true, host: true });
-
     renderedOptions = new QueryList<KbqTreeOption<T>>();
-
     keyManager: FocusKeyManager<KbqTreeOption<T>> = new FocusKeyManager<KbqTreeOption<T>>(this.renderedOptions)
         .withVerticalOrientation(true)
         .withHorizontalOrientation(null);
@@ -224,58 +224,11 @@ export class KbqTreeSelection<T = any, K = T>
     /** Id of the element that labels the tree, for when the label is rendered next to it. */
     readonly ariaLabelledby = input<string>(undefined!, { alias: 'aria-labelledby' });
 
-    /**
-     * Accessible name written to the host.
-     *
-     * The host is the very element the consumer writes, and a host binding runs after their own
-     * `[attr.aria-label]` binding on that element — an unset input reporting `null` would erase the name
-     * they just set, because `[attr.]` never reaches the aliased input. Whatever is already on the
-     * element therefore stands in for an unset input.
-     */
-    protected get resolvedAriaLabel(): string | null {
-        return this.ariaLabel() || this.elementRef.nativeElement.getAttribute('aria-label');
-    }
-
-    /** Labelling element of the host. Falls back to the element's own attribute, see `resolvedAriaLabel`. */
-    protected get resolvedAriaLabelledby(): string | null {
-        return this.ariaLabelledby() || this.elementRef.nativeElement.getAttribute('aria-labelledby');
-    }
-
-    /**
-     * Model backing the selection.
-     *
-     * The instance is replaced whenever {@link multiple} changes the multiplicity, because CDK freezes that
-     * flag at construction. Subscribe to {@link selectionChange} rather than to `selectionModel.changed`:
-     * a subscription taken on the model directly is left behind on the discarded instance.
-     *
-     * `T` is the type of the data nodes, inferred from `[treeControl]` in a template. A query names it:
-     * `viewChild.required<KbqTreeSelection<Node>>(KbqTreeSelection)`, and a tree whose control has a `trackBy`
-     * names the key type too: `KbqTreeSelection<Node, string>`.
-     */
-    selectionModel: SelectionModel<T>;
-
-    resetFocusedItemOnBlur: boolean = true;
-
-    userTabIndex: number | null = null;
-
-    // this parameter used when select has a search field
-    optionShouldHoldFocusOnBlur: boolean = false;
-
-    /**
-     * Whether the tree acts on keyboard input itself. Turned off by an embedding host that owns the
-     * keyboard, such as `KbqTreeSelect`.
-     */
-    ownsKeyboard: boolean = true;
-
-    /** Reference to the built-in "select all" row, rendered only while `selectAll` is on. */
-    readonly selectAllOption = viewChild<KbqTreeOption<T>>(KbqTreeOption);
-
-    private readonly unorderedOptionsQuery = contentChildren(KbqTreeOption);
-    private readonly unorderedOptionsList = kbqQueryListFrom(this.unorderedOptionsQuery);
-
-    get unorderedOptions(): QueryList<KbqTreeOption<T>> {
-        return this.unorderedOptionsList();
-    }
+    /** @docs-private */
+    readonly autoSelectInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'autoSelect',
+        transform: booleanAttribute
+    });
 
     readonly navigationChange = output<KbqTreeNavigationChange<KbqTreeOption<T>, T, K>>();
 
@@ -306,22 +259,168 @@ export class KbqTreeSelection<T = any, K = T>
 
     /** @deprecated Use `copyChange` instead. Will be removed in 22.0.0. */
     readonly onCopy = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption<T>, T, K>>();
-
     /** @docs-private */
     readonly onCopyOutput = outputFromObservable(this.onCopy, { alias: 'onCopy' });
 
-    private sortedNodes: T[] = [];
+    /** Reference to the built-in "select all" row, rendered only while `selectAll` is on. */
+    readonly selectAllOption = viewChild<KbqTreeOption<T>>(KbqTreeOption);
+    private readonly unorderedOptionsQuery = contentChildren(KbqTreeOption);
 
+    private readonly unorderedOptionsList = kbqQueryListFrom(this.unorderedOptionsQuery);
+    private sortedNodes: T[] = [];
     private lastSyncedDataNodes: readonly T[] | null = null;
 
-    /** @docs-private */
-    readonly autoSelectInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'autoSelect',
-        transform: booleanAttribute
-    });
+    /**
+     * Model backing the selection.
+     *
+     * The instance is replaced whenever {@link multiple} changes the multiplicity, because CDK freezes that
+     * flag at construction. Subscribe to {@link selectionChange} rather than to `selectionModel.changed`:
+     * a subscription taken on the model directly is left behind on the discarded instance.
+     *
+     * `T` is the type of the data nodes, inferred from `[treeControl]` in a template. A query names it:
+     * `viewChild.required<KbqTreeSelection<Node>>(KbqTreeSelection)`, and a tree whose control has a `trackBy`
+     * names the key type too: `KbqTreeSelection<Node, string>`.
+     */
+    selectionModel: SelectionModel<T>;
+    resetFocusedItemOnBlur: boolean = true;
+    userTabIndex: number | null = null;
+
+    // this parameter used when select has a search field
+    optionShouldHoldFocusOnBlur: boolean = false;
+
+    /**
+     * Whether the tree acts on keyboard input itself. Turned off by an embedding host that owns the
+     * keyboard, such as `KbqTreeSelect`.
+     */
+    ownsKeyboard: boolean = true;
 
     /** `undefined` while the value is derived from the mode. Written by `KbqTreeSelect` as well. */
     private readonly autoSelectState = linkedSignal(() => this.autoSelectInput());
+
+    /** @docs-private */
+    readonly multipleInput = input<KbqMultipleInput | undefined>(undefined, { alias: 'multiple' });
+
+    /** @docs-private */
+    readonly noUnselectLastInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'noUnselectLast',
+        transform: booleanAttribute
+    });
+
+    // Options report here, so a subscriber also hears the rows rendered after it subscribed.
+    private readonly optionFocusEvents = new Subject<KbqTreeOptionEvent>();
+    private readonly optionBlurEvents = new Subject<KbqTreeOptionEvent>();
+
+    /**
+     * Backing signal of {@link multipleMode}. A signal rather than a field because the mode is also written
+     * from inside the component and by `KbqTreeSelect`: options read it through `multiple` and
+     * `showCheckbox`, and only a signal read re-runs their `OnPush` views and host bindings.
+     */
+    private readonly mode = signal<MultipleMode | null>(null);
+
+    /** `undefined` while the value is derived from the mode. Written by `KbqTreeSelect` as well. */
+    private readonly noUnselectLastState = linkedSignal(() => this.noUnselectLastInput());
+
+    /** @docs-private */
+    readonly typeAheadInput = input<boolean, boolean | string | null | undefined>(true, {
+        alias: 'typeAhead',
+        transform: booleanAttribute
+    });
+
+    private readonly typeAheadState = linkedSignal(() => this.typeAheadInput());
+
+    /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
+    readonly selectAllToggle = input(false, { transform: booleanAttribute });
+
+    /** @docs-private */
+    readonly selectAllInput = input<boolean, boolean | string | null | undefined>(false, {
+        alias: 'selectAll',
+        transform: booleanAttribute
+    });
+
+    private readonly selectAllEnabled = linkedSignal(() => this.selectAllInput());
+
+    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'select',
+        KBQ_SELECT_LOCALE_CONFIGURATION
+    );
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'tabIndex',
+        transform: kbqOptionalNumberAttribute
+    });
+
+    /** @docs-private */
+    readonly selectAllHandlerInput = input<
+        ((event: KeyboardEvent, tree: KbqTreeSelection<T, K>) => void) | undefined,
+        ((event: KeyboardEvent, tree: KbqTreeSelection<T, K>) => void) | undefined
+    >(undefined, {
+        alias: 'selectAllHandler',
+        transform: kbqSelectAllHandlerTransform
+    });
+
+    private readonly disabledState = signal(false);
+    private readonly tabIndexState = signal(0);
+    private selectionModelSubscription: Subscription | null = null;
+
+    // A selection change asks for a sweep here, not through `renderedOptions.changes`: the key manager and an
+    // embedding select listen to that, and no row changed.
+    private readonly selectionSweeps = new Subject<void>();
+
+    /** Whether a value report is queued for the end of the current tick. Cleared by `writeValue` to cancel it. */
+    private pendingValueReport = false;
+
+    /** The `multiple` binding the mode was last set from, see `applyMultipleInput`. */
+    private appliedMultipleInput: KbqMultipleInput | undefined;
+
+    /** The `disabled` binding the state was last set from, see `applyDisabledInput`. */
+    private appliedDisabledInput: boolean | undefined;
+
+    /** Backs {@link syncingSelection}: a change of the selection made by code is no change to report back. */
+    private writingValue = false;
+
+    /**
+     * The last value the form wrote while some of the nodes it names were not in the data yet. Applied again as the
+     * data changes, until every node is found or the selection is reported to the form.
+     */
+    private unresolvedValue: { value: any } | null = null;
+    private destroyed = false;
+
+    /** `treeControl.dataNodes` the options' checkbox states were last recomputed against. */
+    private checkboxSyncedDataNodes: T[] | null = null;
+
+    /**
+     * The model this tree built for itself. `KbqTreeSelect` overwrites {@link selectionModel} with one it
+     * shares with the tree, and the two diverging is how a mode change knows the model is not ours to swap.
+     */
+    private ownSelectionModel: SelectionModel<T>;
+
+    /**
+     * Accessible name written to the host.
+     *
+     * The host is the very element the consumer writes, and a host binding runs after their own
+     * `[attr.aria-label]` binding on that element — an unset input reporting `null` would erase the name
+     * they just set, because `[attr.]` never reaches the aliased input. Whatever is already on the
+     * element therefore stands in for an unset input.
+     */
+    protected get resolvedAriaLabel(): string | null {
+        return this.ariaLabel() || this.elementRef.nativeElement.getAttribute('aria-label');
+    }
+
+    /** Labelling element of the host. Falls back to the element's own attribute, see `resolvedAriaLabel`. */
+    protected get resolvedAriaLabelledby(): string | null {
+        return this.ariaLabelledby() || this.elementRef.nativeElement.getAttribute('aria-labelledby');
+    }
+
+    get unorderedOptions(): QueryList<KbqTreeOption<T>> {
+        return this.unorderedOptionsList();
+    }
 
     /**
      * Whether clicking a node clears the rest of the selection. Defaults to `true`, and to `false` for
@@ -337,11 +436,6 @@ export class KbqTreeSelection<T = any, K = T>
     set autoSelect(value: boolean) {
         this.autoSelectState.set(coerceBooleanProperty(value));
     }
-
-    // Options report here, so a subscriber also hears the rows rendered after it subscribed.
-    private readonly optionFocusEvents = new Subject<KbqTreeOptionEvent>();
-
-    private readonly optionBlurEvents = new Subject<KbqTreeOptionEvent>();
 
     /** Emits when an option of the tree takes focus. */
     get optionFocusChanges(): Observable<KbqTreeOptionEvent> {
@@ -373,9 +467,6 @@ export class KbqTreeSelection<T = any, K = T>
         return !!this.mode();
     }
 
-    /** @docs-private */
-    readonly multipleInput = input<KbqMultipleInput | undefined>(undefined, { alias: 'multiple' });
-
     /** Resolved selection mode, or `null` when only one node can be selected. */
     get multipleMode(): MultipleMode | null {
         return this.mode();
@@ -384,22 +475,6 @@ export class KbqTreeSelection<T = any, K = T>
     set multipleMode(value: MultipleMode | null) {
         this.setMultipleMode(value);
     }
-
-    /**
-     * Backing signal of {@link multipleMode}. A signal rather than a field because the mode is also written
-     * from inside the component and by `KbqTreeSelect`: options read it through `multiple` and
-     * `showCheckbox`, and only a signal read re-runs their `OnPush` views and host bindings.
-     */
-    private readonly mode = signal<MultipleMode | null>(null);
-
-    /** @docs-private */
-    readonly noUnselectLastInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'noUnselectLast',
-        transform: booleanAttribute
-    });
-
-    /** `undefined` while the value is derived from the mode. Written by `KbqTreeSelect` as well. */
-    private readonly noUnselectLastState = linkedSignal(() => this.noUnselectLastInput());
 
     /**
      * Whether the last selected node can be deselected.
@@ -430,17 +505,6 @@ export class KbqTreeSelection<T = any, K = T>
         this.typeAheadState.set(value);
     }
 
-    /** @docs-private */
-    readonly typeAheadInput = input<boolean, boolean | string | null | undefined>(true, {
-        alias: 'typeAhead',
-        transform: booleanAttribute
-    });
-
-    private readonly typeAheadState = linkedSignal(() => this.typeAheadInput());
-
-    /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
-    readonly selectAllToggle = input(false, { transform: booleanAttribute });
-
     /**
      * Whether to render the "select all" master checkbox above the nodes. Multiple selection only.
      *
@@ -455,14 +519,6 @@ export class KbqTreeSelection<T = any, K = T>
     set selectAll(value: boolean) {
         this.selectAllEnabled.set(value);
     }
-
-    /** @docs-private */
-    readonly selectAllInput = input<boolean, boolean | string | null | undefined>(false, {
-        alias: 'selectAll',
-        transform: booleanAttribute
-    });
-
-    private readonly selectAllEnabled = linkedSignal(() => this.selectAllInput());
 
     /** Whether the "select all" row is currently rendered. */
     protected get showSelectAll(): boolean {
@@ -487,11 +543,6 @@ export class KbqTreeSelection<T = any, K = T>
     protected get selectAllText(): string {
         return this.localeConfiguration().selectAll;
     }
-
-    private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
-        'select',
-        KBQ_SELECT_LOCALE_CONFIGURATION
-    );
 
     /**
      * Data nodes "select all" acts on, and the ones its checkbox state is derived from.
@@ -538,31 +589,15 @@ export class KbqTreeSelection<T = any, K = T>
         };
     }
 
-    /** @docs-private */
-    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'disabled',
-        transform: booleanAttribute
-    });
-
     /** Whether the tree is disabled, bound with `[disabled]` or set by a form control. */
     get disabled(): boolean {
         return this.disabledState();
     }
 
-    private readonly disabledState = signal(false);
-
-    /** @docs-private */
-    readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
-        alias: 'tabIndex',
-        transform: kbqOptionalNumberAttribute
-    });
-
     /** Tab index of the tree, `-1` while it is disabled. */
     get tabIndex(): number {
         return this.disabled ? -1 : this.tabIndexState();
     }
-
-    private readonly tabIndexState = signal(0);
 
     get showCheckbox(): boolean {
         return this.mode() === MultipleMode.CHECKBOX;
@@ -581,24 +616,6 @@ export class KbqTreeSelection<T = any, K = T>
         return this.sortedNodes.length;
     }
 
-    private selectionModelSubscription: Subscription | null = null;
-
-    // A selection change asks for a sweep here, not through `renderedOptions.changes`: the key manager and an
-    // embedding select listen to that, and no row changed.
-    private readonly selectionSweeps = new Subject<void>();
-
-    /** Whether a value report is queued for the end of the current tick. Cleared by `writeValue` to cancel it. */
-    private pendingValueReport = false;
-
-    /** The `multiple` binding the mode was last set from, see `applyMultipleInput`. */
-    private appliedMultipleInput: KbqMultipleInput | undefined;
-
-    /** The `disabled` binding the state was last set from, see `applyDisabledInput`. */
-    private appliedDisabledInput: boolean | undefined;
-
-    /** Backs {@link syncingSelection}: a change of the selection made by code is no change to report back. */
-    private writingValue = false;
-
     /**
      * Whether the tree is changing the selection model itself — to a value the form wrote, or onto the nodes of
      * reloaded data — rather than acting on the user. A host sharing the model, such as `KbqTreeSelect`, reports
@@ -611,21 +628,12 @@ export class KbqTreeSelection<T = any, K = T>
     }
 
     /**
-     * The last value the form wrote while some of the nodes it names were not in the data yet. Applied again as the
-     * data changes, until every node is found or the selection is reported to the form.
+     * Function for handling the combination Ctrl + A (select all). By default, the internal handler is used,
+     * which toggles the selection of all non-disabled, selectable options.
      */
-    private unresolvedValue: { value: any } | null = null;
-
-    private destroyed = false;
-
-    /** `treeControl.dataNodes` the options' checkbox states were last recomputed against. */
-    private checkboxSyncedDataNodes: T[] | null = null;
-
-    /**
-     * The model this tree built for itself. `KbqTreeSelect` overwrites {@link selectionModel} with one it
-     * shares with the tree, and the two diverging is how a mode change knows the model is not ours to swap.
-     */
-    private ownSelectionModel: SelectionModel<T>;
+    get selectAllHandler(): (event: KeyboardEvent, tree: KbqTreeSelection<T, K>) => void {
+        return this.selectAllHandlerInput() ?? this.defaultSelectAllHandler;
+    }
 
     constructor() {
         super();
@@ -681,6 +689,98 @@ export class KbqTreeSelection<T = any, K = T>
                 untracked(() => this.updateRenderedOptions());
             }
         });
+    }
+
+    override ngAfterContentInit(): void {
+        super.ngAfterContentInit();
+
+        this.unorderedOptions.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.updateRenderedOptions);
+
+        this.applyTypeAhead();
+
+        this.keyManager.change.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            // `aria-activedescendant` is bound to the active option, and nothing else in this view
+            // changes when the key manager moves.
+            this.changeDetectorRef.markForCheck();
+
+            if (this.keyManager.activeItem) {
+                this.emitNavigationEvent(this.keyManager.activeItem);
+
+                // todo need check this logic
+                if (this.autoSelect && !this.keyManager.activeItem.disabled) {
+                    this.updateOptionsFocus();
+                }
+            }
+        });
+
+        kbqLeaveTabOrderOnTabOut(
+            this.keyManager.tabOut,
+            this.elementRef.nativeElement,
+            () => this.tabIndex,
+            this.destroyRef
+        );
+
+        this.bindSelectionModel();
+
+        this.listenToOptionsFocus();
+
+        // A render and the selection changes of one task each notify, each with its own timer: the first to fire sweeps
+        // for all of them and the rest are dropped. `auditTime` would tie the later ones to the first one's timer.
+        let sweeps = 0;
+
+        merge(this.renderedOptions.changes, this.selectionSweeps)
+            .pipe(
+                map(() => sweeps),
+                delay(0, this.scheduler),
+                filter((sweepsWhenNotified) => sweepsWhenNotified === sweeps),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe(() => {
+                sweeps++;
+
+                // Check to see if we need to update our tab index
+                this.updateTabIndex();
+
+                this.syncSelectionModelToDataNodes();
+
+                this.renderedOptions.forEach((option) => {
+                    // By node rather than by value: rows may share a value.
+                    if (option.data !== undefined && this.selectionModel.isSelected(option.data)) {
+                        option.select(false);
+                    } else {
+                        option.deselect();
+                    }
+
+                    option.markForCheck();
+                });
+            });
+    }
+
+    override ngAfterContentChecked(): void {
+        // Syncs the list here so `changes` emits after the projected items are bound and before the host bindings.
+        this.unorderedOptionsList();
+
+        super.ngAfterContentChecked();
+    }
+
+    ngAfterViewInit(): void {
+        // Reports the focus leaving only when it lands outside the tree (or nowhere): the host hands it to an option
+        // on entry, and options hand it on to each other or to their action buttons, none of which blurs the tree.
+        this.focusMonitor
+            .monitor(this.elementRef, true)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((origin) => {
+                if (!origin) this.blur();
+            });
+    }
+
+    override ngOnDestroy(): void {
+        super.ngOnDestroy();
+
+        this.optionFocusEvents.complete();
+        this.optionBlurEvents.complete();
+
+        this.focusMonitor.stopMonitoring(this.elementRef);
     }
 
     /** Selects every node "select all" can act on, or deselects them all when they are already selected. */
@@ -841,71 +941,6 @@ export class KbqTreeSelection<T = any, K = T>
             });
     }
 
-    override ngAfterContentInit(): void {
-        super.ngAfterContentInit();
-
-        this.unorderedOptions.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.updateRenderedOptions);
-
-        this.applyTypeAhead();
-
-        this.keyManager.change.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            // `aria-activedescendant` is bound to the active option, and nothing else in this view
-            // changes when the key manager moves.
-            this.changeDetectorRef.markForCheck();
-
-            if (this.keyManager.activeItem) {
-                this.emitNavigationEvent(this.keyManager.activeItem);
-
-                // todo need check this logic
-                if (this.autoSelect && !this.keyManager.activeItem.disabled) {
-                    this.updateOptionsFocus();
-                }
-            }
-        });
-
-        kbqLeaveTabOrderOnTabOut(
-            this.keyManager.tabOut,
-            this.elementRef.nativeElement,
-            () => this.tabIndex,
-            this.destroyRef
-        );
-
-        this.bindSelectionModel();
-
-        this.listenToOptionsFocus();
-
-        // A render and the selection changes of one task each notify, each with its own timer: the first to fire sweeps
-        // for all of them and the rest are dropped. `auditTime` would tie the later ones to the first one's timer.
-        let sweeps = 0;
-
-        merge(this.renderedOptions.changes, this.selectionSweeps)
-            .pipe(
-                map(() => sweeps),
-                delay(0, this.scheduler),
-                filter((sweepsWhenNotified) => sweepsWhenNotified === sweeps),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe(() => {
-                sweeps++;
-
-                // Check to see if we need to update our tab index
-                this.updateTabIndex();
-
-                this.syncSelectionModelToDataNodes();
-
-                this.renderedOptions.forEach((option) => {
-                    // By node rather than by value: rows may share a value.
-                    if (option.data !== undefined && this.selectionModel.isSelected(option.data)) {
-                        option.select(false);
-                    } else {
-                        option.deselect();
-                    }
-
-                    option.markForCheck();
-                });
-            });
-    }
-
     /**
      * Rebuilds the tree around a selection model owned by an embedding host, such as `KbqTreeSelect`.
      *
@@ -919,33 +954,6 @@ export class KbqTreeSelection<T = any, K = T>
         this.selectionModel = selectionModel;
 
         this.bindSelectionModel();
-    }
-
-    override ngAfterContentChecked(): void {
-        // Syncs the list here so `changes` emits after the projected items are bound and before the host bindings.
-        this.unorderedOptionsList();
-
-        super.ngAfterContentChecked();
-    }
-
-    ngAfterViewInit(): void {
-        // Reports the focus leaving only when it lands outside the tree (or nowhere): the host hands it to an option
-        // on entry, and options hand it on to each other or to their action buttons, none of which blurs the tree.
-        this.focusMonitor
-            .monitor(this.elementRef, true)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((origin) => {
-                if (!origin) this.blur();
-            });
-    }
-
-    override ngOnDestroy(): void {
-        super.ngOnDestroy();
-
-        this.optionFocusEvents.complete();
-        this.optionBlurEvents.complete();
-
-        this.focusMonitor.stopMonitoring(this.elementRef);
     }
 
     focus(event?: Event | null): void {
@@ -1300,23 +1308,6 @@ export class KbqTreeSelection<T = any, K = T>
     /** @docs-private */
     protected emitChangeEvent(option: KbqTreeOption<T>): void {
         this.selectionChange.emit(new KbqTreeSelectionChange(this, option, [option]));
-    }
-
-    /** @docs-private */
-    readonly selectAllHandlerInput = input<
-        ((event: KeyboardEvent, tree: KbqTreeSelection<T, K>) => void) | undefined,
-        ((event: KeyboardEvent, tree: KbqTreeSelection<T, K>) => void) | undefined
-    >(undefined, {
-        alias: 'selectAllHandler',
-        transform: kbqSelectAllHandlerTransform
-    });
-
-    /**
-     * Function for handling the combination Ctrl + A (select all). By default, the internal handler is used,
-     * which toggles the selection of all non-disabled, selectable options.
-     */
-    get selectAllHandler(): (event: KeyboardEvent, tree: KbqTreeSelection<T, K>) => void {
-        return this.selectAllHandlerInput() ?? this.defaultSelectAllHandler;
     }
 
     private defaultSelectAllHandler(event: KeyboardEvent, tree: KbqTreeSelection<T, K>): void {

@@ -113,10 +113,9 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher((_key, va
     }
 })
 export class ValidationCrossFieldDatesExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly form = new FormGroup(
         {
             validFrom: new FormControl<DateTime | null>(null),

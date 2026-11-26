@@ -74,11 +74,11 @@ const USERS: KbqUserInfo[] = [
     }
 })
 export class UsernameFilterBarOptionExample implements AfterViewInit {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly formatUsername = kbqInjectUsernameFormatter();
+
     private readonly userOptionTemplate = viewChild<TemplateRef<any>>('userOption');
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     activeFilter: KbqFilter = {
         name: '',
         readonly: false,
@@ -97,9 +97,7 @@ export class UsernameFilterBarOptionExample implements AfterViewInit {
             }
         ]
     };
-
     pipeTemplates: KbqPipeTemplate[] = [];
-
     protected readonly tokenizeSearchQuery = tokenizeSearchQuery;
 
     constructor() {

@@ -1,4 +1,4 @@
-import { ENTER, SPACE } from '@angular/cdk/keycodes';
+import { ENTER, ESCAPE, SPACE, TAB } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import {
     type CdkConnectedOverlay,
@@ -26,11 +26,9 @@ import {
     createKeyboardEvent,
     dispatchEvent,
     dispatchKeyboardEvent,
-    ESCAPE,
     KbqOptionModule,
     KbqOverlayLayer,
-    ruRULocaleData,
-    TAB
+    ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqDatepicker, KbqDatepickerInput, KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -2663,8 +2661,8 @@ export class TestComponent extends BaseTestComponent {
     readonly currentMode = signal('view');
     readonly placeholder = 'Placeholder';
     readonly displayValue = signal(this.value);
-
     readonly showLabel = signal(false);
+    cancel = vi.fn();
 
     update(): void {
         this.displayValue.set(this.value);
@@ -2677,8 +2675,6 @@ export class TestComponent extends BaseTestComponent {
     onModeChange($event: 'edit' | 'view') {
         this.currentMode.set($event);
     }
-
-    cancel = vi.fn();
 }
 @Component({
     selector: 'name',
@@ -2720,7 +2716,6 @@ export class TestWithMenu extends BaseTestComponent {
     readonly currentMode = signal('view');
     readonly placeholder = 'Placeholder';
     readonly displayValue = signal(this.value);
-
     readonly showLabel = signal(false);
 
     update(): void {
@@ -2770,8 +2765,8 @@ export class TestWithTextareaControl extends BaseTestComponent {
     readonly currentMode = signal('view');
     readonly placeholder = 'Placeholder';
     readonly displayValue = signal(this.value);
-
     readonly showLabel = signal(false);
+    cancel = vi.fn();
 
     update(): void {
         this.displayValue.set(this.value);
@@ -2780,8 +2775,6 @@ export class TestWithTextareaControl extends BaseTestComponent {
     onModeChange($event: 'edit' | 'view') {
         this.currentMode.set($event);
     }
-
-    cancel = vi.fn();
 }
 
 @Component({
@@ -2821,7 +2814,6 @@ export class TestWithValidatedControl extends BaseTestComponent {
     readonly currentMode = signal('view');
     readonly placeholder = 'Placeholder';
     readonly displayValue = signal(this.control.value);
-
     readonly showLabel = signal(false);
 
     update(): void {
@@ -2938,14 +2930,15 @@ export class TestWithLabelAction {
     `
 })
 export class TestWithSelect extends BaseTestComponent {
-    value = '';
-    readonly placeholder = 'Placeholder';
     readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);
-    readonly currentMode = signal('view');
-    readonly displayValue = signal(this.value);
     readonly selected = model(this.options[0]);
 
+    value = '';
+    readonly placeholder = 'Placeholder';
+    readonly currentMode = signal('view');
+    readonly displayValue = signal(this.value);
     readonly showLabel = signal(false);
+    cancel = vi.fn();
 
     update(): void {
         this.displayValue.set(this.value);
@@ -2958,8 +2951,6 @@ export class TestWithSelect extends BaseTestComponent {
     onModeChange($event: 'edit' | 'view') {
         this.currentMode.set($event);
     }
-
-    cancel = vi.fn();
 }
 
 @Component({
@@ -3090,12 +3081,10 @@ export class TestWithDynamicValidationTooltip {
 export class TestWithMultipleFormFields extends BaseTestComponent {
     readonly placeholder = 'Placeholder';
     readonly displayValue = signal('');
-
     readonly form = new FormGroup({
         firstName: new FormControl('John', Validators.required),
         lastName: new FormControl('Doe', Validators.required)
     });
-
     update = vi.fn();
     cancel = vi.fn();
 
@@ -3116,8 +3105,9 @@ export class TestWithMultipleFormFields extends BaseTestComponent {
 })
 export class TestWithMoreValuesThanFormFields {
     readonly control = new FormControl('Initial');
-    readonly getValueHandler = () => ['First', 'Second'];
     readonly cancel = vi.fn();
+
+    readonly getValueHandler = () => ['First', 'Second'];
 }
 
 @Component({
@@ -3142,10 +3132,8 @@ export class TestWithMoreValuesThanFormFields {
 export class TestWithSaveHandler {
     readonly showActions = signal(true);
     readonly control = new FormControl('Initial', { nonNullable: true });
-
     request$ = new Subject<void>();
     subscriptions = 0;
-
     readonly saveHandler = vi.fn(() =>
         defer(() => {
             this.subscriptions++;
@@ -3153,7 +3141,6 @@ export class TestWithSaveHandler {
             return this.request$;
         })
     );
-
     update = vi.fn();
     onSaveError = vi.fn();
 }
@@ -3173,8 +3160,9 @@ export class TestWithSaveHandler {
 export class TestWithSaveErrorHandler {
     readonly control = new FormControl('Initial', { nonNullable: true });
     readonly request$ = new Subject<void>();
-    readonly saveHandler = () => this.request$;
     readonly ownHandler = vi.fn();
+
+    readonly saveHandler = () => this.request$;
 }
 
 @Component({
@@ -3194,8 +3182,11 @@ export class TestWithSaveErrorHandler {
 export class TestWithoutFormField {
     readonly control = new FormControl('Initial', { nonNullable: true });
     readonly request$ = new Subject<void>();
+
     readonly saveHandler = () => this.request$;
+
     readonly getValueHandler = () => this.control.value;
+
     readonly setValueHandler = (value: string) => this.control.setValue(value);
 }
 
@@ -3222,6 +3213,7 @@ export class TestWithSaveHandlerList {
     readonly control = new FormControl('First', { nonNullable: true });
     readonly nextControl = new FormControl('Second', { nonNullable: true });
     readonly request$ = new Subject<void>();
+
     readonly saveHandler = () => this.request$;
 }
 
@@ -3239,8 +3231,9 @@ export class TestWithSaveHandlerList {
 })
 export class TestWithCanSaveOnEnter {
     readonly control = new FormControl('Initial', { nonNullable: true });
-    readonly canSaveOnEnter = () => true;
     saved = vi.fn();
+
+    readonly canSaveOnEnter = () => true;
 }
 
 @Component({
@@ -3281,9 +3274,7 @@ export class TestWithUnboundSaveHandler {
 })
 export class TestWithDefaultCompareWith {
     readonly control = new FormControl('Initial', { nonNullable: true });
-
     request$ = new Subject<void>();
-
     readonly saveHandler = vi.fn(() => defer(() => this.request$));
 }
 
@@ -3414,8 +3405,9 @@ export class TestWithInteractiveAncestor {
     `
 })
 export class TestWithProgrammaticMode {
-    readonly mode = signal<KbqInlineEditMode>('view');
     readonly value = model('value');
+
+    readonly mode = signal<KbqInlineEditMode>('view');
 }
 
 @Component({
@@ -3466,7 +3458,6 @@ export class TestWithPickersInForm {
         date: new FormControl<DateTime | null>(DateTime.local(2024, 5, 17), Validators.required),
         time: new FormControl<DateTime | null>(DateTime.local(2024, 5, 17, 10, 30), Validators.required)
     });
-
     update = vi.fn();
 }
 
@@ -3492,6 +3483,7 @@ export class TestWithBoundPickers {
     readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>(KbqDatepicker);
     readonly datepickerInput = viewChild.required<KbqDatepickerInput<DateTime>>(KbqDatepickerInput);
     readonly timepicker = viewChild.required<KbqTimepicker<DateTime>>(KbqTimepicker);
+
     readonly date = DateTime.local(2024, 5, 17);
     readonly time = DateTime.local(2024, 5, 17, 10, 30);
 }
@@ -3510,6 +3502,7 @@ export class TestWithBoundPickers {
 })
 export class TestInlineEditDrivenByEffect {
     readonly inlineEdit = viewChild.required(KbqInlineEdit);
+
     readonly commit = signal(false);
     value = 'Value';
     runs = 0;

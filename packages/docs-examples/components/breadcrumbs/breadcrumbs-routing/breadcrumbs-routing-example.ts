@@ -34,7 +34,6 @@ export class BreadcrumbsRoutingExample {
             takeUntilDestroyed()
         );
     }*/
-
     private buildBreadcrumbs(
         route: ActivatedRoute,
         url: string = '',

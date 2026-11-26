@@ -101,13 +101,15 @@ function buildTree(categories: DocsStructureCategory[]): TreeNode[] {
     }
 })
 export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
-    private readonly scrollbar = viewChild.required(KbqScrollbarViewport);
-    private readonly tree = viewChild.required(KbqTreeSelection);
     private readonly viewportScroller = inject(ViewportScroller);
     private readonly router = inject(Router);
     private readonly location = inject(Location);
     private readonly injector = inject(Injector);
     protected readonly docStates = inject(DocsDocStates);
+
+    private readonly scrollbar = viewChild.required(KbqScrollbarViewport);
+    private readonly tree = viewChild.required(KbqTreeSelection);
+
     protected readonly treeControl: FlatTreeControl<TreeFlatNode>;
     protected readonly dataSource: KbqTreeFlatDataSource<TreeNode, TreeFlatNode>;
     protected readonly selectedNodeId = model(this.getSelectedNodeIdFromUrl());

@@ -66,10 +66,12 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Editable ta
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagInputEditableExample {
-    protected readonly color = KbqComponentColors;
     protected readonly tags = model(getTags());
-    private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
     protected readonly editInputModel = model<string>('');
+
+    private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
+
+    protected readonly color = KbqComponentColors;
     protected readonly separators = [COMMA, SPACE, SEMICOLON, ENTER, TAB];
 
     protected editChange({ reason, type, tag }: KbqTagEditChange, index: number): void {

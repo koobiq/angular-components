@@ -52,19 +52,6 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class AutocompleteTextareaExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
-    protected readonly control = new FormControl('');
-    protected readonly query = signal<KbqTextQuery | null>(null);
-
-    // Prefix matches keep the active option continuing the word, which is what the inline hint needs.
-    // The placeholder's prefixes are English, so the options they match stay English in every locale.
-    protected readonly filteredOptions = computed(() => {
-        const text = this.query()?.text.toLowerCase();
-
-        return text ? this.options.filter((option) => option.toLowerCase().startsWith(text)) : [];
-    });
-
     private readonly options = [
         'false positive',
         'file integrity',
@@ -83,4 +70,16 @@ export class AutocompleteTextareaExample {
         'vulnerability',
         'vulnerability scan'
     ];
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly control = new FormControl('');
+    protected readonly query = signal<KbqTextQuery | null>(null);
+
+    // Prefix matches keep the active option continuing the word, which is what the inline hint needs.
+    // The placeholder's prefixes are English, so the options they match stay English in every locale.
+    protected readonly filteredOptions = computed(() => {
+        const text = this.query()?.text.toLowerCase();
+
+        return text ? this.options.filter((option) => option.toLowerCase().startsWith(text)) : [];
+    });
 }

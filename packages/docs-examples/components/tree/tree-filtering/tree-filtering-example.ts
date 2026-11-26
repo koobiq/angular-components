@@ -132,9 +132,7 @@ export const DATA_OBJECT = {
 export class TreeFilteringExample {
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     modelValue: any = '';
     filterValue: string = '';
 

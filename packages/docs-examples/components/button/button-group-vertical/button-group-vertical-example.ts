@@ -35,7 +35,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class ButtonGroupVerticalExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly buttonStyles: { color: KbqButtonColor; appearance: KbqButtonStyle; gap?: boolean }[] = [
         { color: KbqComponentColors.Contrast, appearance: KbqButtonStyles.Filled },
         { color: KbqComponentColors.ContrastFade, appearance: KbqButtonStyles.Filled },

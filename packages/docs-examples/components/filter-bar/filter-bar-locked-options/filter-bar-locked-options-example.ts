@@ -79,7 +79,6 @@ export class FilterBarLockedOptionsExample {
             }
         ]
     };
-
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'MultiSelect',

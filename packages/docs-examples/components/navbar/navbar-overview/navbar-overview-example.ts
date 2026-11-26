@@ -27,6 +27,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class NavbarOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     popUpPlacements = PopUpPlacements;
 }

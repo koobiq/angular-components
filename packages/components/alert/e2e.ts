@@ -247,7 +247,6 @@ import {
 })
 export class E2eAlertStateAndStyle {
     protected readonly alertDefaultStyleRows = Array.from(new Set(Object.values(KbqAlertColors)).values());
-
     protected readonly colors = KbqComponentColors;
     protected readonly alertStyle = KbqAlertStyles;
 }

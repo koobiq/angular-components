@@ -50,13 +50,12 @@ export class KbqClampedList<T> implements KbqClamped, AfterViewInit {
     private readonly nativeElement = kbqInjectNativeElement();
     private readonly animateCollapse = kbqInjectCollapseAnimation();
 
-    /** Overflow Items directives rendered inside the list, in DOM order. */
-    private readonly overflowItems = contentChildren(KbqOverflowItem);
-    /** Overflow Items result directive projected next to the items. */
-    private readonly overflowResult = contentChild(KbqOverflowItemsResult);
+    /** Clamped text locale configuration. */
+    readonly localeConfiguration = kbqInjectClampedTextLocaleConfiguration();
 
     /** Collapsed state: `true` = collapsed, `false` = expanded, `undefined` = expanded. */
     readonly isCollapsed = model<boolean>(true);
+
     /** The list of items to display. */
     readonly items = input<T[]>([]);
 
@@ -66,10 +65,13 @@ export class KbqClampedList<T> implements KbqClamped, AfterViewInit {
      * and hides what does not fit. Defaults to `'count'`.
      */
     readonly mode = input<KbqClampedListMode>('count');
+
     /** Orientation of the list layout. Defaults to `'horizontal'`. */
     readonly orientation = input<KbqOrientation>('horizontal');
+
     /** Whether the list wraps onto multiple lines. Defaults to `'nowrap'`. */
     readonly wrap = input<KbqFlexWrap>('nowrap');
+
     /** Whether the list scrolls its host into view after collapse. Defaults to `true`. */
     readonly scrollOnCollapse = input(true, { transform: booleanAttribute });
 
@@ -90,8 +92,11 @@ export class KbqClampedList<T> implements KbqClamped, AfterViewInit {
      */
     readonly duration = input<number, number | string | null | undefined>(100, { transform: numberAttribute });
 
-    /** Id the trigger points its `aria-controls` at. Keeps an id the host already carries. */
-    readonly contentId: string = this.nativeElement.id || inject(_IdGenerator).getId('kbq-clamped-list-');
+    /** Overflow Items directives rendered inside the list, in DOM order. */
+    private readonly overflowItems = contentChildren(KbqOverflowItem);
+
+    /** Overflow Items result directive projected next to the items. */
+    private readonly overflowResult = contentChild(KbqOverflowItemsResult);
 
     /** What the hidden set depends on besides the geometry: data items, item ids/`alwaysVisible`, result, layout and collapse state. */
     private readonly overflowDependencies = computed<readonly unknown[]>(() => [
@@ -105,6 +110,9 @@ export class KbqClampedList<T> implements KbqClamped, AfterViewInit {
         this.hiddenThreshold(),
         this.isCollapsed()
     ]);
+
+    /** Id the trigger points its `aria-controls` at. Keeps an id the host already carries. */
+    readonly contentId: string = this.nativeElement.id || inject(_IdGenerator).getId('kbq-clamped-list-');
 
     /**
      * Overflow-based Collapse controller. In Count-based Collapse its hidden set stays `null`.
@@ -129,6 +137,7 @@ export class KbqClampedList<T> implements KbqClamped, AfterViewInit {
 
         return overflowHidden ? overflowHidden.size : this.items().length - this.collapsedVisibleCount();
     });
+
     /** Whether the number of hidden items meets the threshold to render the toggle trigger. */
     readonly hasToggle = computed(() => this.exceededItemCount() >= this.hiddenThreshold());
 
@@ -150,8 +159,10 @@ export class KbqClampedList<T> implements KbqClamped, AfterViewInit {
             return index < this.collapsedVisibleCount();
         });
     });
+
     /** Items currently visible according to `visibleMap`: the full list when expanded, otherwise the count- or geometry-based collapsed subset. */
     readonly visibleItems = computed(() => this.items().filter((_, index) => this.visibleMap()[index]));
+
     /** Localized "show more" label with the exceeded item count interpolated into the `{exceededItemCount}` placeholder. */
     readonly showMoreCountText = computed(() =>
         this.localeConfiguration().showMoreText.replace('{exceededItemCount}', this.exceededItemCount().toString(10))
@@ -164,9 +175,6 @@ export class KbqClampedList<T> implements KbqClamped, AfterViewInit {
 
         return showMoreTextCompact?.replace('{exceededItemCount}', count) ?? `${count} ${moreText}`;
     });
-
-    /** Clamped text locale configuration. */
-    readonly localeConfiguration = kbqInjectClampedTextLocaleConfiguration();
 
     /**
      * Writes the initial visibility through the Overflow Items directives, so server-side rendering

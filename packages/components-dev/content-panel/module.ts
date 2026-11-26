@@ -137,7 +137,6 @@ export class DevContentPanelOverview {
     protected readonly componentColors = KbqComponentColors;
     protected readonly buttonStyles = KbqButtonStyles;
     protected readonly badgeColors = KbqBadgeColors;
-
     protected readonly asideButtons = Array.from({ length: 4 });
     protected readonly headerActions = Array.from({ length: 2 });
     protected readonly footerActions = Array.from({ length: 3 });

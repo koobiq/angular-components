@@ -462,7 +462,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'checkbox',
                     hasApi: true,
                     apiId: 'checkbox',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-12-08')
                 },
                 {
                     id: DocsStructureItemId.ClampedList,
@@ -811,7 +812,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'modal',
                     hasApi: true,
                     apiId: 'modal',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-12-04')
                 },
                 {
                     id: DocsStructureItemId.Navbar,
@@ -969,7 +971,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'sidepanel',
                     hasApi: true,
                     apiId: 'sidepanel',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-12-04')
                 },
                 {
                     id: DocsStructureItemId.Skeleton,
@@ -1163,7 +1166,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'toggle',
                     hasApi: true,
                     apiId: 'toggle',
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-12-08')
                 },
                 {
                     id: DocsStructureItemId.Tooltip,

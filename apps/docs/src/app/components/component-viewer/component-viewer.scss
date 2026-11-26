@@ -190,6 +190,8 @@
 // header
 .docs-component-name {
     @include tokens.kbq-typography-level-to-styles-css-variables(typography, display-compact-strong);
+
+    margin: 0;
 }
 
 .docs-component-overview {

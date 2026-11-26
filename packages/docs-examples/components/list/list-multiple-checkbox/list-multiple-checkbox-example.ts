@@ -30,6 +30,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class ListMultipleCheckboxExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     selected = [];
 }

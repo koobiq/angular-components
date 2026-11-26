@@ -36,7 +36,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class SelectPreselectedValuesExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly options = Array.from({ length: 15 }, (_, i) => 'Option #' + i);
     control = new FormControl(['Option #101', 'Option #102']);
 }

@@ -122,7 +122,6 @@ export class DocsTokensTable extends DocsLocaleState {
         [DocsStructureTokensTab.Sizes]: 'sizes',
         [DocsStructureTokensTab.Shadows]: 'shadows'
     };
-
     readonly mapTabToCssProp: Record<DocsTokensTab, 'border-radius' | 'background-color' | 'box-shadow' | 'width'> = {
         [DocsStructureTokensTab.Colors]: 'background-color',
         [DocsStructureTokensTab.BorderRadius]: 'border-radius',
@@ -189,14 +188,14 @@ export class DocsTokensTable extends DocsLocaleState {
     }
 })
 export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit {
-    protected readonly wrapper = viewChild.required(DocsComponentViewerWrapperComponent);
-    protected readonly anchors = viewChild.required(DocsAnchorsComponent);
-
     protected readonly themeService = inject(KbqThemeService);
     protected readonly window = inject(KBQ_WINDOW);
     protected readonly document = inject(DOCUMENT);
     protected readonly activatedRoute = inject(ActivatedRoute);
     private readonly injector = inject(Injector);
+
+    protected readonly wrapper = viewChild.required(DocsComponentViewerWrapperComponent);
+    protected readonly anchors = viewChild.required(DocsAnchorsComponent);
 
     protected readonly tokensInfo = signal<DocsTokensInfo[]>([]);
     protected readonly activatedTab = toSignal(
@@ -206,6 +205,13 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
         ),
         { initialValue: DocsStructureTokensTab.Colors }
     );
+    /**
+     * Resolved token values cached by theme class name. Reading a CSS custom property via
+     * `getComputedStyle` can force a style recalculation, and `calculateViewData` re-runs on every
+     * theme change; caching per (theme, token) means switching themes back and forth never re-reads
+     * a token whose value cannot have changed (token values depend only on the active theme).
+     */
+    private readonly tokenValueCache = new Map<string, Map<string, string>>();
 
     protected tokenDataMap: Record<DocsTokensTab, DocsTokensInfoRaw[]> = {
         [DocsStructureTokensTab.Colors]: colors,
@@ -215,14 +221,6 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
         [DocsStructureTokensTab.Palette]: palette,
         [DocsStructureTokensTab.Semantic]: sematic
     };
-
-    /**
-     * Resolved token values cached by theme class name. Reading a CSS custom property via
-     * `getComputedStyle` can force a style recalculation, and `calculateViewData` re-runs on every
-     * theme change; caching per (theme, token) means switching themes back and forth never re-reads
-     * a token whose value cannot have changed (token values depend only on the active theme).
-     */
-    private readonly tokenValueCache = new Map<string, Map<string, string>>();
 
     constructor() {
         super();

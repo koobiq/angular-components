@@ -16,8 +16,9 @@ import { getFormattedSizeParts } from './size';
 export class KbqDataSizePipe implements PipeTransform {
     private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     private readonly numberPipe = inject(KbqDecimalPipe, { optional: true });
-    private readonly nonBreakingSpace = '\u00a0';
     private readonly config = kbqInjectLocaleConfiguration('sizeUnits', KBQ_SIZE_UNITS_LOCALE_CONFIGURATION);
+
+    private readonly nonBreakingSpace = '\u00a0';
 
     /** Transforms bytes into localized size string */
     transform(

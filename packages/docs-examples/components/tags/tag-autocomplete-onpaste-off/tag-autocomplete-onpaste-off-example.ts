@@ -50,16 +50,13 @@ const autocompleteValueCoercion = (value: AutocompleteValue): string =>
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagAutocompleteOnpasteOffExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly tagInput = viewChild.required<ElementRef<HTMLInputElement>>('tagInput');
     readonly tagInputDirective = viewChild.required('tagInput', { read: KbqTagInput });
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     control = new FormControl();
-
     suggestions: string[] = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6', 'tag7', 'tag8', 'tag9', 'tag10'];
     selectedTags: string[] = ['tag1'];
-
     filteredTags: Observable<string[]> = this.control.valueChanges.pipe(
         map((e: string | null) => this.onControlValueChanges(e))
     );

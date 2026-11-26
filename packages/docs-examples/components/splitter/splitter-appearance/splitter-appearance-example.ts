@@ -57,6 +57,7 @@ import { KbqSplitter, type KbqSplitterAppearance, KbqSplitterPanel } from '@koob
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SplitterAppearanceExample {
-    protected readonly appearances: KbqSplitterAppearance[] = ['divider', 'transparent', 'handle'];
     protected readonly appearance = model<KbqSplitterAppearance>('handle');
+
+    protected readonly appearances: KbqSplitterAppearance[] = ['divider', 'transparent', 'handle'];
 }

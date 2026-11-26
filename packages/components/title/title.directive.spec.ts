@@ -1528,7 +1528,6 @@ class ExplicitPlacementTitleComponent {}
 })
 class SiblingPopup implements KbqSiblingPopup {
     isAttached = false;
-
     readonly openedChange = new Subject<boolean>();
 
     open(): void {

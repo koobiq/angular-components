@@ -143,33 +143,7 @@ export class KbqCodeBlockTabLinkContent {}
     exportAs: 'kbqCodeBlock'
 })
 export class KbqCodeBlock implements AfterViewInit {
-    private readonly copyButtonTooltip = viewChild<KbqTooltipTrigger>('copyButtonTooltip');
     private readonly defaultOptions = inject(KBQ_CODE_BLOCK_DEFAULT_OPTIONS, { optional: true });
-
-    private readonly highlight = viewChild(KbqCodeBlockHighlight);
-
-    private readonly scrollbarViewport = viewChild.required(KbqScrollbarViewport);
-
-    /** Memoized so every waiter shares one `toObservable` effect instead of installing one each. */
-    private highlightPending?: Observable<boolean>;
-
-    private readonly preElementRef = viewChild<ElementRef<HTMLElement>>('codeBlockPre');
-
-    private readonly codeElementRef = viewChild<ElementRef<HTMLElement>>('codeBlockCode');
-
-    /**
-     * Whether the code runs past `maxHeight`, or `undefined` until the browser has measured it. The server
-     * never measures, and its markup keeps the limit so that a block hydrated later holds its height.
-     *
-     * @docs-private
-     */
-    protected readonly contentExceedsMaxHeight = signal<boolean | undefined>(undefined);
-
-    /** @docs-private */
-    protected readonly tabLinkTemplate = contentChild<
-        KbqCodeBlockTabLinkContent,
-        TemplateRef<KbqTabLinkTemplateContext>
-    >(KbqCodeBlockTabLinkContent, { read: TemplateRef });
 
     /** Whether to display line numbers. Defaults to `lineNumbers` of `KBQ_CODE_BLOCK_DEFAULT_OPTIONS`, or `false`. */
     readonly lineNumbers = input(this.defaultOptions?.lineNumbers ?? false, { transform: booleanAttribute });
@@ -190,13 +164,31 @@ export class KbqCodeBlock implements AfterViewInit {
      */
     readonly softWrapInput = input(false, { alias: 'softWrap', transform: booleanAttribute });
 
-    /** Whether sequences of whitespace should be preserved. */
-    readonly softWrap = linkedSignal(() => this.softWrapInput());
+    private readonly copyButtonTooltip = viewChild<KbqTooltipTrigger>('copyButtonTooltip');
+    private readonly highlight = viewChild(KbqCodeBlockHighlight);
+    private readonly scrollbarViewport = viewChild.required(KbqScrollbarViewport);
+    private readonly preElementRef = viewChild<ElementRef<HTMLElement>>('codeBlockPre');
+    private readonly codeElementRef = viewChild<ElementRef<HTMLElement>>('codeBlockCode');
+
+    /** @docs-private */
+    protected readonly tabLinkTemplate = contentChild<
+        KbqCodeBlockTabLinkContent,
+        TemplateRef<KbqTabLinkTemplateContext>
+    >(KbqCodeBlockTabLinkContent, { read: TemplateRef });
+
+    /** Memoized so every waiter shares one `toObservable` effect instead of installing one each. */
+    private highlightPending?: Observable<boolean>;
 
     /**
-     * Output to support two-way binding on `[(softWrap)]` property.
+     * Whether the code runs past `maxHeight`, or `undefined` until the browser has measured it. The server
+     * never measures, and its markup keeps the limit so that a block hydrated later holds its height.
+     *
+     * @docs-private
      */
-    readonly softWrapChange = output<boolean>();
+    protected readonly contentExceedsMaxHeight = signal<boolean | undefined>(undefined);
+
+    /** Whether sequences of whitespace should be preserved. */
+    readonly softWrap = linkedSignal(() => this.softWrapInput());
 
     /**
      * Backing input of `viewAll`, in the same shape as `softWrapInput`.
@@ -206,15 +198,15 @@ export class KbqCodeBlock implements AfterViewInit {
     readonly viewAllInput = input(false, { alias: 'viewAll', transform: booleanAttribute });
 
     /**
+     * Output to support two-way binding on `[(softWrap)]` property.
+     */
+    readonly softWrapChange = output<boolean>();
+
+    /**
      * Allows to view all the code, otherwise it will be hidden.
      * Works only with `maxHeight` property.
      */
     readonly viewAll = linkedSignal(() => this.viewAllInput());
-
-    /**
-     * Output to support two-way binding on `[(viewAll)]` property.
-     */
-    readonly viewAllChange = output<boolean>();
 
     /**
      * Maximum height of the code block content, other parts will be hidden.
@@ -223,6 +215,18 @@ export class KbqCodeBlock implements AfterViewInit {
     readonly maxHeight = input<number | undefined, unknown>(undefined, {
         transform: kbqOptionalNumberAttribute
     });
+
+    /**
+     * Backing input of `canDownload`.
+     *
+     * @docs-private
+     */
+    readonly canDownloadInput = input(false, { alias: 'canDownload', transform: booleanAttribute });
+
+    /**
+     * Output to support two-way binding on `[(viewAll)]` property.
+     */
+    readonly viewAllChange = output<boolean>();
 
     /**
      * @docs-private
@@ -236,13 +240,6 @@ export class KbqCodeBlock implements AfterViewInit {
             ? maxHeight
             : null;
     });
-
-    /**
-     * Backing input of `canDownload`.
-     *
-     * @docs-private
-     */
-    readonly canDownloadInput = input(false, { alias: 'canDownload', transform: booleanAttribute });
 
     /** Added download code button. */
     readonly canDownload = linkedSignal(() => this.canDownloadInput());
@@ -285,6 +282,21 @@ export class KbqCodeBlock implements AfterViewInit {
     /** Defines which file (index) is active. */
     readonly activeFileIndex = linkedSignal(() => this.activeFileIndexInput());
 
+    /** Whether to hide border. */
+    readonly noBorder = input<boolean, unknown>(false, { transform: booleanAttribute });
+
+    /**
+     * Backing input of `hideTabs`.
+     *
+     * @docs-private
+     */
+    readonly hideTabsInput = input(false, { alias: 'hideTabs', transform: booleanAttribute });
+
+    /**
+     * Output to support two-way binding on `[(activeFileIndex)]` property.
+     */
+    readonly activeFileIndexChange = output<number>();
+
     /**
      * Index of the file actually rendered. `files` and `activeFileIndex` are written one after the other,
      * so either order leaves the pair briefly inconsistent: the render falls back to the first file rather
@@ -308,46 +320,11 @@ export class KbqCodeBlock implements AfterViewInit {
     );
 
     /**
-     * Output to support two-way binding on `[(activeFileIndex)]` property.
-     */
-    readonly activeFileIndexChange = output<number>();
-
-    /** Whether to hide border. */
-    readonly noBorder = input<boolean, unknown>(false, { transform: booleanAttribute });
-
-    /**
-     * Backing input of `hideTabs`.
-     *
-     * @docs-private
-     */
-    readonly hideTabsInput = input(false, { alias: 'hideTabs', transform: booleanAttribute });
-
-    /**
      * Whether to hide header tabs. A single file without a filename hides them regardless - read
      * `tabsHidden` for what the header actually does.
      * Makes actionbar floating if tabs are hidden.
      */
     readonly hideTabs = linkedSignal(() => this.hideTabsInput());
-
-    /**
-     * A lone file with no filename has nothing to label a tab with, so the bar is hidden whatever was
-     * bound. Derived rather than written into `hideTabs`: the write latched the bar off for the life of
-     * the component, so naming the files later never brought it back, and it re-emitted `hideTabsChange`
-     * on every `files` assignment.
-     *
-     * @docs-private
-     */
-    readonly tabsHidden = computed(() => {
-        const files = this.files();
-
-        return this.hideTabs() || (files.length === 1 && !files[0]?.filename);
-    });
-    private readonly actionbarHovered = signal(false);
-
-    /**
-     * Output to support two-way binding on `[(hideTabs)]` property.
-     */
-    readonly hideTabsChange = output<boolean>();
 
     /**
      * Component locale configuration.
@@ -358,25 +335,6 @@ export class KbqCodeBlock implements AfterViewInit {
         'codeBlock',
         KBQ_CODE_BLOCK_LOCALE_CONFIGURATION
     );
-
-    /**
-     * Whether the code content scrolls while nothing collapses it, which leaves keyboard users a way to scroll it.
-     * Collapsed under `maxHeight` it is clipped instead, and the "view all" button is the way in.
-     */
-    private get canCodeContentBeFocused(): boolean {
-        return !this.calculatedMaxHeight() && this.hasScroll(this.scrollbarViewport().getNativeElement());
-    }
-
-    /**
-     * @docs-private
-     */
-    protected readonly componentColor = KbqComponentColors;
-
-    /**
-     * @docs-private
-     */
-    protected readonly buttonStyle = KbqButtonStyles;
-
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly injector = inject(Injector);
     private readonly destroyRef = inject(DestroyRef);
@@ -393,6 +351,37 @@ export class KbqCodeBlock implements AfterViewInit {
     protected readonly fallbackFileName = inject(KBQ_CODE_BLOCK_FALLBACK_FILE_NAME);
     private readonly window = inject(KBQ_WINDOW);
 
+    /**
+     * Output to support two-way binding on `[(hideTabs)]` property.
+     */
+    readonly hideTabsChange = output<boolean>();
+
+    private readonly actionbarHovered = signal(false);
+
+    /**
+     * A lone file with no filename has nothing to label a tab with, so the bar is hidden whatever was
+     * bound. Derived rather than written into `hideTabs`: the write latched the bar off for the life of
+     * the component, so naming the files later never brought it back, and it re-emitted `hideTabsChange`
+     * on every `files` assignment.
+     *
+     * @docs-private
+     */
+    readonly tabsHidden = computed(() => {
+        const files = this.files();
+
+        return this.hideTabs() || (files.length === 1 && !files[0]?.filename);
+    });
+
+    /**
+     * @docs-private
+     */
+    protected readonly componentColor = KbqComponentColors;
+
+    /**
+     * @docs-private
+     */
+    protected readonly buttonStyle = KbqButtonStyles;
+
     /** @docs-private */
     protected readonly actionbarVisible = computed(
         () =>
@@ -402,6 +391,14 @@ export class KbqCodeBlock implements AfterViewInit {
             !this.tabsHidden() ||
             this.actionbarHovered()
     );
+
+    /**
+     * Whether the code content scrolls while nothing collapses it, which leaves keyboard users a way to scroll it.
+     * Collapsed under `maxHeight` it is clipped instead, and the "view all" button is the way in.
+     */
+    private get canCodeContentBeFocused(): boolean {
+        return !this.calculatedMaxHeight() && this.hasScroll(this.scrollbarViewport().getNativeElement());
+    }
 
     constructor() {
         this.trackHoverState();

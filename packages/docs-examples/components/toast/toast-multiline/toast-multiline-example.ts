@@ -28,9 +28,9 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastMultilineExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly toastService = inject(KbqToastService);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     showToast(actions: TemplateRef<any>) {
         this.toastService.show({

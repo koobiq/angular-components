@@ -86,17 +86,20 @@ const getAutocompleteOptions = () => [
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagAutocompleteDraggableExample {
-    private readonly options = getAutocompleteOptions();
-    protected readonly separatorKeysCodes = [ENTER, COMMA];
     protected readonly tagInputModel = model('');
+
+    private readonly options = getAutocompleteOptions();
+
+    protected readonly separatorKeysCodes = [ENTER, COMMA];
     protected readonly tags = model(this.options.slice(0, 6));
+    private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
+
     protected readonly filteredOptions = computed(() => {
         const current = this.tagInputModel().trim().toLowerCase();
         const options = this.options.filter((option) => !this.tags().includes(option));
 
         return current ? options.filter((option) => option.toLowerCase().includes(current)) : options;
     });
-    private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
 
     protected create({ input, value = '' }: KbqTagInputEvent): void {
         if (value) {

@@ -43,10 +43,9 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SkeletonCodeBlockExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly loading = model(true);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly files: KbqCodeBlockFile[] = [
         {
             content: `function getVulnerabilities() {\n\treturn ['BruteForce', 'Complex Attack', 'DDoS', 'HIPS alert', 'IDS/IPS Alert', 'Zero-Day Exploit', 'XSS', 'Malware', 'Ransomware', 'Phishing'];\n};`,

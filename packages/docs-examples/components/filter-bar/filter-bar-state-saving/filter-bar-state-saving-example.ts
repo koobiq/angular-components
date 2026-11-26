@@ -55,7 +55,6 @@ export class FilterBarStateSavingExample {
      * renames or deletes a saved filter simply gets nothing restored for it.
      */
     protected activeFilter: KbqFilter | null = null;
-
     protected filters: KbqFilter[] = [
         {
             name: 'Errors',
@@ -92,7 +91,6 @@ export class FilterBarStateSavingExample {
             ]
         }
     ];
-
     protected pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Select',

@@ -1,9 +1,9 @@
 import type { Translations } from '@koobiq/docs-examples/i18n';
+import { EXAMPLE_INCIDENT_HEADERS, type ExampleIncidentHeaders } from '../incident-headers';
 
 /** Text of the ag-grid-and-actions-panel example. */
 export interface ExampleTranslation {
-    headerText: string;
-    projectName: string;
+    headers: ExampleIncidentHeaders;
     selected: string;
     more: string;
     responsible: string;
@@ -14,8 +14,7 @@ export interface ExampleTranslation {
 
 export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
-        headerText: 'Текст',
-        projectName: 'Название проекта',
+        headers: EXAMPLE_INCIDENT_HEADERS['ru-RU'],
         selected: 'Выбрано:',
         more: 'Ещё',
         responsible: 'Ответственный',
@@ -24,8 +23,7 @@ export const TRANSLATIONS: Translations<ExampleTranslation> = {
         actionInitiated: (action) => `Действие ${action} инициировано`
     },
     default: {
-        headerText: 'Text',
-        projectName: 'Project name',
+        headers: EXAMPLE_INCIDENT_HEADERS.default,
         selected: 'Selected:',
         more: 'More',
         responsible: 'Responsible',

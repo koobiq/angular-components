@@ -189,9 +189,9 @@ abstract class TreeParams {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeDescendantsSubcategoriesExample extends TreeParams {
-    modelValue: any = ['docs'];
-
     readonly tree = viewChild.required(KbqTreeSelection);
+
+    modelValue: any = ['docs'];
 
     onSelectionChange($event: KbqTreeSelectionChange<KbqTreeOption>) {
         const option: KbqTreeOption = $event.option;

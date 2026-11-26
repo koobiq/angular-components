@@ -37,7 +37,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class AppSwitcherOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     SVGIcon: string = `
         <svg fill="none" height="24" viewBox="0 0 32 32" width="24" xmlns="http://www.w3.org/2000/svg">
             <path clip-rule="evenodd"
@@ -48,7 +47,6 @@ export class AppSwitcherOverviewExample {
                 fill="white" />
         </svg>
     `;
-
     sites: KbqAppSwitcherSite[] = [
         {
             name: 'СЗФО',

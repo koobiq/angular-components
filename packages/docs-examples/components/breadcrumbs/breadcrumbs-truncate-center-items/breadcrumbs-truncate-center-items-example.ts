@@ -56,6 +56,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class BreadcrumbsTruncateCenterItemsExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly PopUpPlacements = PopUpPlacements;
 }

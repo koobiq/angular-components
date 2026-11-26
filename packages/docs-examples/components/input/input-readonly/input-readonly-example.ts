@@ -47,10 +47,10 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class InputReadonlyExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly readonly = model(true);
     protected readonly textValue = model('Text');
     protected readonly number = model<number | null>(42);
     protected readonly password = model('Pa$$w0rd');
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

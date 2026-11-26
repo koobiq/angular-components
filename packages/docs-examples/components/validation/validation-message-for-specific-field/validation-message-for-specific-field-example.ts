@@ -70,14 +70,13 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class ValidationMessageForSpecificFieldExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    private readonly formFieldList = viewChildren(KbqFormField);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly form = new FormGroup({
         first: new FormControl('', [Validators.required]),
         last: new FormControl('', [Validators.required])
     });
-
-    private readonly formFieldList = viewChildren(KbqFormField);
 
     onSubmit(): void {
         this.focusFirstInvalidControl();

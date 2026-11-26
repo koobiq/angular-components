@@ -62,6 +62,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class SidebarStateSavingExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly position = SidebarPositions;
 }

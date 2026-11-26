@@ -832,6 +832,40 @@ describe('api manifest generation', () => {
         expect(collection.packagesApiInfo[0].entries.map(({ name }) => name)).toEqual(['KbqActionsPanel']);
     });
 
+    it('should filter entries resolved into node_modules', () => {
+        const [collection] = generateManifest([
+            {
+                moduleName: 'components',
+                packagesApiInfo: [
+                    {
+                        packageName: 'core',
+                        entries: [
+                            entry({
+                                name: 'ENTER',
+                                source: {
+                                    filePath: 'C:/proj/app/node_modules/@angular/cdk/types/keycodes.d.ts',
+                                    startLine: 5,
+                                    endLine: 5
+                                }
+                            }),
+                            entry({
+                                name: 'ESCAPE',
+                                source: {
+                                    filePath: '/proj/app/node_modules/@angular/cdk/types/keycodes.d.ts',
+                                    startLine: 27,
+                                    endLine: 27
+                                }
+                            }),
+                            entry({ name: 'validationTooltipHideDelay' })
+                        ]
+                    }
+                ]
+            }
+        ]);
+
+        expect(collection.packagesApiInfo[0].entries.map(({ name }) => name)).toEqual(['validationTooltipHideDelay']);
+    });
+
     describe('members', () => {
         const member = (name: string, memberTags: MemberTags[] = []): MemberEntry => ({
             name,

@@ -42,7 +42,6 @@ interface DocsThemeOption {
 })
 export class DocsNavbarComponent extends DocsLocaleState {
     private readonly themeService = inject(KbqThemeService);
-
     readonly docStates = inject(DocsDocStates);
 
     /** Options shown in the theme dropdown. `auto` follows the OS color scheme, handled inside `KbqThemeService`. */
@@ -54,7 +53,6 @@ export class DocsNavbarComponent extends DocsLocaleState {
 
     /** The currently selected mode — persistence and OS-preference resolution are handled by `KbqThemeService`. */
     readonly mode = computed(() => this.themeService.mode());
-
     readonly opened$: Observable<boolean> = this.docStates.navbarMenu.pipe(
         map((state) => state === DocsNavbarState.Opened)
     );

@@ -30,13 +30,6 @@ export class KbqTabLabelWrapper implements OnChanges, AfterViewInit {
     elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private renderer = inject(Renderer2);
 
-    private readonly labelContentQuery = contentChild<ElementRef<HTMLElement>>('labelContent');
-
-    /** The element of the label content, measured to tell whether the label overflows. */
-    get labelContent(): ElementRef<HTMLElement> {
-        return this.labelContentQuery()!;
-    }
-
     /** @docs-private */
     readonly tabInput = input<KbqTab | undefined>(undefined, { alias: 'tab' });
 
@@ -46,7 +39,16 @@ export class KbqTabLabelWrapper implements OnChanges, AfterViewInit {
         transform: booleanAttribute
     });
 
+    private readonly labelContentQuery = contentChild<ElementRef<HTMLElement>>('labelContent');
+
+    private _disabled: boolean = false;
+
     tab: KbqTab | undefined;
+
+    /** The element of the label content, measured to tell whether the label overflows. */
+    get labelContent(): ElementRef<HTMLElement> {
+        return this.labelContentQuery()!;
+    }
 
     get disabled(): boolean {
         return this._disabled;
@@ -57,8 +59,6 @@ export class KbqTabLabelWrapper implements OnChanges, AfterViewInit {
             this._disabled = value;
         }
     }
-
-    private _disabled: boolean = false;
 
     ngOnChanges(changes: SimpleChanges): void {
         // A bound input is handed to its member; unbound, it leaves what code wrote.

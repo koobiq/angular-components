@@ -1,7 +1,14 @@
-﻿import type { OverlayRef } from '@angular/cdk/overlay';
+import { ESCAPE } from '@angular/cdk/keycodes';
+import type { OverlayRef } from '@angular/cdk/overlay';
 import { signal, untracked } from '@angular/core';
 import { filter, merge, type Observable, Subject, take, tap } from 'rxjs';
-import { ESCAPE, isHtmlElement, type KbqOverflowShadowState } from '@koobiq/components/core';
+import {
+    coerceCanCloseDecision,
+    isHtmlElement,
+    type KbqCanClose,
+    type KbqCloseReason,
+    type KbqOverflowShadowState
+} from '@koobiq/components/core';
 import { KbqSidepanelAnimationState } from './sidepanel-animations';
 import type { KbqSidepanelConfig } from './sidepanel-config';
 import type { KbqSidepanelContainerComponent } from './sidepanel-container.component';
@@ -10,16 +17,8 @@ import type { KbqSidepanelContainerComponent } from './sidepanel-container.compo
 let uniqueId = 0;
 
 export class KbqSidepanelRef<T = any, R = any> {
-    readonly id: string;
-
-    /**
-     * Vertical scroll overflow state of the sidepanel body.
-     * Updated on scroll and used for visual adjustments.
-     */
-    readonly bodyOverflow = signal<KbqOverflowShadowState>({ top: false, bottom: false });
-
-    /** Instance of the component making up the content of the sidepanel, `undefined` when it was opened with a template. */
-    instance: T | undefined;
+    /** Whether an async `canClose` decision is pending. */
+    private isGuarding = false;
 
     /** Subject for notifying the user that the sidepanel has been closed and dismissed. */
     private readonly afterClosed$ = new Subject<R | undefined>();
@@ -35,6 +34,23 @@ export class KbqSidepanelRef<T = any, R = any> {
 
     /** Whether `close()` has already started the closing animation. */
     private closing = false;
+
+    readonly id: string;
+
+    /**
+     * Guard intercepting every close attempt. Takes precedence over `config.canClose` and can be
+     * assigned or replaced after the panel was opened. Defaults to the config's `canClose`.
+     */
+    canClose: KbqCanClose | undefined;
+
+    /**
+     * Vertical scroll overflow state of the sidepanel body.
+     * Updated on scroll and used for visual adjustments.
+     */
+    readonly bodyOverflow = signal<KbqOverflowShadowState>({ top: false, bottom: false });
+
+    /** Instance of the component making up the content of the sidepanel, `undefined` when it was opened with a template. */
+    instance: T | undefined;
 
     constructor(
         public readonly containerInstance: KbqSidepanelContainerComponent,
@@ -107,41 +123,78 @@ export class KbqSidepanelRef<T = any, R = any> {
                 this.afterClosed$.complete();
             });
 
+        overlayRef.backdropClick().subscribe(() => this.requestClose('backdrop'));
+
         overlayRef
             .keydownEvents()
-            .pipe(
-                // keyCode is deprecated, but IE11 and Edge don't support code property, which we need use instead
-                filter((event) => event.keyCode === ESCAPE)
-            )
+            // keyCode is deprecated, but IE11 and Edge don't support code property, which we need use instead
+            .pipe(filter((event) => event.keyCode === ESCAPE))
             .subscribe((event) => {
                 // CDK hands the key to this overlay after the layers above it, such as a tooltip, a popover or a
                 // confirm dialog, have handled it: one that closed spent it, and the sidepanel stays open.
                 if (event.defaultPrevented || this.config.disableClose) return;
 
                 event.preventDefault();
-                this.close();
+                this.requestClose('escape');
             });
 
-        merge(
-            overlayRef.backdropClick(),
-            this.containerInstance.indentClick(),
-            overlayRef.outsidePointerEvents().pipe(filter((event) => this.isClickInsideSamePositionStack(event)))
-        ).subscribe(() => {
-            if (this.config.disableClose) return;
+        this.containerInstance.indentClick().subscribe(() => this.requestClose('close'));
 
-            this.close();
+        overlayRef
+            .outsidePointerEvents()
+            .pipe(filter((event) => this.isClickInsideSamePositionStack(event)))
+            .subscribe(() => this.requestClose('backdrop'));
+    }
+
+    /** Programmatic close: goes through `canClose` with the `'programmatic'` reason. */
+    close(result?: R): void {
+        this.requestClose('programmatic', result);
+    }
+
+    /**
+     * Asks `canClose` and closes with `result` when allowed. User-initiated reasons are dropped
+     * under `disableClose`; repeated attempts are ignored while an async decision is pending.
+     * A `programmatic` attempt re-reads the guard instead: assigning `canClose` and calling
+     * `close()` is the way to force-close past a pending decision. `force` closes unconditionally,
+     * bypassing both the guard and the lock — reserved for teardown.
+     */
+    requestClose(reason: KbqCloseReason, result?: R, force = false): void {
+        if (this.closing || this.afterClosed$.closed) return;
+
+        if (!force) {
+            if (reason !== 'programmatic' && this.config.disableClose) return;
+            if (this.isGuarding && reason !== 'programmatic') return;
+        } else {
+            untracked(() => this.doClose(result));
+
+            return;
+        }
+
+        const guard = this.canClose ?? this.config.canClose;
+
+        // The guard reads application signals; untracked keeps them out of the reactive context
+        // of a caller that closes the sidepanel from an `effect()`.
+        const decision = untracked(() => guard?.(reason)) ?? true;
+
+        if (decision === true) {
+            untracked(() => this.doClose(result));
+
+            return;
+        }
+
+        if (decision === false) return;
+
+        this.isGuarding = true;
+
+        coerceCanCloseDecision(decision).subscribe((allow) => {
+            this.isGuarding = false;
+
+            if (allow) untracked(() => this.doClose(result));
         });
     }
 
-    close(result?: R): void {
-        // Untracked, as `KbqSidepanelService.open()`: called from a consumer's `effect()`, the state of the sidepanels
-        // stacked under this one, read and written on the way, would make the effect run again as they move.
-        untracked(() => this.startClosing(result));
-    }
-
-    /** Body of `close()`. */
-    private startClosing(result: R | undefined): void {
-        if (this.closing) return;
+    private doClose(result?: R): void {
+        if (this.closing || this.afterClosed$.closed) return;
 
         this.closing = true;
 

@@ -264,6 +264,8 @@ const e2eTabLabelStateSetter = (testid: string) => {
     }
 })
 export class E2eTabsStates {
+    private readonly injector = inject(Injector);
+
     protected readonly tabs = [
         'BruteForce',
         'Complex Attack',
@@ -276,10 +278,7 @@ export class E2eTabsStates {
         'Ransomware',
         'Phishing'
     ] as const;
-
     protected readonly shown = signal(false);
-
-    private readonly injector = inject(Injector);
 
     protected show(): void {
         this.shown.set(true);

@@ -109,10 +109,8 @@ export const DATA_OBJECT = {
 })
 export class TreeSelectSelectAllExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {
