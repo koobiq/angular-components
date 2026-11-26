@@ -126,13 +126,6 @@ export class DevApp {
     selected = [];
     singleSelected = [];
     asyncUpdate = new UntypedFormControl();
-    asyncUpdate$ = this.asyncUpdate.valueChanges.pipe(
-        startWith(null),
-        debounceTime(3000),
-        switchMap(() => {
-            return of(this.typesOfShoes);
-        })
-    );
 
     // The options of the select are the values of `KbqListDragPreview`
     protected setDragPreview(value: string): void {
@@ -142,6 +135,14 @@ export class DevApp {
     compareById = (o1: DevItem | null, o2: DevItem | null): boolean => !!o1 && !!o2 && o1.id === o2.id;
 
     compareByReference = (o1: DevItem | null, o2: DevItem | null): boolean => o1 === o2;
+
+    asyncUpdate$ = this.asyncUpdate.valueChanges.pipe(
+        startWith(null),
+        debounceTime(3000),
+        switchMap(() => {
+            return of(this.typesOfShoes);
+        })
+    );
 
     onSelectionChange($event: KbqListSelectionChange) {
         console.log(`onSelectionChange: ${$event.option.value}`);

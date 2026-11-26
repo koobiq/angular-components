@@ -18,6 +18,5 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 })
 export class DevThemeToggle {
     protected readonly theme = inject(KbqThemeService);
-
     readonly isDarkTheme = model(this.theme.colorScheme() === 'dark');
 }

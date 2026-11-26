@@ -371,23 +371,6 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
     protected readonly overlayDir = viewChild.required(CdkConnectedOverlay);
 
     private readonly saveStatusSource = signal<KbqInlineEditSaveStatus>('idle');
-    private initialValue: unknown;
-
-    /** Value sent by the in-flight `saveHandler` request, which becomes `lastSavedValue` once it succeeds. */
-    private submittedValue: unknown;
-
-    /** Last value the server accepted — what `rollback()` restores after a failed save. */
-    private lastSavedValue: unknown;
-    private destroyed = false;
-
-    /** Handle for an in-flight `showValidationTooltip()` scroll/settle request, if any. */
-    private validationTooltipScrollHandle: { cancel: () => void } | null = null;
-
-    /** How edit mode was entered, so leaving it restores the same focus style. */
-    private editModeOrigin: FocusOrigin = null;
-
-    /** Set while Tab-chaining, where the next inline edit — not this one — has to end up focused. */
-    private chainingToNextInlineEdit = false;
 
     /** @docs-private */
     protected readonly formFieldRef = computed<KbqFormField | undefined>(() => this.formFieldRefList()[0]);
@@ -426,8 +409,38 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
      */
     protected readonly scrollStrategy = computed(() => this.overlay.scrollStrategies.reposition());
 
+    /**
+     * The validation tooltip is anchored inside the edit-mode overlay — an overlay inside another
+     * overlay. Its default `close()` scroll strategy would close it the moment either overlay's
+     * origin scrolls (including the programmatic scroll `showValidationTooltip()` uses to bring an
+     * invalid control into view), so it's overridden to `reposition()` here — passed directly as a
+     * per-instance override to this tooltip's `[kbqTooltipScrollStrategy]` input, rather than a DI
+     * override, so it doesn't leak into any `kbqTooltip` in projected content.
+     *
+     * @docs-private
+     */
+    protected readonly validationTooltipScrollStrategy = (): ScrollStrategy =>
+        this.overlay.scrollStrategies.reposition();
     /** State of the background save started by `saveHandler`. */
     readonly saveStatus = this.saveStatusSource.asReadonly();
+
+    private initialValue: unknown;
+
+    /** Value sent by the in-flight `saveHandler` request, which becomes `lastSavedValue` once it succeeds. */
+    private submittedValue: unknown;
+
+    /** Last value the server accepted — what `rollback()` restores after a failed save. */
+    private lastSavedValue: unknown;
+    private destroyed = false;
+
+    /** Handle for an in-flight `showValidationTooltip()` scroll/settle request, if any. */
+    private validationTooltipScrollHandle: { cancel: () => void } | null = null;
+
+    /** How edit mode was entered, so leaving it restores the same focus style. */
+    private editModeOrigin: FocusOrigin = null;
+
+    /** Set while Tab-chaining, where the next inline edit — not this one — has to end up focused. */
+    private chainingToNextInlineEdit = false;
 
     /** @docs-private */
     protected readonly isSaving = computed(() => this.saveStatus() === 'pending' || this.saveStatus() === 'progress');
@@ -529,19 +542,6 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
             onCleanup(() => subscription.unsubscribe());
         });
     }
-
-    /**
-     * The validation tooltip is anchored inside the edit-mode overlay — an overlay inside another
-     * overlay. Its default `close()` scroll strategy would close it the moment either overlay's
-     * origin scrolls (including the programmatic scroll `showValidationTooltip()` uses to bring an
-     * invalid control into view), so it's overridden to `reposition()` here — passed directly as a
-     * per-instance override to this tooltip's `[kbqTooltipScrollStrategy]` input, rather than a DI
-     * override, so it doesn't leak into any `kbqTooltip` in projected content.
-     *
-     * @docs-private
-     */
-    protected readonly validationTooltipScrollStrategy = (): ScrollStrategy =>
-        this.overlay.scrollStrategies.reposition();
 
     /** Manually switch mode. Does nothing while a `saveHandler` request is in flight. */
     toggleMode(): void {

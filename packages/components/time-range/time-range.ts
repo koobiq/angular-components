@@ -132,12 +132,6 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     /** @docs-private */
     readonly ngControl = inject(NgControl, { optional: true, self: true });
 
-    /** @docs-private */
-    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
-        'timeRange',
-        KBQ_TIME_RANGE_LOCALE_CONFIGURATION
-    );
-
     /** The earliest date the calendars offer and the validation accepts. */
     readonly minDate = input<T>();
 
@@ -197,6 +191,12 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
 
     /** Whether the control is disabled through the forms layer. */
     readonly disabled: Signal<boolean> = this.disabledState.asReadonly();
+
+    /** @docs-private */
+    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'timeRange',
+        KBQ_TIME_RANGE_LOCALE_CONFIGURATION
+    );
 
     /** @docs-private */
     protected readonly popoverSize = PopUpSizes.Medium;

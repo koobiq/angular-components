@@ -67,9 +67,9 @@ export class DevDocsExamples {}
 export class DevApp implements AfterViewInit {
     private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
+    date = this.adapter.today();
     readonly datepicker = viewChild.required(KbqDatepicker);
 
-    date = this.adapter.today();
     formControlValue: UntypedFormControl;
     minDate: DateTime;
     maxDate: DateTime;

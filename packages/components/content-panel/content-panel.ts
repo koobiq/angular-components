@@ -307,9 +307,6 @@ export class KbqContentPanelContainer implements OnInit {
      * `stateSavingKey` are its inputs, surfaced on the container.
      */
     private readonly stateSaving = inject(KbqStateSaving);
-    private readonly injector = inject(Injector);
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly errorHandler = inject(ErrorHandler);
 
     /**
      * Whether the content panel is opened. Defaults to `undefined`.
@@ -328,6 +325,11 @@ export class KbqContentPanelContainer implements OnInit {
      * Defaults to `false`.
      */
     readonly disableClose = input(false, { transform: booleanAttribute });
+
+    /**
+     * Emits event when the content panel opened state is changed.
+     */
+    readonly openedChange = output<boolean>();
 
     /**
      * Whether the content panel can not be closed by pressing the ESCAPE key.
@@ -361,9 +363,21 @@ export class KbqContentPanelContainer implements OnInit {
     readonly maxWidth = input(800, { transform: numberAttribute });
 
     /**
-     * Emits event when the content panel opened state is changed.
+     * A linked signal rather than a plain one: it follows the input whenever the input changes, and keeps
+     * a local write until then — which is what lets a restored state survive the input's initial value.
+     *
+     * @docs-private
      */
-    readonly openedChange = output<boolean>();
+    protected readonly openedState = linkedSignal(() => this.openedInput() ?? false);
+
+    /**
+     * @docs-private
+     */
+    protected readonly widthState = linkedSignal(() => this.width());
+
+    private readonly injector = inject(Injector);
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly errorHandler = inject(ErrorHandler);
 
     private readonly content = viewChild.required(KbqScrollbar, { read: ElementRef });
 
@@ -380,19 +394,6 @@ export class KbqContentPanelContainer implements OnInit {
      * on each frame. The store's unchanged-payload skip does not help here — every frame is a new number.
      */
     private readonly resized = new Subject<void>();
-
-    /**
-     * A linked signal rather than a plain one: it follows the input whenever the input changes, and keeps
-     * a local write until then — which is what lets a restored state survive the input's initial value.
-     *
-     * @docs-private
-     */
-    protected readonly openedState = linkedSignal(() => this.openedInput() ?? false);
-
-    /**
-     * @docs-private
-     */
-    protected readonly widthState = linkedSignal(() => this.width());
 
     /**
      * Whether the content panel is opened.

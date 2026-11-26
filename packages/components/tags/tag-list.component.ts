@@ -139,10 +139,29 @@ export class KbqTagList
     private readonly focusMonitor = inject(FocusMonitor);
 
     /** @docs-private */
-    readonly uid: string = inject(_IdGenerator).getId('kbq-tag-list-');
-
-    /** @docs-private */
     readonly valueInput = input<any>(undefined, { alias: 'value' });
+
+    private readonly errorStateTracker = new KbqErrorStateTracker(
+        this.defaultErrorStateMatcher,
+        this.ngControl,
+        this.parentFormGroup,
+        this.parentForm
+    );
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     *
+     * @docs-private
+     */
+    readonly controlType: string = 'tag-list';
+
+    /**
+     * Implemented as part of KbqFormFieldControl. Set with `[value]`, by the form control and by the rendered
+     * tags.
+     *
+     * @docs-private
+     */
+    readonly value = linkedSignal(() => this.valueInput());
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -159,6 +178,60 @@ export class KbqTagList
         alias: 'disabled',
         transform: booleanAttribute
     });
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     *
+     * @docs-private
+     */
+    readonly id = computed(() => this.registeredInput()?.id() ?? this.uid);
+
+    /**
+     * Implemented as part of KbqFormFieldControl. Taken from the `kbqTagInput` when there is one.
+     *
+     * @docs-private
+     */
+    readonly placeholder = computed(() => {
+        const tagInput = this.registeredInput();
+
+        return tagInput ? tagInput.placeholder() : this.placeholderInput();
+    });
+
+    /** Whether any tags or the kbqTagInput inside of this tag-list has focus. */
+    // Derived from the current tags: one removed while focused fires no blur. Read from the query, as syncing
+    // `tags` emits `changes`, whose subscribers must not run inside a computed.
+    readonly focused = computed(
+        () => !!this.registeredInput()?.focused() || this.tagsQuery().some((tag) => tag.hasFocus)
+    );
+
+    /**
+     * Implemented as part of KbqFormFieldControl. Forwarded from the registered `kbqTagInput`, which
+     * is the element the browser actually autofills — the tag list itself is not an input.
+     *
+     * @docs-private
+     */
+    readonly autofilled = computed(() => this.registeredInput()?.autofilled?.() ?? false);
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     *
+     * @docs-private
+     */
+    readonly empty = computed(() => {
+        const tagInput = this.registeredInput();
+
+        return (!tagInput || tagInput.empty()) && this.tagsQuery().length === 0;
+    });
+
+    /**
+     * Implemented as part of KbqFormFieldControl. Also set by the bound form control.
+     *
+     * @docs-private
+     */
+    readonly disabled = linkedSignal(() => this.disabledInput());
+
+    /** @docs-private */
+    readonly uid: string = inject(_IdGenerator).getId('kbq-tag-list-');
 
     /**
      * Whether or not this tag list is selectable. When a tag list is not selectable,
@@ -226,31 +299,18 @@ export class KbqTagList
         { descendants: true }
     );
 
-    private readonly errorStateTracker = new KbqErrorStateTracker(
-        this.defaultErrorStateMatcher,
-        this.ngControl,
-        this.parentFormGroup,
-        this.parentForm
-    );
+    private readonly _draggable = signal(false);
+
+    // One signal per host value. The host bindings of every tag list in a view run in that view's reactive consumer,
+    // where a signal read again by another binding costs a scan of everything the view has read.
+    private readonly draggableState = computed(() => this._draggable() && !this.disabled());
+    private readonly _tabIndex = signal(0);
 
     /**
      * The same control as `tagInput`, kept in a signal so `autofilled` can track it reactively —
      * `registerInput()` runs after the first read.
      */
     private readonly registeredInput = signal<KbqTagTextControl | undefined>(undefined);
-    private readonly _draggable = signal(false);
-
-    /**
-     * Implemented as part of KbqFormFieldControl. Also set by the bound form control.
-     *
-     * @docs-private
-     */
-    readonly disabled = linkedSignal(() => this.disabledInput());
-
-    // One signal per host value. The host bindings of every tag list in a view run in that view's reactive consumer,
-    // where a signal read again by another binding costs a scan of everything the view has read.
-    private readonly draggableState = computed(() => this._draggable() && !this.disabled());
-    private readonly _tabIndex = signal(0);
     private readonly resolvedTabIndex = computed(() =>
         this.disabled() || this.registeredInput() ? null : this._tabIndex()
     );
@@ -280,65 +340,6 @@ export class KbqTagList
 
     /** Triggers unsubscription from all per-tags streams when tags are reset. */
     private readonly tagsSubscriptions$ = new Subject<void>();
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     *
-     * @docs-private
-     */
-    readonly controlType: string = 'tag-list';
-
-    /**
-     * Implemented as part of KbqFormFieldControl. Set with `[value]`, by the form control and by the rendered
-     * tags.
-     *
-     * @docs-private
-     */
-    readonly value = linkedSignal(() => this.valueInput());
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     *
-     * @docs-private
-     */
-    readonly id = computed(() => this.registeredInput()?.id() ?? this.uid);
-
-    /**
-     * Implemented as part of KbqFormFieldControl. Taken from the `kbqTagInput` when there is one.
-     *
-     * @docs-private
-     */
-    readonly placeholder = computed(() => {
-        const tagInput = this.registeredInput();
-
-        return tagInput ? tagInput.placeholder() : this.placeholderInput();
-    });
-
-    /** Whether any tags or the kbqTagInput inside of this tag-list has focus. */
-    // Derived from the current tags: one removed while focused fires no blur. Read from the query, as syncing
-    // `tags` emits `changes`, whose subscribers must not run inside a computed.
-    readonly focused = computed(
-        () => !!this.registeredInput()?.focused() || this.tagsQuery().some((tag) => tag.hasFocus)
-    );
-
-    /**
-     * Implemented as part of KbqFormFieldControl. Forwarded from the registered `kbqTagInput`, which
-     * is the element the browser actually autofills — the tag list itself is not an input.
-     *
-     * @docs-private
-     */
-    readonly autofilled = computed(() => this.registeredInput()?.autofilled?.() ?? false);
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     *
-     * @docs-private
-     */
-    readonly empty = computed(() => {
-        const tagInput = this.registeredInput();
-
-        return (!tagInput || tagInput.empty()) && this.tagsQuery().length === 0;
-    });
 
     /**
      * User defined tab index.

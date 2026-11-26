@@ -347,13 +347,6 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
     private readonly modeState = signal<KbqThemeMode>(this.readMode());
     private readonly staticThemeState = signal<string | null>(this.readStaticTheme());
 
-    /** `mode()` resolved to a concrete `'light'`/`'dark'` target — never `'auto'`. */
-    private readonly resolvedMode = computed<KbqThemeColorScheme>(() => {
-        const mode = this.modeState();
-
-        return mode === 'auto' ? (this.systemPrefersDark() ? 'dark' : 'light') : mode;
-    });
-
     /** Themes available to select from. Set via `setThemes()` to register a fully custom set. */
     readonly themes = this.themesState.asReadonly();
 
@@ -366,6 +359,13 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
      * cleared or `setMode()`/`toggle()` is called. `null` when nothing is selected.
      */
     readonly staticTheme = this.staticThemeState.asReadonly();
+
+    /** `mode()` resolved to a concrete `'light'`/`'dark'` target — never `'auto'`. */
+    private readonly resolvedMode = computed<KbqThemeColorScheme>(() => {
+        const mode = this.modeState();
+
+        return mode === 'auto' ? (this.systemPrefersDark() ? 'dark' : 'light') : mode;
+    });
 
     /** The static theme if `staticTheme()` is set, otherwise the theme whose `colorScheme` matches `resolvedMode()`. */
     readonly currentTheme = computed<T | null>(() => {

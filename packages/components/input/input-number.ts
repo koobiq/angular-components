@@ -432,7 +432,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         const shouldBlockMinus = minuses.includes(keyCode) && (this.viewValue.includes(event.key) || this.min() >= 0);
         const isSignAndFractionSepAlreadyExists =
             this.isPeriod(event) &&
-            [KBQ_DEFAULT_PRECISION_SEPARATOR, this.fractionSeparator].includes(event.key) &&
+            [this.fractionSeparator, KBQ_DEFAULT_PRECISION_SEPARATOR].includes(event.key) &&
             viewValueToBeChecked.indexOf(KBQ_DEFAULT_PRECISION_SEPARATOR) !== -1;
 
         if (shouldSkipForIntegerMode || shouldBlockMinus || isSignAndFractionSepAlreadyExists) {
@@ -585,7 +585,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     private isPeriod = (event: KeyboardEvent) => {
         return (
             this.groupSeparator.includes(event.key) ||
-            [KBQ_DEFAULT_PRECISION_SEPARATOR, this.fractionSeparator].includes(event.key)
+            [this.fractionSeparator, KBQ_DEFAULT_PRECISION_SEPARATOR].includes(event.key)
         );
     };
 

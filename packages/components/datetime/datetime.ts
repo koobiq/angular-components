@@ -155,45 +155,12 @@ export class KbqDatetime<D>
         transform: booleanAttribute
     });
 
-    /** Time format the time part parses and renders. Defaults to `TimeFormats.HHmm`. */
-    readonly format = input<TimeFormats>(DEFAULT_TIME_FORMAT);
-
-    /**
-     * Earliest date and time the control accepts, reported as `kbqDatetimeMin`. The calendar disables the days
-     * before it. Defaults to `null`.
-     */
-    readonly min = input<D | null>(null);
-
-    /**
-     * Latest date and time the control accepts, reported as `kbqDatetimeMax`. The calendar disables the days
-     * after it. Defaults to `null`.
-     */
-    readonly max = input<D | null>(null);
-
-    /** The calendar of the date part, for a `kbq-datepicker-toggle-icon` placed in the form field. */
-    readonly datepicker = viewChild.required<KbqDatepicker<D>>(KbqDatepicker);
-    private readonly dateInput = viewChild<KbqDatepickerInput<D>>(KbqDatepickerInput);
-    private readonly timeInput = viewChild<KbqTimepicker<D>>(KbqTimepicker);
-    private readonly timeElement = viewChild<ElementRef<HTMLInputElement>>('timeElement');
-
     private readonly errorStateTracker = new KbqErrorStateTracker(
         inject(ErrorStateMatcher),
         null,
         inject(FormGroupDirective, { optional: true }),
         inject(NgForm, { optional: true })
     );
-    private readonly valueState = signal<D | null>(null);
-    private readonly focusedState = signal(false);
-
-    /** What each part reported last: the parts re-emit a value they already gave when only its validity is refreshed. */
-    private lastDate: D | null = null;
-    private lastTime: D | null = null;
-
-    /** Whether the form control was last told that the parts are unparseable or half filled. */
-    private reportedParseError = false;
-
-    /** Set by a day picked for an empty time part: the calendar hands the focus on to the hours. */
-    private focusTimeOnClose = false;
 
     /** @docs-private */
     protected readonly formField = parentFormField();
@@ -239,6 +206,23 @@ export class KbqDatetime<D>
     /** Whether the control is disabled. Also set by the bound form control. Defaults to `false`. */
     readonly disabled = linkedSignal(() => this.disabledInput());
 
+    /** Time format the time part parses and renders. Defaults to `TimeFormats.HHmm`. */
+    readonly format = input<TimeFormats>(DEFAULT_TIME_FORMAT);
+
+    /**
+     * Earliest date and time the control accepts, reported as `kbqDatetimeMin`. The calendar disables the days
+     * before it. Defaults to `null`.
+     */
+    readonly min = input<D | null>(null);
+
+    /**
+     * Latest date and time the control accepts, reported as `kbqDatetimeMax`. The calendar disables the days
+     * after it. Defaults to `null`.
+     */
+    readonly max = input<D | null>(null);
+
+    private readonly valueState = signal<D | null>(null);
+
     /** @docs-private */
     protected readonly hasSeconds = computed(() => this.format() === TimeFormats.HHmmss);
 
@@ -251,12 +235,30 @@ export class KbqDatetime<D>
     /** The date and time the control holds, `null` until both parts are filled in. */
     readonly value = this.valueState.asReadonly();
 
+    private readonly focusedState = signal(false);
+
     /**
      * Implemented as part of KbqFormFieldControl. Stays `true` while the focus is in the calendar.
      *
      * @docs-private
      */
     readonly focused = this.focusedState.asReadonly();
+
+    /** The calendar of the date part, for a `kbq-datepicker-toggle-icon` placed in the form field. */
+    readonly datepicker = viewChild.required<KbqDatepicker<D>>(KbqDatepicker);
+    private readonly dateInput = viewChild<KbqDatepickerInput<D>>(KbqDatepickerInput);
+    private readonly timeInput = viewChild<KbqTimepicker<D>>(KbqTimepicker);
+    private readonly timeElement = viewChild<ElementRef<HTMLInputElement>>('timeElement');
+
+    /** What each part reported last: the parts re-emit a value they already gave when only its validity is refreshed. */
+    private lastDate: D | null = null;
+    private lastTime: D | null = null;
+
+    /** Whether the form control was last told that the parts are unparseable or half filled. */
+    private reportedParseError = false;
+
+    /** Set by a day picked for an empty time part: the calendar hands the focus on to the hours. */
+    private focusTimeOnClose = false;
 
     /**
      * Implemented as part of KbqFormFieldControl.

@@ -106,12 +106,13 @@ export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
     private readonly location = inject(Location);
     private readonly injector = inject(Injector);
     protected readonly docStates = inject(DocsDocStates);
-    private readonly pagePrefetch = inject(DocsPagePrefetch);
-
-    protected readonly selectedNodeId = model(this.getSelectedNodeIdFromUrl());
 
     private readonly scrollbar = viewChild.required(KbqScrollbarViewport);
     private readonly tree = viewChild.required(KbqTreeSelection);
+
+    protected readonly treeControl: FlatTreeControl<TreeFlatNode>;
+    protected readonly dataSource: KbqTreeFlatDataSource<TreeNode, TreeFlatNode>;
+    protected readonly selectedNodeId = model(this.getSelectedNodeIdFromUrl());
 
     /**
      * Last node id derived from the URL. `selectedNodeId` cannot serve as that baseline: it is a
@@ -120,8 +121,7 @@ export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
      */
     private lastUrlNodeId = this.selectedNodeId();
 
-    protected readonly treeControl: FlatTreeControl<TreeFlatNode>;
-    protected readonly dataSource: KbqTreeFlatDataSource<TreeNode, TreeFlatNode>;
+    private readonly pagePrefetch = inject(DocsPagePrefetch);
 
     constructor() {
         super();

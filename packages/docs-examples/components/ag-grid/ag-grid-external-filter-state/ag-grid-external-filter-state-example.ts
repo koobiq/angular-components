@@ -59,11 +59,11 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridExternalFilterStateExample {
-    readonly filter = model<string | null>(null);
-
     protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly rowData = exampleGetIncidents();
     readonly options = [...new Set(this.rowData.map((row) => row.category))];
+    readonly filter = model<string | null>(null);
+
     protected readonly columnDefs = computed(() =>
         exampleIncidentColumns(this.t().headers, 'id', 'category', 'event', 'severity', 'status')
     );

@@ -84,7 +84,7 @@ const renderExample = (item: DocsStructureItem, id: string, files: Map<string, s
 export const ownsExample = (item: DocsStructureItem, id: string): boolean => {
     const directory = EXAMPLE_COMPONENTS[id]?.packagePath.split('/')[1];
 
-    return !!directory && [item.apiId, item.id, item.path && posix.basename(item.path)].includes(directory);
+    return !!directory && [item.id, item.apiId, item.path && posix.basename(item.path)].includes(directory);
 };
 
 /**

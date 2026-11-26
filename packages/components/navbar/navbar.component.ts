@@ -83,6 +83,20 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
 
+    /** The focusable items projected into the navbar, in projection order. @docs-private */
+    protected readonly focusableItemsQuery = contentChildren<KbqNavbarFocusableItem>(
+        forwardRef(() => KbqNavbarFocusableItem),
+        { descendants: true }
+    );
+
+    /** The focusable items as a `QueryList`, kept in step with the query. @docs-private */
+    protected readonly focusableItemsList = kbqQueryListFrom(this.focusableItemsQuery);
+
+    /** @docs-private */
+    keyManager: FocusKeyManager<KbqNavbarFocusableItem> = new FocusKeyManager<KbqNavbarFocusableItem>(
+        this.focusableItemsList()
+    ).withTypeAhead();
+
     /**
      * Tab index of the navbar host. The navbar owns the single tab stop of the whole widget and moves focus
      * between its items with the arrow keys. A navbar without a focusable item stays out of the tab order.
@@ -95,25 +109,11 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
      */
     readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
 
-    /** The focusable items projected into the navbar, in projection order. @docs-private */
-    protected readonly focusableItemsQuery = contentChildren<KbqNavbarFocusableItem>(
-        forwardRef(() => KbqNavbarFocusableItem),
-        { descendants: true }
-    );
-
     private lastFocusOrigin: FocusOrigin = null;
     private cachedOptionFocusChanges: Observable<KbqNavbarFocusableItemEvent> | null = null;
     private cachedOptionBlurChanges: Observable<KbqNavbarFocusableItemEvent> | null = null;
     private optionFocusSubscription: Subscription | null = null;
     private optionBlurSubscription: Subscription | null = null;
-
-    /** The focusable items as a `QueryList`, kept in step with the query. @docs-private */
-    protected readonly focusableItemsList = kbqQueryListFrom(this.focusableItemsQuery);
-
-    /** @docs-private */
-    keyManager: FocusKeyManager<KbqNavbarFocusableItem> = new FocusKeyManager<KbqNavbarFocusableItem>(
-        this.focusableItemsList()
-    ).withTypeAhead();
 
     /**
      * Tab index the host renders: {@link tabIndex}, or `-1` while there is no item to hand the focus to. Derived
@@ -341,9 +341,6 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     );
     private readonly renderer = inject(Renderer2);
 
-    /** Reports the navbar host's resizes, the page-level element aside. */
-    private readonly hostResizeObserver = inject(SharedResizeObserver);
-
     /** @docs-private */
     readonly rectangleElements = contentChildren<KbqNavbarRectangleElement>(
         forwardRef(() => KbqNavbarRectangleElement),
@@ -374,11 +371,25 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     /** The measurement and hiding engine of the third fit stage, shared with `KbqOverflowItems`. */
     private readonly engine = new KbqOverflowFitEngine(this.window);
 
+    /**
+     * Accessible name of the «More» trigger: the active locale's `more`, or the default's — a full custom
+     * configuration that leaves `more` out must not leave the trigger an unnamed icon-only button.
+     */
+    protected readonly moreAriaLabel = computed(
+        () => this.localeConfiguration().more ?? KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION.more ?? null
+    );
+
+    /** Whether the «More» trigger is shown, i.e. whether anything is hidden under it. @docs-private */
+    protected readonly moreTriggerVisible = signal(false);
+
     /** The «More» trigger as the engine's result slot, its width joining the budget once it is shown. */
     private readonly moreResult: KbqOverflowFitResult = {
         hide: () => this.setMoreTriggerHidden(true),
         show: () => this.setMoreTriggerHidden(false)
     };
+
+    /** Reports the navbar host's resizes, the page-level element aside. */
+    private readonly hostResizeObserver = inject(SharedResizeObserver);
 
     /** Items moved into the «More» panel, with the anchors they return to. */
     private readonly movedToMorePanel = new Map<
@@ -405,9 +416,6 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     /** The debounce of a burst of recalculation triggers, the resize one of the past included. */
     private readonly recalculationDebounce = signal(this.resizeDebounceInterval);
 
-    /** Whether the «More» trigger is shown, i.e. whether anything is hidden under it. @docs-private */
-    protected readonly moreTriggerVisible = signal(false);
-
     /**
      * The focusable items with the «More» trigger appended, visible only while there is something hidden.
      */
@@ -418,14 +426,6 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         return trigger && this.moreTriggerVisible() ? [...items, trigger] : items;
     });
     private readonly focusableItemsWithTriggerList = kbqQueryListFrom(this.focusableItemsWithTrigger);
-
-    /**
-     * Accessible name of the «More» trigger: the active locale's `more`, or the default's — a full custom
-     * configuration that leaves `more` out must not leave the trigger an unnamed icon-only button.
-     */
-    protected readonly moreAriaLabel = computed(
-        () => this.localeConfiguration().more ?? KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION.more ?? null
-    );
 
     /** Raw `resize` events of the window, fed from outside the Angular zone. @docs-private */
     readonly resizeStream = new Subject<Event>();

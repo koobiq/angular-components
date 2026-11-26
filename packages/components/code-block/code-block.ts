@@ -145,31 +145,6 @@ export class KbqCodeBlockTabLinkContent {}
 export class KbqCodeBlock implements AfterViewInit {
     private readonly defaultOptions = inject(KBQ_CODE_BLOCK_DEFAULT_OPTIONS, { optional: true });
 
-    /**
-     * Component locale configuration.
-     *
-     * @docs-private
-     */
-    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
-        'codeBlock',
-        KBQ_CODE_BLOCK_LOCALE_CONFIGURATION
-    );
-    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly injector = inject(Injector);
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly platform = inject(Platform);
-    private readonly focusMonitor = inject(FocusMonitor);
-    private readonly clipboard = inject(Clipboard);
-    private readonly domSanitizer = inject(DomSanitizer);
-    private readonly document = inject<Document>(DOCUMENT);
-    private readonly sharedResizeObserver = inject(SharedResizeObserver);
-
-    /**
-     * @docs-private
-     */
-    protected readonly fallbackFileName = inject(KBQ_CODE_BLOCK_FALLBACK_FILE_NAME);
-    private readonly window = inject(KBQ_WINDOW);
-
     /** Whether to display line numbers. Defaults to `lineNumbers` of `KBQ_CODE_BLOCK_DEFAULT_OPTIONS`, or `false`. */
     readonly lineNumbers = input(this.defaultOptions?.lineNumbers ?? false, { transform: booleanAttribute });
 
@@ -189,12 +164,49 @@ export class KbqCodeBlock implements AfterViewInit {
      */
     readonly softWrapInput = input(false, { alias: 'softWrap', transform: booleanAttribute });
 
+    private readonly copyButtonTooltip = viewChild<KbqTooltipTrigger>('copyButtonTooltip');
+    private readonly highlight = viewChild(KbqCodeBlockHighlight);
+    private readonly scrollbarViewport = viewChild.required(KbqScrollbarViewport);
+    private readonly preElementRef = viewChild<ElementRef<HTMLElement>>('codeBlockPre');
+    private readonly codeElementRef = viewChild<ElementRef<HTMLElement>>('codeBlockCode');
+
+    /** @docs-private */
+    protected readonly tabLinkTemplate = contentChild<
+        KbqCodeBlockTabLinkContent,
+        TemplateRef<KbqTabLinkTemplateContext>
+    >(KbqCodeBlockTabLinkContent, { read: TemplateRef });
+
+    /** Memoized so every waiter shares one `toObservable` effect instead of installing one each. */
+    private highlightPending?: Observable<boolean>;
+
+    /**
+     * Whether the code runs past `maxHeight`, or `undefined` until the browser has measured it. The server
+     * never measures, and its markup keeps the limit so that a block hydrated later holds its height.
+     *
+     * @docs-private
+     */
+    protected readonly contentExceedsMaxHeight = signal<boolean | undefined>(undefined);
+
+    /** Whether sequences of whitespace should be preserved. */
+    readonly softWrap = linkedSignal(() => this.softWrapInput());
+
     /**
      * Backing input of `viewAll`, in the same shape as `softWrapInput`.
      *
      * @docs-private
      */
     readonly viewAllInput = input(false, { alias: 'viewAll', transform: booleanAttribute });
+
+    /**
+     * Output to support two-way binding on `[(softWrap)]` property.
+     */
+    readonly softWrapChange = output<boolean>();
+
+    /**
+     * Allows to view all the code, otherwise it will be hidden.
+     * Works only with `maxHeight` property.
+     */
+    readonly viewAll = linkedSignal(() => this.viewAllInput());
 
     /**
      * Maximum height of the code block content, other parts will be hidden.
@@ -211,99 +223,10 @@ export class KbqCodeBlock implements AfterViewInit {
      */
     readonly canDownloadInput = input(false, { alias: 'canDownload', transform: booleanAttribute });
 
-    /** Added copy code button. */
-    readonly canCopy = input<boolean, unknown>(true, { transform: booleanAttribute });
-
-    /** Whether the actionbar should remain visible when tabs are hidden. */
-    readonly alwaysShowActionbar = input<boolean, unknown>(this.defaultOptions?.alwaysShowActionbar ?? false, {
-        transform: booleanAttribute
-    });
-
-    /**
-     * Backing input of `files`.
-     *
-     * @docs-private
-     */
-    readonly filesInput = input<KbqCodeBlockFile[]>([], { alias: 'files' });
-
-    /**
-     * Backing input of `activeFileIndex`. `numberAttribute` yields NaN for anything not cleanly numeric,
-     * and an unbound `index?: number` reaches it as `undefined`, so the transform floors both at 0 rather
-     * than letting NaN through a signal typed `number`.
-     *
-     * @docs-private
-     */
-    readonly activeFileIndexInput = input(0, {
-        alias: 'activeFileIndex',
-        transform: (value: unknown) => {
-            const index = numberAttribute(value);
-
-            return Number.isInteger(index) && index >= 0 ? index : 0;
-        }
-    });
-
-    /** Whether to hide border. */
-    readonly noBorder = input<boolean, unknown>(false, { transform: booleanAttribute });
-
-    /**
-     * Backing input of `hideTabs`.
-     *
-     * @docs-private
-     */
-    readonly hideTabsInput = input(false, { alias: 'hideTabs', transform: booleanAttribute });
-
-    /**
-     * Output to support two-way binding on `[(softWrap)]` property.
-     */
-    readonly softWrapChange = output<boolean>();
-
     /**
      * Output to support two-way binding on `[(viewAll)]` property.
      */
     readonly viewAllChange = output<boolean>();
-
-    /**
-     * Output to support two-way binding on `[(activeFileIndex)]` property.
-     */
-    readonly activeFileIndexChange = output<number>();
-
-    /**
-     * Output to support two-way binding on `[(hideTabs)]` property.
-     */
-    readonly hideTabsChange = output<boolean>();
-
-    private readonly copyButtonTooltip = viewChild<KbqTooltipTrigger>('copyButtonTooltip');
-    private readonly highlight = viewChild(KbqCodeBlockHighlight);
-    private readonly scrollbarViewport = viewChild.required(KbqScrollbarViewport);
-    private readonly preElementRef = viewChild<ElementRef<HTMLElement>>('codeBlockPre');
-    private readonly codeElementRef = viewChild<ElementRef<HTMLElement>>('codeBlockCode');
-
-    /** @docs-private */
-    protected readonly tabLinkTemplate = contentChild<
-        KbqCodeBlockTabLinkContent,
-        TemplateRef<KbqTabLinkTemplateContext>
-    >(KbqCodeBlockTabLinkContent, { read: TemplateRef });
-
-    /** Memoized so every waiter shares one `toObservable` effect instead of installing one each. */
-    private highlightPending?: Observable<boolean>;
-    private readonly actionbarHovered = signal(false);
-
-    /**
-     * Whether the code runs past `maxHeight`, or `undefined` until the browser has measured it. The server
-     * never measures, and its markup keeps the limit so that a block hydrated later holds its height.
-     *
-     * @docs-private
-     */
-    protected readonly contentExceedsMaxHeight = signal<boolean | undefined>(undefined);
-
-    /** Whether sequences of whitespace should be preserved. */
-    readonly softWrap = linkedSignal(() => this.softWrapInput());
-
-    /**
-     * Allows to view all the code, otherwise it will be hidden.
-     * Works only with `maxHeight` property.
-     */
-    readonly viewAll = linkedSignal(() => this.viewAllInput());
 
     /**
      * @docs-private
@@ -321,12 +244,58 @@ export class KbqCodeBlock implements AfterViewInit {
     /** Added download code button. */
     readonly canDownload = linkedSignal(() => this.canDownloadInput());
 
+    /** Added copy code button. */
+    readonly canCopy = input<boolean, unknown>(true, { transform: booleanAttribute });
+
+    /** Whether the actionbar should remain visible when tabs are hidden. */
+    readonly alwaysShowActionbar = input<boolean, unknown>(this.defaultOptions?.alwaysShowActionbar ?? false, {
+        transform: booleanAttribute
+    });
+
+    /**
+     * Backing input of `files`.
+     *
+     * @docs-private
+     */
+    readonly filesInput = input<KbqCodeBlockFile[]>([], { alias: 'files' });
+
     /** Files to display. */
     // TODO: mark as `required`.
     readonly files = linkedSignal(() => this.filesInput());
 
+    /**
+     * Backing input of `activeFileIndex`. `numberAttribute` yields NaN for anything not cleanly numeric,
+     * and an unbound `index?: number` reaches it as `undefined`, so the transform floors both at 0 rather
+     * than letting NaN through a signal typed `number`.
+     *
+     * @docs-private
+     */
+    readonly activeFileIndexInput = input(0, {
+        alias: 'activeFileIndex',
+        transform: (value: unknown) => {
+            const index = numberAttribute(value);
+
+            return Number.isInteger(index) && index >= 0 ? index : 0;
+        }
+    });
+
     /** Defines which file (index) is active. */
     readonly activeFileIndex = linkedSignal(() => this.activeFileIndexInput());
+
+    /** Whether to hide border. */
+    readonly noBorder = input<boolean, unknown>(false, { transform: booleanAttribute });
+
+    /**
+     * Backing input of `hideTabs`.
+     *
+     * @docs-private
+     */
+    readonly hideTabsInput = input(false, { alias: 'hideTabs', transform: booleanAttribute });
+
+    /**
+     * Output to support two-way binding on `[(activeFileIndex)]` property.
+     */
+    readonly activeFileIndexChange = output<number>();
 
     /**
      * Index of the file actually rendered. `files` and `activeFileIndex` are written one after the other,
@@ -356,6 +325,38 @@ export class KbqCodeBlock implements AfterViewInit {
      * Makes actionbar floating if tabs are hidden.
      */
     readonly hideTabs = linkedSignal(() => this.hideTabsInput());
+
+    /**
+     * Component locale configuration.
+     *
+     * @docs-private
+     */
+    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'codeBlock',
+        KBQ_CODE_BLOCK_LOCALE_CONFIGURATION
+    );
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly injector = inject(Injector);
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly platform = inject(Platform);
+    private readonly focusMonitor = inject(FocusMonitor);
+    private readonly clipboard = inject(Clipboard);
+    private readonly domSanitizer = inject(DomSanitizer);
+    private readonly document = inject<Document>(DOCUMENT);
+    private readonly sharedResizeObserver = inject(SharedResizeObserver);
+
+    /**
+     * @docs-private
+     */
+    protected readonly fallbackFileName = inject(KBQ_CODE_BLOCK_FALLBACK_FILE_NAME);
+    private readonly window = inject(KBQ_WINDOW);
+
+    /**
+     * Output to support two-way binding on `[(hideTabs)]` property.
+     */
+    readonly hideTabsChange = output<boolean>();
+
+    private readonly actionbarHovered = signal(false);
 
     /**
      * A lone file with no filename has nothing to label a tab with, so the bar is hidden whatever was

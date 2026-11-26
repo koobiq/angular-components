@@ -144,6 +144,40 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
      * the keys with {@link handleKeydown}.
      */
     readonly activeDescendantNavigation = input(false, { transform: booleanAttribute });
+
+    private readonly panelFormField = contentChild(KbqFormField);
+
+    /**
+     * Signal content queries carry `descendants: true`, and a nested panel declared inside this one's
+     * content is part of the same view — so the match has to be narrowed to the fields this panel owns,
+     * the way `syncDirectDescendants` narrows the items.
+     */
+    private readonly searches = contentChildren(KbqDropdownSearch, { descendants: true });
+
+    /** The pending deferred initial focus, see `focusFirstItem`. */
+    private initialFocusRef: AfterRenderRef | null = null;
+    private readonly search: Signal<KbqDropdownSearch | undefined> = computed(() =>
+        this.searches().find((search) => search.panel === this)
+    );
+
+    /** Whether the dropdown projects a search form-field. @docs-private */
+    readonly hasSearch = computed(() => !!this.panelFormField());
+
+    /** Whether the panel highlights the active item instead of focusing it. @docs-private */
+    readonly inSearchMode: Signal<boolean> = computed(() => !!this.search() || this.activeDescendantNavigation());
+
+    /**
+     * Panel that its search field filters, as the field describes it to assistive technology. The items are actions
+     * rather than options, so the field keeps its native role and is not a combobox.
+     *
+     * @docs-private
+     */
+    readonly searchFieldPopup: KbqSearchFieldPopup = {
+        comboboxPopupRole: null,
+        popup: () => this.panelElement()?.nativeElement,
+        activeDescendant: () => (this.inSearchMode() ? this.keyManager?.activeItem?.getHostElement() : null)
+    };
+
     readonly navigationWithWrap = input<boolean>(false);
 
     // The position members are `model()`s because `kbq-split-button` and `kbq-navbar-item` write them.
@@ -205,15 +239,6 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     /** Event emitted when the dropdown is closed. */
     readonly closed = output<DropdownCloseReason>();
 
-    private readonly panelFormField = contentChild(KbqFormField);
-
-    /**
-     * Signal content queries carry `descendants: true`, and a nested panel declared inside this one's
-     * content is part of the same view — so the match has to be narrowed to the fields this panel owns,
-     * the way `syncDirectDescendants` narrows the items.
-     */
-    private readonly searches = contentChildren(KbqDropdownSearch, { descendants: true });
-
     /** @docs-private */
     readonly templateRef = viewChild.required(TemplateRef);
     private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
@@ -228,12 +253,6 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
      * @docs-private
      */
     readonly lazyContent = contentChild(KbqDropdownContent);
-
-    /** The pending deferred initial focus, see `focusFirstItem`. */
-    private initialFocusRef: AfterRenderRef | null = null;
-    private readonly search: Signal<KbqDropdownSearch | undefined> = computed(() =>
-        this.searches().find((search) => search.panel === this)
-    );
 
     /** The position the trigger resolved; supersedes the inputs until one of them changes. */
     private readonly positionOverride = signal<{ posX: KbqDropdownPositionX; posY: KbqDropdownPositionY } | null>(null);
@@ -279,24 +298,6 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
 
     /** Watches for a forced switch to a sibling trigger while a safe area is active. */
     private switchTargetSubscription = Subscription.EMPTY;
-
-    /** Whether the dropdown projects a search form-field. @docs-private */
-    readonly hasSearch = computed(() => !!this.panelFormField());
-
-    /** Whether the panel highlights the active item instead of focusing it. @docs-private */
-    readonly inSearchMode: Signal<boolean> = computed(() => !!this.search() || this.activeDescendantNavigation());
-
-    /**
-     * Panel that its search field filters, as the field describes it to assistive technology. The items are actions
-     * rather than options, so the field keeps its native role and is not a combobox.
-     *
-     * @docs-private
-     */
-    readonly searchFieldPopup: KbqSearchFieldPopup = {
-        comboboxPopupRole: null,
-        popup: () => this.panelElement()?.nativeElement,
-        activeDescendant: () => (this.inSearchMode() ? this.keyManager?.activeItem?.getHostElement() : null)
-    };
 
     /** Config object passed into the dropdown panel's `[class]` binding. */
     protected readonly classList = computed<Record<string, boolean>>(() => {

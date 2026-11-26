@@ -34,6 +34,17 @@ export abstract class KbqPopUp implements OnDestroy {
     private readonly hostInjector = inject(Injector);
 
     private readonly hoveredState = signal(false);
+
+    /**
+     * Whether the pop-up appears without motion.
+     *
+     * @docs-private
+     */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
+
+    /** Whether the pointer is over the pop-up. */
+    readonly hovered: Signal<boolean> = this.hoveredState.asReadonly();
+
     private readonly classMapState = signal({});
     private resolvedPlacement = 'top';
     private appliedArrowShift: { x: string; y: string } | null = null;
@@ -45,15 +56,6 @@ export abstract class KbqPopUp implements OnDestroy {
     private hideOnMouseLeave: (() => void) | null = null;
     private showAnimation?: { destroy(): void };
 
-    /**
-     * Whether the pop-up appears without motion.
-     *
-     * @docs-private
-     */
-    protected readonly animationsDisabled = kbqAnimationsDisabled();
-
-    /** Whether the pointer is over the pop-up. */
-    readonly hovered: Signal<boolean> = this.hoveredState.asReadonly();
     trigger: KbqPopUpTrigger<unknown> | undefined;
     header: string | TemplateRef<unknown> = '';
     content: string | TemplateRef<unknown> = '';

@@ -129,6 +129,16 @@ export class KbqSearchExpandable
     protected readonly nativeElement: HTMLElement = inject(ElementRef).nativeElement;
     private readonly carrier = inject(KbqLocaleOverridesDirective, { self: true });
 
+    /**
+     * Accessible names of the icon-only controls this component renders itself.
+     *
+     * @docs-private
+     */
+    protected readonly a11yLocaleConfiguration = this.carrier.read('a11y', KBQ_A11Y_LOCALE_CONFIGURATION);
+
+    /** Strings currently rendered by the component. */
+    readonly localeConfiguration = this.carrier.read('searchExpandable', KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION);
+
     /** Emit event by enter or not. Default is false */
     readonly isEmitValueByEnterEnabled = input(false, { transform: booleanAttribute });
 
@@ -186,16 +196,6 @@ export class KbqSearchExpandable
     private readonly disabledState = signal(false);
     private _tabIndex = 0;
     private lastEmittedValue = defaultValue;
-
-    /**
-     * Accessible names of the icon-only controls this component renders itself.
-     *
-     * @docs-private
-     */
-    protected readonly a11yLocaleConfiguration = this.carrier.read('a11y', KBQ_A11Y_LOCALE_CONFIGURATION);
-
-    /** Strings currently rendered by the component. */
-    readonly localeConfiguration = this.carrier.read('searchExpandable', KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION);
 
     /**
      * Control backing the expanded input. Owning it — rather than binding the consumer's own control to

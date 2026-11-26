@@ -1194,7 +1194,7 @@ export class KbqListSelection<T = any>
     onKeyDown(event: KeyboardEvent): void {
         const keyCode = event.keyCode;
 
-        if ([ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE].includes(keyCode) || isVerticalMovement(event)) {
+        if ([SPACE, ENTER, LEFT_ARROW, RIGHT_ARROW].includes(keyCode) || isVerticalMovement(event)) {
             event.preventDefault();
         }
 
@@ -1206,7 +1206,7 @@ export class KbqListSelection<T = any>
             this.copyActiveOption(event);
 
             return;
-        } else if ([ENTER, SPACE].includes(keyCode)) {
+        } else if ([SPACE, ENTER].includes(keyCode)) {
             this.toggleFocusedOption();
 
             return;
@@ -1783,6 +1783,10 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
 
     readonly actionButton = contentChild(KbqOptionActionComponent);
     private readonly tooltipTriggerQuery = contentChild(KbqTooltipTrigger);
+
+    // Getters rather than the signal queries themselves: `KbqOptionActionComponent` reads the triggers as
+    // directive instances through KBQ_OPTION_ACTION_PARENT — see #DS-5079.
+
     private readonly dropdownTriggerQuery = contentChild(KbqDropdownTrigger);
     readonly pseudoCheckbox = contentChild(KbqPseudoCheckbox);
 

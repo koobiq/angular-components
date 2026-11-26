@@ -69,6 +69,27 @@ export class KbqLink implements AfterViewInit, AfterViewChecked, OnDestroy {
     /** Whether the link is disabled. */
     readonly disabled = input(false, { transform: booleanAttribute });
 
+    private readonly icons = contentChildren(
+        forwardRef(() => KbqIcon),
+        { read: ElementRef }
+    );
+
+    /**
+     * `[kbq-link]` styles an `<a>` or a `<span>`, where `disabled` is not a valid attribute and means
+     * nothing to assistive tech, so the state is exposed through ARIA instead. The check is on the tag
+     * rather than hardcoded, because the selector does not restrict the host.
+     */
+    private readonly hostSupportsNativeDisabled = supportsNativeDisabled(this.nativeElement);
+
+    /**
+     * Effective disabled state, mirroring the `disabled` input. It stays writable because `kbqTooltip`
+     * accepts a link through `forDisabledComponent` and reads this signal to keep a tooltip reachable on a
+     * disabled link; the host bindings read it rather than the input so such a write still shows.
+     *
+     * @docs-private
+     */
+    readonly disabledSignal = linkedSignal(() => this.disabled());
+
     /** Tab order of the link. A disabled link is taken out of the tab order regardless of this value. */
     readonly tabIndex = input(0, { transform: numberAttribute });
 
@@ -97,29 +118,8 @@ export class KbqLink implements AfterViewInit, AfterViewChecked, OnDestroy {
      */
     readonly print = input<string | null>();
 
-    private readonly icons = contentChildren(
-        forwardRef(() => KbqIcon),
-        { read: ElementRef }
-    );
-
-    /**
-     * `[kbq-link]` styles an `<a>` or a `<span>`, where `disabled` is not a valid attribute and means
-     * nothing to assistive tech, so the state is exposed through ARIA instead. The check is on the tag
-     * rather than hardcoded, because the selector does not restrict the host.
-     */
-    private readonly hostSupportsNativeDisabled = supportsNativeDisabled(this.nativeElement);
-
     /** The URL last written to the `print` attribute. */
     private printedUrl: string | undefined;
-
-    /**
-     * Effective disabled state, mirroring the `disabled` input. It stays writable because `kbqTooltip`
-     * accepts a link through `forDisabledComponent` and reads this signal to keep a tooltip reachable on a
-     * disabled link; the host bindings read it rather than the input so such a write still shows.
-     *
-     * @docs-private
-     */
-    readonly disabledSignal = linkedSignal(() => this.disabled());
 
     /** @docs-private */
     protected readonly hasIcon = computed(() => this.icons().length > 0);

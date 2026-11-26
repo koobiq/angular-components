@@ -712,8 +712,6 @@ const SELECT_ALL_TREE_DATA = {
     `
 })
 class MultiTreeSelectWithSelectAll implements OnInit {
-    readonly select = viewChild.required(KbqTreeSelect);
-
     control = new UntypedFormControl();
     multiple = true;
     selectAll = true;
@@ -731,6 +729,8 @@ class MultiTreeSelectWithSelectAll implements OnInit {
         defaultCompareViewValues,
         (node) => this.disabledNodes.includes(node.name)
     );
+    readonly select = viewChild.required(KbqTreeSelect);
+
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
     searchControl: UntypedFormControl = new UntypedFormControl();
@@ -780,8 +780,6 @@ class MultiTreeSelectWithSelectAll implements OnInit {
     `
 })
 class MultiTreeSelectWithCleaner {
-    readonly select = viewChild.required(KbqTreeSelect);
-
     control = new UntypedFormControl(['Documents', 'Downloads']);
 
     /** Nodes disabled through the option's own `[disabled]` input, which only a rendered node carries. */
@@ -798,6 +796,8 @@ class MultiTreeSelectWithCleaner {
         defaultCompareViewValues,
         (node) => this.disabledNodes.includes(node.name)
     );
+    readonly select = viewChild.required(KbqTreeSelect);
+
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 

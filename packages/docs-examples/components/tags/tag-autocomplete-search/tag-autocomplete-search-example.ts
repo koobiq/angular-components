@@ -82,9 +82,9 @@ export class TagAutocompleteSearchExample {
     protected readonly tagInputModel = model('');
 
     private readonly options = getAutocompleteOptions();
-    protected readonly tags = model(this.options.slice(0, 2));
 
     protected readonly separatorKeysCodes = [ENTER, COMMA];
+    protected readonly tags = model(this.options.slice(0, 2));
     protected readonly searchTokens = computed(() => tokenizeSearchQuery(this.tagInputModel().trim()));
     protected readonly filteredOptions = computed(() => {
         const options = this.options.filter((option) => !this.tags().includes(option));

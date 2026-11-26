@@ -26,7 +26,6 @@ import { KbqFlag } from '@koobiq/components/flag';
 })
 export class FlagSquareExample {
     private readonly sanitizer = inject(DomSanitizer);
-
     protected readonly countries = (
         [
             { code: 'EU', name: 'European Union' },

@@ -540,12 +540,6 @@ export class KbqTooltipTrigger
     private stopCaretListeners: (() => void) | null = null;
 
     /**
-     * Origin that stays on the caret of the field while `kbqRelativeToCaret` is enabled, and on the host element
-     * otherwise — so switching the input off while the tooltip is open does not leave it on the caret.
-     */
-    private readonly caretOrigin = kbqCreateCaretOrigin(() => this.measureCaretAnchor());
-
-    /**
      * Changes hiding behavior. By default, tooltip is hidden on mouseleave from trigger.
      * Setting hideWithTimeout to true will delay tooltip hiding and will not hide when the mouse moves from trigger
      * to tooltip.
@@ -635,6 +629,12 @@ export class KbqTooltipTrigger
      * can tell a keyboard focus from the one a click leaves behind.
      */
     protected lastFocusOrigin: FocusOrigin = null;
+
+    /**
+     * Origin that stays on the caret of the field while `kbqRelativeToCaret` is enabled, and on the host element
+     * otherwise — so switching the input off while the tooltip is open does not leave it on the caret.
+     */
+    private readonly caretOrigin = kbqCreateCaretOrigin(() => this.measureCaretAnchor());
 
     /** @docs-private */
     protected get scrollStrategy(): () => ScrollStrategy {
@@ -1491,7 +1491,7 @@ export class KbqTooltipTrigger
     protected applyRelativeToPointer() {
         if (
             !this.strategy ||
-            ![PopUpPlacements.Bottom, PopUpPlacements.Top].includes(this.placement as PopUpPlacements) ||
+            ![PopUpPlacements.Top, PopUpPlacements.Bottom].includes(this.placement as PopUpPlacements) ||
             this.triggerName !== 'mouseenter'
         ) {
             this.resetOrigin();

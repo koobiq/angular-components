@@ -38,9 +38,6 @@ export class ThemeStaticSelectionExample implements OnDestroy {
     // control of it (see the `Day`/`Night` classes below, which alias `KbqThemeSelector` for this reason).
     protected readonly theme = inject(KbqThemeService);
 
-    private readonly previousThemes = this.theme.themes();
-    private readonly previousStaticTheme = this.theme.staticTheme();
-
     protected readonly t = injectTranslation(TRANSLATIONS);
 
     /**
@@ -57,6 +54,9 @@ export class ThemeStaticSelectionExample implements OnDestroy {
 
         return this.customThemes().find((option) => option.name === name)?.label ?? name ?? this.t().pickTheme;
     });
+
+    private readonly previousThemes = this.theme.themes();
+    private readonly previousStaticTheme = this.theme.staticTheme();
 
     constructor() {
         this.theme.setThemes([...this.previousThemes, ...this.customThemes()]);

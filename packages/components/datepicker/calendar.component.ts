@@ -54,6 +54,15 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     /** @docs-private */
     readonly maxDateInput = input<D | null | undefined>(undefined, { alias: 'maxDate' });
 
+    private readonly adapter = injectRequiredDateAdapter<D>();
+    private _startAt: D | null = null;
+    private _selected: D | null = null;
+    private _minDate: D | null = null;
+    private _maxDate: D | null = null;
+
+    // What the setter gives before any bound or `startAt` is set; `ngAfterContentInit` resolves it against them.
+    private _activeDate: D = this.adapter.today();
+
     /** Function used to filter which dates are selectable. */
     readonly dateFilter = input<(date: D) => boolean>(undefined!);
 
@@ -80,15 +89,6 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
 
     /** Reference to the current month view component. */
     readonly monthView = viewChild.required(KbqMonthView);
-
-    private readonly adapter = injectRequiredDateAdapter<D>();
-    private _startAt: D | null = null;
-    private _selected: D | null = null;
-    private _minDate: D | null = null;
-    private _maxDate: D | null = null;
-
-    // What the setter gives before any bound or `startAt` is set; `ngAfterContentInit` resolves it against them.
-    private _activeDate: D = this.adapter.today();
 
     /** Subscription to value changes in the associated input element. */
     private inputSubscription = Subscription.EMPTY;

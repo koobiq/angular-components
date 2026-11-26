@@ -57,6 +57,27 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanU
     parentFormGroup = inject(FormGroupDirective, { optional: true });
     defaultErrorStateMatcher = inject(ErrorStateMatcher);
 
+    /** An object used to control when error messages are shown. */
+    readonly errorStateMatcher = input<ErrorStateMatcher>();
+
+    private readonly errorStateTracker = new KbqErrorStateTracker(
+        this.defaultErrorStateMatcher,
+        this.ngControl,
+        this.parentFormGroup,
+        this.parentForm
+    );
+    private readonly focusedValue = signal(false);
+
+    /** Whether the component is in an error state. */
+    readonly errorState = this.errorStateTracker.errorState;
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     *
+     * @docs-private
+     */
+    readonly focused = this.focusedValue.asReadonly();
+
     /**
      * Implemented as part of KbqFormFieldControl.
      *
@@ -64,15 +85,31 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanU
      */
     readonly autofilled = kbqInjectAutofilled();
 
-    // Own namespace: sharing `kbq-input-` with `KbqInput` produced duplicate ids on any page holding both
-    // controls, and the form field's `<label for>` then resolved to the wrong control.
-    protected uid = inject(_IdGenerator).getId('kbq-input-password-');
+    private readonly elementTypeValue = signal<'text' | 'password'>('password');
 
-    /** An object used to control when error messages are shown. */
-    readonly errorStateMatcher = input<ErrorStateMatcher>();
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     *
+     * @docs-private
+     */
+    controlType: string = 'input-password';
+
+    /** Type of the native input: `password` while the password is hidden, `text` while it is shown. */
+    readonly elementType = this.elementTypeValue.asReadonly();
 
     /** @docs-private */
     readonly placeholderInput = input<string | undefined>(undefined, { alias: 'placeholder' });
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     *
+     * @docs-private
+     */
+    readonly placeholder = linkedSignal(() => this.placeholderInput());
+
+    // Own namespace: sharing `kbq-input-` with `KbqInput` produced duplicate ids on any page holding both
+    // controls, and the form field's `<label for>` then resolved to the wrong control.
+    protected uid = inject(_IdGenerator).getId('kbq-input-password-');
 
     /** @docs-private */
     readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
@@ -99,15 +136,6 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanU
     /** @docs-private */
     readonly valueInput = input<string | undefined>(undefined, { alias: 'value' });
 
-    private readonly errorStateTracker = new KbqErrorStateTracker(
-        this.defaultErrorStateMatcher,
-        this.ngControl,
-        this.parentFormGroup,
-        this.parentForm
-    );
-    private readonly focusedValue = signal(false);
-    private readonly elementTypeValue = signal<'text' | 'password'>('password');
-
     /** `disabled` of the bound form control, which takes precedence over the input. */
     private readonly formDisabled = signal<boolean | null>(null);
     private inputValueAccessor: { value: any };
@@ -116,33 +144,6 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanU
     /** The value the element and `value` last agreed on, and the text the element showed then. */
     private syncedValue: unknown;
     private syncedText: string;
-
-    /** Whether the component is in an error state. */
-    readonly errorState = this.errorStateTracker.errorState;
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     *
-     * @docs-private
-     */
-    readonly focused = this.focusedValue.asReadonly();
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     *
-     * @docs-private
-     */
-    controlType: string = 'input-password';
-
-    /** Type of the native input: `password` while the password is hidden, `text` while it is shown. */
-    readonly elementType = this.elementTypeValue.asReadonly();
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     *
-     * @docs-private
-     */
-    readonly placeholder = linkedSignal(() => this.placeholderInput());
 
     /**
      * Implemented as part of KbqFormFieldControl.

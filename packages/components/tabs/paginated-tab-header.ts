@@ -659,7 +659,7 @@ export abstract class KbqPaginatedTabHeader
             this.selectFocusedIndex.emit(this.focusIndex);
         }
 
-        if ([DOWN_ARROW, END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, UP_ARROW].includes(key)) {
+        if ([HOME, END, UP_ARROW, DOWN_ARROW, RIGHT_ARROW, LEFT_ARROW, SPACE, ENTER].includes(key)) {
             event.preventDefault();
         }
     }

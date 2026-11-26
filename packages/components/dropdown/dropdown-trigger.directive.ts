@@ -218,15 +218,6 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     /** Event emitted when the associated dropdown is closed. */
     readonly dropdownClosed = output<void>();
 
-    private readonly openedState = signal(false);
-    private portal?: TemplatePortal;
-    private overlayRef: OverlayRef | null = null;
-
-    /** Per-session subscription to `closingActions()`; torn down on every close. */
-    private closingActionsSubscription = Subscription.EMPTY;
-    private hoverSubscription = Subscription.EMPTY;
-    private widthLockRef: AfterRenderRef | null = null;
-
     lastDestroyReason: DropdownCloseReason = undefined;
 
     /**
@@ -242,6 +233,15 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         outputToObservable(this.dropdownOpened).pipe(map(() => true)),
         outputToObservable(this.dropdownClosed).pipe(map(() => false))
     );
+
+    private readonly openedState = signal(false);
+    private portal?: TemplatePortal;
+    private overlayRef: OverlayRef | null = null;
+
+    /** Per-session subscription to `closingActions()`; torn down on every close. */
+    private closingActionsSubscription = Subscription.EMPTY;
+    private hoverSubscription = Subscription.EMPTY;
+    private widthLockRef: AfterRenderRef | null = null;
 
     // Tracking input type is necessary so it's possible to only auto-focus
     // the first item of the list when the dropdown is opened via the keyboard

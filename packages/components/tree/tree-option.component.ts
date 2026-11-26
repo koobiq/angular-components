@@ -156,6 +156,18 @@ export class KbqTreeOption<T = any>
     private readonly ngZone = inject(NgZone);
     private readonly renderer = inject(Renderer2);
 
+    private readonly focusEvents = new Subject<KbqTreeOptionEvent>();
+    private readonly blurEvents = new Subject<KbqTreeOptionEvent>();
+
+    // Intersected with the rendering base because `KbqTreeNode` resolves its level and expansion state
+    // through it; the option itself only ever touches the `KbqTreeOptionParent` half.
+    override tree: KbqTreeOptionParent<T> & KbqTreeBase<T>;
+
+    /** Emits when the option takes focus. */
+    readonly onFocus: Observable<KbqTreeOptionEvent> = this.focusEvents.asObservable();
+
+    /** Emits when the option loses focus. */
+    readonly onBlur: Observable<KbqTreeOptionEvent> = this.blurEvents.asObservable();
     readonly checkboxThirdState = input<boolean>(false);
 
     /** @docs-private */
@@ -166,6 +178,31 @@ export class KbqTreeOption<T = any>
         alias: 'disabled',
         transform: booleanAttribute
     });
+
+    private readonly titleContainer = viewChild<ElementRef<HTMLElement>>('kbqTitleContainer');
+    readonly toggleElementDirective = contentChild(KbqTreeNodeToggleDirective);
+    readonly toggleElementComponent = contentChild(KbqTreeNodeToggleComponent);
+    readonly pseudoCheckbox = contentChild(KbqPseudoCheckbox);
+    readonly actionButton = contentChild(KbqOptionActionComponent);
+    private readonly tooltipTriggerQuery = contentChild(KbqTooltipTrigger);
+    private readonly dropdownTriggerQuery = contentChild(KbqDropdownTrigger);
+
+    private _value: any;
+
+    preventBlur: boolean = false;
+
+    /**
+     * `disabled` as of the last check, which the host bindings read: the tree control's `isDisabled` predicate gives
+     * no notice of a change and may be costly, so a check asks it once.
+     */
+    protected checkedDisabled = false;
+
+    /**
+     * What the tree control's `isDisabled` and `isExpandable` say about the row. Derived, so a predicate reading a
+     * signal brings the row back once that signal changes; `ngDoCheck` sets it on every check for one reading plain
+     * state. Read by a single host binding, see `ariaExpanded`.
+     */
+    private readonly predicates = linkedSignal(() => this.resolvePredicates(), { equal: samePredicates });
 
     /**
      * Whether the option can be selected by user interaction (click, keyboard, select all).
@@ -199,25 +236,6 @@ export class KbqTreeOption<T = any>
     /** @deprecated Use `selectionChange` instead. Will be removed in 22.0.0. */
     readonly onSelectionChange = output<KbqTreeOptionChange>({ alias: 'onSelectionChange' });
 
-    private readonly titleContainer = viewChild<ElementRef<HTMLElement>>('kbqTitleContainer');
-    readonly toggleElementDirective = contentChild(KbqTreeNodeToggleDirective);
-    readonly toggleElementComponent = contentChild(KbqTreeNodeToggleComponent);
-    readonly pseudoCheckbox = contentChild(KbqPseudoCheckbox);
-    readonly actionButton = contentChild(KbqOptionActionComponent);
-    private readonly tooltipTriggerQuery = contentChild(KbqTooltipTrigger);
-    private readonly dropdownTriggerQuery = contentChild(KbqDropdownTrigger);
-
-    private readonly focusEvents = new Subject<KbqTreeOptionEvent>();
-    private readonly blurEvents = new Subject<KbqTreeOptionEvent>();
-    private _value: any;
-
-    /**
-     * What the tree control's `isDisabled` and `isExpandable` say about the row. Derived, so a predicate reading a
-     * signal brings the row back once that signal changes; `ngDoCheck` sets it on every check for one reading plain
-     * state. Read by a single host binding, see `ariaExpanded`.
-     */
-    private readonly predicates = linkedSignal(() => this.resolvePredicates(), { equal: samePredicates });
-
     // Values of the ARIA host bindings as of the last check, resolved by `ngDoCheck`.
     private checkedAriaSelected: boolean | null = null;
     private checkedSelectAllState: string | null = null;
@@ -230,23 +248,6 @@ export class KbqTreeOption<T = any>
     // listener calls back into `focus()` while `hasFocus` is still false.
     private focusReported = false;
     private readonly checkbox = signal<KbqPseudoCheckboxState>('unchecked');
-
-    // Intersected with the rendering base because `KbqTreeNode` resolves its level and expansion state
-    // through it; the option itself only ever touches the `KbqTreeOptionParent` half.
-    override tree: KbqTreeOptionParent<T> & KbqTreeBase<T>;
-
-    /** Emits when the option takes focus. */
-    readonly onFocus: Observable<KbqTreeOptionEvent> = this.focusEvents.asObservable();
-
-    /** Emits when the option loses focus. */
-    readonly onBlur: Observable<KbqTreeOptionEvent> = this.blurEvents.asObservable();
-    preventBlur: boolean = false;
-
-    /**
-     * `disabled` as of the last check, which the host bindings read: the tree control's `isDisabled` predicate gives
-     * no notice of a change and may be costly, so a check asks it once.
-     */
-    protected checkedDisabled = false;
 
     // Not an `output()`: `KbqTreeSelect` merges this stream with rxjs, which an `OutputEmitterRef`
     // cannot feed without wrapping every call site in `outputToObservable`.

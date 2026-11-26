@@ -156,7 +156,7 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     }
 
     onKeyDown(event: KeyboardEvent) {
-        if ([ENTER, SPACE].includes(event.keyCode) && this.option.dropdownTrigger) {
+        if ([SPACE, ENTER].includes(event.keyCode) && this.option.dropdownTrigger) {
             this.option.dropdownTrigger.openedBy = 'keyboard';
         } else if (event.shiftKey && event.keyCode === TAB) {
             this.hasFocus = false;

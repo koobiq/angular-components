@@ -185,11 +185,45 @@ export class KbqAutocompleteTrigger
     private readonly formField = inject(KBQ_FORM_FIELD, { optional: true, host: true });
     private viewportRuler = inject(ViewportRuler);
     protected readonly document = inject<Document>(DOCUMENT);
-    private readonly renderer = inject(Renderer2);
-    private readonly window = inject(KBQ_WINDOW);
 
     /** The autocomplete panel to be attached to this trigger. */
     readonly autocomplete = input<KbqAutocomplete>(undefined!, { alias: 'kbqAutocomplete' });
+
+    /** The bound panel, replayed to every subscriber: it may be bound, or rendered, after they subscribe. */
+    private readonly autocompleteChanges = toObservable(this.autocomplete);
+
+    /**
+     * Emits `true` when the panel opens and `false` when it closes. Part of the `KbqSiblingPopup`
+     * contract.
+     *
+     * Built on top of the `autocomplete` signal rather than read once: the panel is bound after the consumers
+     * of this stream are created (a tooltip on the same element subscribes in its constructor).
+     */
+    readonly openedChange: Observable<boolean> = this.autocompleteChanges.pipe(
+        filter(Boolean),
+        switchMap((autocomplete) =>
+            merge(
+                outputToObservable(autocomplete.opened).pipe(map(() => true)),
+                outputToObservable(autocomplete.closed).pipe(map(() => false))
+            )
+        )
+    );
+
+    // Follows the bound panel and its options rather than reading them once: either may arrive after a subscriber.
+    readonly optionSelections: Observable<KbqOptionSelectionChange> = this.autocompleteChanges.pipe(
+        switchMap((autocomplete) => {
+            if (!autocomplete) return EMPTY;
+
+            const { options } = autocomplete;
+
+            return options.changes.pipe(
+                startWith(options),
+                switchMap(() => merge(...options.map((option) => option.onSelectionChange)))
+            );
+        })
+    );
+
+    private readonly renderer = inject(Renderer2);
 
     /**
      * Reference relative to which to position the autocomplete panel.
@@ -273,11 +307,10 @@ export class KbqAutocompleteTrigger
      */
     readonly queryChange = output<KbqTextQuery | null>({ alias: 'kbqAutocompleteQueryChange' });
 
-    /** The bound panel, replayed to every subscriber: it may be bound, or rendered, after they subscribe. */
-    private readonly autocompleteChanges = toObservable(this.autocomplete);
-
     /** Origin of a caret-anchored panel, measured again whenever the panel is positioned. */
     private readonly caretOrigin = kbqCreateCaretOrigin(() => this.measureCaretOrigin());
+
+    private readonly window = inject(KBQ_WINDOW);
 
     /** Query at the caret in text mode, or `null` while there is none. */
     private query: KbqTextQuery | null = null;
@@ -318,37 +351,6 @@ export class KbqAutocompleteTrigger
 
     /** Stream of keyboard events that can close the panel. */
     private readonly closeKeyEventStream = new Subject<void>();
-
-    /**
-     * Emits `true` when the panel opens and `false` when it closes. Part of the `KbqSiblingPopup`
-     * contract.
-     *
-     * Built on top of the `autocomplete` signal rather than read once: the panel is bound after the consumers
-     * of this stream are created (a tooltip on the same element subscribes in its constructor).
-     */
-    readonly openedChange: Observable<boolean> = this.autocompleteChanges.pipe(
-        filter(Boolean),
-        switchMap((autocomplete) =>
-            merge(
-                outputToObservable(autocomplete.opened).pipe(map(() => true)),
-                outputToObservable(autocomplete.closed).pipe(map(() => false))
-            )
-        )
-    );
-
-    // Follows the bound panel and its options rather than reading them once: either may arrive after a subscriber.
-    readonly optionSelections: Observable<KbqOptionSelectionChange> = this.autocompleteChanges.pipe(
-        switchMap((autocomplete) => {
-            if (!autocomplete) return EMPTY;
-
-            const { options } = autocomplete;
-
-            return options.changes.pipe(
-                startWith(options),
-                switchMap(() => merge(...options.map((option) => option.onSelectionChange)))
-            );
-        })
-    );
 
     /** The currently active option, coerced to MatOption type. */
     get activeOption(): KbqOption | null {

@@ -318,6 +318,94 @@ export class KbqPopoverTrigger
         transform: (value) => (value == null ? true : booleanAttribute(value))
     });
 
+    /**
+     * Emits the resolved placement whenever the panel is repositioned.
+     *
+     * Declared as `string` to match the abstract member on `KbqPopUpTrigger`: `EventEmitter` is invariant,
+     * so a narrower emitter cannot override a wider one. Narrowing both is a change to the shared pop-up
+     * base and belongs to the branch that owns it.
+     */
+    readonly placementChange = new EventEmitter<KbqPopUpPlacementValues>();
+
+    /** @docs-private */
+    readonly placementChangeOutput = outputFromObservable(this.placementChange, { alias: 'kbqPopoverPlacementChange' });
+
+    /** Emits `true` when the panel opens and `false` when it closes. */
+    readonly visibleChange = new EventEmitter<boolean>();
+
+    /** @docs-private */
+    readonly visibleChangeOutput = outputFromObservable(this.visibleChange, { alias: 'kbqPopoverVisibleChange' });
+
+    private _hasBackdrop: boolean = false;
+    private _header: string | TemplateRef<any> = '';
+    private _footer: string | TemplateRef<any> = '';
+    private _trigger: string = `${PopUpTriggers.Click}, ${PopUpTriggers.Keydown}`;
+    private _size: KbqPopUpSizeValues = PopUpSizes.Medium;
+    private _context: unknown = null;
+    private _ariaLabel: string | undefined;
+    private _hasCloseButton = false;
+    private _closeOnScroll: boolean | null = null;
+    private _backdropClass: string = defaultBackdropClass;
+    private leaveDelayBound = false;
+
+    /** Whether a position re-apply is already queued for this turn. */
+    private repositionScheduled = false;
+    private pointerOffset: { x: number; y: number } | null = null;
+
+    /** Id of the panel this trigger controls, shared with `aria-controls`. */
+    readonly panelId: string = `kbq-popover-${nextUniqueId++}`;
+
+    /** prevents closure by any event */
+    override preventClose: boolean = false;
+
+    /** Whether the header, content and footer keep their default paddings. Bound with `kbqPopoverDefaultPaddings`. */
+    defaultPaddings = true;
+
+    /**
+     * Additionally positions the element relative to the window side (Top, Right, Bottom and Left).
+     * If container is specified, the positioning will be relative to it.
+     * */
+    override stickToWindow: KbqStickToWindowPlacementValues | undefined;
+
+    /** Container for additional positioning, used with `kbqPopoverStickToWindow`. Bound with `kbqPopoverContainer`. */
+    override container: HTMLElement | undefined;
+
+    /** Input (`kbqPopoverArrow`) — renders the arrow pointing at the trigger. */
+    arrow: boolean = true;
+
+    /**
+     * Input (`kbqPopoverArrowCentered`) — centers the arrow on the trigger while preserving the panel placement.
+     * Defaults to `false`.
+     */
+    override arrowCentered = false;
+
+    /** Input (`kbqPopoverOffset`) — distance between the trigger and the panel, in pixels. */
+    offset: number | null = defaultOffsetYWithArrow;
+
+    /**
+     * Input (`kbqPopoverAutoFocus`) — whether opening the popover moves the keyboard focus into the panel. Turn it
+     * off for a panel that must not disturb what the reader is doing: taking focus away from a text selection
+     * collapses it. Focus then never enters the panel, so its content has to be reachable some other way.
+     */
+    autoFocus: boolean = true;
+
+    /**
+     * Input (`kbqRelativeToPointer`) — positions a click-opened popover at the click point. Keyboard and
+     * programmatic opens stay on the trigger. An explicit `kbqPopoverOrigin` takes precedence. Defaults to `false`.
+     */
+    relativeToPointer: boolean = false;
+
+    /** Input (`kbqEnterDelay`) — delay before opening, in milliseconds. Defaults to `0`. */
+    override enterDelay: number = 0;
+    protected originSelector = '.kbq-popover';
+
+    private readonly pointerOrigin = kbqCreateCaretOrigin((): KbqCaretRect => {
+        const { left, top } = this.getNativeElement().getBoundingClientRect();
+        const offset = this.pointerOffset!;
+
+        return { x: left + offset.x, y: top + offset.y, width: 0, height: 0 };
+    });
+
     /** @docs-private */
     readonly triggerInput = input<string | undefined>(undefined, { alias: 'kbqTrigger' });
 
@@ -460,46 +548,6 @@ export class KbqPopoverTrigger
     readonly popoverVisibleInput = input<boolean | undefined>(undefined, { alias: 'kbqPopoverVisible' });
 
     /**
-     * Emits the resolved placement whenever the panel is repositioned.
-     *
-     * Declared as `string` to match the abstract member on `KbqPopUpTrigger`: `EventEmitter` is invariant,
-     * so a narrower emitter cannot override a wider one. Narrowing both is a change to the shared pop-up
-     * base and belongs to the branch that owns it.
-     */
-    readonly placementChange = new EventEmitter<KbqPopUpPlacementValues>();
-
-    /** @docs-private */
-    readonly placementChangeOutput = outputFromObservable(this.placementChange, { alias: 'kbqPopoverPlacementChange' });
-
-    /** Emits `true` when the panel opens and `false` when it closes. */
-    readonly visibleChange = new EventEmitter<boolean>();
-
-    /** @docs-private */
-    readonly visibleChangeOutput = outputFromObservable(this.visibleChange, { alias: 'kbqPopoverVisibleChange' });
-
-    private _hasBackdrop: boolean = false;
-    private _header: string | TemplateRef<any> = '';
-    private _footer: string | TemplateRef<any> = '';
-    private _trigger: string = `${PopUpTriggers.Click}, ${PopUpTriggers.Keydown}`;
-    private _size: KbqPopUpSizeValues = PopUpSizes.Medium;
-    private _context: unknown = null;
-    private _ariaLabel: string | undefined;
-    private _hasCloseButton = false;
-    private _closeOnScroll: boolean | null = null;
-    private _backdropClass: string = defaultBackdropClass;
-    private leaveDelayBound = false;
-
-    /** Whether a position re-apply is already queued for this turn. */
-    private repositionScheduled = false;
-    private pointerOffset: { x: number; y: number } | null = null;
-    private readonly pointerOrigin = kbqCreateCaretOrigin((): KbqCaretRect => {
-        const { left, top } = this.getNativeElement().getBoundingClientRect();
-        const offset = this.pointerOffset!;
-
-        return { x: left + offset.x, y: top + offset.y, width: 0, height: 0 };
-    });
-
-    /**
      * Whether the open currently on screen was a deliberate one rather than a pointer or focus one.
      *
      * The shared base records the event that opened the pop-up in `triggerName`, but its keyboard opener is
@@ -508,53 +556,6 @@ export class KbqPopoverTrigger
      * pointer and focus listeners reach with the name they have just written.
      */
     private deliberateOpen = true;
-
-    /** Id of the panel this trigger controls, shared with `aria-controls`. */
-    readonly panelId: string = `kbq-popover-${nextUniqueId++}`;
-
-    /** prevents closure by any event */
-    override preventClose: boolean = false;
-
-    /** Whether the header, content and footer keep their default paddings. Bound with `kbqPopoverDefaultPaddings`. */
-    defaultPaddings = true;
-
-    /**
-     * Additionally positions the element relative to the window side (Top, Right, Bottom and Left).
-     * If container is specified, the positioning will be relative to it.
-     * */
-    override stickToWindow: KbqStickToWindowPlacementValues | undefined;
-
-    /** Container for additional positioning, used with `kbqPopoverStickToWindow`. Bound with `kbqPopoverContainer`. */
-    override container: HTMLElement | undefined;
-
-    /** Input (`kbqPopoverArrow`) — renders the arrow pointing at the trigger. */
-    arrow: boolean = true;
-
-    /**
-     * Input (`kbqPopoverArrowCentered`) — centers the arrow on the trigger while preserving the panel placement.
-     * Defaults to `false`.
-     */
-    override arrowCentered = false;
-
-    /** Input (`kbqPopoverOffset`) — distance between the trigger and the panel, in pixels. */
-    offset: number | null = defaultOffsetYWithArrow;
-
-    /**
-     * Input (`kbqPopoverAutoFocus`) — whether opening the popover moves the keyboard focus into the panel. Turn it
-     * off for a panel that must not disturb what the reader is doing: taking focus away from a text selection
-     * collapses it. Focus then never enters the panel, so its content has to be reachable some other way.
-     */
-    autoFocus: boolean = true;
-
-    /**
-     * Input (`kbqRelativeToPointer`) — positions a click-opened popover at the click point. Keyboard and
-     * programmatic opens stay on the trigger. An explicit `kbqPopoverOrigin` takes precedence. Defaults to `false`.
-     */
-    relativeToPointer: boolean = false;
-
-    /** Input (`kbqEnterDelay`) — delay before opening, in milliseconds. Defaults to `0`. */
-    override enterDelay: number = 0;
-    protected originSelector = '.kbq-popover';
 
     /** Input (`kbqPopoverDefaultPaddings`) — sets {@link defaultPaddings}. */
     set popoverDefaultPaddings(value: boolean) {
@@ -699,7 +700,7 @@ export class KbqPopoverTrigger
     }
 
     set size(value: KbqPopUpSizeValues) {
-        if ([PopUpSizes.Custom, PopUpSizes.Large, PopUpSizes.Medium, PopUpSizes.Small].includes(value as PopUpSizes)) {
+        if ([PopUpSizes.Small, PopUpSizes.Medium, PopUpSizes.Large, PopUpSizes.Custom].includes(value as PopUpSizes)) {
             this._size = value;
 
             this.updateClassMap();

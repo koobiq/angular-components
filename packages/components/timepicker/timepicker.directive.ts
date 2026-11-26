@@ -183,6 +183,24 @@ export class KbqTimepicker<D>
         KBQ_TIMEPICKER_LOCALE_CONFIGURATION
     );
 
+    private readonly errorStateTracker = new KbqErrorStateTracker(
+        inject(ErrorStateMatcher),
+        null,
+        inject(FormGroupDirective, { optional: true }),
+        inject(NgForm, { optional: true })
+    );
+    private readonly focusedValue = signal(false);
+
+    /** @docs-private */
+    readonly errorState = this.errorStateTracker.errorState;
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     *
+     * @docs-private
+     */
+    readonly focused = this.focusedValue.asReadonly();
+
     /** Object used to control when error messages are shown. */
     readonly errorStateMatcher = input<ErrorStateMatcher>();
 
@@ -194,6 +212,23 @@ export class KbqTimepicker<D>
         alias: 'disabled',
         transform: booleanAttribute
     });
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     *
+     * @docs-private
+     */
+    controlType: string = 'timepicker';
+
+    /**
+     * Implemented as part of KbqFormFieldControl. Defaults to the localized pattern of `format`.
+     *
+     * @docs-private
+     */
+    readonly placeholder = computed(() => this.placeholderInput() ?? this.timeFormatPlaceholder);
+
+    /** Whether the timepicker is disabled. Also set by the bound form control. */
+    readonly disabled = linkedSignal(() => this.disabledInput());
 
     /** @docs-private */
     readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
@@ -219,26 +254,33 @@ export class KbqTimepicker<D>
     /** @docs-private */
     readonly valueInput = input<D | null | undefined>(undefined, { alias: 'value' });
 
-    /** Tooltip shown for a moment whenever a keystroke is rejected. */
-    readonly kbqValidationTooltip = input<KbqTooltipTrigger | undefined>();
-
-    readonly incorrectInput = output<void>();
-
-    private readonly errorStateTracker = new KbqErrorStateTracker(
-        inject(ErrorStateMatcher),
-        null,
-        inject(FormGroupDirective, { optional: true }),
-        inject(NgForm, { optional: true })
-    );
-    private readonly focusedValue = signal(false);
-
     /** `min` as the date adapter reads it, or null when it cannot. */
     private readonly minDate = computed(() => this.getValidDateOrNull(this.dateAdapter.deserialize(this.min())));
 
     /** `max` as the date adapter reads it, or null when it cannot. */
     private readonly maxDate = computed(() => this.getValidDateOrNull(this.dateAdapter.deserialize(this.max())));
     private readonly valueState = signal<D | null>(null);
+
+    /** Unique id of the element, generated when not provided. */
+    readonly id = computed(() => this.idInput() || this.uid);
+
+    /** The time the control holds: set with `[value]`, by the form control and by typing. */
+    readonly value = this.valueState.asReadonly();
+
+    /** Tooltip shown for a moment whenever a keystroke is rejected. */
+    readonly kbqValidationTooltip = input<KbqTooltipTrigger | undefined>();
+
+    readonly incorrectInput = output<void>();
+
     private readonly emptyValue = signal(true);
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     *
+     * @docs-private
+     */
+    readonly empty = this.emptyValue.asReadonly();
+
     private readonly validator: ValidatorFn | null;
     private lastValueValid = false;
     private control?: AbstractControl;
@@ -248,46 +290,6 @@ export class KbqTimepicker<D>
     private pendingCaret: { start: number } | null = null;
     private onChange: (value: any) => void;
     private onTouched: () => void;
-
-    /** @docs-private */
-    readonly errorState = this.errorStateTracker.errorState;
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     *
-     * @docs-private
-     */
-    readonly focused = this.focusedValue.asReadonly();
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     *
-     * @docs-private
-     */
-    controlType: string = 'timepicker';
-
-    /**
-     * Implemented as part of KbqFormFieldControl. Defaults to the localized pattern of `format`.
-     *
-     * @docs-private
-     */
-    readonly placeholder = computed(() => this.placeholderInput() ?? this.timeFormatPlaceholder);
-
-    /** Whether the timepicker is disabled. Also set by the bound form control. */
-    readonly disabled = linkedSignal(() => this.disabledInput());
-
-    /** Unique id of the element, generated when not provided. */
-    readonly id = computed(() => this.idInput() || this.uid);
-
-    /** The time the control holds: set with `[value]`, by the form control and by typing. */
-    readonly value = this.valueState.asReadonly();
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     *
-     * @docs-private
-     */
-    readonly empty = this.emptyValue.asReadonly();
 
     /**
      * Whether a drag started in this field, so that its drop here is the field's own text.
@@ -598,7 +600,7 @@ export class KbqTimepicker<D>
             (hasModifierKey(event) && (isVerticalMovement(event) || isHorizontalMovement(event))) ||
             event.ctrlKey ||
             event.metaKey ||
-            [BACKSPACE, DELETE, TAB].includes(keyCode)
+            [DELETE, BACKSPACE, TAB].includes(keyCode)
         ) {
             noop();
         } else if (keyCode === SPACE) {
@@ -607,7 +609,7 @@ export class KbqTimepicker<D>
             this.createSelectionOfTimeComponentInInput(0);
         } else if ([END, PAGE_DOWN].includes(keyCode)) {
             this.createSelectionOfTimeComponentInInput(this.viewValue.length);
-        } else if ([DOWN_ARROW, UP_ARROW].includes(keyCode)) {
+        } else if ([UP_ARROW, DOWN_ARROW].includes(keyCode)) {
             event.preventDefault();
 
             this.verticalArrowKeyHandler(keyCode);

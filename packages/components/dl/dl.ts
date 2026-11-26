@@ -200,16 +200,6 @@ export class KbqDd {}
 export class KbqDl {
     // Read by the input defaults below, so it is declared first.
     private readonly options = inject(KBQ_DL_OPTIONS);
-    private readonly nativeElement = kbqInjectNativeElement();
-    private readonly window = inject(KBQ_WINDOW);
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly resizeObserver = inject(SharedResizeObserver);
-    private readonly directionality = inject(Directionality, { optional: true });
-    private readonly focusMonitor = inject(FocusMonitor);
-    private readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
-        'a11y',
-        KBQ_A11Y_LOCALE_CONFIGURATION
-    );
 
     /**
      * Host width in pixels at or below which the list auto-switches to the vertical layout.
@@ -236,6 +226,27 @@ export class KbqDl {
         alias: 'dtWidth',
         transform: (value: unknown) => kbqOptionalNumberAttribute(value) ?? null
     });
+
+    /**
+     * Width of the `kbq-dt` area in pixels; `null` restores the default column ratio.
+     * Defaults to the app-wide {@link KBQ_DL_OPTIONS}.
+     *
+     * Writable: a drag or a double-click on the separator sets it, and `dtWidthChange` reports that back.
+     * `model()` would have been the shorter form, but it takes no `transform`, so an uncoerced attribute
+     * reached the layout arithmetic as a string and skipped the clamp against `dtMinWidth`.
+     */
+    readonly dtWidth = linkedSignal(() => this.dtWidthInput());
+
+    private readonly nativeElement = kbqInjectNativeElement();
+    private readonly window = inject(KBQ_WINDOW);
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly resizeObserver = inject(SharedResizeObserver);
+    private readonly directionality = inject(Directionality, { optional: true });
+    private readonly focusMonitor = inject(FocusMonitor);
+    private readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'a11y',
+        KBQ_A11Y_LOCALE_CONFIGURATION
+    );
 
     /**
      * Minimum width of the `kbq-dt` area in pixels; defaults to the app-wide {@link KBQ_DL_OPTIONS}, then to the
@@ -310,16 +321,6 @@ export class KbqDl {
     /** Rendered width of the resize track, which spans the `kbq-dt` area. */
     private readonly trackWidth = signal(0);
     private readonly keyboardResizeStep: number = 8;
-
-    /**
-     * Width of the `kbq-dt` area in pixels; `null` restores the default column ratio.
-     * Defaults to the app-wide {@link KBQ_DL_OPTIONS}.
-     *
-     * Writable: a drag or a double-click on the separator sets it, and `dtWidthChange` reports that back.
-     * `model()` would have been the shorter form, but it takes no `transform`, so an uncoerced attribute
-     * reached the layout arithmetic as a string and skipped the clamp against `dtMinWidth`.
-     */
-    readonly dtWidth = linkedSignal(() => this.dtWidthInput());
 
     /** @docs-private */
     protected readonly resizeDirection = computed<KbqResizerDirection>(() =>

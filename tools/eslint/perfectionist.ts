@@ -39,6 +39,60 @@ type Item = { type: string; loc: AST.SourceLocation; range: AST.Range };
 const propertyTypes = new Set(['PropertyDefinition', 'TSAbstractPropertyDefinition']);
 const fieldTypes = new Set([...propertyTypes, 'AccessorProperty', 'TSAbstractAccessorProperty']);
 
+/** Angular evaluates the computation on signal read. Its arguments still run during initialization. */
+const isLazyComputed = (member: ClassMember, sourceCode: SourceCode): boolean => {
+    const call = member.value;
+
+    if (call?.type !== 'CallExpression' || call.arguments.length !== 1) return false;
+    const [computation] = call.arguments;
+
+    if (computation?.type !== 'ArrowFunctionExpression' && computation?.type !== 'FunctionExpression') return false;
+
+    const binding = sourceCode.getScope(call).references.find(({ identifier }) => identifier === call.callee)?.resolved
+        ?.defs[0];
+
+    return (
+        binding?.type === 'ImportBinding' &&
+        binding.parent.source.value === '@angular/core' &&
+        binding.node.type === 'ImportSpecifier' &&
+        binding.node.imported.type === 'Identifier' &&
+        binding.node.imported.name === 'computed'
+    );
+};
+
+const sortClasses = perfectionist.rules!['sort-classes']!;
+const safeSortClasses: Rule.RuleModule = {
+    ...sortClasses,
+    create(context) {
+        // A call on the instance can read any field through a method or an override. Sort each side
+        // of that initializer independently. A function-valued field runs its body only when called.
+        const barriers = new WeakSet<object>();
+        const field = ':matches(PropertyDefinition, AccessorProperty)';
+        const deferred = ':matches([value.type="ArrowFunctionExpression"], [value.type="FunctionExpression"])';
+        const instanceCall = 'CallExpression > .callee:has(:matches(ThisExpression, Super))';
+        const sort = sortClasses.create(context)['ClassBody:exit']!;
+
+        return {
+            [`${field}:not(${deferred}):has(${instanceCall})`](node: Rule.Node) {
+                if (!isLazyComputed(node as ClassMember, context.sourceCode)) barriers.add(node);
+            },
+            'ClassBody:exit'(node) {
+                let start = 0;
+
+                for (const [index, member] of node.body.entries()) {
+                    if (!barriers.has(member)) continue;
+
+                    if (index - start > 1) sort({ ...node, body: node.body.slice(start, index) });
+                    start = index + 1;
+                }
+
+                if (start === 0) sort(node);
+                else if (node.body.length - start > 1) sort({ ...node, body: node.body.slice(start) });
+            }
+        };
+    }
+};
+
 /**
  * The group `perfectionist/sort-classes` puts a field in, or `null` for a member that is not a field. As there, the
  * custom groups come first and match properties only, not `accessor` fields.
@@ -148,12 +202,9 @@ const memberSpacing: Rule.RuleModule = {
 
 /**
  * The order of the members of a class, which `eslint --fix` sets: the public API of a component first, then its
- * state, the accessors, the constructor, the lifecycle hooks and the other methods. The private state comes before
- * the protected and public one, as in Taiga UI, since that one reads it as the class is created: the rule sees a
- * field the initializer reads itself, not one a method it calls reads. A field with a function as its value is a
- * callback or a handler and goes with the methods: with `useDefineForClassFields` off, every initializer runs at the
- * start of the constructor in the order of declaration wherever the field stands. Within a group the members keep
- * their written order. An empty line separates the groups and the members with a body, and a field with a comment.
+ * state, the accessors, the constructor, the lifecycle hooks and the other methods. A field with a function as its
+ * value goes with the methods. Within a group the members keep their written order. An empty line separates the
+ * groups and the members with a body, and a field with a comment.
  *
  * @see https://perfectionist.dev/rules/sort-classes
  */
@@ -161,12 +212,10 @@ export const perfectionistConfig = defineConfig({
     name: 'koobiq/perfectionist',
     files: ['**/*.{ts,cts,mts}'],
     plugins: {
-        perfectionist,
-        'kbq-classes': { rules: { 'member-spacing': memberSpacing } }
+        'kbq-classes': { rules: { 'member-spacing': memberSpacing, 'sort-classes': safeSortClasses } }
     },
     rules: {
-        'perfectionist/sort-array-includes': [2, { type: 'natural', order: 'asc' }],
-        'perfectionist/sort-classes': [
+        'kbq-classes/sort-classes': [
             1,
             {
                 type: 'unsorted',

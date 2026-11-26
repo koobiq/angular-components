@@ -125,8 +125,6 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class ValidationRequiredLabelExample {
-    private readonly formFieldList = viewChildren(KbqFormField);
-
     protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly form = new FormGroup({
         firstName: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
@@ -137,6 +135,8 @@ export class ValidationRequiredLabelExample {
         estimation: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
         comment: new FormControl<string>('', { nonNullable: true })
     });
+
+    private readonly formFieldList = viewChildren(KbqFormField);
 
     onSubmit(): void {
         this.focusFirstInvalidControl();

@@ -325,6 +325,9 @@ export class KbqButton
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly renderer = inject(Renderer2);
 
+    /** Lower-cased tag name of the host element. */
+    private readonly hostTagName = this.elementRef.nativeElement.nodeName.toLowerCase();
+
     /** @docs-private */
     readonly kbqStyleInput = input<KbqButtonStyleInput | null | undefined>(undefined, { alias: 'kbqStyle' });
 
@@ -342,9 +345,6 @@ export class KbqButton
 
     private readonly titleText = viewChild<ElementRef<HTMLElement>>('kbqTitleText');
     private readonly parentText = viewChild<ElementRef<HTMLElement>>('parentTextElement');
-
-    /** Lower-cased tag name of the host element. */
-    private readonly hostTagName = this.elementRef.nativeElement.nodeName.toLowerCase();
 
     /** Whether the host element supports the native `disabled` attribute. */
     private readonly hostSupportsNativeDisabled = supportsNativeDisabled(this.elementRef.nativeElement);
@@ -593,7 +593,7 @@ export class KbqButton
         // Keys that activate sibling host directives on the same host (e.g. KbqDropdownTrigger opens
         // on ENTER/SPACE and on DOWN/LEFT/RIGHT arrows). Tab/Escape are intentionally left untouched
         // so focus can still move away from a disabled — but still focusable — <a kbq-button> host.
-        if ([DOWN_ARROW, ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE].includes(event.keyCode)) {
+        if ([ENTER, SPACE, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW].includes(event.keyCode)) {
             this.haltDisabledEvents(event);
         }
     };

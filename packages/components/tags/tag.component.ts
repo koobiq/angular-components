@@ -297,34 +297,6 @@ export class KbqTag
     readonly selectedInput = input(false, { alias: 'selected', transform: booleanAttribute });
 
     /**
-     * Backing input of `selectable`. Bind through the `selectable` attribute; read `selectable`, which is
-     * also true while the tag list is selectable.
-     *
-     * @docs-private
-     */
-    readonly selectableInput = input(false, { alias: 'selectable', transform: booleanAttribute });
-
-    /**
-     * Backing input of `removable`. Bind through the `removable` attribute; read `removable`, which also
-     * requires the tag list to be removable.
-     *
-     * @docs-private
-     */
-    readonly removableInput = input(true, { alias: 'removable', transform: booleanAttribute });
-
-    /** @docs-private */
-    readonly valueInput = input<NonNullable<unknown> | null | undefined>(undefined, { alias: 'value' });
-
-    /** @docs-private */
-    readonly tabindexInput = input<number | null | undefined>(undefined, { alias: 'tabindex' });
-
-    /** @docs-private */
-    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'disabled',
-        transform: booleanAttribute
-    });
-
-    /**
      * Emits event when the tag is edited.
      */
     readonly editChange = output<KbqTagEditChange>();
@@ -355,21 +327,6 @@ export class KbqTag
 
     private readonly _hasFocus = signal(false);
     private readonly _selected = signal(false);
-    private _value: any;
-    private readonly _tabindex = signal<any>(-1);
-
-    /** Whether the tag is selectable. */
-    readonly selectable = computed(() => this.selectableInput() || !!this.tagList?.selectable());
-
-    private readonly tabindexState = computed(() => {
-        if (this.disabled) return null;
-        if (this._tabindex() === -1 && this.selectable() && !this.tagList) return 0;
-
-        return this._tabindex();
-    });
-    private readonly _disabled = signal(false);
-    private readonly disabledState = computed(() => this._disabled() || (this.tagList?.disabled() ?? false));
-    private readonly draggableState = computed(() => (this.tagList?.draggable ?? false) && !this.disabled);
 
     /**
      * Emits when the tag is focused.
@@ -401,6 +358,50 @@ export class KbqTag
     // Read-only rather than a `linkedSignal`: a binding change reset through a `linkedSignal` would skip
     // `setSelectedState()` and never emit the `selectionChange` the tag list listens to.
     readonly selected = this._selected.asReadonly();
+
+    /**
+     * Backing input of `selectable`. Bind through the `selectable` attribute; read `selectable`, which is
+     * also true while the tag list is selectable.
+     *
+     * @docs-private
+     */
+    readonly selectableInput = input(false, { alias: 'selectable', transform: booleanAttribute });
+
+    /**
+     * Backing input of `removable`. Bind through the `removable` attribute; read `removable`, which also
+     * requires the tag list to be removable.
+     *
+     * @docs-private
+     */
+    readonly removableInput = input(true, { alias: 'removable', transform: booleanAttribute });
+
+    /** @docs-private */
+    readonly valueInput = input<NonNullable<unknown> | null | undefined>(undefined, { alias: 'value' });
+
+    /** @docs-private */
+    readonly tabindexInput = input<number | null | undefined>(undefined, { alias: 'tabindex' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    private _value: any;
+    private readonly _tabindex = signal<any>(-1);
+
+    /** Whether the tag is selectable. */
+    readonly selectable = computed(() => this.selectableInput() || !!this.tagList?.selectable());
+
+    private readonly tabindexState = computed(() => {
+        if (this.disabled) return null;
+        if (this._tabindex() === -1 && this.selectable() && !this.tagList) return 0;
+
+        return this._tabindex();
+    });
+    private readonly _disabled = signal(false);
+    private readonly disabledState = computed(() => this._disabled() || (this.tagList?.disabled() ?? false));
+    private readonly draggableState = computed(() => (this.tagList?.draggable ?? false) && !this.disabled);
 
     /** Determines whether the tag is removable. */
     readonly removable = computed(() => this.removableInput() && (this.tagList?.removable() ?? true));

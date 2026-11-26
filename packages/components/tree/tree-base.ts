@@ -80,7 +80,6 @@ export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel' | 't
      * Optional because `KbqTreeBase` is exported: a tree without the directive persists nothing.
      */
     private readonly stateSaving = inject(KbqStateSaving, { optional: true });
-    protected readonly destroyRef = inject(DestroyRef);
 
     /** @docs-private */
     readonly treeControlInput = input<C>(undefined!, { alias: 'treeControl' });
@@ -98,15 +97,33 @@ export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel' | 't
      */
     readonly trackBy = input<TrackByFunction<T>>(undefined!);
 
-    /** @docs-private */
-    readonly dataSourceInput = input<DataSource<T> | Observable<T[]> | T[] | null | undefined>(undefined, {
-        alias: 'dataSource'
-    });
-
     private readonly nodeOutletQuery = viewChild(KbqTreeNodeOutlet);
 
     /** The tree node template for the tree */
     readonly nodeDefs: Signal<readonly KbqTreeNodeDef<T>[]> = contentChildren(KbqTreeNodeDef);
+
+    /**
+     * Stream containing the latest information on what rows are being displayed on screen.
+     * Can be used by the data source to as a heuristic of what data should be provided.
+     *
+     * The tree renders every expanded node eagerly, so the window is the whole data set; a data source
+     * cannot use it to page or virtualize. Windowing would have to emit a real range from a scroll
+     * listener here first.
+     */
+    viewChange = new BehaviorSubject<{ start: number; end: number }>({ start: 0, end: Number.MAX_VALUE });
+
+    /**
+     * Differ used to find the changes in the data provided by the data source. Replaced in `ngOnInit`, once the
+     * `trackBy` it identifies nodes by is bound, and whenever the data source changes.
+     */
+    protected dataDiffer: IterableDiffer<T> = this.differs.find([]).create();
+
+    protected readonly destroyRef = inject(DestroyRef);
+
+    /** @docs-private */
+    readonly dataSourceInput = input<DataSource<T> | Observable<T[]> | T[] | null | undefined>(undefined, {
+        alias: 'dataSource'
+    });
 
     /** Stores the node definition that does not have a when predicate. */
     private defaultNodeDef?: KbqTreeNodeDef<T> | null;
@@ -145,22 +162,6 @@ export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel' | 't
 
     /** Whether `ngAfterContentChecked` has run, i.e. the node definitions the first render needs are resolved. */
     private contentChecked = false;
-
-    /**
-     * Stream containing the latest information on what rows are being displayed on screen.
-     * Can be used by the data source to as a heuristic of what data should be provided.
-     *
-     * The tree renders every expanded node eagerly, so the window is the whole data set; a data source
-     * cannot use it to page or virtualize. Windowing would have to emit a real range from a scroll
-     * listener here first.
-     */
-    viewChange = new BehaviorSubject<{ start: number; end: number }>({ start: 0, end: Number.MAX_VALUE });
-
-    /**
-     * Differ used to find the changes in the data provided by the data source. Replaced in `ngOnInit`, once the
-     * `trackBy` it identifies nodes by is bound, and whenever the data source changes.
-     */
-    protected dataDiffer: IterableDiffer<T> = this.differs.find([]).create();
 
     /** Controls the expanded state and holds the data nodes of the tree. */
     get treeControl(): C {

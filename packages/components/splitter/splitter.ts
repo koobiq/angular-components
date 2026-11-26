@@ -660,6 +660,9 @@ export class KbqSplitter implements KbqSplitterGroup {
     /** Splitter size along the resize axis, in pixels; `0` until the first measurement. */
     private readonly containerSize = signal(0);
 
+    /** Whether a separator is being dragged right now. @docs-private */
+    protected readonly dragging = computed(() => this.dragBoundary() !== null);
+
     /**
      * Viewport size `vw` and `vh` resolve against, in pixels. Known from the start rather than after the first render:
      * tracks resolved against a zero viewport would be what a nested splitter measures itself in.
@@ -774,9 +777,6 @@ export class KbqSplitter implements KbqSplitterGroup {
             total
         );
     });
-
-    /** Whether a separator is being dragged right now. @docs-private */
-    protected readonly dragging = computed(() => this.dragBoundary() !== null);
 
     /** A disabled splitter reports no direction, which is how `KbqResizer` ignores a drag. @docs-private */
     readonly resizerDirection = computed<KbqResizerDirection>(() => {

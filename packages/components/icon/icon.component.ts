@@ -93,15 +93,6 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     // so far.
     private readonly hostErrorState = computed(() => !!this.errorStateContext?.errorState());
 
-    /** Resolution of the inline SVG, replaced whenever the name changes. */
-    private svgIconSubscription = Subscription.EMPTY;
-
-    /** The `<svg>` injected for the resolved name — or already on the host, tagged, from SSR. */
-    private injectedSvg: SVGElement | null = this.findTaggedSvg();
-
-    /** Whether the content is initialized, which is when the inline SVG is first resolved. */
-    private contentInitialized = false;
-
     /** Whether an icon of this kind is decorative when the caller says nothing. Overridden by subclasses. */
     protected readonly defaultAriaHidden: boolean = true;
 
@@ -154,6 +145,15 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     // Starts from the DOM, not `false`: on a hydrated page the svg is already there, and `false`
     // would show the font class until the async resolution catches up.
     protected readonly svgIcon = signal(!!this.findTaggedSvg());
+
+    /** Resolution of the inline SVG, replaced whenever the name changes. */
+    private svgIconSubscription = Subscription.EMPTY;
+
+    /** The `<svg>` injected for the resolved name — or already on the host, tagged, from SSR. */
+    private injectedSvg: SVGElement | null = this.findTaggedSvg();
+
+    /** Whether the content is initialized, which is when the inline SVG is first resolved. */
+    private contentInitialized = false;
 
     /**
      * Whether `autoColor` takes the error color from the host's error state.

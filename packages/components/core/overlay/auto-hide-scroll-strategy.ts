@@ -44,13 +44,14 @@ export interface KbqAutoHideScrollStrategyHooks {
  */
 export class KbqAutoHideScrollStrategy implements ScrollStrategy {
     private readonly hideSubject = new Subject<void>();
+
+    /** Emits once when the tracked element scrolls outside its boundary. */
+    readonly hide: Observable<void> = this.hideSubject.asObservable();
+
     private overlayRef: OverlayRef | null = null;
     private scrollSubscription: Subscription | null = null;
     private originElement: HTMLElement | null = null;
     private ancestorScrollContainers: readonly CdkScrollable[] | null = null;
-
-    /** Emits once when the tracked element scrolls outside its boundary. */
-    readonly hide: Observable<void> = this.hideSubject.asObservable();
 
     constructor(
         private readonly scrollDispatcher: ScrollDispatcher,

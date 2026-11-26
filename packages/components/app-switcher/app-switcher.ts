@@ -736,7 +736,6 @@ export class KbqAppSwitcherTrigger
 
         return value && (this.parsedSitesById().get(value.id) ?? value);
     });
-
     private readonly currentAppsComputed = computed(() =>
         this.sitesModeComputed()
             ? // A multi-site switcher can be opened before a site is selected; render nothing rather than crash.

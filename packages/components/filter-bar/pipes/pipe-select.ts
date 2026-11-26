@@ -53,19 +53,8 @@ import { kbqFilterSelectValueNameKey, kbqFilterSelectValuesBySearch } from './se
     encapsulation: ViewEncapsulation.None
 })
 export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implements AfterViewInit {
-    /** @docs-private */
-    readonly select = viewChild.required(KbqSelect);
-
-    /** Updates on every pipe-template emission, so the options re-derive even for the same array reference. */
-    private readonly templatesVersion = signal(0);
-
     /** control for search options */
     readonly searchControl = new FormControl<string | null>(null);
-
-    /** Current search query; a signal so the options derivation follows the search control. */
-    private readonly searchQuery = toSignal(this.searchControl.valueChanges, {
-        initialValue: this.searchControl.value
-    });
 
     /** Query tokens for option highlighting: tokenized like the filter, so every matched token is marked. */
     readonly searchTokens = toSignal(
@@ -75,6 +64,17 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
         ),
         { initialValue: [] as string[] }
     );
+
+    /** @docs-private */
+    readonly select = viewChild.required(KbqSelect);
+
+    /** Updates on every pipe-template emission, so the options re-derive even for the same array reference. */
+    private readonly templatesVersion = signal(0);
+
+    /** Current search query; a signal so the options derivation follows the search control. */
+    private readonly searchQuery = toSignal(this.searchControl.valueChanges, {
+        initialValue: this.searchControl.value
+    });
 
     /**
      * Options of the pipe template that match the search query. Follows the templates and the query,

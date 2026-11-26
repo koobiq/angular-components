@@ -48,7 +48,6 @@ class SkeletonWave {
     // Widened because TypeScript declares the observer constructors on `globalThis` rather than on `Window`.
     private readonly window = inject(KBQ_WINDOW) as Window & typeof globalThis;
     private readonly ngZone = inject(NgZone);
-
     private readonly observer = this.createObserver();
     private readonly hosts = new Set<Element>();
 

@@ -278,8 +278,6 @@ export class DevPanelAnchor {
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
-    readonly cdkVirtualScrollViewport = viewChild.required(CdkVirtualScrollViewport);
-
     singleSelected = '';
     multipleSelected = ['Disabled', 'Normal', 'Hovered', 'Selected', 'Selected1'];
     multipleSelectedForCustomTagText = ['Normal', 'Hovered'];
@@ -297,6 +295,8 @@ export class DevApp {
         of(DEV_OPTIONS),
         this.multipleSearchCtrl.valueChanges.pipe(map((value) => this.getFilteredOptions(value)))
     );
+    readonly cdkVirtualScrollViewport = viewChild.required(CdkVirtualScrollViewport);
+
     optionCounter = 0;
     options: string[] = DEV_OPTIONS.sort();
     selectedOptionsAsObject = [

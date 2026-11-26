@@ -31,8 +31,7 @@ import { TRANSLATIONS } from './l10n';
 export class DatetimeWithSecondsExample {
     private readonly adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
-    protected readonly value = model<DateTime | null>(this.adapter.createDateTime(2026, 10, 11, 20, 20, 35, 0));
-
     protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly format = TimeFormats.HHmmss;
+    protected readonly value = model<DateTime | null>(this.adapter.createDateTime(2026, 10, 11, 20, 20, 35, 0));
 }

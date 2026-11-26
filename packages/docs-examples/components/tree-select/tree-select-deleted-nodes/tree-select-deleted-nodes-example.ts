@@ -147,9 +147,6 @@ export class TreeSelectDeletedNodesExample {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly defaultErrorStateMatcher = inject(ErrorStateMatcher);
 
-    // The explicit list of deleted ids as it would arrive from the backend.
-    private readonly backendDeletedIds = ['Downloads/November', 'Downloads/October'];
-
     protected readonly t = injectTranslation(TRANSLATIONS);
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
@@ -174,6 +171,9 @@ export class TreeSelectDeletedNodesExample {
             this.defaultErrorStateMatcher.isErrorState(control as any, form) ||
             (Array.isArray(control?.value) && control!.value.some((id: string) => this.deletedIds.has(id)))
     };
+
+    // The explicit list of deleted ids as it would arrive from the backend.
+    private readonly backendDeletedIds = ['Downloads/November', 'Downloads/October'];
 
     /** Count of currently-selected values that are deleted — drives the explanatory hint. */
     get deletedCount(): number {

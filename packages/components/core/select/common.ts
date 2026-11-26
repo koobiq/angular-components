@@ -166,7 +166,7 @@ export class KbqSelectSearch implements AfterContentInit {
             }
         }
 
-        if ([END, HOME, SPACE].includes(event.keyCode)) {
+        if ([SPACE, HOME, END].includes(event.keyCode)) {
             event.stopPropagation();
         }
     }

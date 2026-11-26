@@ -88,7 +88,6 @@ export class KbqToastComponent implements OnDestroy {
 
     private readonly _hovered = signal(false);
     private readonly _focused = signal(false);
-    private alreadyRead = false;
 
     /** Whether the toast appears and leaves without motion. */
     protected readonly animationsDisabled = kbqAnimationsDisabled();
@@ -122,6 +121,8 @@ export class KbqToastComponent implements OnDestroy {
     protected readonly contentTemplate = this.asTemplateRef(this.data.content);
     protected readonly actionsTemplate = this.asTemplateRef(this.data.actions);
     protected readonly closeButtonTemplate = this.asTemplateRef(this.closeButton);
+
+    private alreadyRead = false;
 
     // TODO: nothing in the library uses it; kept as public API at the DS-2196 review. Document or deprecate it.
     get isFocusedOrHovered(): boolean {

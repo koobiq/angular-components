@@ -125,15 +125,6 @@ export class KbqCodeBlockHighlight {
     // Read here and handed to the loader: a component or a route may provide a configuration of its own.
     private readonly config = inject(KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG, { optional: true });
 
-    /** The code file. */
-    readonly file = input.required<KbqCodeBlockFile>();
-
-    /** The starting line number. */
-    readonly startFrom = input<number, unknown>(1, { transform: (value: unknown) => numberAttribute(value, 1) });
-
-    /** Whether to display line numbers for single line code block. */
-    readonly singleLine = input<boolean, unknown>(false, { transform: booleanAttribute });
-
     private readonly _pending = signal(false);
 
     /**
@@ -142,6 +133,15 @@ export class KbqCodeBlockHighlight {
      * @docs-private
      */
     readonly pending = this._pending.asReadonly();
+
+    /** The code file. */
+    readonly file = input.required<KbqCodeBlockFile>();
+
+    /** The starting line number. */
+    readonly startFrom = input<number, unknown>(1, { transform: (value: unknown) => numberAttribute(value, 1) });
+
+    /** Whether to display line numbers for single line code block. */
+    readonly singleLine = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     /** Number of lines of the file, a line break at its end not counted, as it starts no line. */
     protected readonly lineCount = computed(() => {

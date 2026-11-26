@@ -59,8 +59,6 @@ interface ExampleUser {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListIntermediateStateExample {
-    readonly popover = viewChild.required(KbqPopoverTrigger);
-
     protected readonly t = injectTranslation(TRANSLATIONS);
     PopUpSizes = PopUpSizes;
     PopUpPlacements = PopUpPlacements;
@@ -223,6 +221,8 @@ export class ListIntermediateStateExample {
     usersSelectedInOtherGroups: ExampleUser[] = this.users.slice(0, 1);
     savedUsersSelectedInOtherGroups: ExampleUser[] = [];
     selected: ExampleUser[] = this.users.filter((_, index) => [5, 8, 11].includes(index));
+    readonly popover = viewChild.required(KbqPopoverTrigger);
+
     savedSelection: ExampleUser[] = [];
     needRestore: boolean = true;
     searchControl: UntypedFormControl = new UntypedFormControl();

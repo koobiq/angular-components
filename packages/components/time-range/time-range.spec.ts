@@ -1494,7 +1494,6 @@ export class TestComponentWithTimedBounds {
 })
 export class TestComponentWithMillisecondBounds {
     private readonly dateAdapter = inject<DateAdapter<unknown>>(DateAdapter);
-
     private readonly nextYear = this.dateAdapter.getYear(this.dateAdapter.today()) + 1;
 
     // Entirely in the future and carrying milliseconds, the way a `today()`-derived bound does for a

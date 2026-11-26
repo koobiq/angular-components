@@ -117,6 +117,12 @@ export class DocsMigrationGuide extends DocsLocaleState {
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
     private readonly document = inject<Document>(DOCUMENT);
+
+    /** The page `docsPageResolver` compiled from the guide's MDX for the route. */
+    protected readonly page = toSignal(this.route.data.pipe(map(({ page }): Type<unknown> => page)), {
+        requireSync: true
+    });
+
     private readonly host = kbqInjectNativeElement();
     private readonly appRef = inject(ApplicationRef);
     private readonly injector = inject(Injector);
@@ -169,10 +175,6 @@ export class DocsMigrationGuide extends DocsLocaleState {
     /** Heading ids of the steps on screen, or `null` before the page has been filtered at all. */
     private readonly shownSteps = signal<string[] | null>(null);
 
-    /** The page `docsPageResolver` compiled from the guide's MDX for the route. */
-    protected readonly page = toSignal(this.route.data.pipe(map(({ page }): Type<unknown> => page)), {
-        requireSync: true
-    });
     protected readonly from = signal<string | null>(null);
     protected readonly to = signal<string | null>(null);
 

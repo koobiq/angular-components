@@ -50,6 +50,5 @@ import { KbqFlag } from '@koobiq/components/flag';
 })
 export class FlagStylizedExample {
     private readonly sanitizer = inject(DomSanitizer);
-
     protected readonly BR = this.sanitizer.bypassSecurityTrustHtml(BR);
 }

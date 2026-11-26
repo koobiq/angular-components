@@ -126,12 +126,34 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
 
     private readonly _hovered = signal(false);
     private readonly _focused = signal(false);
+
+    readonly read = new BehaviorSubject<KbqToastData | null>(null);
+
+    /** Whether at least one toast is hovered. */
+    readonly hovered: Signal<boolean> = this._hovered.asReadonly();
+
+    /** Whether at least one toast holds the focus. */
+    readonly focused: Signal<boolean> = this._focused.asReadonly();
+
     private readonly stackSize = new BehaviorSubject<number>(0);
 
     /** Subscribed outside Angular so that a tick never runs change detection over the whole application. */
     private readonly heartbeat = new Observable<number>((subscriber) =>
         this.ngZone.runOutsideAngular(() => timer(CHECK_INTERVAL, CHECK_INTERVAL).subscribe(subscriber))
     );
+
+    /**
+     * Countdown heartbeat: emits every 500 ms while the stack holds something and is not paused by the pointer
+     * or the keyboard focus. No interval runs while the stack is empty.
+     */
+    readonly timer: Observable<number> = this.stackSize.pipe(
+        map((size) => size > 0),
+        distinctUntilChanged(),
+        switchMap((filled) => (filled ? this.heartbeat : EMPTY)),
+        filter(() => !this.isPaused),
+        share()
+    );
+
     private containerInstance?: KbqToastContainerComponent;
     private overlayRef?: OverlayRef;
     private portal?: ComponentPortal<KbqToastContainerComponent>;
@@ -147,26 +169,6 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     private readonly hoveredToasts = new Set<number>();
     private readonly focusedToasts = new Map<number, FocusOrigin>();
     private wasPaused = false;
-
-    readonly read = new BehaviorSubject<KbqToastData | null>(null);
-
-    /** Whether at least one toast is hovered. */
-    readonly hovered: Signal<boolean> = this._hovered.asReadonly();
-
-    /** Whether at least one toast holds the focus. */
-    readonly focused: Signal<boolean> = this._focused.asReadonly();
-
-    /**
-     * Countdown heartbeat: emits every 500 ms while the stack holds something and is not paused by the pointer
-     * or the keyboard focus. No interval runs while the stack is empty.
-     */
-    readonly timer: Observable<number> = this.stackSize.pipe(
-        map((size) => size > 0),
-        distinctUntilChanged(),
-        switchMap((filled) => (filled ? this.heartbeat : EMPTY)),
-        filter(() => !this.isPaused),
-        share()
-    );
 
     get toasts(): ComponentRef<T>[] {
         return [...this.toastsDict.values()]

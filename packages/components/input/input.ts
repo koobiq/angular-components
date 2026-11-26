@@ -73,19 +73,52 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
     parentFormGroup = inject(FormGroupDirective, { optional: true });
     defaultErrorStateMatcher = inject(ErrorStateMatcher);
 
+    /** An object used to control when error messages are shown. */
+    readonly errorStateMatcher = input<ErrorStateMatcher>();
+
+    private readonly errorStateTracker = new KbqErrorStateTracker(
+        this.defaultErrorStateMatcher,
+        this.ngControl,
+        this.parentFormGroup,
+        this.parentForm
+    );
+    private readonly focusedValue = signal(false);
+
+    /** Whether the component is in an error state. */
+    readonly errorState = this.errorStateTracker.errorState;
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     *
+     * @docs-private
+     */
+    readonly focused = this.focusedValue.asReadonly();
+
     /**
      * Implemented as part of KbqFormFieldControl.
      *
      * @docs-private
      */
     readonly autofilled = kbqInjectAutofilled();
-    protected uid = inject(_IdGenerator).getId('kbq-input-');
-
-    /** An object used to control when error messages are shown. */
-    readonly errorStateMatcher = input<ErrorStateMatcher>();
 
     /** @docs-private */
     readonly placeholderInput = input<string | undefined>(undefined, { alias: 'placeholder' });
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     *
+     * @docs-private
+     */
+    controlType: string = this.numberInput ? 'input-number' : 'input';
+
+    /**
+     * Implemented as part of KbqFormFieldControl. Writable, so that a select search can supply one.
+     *
+     * @docs-private
+     */
+    readonly placeholder = linkedSignal(() => this.placeholderInput());
+
+    protected uid = inject(_IdGenerator).getId('kbq-input-');
 
     /** @docs-private */
     readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
@@ -115,14 +148,6 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
     /** @docs-private */
     readonly valueInput = input<string | undefined>(undefined, { alias: 'value' });
 
-    private readonly errorStateTracker = new KbqErrorStateTracker(
-        this.defaultErrorStateMatcher,
-        this.ngControl,
-        this.parentFormGroup,
-        this.parentForm
-    );
-    private readonly focusedValue = signal(false);
-
     /** `disabled` of the bound form control, which takes precedence over the input. */
     private readonly formDisabled = signal<boolean | null>(null);
 
@@ -142,29 +167,6 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
     private syncedValue: unknown;
     private syncedText: string;
 
-    /** Whether the component is in an error state. */
-    readonly errorState = this.errorStateTracker.errorState;
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     *
-     * @docs-private
-     */
-    readonly focused = this.focusedValue.asReadonly();
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     *
-     * @docs-private
-     */
-    controlType: string = this.numberInput ? 'input-number' : 'input';
-
-    /**
-     * Implemented as part of KbqFormFieldControl. Writable, so that a select search can supply one.
-     *
-     * @docs-private
-     */
-    readonly placeholder = linkedSignal(() => this.placeholderInput());
     protected neverEmptyInputTypes = [
         'date',
         'datetime',

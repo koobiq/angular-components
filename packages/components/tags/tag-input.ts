@@ -124,6 +124,15 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
      */
     autocompleteTrigger? = inject(KbqAutocompleteTrigger, { optional: true, self: true });
 
+    private readonly focusedValue = signal(false);
+
+    /**
+     * Whether the control is focused.
+     *
+     * @docs-private
+     */
+    readonly focused = this.focusedValue.asReadonly();
+
     /** Whether the control's value was filled in by the browser. */
     readonly autofilled = kbqInjectAutofilled();
 
@@ -163,16 +172,9 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
         transform: booleanAttribute
     });
 
-    /** @docs-private */
-    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'disabled',
-        transform: booleanAttribute
-    });
-
     /** Emitted when a tag is to be added. */
     readonly tagEnd = output<KbqTagInputEvent>({ alias: 'kbqTagInputTokenEnd' });
 
-    private readonly focusedValue = signal(false);
     private readonly allSeparators: KbqTagSeparator[] =
         this.defaultOptions.separators || KBQ_TAG_INPUT_DEFAULT_SEPARATORS;
 
@@ -180,16 +182,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
     private _tagList?: KbqTagList;
     private readonly _disabled = signal(false);
     private readonly emptyValue = signal(true);
-
-    /** The native input element to which this directive is attached. */
-    private inputElement: HTMLInputElement;
-
-    /**
-     * Whether the control is focused.
-     *
-     * @docs-private
-     */
-    readonly focused = this.focusedValue.asReadonly();
 
     /**
      * The effective set of separators: entries gated by `keyCode` are included only when that
@@ -206,6 +198,15 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
 
     /** Whether the input is empty. */
     readonly empty = this.emptyValue.asReadonly();
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** The native input element to which this directive is attached. */
+    private inputElement: HTMLInputElement;
 
     /** Whether the input is disabled. */
     get disabled(): boolean {

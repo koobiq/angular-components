@@ -309,6 +309,8 @@ export class KbqScrollbarViewport {
     private readonly destroyRef = inject(DestroyRef);
     private readonly scrollDispatcher = inject(ScrollDispatcher);
 
+    private readonly generatedId = this.idGenerator.getId('kbq-scrollbar-viewport-');
+
     /** Visibility mode for this viewport's scrollbar. Defaults to the app-wide {@link KBQ_SCROLLBAR_OPTIONS}. */
     readonly mode = input<KbqScrollbarMode>(this.options.mode, { alias: 'kbqScrollbarMode' });
 
@@ -321,7 +323,6 @@ export class KbqScrollbarViewport {
         transform: numberAttribute
     });
 
-    private readonly generatedId = this.idGenerator.getId('kbq-scrollbar-viewport-');
     private trackRef: ComponentRef<KbqScrollbarTrack> | null = null;
     private readonly flashSubject = new Subject<void>();
 
@@ -489,11 +490,11 @@ export class KbqScrollbarViewport {
 @Injectable()
 class KbqScrollbarContentObserver {
     private readonly viewport = inject(KbqScrollbarViewport);
+    private readonly viewportElement = this.viewport.getNativeElement();
     private readonly document = inject(DOCUMENT);
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly mutationObserverFactory = inject(MutationObserverFactory);
 
-    private readonly viewportElement = this.viewport.getNativeElement();
     private readonly nextFrame = nextAnimationFrame();
 
     readonly changes: Observable<void> = merge(
@@ -642,14 +643,13 @@ class KbqScrollbarContentObserver {
 class KbqScrollbarThumb {
     private readonly viewport = inject(KbqScrollbarViewport);
     private readonly directionality = inject(Directionality);
+    protected readonly viewportElement = this.viewport.getNativeElement();
     private readonly nativeElement = kbqInjectNativeElement();
     private readonly contentChanges = inject(KbqScrollbarContentObserver).changes;
 
     readonly orientation = input.required<Orientation>();
 
     private readonly style = this.nativeElement.style;
-
-    protected readonly viewportElement = this.viewport.getNativeElement();
 
     constructor() {
         merge(
@@ -850,6 +850,7 @@ class KbqScrollbarThumb {
 })
 class KbqScrollbarTrack {
     private readonly viewport = inject(KbqScrollbarViewport);
+    private readonly viewportElement = this.viewport.getNativeElement();
     private readonly window = inject(KBQ_WINDOW);
     private readonly renderer = inject(Renderer2);
     private readonly ngZone = inject(NgZone);
@@ -857,10 +858,6 @@ class KbqScrollbarTrack {
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly nativeElement = kbqInjectNativeElement();
 
-    readonly mode = input.required<KbqScrollbarMode>();
-    readonly hideDelay = input.required<number>();
-
-    private readonly viewportElement = this.viewport.getNativeElement();
     private readonly scheduler = zoneFreeScheduler();
 
     // Scrolling re-measures too: a viewport that scrolls has something to scroll, whatever the observers
@@ -887,6 +884,9 @@ class KbqScrollbarTrack {
         ),
         { requireSync: true }
     );
+
+    readonly mode = input.required<KbqScrollbarMode>();
+    readonly hideDelay = input.required<number>();
 
     /** Whether the bars, the thumbs and the hover-mode track appear and change color without motion. */
     protected readonly animationsDisabled = kbqAnimationsDisabled();

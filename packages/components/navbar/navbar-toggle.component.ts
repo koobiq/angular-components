@@ -171,7 +171,7 @@ export class KbqNavbarToggle implements OnDestroy {
 
     /** @docs-private */
     protected keydownHandler($event: KeyboardEvent) {
-        if ([ENTER, SPACE].includes($event.keyCode)) {
+        if ([SPACE, ENTER].includes($event.keyCode)) {
             this.toggle();
 
             $event.stopPropagation();

@@ -65,7 +65,7 @@ export class KbqSidepanelRef<T = any, R = any> {
             filter(
                 (event) =>
                     event.phaseName === 'start' &&
-                    [KbqSidepanelAnimationState.BottomPanel, KbqSidepanelAnimationState.Lower].includes(
+                    [KbqSidepanelAnimationState.Lower, KbqSidepanelAnimationState.BottomPanel].includes(
                         event.toState as KbqSidepanelAnimationState
                     )
             )

@@ -47,6 +47,24 @@ export class KbqAccordionItem implements OnChanges, OnInit, OnDestroy {
     /** @docs-private */
     protected readonly expansionDispatcher = inject(UniqueSelectionDispatcher);
 
+    /** @docs-private */
+    readonly trigger = contentChild(KbqAccordionTriggerDirective);
+
+    /** @docs-private */
+    readonly triggerComponent = contentChild(KbqAccordionTrigger);
+
+    /** @docs-private */
+    readonly content = contentChild(forwardRef(() => KbqAccordionContentDirective));
+
+    private _id = `kbq-accordion-item-${uniqueIdCounter++}`;
+
+    /**
+     * Follows the binding at once, a static `expanded` included, while the view is created: every item of a
+     * single-mode accordion holds its bound state before the first of them reports in `ngOnInit` and collapses
+     * the others.
+     */
+    private readonly expandedState = linkedSignal(() => !!this.expandedInput());
+
     /**
      * The item's own `value` input. Must stay `public`: a `protected` input cannot be bound from a
      * consumer template (TS2445 under full AOT template type-checking).
@@ -80,24 +98,6 @@ export class KbqAccordionItem implements OnChanges, OnInit, OnDestroy {
      * @docs-private
      */
     readonly expandedChange = output<boolean>();
-
-    /** @docs-private */
-    readonly trigger = contentChild(KbqAccordionTriggerDirective);
-
-    /** @docs-private */
-    readonly triggerComponent = contentChild(KbqAccordionTrigger);
-
-    /** @docs-private */
-    readonly content = contentChild(forwardRef(() => KbqAccordionContentDirective));
-
-    private _id = `kbq-accordion-item-${uniqueIdCounter++}`;
-
-    /**
-     * Follows the binding at once, a static `expanded` included, while the view is created: every item of a
-     * single-mode accordion holds its bound state before the first of them reports in `ngOnInit` and collapses
-     * the others.
-     */
-    private readonly expandedState = linkedSignal(() => !!this.expandedInput());
 
     /** The state the item last reported, so a binding change that the state already follows is reported once. */
     private reportedExpanded = false;

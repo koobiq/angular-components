@@ -128,11 +128,11 @@ export class UsernameSearchExample {
 
     protected readonly isCompact = model(false);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly searchControl = new FormControl('', { nonNullable: true });
 
     private readonly searchText = toSignal(this.searchControl.valueChanges.pipe(startWith('')), { initialValue: '' });
 
-    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly users: KbqUserInfo[] = [
         { firstName: 'Maxwell', middleName: 'Alan', lastName: 'Root', login: 'mroot', site: 'corp' },
         { firstName: 'Alice', middleName: 'Marie', lastName: 'Stone', login: 'astone' },

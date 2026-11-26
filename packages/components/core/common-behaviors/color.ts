@@ -47,19 +47,19 @@ export class KbqColorDirective<T extends string = KbqComponentColors | string> {
     /** @docs-private */
     readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
+    private readonly defaultColorState = signal<T>(KbqComponentColors.Empty as T);
+
+    /** Color used while neither the `color` input nor a value set in code gives one. */
+    protected readonly defaultColor: Signal<T> = this.defaultColorState.asReadonly();
+
     /** @docs-private */
     readonly colorInput = input<T | null | undefined>(undefined, { alias: 'color' });
-
-    private readonly defaultColorState = signal<T>(KbqComponentColors.Empty as T);
 
     /** Color set in code. A new value of the input drops it. */
     private readonly colorSetInCode = linkedSignal<T | null | undefined, T | null | undefined>({
         source: this.colorInput,
         computation: () => undefined
     });
-
-    /** Color used while neither the `color` input nor a value set in code gives one. */
-    protected readonly defaultColor: Signal<T> = this.defaultColorState.asReadonly();
 
     /**
      * Color of the component. A value set in code holds until the input changes, and the default color is used

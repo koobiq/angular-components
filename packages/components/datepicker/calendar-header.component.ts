@@ -48,6 +48,18 @@ export class KbqCalendarHeader<D> implements AfterContentInit, OnChanges {
     /** Accessible names for the icon-only month navigation buttons. */
     protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
+    private readonly adapter = injectRequiredDateAdapter<D>();
+
+    monthNames: MonthName[];
+    selectedMonth: number;
+    years: number[] = [];
+    selectedYear: number;
+
+    // Today until the calendar binds its own active date, as it does before the header renders.
+    private _activeDate: D = this.adapter.today();
+    private _maxDate = this.adapter.createDate(defaultMaxYear, 11);
+    private _minDate = this.adapter.createDate(defaultMinYear, 1);
+
     /** @docs-private */
     readonly activeDateInput = input<D | undefined>(undefined, { alias: 'activeDate' });
 
@@ -61,18 +73,6 @@ export class KbqCalendarHeader<D> implements AfterContentInit, OnChanges {
     readonly activeDateChange = output<D>();
     readonly monthSelected = output<D>();
     readonly yearSelected = output<D>();
-
-    private readonly adapter = injectRequiredDateAdapter<D>();
-
-    // Today until the calendar binds its own active date, as it does before the header renders.
-    private _activeDate: D = this.adapter.today();
-    private _maxDate = this.adapter.createDate(defaultMaxYear, 11);
-    private _minDate = this.adapter.createDate(defaultMinYear, 1);
-
-    monthNames: MonthName[];
-    selectedMonth: number;
-    years: number[] = [];
-    selectedYear: number;
 
     get activeDate(): D {
         return this._activeDate;

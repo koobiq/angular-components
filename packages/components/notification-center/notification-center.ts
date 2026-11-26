@@ -182,17 +182,6 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     private readonly inputModalityDetector = inject(InputModalityDetector);
     private readonly carrier = inject(KbqLocaleOverridesDirective, { self: true });
 
-    readonly switcher = viewChild.required<KbqButton>('notificationSwitcher');
-
-    /** Scrollable list container; used to measure scroll position for infinite scroll. */
-    private readonly scrollContainer = viewChild.required(KbqScrollbarViewport);
-
-    /** Re-measures the list outside of a scroll event: on first render and whenever the state changes. */
-    /** Whether a re-measurement is already queued for the next render. */
-    private scrolledToBottomRecheckPending = false;
-    private readonly scrolledToBottomRecheck = new Subject<void>();
-    private _popoverHeight = '';
-
     /**
      * Accessible names for the icon-only toolbar buttons.
      *
@@ -218,6 +207,17 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
      * @docs-private
      */
     protected readonly titleId = this.idGenerator.getId('kbq-notification-center-title-');
+
+    readonly switcher = viewChild.required<KbqButton>('notificationSwitcher');
+
+    /** Scrollable list container; used to measure scroll position for infinite scroll. */
+    private readonly scrollContainer = viewChild.required(KbqScrollbarViewport);
+
+    /** Re-measures the list outside of a scroll event: on first render and whenever the state changes. */
+    /** Whether a re-measurement is already queued for the next render. */
+    private scrolledToBottomRecheckPending = false;
+    private readonly scrolledToBottomRecheck = new Subject<void>();
+    private _popoverHeight = '';
 
     /**
      * Id of the panel element, set by the trigger so it can point `aria-controls` at it.

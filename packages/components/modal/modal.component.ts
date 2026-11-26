@@ -259,20 +259,12 @@ export class KbqModalComponent<T = any, R = any>
      */
     readonly kbqCancelClick = input<OnClickCallback<T> | undefined>(this.options?.kbqCancelClick);
 
-    /** Element or overlay the dialog is rendered into. Read once, on init. */
-    readonly kbqGetContainer = input<HTMLElement | OverlayRef | (() => HTMLElement | OverlayRef) | null>(
-        // A service-created dialog is already inside an overlay the builder owns, so it must not
-        // create one of its own; the declarative path has nowhere to render until it does.
-        this.options ? (this.options.kbqGetContainer ?? null) : () => this.overlay.create()
-    );
-
     // The emitters stay the source of truth: they back the public `afterOpen`/`beforeClose`/`afterClose`
     // observables and the subscriptions of `ModalBuilderForService`, which `OutputEmitterRef` cannot. The
     // outputs below mirror them for template bindings; `outputFromObservable` subscribes once per listener,
     // so `observed` still tells a bound output.
     // Trigger when modal open(visible) after animations
     readonly kbqAfterOpen = new EventEmitter<void>();
-
     /** @docs-private */
     readonly kbqAfterOpenOutput = outputFromObservable(this.kbqAfterOpen, { alias: 'kbqAfterOpen' });
 
@@ -284,6 +276,7 @@ export class KbqModalComponent<T = any, R = any>
 
     /** Emitted before the modal begins its closing animation. */
     readonly kbqBeforeClose = new EventEmitter<R | undefined>();
+
     /** @docs-private */
     readonly kbqBeforeCloseOutput = outputFromObservable(this.kbqBeforeClose, { alias: 'kbqBeforeClose' });
 
@@ -325,47 +318,6 @@ export class KbqModalComponent<T = any, R = any>
      * `KbqModalControlService` fades the layer of a covered dialog out on its own.
      */
     private readonly maskPhase = signal<AnimationState>(null);
-
-    /**
-     * Whether the dim layer is actually painted: the input, overridden while another dialog covers
-     * this one. Seeded from the input so re-binding `[kbqMask]` still takes effect.
-     *
-     * The override exists because `KbqModalControlService` turns the layer of the dialogs underneath
-     * a newly opened one off and back on. That orchestration belongs in the dialog, keyed on
-     * `KbqModalControlService.topVisibleModal()` the way `inert` already is.
-     */
-    private readonly maskEnabled = linkedSignal(() => this.kbqMask());
-
-    /**
-     * Progress state the predefined buttons actually render: the input, overridden while a handler's
-     * returned promise is pending. Seeded from the input so re-binding it still takes effect.
-     */
-    private readonly okLoading = linkedSignal(() => this.kbqOkLoading());
-    private readonly cancelLoading = linkedSignal(() => this.kbqCancelLoading());
-    private focusedElementBeforeOpen?: HTMLElement | null;
-    private previouslyFocusedElementOrigin: FocusOrigin = null;
-    private monitoredContainer: ElementRef | null = null;
-    private focusMonitorSubscription: Subscription | null = null;
-
-    /** Whether a `kbq-modal-title` is composed inside the dialog body. */
-    private composedTitle = false;
-
-    /** Whether a `kbq-modal-caption` is composed inside the dialog body. */
-    private composedCaption = false;
-
-    /** Whether a `kbq-modal-footer` is composed inside the dialog body. */
-    private composedFooter = false;
-    private viewInitialized = false;
-
-    /** Visibility the open/close flow has already run for. See `syncVisibleState`. */
-    private handledVisible = false;
-
-    // Handle the reference when using kbqContent as Component
-    private contentComponentRef?: ComponentRef<T>;
-
-    // Current animation state
-    private animationState?: AnimationState;
-    private container?: HTMLElement | OverlayRef;
 
     /**
      * Whether the dialog and its dim layer move without motion. Read from the dialog's own injector, under
@@ -448,13 +400,6 @@ export class KbqModalComponent<T = any, R = any>
         return classes.filter(Boolean).join(' ');
     });
 
-    /** Classes for the dim layer. */
-    protected readonly maskAnimationClasses = computed(() => {
-        const phase = this.maskPhase();
-
-        return phase ? `fade-${phase} fade-${phase}-active` : '';
-    });
-
     // Observable alias for kbqAfterOpen
     get afterOpen(): Observable<void> {
         return this.kbqAfterOpen.asObservable();
@@ -474,6 +419,61 @@ export class KbqModalComponent<T = any, R = any>
     get hidden(): boolean {
         return !this.kbqVisible() && !this.animationState;
     }
+
+    /**
+     * Whether the dim layer is actually painted: the input, overridden while another dialog covers
+     * this one. Seeded from the input so re-binding `[kbqMask]` still takes effect.
+     *
+     * The override exists because `KbqModalControlService` turns the layer of the dialogs underneath
+     * a newly opened one off and back on. That orchestration belongs in the dialog, keyed on
+     * `KbqModalControlService.topVisibleModal()` the way `inert` already is.
+     */
+    private readonly maskEnabled = linkedSignal(() => this.kbqMask());
+
+    /** Classes for the dim layer. */
+    protected readonly maskAnimationClasses = computed(() => {
+        const phase = this.maskPhase();
+
+        return phase ? `fade-${phase} fade-${phase}-active` : '';
+    });
+
+    /**
+     * Progress state the predefined buttons actually render: the input, overridden while a handler's
+     * returned promise is pending. Seeded from the input so re-binding it still takes effect.
+     */
+    private readonly okLoading = linkedSignal(() => this.kbqOkLoading());
+    private readonly cancelLoading = linkedSignal(() => this.kbqCancelLoading());
+    private focusedElementBeforeOpen?: HTMLElement | null;
+    private previouslyFocusedElementOrigin: FocusOrigin = null;
+    private monitoredContainer: ElementRef | null = null;
+    private focusMonitorSubscription: Subscription | null = null;
+
+    /** Whether a `kbq-modal-title` is composed inside the dialog body. */
+    private composedTitle = false;
+
+    /** Whether a `kbq-modal-caption` is composed inside the dialog body. */
+    private composedCaption = false;
+
+    /** Whether a `kbq-modal-footer` is composed inside the dialog body. */
+    private composedFooter = false;
+    private viewInitialized = false;
+
+    /** Visibility the open/close flow has already run for. See `syncVisibleState`. */
+    private handledVisible = false;
+
+    // Handle the reference when using kbqContent as Component
+    private contentComponentRef?: ComponentRef<T>;
+
+    // Current animation state
+    private animationState?: AnimationState;
+    private container?: HTMLElement | OverlayRef;
+
+    /** Element or overlay the dialog is rendered into. Read once, on init. */
+    readonly kbqGetContainer = input<HTMLElement | OverlayRef | (() => HTMLElement | OverlayRef) | null>(
+        // A service-created dialog is already inside an overlay the builder owns, so it must not
+        // create one of its own; the declarative path has nowhere to render until it does.
+        this.options ? (this.options.kbqGetContainer ?? null) : () => this.overlay.create()
+    );
 
     /** Whether the dialog renders a footer — a predefined button is enough, `kbqFooter` is not required. */
     protected get hasFooter(): boolean {

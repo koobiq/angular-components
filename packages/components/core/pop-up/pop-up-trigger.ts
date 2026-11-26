@@ -107,6 +107,15 @@ const getOffset = (
     }
 })
 export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblingPopup {
+    private readonly hoveredState = signal(false);
+
+    /**
+     * Whether the pointer is over the trigger.
+     *
+     * @docs-private
+     */
+    readonly hovered: Signal<boolean> = this.hoveredState.asReadonly();
+
     /**
      * CDK Overlay service used to create and position the pop-up overlay.
      *
@@ -170,8 +179,6 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      */
     protected readonly scrollable = inject(CdkScrollable, { optional: true });
 
-    private readonly hoveredState = signal(false);
-
     /** Backing signal of `isOpen`, so that the host bindings and templates reading it follow it by themselves. */
     private readonly openState = signal(false);
 
@@ -192,13 +199,6 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
 
     /** Origin currently applied to the position strategy; `null` follows the configured origin or host. */
     private activeOrigin: FlexibleConnectedPositionStrategyOrigin | null = null;
-
-    /**
-     * Whether the pointer is over the trigger.
-     *
-     * @docs-private
-     */
-    readonly hovered: Signal<boolean> = this.hoveredState.asReadonly();
 
     /**
      * Factory returning the overlay scroll strategy; provided by the concrete subclass.

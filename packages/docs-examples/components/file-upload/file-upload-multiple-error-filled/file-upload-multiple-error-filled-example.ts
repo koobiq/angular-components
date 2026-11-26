@@ -74,13 +74,14 @@ const createMockFile = (fileName: string = 'Filename.txt', options?: FilePropert
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadMultipleErrorFilledExample {
-    protected readonly cdr = inject(ChangeDetectorRef);
-
     protected readonly t = injectTranslation(TRANSLATIONS);
     protected accept: KbqFileTypeSpecifier = ['.doc', '.docx', '.pdf', '.txt'];
     protected acceptedOutput: string = this.accept
         .map((typeSpecifier) => typeSpecifier.replace('.', '').toUpperCase())
         .join(', ');
+
+    protected readonly cdr = inject(ChangeDetectorRef);
+
     protected readonly formMultiple = new FormGroup({
         fileUpload: new FormControl<FileList | KbqFileItem[]>([]),
         fileList: new FormArray<FormControl<KbqFileItem | null>>([])

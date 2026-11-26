@@ -197,14 +197,6 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
     protected readonly wrapper = viewChild.required(DocsComponentViewerWrapperComponent);
     protected readonly anchors = viewChild.required(DocsAnchorsComponent);
 
-    /**
-     * Resolved token values cached by theme class name. Reading a CSS custom property via
-     * `getComputedStyle` can force a style recalculation, and `calculateViewData` re-runs on every
-     * theme change; caching per (theme, token) means switching themes back and forth never re-reads
-     * a token whose value cannot have changed (token values depend only on the active theme).
-     */
-    private readonly tokenValueCache = new Map<string, Map<string, string>>();
-
     protected readonly tokensInfo = signal<DocsTokensInfo[]>([]);
     protected readonly activatedTab = toSignal(
         this.activatedRoute.url.pipe(
@@ -213,6 +205,14 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
         ),
         { initialValue: DocsStructureTokensTab.Colors }
     );
+    /**
+     * Resolved token values cached by theme class name. Reading a CSS custom property via
+     * `getComputedStyle` can force a style recalculation, and `calculateViewData` re-runs on every
+     * theme change; caching per (theme, token) means switching themes back and forth never re-reads
+     * a token whose value cannot have changed (token values depend only on the active theme).
+     */
+    private readonly tokenValueCache = new Map<string, Map<string, string>>();
+
     protected tokenDataMap: Record<DocsTokensTab, DocsTokensInfoRaw[]> = {
         [DocsStructureTokensTab.Colors]: colors,
         [DocsStructureTokensTab.Shadows]: shadows,

@@ -13,6 +13,8 @@ const fix = async (members: string[]): Promise<string[]> => {
     );
     const [result] = await eslint.lintText(code, { filePath });
 
+    expect(result!.messages).toEqual([]);
+
     return (result!.output ?? code)
         .split('\n')
         .slice(1, -2)
@@ -23,14 +25,70 @@ const fix = async (members: string[]): Promise<string[]> => {
 const fixCode = async (code: string): Promise<string> => {
     const [result] = await eslint.lintText(code, { filePath });
 
+    expect(result!.messages).toEqual([]);
+
     return result!.output ?? code;
 };
 
 describe('perfectionistConfig', () => {
-    it('sorts array literals used with includes in natural order', async () => {
-        expect(await fixCode("export const a = (x: string) => ['a10', 'a2'].includes(x);\n")).toBe(
-            "export const a = (x: string) => ['a2', 'a10'].includes(x);\n"
-        );
+    it.each(["includes('a')", "includes('a', 1)"])('preserves array order for %s', async (call) => {
+        const code = `export const found = ['z', 'a'].${call};\n`;
+
+        expect(await fixCode(code)).toBe(code);
+    });
+
+    it.each(['this.read()', "this['read']?.()", 'this.read!()'])(
+        'keeps fields in initialization order for %s',
+        async (call) => {
+            const fields = ['value = 1;', `private initial = ${call};`, 'read() { return this.value; }'];
+
+            expect((await fix(fields)).filter(Boolean)).toEqual(fields);
+        }
+    );
+
+    it('keeps an optional call before the function field it reads', async () => {
+        const fields = ['value = 1;', 'private initial = this.read?.();', 'read = () => this.value;'];
+
+        expect((await fix(fields)).filter(Boolean)).toEqual(fields);
+    });
+
+    it('moves an Angular computed signal above the constructor', async () => {
+        const source = [
+            "import { computed as derive } from '@angular/core';",
+            'class Probe {',
+            '    constructor() {}',
+            '    readonly value = derive(() => this.read());',
+            '    read() { return 1; }',
+            '}'
+        ].join('\n');
+
+        const fixed = await fixCode(source);
+
+        expect(fixed).toContain('readonly value = derive(() => this.read());\n\n    constructor() {}');
+    });
+
+    it('keeps field order for a callback that can run immediately', async () => {
+        const fields = [
+            'value = 1;',
+            'private initial = computed(() => this.read());',
+            'read() { return this.value; }'
+        ];
+        const source = ['const computed = (fn: () => number) => fn();', 'class Probe {', ...fields, '}'].join('\n');
+
+        expect(await fixCode(source)).toBe(source);
+    });
+
+    it('sorts members on both sides of an initializer that calls a method', async () => {
+        const initial = 'private initial = this.read();';
+        const read = 'read() { return this.value; }';
+
+        expect((await fix(['value = 1;', 'private a = 1;', initial, read, 'private b = 2;'])).filter(Boolean)).toEqual([
+            'private a = 1;',
+            'value = 1;',
+            initial,
+            'private b = 2;',
+            read
+        ]);
     });
 
     it('preserves the order of decorators on the same class', async () => {
@@ -100,12 +158,12 @@ describe('perfectionistConfig', () => {
     });
 
     it('puts a field with a function as its value with the methods', async () => {
-        expect(await fix(['onChange = (value: string): void => {};', 'value = "";', 'constructor() {}'])).toEqual([
+        expect(await fix(['onChange = () => this.update();', 'value = "";', 'constructor() {}'])).toEqual([
             'value = "";',
             '',
             'constructor() {}',
             '',
-            'onChange = (value: string): void => {};'
+            'onChange = () => this.update();'
         ]);
     });
 

@@ -63,9 +63,6 @@ export class KbqDatepickerToggleIconComponent<D> implements OnChanges, KbqSiblin
 
     private readonly disabledState = signal(false);
 
-    /** Whether the calendar was open when the toggle was pressed. */
-    private openedOnPress = false;
-
     /**
      * Emits `true` when the calendar opens and `false` when it closes. Part of the `KbqSiblingPopup`
      * contract.
@@ -83,6 +80,9 @@ export class KbqDatepickerToggleIconComponent<D> implements OnChanges, KbqSiblin
             )
         )
     );
+
+    /** Whether the calendar was open when the toggle was pressed. */
+    private openedOnPress = false;
 
     /** Whether the toggle button is disabled. */
     get disabled(): boolean {

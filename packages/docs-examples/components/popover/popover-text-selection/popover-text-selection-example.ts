@@ -109,11 +109,11 @@ export class PopoverTextSelectionExample {
     private readonly textRef = viewChild<ElementRef<HTMLElement>>('text');
     private readonly popover = viewChild(KbqPopoverTrigger);
 
+    /** Stays on the selection: the rectangle is measured again every time the panel is positioned. */
+    protected readonly origin = kbqCreateCaretOrigin(() => this.measureSelection());
     /** Whether a pointer selection is still being dragged out. */
     private selecting = false;
 
-    /** Stays on the selection: the rectangle is measured again every time the panel is positioned. */
-    protected readonly origin = kbqCreateCaretOrigin(() => this.measureSelection());
     protected readonly visible = signal(false);
 
     /** The formats the selection already carries. */

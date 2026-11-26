@@ -155,6 +155,39 @@ export class KbqLink implements AfterViewChecked {
     /** Whether the link is disabled. */
     readonly disabled = input(false, { transform: booleanAttribute });
 
+    private readonly textElement = viewChild.required<ElementRef<HTMLElement>>('text');
+
+    /**
+     * `disabled` is valid on a `<button>`, but not on an `<a>` or a `<span>`, where it means nothing to
+     * assistive tech, so the state is exposed through ARIA there instead.
+     */
+    private readonly hostSupportsNativeDisabled = supportsNativeDisabled(this.nativeElement);
+
+    /**
+     * Whether a pseudo link may supply the button semantics itself: a `<button>` and a `<label>` are
+     * activatable on their own, and so is an element that declares a role in the template.
+     */
+    private readonly ownsPseudoSemantics =
+        !['BUTTON', 'LABEL'].includes(this.nativeElement.tagName) && this.declaredRole === null;
+
+    /** A `<label>` is reached through its control, so it stays out of the tab order unless it declares a role. */
+    private readonly focusable = this.nativeElement.tagName !== 'LABEL' || this.declaredRole !== null;
+
+    /** Only an anchor can lead somewhere: on any other element the link is a pseudo link. */
+    private readonly anchor = this.nativeElement.tagName === 'A' ? (this.nativeElement as HTMLAnchorElement) : null;
+
+    /** The text nodes trimmed at an edge of the text, with their data before, for one that leaves the edge. */
+    private readonly trimmedTexts = new Map<Text, { source: string; trimmed: string }>();
+
+    /**
+     * Effective disabled state, mirroring the `disabled` input. It stays writable because `kbqTooltip`
+     * accepts a link through `forDisabledComponent` and reads this signal to keep a tooltip reachable on a
+     * disabled link; the host bindings read it rather than the input so such a write still shows.
+     *
+     * @docs-private
+     */
+    readonly disabledSignal = linkedSignal(() => this.disabled());
+
     /**
      * Tab order of the link: the `tabindex` written on the element, or 0. A disabled link is taken out of the tab
      * order regardless of this value, and a `<label>` is left out of it: the control it labels is the one that
@@ -201,30 +234,6 @@ export class KbqLink implements AfterViewChecked {
      */
     readonly print = input<string | null>();
 
-    private readonly textElement = viewChild.required<ElementRef<HTMLElement>>('text');
-
-    /**
-     * `disabled` is valid on a `<button>`, but not on an `<a>` or a `<span>`, where it means nothing to
-     * assistive tech, so the state is exposed through ARIA there instead.
-     */
-    private readonly hostSupportsNativeDisabled = supportsNativeDisabled(this.nativeElement);
-
-    /**
-     * Whether a pseudo link may supply the button semantics itself: a `<button>` and a `<label>` are
-     * activatable on their own, and so is an element that declares a role in the template.
-     */
-    private readonly ownsPseudoSemantics =
-        !['BUTTON', 'LABEL'].includes(this.nativeElement.tagName) && this.declaredRole === null;
-
-    /** A `<label>` is reached through its control, so it stays out of the tab order unless it declares a role. */
-    private readonly focusable = this.nativeElement.tagName !== 'LABEL' || this.declaredRole !== null;
-
-    /** Only an anchor can lead somewhere: on any other element the link is a pseudo link. */
-    private readonly anchor = this.nativeElement.tagName === 'A' ? (this.nativeElement as HTMLAnchorElement) : null;
-
-    /** The text nodes trimmed at an edge of the text, with their data before, for one that leaves the edge. */
-    private readonly trimmedTexts = new Map<Text, { source: string; trimmed: string }>();
-
     /** @docs-private */
     protected readonly isPseudo = computed(() => this.pseudo() || !this.anchor);
 
@@ -234,15 +243,6 @@ export class KbqLink implements AfterViewChecked {
      * instance - and gets neither the role nor the keyboard.
      */
     private readonly actsAsButton = computed(() => this.isPseudo() && this.ownsPseudoSemantics && this.tabIndex() >= 0);
-
-    /**
-     * Effective disabled state, mirroring the `disabled` input. It stays writable because `kbqTooltip`
-     * accepts a link through `forDisabledComponent` and reads this signal to keep a tooltip reachable on a
-     * disabled link; the host bindings read it rather than the input so such a write still shows.
-     *
-     * @docs-private
-     */
-    readonly disabledSignal = linkedSignal(() => this.disabled());
 
     /** @docs-private */
     protected readonly underlineMode = computed(
