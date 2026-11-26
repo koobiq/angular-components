@@ -194,7 +194,7 @@ describe('KbqSlider', () => {
         it('reports neighbour bounds, separate labels and stable thumb nodes', () => {
             fixture.componentRef.setInput('value', [20, 60]);
             fixture.componentRef.setInput('minDistance', 10);
-            fixture.componentRef.setInput('thumbLabels', ['Minimum price', 'Maximum price']);
+            fixture.componentRef.setInput('thumbAriaLabels', ['Minimum price', 'Maximum price']);
             fixture.detectChanges();
             const inputs: HTMLInputElement[] = [...fixture.nativeElement.querySelectorAll('input[type=range]')];
 
@@ -212,7 +212,7 @@ describe('KbqSlider', () => {
             const focusVia = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
 
             fixture.componentRef.setInput('value', [25, 35]);
-            fixture.componentRef.setInput('collision', 'swap');
+            fixture.componentRef.setInput('thumbCollisionBehavior', 'swap');
             fixture.componentRef.setInput('minDistance', 10);
             fixture.detectChanges();
             const [lower, upper] = fixture.nativeElement.querySelectorAll('input[type=range]');
@@ -238,7 +238,7 @@ describe('KbqSlider', () => {
 
         it('moves by the configured page step in both directions', () => {
             fixture.componentRef.setInput('step', 2);
-            fixture.componentRef.setInput('pageStep', 3);
+            fixture.componentRef.setInput('largeStepMultiplier', 3);
             fixture.detectChanges();
             const input = fixture.nativeElement.querySelector('input');
 
@@ -462,7 +462,7 @@ describe('KbqSlider', () => {
             @Component({
                 imports: [ReactiveFormsModule, KbqInputSlider],
                 template: `
-                    <kbq-input-slider collision="swap" [formControl]="control" />
+                    <kbq-input-slider thumbCollisionBehavior="swap" [formControl]="control" />
                 `
             })
             class RangeForm {
@@ -543,7 +543,7 @@ describe('KbqSlider', () => {
             const fixture = TestBed.createComponent(KbqInputSlider);
 
             fixture.componentRef.setInput('value', [20, 60]);
-            fixture.componentRef.setInput('collision', 'push');
+            fixture.componentRef.setInput('thumbCollisionBehavior', 'push');
             fixture.detectChanges();
             await fixture.whenStable();
             const editor: HTMLInputElement = fixture.nativeElement.querySelectorAll('input.kbq-input')[1];

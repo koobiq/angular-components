@@ -14,7 +14,7 @@ import { TRANSLATIONS } from './l10n';
                     <kbq-slider showTooltip vertical [value]="level" [aria-label]="t().channel + ' ' + ($index + 1)" />
                 }
             </div>
-            <kbq-slider showTooltip vertical [value]="[25, 75]" [marks]="marks" [thumbLabels]="t().bounds" />
+            <kbq-slider showTooltip vertical [value]="[25, 75]" [marks]="marks" [thumbAriaLabels]="t().bounds" />
         </div>
     `,
     styles: `

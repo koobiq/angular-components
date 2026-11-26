@@ -36,7 +36,7 @@ import { TRANSLATIONS } from './l10n';
                 [max]="100_000_000"
                 [step]="1_000_000"
                 [value]="[20_000_000, 75_000_000]"
-                [thumbLabels]="t().bounds"
+                [thumbAriaLabels]="t().bounds"
             />
         </kbq-form-field>
     `,

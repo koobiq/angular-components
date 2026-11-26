@@ -124,11 +124,11 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
         transform: booleanAttribute
     });
     /** Shows the value on focus even when `showTooltip` is off. Defaults to `false`. */
-    readonly tooltipOnFocus = input<boolean, boolean | string | null | undefined>(this.options.tooltipOnFocus, {
+    readonly showTooltipOnFocus = input<boolean, boolean | string | null | undefined>(this.options.showTooltipOnFocus, {
         transform: booleanAttribute
     });
-    /** Number of steps advanced by Page Up/Down. Defaults to `10`. */
-    readonly pageStep = input(this.options.pageStep);
+    /** Number of steps moved by Page Up, Page Down or Shift + arrow. Defaults to `10`. */
+    readonly largeStepMultiplier = input(this.options.largeStepMultiplier);
     /** @docs-private */
     readonly controlType = 'slider';
 
@@ -225,7 +225,7 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
 
         // A changed configuration ends the old gesture before its geometry or value shape can drift.
         this.settings();
-        this.collision();
+        this.thumbCollisionBehavior();
         this.vertical();
         this.reversed();
         this.scale();
@@ -397,7 +397,7 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
 
         const page =
             keyCode === PAGE_UP || keyCode === PAGE_DOWN || event.shiftKey
-                ? Math.max(1, Math.floor(this.pageStep()))
+                ? Math.max(1, Math.floor(this.largeStepMultiplier()))
                 : 1;
         let next = this.thumbValue(index) + direction * this.bounds().step * page;
 
@@ -420,7 +420,7 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
     private keyboardTarget(index: number, next: number): number {
         const values = this.values();
 
-        if (values.length !== 2 || this.collision() !== 'swap') return next;
+        if (values.length !== 2 || this.thumbCollisionBehavior() !== 'swap') return next;
 
         const direction = index === 0 ? 1 : -1;
         const current = this.thumbValue(index);
@@ -558,7 +558,7 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
     }
 
     private revealTooltip(index: number): void {
-        if (this.disabled() || !(this.showTooltip() || (this.tooltipOnFocus() && this.focused()))) return;
+        if (this.disabled() || !(this.showTooltip() || (this.showTooltipOnFocus() && this.focused()))) return;
         this.clearTooltip();
         this.tooltipIndex.set(index);
     }
@@ -597,7 +597,7 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
         if (this.disabled() || this.readonly() || this.pointer) return;
 
         const start = this.value();
-        const next = sliderMove(start, this.nearest(value), value, this.settings(), this.collision());
+        const next = sliderMove(start, this.nearest(value), value, this.settings(), this.thumbCollisionBehavior());
 
         if (sliderEqual(start, next.value)) return;
 

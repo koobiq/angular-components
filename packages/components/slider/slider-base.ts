@@ -27,10 +27,10 @@ import {
 } from '@koobiq/components/core';
 import { KBQ_FORM_FIELD, KbqFormFieldControl } from '@koobiq/components/form-field';
 import type {
-    KbqSliderCollision,
     KbqSliderCommit,
     KbqSliderMark,
     KbqSliderSelection,
+    KbqSliderThumbCollisionBehavior,
     KbqSliderValue
 } from './slider.types';
 import { KBQ_SLIDER_OPTIONS } from './slider-options';
@@ -68,7 +68,7 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
     /** Minimum separation of range bounds in value units. Defaults to `0`. */
     readonly minDistance = input<number, NumberInput>(this.options.minDistance, { transform: numberAttribute });
     /** Range collision strategy for pointer, keyboard and numeric input. Defaults to `'none'`. */
-    readonly collision = input<KbqSliderCollision>(this.options.collision);
+    readonly thumbCollisionBehavior = input<KbqSliderThumbCollisionBehavior>(this.options.thumbCollisionBehavior);
     /** Whether user input is disabled. Defaults to `false`. */
     readonly disabledInput = input<boolean, BooleanInput>(this.options.disabled, {
         alias: 'disabled',
@@ -85,7 +85,7 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
     /** Space-separated IDs of descriptions. Defaults to `null`. */
     readonly ariaDescribedby = input<string | null>(null, { alias: 'aria-describedby' });
     /** Individual accessible names of range bounds. Defaults to localized lower/upper bound names. */
-    readonly thumbLabels = input<readonly string[]>([]);
+    readonly thumbAriaLabels = input<readonly string[]>([]);
     protected readonly defaultFormat = (value: number): string => String(value);
     /** Formats the tooltip and accessible value text. Defaults to the numeric string. */
     readonly displayWith = input<(value: number) => string>(this.options.displayWith ?? this.defaultFormat);
@@ -271,7 +271,7 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
 
     protected move(index: number, value: number): number {
         if (this.disabled() || this.readonly()) return index;
-        const result = sliderMove(this.value(), index, value, this.settings(), this.collision());
+        const result = sliderMove(this.value(), index, value, this.settings(), this.thumbCollisionBehavior());
 
         this.changeValue(result.value);
 
@@ -281,8 +281,8 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
     protected thumbMin(index: number): number {
         const min = sliderSnap(this.bounds().min, this.settings());
 
-        if (index !== 1 || this.collision() === 'swap') return min;
-        const lower = this.collision() === 'push' ? min : this.thumbValue(0);
+        if (index !== 1 || this.thumbCollisionBehavior() === 'swap') return min;
+        const lower = this.thumbCollisionBehavior() === 'push' ? min : this.thumbValue(0);
 
         return sliderSnap(lower + sliderGap(this.settings()), this.settings(), 1);
     }
@@ -290,14 +290,14 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
     protected thumbMax(index: number): number {
         const max = sliderSnap(this.bounds().max, this.settings(), -1);
 
-        if (this.values().length === 1 || index !== 0 || this.collision() === 'swap') return max;
-        const upper = this.collision() === 'push' ? max : this.thumbValue(1);
+        if (this.values().length === 1 || index !== 0 || this.thumbCollisionBehavior() === 'swap') return max;
+        const upper = this.thumbCollisionBehavior() === 'push' ? max : this.thumbValue(1);
 
         return sliderSnap(upper - sliderGap(this.settings()), this.settings(), -1);
     }
 
     protected thumbLabel(index: number): string {
-        const label = this.thumbLabels()[index];
+        const label = this.thumbAriaLabels()[index];
 
         const { slider, sliderStart, sliderEnd } = this.locale();
 

@@ -45,9 +45,9 @@ Categorical values can use numeric indexes with text labels and `displayWith`. F
 
 ### Range
 
-A range value is a pair `[start, end]`. Each thumb has an individual accessible name through `thumbLabels`. Clicking the track moves the nearest thumb. `minDistance` defines the minimum separation in value units; excessive separation is limited to the available scale.
+A range value is a pair `[start, end]`. Each thumb has an individual accessible name through `thumbAriaLabels`. Clicking the track moves the nearest thumb. `minDistance` defines the minimum separation in value units; excessive separation is limited to the available scale.
 
-`collision` controls how thumbs interact:
+`thumbCollisionBehavior` controls how thumbs interact:
 
 - `none` stops the thumb at its neighbour; this is the default.
 - `swap` changes the active range boundary when a thumb crosses its neighbour.
@@ -57,7 +57,7 @@ A range value is a pair `[start, end]`. Each thumb has an individual accessible 
 
 #### Minimum distance
 
-In this example, `minDistance` keeps the bounds at least 10 apart with every `collision` strategy. Drag the lower thumb past the upper thumb to compare the strategies.
+In this example, `minDistance` keeps the bounds at least 10 apart with every `thumbCollisionBehavior` strategy. Drag the lower thumb past the upper thumb to compare the strategies.
 
 <Example id="slider-distance" />
 
@@ -77,7 +77,7 @@ The default fill extends from the start of the scale to the value, or between th
 
 ### Form field
 
-The component supports `[(value)]`, reactive forms and `[(ngModel)]`. A `kbq-form-field` wrapper associates labels, hints and errors with the thumbs. For ranges, `thumbLabels` identifies the purpose of each bound.
+The component supports `[(value)]`, reactive forms and `[(ngModel)]`. A `kbq-form-field` wrapper associates labels, hints and errors with the thumbs. For ranges, `thumbAriaLabels` identifies the purpose of each bound.
 
 For Angular Forms, use a `nonNullable` control initialized with a number or a pair. Writing `null` displays the lower bound of the scale or the full range. The form retains `null` until the user changes the value.
 
@@ -97,7 +97,7 @@ Dragging updates the zoom, map color and caption together. Completing the change
 
 ### Value tooltip
 
-`showTooltip` shows the value immediately on focus and after a short delay on hover. The tooltip stays visible after dragging until focus leaves the slider or you press Esc. Use `tooltipOnFocus` to show it only on focus. Vertical sliders show it beside the thumb. Use `displayWith` to format the value.
+`showTooltip` shows the value immediately on focus and after a short delay on hover. The tooltip stays visible after dragging until focus leaves the slider or you press Esc. Use `showTooltipOnFocus` to show it only on focus. Vertical sliders show it beside the thumb. Use `displayWith` to format the value.
 
 <Example id="slider-tooltip" />
 
@@ -125,7 +125,7 @@ Intermediate text, including an empty field, is preserved during editing. On <kb
 
 ### Accessibility
 
-Use `kbq-label` inside `kbq-form-field`. Clicking the label focuses the thumb or the first numeric field. Give each range thumb a distinct `thumbLabels` entry, such as “Minimum price” and “Maximum price”. Use `displayWith` for times, percentages and other quantities so screen readers announce the unit with the value.
+Use `kbq-label` inside `kbq-form-field`. Clicking the label focuses the thumb or the first numeric field. Give each range thumb a distinct `thumbAriaLabels` entry, such as “Minimum price” and “Maximum price”. Use `displayWith` for times, percentages and other quantities so screen readers announce the unit with the value.
 
 ### Keyboard interaction
 
@@ -138,8 +138,8 @@ Use `kbq-label` inside `kbq-form-field`. Clicking the label focuses the thumb or
 | <span class="docs-hot-key-button">←</span>, <span class="docs-hot-key-button">↓</span>        | Decreases the value by one step                                           |
 | <span class="docs-hot-key-button">Home</span>                                                 | Selects the lowest available value                                        |
 | <span class="docs-hot-key-button">End</span>                                                  | Selects the highest available value                                       |
-| <span class="docs-hot-key-button">PgUp</span>, <span class="docs-hot-key-button">PgDn</span>  | Changes the value by `pageStep` steps, 10 by default                      |
-| <span class="docs-hot-key-button">Shift</span>+<span class="docs-hot-key-button">arrow</span> | Changes the value by `pageStep` steps                                     |
+| <span class="docs-hot-key-button">PgUp</span>, <span class="docs-hot-key-button">PgDn</span>  | Changes the value by `largeStepMultiplier` steps, 10 by default           |
+| <span class="docs-hot-key-button">Shift</span>+<span class="docs-hot-key-button">arrow</span> | Changes the value by `largeStepMultiplier` steps                          |
 
 `reversed` reverses the arrow keys along the scale. Home, End, PgUp and PgDn keep their numeric meaning. With `step=null`, arrows move between marks. Standard text editing commands in the numeric field are preserved.
 

@@ -11,11 +11,11 @@ import { TRANSLATIONS } from './l10n';
     template: `
         <kbq-form-field>
             <kbq-label>{{ t().regular }}</kbq-label>
-            <kbq-slider showTooltip [value]="[25, 65]" [marks]="marks" [thumbLabels]="t().bounds" />
+            <kbq-slider showTooltip [value]="[25, 65]" [marks]="marks" [thumbAriaLabels]="t().bounds" />
         </kbq-form-field>
         <kbq-form-field>
             <kbq-label>{{ t().reversed }}</kbq-label>
-            <kbq-slider reversed showTooltip [value]="[25, 65]" [marks]="marks" [thumbLabels]="t().bounds" />
+            <kbq-slider reversed showTooltip [value]="[25, 65]" [marks]="marks" [thumbAriaLabels]="t().bounds" />
         </kbq-form-field>
         <kbq-form-field>
             <kbq-label>{{ t().discrete }}</kbq-label>

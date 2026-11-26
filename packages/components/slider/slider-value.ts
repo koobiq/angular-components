@@ -1,4 +1,4 @@
-import type { KbqSliderCollision, KbqSliderMark, KbqSliderValue } from './slider.types';
+import type { KbqSliderMark, KbqSliderThumbCollisionBehavior, KbqSliderValue } from './slider.types';
 
 type SliderSnapDirection = -1 | 0 | 1;
 
@@ -93,7 +93,7 @@ export function sliderMove(
     index: number,
     next: number,
     settings: SliderSettings,
-    collision: KbqSliderCollision
+    collision: KbqSliderThumbCollisionBehavior
 ): { value: KbqSliderValue; index: number } {
     const normalized = sliderNormalize(value, settings);
     const snapped = sliderSnap(next, settings);

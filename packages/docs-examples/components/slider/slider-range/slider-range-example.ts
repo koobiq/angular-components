@@ -12,7 +12,12 @@ import { TRANSLATIONS } from './l10n';
         @for (mode of modes; track mode.value) {
             <kbq-form-field>
                 <kbq-label>{{ mode.label }}</kbq-label>
-                <kbq-slider showTooltip [value]="[25, 75]" [collision]="mode.value" [thumbLabels]="t().bounds" />
+                <kbq-slider
+                    showTooltip
+                    [value]="[25, 75]"
+                    [thumbCollisionBehavior]="mode.value"
+                    [thumbAriaLabels]="t().bounds"
+                />
             </kbq-form-field>
         }
     `,

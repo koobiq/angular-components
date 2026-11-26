@@ -18,7 +18,7 @@ import { TRANSLATIONS } from './l10n';
             [marks]="marks"
             [aria-label]="t().value"
         />
-        <kbq-slider showTooltip class="example-slider-round" [value]="[16, 67]" [thumbLabels]="t().bounds" />
+        <kbq-slider showTooltip class="example-slider-round" [value]="[16, 67]" [thumbAriaLabels]="t().bounds" />
         <kbq-slider showTooltip class="example-slider-dot" [value]="74" [aria-label]="t().value" />
     `,
     styles: `

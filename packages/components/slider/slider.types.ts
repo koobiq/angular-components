@@ -5,7 +5,7 @@ export type KbqSliderValue = number | readonly [number, number];
 export type KbqSliderSelection<T extends KbqSliderValue> = T extends number ? number : [number, number];
 
 /** How a range thumb behaves when it reaches its neighbour. */
-export type KbqSliderCollision = 'none' | 'push' | 'swap';
+export type KbqSliderThumbCollisionBehavior = 'none' | 'push' | 'swap';
 
 /** The portion of the scale highlighted by the slider. */
 export type KbqSliderFill = 'start' | 'end' | 'outside' | 'origin' | 'none';

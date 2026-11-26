@@ -34,7 +34,7 @@ import { TRANSLATIONS } from './l10n';
                 [value]="[7, 18]"
                 [marks]="hours"
                 [displayWith]="time"
-                [thumbLabels]="t().bounds"
+                [thumbAriaLabels]="t().bounds"
             />
         </kbq-form-field>
         <div>

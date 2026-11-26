@@ -1,10 +1,10 @@
 import { inject, InjectionToken, type Provider } from '@angular/core';
 import type {
-    KbqSliderCollision,
     KbqSliderFill,
     KbqSliderMark,
     KbqSliderScale,
-    KbqSliderThumbAlignment
+    KbqSliderThumbAlignment,
+    KbqSliderThumbCollisionBehavior
 } from './slider.types';
 
 /** Default input values for sliders in an injector scope. */
@@ -20,7 +20,7 @@ export type KbqSliderOptions = {
     /** Minimum distance between range thumbs. */
     minDistance: number;
     /** How range thumbs interact when they meet. */
-    collision: KbqSliderCollision;
+    thumbCollisionBehavior: KbqSliderThumbCollisionBehavior;
     /** Whether the slider is disabled. Angular forms can override this state. */
     disabled: boolean;
     /** Whether the slider is read-only. */
@@ -44,9 +44,9 @@ export type KbqSliderOptions = {
     /** Whether hovering or dragging shows the value tooltip. */
     showTooltip: boolean;
     /** Whether focusing a thumb shows the value tooltip. */
-    tooltipOnFocus: boolean;
-    /** Number of steps moved by Page Up or Page Down. */
-    pageStep: number;
+    showTooltipOnFocus: boolean;
+    /** Number of steps moved by Page Up, Page Down or Shift + arrow. */
+    largeStepMultiplier: number;
     /** Unit displayed beside each numeric field in an input slider. */
     unit: string;
     /** Whether a single-value input slider shows stepper buttons. */
@@ -59,7 +59,7 @@ const KBQ_SLIDER_DEFAULT_OPTIONS: KbqSliderOptions = {
     step: 1,
     marks: [],
     minDistance: 0,
-    collision: 'none',
+    thumbCollisionBehavior: 'none',
     disabled: false,
     readonly: false,
     required: false,
@@ -69,8 +69,8 @@ const KBQ_SLIDER_DEFAULT_OPTIONS: KbqSliderOptions = {
     fill: 'start',
     fillOrigin: 0,
     showTooltip: false,
-    tooltipOnFocus: false,
-    pageStep: 10,
+    showTooltipOnFocus: false,
+    largeStepMultiplier: 10,
     unit: '',
     showStepper: true
 };

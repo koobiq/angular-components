@@ -92,6 +92,7 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSli
     protected hover(index: number): void;
     // (undocumented)
     protected isMarkFilled(value: number): boolean;
+    readonly largeStepMultiplier: _angular_core.InputSignal<number>;
     // (undocumented)
     protected leave(index: number): void;
     onContainerClick(event: MouseEvent): void;
@@ -111,7 +112,6 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSli
     protected onPointerUp(event: PointerEvent): void;
     // (undocumented)
     protected onThumbFocus(index: number): void;
-    readonly pageStep: _angular_core.InputSignal<number>;
     // (undocumented)
     protected position(value: number): number;
     readonly reversed: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
@@ -124,10 +124,10 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSli
     // (undocumented)
     protected selectMark(value: number): void;
     readonly showTooltip: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
+    readonly showTooltipOnFocus: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     readonly thumbAlignment: _angular_core.InputSignal<KbqSliderThumbAlignment>;
     // (undocumented)
     protected readonly tooltipIndex: _angular_core.WritableSignal<number | null>;
-    readonly tooltipOnFocus: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     // (undocumented)
     protected readonly tooltipScrollStrategy: () => _angular_cdk_overlay.RepositionScrollStrategy;
     readonly vertical: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
@@ -136,7 +136,7 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSli
     // (undocumented)
     writeValue(value: KbqSliderValue | null): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSlider<any>, "kbq-slider", ["kbqSlider"], { "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; "reversed": { "alias": "reversed"; "required": false; "isSignal": true; }; "thumbAlignment": { "alias": "thumbAlignment"; "required": false; "isSignal": true; }; "fill": { "alias": "fill"; "required": false; "isSignal": true; }; "fillOrigin": { "alias": "fillOrigin"; "required": false; "isSignal": true; }; "scale": { "alias": "scale"; "required": false; "isSignal": true; }; "showTooltip": { "alias": "showTooltip"; "required": false; "isSignal": true; }; "tooltipOnFocus": { "alias": "tooltipOnFocus"; "required": false; "isSignal": true; }; "pageStep": { "alias": "pageStep"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSlider<any>, "kbq-slider", ["kbqSlider"], { "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; "reversed": { "alias": "reversed"; "required": false; "isSignal": true; }; "thumbAlignment": { "alias": "thumbAlignment"; "required": false; "isSignal": true; }; "fill": { "alias": "fill"; "required": false; "isSignal": true; }; "fillOrigin": { "alias": "fillOrigin"; "required": false; "isSignal": true; }; "scale": { "alias": "scale"; "required": false; "isSignal": true; }; "showTooltip": { "alias": "showTooltip"; "required": false; "isSignal": true; }; "showTooltipOnFocus": { "alias": "showTooltipOnFocus"; "required": false; "isSignal": true; }; "largeStepMultiplier": { "alias": "largeStepMultiplier"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSlider<any>, never>;
 }
@@ -155,7 +155,6 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue> i
     }>;
     // (undocumented)
     protected changeValue(value: KbqSliderValue): void;
-    readonly collision: _angular_core.InputSignal<KbqSliderCollision>;
     // (undocumented)
     protected readonly defaultFormat: (value: number) => string;
     // (undocumented)
@@ -218,11 +217,12 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue> i
         minDistance: number;
     }>;
     readonly step: _angular_core.InputSignalWithTransform<number | null, NumberInput>;
+    readonly thumbAriaLabels: _angular_core.InputSignal<readonly string[]>;
+    readonly thumbCollisionBehavior: _angular_core.InputSignal<KbqSliderThumbCollisionBehavior>;
     // (undocumented)
     protected thumbLabel(index: number): string;
     // (undocumented)
     protected thumbLabelledBy(index: number): string | null;
-    readonly thumbLabels: _angular_core.InputSignal<readonly string[]>;
     // (undocumented)
     protected thumbMax(index: number): number;
     // (undocumented)
@@ -237,13 +237,10 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue> i
     protected readonly values: _angular_core.Signal<readonly [number, number] | readonly [number]>;
     writeValue(value: KbqSliderValue | null): void;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqSliderBase<any>, never, never, { "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "min": { "alias": "min"; "required": false; "isSignal": true; }; "max": { "alias": "max"; "required": false; "isSignal": true; }; "step": { "alias": "step"; "required": false; "isSignal": true; }; "marks": { "alias": "marks"; "required": false; "isSignal": true; }; "minDistance": { "alias": "minDistance"; "required": false; "isSignal": true; }; "collision": { "alias": "collision"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "ariaDescribedby": { "alias": "aria-describedby"; "required": false; "isSignal": true; }; "thumbLabels": { "alias": "thumbLabels"; "required": false; "isSignal": true; }; "displayWith": { "alias": "displayWith"; "required": false; "isSignal": true; }; "name": { "alias": "name"; "required": false; "isSignal": true; }; "idInput": { "alias": "id"; "required": false; "isSignal": true; }; "requiredInput": { "alias": "required"; "required": false; "isSignal": true; }; }, { "valueChange": "valueChange"; "valueCommit": "valueCommit"; }, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqSliderBase<any>, never, never, { "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "min": { "alias": "min"; "required": false; "isSignal": true; }; "max": { "alias": "max"; "required": false; "isSignal": true; }; "step": { "alias": "step"; "required": false; "isSignal": true; }; "marks": { "alias": "marks"; "required": false; "isSignal": true; }; "minDistance": { "alias": "minDistance"; "required": false; "isSignal": true; }; "thumbCollisionBehavior": { "alias": "thumbCollisionBehavior"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "ariaDescribedby": { "alias": "aria-describedby"; "required": false; "isSignal": true; }; "thumbAriaLabels": { "alias": "thumbAriaLabels"; "required": false; "isSignal": true; }; "displayWith": { "alias": "displayWith"; "required": false; "isSignal": true; }; "name": { "alias": "name"; "required": false; "isSignal": true; }; "idInput": { "alias": "id"; "required": false; "isSignal": true; }; "requiredInput": { "alias": "required"; "required": false; "isSignal": true; }; }, { "valueChange": "valueChange"; "valueCommit": "valueCommit"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSliderBase<any>, never>;
 }
-
-// @public
-export type KbqSliderCollision = 'none' | 'push' | 'swap';
 
 // @public
 export type KbqSliderCommit = {
@@ -280,7 +277,7 @@ export type KbqSliderOptions = {
     step: number | null;
     marks: readonly KbqSliderMark[];
     minDistance: number;
-    collision: KbqSliderCollision;
+    thumbCollisionBehavior: KbqSliderThumbCollisionBehavior;
     disabled: boolean;
     readonly: boolean;
     required: boolean;
@@ -292,8 +289,8 @@ export type KbqSliderOptions = {
     fillOrigin: number;
     scale?: KbqSliderScale;
     showTooltip: boolean;
-    tooltipOnFocus: boolean;
-    pageStep: number;
+    showTooltipOnFocus: boolean;
+    largeStepMultiplier: number;
     unit: string;
     showStepper: boolean;
 };
@@ -312,6 +309,9 @@ export type KbqSliderSelection<T extends KbqSliderValue> = T extends number ? nu
 
 // @public
 export type KbqSliderThumbAlignment = 'contain' | 'center';
+
+// @public
+export type KbqSliderThumbCollisionBehavior = 'none' | 'push' | 'swap';
 
 // @public
 export type KbqSliderValue = number | readonly [number, number];

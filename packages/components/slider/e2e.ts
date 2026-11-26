@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqInputSlider } from './input-slider';
 import { KbqSlider } from './slider';
-import type { KbqSliderCollision, KbqSliderCommit, KbqSliderFill, KbqSliderValue } from './slider.types';
+import type { KbqSliderCommit, KbqSliderFill, KbqSliderThumbCollisionBehavior, KbqSliderValue } from './slider.types';
 
 @Component({
     selector: 'e2e-slider-state-and-style',
@@ -149,15 +149,15 @@ export class E2eSliderStateAndStyle {
                 [attr.data-collision]="collision()"
                 [value]="[25, 75]"
                 [minDistance]="10"
-                [collision]="collision()"
-                [thumbLabels]="['Lower price', 'Upper price']"
+                [thumbCollisionBehavior]="collision()"
+                [thumbAriaLabels]="['Lower price', 'Upper price']"
             />
             <button type="button" (click)="collision.set('push')">Push</button>
             <button type="button" (click)="collision.set('swap')">Swap</button>
             <kbq-slider
                 data-testid="coincident"
                 [value]="[50, 50]"
-                [thumbLabels]="['Coincident lower', 'Coincident upper']"
+                [thumbAriaLabels]="['Coincident lower', 'Coincident upper']"
             />
             <kbq-slider data-testid="vertical" vertical aria-label="Vertical" [value]="30" />
             <div [dir]="direction()"><kbq-slider data-testid="direction" aria-label="Direction" [value]="30" /></div>
@@ -171,7 +171,7 @@ export class E2eSliderStateAndStyle {
             <kbq-input-slider
                 data-testid="hybrid-range"
                 [value]="[25, 75]"
-                [thumbLabels]="['Minimum input', 'Maximum input']"
+                [thumbAriaLabels]="['Minimum input', 'Maximum input']"
             />
             <iframe
                 title="External frame"
@@ -202,7 +202,7 @@ export class E2eSliderInteraction {
     protected readonly direction = signal<Direction>('ltr');
     protected readonly value = signal(30);
     protected readonly commits = signal<KbqSliderCommit[]>([]);
-    protected readonly collision = signal<KbqSliderCollision>('none');
+    protected readonly collision = signal<KbqSliderThumbCollisionBehavior>('none');
     protected readonly control = new FormControl<KbqSliderValue>(35, { nonNullable: true });
     protected readonly nativeValue = signal(70);
     protected readonly editorControl = new FormControl<KbqSliderValue>(70, { nonNullable: true });

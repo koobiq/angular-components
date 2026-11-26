@@ -17,8 +17,8 @@ import { TRANSLATIONS } from './l10n';
                     [max]="60"
                     [value]="[25, 35]"
                     [minDistance]="10"
-                    [collision]="mode.value"
-                    [thumbLabels]="t().bounds"
+                    [thumbCollisionBehavior]="mode.value"
+                    [thumbAriaLabels]="t().bounds"
                 />
             </kbq-form-field>
         }

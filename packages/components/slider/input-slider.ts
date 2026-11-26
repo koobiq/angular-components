@@ -119,7 +119,7 @@ export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue>
 
         this.drafts.update((drafts) => drafts.map((draft, i) => (i === index ? value : draft)));
         if (value === null || !Number.isFinite(value) || this.readonly() || this.disabled()) return;
-        const result = sliderMove(start, index, value, this.settings(), this.collision());
+        const result = sliderMove(start, index, value, this.settings(), this.thumbCollisionBehavior());
 
         // Keep a crossing draft in its original field until the user finishes editing.
         if (result.index === index) this.changeValue(result.value);
@@ -133,7 +133,7 @@ export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue>
 
         const result =
             start !== null && typed != null && Number.isFinite(typed) && !this.disabled() && !this.readonly()
-                ? sliderMove(start, index, typed, this.settings(), this.collision())
+                ? sliderMove(start, index, typed, this.settings(), this.thumbCollisionBehavior())
                 : null;
 
         if (result) this.changeValue(result.value);
