@@ -93,8 +93,8 @@ import { TRANSLATIONS } from './l10n';
         }
 
         form {
-            width: calc(100% + 16px);
-            margin-left: -8px;
+            width: calc(100% + 24px);
+            margin-left: -12px;
         }
 
         .example-inline-text {
