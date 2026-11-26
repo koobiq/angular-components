@@ -67,7 +67,7 @@ export class ExamplePasswordForm {
         this.form.valueChanges.subscribe(() => this.dirty.set(this.form.dirty));
     }
 
-    /** Resets the form state: after a successful save or on an explicit discard the dialog closes without a confirmation. */
+    /** Resets the form state after a successful save, so the dialog closes without a confirmation. */
     markClean(): void {
         this.form.markAsPristine();
         this.dirty.set(false);
@@ -100,9 +100,6 @@ export class ModalKeepOpenOnErrorExample {
             kbqOkText: this.t().save,
             kbqCancelText: this.t().cancel,
             kbqOkClick: (instance) => this.save(instance),
-            // Cancel and the header close button are an explicit discard: they close without the
-            // confirmation, like Save.
-            kbqCancelClick: (instance) => instance.markClean(),
             canClose: (reason) => this.canClose(reason)
         });
     }
