@@ -315,10 +315,6 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         return this.config.groupSeparator;
     }
 
-    private fractionDigitsLimit(): number {
-        return this.integer() ? 0 : Math.min(100, Math.max(0, Math.floor(this.maxFractionDigits())));
-    }
-
     private get config() {
         return this.localeConfiguration().number;
     }
@@ -329,6 +325,10 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
 
     private get stepMax(): number {
         return Math.min(this.max(), Number.MAX_SAFE_INTEGER);
+    }
+
+    private fractionDigitsLimit(): number {
+        return this.integer() ? 0 : Math.min(100, Math.max(0, Math.floor(this.maxFractionDigits())));
     }
 
     private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
