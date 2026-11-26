@@ -69,6 +69,7 @@ export class ExampleConnectionHeader implements IInnerHeaderAngularComp {
 export class ExampleConnectionCell implements ICellRendererAngularComp {
     private readonly renderer = inject(Renderer2);
     private readonly destroyRef = inject(DestroyRef);
+
     protected readonly cellFocused = signal(false);
     protected readonly connection = signal<ExampleSecurityIncident['connection'] | undefined>(undefined);
 

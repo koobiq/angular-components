@@ -40,7 +40,7 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LinkUnderlineExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly underline = model<KbqLinkUnderline>('always');
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

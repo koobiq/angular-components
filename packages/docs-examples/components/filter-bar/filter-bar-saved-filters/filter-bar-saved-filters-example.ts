@@ -84,12 +84,12 @@ const createSearchPipe = (name: string): KbqPipe => ({
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarSavedFiltersExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly toastService = inject(KbqToastService);
 
     readonly errorToastActionsTemplate = viewChild.required<TemplateRef<any>>('errorToastActions');
     readonly toastErrorTitleTemplate = viewChild.required<TemplateRef<any>>('toastErrorTitleTemplate');
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     /** Resolves a period `nameKey`; the `name` stays the stable English fallback. */
     protected readonly nameResolver: KbqFilterBarNameResolver = ({ key, fallback }) =>
@@ -166,10 +166,8 @@ export class FilterBarSavedFiltersExample {
             disabled: false
         }
     ];
-
     filters: ExampleFilter[] = this.createFilters();
     readonly savedFilters: KbqFilter[] = this.createSavedFilters();
-
     activeFilter: KbqFilter | null = this.createFilters()[0] ?? null;
 
     get defaultFilter(): KbqFilter | null {

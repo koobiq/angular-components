@@ -105,9 +105,9 @@ const e2eDlResizerStateClasses: Record<DlResizerState, { list: string[]; separat
     }
 })
 export class E2eDlResizerStates {
-    protected readonly states = Object.keys(e2eDlResizerStateClasses) as DlResizerState[];
-
     private readonly nativeElement = kbqInjectNativeElement();
+
+    protected readonly states = Object.keys(e2eDlResizerStateClasses) as DlResizerState[];
 
     constructor() {
         afterNextRender(() => {

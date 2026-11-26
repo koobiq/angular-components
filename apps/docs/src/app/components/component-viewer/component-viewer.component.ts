@@ -72,13 +72,6 @@ const GITHUB_REPO_TREE_URL = `https://github.com/koobiq/angular-components/tree/
     hostDirectives: [KbqScrollbarViewport, KbqOverlayLayer]
 })
 export class DocsComponentViewerComponent extends DocsLocaleState {
-    protected readonly structureItemTab = DocsStructureItemTab;
-    // Stays `null` for an unknown id: the redirect to /404 is async, so the template renders at
-    // least once with nothing resolved and has to tolerate it.
-    protected structureItem: DocsStructureItem | null = null;
-    private readonly activeTab = signal<string | undefined>(undefined);
-    private structureCategory: DocsStructureCategory | null = null;
-
     private readonly activatedRoute = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly sidepanelService = inject(KbqSidepanelService);
@@ -86,6 +79,20 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
     private readonly docStates = inject(DocsDocStates);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly pagePrefetch = inject(DocsPagePrefetch);
+
+    private readonly activeTab = signal<string | undefined>(undefined);
+    private structureCategory: DocsStructureCategory | null = null;
+
+    protected readonly structureItemTab = DocsStructureItemTab;
+
+    // Stays `null` for an unknown id: the redirect to /404 is async, so the template renders at
+    // least once with nothing resolved and has to tolerate it.
+    protected structureItem: DocsStructureItem | null = null;
+
+    /** Link to the item's source directory on GitHub, or `null` when the item has no known path. */
+    protected get githubSourceUrl(): string | null {
+        return this.structureItem?.path ? `${GITHUB_REPO_TREE_URL}/${this.structureItem.path}` : null;
+    }
 
     constructor() {
         super();
@@ -140,11 +147,6 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
                 return this.structureCategory?.name[this.locale()] ?? null;
         }
     }
-
-    /** Link to the item's source directory on GitHub, or `null` when the item has no known path. */
-    protected get githubSourceUrl(): string | null {
-        return this.structureItem?.path ? `${GITHUB_REPO_TREE_URL}/${this.structureItem.path}` : null;
-    }
 }
 
 /** The overview and examples tabs: the page `docsPageResolver` compiled from MDX for the route. */
@@ -193,9 +195,10 @@ export class DocsComponentPageComponent {
     }
 })
 export class DocsComponentApiPageComponent {
-    private readonly wrapper = viewChild.required(DocsComponentViewerWrapperComponent);
     private readonly route = inject(ActivatedRoute);
     private readonly document = inject(DOCUMENT);
+
+    private readonly wrapper = viewChild.required(DocsComponentViewerWrapperComponent);
 
     protected readonly entryPoint = toSignal(this.route.data.pipe(map(({ page }): DocsApiEntryPoint => page)), {
         requireSync: true

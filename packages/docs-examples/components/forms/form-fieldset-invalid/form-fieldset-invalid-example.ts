@@ -53,7 +53,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class FormFieldsetInvalidExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     form = new FormGroup({
         surname: new FormControl('', Validators.required),
         name: new FormControl('', Validators.required),

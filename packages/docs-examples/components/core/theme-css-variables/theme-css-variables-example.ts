@@ -33,9 +33,9 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ThemeCssVariablesExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     // The app's shared service, so the switch flips the whole page — that is the point here: nothing
     // in the styles above reacts to it explicitly, the variables simply resolve to the other theme.
     protected readonly themeService = inject(KbqThemeService);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

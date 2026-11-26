@@ -140,6 +140,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TooltipPlacementsExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly tooltipText = computed(() => this.t().longTooltip);
 }

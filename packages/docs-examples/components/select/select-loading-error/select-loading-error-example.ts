@@ -32,11 +32,10 @@ type Option = {
 };
 
 export class OptionsApiService {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private delay: number = 3000;
-
     private readonly data = Array.from({ length: 10 }, (_, i) => ({ id: i, label: 'Option #' + i }));
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     setDelay(delay: number) {
         this.delay = delay;
@@ -57,15 +56,8 @@ export class OptionsApiService {
 
 export class SelectFacade {
     private readonly api = inject(OptionsApiService);
+
     private readonly search$ = new BehaviorSubject<string | null>(null);
-
-    reset(): void {
-        this.search$.next(null);
-    }
-
-    setSearch(value: string) {
-        this.search$.next(value);
-    }
 
     readonly state$ = this.search$.pipe(
         // for use in a real project
@@ -102,6 +94,14 @@ export class SelectFacade {
             );
         })
     );
+
+    reset(): void {
+        this.search$.next(null);
+    }
+
+    setSearch(value: string) {
+        this.search$.next(value);
+    }
 }
 
 /**
@@ -179,12 +179,17 @@ export class SelectFacade {
     }
 })
 export class SelectLoadingErrorExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly facade = inject(SelectFacade);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     readonly state$ = this.facade.state$;
     readonly searchControl = new FormControl('');
+
+    constructor() {
+        this.searchControl.valueChanges
+            .pipe(takeUntilDestroyed())
+            .subscribe((value) => this.facade.setSearch(value ?? ''));
+    }
 
     protected resetOptions() {
         // used as an example to show loading every time the select is opened
@@ -199,11 +204,5 @@ export class SelectLoadingErrorExample {
     protected reloadOptions() {
         // used as an example to demonstrate a repeated request
         this.searchControl.setValue('');
-    }
-
-    constructor() {
-        this.searchControl.valueChanges
-            .pipe(takeUntilDestroyed())
-            .subscribe((value) => this.facade.setSearch(value ?? ''));
     }
 }

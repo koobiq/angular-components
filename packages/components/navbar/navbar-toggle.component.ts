@@ -36,6 +36,12 @@ export class KbqNavbarToggleRegistry implements OnDestroy {
 
     private readonly toggles = new Set<KbqNavbarToggle>();
 
+    ngOnDestroy(): void {
+        this.window.removeEventListener('keydown', this.handleKeydown);
+
+        this.toggles.clear();
+    }
+
     /** Starts listening for the shortcut on behalf of the given toggle. */
     add(toggle: KbqNavbarToggle): void {
         if (this.toggles.size === 0) {
@@ -52,12 +58,6 @@ export class KbqNavbarToggleRegistry implements OnDestroy {
         if (this.toggles.size === 0) {
             this.window.removeEventListener('keydown', this.handleKeydown);
         }
-    }
-
-    ngOnDestroy(): void {
-        this.window.removeEventListener('keydown', this.handleKeydown);
-
-        this.toggles.clear();
     }
 
     private handleKeydown = (event: KeyboardEvent): void => {
@@ -120,7 +120,6 @@ export class KbqNavbarToggle implements OnDestroy {
     private readonly nativeElement = kbqInjectNativeElement();
     private readonly registry = inject(KbqNavbarToggleRegistry);
     private readonly isBrowser = inject(Platform).isBrowser;
-
     private readonly tooltip = inject(KbqTooltipTrigger, { self: true });
 
     /** @docs-private */

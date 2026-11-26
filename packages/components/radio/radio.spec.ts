@@ -1076,6 +1076,7 @@ const EFFECT_RUN_LIMIT = 10;
 class RadioGroupDrivenByEffect {
     readonly group = viewChild.required(KbqRadioGroup);
     readonly radios = viewChildren(KbqRadioButton);
+
     readonly action = signal<'value' | 'checked' | null>(null);
     runs = 0;
 

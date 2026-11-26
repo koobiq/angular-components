@@ -105,6 +105,7 @@ export class E2eTagStateAndStyle {
 })
 export class E2eTagEditable {
     readonly tag = model('Editable tag');
+
     readonly color = KbqComponentColors;
 }
 

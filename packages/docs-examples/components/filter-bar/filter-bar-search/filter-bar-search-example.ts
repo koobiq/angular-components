@@ -63,7 +63,6 @@ const createSearchPipe = (name: string): KbqPipe => ({
 })
 export class FilterBarSearchExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly networks: Network[] = [
         { name: '10.125.123.0/24 - all', description: 'Development network' },
         { name: '10.125.10.0/24 - admin', description: 'Admin network' },
@@ -77,7 +76,6 @@ export class FilterBarSearchExample {
     // given and ignores later changes to that binding, so the relabelled pipe only reaches the screen as
     // a new object.
     readonly activeFilter = linkedSignal(() => this.getDefaultFilter());
-
     readonly filteredNetworks = computed(() => {
         const query = (this.activeFilter()?.pipes[0]?.value as string | null) ?? '';
         const predicate = createSearchPredicate(query);

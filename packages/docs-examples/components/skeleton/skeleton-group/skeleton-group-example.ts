@@ -55,9 +55,8 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SkeletonGroupExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly loading = model(true);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly colors = KbqComponentColors;
 }

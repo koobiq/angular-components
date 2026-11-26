@@ -108,22 +108,7 @@ const parseErrorKey = 'kbqDatepickerParse';
 class DateDigit {
     maxDays = MAX_DAYS_IN_MONTH;
     maxMonth = 12;
-
     parse: (value: string) => number;
-
-    constructor(
-        public value: DateParts,
-        public start: number,
-        public length: number
-    ) {
-        if (value === DateParts.day) {
-            this.parse = this.parseDay;
-        } else if (value === DateParts.month) {
-            this.parse = this.parseMonth;
-        } else {
-            this.parse = this.parseYear;
-        }
-    }
 
     get end(): number {
         return this.start + this.length;
@@ -145,6 +130,20 @@ class DateDigit {
                 return 'month';
             case DateParts.year:
                 return 'year';
+        }
+    }
+
+    constructor(
+        public value: DateParts,
+        public start: number,
+        public length: number
+    ) {
+        if (value === DateParts.day) {
+            this.parse = this.parseDay;
+        } else if (value === DateParts.month) {
+            this.parse = this.parseMonth;
+        } else {
+            this.parse = this.parseYear;
         }
     }
 
@@ -353,12 +352,11 @@ export class KbqDatepickerInput<D>
 {
     elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     private readonly renderer = inject(Renderer2);
-    readonly adapter: DateAdapter<D> = injectRequiredDateAdapter<D>();
     private readonly timezoneService = inject(KbqDateTimezoneService);
     private readonly dateFormats = inject<KbqDateFormats>(KBQ_DATE_FORMATS, { optional: true });
+
     /** @docs-private */
     protected readonly formField = inject(KBQ_FORM_FIELD, { optional: true, host: true });
-
     protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'datepicker',
         KBQ_DATEPICKER_INPUT_LOCALE_CONFIGURATION
@@ -371,16 +369,40 @@ export class KbqDatepickerInput<D>
         inject(FormGroupDirective, { optional: true }),
         inject(NgForm, { optional: true })
     );
+    private readonly focusedValue = signal(false);
+
+    readonly adapter: DateAdapter<D> = injectRequiredDateAdapter<D>();
 
     /** Whether the input is in an error state. */
     readonly errorState = this.errorStateTracker.errorState;
-
     controlType: string = 'datepicker';
-
-    private readonly focusedValue = signal(false);
 
     /** Whether the input has focus. */
     readonly focused = this.focusedValue.asReadonly();
+    /** Object used to control when error messages are shown. */
+    readonly errorStateMatcher = input<ErrorStateMatcher>();
+
+    /** @docs-private */
+    readonly placeholderInput = input<string | undefined>(undefined, { alias: 'placeholder' });
+
+    /** Whether the input is required. */
+    readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
+
+    /** @docs-private */
+    readonly kbqDatepickerInput = input<KbqDatepicker<D> | undefined>(undefined, { alias: 'kbqDatepicker' });
+
+    /** @docs-private */
+    readonly kbqCalendarInput = input<KbqCalendar<D> | undefined>(undefined, { alias: 'kbqCalendar' });
+
+    /** @docs-private */
+    readonly kbqDatepickerFilterInput = input<((date: D | null) => boolean) | undefined>(undefined, {
+        alias: 'kbqDatepickerFilter'
+    });
+
+    /** @docs-private */
+    readonly valueInput = input<D | null | undefined>(undefined, { alias: 'value' });
+
+    private readonly valueState = signal<D | null>(null);
 
     datepicker: KbqDatepicker<D> | undefined;
     calendar: KbqCalendar<D> | undefined;
@@ -394,17 +416,78 @@ export class KbqDatepickerInput<D>
     /** Emits when the disabled state has changed */
     disabledChange = new EventEmitter<boolean>();
 
-    /** Object used to control when error messages are shown. */
-    readonly errorStateMatcher = input<ErrorStateMatcher>();
-
-    /** @docs-private */
-    readonly placeholderInput = input<string | undefined>(undefined, { alias: 'placeholder' });
-
     /** Placeholder of the input. Defaults to the localized date pattern. */
     readonly placeholder = computed(() => this.placeholderInput() || this.localeConfiguration().placeholder);
 
-    /** Whether the input is required. */
-    readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
+    /** The date the input holds: set with `[value]`, by the form control, by typing and by the calendar. */
+    readonly value = this.valueState.asReadonly();
+
+    /** @docs-private */
+    readonly minInput = input<D | null | undefined>(undefined, { alias: 'min' });
+
+    /** @docs-private */
+    readonly maxInput = input<D | null | undefined>(undefined, { alias: 'max' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    private _min: D | null = null;
+    private _max: D | null = null;
+
+    /** Whether the datepicker-input is disabled. Also set by the bound form control. */
+    readonly disabled = linkedSignal(() => this.disabledInput());
+
+    /** @docs-private */
+    readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
+
+    /** @docs-private */
+    readonly kbqValidationTooltipInput = input<KbqTooltipTrigger | undefined>(undefined, {
+        alias: 'kbqValidationTooltip'
+    });
+
+    readonly incorrectInput = output<void>();
+
+    /** Emits when a `change` event is fired on this `<input>`. */
+    readonly dateChange = output<KbqDatepickerInputEvent<D>>();
+
+    /** Emits when an `input` event is fired on this `<input>`. */
+    readonly dateInput = output<KbqDatepickerInputEvent<D>>();
+
+    private readonly emptyValue = signal(true);
+
+    /** Unique id of the element, generated when not provided. */
+    readonly id = computed(() => this.idInput() || this.uid);
+
+    /** Whether the input renders no text. */
+    readonly empty = this.emptyValue.asReadonly();
+
+    private control: AbstractControl | undefined;
+    private readonly uid = `kbq-datepicker-input-${uniqueComponentIdSuffix++}`;
+    private datepickerSubscription = Subscription.EMPTY;
+
+    /** Whether the last value set on the input was valid. */
+    private lastValueValid = false;
+
+    /** The combined form control validator for this input. */
+    private readonly validator: ValidatorFn | null;
+    private separator = '';
+    private firstDigit: DateDigit | null = null;
+    private secondDigit: DateDigit | null = null;
+    private thirdDigit: DateDigit | null = null;
+    private separatorPositions: number[] = [];
+
+    /** Work the keys left to timers, in the order the timers run. */
+    private readonly deferred = new Map<ReturnType<typeof setTimeout>, () => void>();
+
+    /**
+     * Whether a drag started in this field, so that its drop here is the field's own text.
+     *
+     * @docs-private
+     */
+    protected draggingOwnText = false;
 
     /** The datepicker that this input is associated with. */
     set kbqDatepicker(value: KbqDatepicker<D>) {
@@ -436,30 +519,11 @@ export class KbqDatepickerInput<D>
         this.calendar.registerInput(this);
     }
 
-    /** @docs-private */
-    readonly kbqDatepickerInput = input<KbqDatepicker<D> | undefined>(undefined, { alias: 'kbqDatepicker' });
-
-    /** @docs-private */
-    readonly kbqCalendarInput = input<KbqCalendar<D> | undefined>(undefined, { alias: 'kbqCalendar' });
-
     /** Function that can be used to filter out dates within the datepicker. `undefined` removes the filter. */
     set kbqDatepickerFilter(value: ((date: D | null) => boolean) | undefined) {
         this.dateFilter = value ?? acceptAnyDate;
         this.validatorOnChange();
     }
-
-    /** @docs-private */
-    readonly kbqDatepickerFilterInput = input<((date: D | null) => boolean) | undefined>(undefined, {
-        alias: 'kbqDatepickerFilter'
-    });
-
-    /** @docs-private */
-    readonly valueInput = input<D | null | undefined>(undefined, { alias: 'value' });
-
-    private readonly valueState = signal<D | null>(null);
-
-    /** The date the input holds: set with `[value]`, by the form control, by typing and by the calendar. */
-    readonly value = this.valueState.asReadonly();
 
     /**
      * The minimum valid date. Drives validation only — including dates typed or pasted into the
@@ -479,8 +543,6 @@ export class KbqDatepickerInput<D>
         this.validatorOnChange();
     }
 
-    private _min: D | null = null;
-
     /**
      * The maximum valid date. Drives validation only — including dates typed or pasted into the
      * input — and reports `kbqDatepickerMax`. The calendar is restricted separately, by `maxDate`
@@ -498,29 +560,6 @@ export class KbqDatepickerInput<D>
         this._max = this.getValidDateOrNull(this.adapter.deserialize(value));
         this.validatorOnChange();
     }
-
-    private _max: D | null = null;
-
-    /** @docs-private */
-    readonly minInput = input<D | null | undefined>(undefined, { alias: 'min' });
-
-    /** @docs-private */
-    readonly maxInput = input<D | null | undefined>(undefined, { alias: 'max' });
-
-    /** @docs-private */
-    readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
-        alias: 'disabled',
-        transform: booleanAttribute
-    });
-
-    /** Whether the datepicker-input is disabled. Also set by the bound form control. */
-    readonly disabled = linkedSignal(() => this.disabledInput());
-
-    /** @docs-private */
-    readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
-
-    /** Unique id of the element, generated when not provided. */
-    readonly id = computed(() => this.idInput() || this.uid);
 
     set kbqValidationTooltip(tooltip: KbqTooltipTrigger) {
         if (!tooltip) {
@@ -542,24 +581,6 @@ export class KbqDatepickerInput<D>
             setTimeout(() => tooltip.hide(), validationTooltipHideDelay);
         });
     }
-
-    /** @docs-private */
-    readonly kbqValidationTooltipInput = input<KbqTooltipTrigger | undefined>(undefined, {
-        alias: 'kbqValidationTooltip'
-    });
-
-    readonly incorrectInput = output<void>();
-
-    /** Emits when a `change` event is fired on this `<input>`. */
-    readonly dateChange = output<KbqDatepickerInputEvent<D>>();
-
-    /** Emits when an `input` event is fired on this `<input>`. */
-    readonly dateInput = output<KbqDatepickerInputEvent<D>>();
-
-    private readonly emptyValue = signal(true);
-
-    /** Whether the input renders no text. */
-    readonly empty = this.emptyValue.asReadonly();
 
     get viewValue(): string {
         return this.elementRef.nativeElement.value;
@@ -588,35 +609,6 @@ export class KbqDatepickerInput<D>
     private get selectionEnd(): number | null {
         return this.elementRef.nativeElement.selectionEnd;
     }
-
-    private control: AbstractControl | undefined;
-    private readonly uid = `kbq-datepicker-input-${uniqueComponentIdSuffix++}`;
-
-    private datepickerSubscription = Subscription.EMPTY;
-
-    /** Whether the last value set on the input was valid. */
-    private lastValueValid = false;
-
-    /**
-     * Whether a drag started in this field, so that its drop here is the field's own text.
-     *
-     * @docs-private
-     */
-    protected draggingOwnText = false;
-
-    /** The combined form control validator for this input. */
-    private readonly validator: ValidatorFn | null;
-
-    private separator = '';
-
-    private firstDigit: DateDigit | null = null;
-    private secondDigit: DateDigit | null = null;
-    private thirdDigit: DateDigit | null = null;
-
-    private separatorPositions: number[] = [];
-
-    /** Work the keys left to timers, in the order the timers run. */
-    private readonly deferred = new Map<ReturnType<typeof setTimeout>, () => void>();
 
     constructor() {
         this.validator = Validators.compose([
@@ -743,6 +735,16 @@ export class KbqDatepickerInput<D>
         this.emptyValue.set(this.isEmpty());
     }
 
+    ngAfterContentInit() {
+        this.updateErrorState();
+    }
+
+    ngOnDestroy() {
+        this.datepickerSubscription.unsubscribe();
+        this.valueChange.complete();
+        this.disabledChange.complete();
+    }
+
     onContainerClick() {
         this.focus();
     }
@@ -764,16 +766,6 @@ export class KbqDatepickerInput<D>
      * @docs-private
      */
     onTouched = () => {};
-
-    ngAfterContentInit() {
-        this.updateErrorState();
-    }
-
-    ngOnDestroy() {
-        this.datepickerSubscription.unsubscribe();
-        this.valueChange.complete();
-        this.disabledChange.complete();
-    }
 
     /** @docs-private */
     registerOnValidatorChange(fn: () => void): void {

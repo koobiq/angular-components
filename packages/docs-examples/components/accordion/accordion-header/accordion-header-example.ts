@@ -17,7 +17,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class AccordionHeaderExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     icon: boolean = false;
     caption: boolean = false;
     leftBadge: boolean = false;

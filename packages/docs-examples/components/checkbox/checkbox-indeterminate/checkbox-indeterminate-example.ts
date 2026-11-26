@@ -37,10 +37,8 @@ import { TRANSLATIONS } from './l10n';
 })
 export class CheckboxIndeterminateExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly eventTypes = computed(() => this.t().eventTypes);
     protected readonly selected = signal(new Set([0]));
-
     protected readonly allSelected = computed(() => this.selected().size === this.eventTypes().length);
     protected readonly someSelected = computed(() => this.selected().size > 0 && !this.allSelected());
 

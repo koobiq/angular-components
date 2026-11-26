@@ -51,27 +51,23 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridOverviewExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly dateFormatter = inject<DateFormatter<DateTime>>(DateFormatter);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,
         width: 140
     };
-
     protected readonly selectionColumnDef: SelectionColumnDef = {
         pinned: 'left'
     };
-
     protected readonly rowSelection: RowSelectionOptions = {
         mode: 'multiRow',
         headerCheckbox: true,
         checkboxes: true,
         hideDisabledCheckboxes: false
     };
-
     protected readonly columnDefs = computed(() =>
         exampleIncidentColumns(
             this.t().headers,
@@ -91,7 +87,6 @@ export class AgGridOverviewExample {
             }
         )
     );
-
     protected readonly rowData = exampleGetIncidents();
 
     protected onFirstDataRendered({ api }: FirstDataRenderedEvent): void {

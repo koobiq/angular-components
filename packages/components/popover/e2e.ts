@@ -49,7 +49,6 @@ export class E2ePopoverStates implements AfterViewInit {
     readonly customHeader = viewChild.required<TemplateRef<any>>('customHeader');
     readonly customContent = viewChild.required<TemplateRef<any>>('customContent');
     readonly customFooter = viewChild.required<TemplateRef<any>>('customFooter');
-
     readonly popoverSmall = viewChild.required<KbqPopoverComponent>('popoverSmall');
     readonly popoverMedium = viewChild.required<KbqPopoverComponent>('popoverMedium');
     readonly popoverLarge = viewChild.required<KbqPopoverComponent>('popoverLarge');

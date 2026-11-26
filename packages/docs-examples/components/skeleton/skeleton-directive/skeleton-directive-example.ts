@@ -88,10 +88,9 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SkeletonDirectiveExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly loading = model(true);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly badgeColors = KbqBadgeColors;
     protected readonly alertColors = KbqAlertColors;
     protected readonly alertStyles = KbqAlertStyles;

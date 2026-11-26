@@ -1277,6 +1277,7 @@ const EFFECT_RUN_LIMIT = 10;
 })
 class TestSearchExpandableDrivenByEffect {
     readonly search = viewChild.required(KbqSearchExpandable);
+
     readonly searchControl = new FormControl<string>('');
     readonly action = signal<'toggle' | 'write' | null>(null);
     runs = 0;
@@ -1338,7 +1339,6 @@ class TestSearchExpandableExternalToggle {
 })
 class TestSearchExpandableWithFormControl {
     searchControl = new FormControl<string>('');
-
     openedState: boolean = false;
 }
 

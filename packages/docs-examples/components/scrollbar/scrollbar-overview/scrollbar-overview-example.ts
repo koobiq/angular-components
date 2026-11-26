@@ -98,6 +98,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScrollbarOverviewExample {
-    protected readonly modes: KbqScrollbarMode[] = ['hover', 'always', 'native', 'hidden'] as const;
     protected readonly mode = model<KbqScrollbarMode>('hover');
+
+    protected readonly modes: KbqScrollbarMode[] = ['hover', 'always', 'native', 'hidden'] as const;
 }

@@ -10,13 +10,12 @@ import { type AfterContentInit, contentChildren, Directive, ElementRef, inject }
 export class KbqFormElement implements AfterContentInit {
     private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
 
-    margin = false;
+    readonly elements = contentChildren(KbqFormElement);
 
+    margin = false;
     isFieldSet = false;
     hasLegend = false;
     isHorizontal = false;
-
-    readonly elements = contentChildren(KbqFormElement);
 
     ngAfterContentInit(): void {
         const classList = this.element.nativeElement.classList;

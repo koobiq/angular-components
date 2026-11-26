@@ -51,11 +51,12 @@ type DocsFormData = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocsNameFormComponent {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly modalData = inject<DocsFormData>(KBQ_MODAL_DATA, { optional: true });
     protected readonly modalRef = inject(KbqModalRef);
+
     protected readonly formFieldList = viewChildren(KbqFormField);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     readonly userDetailsForm = new FormGroup({
         firstName: new FormControl(this.modalData?.firstName || '', Validators.required),
         lastName: new FormControl(this.modalData?.lastName || '', Validators.required)
@@ -107,9 +108,9 @@ export class DocsNameFormComponent {
     }
 })
 export class ValidationOnOpenExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly modalService = inject(KbqModalService);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected modalRef?: KbqModalRef<DocsNameFormComponent>;
 
     protected cancel(): void {

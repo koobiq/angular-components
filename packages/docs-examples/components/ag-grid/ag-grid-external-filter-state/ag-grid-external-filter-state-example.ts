@@ -60,12 +60,13 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class AgGridExternalFilterStateExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly rowData = exampleGetIncidents();
     readonly options = [...new Set(this.rowData.map((row) => row.category))];
     readonly filter = model<string | null>(null);
-    readonly filterPass = (node: IRowNode<ExampleSecurityIncident>): boolean => node.data?.category === this.filter();
+
     protected readonly columnDefs = computed(() =>
         exampleIncidentColumns(this.t().headers, 'id', 'category', 'event', 'severity', 'status')
     );
+
+    readonly filterPass = (node: IRowNode<ExampleSecurityIncident>): boolean => node.data?.category === this.filter();
 }

@@ -81,24 +81,22 @@ const PINNED_RIGHT = ['sourceIp'];
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridLoadErrorExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    private readonly localeService = inject(KbqLocaleService);
 
     protected readonly pinnedColumns = model(true);
     protected readonly rowDividers = model(false);
 
     private readonly loadError = viewChild.required(KbqAgGridLoadError);
-    private readonly localeService = inject(KbqLocaleService);
-    private readonly pageCache = new Map<number, ExampleSecurityIncident[]>();
 
+    private readonly pageCache = new Map<number, ExampleSecurityIncident[]>();
     private requestCount = 0;
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected api?: GridApi;
     protected readonly pageSize = PAGE_SIZE;
-
     protected readonly labels = computed(() =>
         this.localeService.localeId() === 'ru-RU' ? KBQ_AG_GRID_LOAD_ERROR_LABELS_RU : KBQ_AG_GRID_LOAD_ERROR_LABELS_EN
     );
-
     protected readonly rowStyle = computed<RowStyle>(() =>
         this.rowDividers()
             ? {
@@ -107,32 +105,27 @@ export class AgGridLoadErrorExample {
               }
             : { borderBottom: '', borderRadius: '' }
     );
-
     protected readonly columnDefs = computed(() =>
         exampleIncidentColumns(this.t().headers, { field: 'id', pinned: 'left' }, 'event', 'severity', 'status', {
             field: 'sourceIp',
             pinned: 'right'
         })
     );
-
     protected readonly defaultColDef: ColDef = {
         cellRendererSelector: ({ data }: ICellRendererParams) =>
             data === undefined ? { component: KbqAgGridSkeletonCellRenderer } : undefined
     };
-
     protected readonly selectionColumnDef: SelectionColumnDef = {
         pinned: 'left',
         cellRendererSelector: ({ data }: ICellRendererParams) =>
             data === undefined ? { component: KbqAgGridSkeletonSelectionCellComponent } : undefined
     };
-
     protected readonly rowSelection: RowSelectionOptions = {
         mode: 'multiRow',
         checkboxes: true,
         headerCheckbox: false,
         isRowSelectable: ({ data }) => data !== undefined
     };
-
     protected readonly datasource: IDatasource = {
         getRows: (params: IGetRowsParams) => this.getRows(params)
     };

@@ -63,23 +63,17 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
     private readonly destroyRef = inject(DestroyRef);
     private readonly injector = inject(Injector);
 
-    /** Whether the tab body translates without motion. */
-    protected readonly animationsDisabled = kbqAnimationsDisabled();
-
     /** @docs-private */
     readonly positionInput = input<number | undefined>(undefined, { alias: 'position' });
 
     /** @docs-private */
     readonly originInput = input<number | undefined>(undefined, { alias: 'origin' });
 
-    /** The shifted index position of the tab body, where zero represents the active center tab. */
-    set position(position: number) {
-        this.positionIndex = position;
-        this.computePositionAnimationState();
-    }
+    /** The tab body content to display. */
+    readonly content = input<TemplatePortal | null>(null);
 
-    /** Tab body position state, rendered as a modifier class of the content. `undefined` until a position is set. */
-    bodyPosition: KbqTabBodyPositionState | undefined;
+    /** Duration for the tab's animation. */
+    readonly animationDuration = input<string>('0ms');
 
     /** Event emitted when the tab begins to animate towards the center as the active tab. */
     readonly onCentering = output<number>();
@@ -101,15 +95,29 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
 
     /** The portal host inside of this container into which the tab body content will be loaded. */
     readonly portalHost = viewChild.required(CdkPortalOutlet);
+    private readonly contentElement = viewChild.required('content', { read: ElementRef });
 
-    /** The tab body content to display. */
-    readonly content = input<TemplatePortal | null>(null);
+    /** Current position of the tab-body in the tab-group. Zero means that the tab is visible. */
+    private positionIndex = 0;
+
+    /** Subscription to the directionality change observable. */
+    private readonly dirChangeSubscription = Subscription.EMPTY;
+
+    /** The position the last translation went to, see `translateOnRender`. */
+    private renderedPosition?: KbqTabBodyPositionState;
+
+    /** The position the body is created at, see `translateOnRender`. */
+    private initialPosition?: KbqTabBodyPositionState;
+    private translationRender?: AfterRenderRef;
+
+    /** Whether the tab body translates without motion. */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
+
+    /** Tab body position state, rendered as a modifier class of the content. `undefined` until a position is set. */
+    bodyPosition: KbqTabBodyPositionState | undefined;
 
     /** Position that will be used when the tab is immediately becoming visible after creation. */
     origin: number | undefined;
-
-    /** Duration for the tab's animation. */
-    readonly animationDuration = input<string>('0ms');
 
     /** The duration as CSS time: a bare number, which CSS rejects, is taken as milliseconds. */
     protected readonly cssAnimationDuration = computed(() => {
@@ -118,21 +126,11 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
         return /^\d+$/.test(duration) ? `${duration}ms` : duration;
     });
 
-    /** Current position of the tab-body in the tab-group. Zero means that the tab is visible. */
-    private positionIndex = 0;
-
-    /** Subscription to the directionality change observable. */
-    private readonly dirChangeSubscription = Subscription.EMPTY;
-
-    private readonly contentElement = viewChild.required('content', { read: ElementRef });
-
-    /** The position the last translation went to, see `translateOnRender`. */
-    private renderedPosition?: KbqTabBodyPositionState;
-
-    /** The position the body is created at, see `translateOnRender`. */
-    private initialPosition?: KbqTabBodyPositionState;
-
-    private translationRender?: AfterRenderRef;
+    /** The shifted index position of the tab body, where zero represents the active center tab. */
+    set position(position: number) {
+        this.positionIndex = position;
+        this.computePositionAnimationState();
+    }
 
     constructor() {
         const changeDetectorRef = inject(ChangeDetectorRef);
@@ -290,6 +288,7 @@ export class KbqTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
 
     /** Subscription to events for when the tab body begins centering. */
     private centeringSub = Subscription.EMPTY;
+
     /** Subscription to events for when the tab body finishes leaving from center position. */
     private leavingSub = Subscription.EMPTY;
 

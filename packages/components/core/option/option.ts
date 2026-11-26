@@ -74,11 +74,13 @@ export interface KeyboardNavigationHandler {
 export const KBQ_OPTION_PARENT_COMPONENT = new InjectionToken<KbqOptionParentComponent>('KBQ_OPTION_PARENT_COMPONENT');
 
 export abstract class KbqOptionBase {
-    abstract get value(): any;
-    abstract get viewValue(): string;
-    abstract get disabled(): boolean;
-
     abstract readonly onSelectionChange: EventEmitter<KbqOptionSelectionChange<any>>;
+
+    abstract get value(): any;
+
+    abstract get viewValue(): string;
+
+    abstract get disabled(): boolean;
 
     abstract select(): void;
 
@@ -91,9 +93,14 @@ export abstract class KbqOptionBase {
 }
 
 export class KbqVirtualOption extends KbqOptionBase {
+    private _selected = false;
+
+    readonly onSelectionChange = new EventEmitter<KbqOptionSelectionChange<KbqVirtualOption>>();
+
     get disabled() {
         return this._disabled;
     }
+
     set disabled(value: any) {
         this._disabled = coerceBooleanProperty(value);
     }
@@ -102,13 +109,9 @@ export class KbqVirtualOption extends KbqOptionBase {
         return this._selected;
     }
 
-    private _selected = false;
-
     get viewValue(): string {
         return this._viewValue ?? this.value;
     }
-
-    readonly onSelectionChange = new EventEmitter<KbqOptionSelectionChange<KbqVirtualOption>>();
 
     constructor(
         public value: any,
@@ -188,21 +191,8 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     protected readonly parent = inject<KbqOptionParentComponent>(KBQ_OPTION_PARENT_COMPONENT, { optional: true });
     readonly group = inject(KbqOptgroup, { optional: true });
 
-    private readonly titleText = viewChild<ElementRef<HTMLElement>>('kbqTitleText');
-
-    /** Element holding the text of the option, measured by `kbq-title`. */
-    get textElement(): ElementRef<HTMLElement> | undefined {
-        return this.titleText();
-    }
-
     /** @docs-private */
     readonly valueInput = input<any>(undefined, { alias: 'value' });
-
-    /** The form value of the option. */
-    get value(): any {
-        return this.valueInput();
-    }
-
     readonly selectable = input<boolean, unknown>(true, { transform: booleanAttribute });
 
     // todo this flag will need to be rethought in the future (added for filter panel)
@@ -214,10 +204,14 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
         transform: booleanAttribute
     });
 
-    /** Whether the option renders a checkbox. Follows the multiple selection mode of the parent until bound. */
-    get showCheckbox(): boolean {
-        return this.showCheckboxInput() ?? this.multiple;
-    }
+    /** @docs-private */
+    readonly viewValueInput = input<string | undefined>(undefined, { alias: 'viewValue' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
 
     /**
      * Event emitted when the option is selected or deselected. A stream rather than an `output()`: it keeps
@@ -229,11 +223,51 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     /** @docs-private */
     readonly selectionChangeOutput = outputFromObservable(this.onSelectionChange, { alias: 'onSelectionChange' });
 
+    private readonly titleText = viewChild<ElementRef<HTMLElement>>('kbqTitleText');
+
+    private _id = `kbq-option-${uniqueIdCounter++}`;
+    private readonly selectedState = signal(false);
+
+    // A signal per option for the host bindings, since the group's is the same for all its options.
+    private readonly disabledState = computed(() => !!this.group?.disabled() || this.disabledInput());
+    private readonly tabIndex = computed(() => (this.disabled ? '-1' : '0'));
+
+    // The selected state for `aria-selected`, apart from the one `kbq-selected` reads.
+    private readonly ariaSelected = computed(() => this.selected);
+    private readonly activeState = signal(false);
+    private mostRecentViewValue = '';
+
+    /**
+     * Whether the pointer is currently over this option. Cleared on `mouseleave` rather than when the
+     * option is focused: hovering the option that is already active does not move the key manager's
+     * index, so no focus follows and a flag cleared only there would stay armed indefinitely.
+     */
+    private hoveredByPointer = false;
+
     /** Emits when the state of the option changes and any parents have to be notified. */
     readonly stateChanges = new Subject<void>();
 
-    /** @docs-private */
-    readonly viewValueInput = input<string | undefined>(undefined, { alias: 'viewValue' });
+    /**
+     * Value of `aria-disabled`: the same as `disabled`, but a signal of its own, since `kbq-disabled` reads that one.
+     *
+     * @docs-private
+     */
+    protected readonly ariaDisabled = computed(() => this.disabled);
+
+    /** Element holding the text of the option, measured by `kbq-title`. */
+    get textElement(): ElementRef<HTMLElement> | undefined {
+        return this.titleText();
+    }
+
+    /** The form value of the option. */
+    get value(): any {
+        return this.valueInput();
+    }
+
+    /** Whether the option renders a checkbox. Follows the multiple selection mode of the parent until bound. */
+    get showCheckbox(): boolean {
+        return this.showCheckboxInput() ?? this.multiple;
+    }
 
     /**
      * The displayed value of the option. It is necessary to show the selected option in the
@@ -252,39 +286,14 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
         return this._id;
     }
 
-    private _id = `kbq-option-${uniqueIdCounter++}`;
-
     get selected(): boolean {
         return this.selectedState();
     }
-
-    private readonly selectedState = signal(false);
-
-    /** @docs-private */
-    readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
-        alias: 'disabled',
-        transform: booleanAttribute
-    });
 
     /** Whether the option is disabled, through its own input or its group. */
     get disabled(): boolean {
         return this.disabledState();
     }
-
-    // A signal per option for the host bindings, since the group's is the same for all its options.
-    private readonly disabledState = computed(() => !!this.group?.disabled() || this.disabledInput());
-
-    /**
-     * Value of `aria-disabled`: the same as `disabled`, but a signal of its own, since `kbq-disabled` reads that one.
-     *
-     * @docs-private
-     */
-    protected readonly ariaDisabled = computed(() => this.disabled);
-
-    private readonly tabIndex = computed(() => (this.disabled ? '-1' : '0'));
-
-    // The selected state for `aria-selected`, apart from the one `kbq-selected` reads.
-    private readonly ariaSelected = computed(() => this.selected);
 
     /**
      * Whether or not the option is currently active and ready to be selected.
@@ -296,16 +305,6 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
         return this.activeState();
     }
 
-    private readonly activeState = signal(false);
-
-    private mostRecentViewValue = '';
-
-    /**
-     * Whether the pointer is currently over this option. Cleared on `mouseleave` rather than when the
-     * option is focused: hovering the option that is already active does not move the key manager's
-     * index, so no focus follows and a flag cleared only there would stay armed indefinitely.
-     */
-    private hoveredByPointer = false;
     ngAfterViewChecked() {
         // Since parent components could be using the option's label to display the selected values
         // (e.g. `kbq-select`) and they don't have a way of knowing if the option's label has changed

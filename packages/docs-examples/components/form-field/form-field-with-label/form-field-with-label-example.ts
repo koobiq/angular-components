@@ -21,6 +21,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class FormFieldWithLabelExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly showRequiredMarker = signal(false);
 }

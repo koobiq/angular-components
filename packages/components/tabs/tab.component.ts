@@ -46,25 +46,23 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     private readonly viewContainerRef = inject(ViewContainerRef);
 
     /** @docs-private */
-    get content(): TemplatePortal | null {
-        return this.contentPortal;
-    }
+    readonly tooltipTitleInput = input<string | undefined>(undefined, { alias: 'tooltipTitle' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** Placement of the tooltip shown for a truncated or empty label. */
+    readonly tooltipPlacement = input<KbqPopUpPlacementValues>(PopUpPlacements.Right);
+
+    /** Plain text label for the tab, used when there is no template label. */
+    readonly textLabel = input('', { alias: 'label' });
+    readonly empty = input<boolean, unknown>(false, { transform: booleanAttribute });
+    readonly tabId = input<string>(undefined!);
 
     private readonly templateLabelQuery = contentChild(KBQ_TAB_LABEL);
-
-    /**
-     * The label template of the tab: the `kbqTabLabel` in its content, or else the one assigned in code. `undefined`
-     * for a tab labelled with text.
-     */
-    get templateLabel(): KbqTabLabel | undefined {
-        return this.templateLabelQuery() ?? this._templateLabel;
-    }
-
-    set templateLabel(value: KbqTabLabel) {
-        this.setTemplateLabelInput(value);
-    }
-
-    private _templateLabel?: KbqTabLabel;
 
     /**
      * Template provided in the tab content that will be used if present, used to enable lazy-loading
@@ -74,52 +72,14 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     /** Template inside the KbqTab view that contains an `<ng-content>`. */
     readonly implicitContent = viewChild.required(TemplateRef);
 
-    /** @docs-private */
-    readonly tooltipTitleInput = input<string | undefined>(undefined, { alias: 'tooltipTitle' });
-
-    /** @docs-private */
-    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'disabled',
-        transform: booleanAttribute
-    });
-
-    get tooltipTitle(): string {
-        return this.overflowTooltipTitle + this._tooltipTitle;
-    }
-
-    set tooltipTitle(value: string) {
-        this._tooltipTitle = value;
-    }
-
+    private _templateLabel?: KbqTabLabel;
     private _tooltipTitle = '';
-
-    /** Whether the tab is disabled: it cannot be selected and has no interactive states. */
-    get disabled(): boolean {
-        return this._disabled;
-    }
-
-    set disabled(value: boolean) {
-        if (value !== this.disabled) {
-            this._disabled = value;
-        }
-    }
-
     private _disabled: boolean = false;
+    private readonly activeState = signal(false);
+    private _overflowTooltipTitle = '';
 
-    /** Placement of the tooltip shown for a truncated or empty label. */
-    readonly tooltipPlacement = input<KbqPopUpPlacementValues>(PopUpPlacements.Right);
-
-    /** Plain text label for the tab, used when there is no template label. */
-    readonly textLabel = input('', { alias: 'label' });
-
-    readonly empty = input<boolean, unknown>(false, { transform: booleanAttribute });
-
-    readonly tabId = input<string>(undefined!);
-
-    /** Whether the tab label contains only an icon (no text). */
-    get iconOnlyLabel(): boolean {
-        return this.templateLabel?.iconOnly() ?? false;
-    }
+    /** Portal that will be the hosted content of the tab */
+    private contentPortal: TemplatePortal | null = null;
 
     /** Emits whenever the internal state of the tab changes. */
     readonly stateChanges = new Subject<void>();
@@ -136,6 +96,47 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
      */
     origin: number | null = null;
 
+    /** @docs-private */
+    get content(): TemplatePortal | null {
+        return this.contentPortal;
+    }
+
+    /**
+     * The label template of the tab: the `kbqTabLabel` in its content, or else the one assigned in code. `undefined`
+     * for a tab labelled with text.
+     */
+    get templateLabel(): KbqTabLabel | undefined {
+        return this.templateLabelQuery() ?? this._templateLabel;
+    }
+
+    set templateLabel(value: KbqTabLabel) {
+        this.setTemplateLabelInput(value);
+    }
+
+    get tooltipTitle(): string {
+        return this.overflowTooltipTitle + this._tooltipTitle;
+    }
+
+    set tooltipTitle(value: string) {
+        this._tooltipTitle = value;
+    }
+
+    /** Whether the tab is disabled: it cannot be selected and has no interactive states. */
+    get disabled(): boolean {
+        return this._disabled;
+    }
+
+    set disabled(value: boolean) {
+        if (value !== this.disabled) {
+            this._disabled = value;
+        }
+    }
+
+    /** Whether the tab label contains only an icon (no text). */
+    get iconOnlyLabel(): boolean {
+        return this.templateLabel?.iconOnly() ?? false;
+    }
+
     /** Whether the tab is currently active. A template that reads it is updated when it changes. */
     get isActive(): boolean {
         return this.activeState();
@@ -144,8 +145,6 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     set isActive(value: boolean) {
         this.activeState.set(value);
     }
-
-    private readonly activeState = signal(false);
 
     get isOverflown(): boolean {
         return !!this._overflowTooltipTitle;
@@ -162,11 +161,6 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     set overflowTooltipTitle(value: string) {
         this._overflowTooltipTitle = value;
     }
-
-    private _overflowTooltipTitle = '';
-
-    /** Portal that will be the hosted content of the tab */
-    private contentPortal: TemplatePortal | null = null;
 
     ngOnChanges(changes: SimpleChanges): void {
         // A bound input is handed to its member, except that `undefined` resets a member

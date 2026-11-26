@@ -71,9 +71,9 @@ export class FilterParentsForNodes<T, K = T> implements FlatTreeControlFilter<T>
 }
 
 export class FilterByValues<T, K = T> implements FlatTreeControlFilter<T> {
-    result: T[] = [];
-
     private values: string[] = [];
+
+    result: T[] = [];
 
     constructor(private control: FlatTreeControl<T, K>) {}
 

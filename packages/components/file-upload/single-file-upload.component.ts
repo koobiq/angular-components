@@ -94,37 +94,19 @@ export class KbqSingleFileUploadComponent
     extends KbqFileUploadBase
     implements OnChanges, AfterViewInit, ControlValueAccessor, DoCheck
 {
+    private readonly focusMonitor = inject(FocusMonitor);
+    private readonly injector = inject(Injector);
+    private readonly platformId = inject(PLATFORM_ID);
+
     /**
      * A value responsible for progress spinner type.
      * Loading logic depends on selected mode
      */
     readonly progressMode = input<ProgressSpinnerMode>('determinate');
+
     /** Array of file type specifiers */
     readonly accept = input<string[]>();
     readonly inputId = input<string>(`kbq-single-file-upload-${nextSingleFileUploadUniqueId++}`);
-
-    /** An object used to control the error state of the component. Defaults to the injected `ErrorStateMatcher`. */
-    errorStateMatcher: ErrorStateMatcher = this.defaultErrorStateMatcher;
-
-    /**
-     * The selected file, or `null`.
-     *
-     * Writing it is the model→view direction, same as `writeValue()`: it fills the list and tells
-     * nobody. `cvaOnChange` and `(fileChange)` belong to the paths a user drives — see `addFile()`
-     * and `deleteItem()` — so a `[file]` binding cannot make the form look edited.
-     */
-    // An accessor, not a `model()`: the store is `KbqFileList.list`, a model on the host directive that the template
-    // reads and that `remove()`, `removeAt()` and `replace()` mutate. A `model()` here would be a second store to keep
-    // in sync with that one.
-    get file(): KbqFileItem | null {
-        const files = this.fileList.list();
-
-        return files[0] ?? null;
-    }
-
-    set file(currentFile: KbqFileItem | null) {
-        this.setFileList(currentFile === null ? [] : [currentFile]);
-    }
 
     /**
      * Controls whether to display the file size information. Defaults to `true`.
@@ -142,6 +124,12 @@ export class KbqSingleFileUploadComponent
      */
     readonly fullScreenDropZone = input<KbqDropzoneData | boolean>();
 
+    /** @docs-private */
+    readonly errorStateMatcherInput = input<ErrorStateMatcher | undefined>(undefined, { alias: 'errorStateMatcher' });
+
+    /** @docs-private */
+    readonly fileInput = input<KbqFileItem | null | undefined>(undefined, { alias: 'file' });
+
     /** Emits an event containing an updated file. */
     readonly fileChange = output<KbqFileItem | null>();
 
@@ -157,6 +145,9 @@ export class KbqSingleFileUploadComponent
     /** @docs-private */
     protected readonly hint = contentChildren(KbqHint);
 
+    /** An object used to control the error state of the component. Defaults to the injected `ErrorStateMatcher`. */
+    errorStateMatcher: ErrorStateMatcher = this.defaultErrorStateMatcher;
+
     /** @docs-private */
     protected readonly describedBy = computed(
         () =>
@@ -164,45 +155,6 @@ export class KbqSingleFileUploadComponent
                 .map((hint) => hint.id())
                 .join(' ') || null
     );
-
-    /**
-     * cvaOnChange function registered via registerOnChange (ControlValueAccessor).
-     *
-     * @docs-private
-     */
-    cvaOnChange = (_: KbqFileItem | null) => {};
-
-    /**
-     * onTouch function registered via registerOnTouch (ControlValueAccessor).
-     *
-     * @docs-private
-     */
-    onTouched = () => {};
-
-    /** @docs-private */
-    get input(): ElementRef<HTMLInputElement> | undefined {
-        return this.fileLoader()?.input();
-    }
-
-    /** @docs-private */
-    get acceptedFiles(): string {
-        return this.accept()?.join(',') || '*/*';
-    }
-
-    /** @docs-private */
-    get hasHint(): boolean {
-        return this.hint().length > 0;
-    }
-
-    /**
-     * Indicates an invalid state based on file errors or `errorState`,
-     * applying a CSS class in HTML for visual feedback.
-     *
-     * @docs-private
-     */
-    get invalid(): boolean {
-        return !!this.file?.hasError || this.errorState;
-    }
 
     /** @docs-private */
     protected readonly captionContext = computed<KbqFileUploadCaptionContext>(() => {
@@ -235,24 +187,49 @@ export class KbqSingleFileUploadComponent
         }
     });
 
-    private readonly focusMonitor = inject(FocusMonitor);
-    private readonly injector = inject(Injector);
-    private readonly platformId = inject(PLATFORM_ID);
+    /**
+     * The selected file, or `null`.
+     *
+     * Writing it is the model→view direction, same as `writeValue()`: it fills the list and tells
+     * nobody. `cvaOnChange` and `(fileChange)` belong to the paths a user drives — see `addFile()`
+     * and `deleteItem()` — so a `[file]` binding cannot make the form look edited.
+     */
+    // An accessor, not a `model()`: the store is `KbqFileList.list`, a model on the host directive that the template
+    // reads and that `remove()`, `removeAt()` and `replace()` mutate. A `model()` here would be a second store to keep
+    // in sync with that one.
+    get file(): KbqFileItem | null {
+        const files = this.fileList.list();
+
+        return files[0] ?? null;
+    }
+
+    set file(currentFile: KbqFileItem | null) {
+        this.setFileList(currentFile === null ? [] : [currentFile]);
+    }
 
     /** @docs-private */
-    readonly errorStateMatcherInput = input<ErrorStateMatcher | undefined>(undefined, { alias: 'errorStateMatcher' });
+    get input(): ElementRef<HTMLInputElement> | undefined {
+        return this.fileLoader()?.input();
+    }
 
     /** @docs-private */
-    readonly fileInput = input<KbqFileItem | null | undefined>(undefined, { alias: 'file' });
+    get acceptedFiles(): string {
+        return this.accept()?.join(',') || '*/*';
+    }
 
-    ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member; unbound, it leaves what code wrote.
-        // A bound `undefined` falls back to the default matcher and clears the file.
-        if (changes['errorStateMatcherInput']) {
-            this.errorStateMatcher = this.errorStateMatcherInput() ?? this.defaultErrorStateMatcher;
-        }
+    /** @docs-private */
+    get hasHint(): boolean {
+        return this.hint().length > 0;
+    }
 
-        if (changes['fileInput']) this.file = this.fileInput() ?? null;
+    /**
+     * Indicates an invalid state based on file errors or `errorState`,
+     * applying a CSS class in HTML for visual feedback.
+     *
+     * @docs-private
+     */
+    get invalid(): boolean {
+        return !!this.file?.hasError || this.errorState;
     }
 
     constructor() {
@@ -281,6 +258,16 @@ export class KbqSingleFileUploadComponent
         });
     }
 
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
+        // A bound `undefined` falls back to the default matcher and clears the file.
+        if (changes['errorStateMatcherInput']) {
+            this.errorStateMatcher = this.errorStateMatcherInput() ?? this.defaultErrorStateMatcher;
+        }
+
+        if (changes['fileInput']) this.file = this.fileInput() ?? null;
+    }
+
     ngDoCheck() {
         if (this.ngControl) {
             // We need to re-evaluate this on every change detection cycle, because there are some
@@ -306,6 +293,20 @@ export class KbqSingleFileUploadComponent
 
         this.stateChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
     }
+
+    /**
+     * cvaOnChange function registered via registerOnChange (ControlValueAccessor).
+     *
+     * @docs-private
+     */
+    cvaOnChange = (_: KbqFileItem | null) => {};
+
+    /**
+     * onTouch function registered via registerOnTouch (ControlValueAccessor).
+     *
+     * @docs-private
+     */
+    onTouched = () => {};
 
     /**
      * Implemented as part of ControlValueAccessor.

@@ -56,7 +56,6 @@ export class AgGridSettingsMenuExample {
     ]);
 
     protected readonly density = signal(this.densities()[1]!);
-
     protected readonly settingsMenuItems = computed<KbqAgGridSettingsMenuItems>(() => [
         kbqAgGridSettingsMenuColumnsItem(),
         kbqAgGridSettingsMenuSortItem(),
@@ -77,7 +76,6 @@ export class AgGridSettingsMenuExample {
             }))
         }
     ]);
-
     protected readonly columnDefs = computed(() =>
         exampleIncidentColumns(
             this.t().headers,
@@ -91,6 +89,5 @@ export class AgGridSettingsMenuExample {
             { field: 'affectedHost', hide: true }
         )
     );
-
     protected readonly rowData = exampleGetIncidents(0, 30);
 }

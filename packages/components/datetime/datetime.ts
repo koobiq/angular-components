@@ -138,10 +138,22 @@ export class KbqDatetime<D>
     private readonly adapter = inject<DateAdapter<D>>(DateAdapter, { optional: true })!;
 
     /** @docs-private */
-    protected readonly formField = parentFormField();
+    protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+
+    /** Object used to control when error messages are shown. */
+    readonly errorStateMatcher = input<ErrorStateMatcher>();
 
     /** @docs-private */
-    protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+    readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
+
+    /** Whether the control is required. Defaults to `false`. */
+    readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
 
     private readonly errorStateTracker = new KbqErrorStateTracker(
         inject(ErrorStateMatcher),
@@ -149,6 +161,9 @@ export class KbqDatetime<D>
         inject(FormGroupDirective, { optional: true }),
         inject(NgForm, { optional: true })
     );
+
+    /** @docs-private */
+    protected readonly formField = parentFormField();
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -185,23 +200,8 @@ export class KbqDatetime<D>
      */
     ngControl: NgControl | null = null;
 
-    /** Object used to control when error messages are shown. */
-    readonly errorStateMatcher = input<ErrorStateMatcher>();
-
-    /** @docs-private */
-    readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
-
     /** Unique id of the element, generated when not provided. */
     readonly id = computed(() => this.idInput() || this.uid);
-
-    /** Whether the control is required. Defaults to `false`. */
-    readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
-
-    /** @docs-private */
-    readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
-        alias: 'disabled',
-        transform: booleanAttribute
-    });
 
     /** Whether the control is disabled. Also set by the bound form control. Defaults to `false`. */
     readonly disabled = linkedSignal(() => this.disabledInput());
@@ -221,6 +221,8 @@ export class KbqDatetime<D>
      */
     readonly max = input<D | null>(null);
 
+    private readonly valueState = signal<D | null>(null);
+
     /** @docs-private */
     protected readonly hasSeconds = computed(() => this.format() === TimeFormats.HHmmss);
 
@@ -229,8 +231,6 @@ export class KbqDatetime<D>
 
     /** @docs-private */
     protected readonly maxDate = computed(() => this.validOrNull(this.max()));
-
-    private readonly valueState = signal<D | null>(null);
 
     /** The date and time the control holds, `null` until both parts are filled in. */
     readonly value = this.valueState.asReadonly();
@@ -246,10 +246,19 @@ export class KbqDatetime<D>
 
     /** The calendar of the date part, for a `kbq-datepicker-toggle-icon` placed in the form field. */
     readonly datepicker = viewChild.required<KbqDatepicker<D>>(KbqDatepicker);
-
     private readonly dateInput = viewChild<KbqDatepickerInput<D>>(KbqDatepickerInput);
     private readonly timeInput = viewChild<KbqTimepicker<D>>(KbqTimepicker);
     private readonly timeElement = viewChild<ElementRef<HTMLInputElement>>('timeElement');
+
+    /** What each part reported last: the parts re-emit a value they already gave when only its validity is refreshed. */
+    private lastDate: D | null = null;
+    private lastTime: D | null = null;
+
+    /** Whether the form control was last told that the parts are unparseable or half filled. */
+    private reportedParseError = false;
+
+    /** Set by a day picked for an empty time part: the calendar hands the focus on to the hours. */
+    private focusTimeOnClose = false;
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -263,20 +272,6 @@ export class KbqDatetime<D>
 
     /** @docs-private */
     protected readonly timeControl = new FormControl<D | null>(null);
-
-    /** What each part reported last: the parts re-emit a value they already gave when only its validity is refreshed. */
-    private lastDate: D | null = null;
-    private lastTime: D | null = null;
-
-    /** Whether the form control was last told that the parts are unparseable or half filled. */
-    private reportedParseError = false;
-
-    /** Set by a day picked for an empty time part: the calendar hands the focus on to the hours. */
-    private focusTimeOnClose = false;
-
-    private onChange: (value: D | null) => void = () => {};
-    private onTouched: () => void = () => {};
-    private validatorOnChange: () => void = () => {};
 
     constructor() {
         if (!this.adapter) {
@@ -335,6 +330,12 @@ export class KbqDatetime<D>
         // The first `ngDoCheck()` runs before the form directive of the same element has validated its control.
         this.updateErrorState();
     }
+
+    private onChange: (value: D | null) => void = () => {};
+
+    private onTouched: () => void = () => {};
+
+    private validatorOnChange: () => void = () => {};
 
     /** Focuses the first part left empty, the date part when there is none. */
     focus(options?: FocusOptions): void {

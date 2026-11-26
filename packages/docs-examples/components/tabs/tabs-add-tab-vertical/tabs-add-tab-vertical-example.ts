@@ -87,10 +87,11 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabsAddTabVerticalExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly injector = inject(Injector);
+
     private readonly tabLinks = viewChildren(KbqTabLink);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     private readonly defaultTabs = computed(() => [
         this.t().bruteforce,
@@ -98,6 +99,7 @@ export class TabsAddTabVerticalExample {
         this.t().ddos,
         this.t().hipsAlert
     ]);
+    private baseTabs: string[] = [];
 
     protected tabs: string[] = [];
     protected activeTab: string = '';
@@ -116,8 +118,6 @@ export class TabsAddTabVerticalExample {
             }
         });
     }
-
-    private baseTabs: string[] = [];
 
     protected addTab(): void {
         const newTab = 'Tab ' + (this.tabs.length + 1);

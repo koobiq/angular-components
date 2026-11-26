@@ -116,12 +116,11 @@ export class DevApp {
     private modalService = inject(KbqModalService);
     private sidepanelService = inject(KbqSidepanelService);
 
-    position: KbqSidepanelPosition = KbqSidepanelPosition.Right;
-
-    modalState: boolean = false;
-
-    array = new Array(40);
     readonly template = viewChild.required<TemplateRef<any>>('sipanelTemplate');
+
+    position: KbqSidepanelPosition = KbqSidepanelPosition.Right;
+    modalState: boolean = false;
+    array = new Array(40);
 
     openTemplateSidepanel() {
         this.sidepanelService.open(this.template(), {

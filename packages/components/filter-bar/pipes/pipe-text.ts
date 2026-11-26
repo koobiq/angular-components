@@ -47,18 +47,18 @@ import { KbqPipeState } from './pipe-state';
     encapsulation: ViewEncapsulation.None
 })
 export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements AfterViewInit, OnInit {
-    readonly placements = PopUpPlacements;
-
     /** @docs-private */
     readonly popover = viewChild.required(KbqPopoverTrigger);
+
+    readonly placements = PopUpPlacements;
+
+    /** textarea control */
+    control = new FormControl<typeof this.data.value>('');
 
     /** Whether the current pipe is disabled. */
     get disabled(): boolean {
         return !this.control.value;
     }
-
-    /** textarea control */
-    control = new FormControl<typeof this.data.value>('');
 
     ngOnInit(): void {
         this.control.setValue(this.data.value);

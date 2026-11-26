@@ -202,29 +202,18 @@ export class DevApp {
         'Bryansk',
         'Veliky Novgorod'
     ];
-
     emptyMultipleValue = [];
-
     treeModel = 'rootNode_1';
     multipleTreeModel = ['rootNode_1', 'Documents', 'November'];
-
     treeControl: FlatTreeControl<DevFileFlatNode>;
     treeFlattener: KbqTreeFlattener<DevFileNode, DevFileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<DevFileNode, DevFileFlatNode>;
-
     inputTags = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6', 'tag7'];
-
     tagModel = ['tag', 'tag1'];
-
     readonly separatorKeysCodes: number[] = [ENTER, SPACE, TAB, COMMA];
-
     autocompleteSelectedTags: string[] = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6', 'tag7'];
-
     options: string[] = OPTIONS.sort();
-
     password = '456';
-
     numberValue: number | null = null;
 
     constructor() {

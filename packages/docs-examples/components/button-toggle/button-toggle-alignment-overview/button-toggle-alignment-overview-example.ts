@@ -20,8 +20,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class ButtonToggleAlignmentOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly group = computed(() => [this.t().courier, this.t().donkeyExpress, this.t().middleEarthPost]);
-
     model = 0;
 }

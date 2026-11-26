@@ -61,12 +61,12 @@ type ExportTable = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridExportExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    private readonly fileSize = inject(KbqDataSizePipe);
 
     private readonly api = signal<GridApi | null>(null);
-    private readonly fileSize = inject(KbqDataSizePipe);
     private readonly filename = 'security-incidents';
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,

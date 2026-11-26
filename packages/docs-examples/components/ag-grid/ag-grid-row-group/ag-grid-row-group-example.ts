@@ -35,6 +35,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 class ExampleIncidentGroupLabel implements KbqAgGridRowGroupCellContent {
     readonly group = input.required<KbqAgGridRowGroupInfo>();
+
     protected readonly status = computed(() => exampleIncidentStatuses.find((status) => status === this.group().key));
 }
 
@@ -91,11 +92,10 @@ class ExampleIncidentGroupLabel implements KbqAgGridRowGroupCellContent {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridRowGroupExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
-    protected readonly groupLabel = ExampleIncidentGroupLabel;
     protected readonly groupCols = model(['status']);
-    protected readonly rowId = (row: Record<string, unknown>): string => row['id'] as string;
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly groupLabel = ExampleIncidentGroupLabel;
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,
@@ -118,8 +118,9 @@ export class AgGridRowGroupExample {
             'affectedHost'
         )
     );
-
     protected readonly rowData = exampleGetIncidents(0, 24);
+
+    protected readonly rowId = (row: Record<string, unknown>): string => row['id'] as string;
 
     /** Deselects every data row, including rows hidden inside a collapsed group. */
     protected clearSelectionState(rowGroup: KbqAgGridRowGroup): void {

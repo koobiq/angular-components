@@ -20,7 +20,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class ButtonFillAndStyleOnlyIconExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     colors = KbqComponentColors;
     styles = KbqButtonStyles;
 }

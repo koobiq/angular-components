@@ -69,22 +69,18 @@ type CheckResult = 'success' | 'error';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalButtonLoadingExample {
+    private readonly modalService = inject(KbqModalService);
+
+    private modalRef?: KbqModalRef;
+    private previousConnectionState = true;
+
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly checking = signal(false);
-
     protected readonly checkResult = signal<CheckResult | null>(null);
-
     protected readonly server = new FormControl('https://koobiq.io/', {
         nonNullable: true,
         validators: [Validators.required, Validators.pattern(SERVER_ADDRESS_PATTERN)]
     });
-
-    private readonly modalService = inject(KbqModalService);
-
-    private modalRef?: KbqModalRef;
-
-    private previousConnectionState = true;
 
     constructor() {
         this.server.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => this.checkResult.set(null));

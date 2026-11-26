@@ -160,6 +160,7 @@ export class E2eRadioWithLabel {
 export class E2eRadioWithHint {
     // Each size gets a grid of its own: a big button is taller than a normal one, so the two in one row never line up.
     protected readonly sizes = [false, true] as const;
+
     // The error palette colors the hint too, so it gets a row of its own.
     protected readonly states = ['normal', 'error', 'disabled'] as const;
     protected readonly labelPositions = ['after', 'before'] as const;

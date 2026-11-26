@@ -56,7 +56,6 @@ export class FilterBarRemovableExample {
 
     /** Period labels follow the active locale, so the templates are rebuilt whenever it changes. */
     protected readonly periods = injectLocalizedPeriods();
-
     readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
         {
             name: 'Date',

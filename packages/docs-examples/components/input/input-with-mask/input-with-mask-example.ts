@@ -105,7 +105,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class InputWithMaskExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly amountControl = new FormControl('');
     readonly percentControl = new FormControl('');
     readonly phoneControl = new FormControl('+7 (999) 123-45-67');
@@ -120,7 +119,6 @@ export class InputWithMaskExample {
     readonly licenseControl = new FormControl('ABCD-1234-EFGH-5678', [
         Validators.pattern(/^[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}$/)
     ]);
-
     readonly amountMask = this.makeAmountMaskOptions();
     readonly percentMask = maskitoNumberOptionsGenerator({
         min: 0,

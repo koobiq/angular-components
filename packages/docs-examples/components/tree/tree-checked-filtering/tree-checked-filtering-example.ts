@@ -215,10 +215,8 @@ abstract class TreeParams {
 })
 export class TreeCheckedFilteringExample extends TreeParams {
     filterByValues: FilterByValues<FileFlatNode>;
-
     modelValue: any = ['docs'];
     filterValue: string = '';
-
     readonly treeStates = {
         ALL: 0,
         SELECTED: 1,

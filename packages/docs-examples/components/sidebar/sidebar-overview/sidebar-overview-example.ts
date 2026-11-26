@@ -80,9 +80,7 @@ import { TRANSLATIONS } from './l10n';
 })
 export class SidebarOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly position = SidebarPositions;
-
     leftOpened = true;
     rightOpened = false;
 

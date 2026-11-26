@@ -49,12 +49,13 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditDisabledExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly clipboard = inject(Clipboard);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
+    protected value =
+        'Multi-factor authentication involves multiple identification forms before account access, reducing the risk of unauthorized access';
+
     protected get placeholder(): string {
         return this.t().placeholder;
     }
-    protected value =
-        'Multi-factor authentication involves multiple identification forms before account access, reducing the risk of unauthorized access';
 }

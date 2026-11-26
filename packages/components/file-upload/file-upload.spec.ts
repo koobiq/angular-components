@@ -2654,14 +2654,13 @@ class FileUploadEmptyStateWithSize {
     `
 })
 class BasicSingleFileUpload {
-    elementRef = inject_1(ElementRef);
-
     readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
+
+    elementRef = inject_1(ElementRef);
     disabled: boolean;
     file: KbqFileItem | null;
     accept: string[] = [];
     readonly fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
-
     onChange = vi.fn().mockImplementation((file: KbqFileItem) => {
         this.file = file;
     });
@@ -2677,13 +2676,12 @@ class BasicSingleFileUpload {
     `
 })
 class ControlValueAccessorSingleFileUpload {
-    elementRef = inject_1(ElementRef);
-
     readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
+
+    elementRef = inject_1(ElementRef);
     file: KbqFileItem | null;
     accept: string[] = [];
     control = new FormControl();
-
     onChange = vi.fn().mockImplementation((file: KbqFileItem) => {
         this.file = file;
     });
@@ -2705,15 +2703,14 @@ class ControlValueAccessorSingleFileUpload {
     `
 })
 class BasicMultipleFileUpload {
+    readonly fileUpload = viewChild.required<KbqMultipleFileUploadComponent>('fileUpload');
+
     elementRef = inject_1(ElementRef);
     cdr = inject_1(ChangeDetectorRef);
-
-    readonly fileUpload = viewChild.required<KbqMultipleFileUploadComponent>('fileUpload');
     disabled: boolean;
     files: KbqFileItem[];
     readonly fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
     readonly addStrategy = signal<KbqFileUploadAddStrategyValues>(KbqFileUploadAddStrategy.Concat);
-
     onChange = vi.fn().mockImplementation((files: KbqFileItem[]) => {
         this.files = files;
     });
@@ -2734,13 +2731,12 @@ class BasicMultipleFileUpload {
     `
 })
 class ControlValueAccessorMultipleFileUpload {
-    elementRef = inject_1(ElementRef);
-
     readonly fileUpload = viewChild.required<KbqMultipleFileUploadComponent>('fileUpload');
+
+    elementRef = inject_1(ElementRef);
     files: KbqFileItem[];
     accept: string[] = [];
     control = new FormControl();
-
     onChange = vi.fn().mockImplementation((files: KbqFileItem[]) => {
         this.files = files;
     });
@@ -2754,9 +2750,9 @@ class ControlValueAccessorMultipleFileUpload {
     `
 })
 class SingleFileUploadWithAsyncValidator {
-    elementRef = inject_1(ElementRef);
-
     readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
+
+    elementRef = inject_1(ElementRef);
     readonly control = new FormControl<KbqFileItem | null>(null, {
         asyncValidators: [getAsyncValidator()]
     });
@@ -2770,9 +2766,9 @@ class SingleFileUploadWithAsyncValidator {
     `
 })
 class SingleFileUploadWithInvalidAsyncValidator {
-    elementRef = inject_1(ElementRef);
-
     readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
+
+    elementRef = inject_1(ElementRef);
     readonly control = new FormControl<KbqFileItem | null>(null, {
         asyncValidators: [getAsyncValidator(false)]
     });
@@ -2786,9 +2782,9 @@ class SingleFileUploadWithInvalidAsyncValidator {
     `
 })
 class SingleFileUploadWithFileReaderValidator {
-    elementRef = inject_1(ElementRef);
-
     readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
+
+    elementRef = inject_1(ElementRef);
     readonly control = new FormControl<KbqFileItem | null>(null, {
         asyncValidators: [fileContentLinesValidator(MAX_FILE_LINES_FOR_TEST)]
     });
@@ -2802,9 +2798,9 @@ class SingleFileUploadWithFileReaderValidator {
     `
 })
 class MultipleFileUploadWithAsyncValidator {
-    elementRef = inject_1(ElementRef);
-
     readonly fileUpload = viewChild.required<KbqMultipleFileUploadComponent>('fileUpload');
+
+    elementRef = inject_1(ElementRef);
     readonly control = new FormControl<KbqFileItem[] | null>(null, {
         asyncValidators: [getAsyncValidator()]
     });
@@ -2818,9 +2814,9 @@ class MultipleFileUploadWithAsyncValidator {
     `
 })
 class MultipleFileUploadWithInvalidAsyncValidator {
-    elementRef = inject_1(ElementRef);
-
     readonly fileUpload = viewChild.required<KbqMultipleFileUploadComponent>('fileUpload');
+
+    elementRef = inject_1(ElementRef);
     readonly control = new FormControl<KbqFileItem[] | null>(null, {
         asyncValidators: [getAsyncValidator(false)]
     });
@@ -2837,6 +2833,7 @@ class MultipleFileUploadWithInvalidAsyncValidator {
 })
 class MultipleFileUploadWithHint {
     readonly fileUpload = viewChild.required<KbqMultipleFileUploadComponent>('fileUpload');
+
     readonly control = new FormControl<KbqFileItem[] | null>(null, { validators: [Validators.required] });
 }
 
@@ -2851,6 +2848,7 @@ class MultipleFileUploadWithHint {
 })
 class SingleFileUploadWithHint {
     readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
+
     readonly control = new FormControl<KbqFileItem | null>(null, { validators: [Validators.required] });
 }
 
@@ -2874,6 +2872,7 @@ class SingleFileUploadMarkedMultiple {
 })
 class TwoWayBindingMultipleFileUpload {
     readonly fileUpload = viewChild.required<KbqMultipleFileUploadComponent>('fileUpload');
+
     files: KbqFileItem[] = [];
 }
 
@@ -2885,9 +2884,9 @@ class TwoWayBindingMultipleFileUpload {
     `
 })
 class TwoWayBindingSingleFileUpload {
-    elementRef = inject_1(ElementRef);
-
     readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
+
+    elementRef = inject_1(ElementRef);
     file: KbqFileItem | null | undefined = null;
 }
 
@@ -2900,6 +2899,7 @@ class TwoWayBindingSingleFileUpload {
 })
 class MultipleFileUploadWithBoundFiles {
     readonly fileUpload = viewChild.required<KbqMultipleFileUploadComponent>('fileUpload');
+
     files: KbqFileItem[] | undefined = [];
 }
 
@@ -2943,6 +2943,7 @@ class SingleFileUploadWithErrorStateMatcher {
 class TestLocalDropzone {
     readonly multipleFileUpload = viewChild.required(KbqMultipleFileUploadComponent);
     readonly singleFileUpload = viewChild.required(KbqSingleFileUploadComponent);
+
     connectedComponent?: KbqSingleFileUploadComponent | KbqMultipleFileUploadComponent;
 }
 
@@ -2955,6 +2956,7 @@ describe('file upload localization', () => {
     })
     class TestApp {
         readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
+
         configuration: KbqPartialLocaleData | undefined;
     }
 
@@ -3051,6 +3053,7 @@ const EFFECT_RUN_LIMIT = 10;
 })
 class MultipleFileUploadDrivenByEffect {
     readonly fileUpload = viewChild.required(KbqMultipleFileUploadComponent);
+
     readonly files = [createLoadingItem('first.txt'), createLoadingItem('second.txt'), createLoadingItem('third.txt')];
     readonly remove = signal(false);
     runs = 0;
@@ -3073,6 +3076,7 @@ class MultipleFileUploadDrivenByEffect {
 })
 class SingleFileUploadDrivenByEffect {
     readonly fileUpload = viewChild.required(KbqSingleFileUploadComponent);
+
     readonly file = createLoadingItem('initial.txt');
     readonly remove = signal(false);
     runs = 0;

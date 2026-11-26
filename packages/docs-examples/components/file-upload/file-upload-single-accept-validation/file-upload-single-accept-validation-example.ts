@@ -39,9 +39,7 @@ import { TRANSLATIONS } from './l10n';
 })
 export class FileUploadSingleAcceptValidationExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected accept: KbqFileTypeSpecifier = ['.txt'];
-
     protected readonly formGroup = new FormGroup({
         fileControl: new FormControl(null, FileValidators.isCorrectExtension(this.accept))
     });

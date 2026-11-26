@@ -37,20 +37,20 @@ export function KBQ_LUXON_DATE_ADAPTER_OPTIONS_FACTORY(): KbqLuxonDateAdapterOpt
 
 @Injectable()
 export class LuxonDateAdapter extends BaseLuxonDateAdapter {
-    protected override readonly options?: LuxonDateAdapterOptions;
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     private readonly timezoneService = inject(KbqDateTimezoneService);
 
     /** Time zone {@link resolvedZone} was built from, so an unchanged zone is not resolved twice. */
     private appliedTimezone: KbqTimezoneLike | null = null;
     private resolvedZone: Zone | string | undefined;
+    private _localeChanges = new BehaviorSubject<string>(KBQ_DEFAULT_LOCALE_ID);
+
+    protected override readonly options?: LuxonDateAdapterOptions;
 
     /** A stream that emits when the locale changes. */
     get localeChanges(): Observable<any> {
         return this._localeChanges;
     }
-
-    private _localeChanges = new BehaviorSubject<string>(KBQ_DEFAULT_LOCALE_ID);
 
     constructor() {
         const dateLocale = inject(KBQ_DATE_LOCALE);

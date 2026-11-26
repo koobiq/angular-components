@@ -66,7 +66,6 @@ class TestComponent {
     readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     activeFilter: KbqFilter | null = null;
-
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Date',

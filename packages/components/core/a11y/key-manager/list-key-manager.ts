@@ -23,6 +23,20 @@ export type ListKeyManagerModifierKey = 'altKey' | 'ctrlKey' | 'metaKey' | 'shif
  * of items, it will set the active item correctly when arrow events occur.
  */
 export class ListKeyManager<T extends ListKeyManagerOption> {
+    private _activeItemIndex = -1;
+    private _activeItem: T | null = null;
+    private wrap: boolean = false;
+    private letterKeyStream = new Subject<string>();
+    private typeaheadSubscription = Subscription.EMPTY;
+    private vertical = true;
+    private horizontal?: 'ltr' | 'rtl' | null;
+    private scrollSize: number = 0;
+
+    // Buffer for the letters that the user has pressed when the typeahead option is turned on.
+    private pressedLetters: string[] = [];
+    private homeAndEnd = false;
+    private allowedModifierKeys: ListKeyManagerModifierKey[] = [];
+
     /**
      * Stream that emits any time the TAB key is pressed, so components can react
      * when focus is shifted off of the list.
@@ -31,7 +45,6 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
     /** Stream that emits whenever the active item of the list manager changes. */
     change = new Subject<number>();
-
     previousActiveItemIndex = -1;
 
     // Index of the currently active item.
@@ -39,29 +52,10 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
         return this._activeItemIndex;
     }
 
-    private _activeItemIndex = -1;
-
     // The active item.
     get activeItem(): T | null {
         return this._activeItem;
     }
-
-    private _activeItem: T | null = null;
-
-    private wrap: boolean = false;
-    private letterKeyStream = new Subject<string>();
-    private typeaheadSubscription = Subscription.EMPTY;
-    private vertical = true;
-    private horizontal?: 'ltr' | 'rtl' | null;
-
-    private scrollSize: number = 0;
-
-    // Buffer for the letters that the user has pressed when the typeahead option is turned on.
-    private pressedLetters: string[] = [];
-
-    private homeAndEnd = false;
-
-    private allowedModifierKeys: ListKeyManagerModifierKey[] = [];
 
     constructor(private _items: QueryList<T>) {
         if (_items instanceof QueryList) {
@@ -103,7 +97,6 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
      * Turns on wrapping mode, which ensures that the active item will wrap to
      * the other end of list when there are no more items in the given direction.
      */
-
     withWrap(shouldWrap = true): this {
         this.wrap = shouldWrap;
 

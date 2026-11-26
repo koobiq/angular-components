@@ -79,9 +79,7 @@ class TestComponent {
     readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     selectedAllEqualsSelectedNothing = true;
-
     activeFilter: KbqFilter | null = null;
-
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Text',
@@ -97,7 +95,6 @@ class TestComponent {
 /** Calls `command` from an effect of its own view, at most ten times. */
 @Component({ template: '' })
 class EffectHost {
-    command: () => void = () => {};
     runs = 0;
 
     constructor() {
@@ -108,6 +105,8 @@ class EffectHost {
             this.command();
         });
     }
+
+    command: () => void = () => {};
 }
 
 describe('KbqFilterBar', () => {
@@ -758,8 +757,6 @@ describe('KbqFilterBar', () => {
         // Minimal stand-in for KbqLocaleService: a BehaviorSubject-backed `changes` stream plus
         // `getParams`, returning a distinct configuration per locale id so swaps are observable.
         class MockLocaleService {
-            readonly changes = new BehaviorSubject<string>('locale-a');
-
             private readonly params: Record<string, KbqFilterBarLocaleConfiguration> = {
                 'locale-a': {
                     ...KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
@@ -772,6 +769,8 @@ describe('KbqFilterBar', () => {
                     reset: { ...KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.reset, buttonName: 'Locale B reset' }
                 }
             };
+
+            readonly changes = new BehaviorSubject<string>('locale-a');
 
             getParams(): KbqFilterBarLocaleConfiguration {
                 return this.params[this.changes.value];
@@ -893,14 +892,14 @@ describe('pipeNameKey legacy lookup', () => {
         providers: [{ provide: KBQ_PIPE_DATA, useValue: {} }]
     })
     class NameKeyTestPipe extends KbqBasePipe<unknown> {
+        get pipeNamePublic(): string {
+            return this.pipeName;
+        }
+
         open(): void {}
 
         exposePipeNameKey(): string | undefined {
             return this.pipeNameKey();
-        }
-
-        get pipeNamePublic(): string {
-            return this.pipeName;
         }
     }
 
@@ -1215,12 +1214,11 @@ const ADDED_PIPE_ID = 'TestAdded';
 })
 class StateSavingFilterBar {
     useStateSaving = true;
+
     /** An empty key leaves the bar on the key derived from its position in the document. */
     stateSavingKey = 'filter-bar-key';
-
     activeFilter: KbqFilter | null = null;
     filters: KbqFilter[] = [createFilter([createPipe()], { name: 'Saved', saved: true })];
-
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Text',
@@ -1250,9 +1248,7 @@ class StateSavingFilterBar {
 })
 class FilterBarWithoutFilterList {
     stateSavingKey = 'filter-bar-key';
-
     activeFilter: KbqFilter | null = createFilter([createPipe()], { name: 'Owned' });
-
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Text',

@@ -55,7 +55,6 @@ const getRandomInt = (min: number, max: number): number => {
 })
 export class AgGridSkeletonCellRendererExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly columnDefs = computed(() => exampleIncidentColumns(this.t().headers));
     readonly datasource: IDatasource = {
         rowCount: EXAMPLE_INCIDENT_COUNT,

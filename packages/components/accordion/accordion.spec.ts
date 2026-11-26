@@ -2725,14 +2725,18 @@ class AccordionLevel {
 })
 class AccordionStateSaving {
     useStateSaving = true;
+
     /** An empty key leaves the accordion on the key derived from its position in the document. */
     stateSavingKey = 'accordion-key';
+
     /** Whether the sections are rendered at all — models content that arrives after initialization. */
     rendered = true;
+
     /** A template-driven expansion, which runs before the accordion's own initialization. */
     expandedFirst = false;
     type: KbqAccordionType = 'single';
     defaultValue: string[] | string = [];
+
     // `undefined` leaves the accordion uncontrolled — the same state as not binding `[value]` at all.
     value: string[] | string | undefined = undefined;
 }
@@ -2948,6 +2952,7 @@ const EFFECT_RUN_LIMIT = 10;
 class AccordionDrivenByEffect {
     readonly accordion = viewChild.required(KbqAccordion);
     readonly items = viewChildren(KbqAccordionItem);
+
     readonly values = ['item-1', 'item-2'];
     readonly disabled = signal(false);
     readonly action = signal<'open' | 'toggle' | 'openAll' | null>(null);

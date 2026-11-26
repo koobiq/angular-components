@@ -75,7 +75,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class ContentPanelOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly componentColors = KbqComponentColors;
     protected readonly buttonStyles = KbqButtonStyles;
 }

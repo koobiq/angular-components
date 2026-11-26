@@ -96,6 +96,12 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
         KBQ_NAVBAR_LOCALE_CONFIGURATION
     );
 
+    /** Whether the expanded navbar overlays the page content instead of taking room from it. */
+    readonly openOver = input<boolean>(false);
+
+    /** Whether the navbar is expanded. */
+    readonly expanded = model<boolean>(false);
+
     /** @docs-private */
     readonly rectangleElements = contentChildren<KbqNavbarRectangleElement>(
         forwardRef(() => KbqNavbarRectangleElement),
@@ -110,12 +116,6 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
 
     /** @docs-private */
     readonly bento = contentChild<KbqNavbarBento>(forwardRef(() => KbqNavbarBento));
-
-    /** Whether the expanded navbar overlays the page content instead of taking room from it. */
-    readonly openOver = input<boolean>(false);
-
-    /** Whether the navbar is expanded. */
-    readonly expanded = model<boolean>(false);
 
     private buttonIconsRefresh?: ReturnType<typeof setTimeout>;
 

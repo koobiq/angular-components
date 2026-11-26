@@ -127,6 +127,7 @@ const getAsyncValidator =
 })
 class TreeSelectControlWithAsyncValidators {
     readonly treeSelect = viewChild.required(KbqTreeSelect);
+
     readonly control = new FormControl<string>('', {
         nonNullable: true,
         asyncValidators: [getAsyncValidator()]
@@ -148,6 +149,7 @@ class TreeSelectControlWithAsyncValidators {
 })
 class TreeSelectWithDIErrorStateMatcher {
     readonly treeSelect = viewChild.required(KbqTreeSelect);
+
     readonly form = new FormGroup({ treeSelect: new FormControl('', Validators.required) });
 }
 
@@ -182,6 +184,7 @@ class TreeSelectWithErrorStateOnValidControl {
 })
 class TreeSelectWithErrorStateMatcher {
     readonly treeSelect = viewChild.required(KbqTreeSelect);
+
     readonly form = new FormGroup({ treeSelect: new FormControl('', Validators.required) });
     errorStateMatcher: ErrorStateMatcher = new ErrorStateMatcher();
 }
@@ -365,21 +368,18 @@ const getChildren = (node: FileNode): Observable<FileNode[]> => {
     `
 })
 class BasicTreeSelect {
-    control = new UntypedFormControl();
+    readonly select = viewChild.required(KbqTreeSelect);
+    readonly options = viewChildren(KbqTreeOption);
 
+    control = new UntypedFormControl();
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     heightAbove = 0;
     heightBelow = 0;
     isRequired = false;
     tabIndexOverride: number = 0;
     panelClass = ['custom-one', 'custom-two'];
-
-    readonly select = viewChild.required(KbqTreeSelect);
-    readonly options = viewChildren(KbqTreeOption);
 
     constructor() {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -420,7 +420,6 @@ class TreeSelectWithAriaName {
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     ariaLabel: string | null = null;
     ariaLabelledby: string | null = null;
     label: string | null = null;
@@ -452,12 +451,12 @@ class TreeSelectWithAriaName {
     `
 })
 class TreeSelectWithoutFormField {
+    readonly select = viewChild.required(KbqTreeSelect);
+    readonly treeSelection = viewChild(KbqTreeSelection);
+
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
-    readonly select = viewChild.required(KbqTreeSelect);
-    readonly treeSelection = viewChild(KbqTreeSelection);
 
     constructor() {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -497,16 +496,14 @@ class TreeSelectWithoutFormField {
     `
 })
 class BasicEvents {
+    readonly select = viewChild.required(KbqTreeSelect);
+
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     openedChangeListener = vi.fn();
     openedListener = vi.fn();
     closedListener = vi.fn();
-
-    readonly select = viewChild.required(KbqTreeSelect);
 
     constructor() {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -562,7 +559,6 @@ class BasicEvents {
 class ManySelects {
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {
@@ -608,16 +604,14 @@ class ManySelects {
     `
 })
 class SelectWithSearch implements OnInit {
+    readonly select = viewChild.required(KbqTreeSelect);
+
     control = new UntypedFormControl();
     searchMinOptionsThreshold: number;
-
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
     searchControl: UntypedFormControl = new UntypedFormControl();
-
-    readonly select = viewChild.required(KbqTreeSelect);
 
     constructor() {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -657,15 +651,13 @@ class SelectWithSearch implements OnInit {
     `
 })
 class MultipleTreeSelectWithSearch implements OnInit {
-    control = new UntypedFormControl();
+    readonly select = viewChild.required(KbqTreeSelect);
 
+    control = new UntypedFormControl();
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
     searchControl: UntypedFormControl = new UntypedFormControl();
-
-    readonly select = viewChild.required(KbqTreeSelect);
 
     constructor() {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -723,11 +715,11 @@ class MultiTreeSelectWithSelectAll implements OnInit {
     control = new UntypedFormControl();
     multiple = true;
     selectAll = true;
+
     // Consulted by `treeControl`'s `isDisabled`, not a per-node template binding: collapsed branches
     // never get a rendered `KbqTreeOption` to bind `[disabled]` on, so this is the only way to mark a
     // (possibly collapsed) node disabled for "select all" purposes.
     disabledNodes: string[] = [];
-
     treeControl = new FlatTreeControl<FileFlatNode>(
         getLevel,
         isExpandable,
@@ -737,12 +729,11 @@ class MultiTreeSelectWithSelectAll implements OnInit {
         defaultCompareViewValues,
         (node) => this.disabledNodes.includes(node.name)
     );
-    treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
+    readonly select = viewChild.required(KbqTreeSelect);
 
+    treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
     searchControl: UntypedFormControl = new UntypedFormControl();
-
-    readonly select = viewChild.required(KbqTreeSelect);
 
     constructor() {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -793,9 +784,9 @@ class MultiTreeSelectWithCleaner {
 
     /** Nodes disabled through the option's own `[disabled]` input, which only a rendered node carries. */
     disabledByInput: string[] = [];
+
     /** Nodes disabled through the tree control, the only way to reach one inside a collapsed branch. */
     disabledNodes: string[] = [];
-
     treeControl = new FlatTreeControl<FileFlatNode>(
         getLevel,
         isExpandable,
@@ -805,11 +796,10 @@ class MultiTreeSelectWithCleaner {
         defaultCompareViewValues,
         (node) => this.disabledNodes.includes(node.name)
     );
-    treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
-    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     readonly select = viewChild.required(KbqTreeSelect);
+
+    treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
+    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -852,9 +842,9 @@ class MultiTreeSelectWithCleaner {
     `
 })
 class MultiTreeSelectWithClearPredicate {
-    control = new UntypedFormControl(['Documents', 'Downloads']);
-    clearPredicate: (node: any) => boolean = () => true;
+    readonly select = viewChild.required(KbqTreeSelect);
 
+    control = new UntypedFormControl(['Documents', 'Downloads']);
     treeControl = new FlatTreeControl<FileFlatNode>(
         getLevel,
         isExpandable,
@@ -864,15 +854,14 @@ class MultiTreeSelectWithClearPredicate {
         defaultCompareViewValues
     );
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
-    readonly select = viewChild.required(KbqTreeSelect);
 
     constructor() {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
         this.dataSource.data = buildFileTree(SELECT_ALL_TREE_DATA, 0);
     }
+
+    clearPredicate: (node: any) => boolean = () => true;
 
     hasChild(_: number, nodeData: FileFlatNode) {
         return nodeData.expandable;
@@ -908,10 +897,8 @@ class SelectWithChangeEvent {
     readonly treeSelect = viewChild.required(KbqTreeSelect);
 
     selectionChangeListener = vi.fn();
-
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {
@@ -949,7 +936,9 @@ class CustomSelectAccessor implements ControlValueAccessor {
     readonly select = viewChild.required(KbqTreeSelect);
 
     writeValue: (value?: any) => void = () => {};
+
     registerOnChange: (changeFn?: (value: any) => void) => void = () => {};
+
     registerOnTouched: (touchedFn?: () => void) => void = () => {};
 }
 
@@ -971,8 +960,9 @@ class CustomSelectAccessor implements ControlValueAccessor {
     ]
 })
 class CompWithCustomSelect {
-    ctrl = new UntypedFormControl('initial value');
     readonly customAccessor = viewChild.required(CustomSelectAccessor);
+
+    ctrl = new UntypedFormControl('initial value');
 }
 
 @Component({
@@ -1030,10 +1020,8 @@ class SelectWithErrorSibling {
 })
 class BasicSelectOnPush {
     control = new UntypedFormControl();
-
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {
@@ -1076,10 +1064,8 @@ class BasicSelectOnPush {
 })
 class BasicSelectOnPushPreselected {
     control = new UntypedFormControl('rootNode_1');
-
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {
@@ -1129,18 +1115,16 @@ class BasicSelectOnPushPreselected {
     `
 })
 class MultiSelect {
+    readonly select = viewChild.required(KbqTreeSelect);
+    readonly options = viewChildren(KbqTreeOption);
+
     control = new UntypedFormControl();
     multiple = true;
     selectAllToggle: boolean = false;
     disabledNodes = new Set<unknown>();
-
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
-    readonly select = viewChild.required(KbqTreeSelect);
-    readonly options = viewChildren(KbqTreeOption);
 
     constructor() {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -1219,11 +1203,10 @@ class SelectEarlyAccessSibling {}
 })
 class BasicSelectWithTheming {
     readonly select = viewChild.required(KbqTreeSelect);
-    theme: KbqComponentColors;
 
+    theme: KbqComponentColors;
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {
@@ -1264,13 +1247,11 @@ class BasicSelectWithTheming {
     `
 })
 class ResetValuesSelect {
-    control = new UntypedFormControl();
-
     readonly select = viewChild.required(KbqTreeSelect);
 
+    control = new UntypedFormControl();
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getVal, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {
@@ -1337,10 +1318,8 @@ class SelectInsideFormGroup {
     formGroup = new UntypedFormGroup({
         food: this.formControl
     });
-
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
     submitResult: string;
 
@@ -1385,13 +1364,11 @@ class SelectInsideFormGroup {
     `
 })
 class BasicSelectWithoutForms {
-    selectedFood: string | null;
-
     readonly select = viewChild.required(KbqTreeSelect);
 
+    selectedFood: string | null;
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {
@@ -1432,13 +1409,11 @@ class BasicSelectWithoutForms {
     `
 })
 class BasicSelectWithoutFormsPreselected {
-    selectedFood = 'Pictures';
-
     readonly select = viewChild.required(KbqTreeSelect);
 
+    selectedFood = 'Pictures';
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {
@@ -1478,13 +1453,11 @@ class BasicSelectWithoutFormsPreselected {
     `
 })
 class BasicSelectWithoutFormsMultiple {
-    selectedFoods: string[];
-
     readonly select = viewChild.required(KbqTreeSelect);
 
+    selectedFoods: string[];
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {
@@ -1529,10 +1502,8 @@ class BasicSelectWithoutFormsMultiple {
 })
 class SelectWithCustomTrigger {
     control = new UntypedFormControl();
-
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {
@@ -1579,12 +1550,9 @@ class SelectWithCustomMatcher {
     readonly select = viewChild.required<KbqTreeSelect>('select');
 
     useDefaultHandlers: boolean = true;
-
     control = new UntypedFormControl();
-
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {
@@ -1625,11 +1593,10 @@ class SelectWithCustomMatcher {
     `
 })
 class NgModelCompareWithFlatTreeControl {
-    selectedModel: { name: string; type: string };
-
     readonly select = viewChild.required(KbqTreeSelect);
     readonly options = viewChildren(KbqTreeOption);
 
+    selectedModel: { name: string; type: string };
     treeControl = new FlatTreeControl<FileFlatNode>(
         getLevel,
         isExpandable,
@@ -1638,7 +1605,6 @@ class NgModelCompareWithFlatTreeControl {
         this.compareValues
     );
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {
@@ -1683,12 +1649,9 @@ class CustomErrorBehaviorSelect {
     readonly select = viewChild.required(KbqTreeSelect);
 
     control = new UntypedFormControl();
-
     errorStateMatcher: ErrorStateMatcher;
-
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {
@@ -1728,14 +1691,12 @@ class CustomErrorBehaviorSelect {
     `
 })
 class SingleSelectWithPreselectedArrayValues {
-    selectedFood: string | null;
-
     readonly select = viewChild.required(KbqTreeSelect);
     readonly options = viewChildren(KbqTreeOption);
 
+    selectedFood: string | null;
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {
@@ -1782,14 +1743,12 @@ class SingleSelectWithPreselectedArrayValues {
     `
 })
 class ChildSelection {
+    readonly select = viewChild.required<KbqTreeSelect<FileFlatNode>>(KbqTreeSelect);
+
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     control = new UntypedFormControl(['Downloads', 'rootNode_1']);
-
-    readonly select = viewChild.required<KbqTreeSelect<FileFlatNode>>(KbqTreeSelect);
 
     constructor() {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -1951,16 +1910,13 @@ class TreeSelectWithCustomHiddenItemsText extends BasicTreeSelect {
     `
 })
 class NgIfTreeSelect {
+    readonly select = viewChild.required(KbqTreeSelect);
+
     isShowing = false;
-
     control = new UntypedFormControl('rootNode_1');
-
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
-    readonly select = viewChild.required(KbqTreeSelect);
 
     constructor() {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -1990,7 +1946,6 @@ class NgIfTreeSelect {
 })
 class TreeSelectWithPanelWidth {
     panelWidth: KbqPanelWidth;
-
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
@@ -2019,7 +1974,6 @@ class TreeSelectWithPanelWidth {
 })
 class TreeSelectWithPanelMaxHeight {
     panelMaxHeight: KbqPanelMaxHeight | undefined;
-
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
@@ -2058,7 +2012,6 @@ class TreeSelectWithPanelMaxHeight {
 class TreeSelectWithSearchAndPanelWidth {
     panelWidth: KbqPanelWidth;
     searchControl: UntypedFormControl = new UntypedFormControl();
-
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
@@ -6748,11 +6701,11 @@ describe('KbqTreeSelect', () => {
             `
         })
         class TreeSelectInOverlayLayer {
+            readonly select = viewChild.required(KbqTreeSelect);
+
             treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
             treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
             dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
-            readonly select = viewChild.required(KbqTreeSelect);
 
             constructor() {
                 this.dataSource.data = buildFileTree(TREE_DATA, 0);
@@ -6798,11 +6751,11 @@ describe('KbqTreeSelect', () => {
             `
         })
         class TreeSelectDrivenByEffects {
+            readonly select = viewChild.required(KbqTreeSelect);
+
             treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
             treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
             dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
-            readonly select = viewChild.required(KbqTreeSelect);
             readonly control = new FormControl<string | null>(null);
             readonly wantOpen = signal(false);
             readonly toggles = signal(0);
@@ -6912,14 +6865,12 @@ describe('KbqTreeSelect', () => {
     `
 })
 class MultilineTreeSelect {
-    readonly control = new UntypedFormControl(['Documents', 'Downloads']);
+    readonly select = viewChild.required(KbqTreeSelect);
 
+    readonly control = new UntypedFormControl(['Documents', 'Downloads']);
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
-    readonly select = viewChild.required(KbqTreeSelect);
 
     constructor() {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -7141,13 +7092,12 @@ describe('KbqTreeSelect first-row panel anchor', () => {
     `
 })
 class TreeSelectWithoutOptions {
-    showMessage = true;
+    readonly select = viewChild.required(KbqTreeSelect);
 
+    showMessage = true;
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
     dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
-    readonly select = viewChild.required(KbqTreeSelect);
 }
 
 describe('KbqTreeSelect without options', () => {

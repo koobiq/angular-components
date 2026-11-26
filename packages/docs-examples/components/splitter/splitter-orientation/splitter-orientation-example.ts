@@ -57,6 +57,7 @@ import { KbqSplitter, type KbqSplitterOrientation, KbqSplitterPanel } from '@koo
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SplitterOrientationExample {
-    protected readonly orientations: KbqSplitterOrientation[] = ['horizontal', 'vertical'];
     protected readonly orientation = model<KbqSplitterOrientation>('vertical');
+
+    protected readonly orientations: KbqSplitterOrientation[] = ['horizontal', 'vertical'];
 }

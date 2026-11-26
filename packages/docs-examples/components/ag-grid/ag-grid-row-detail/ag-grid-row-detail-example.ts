@@ -65,6 +65,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class ExampleRowDetailComponent {
     protected readonly params = inject(KBQ_AG_GRID_ROW_DETAIL_PARAMS);
+
     protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly data = this.params.data as ExampleSecurityIncident;
 }
@@ -122,14 +123,9 @@ export class ExampleRowDetailComponent {
 })
 export class AgGridRowDetailExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly multipleExpand = signal(false);
     protected readonly filled = signal(false);
-
     protected readonly rowDetailComponent = ExampleRowDetailComponent;
-
-    protected readonly getRowId: GetRowIdFunc<ExampleSecurityIncident> = ({ data }) => data.id;
-
     protected readonly rowSelection: RowSelectionOptions = {
         mode: 'multiRow',
         headerCheckbox: true,
@@ -149,8 +145,9 @@ export class AgGridRowDetailExample {
             'port'
         )
     );
-
     protected readonly rowData = exampleGetIncidents(0, 8);
+
+    protected readonly getRowId: GetRowIdFunc<ExampleSecurityIncident> = ({ data }) => data.id;
 
     /**
      * Clicking a cell expands and collapses its row. The expanded part is not a cell, so clicking

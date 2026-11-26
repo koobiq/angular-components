@@ -50,7 +50,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class BreadcrumbsSizeExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly breadcrumbs = computed(() => [
         { label: this.t().informationSecurity, url: '/information-security' },
         { label: this.t().accessControl, url: '/information-security/access-control' },

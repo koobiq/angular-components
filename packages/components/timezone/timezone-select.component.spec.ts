@@ -147,15 +147,15 @@ const groupedZones: KbqTimezoneGroup[] = [
     `
 })
 class BasicTimezoneSelect {
+    readonly select = viewChild.required(KbqTimezoneSelect);
+    readonly options = viewChildren(KbqTimezoneOption);
+
     zones: KbqTimezoneGroup[] = groupedZones;
     control = new FormControl();
     tabIndexOverride: number = 0;
     panelClass = ['custom-one', 'custom-two'];
     disabledFor = 'Europe/city7';
     tooltipDisabled: boolean | undefined;
-
-    readonly select = viewChild.required(KbqTimezoneSelect);
-    readonly options = viewChildren(KbqTimezoneOption);
 }
 
 @Component({
@@ -214,10 +214,9 @@ class TimezoneSelectWithPanelWidth {
 })
 class TimezoneSelectWithSearch implements OnInit {
     readonly select = viewChild.required(KbqTimezoneSelect);
+
     minOptionsThreshold: number;
-
     selected = 'Europe/city17';
-
     searchCtrl: FormControl = new FormControl();
     options$: Observable<KbqTimezoneGroup[]>;
 
@@ -267,6 +266,7 @@ class StandaloneTimezoneSelect {
 })
 class TimezoneSelectWithLocaleConfiguration {
     readonly select = viewChild.required(KbqTimezoneSelect);
+
     readonly configuration = { timezone: { searchPlaceholder: 'Where?' } };
 }
 
@@ -290,8 +290,9 @@ class TimezoneSelectWithLocaleConfiguration {
     `
 })
 class TimezoneSelectWithFooter {
-    readonly zones = groupedZones[0].zones;
     readonly select = viewChild.required(KbqTimezoneSelect);
+
+    readonly zones = groupedZones[0].zones;
 }
 
 @Component({
@@ -396,8 +397,9 @@ class TimezoneSelectWithLocaleSearch {
     `
 })
 class TimezoneSelectOpenedByEffect {
-    readonly zones = groupedZones[0].zones;
     readonly select = viewChild.required(KbqTimezoneSelect);
+
+    readonly zones = groupedZones[0].zones;
     readonly wantOpen = signal(false);
     runs = 0;
 
@@ -1304,9 +1306,9 @@ describe('KbqTimezoneSelect', () => {
             `
         })
         class TimezoneSelectInOverlayLayer {
-            zones = groupedZones[0].zones;
-
             readonly select = viewChild.required(KbqTimezoneSelect);
+
+            zones = groupedZones[0].zones;
         }
 
         beforeEach(() => configureTestingModule([TimezoneSelectInOverlayLayer]));
@@ -1535,8 +1537,9 @@ describe('KbqTimezoneSelect', () => {
         `
     })
     class TimezoneSelectWithGroupCounters {
-        readonly groups = groupedZones;
         readonly select = viewChild.required(KbqTimezoneSelect);
+
+        readonly groups = groupedZones;
     }
 
     // `KbqTimezoneOption` extends `KbqOption` and re-provides it, which is what lets the group's

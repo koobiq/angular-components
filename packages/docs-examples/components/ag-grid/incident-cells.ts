@@ -32,6 +32,7 @@ type BadgeValue =
 export class ExampleIncidentBadge {
     readonly value = input.required<BadgeValue>();
     readonly compact = input(false, { transform: booleanAttribute });
+
     protected readonly colors: Record<BadgeValue, KbqBadgeColors> = {
         Safe: KbqBadgeColors.FadeSuccess,
         Malicious: KbqBadgeColors.FadeError,
@@ -98,10 +99,11 @@ class ExampleIncidentDialog {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleIncidentLink {
+    private readonly modal = inject(KbqModalService);
+
     readonly incident = input.required<ExampleSecurityIncident>();
     readonly headers = input.required<ExampleIncidentHeaders>();
     readonly openIncident = input<(row: ExampleSecurityIncident) => void>();
-    private readonly modal = inject(KbqModalService);
 
     open(): void {
         const incident = this.incident();
@@ -145,7 +147,9 @@ type IncidentLinkParams = ICellRendererParams<ExampleSecurityIncident, string> &
 })
 export class ExampleIncidentLinkCell implements ICellRendererAngularComp {
     private readonly destroyRef = inject(DestroyRef);
+
     private readonly link = viewChild(ExampleIncidentLink);
+
     protected readonly cell = signal<(IncidentDetails & Pick<IncidentLinkParams, 'openIncident'>) | undefined>(
         undefined
     );

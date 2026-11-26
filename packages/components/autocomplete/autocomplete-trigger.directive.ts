@@ -184,25 +184,10 @@ export class KbqAutocompleteTrigger
     private dir = inject(Directionality, { optional: true })!;
     private readonly formField = inject(KBQ_FORM_FIELD, { optional: true, host: true });
     private viewportRuler = inject(ViewportRuler);
-
     protected readonly document = inject<Document>(DOCUMENT);
-
-    /** The currently active option, coerced to MatOption type. */
-    get activeOption(): KbqOption | null {
-        return this.autocomplete()?.keyManager?.activeItem ?? null;
-    }
-
-    get panelOpen(): boolean {
-        return this.overlayAttached() && this.autocomplete().showPanel();
-    }
 
     /** The autocomplete panel to be attached to this trigger. */
     readonly autocomplete = input<KbqAutocomplete>(undefined!, { alias: 'kbqAutocomplete' });
-
-    /** Whether the autocomplete panel is currently on screen. Part of the `KbqSiblingPopup` contract. */
-    get isAttached(): boolean {
-        return this.overlayAttached();
-    }
 
     /** The bound panel, replayed to every subscriber: it may be bound, or rendered, after they subscribe. */
     private readonly autocompleteChanges = toObservable(this.autocomplete);
@@ -237,6 +222,8 @@ export class KbqAutocompleteTrigger
             );
         })
     );
+
+    private readonly renderer = inject(Renderer2);
 
     /**
      * Reference relative to which to position the autocomplete panel.
@@ -320,26 +307,10 @@ export class KbqAutocompleteTrigger
      */
     readonly queryChange = output<KbqTextQuery | null>({ alias: 'kbqAutocompleteQueryChange' });
 
-    /**
-     * Whether the host takes the `combobox` role. ARIA in HTML allows it on a text input only: a textarea and the
-     * other text fields keep their native role.
-     */
-    protected get isCombobox(): boolean {
-        return this.exposesPanel && this.elementRef.nativeElement.type === 'text';
-    }
-
-    /**
-     * Whether the host exposes the panel to assistive technology: a text field with the autocomplete enabled. Other
-     * fields, such as a number input, keep their native semantics.
-     */
-    protected get exposesPanel(): boolean {
-        return !this.autocompleteDisabled() && TEXT_FIELD_TYPES.has(this.elementRef.nativeElement.type);
-    }
-
-    private readonly renderer = inject(Renderer2);
-
     /** Origin of a caret-anchored panel, measured again whenever the panel is positioned. */
     private readonly caretOrigin = kbqCreateCaretOrigin(() => this.measureCaretOrigin());
+
+    private readonly window = inject(KBQ_WINDOW);
 
     /** Query at the caret in text mode, or `null` while there is none. */
     private query: KbqTextQuery | null = null;
@@ -355,11 +326,8 @@ export class KbqAutocompleteTrigger
 
     /** Whether the overlay is attached. A signal: host bindings read it, and it changes outside any listener. */
     private readonly overlayAttached = signal(false);
-
     private overlayRef?: OverlayRef | null;
-
     private portal?: TemplatePortal;
-
     private scrollStrategy: () => ScrollStrategy;
 
     /** Old value of the native input. Used to work around issues with the `input` event on IE. */
@@ -383,7 +351,53 @@ export class KbqAutocompleteTrigger
 
     /** Stream of keyboard events that can close the panel. */
     private readonly closeKeyEventStream = new Subject<void>();
-    private readonly window = inject(KBQ_WINDOW);
+
+    /** The currently active option, coerced to MatOption type. */
+    get activeOption(): KbqOption | null {
+        return this.autocomplete()?.keyManager?.activeItem ?? null;
+    }
+
+    get panelOpen(): boolean {
+        return this.overlayAttached() && this.autocomplete().showPanel();
+    }
+
+    /** Whether the autocomplete panel is currently on screen. Part of the `KbqSiblingPopup` contract. */
+    get isAttached(): boolean {
+        return this.overlayAttached();
+    }
+
+    /**
+     * Whether the host takes the `combobox` role. ARIA in HTML allows it on a text input only: a textarea and the
+     * other text fields keep their native role.
+     */
+    protected get isCombobox(): boolean {
+        return this.exposesPanel && this.elementRef.nativeElement.type === 'text';
+    }
+
+    /**
+     * Whether the host exposes the panel to assistive technology: a text field with the autocomplete enabled. Other
+     * fields, such as a number input, keep their native semantics.
+     */
+    protected get exposesPanel(): boolean {
+        return !this.autocompleteDisabled() && TEXT_FIELD_TYPES.has(this.elementRef.nativeElement.type);
+    }
+
+    /**
+     * A stream of actions that should close the autocomplete panel, including
+     * when an option is selected, on blur, and when TAB is pressed.
+     */
+    get panelClosingActions(): Observable<KbqOptionSelectionChange | null> {
+        return merge(
+            this.optionSelections,
+            this.autocomplete().keyManager?.tabOut.pipe(filter(() => this.overlayAttached())) ?? observableOf(),
+            this.closeKeyEventStream,
+            this.getOutsideClickStream(),
+            this.overlayRef ? this.overlayRef.detachments().pipe(filter(() => this.overlayAttached())) : observableOf()
+        ).pipe(
+            // Normalize the output so we return a consistent type.
+            map((event) => (event instanceof KbqOptionSelectionChange ? event : null))
+        );
+    }
 
     constructor() {
         const zone = this.zone;
@@ -491,23 +505,6 @@ export class KbqAutocompleteTrigger
                 this.overlayRef!.updatePosition();
             }
         });
-    }
-
-    /**
-     * A stream of actions that should close the autocomplete panel, including
-     * when an option is selected, on blur, and when TAB is pressed.
-     */
-    get panelClosingActions(): Observable<KbqOptionSelectionChange | null> {
-        return merge(
-            this.optionSelections,
-            this.autocomplete().keyManager?.tabOut.pipe(filter(() => this.overlayAttached())) ?? observableOf(),
-            this.closeKeyEventStream,
-            this.getOutsideClickStream(),
-            this.overlayRef ? this.overlayRef.detachments().pipe(filter(() => this.overlayAttached())) : observableOf()
-        ).pipe(
-            // Normalize the output so we return a consistent type.
-            map((event) => (event instanceof KbqOptionSelectionChange ? event : null))
-        );
     }
 
     // Implemented as part of ControlValueAccessor.

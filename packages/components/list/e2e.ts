@@ -432,7 +432,6 @@ export class E2eListDragHandle {
 export class E2eListDragGrouped {
     protected readonly items = signal(['row-1', 'row-2', 'row-3', 'row-4', 'row-5', 'row-6', 'row-7']);
     protected readonly pinned = signal('row-7');
-
     protected readonly beforeGroup = computed(() => this.items().slice(0, 2));
     protected readonly grouped = computed(() => this.items().slice(2, 5));
     protected readonly afterDivider = computed(() => this.items().slice(5));
@@ -504,7 +503,6 @@ export class E2eListDragPreview {
                 'A caption at least as long as the label above it, so that the preview has to cut off both of its lines and not just the first'
         }
     ]);
-
     protected readonly fullItems = signal([
         { id: 'full-1', label: 'Full 1' },
         { id: 'full-2', label: 'Full 2' }

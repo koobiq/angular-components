@@ -70,13 +70,12 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly destroyRef = inject(DestroyRef);
 
+    private searchQuery: string | null = null;
+
     searchControl = new FormControl<string>('');
     accentColorFilterControl = new FormControl<boolean>(false, { nonNullable: true });
     filteredIcons = new BehaviorSubject<DocsIconItem[] | undefined>([]);
-
     availableSizes: number[] = [];
-
-    private searchQuery: string | null = null;
 
     constructor() {
         super();

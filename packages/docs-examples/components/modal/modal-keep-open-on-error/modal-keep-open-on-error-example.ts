@@ -37,10 +37,9 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExamplePasswordForm {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly window = inject(KBQ_WINDOW);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     readonly form = new FormGroup({
         current: new FormControl('', [Validators.required]),
         next: new FormControl('', [Validators.required])
@@ -86,11 +85,11 @@ export class ExamplePasswordForm {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalKeepOpenOnErrorExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly modalService = inject(KbqModalService);
 
     private modalRef?: KbqModalRef<ExamplePasswordForm>;
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     openModal(): void {
         this.modalRef = this.modalService.create<ExamplePasswordForm>({

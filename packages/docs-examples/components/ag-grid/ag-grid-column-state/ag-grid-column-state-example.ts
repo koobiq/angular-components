@@ -50,7 +50,6 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class AgGridColumnStateExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true

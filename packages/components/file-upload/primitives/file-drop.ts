@@ -54,12 +54,12 @@ export class KbqDrop {
     exportAs: 'kbqFileDrop'
 })
 export class KbqFileDropDirective extends KbqDrop {
-    /** Flag that controls css-class modifications on drag events. */
-    protected readonly dragover = signal(false);
-
     private readonly ngZone = inject(NgZone);
     private readonly nativeElement = kbqInjectNativeElement();
     private readonly destroyRef = inject(DestroyRef);
+
+    /** Flag that controls css-class modifications on drag events. */
+    protected readonly dragover = signal(false);
 
     constructor() {
         super();

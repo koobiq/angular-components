@@ -134,10 +134,19 @@ export class KbqTagList
     parentForm = inject(NgForm, { optional: true });
     parentFormGroup = inject(FormGroupDirective, { optional: true });
     ngControl = inject(NgControl, { optional: true, self: true })!;
-
     private readonly dropList = inject(CdkDropList, { host: true });
     private readonly destroyRef = inject(DestroyRef);
     private readonly focusMonitor = inject(FocusMonitor);
+
+    /** @docs-private */
+    readonly valueInput = input<any>(undefined, { alias: 'value' });
+
+    private readonly errorStateTracker = new KbqErrorStateTracker(
+        this.defaultErrorStateMatcher,
+        this.ngControl,
+        this.parentFormGroup,
+        this.parentForm
+    );
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -146,12 +155,209 @@ export class KbqTagList
      */
     readonly controlType: string = 'tag-list';
 
-    private readonly errorStateTracker = new KbqErrorStateTracker(
-        this.defaultErrorStateMatcher,
-        this.ngControl,
-        this.parentFormGroup,
-        this.parentForm
+    /**
+     * Implemented as part of KbqFormFieldControl. Set with `[value]`, by the form control and by the rendered
+     * tags.
+     *
+     * @docs-private
+     */
+    readonly value = linkedSignal(() => this.valueInput());
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     *
+     * @docs-private
+     */
+    readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
+
+    /** @docs-private */
+    readonly placeholderInput = input<string | undefined>(undefined, { alias: 'placeholder' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     *
+     * @docs-private
+     */
+    readonly id = computed(() => this.registeredInput()?.id() ?? this.uid);
+
+    /**
+     * Implemented as part of KbqFormFieldControl. Taken from the `kbqTagInput` when there is one.
+     *
+     * @docs-private
+     */
+    readonly placeholder = computed(() => {
+        const tagInput = this.registeredInput();
+
+        return tagInput ? tagInput.placeholder() : this.placeholderInput();
+    });
+
+    /** Whether any tags or the kbqTagInput inside of this tag-list has focus. */
+    // Derived from the current tags: one removed while focused fires no blur. Read from the query, as syncing
+    // `tags` emits `changes`, whose subscribers must not run inside a computed.
+    readonly focused = computed(
+        () => !!this.registeredInput()?.focused() || this.tagsQuery().some((tag) => tag.hasFocus)
     );
+
+    /**
+     * Implemented as part of KbqFormFieldControl. Forwarded from the registered `kbqTagInput`, which
+     * is the element the browser actually autofills — the tag list itself is not an input.
+     *
+     * @docs-private
+     */
+    readonly autofilled = computed(() => this.registeredInput()?.autofilled?.() ?? false);
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     *
+     * @docs-private
+     */
+    readonly empty = computed(() => {
+        const tagInput = this.registeredInput();
+
+        return (!tagInput || tagInput.empty()) && this.tagsQuery().length === 0;
+    });
+
+    /**
+     * Implemented as part of KbqFormFieldControl. Also set by the bound form control.
+     *
+     * @docs-private
+     */
+    readonly disabled = linkedSignal(() => this.disabledInput());
+
+    /** @docs-private */
+    readonly uid: string = inject(_IdGenerator).getId('kbq-tag-list-');
+
+    /**
+     * Whether or not this tag list is selectable. When a tag list is not selectable,
+     * the selected states for all the tags inside the tag list are always ignored.
+     */
+    readonly selectable = input(true, { transform: booleanAttribute });
+
+    /** Whether the tags in the list are editable. */
+    readonly editable = input(false, { transform: booleanAttribute });
+
+    /**
+     * Decides which tags the projected `KbqCleaner` removes: return `true` to clear the tag, `false` to
+     * keep it. Disabled tags are kept by default. Bind a stable reference — a new function on every change
+     * detection re-runs the predicate over every tag.
+     *
+     * A tag the list does not allow to be removed is never offered, whatever the predicate answers.
+     */
+    readonly clearPredicate = input<(tag: KbqTag) => boolean, (tag: KbqTag) => boolean>((tag) => !tag.disabled, {
+        transform: (fn) => {
+            if (typeof fn !== 'function') {
+                throw Error('`clearPredicate` must be a function.');
+            }
+
+            return fn;
+        }
+    });
+
+    /** Whether the tags in the list are removable. */
+    // Nothing is pushed onto the tags: each folds this into its own `removable` computed, and a push would
+    // overwrite a tag's own `[removable]="false"`, which Angular never re-writes.
+    readonly removable = input(true, { transform: booleanAttribute });
+
+    /** An object used to control when error messages are shown. */
+    readonly errorStateMatcher = input<ErrorStateMatcher>();
+
+    /** @docs-private */
+    readonly draggableInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'draggable',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly tabIndexInput = input<number | undefined>(undefined, { alias: 'tabIndex' });
+
+    /**
+     * Emits when the user drops tag inside tag list container.
+     */
+    readonly dropped = output<KbqTagListDroppedEvent>();
+
+    /**
+     * Event that emits whenever the raw value of the tag-list changes. This is here primarily
+     * to facilitate the two-way binding for the `value` input.
+     *
+     * @docs-private
+     */
+    readonly valueChange = output<any>();
+
+    /** Event emitted when the selected tag list value has been changed by the user. */
+    readonly change = output<KbqTagListChange>();
+
+    /** @docs-private */
+    readonly cleaner = contentChild(KbqCleaner, { descendants: false });
+    private readonly tagsQuery = contentChildren<KbqTag>(
+        forwardRef(() => KbqTag),
+        { descendants: true }
+    );
+
+    private readonly _draggable = signal(false);
+
+    // One signal per host value. The host bindings of every tag list in a view run in that view's reactive consumer,
+    // where a signal read again by another binding costs a scan of everything the view has read.
+    private readonly draggableState = computed(() => this._draggable() && !this.disabled());
+    private readonly _tabIndex = signal(0);
+
+    /**
+     * The same control as `tagInput`, kept in a signal so `autofilled` can track it reactively —
+     * `registerInput()` runs after the first read.
+     */
+    private readonly registeredInput = signal<KbqTagTextControl | undefined>(undefined);
+    private readonly resolvedTabIndex = computed(() =>
+        this.disabled() || this.registeredInput() ? null : this._tabIndex()
+    );
+    private readonly tagsList = kbqQueryListFrom(this.tagsQuery);
+
+    /** The tag input to add more tags */
+    private tagInput?: KbqTagTextControl;
+
+    /** True when the next `tags.changes` emission is triggered by a UI action, not programmatic update. */
+    private pendingUIChange = false;
+
+    /** Shared range selection state used by pointer and keyboard interactions. */
+    private rangeSelection: { anchor: KbqTag; activeEnd: KbqTag } | null = null;
+
+    /**
+     * When a tag is destroyed, we store the index of the destroyed tag until the tags
+     * query list notifies about the update. This is necessary because we cannot determine an
+     * appropriate tag that should receive focus until the array of tags updated completely.
+     */
+    private lastDestroyedTagIndex: number | null = null;
+
+    /**
+     * Tags the list has asked the consumer to drop. They stay rendered, and stay in `tags`, until the
+     * consumer's own view is re-checked, so until then they cannot be given focus.
+     */
+    private readonly pendingRemoval = new Set<KbqTag>();
+
+    /** Triggers unsubscription from all per-tags streams when tags are reset. */
+    private readonly tagsSubscriptions$ = new Subject<void>();
+
+    /**
+     * User defined tab index.
+     * When it is not null, use user defined tab index. Otherwise use tabIndex
+     *
+     * @docs-private
+     */
+    userTabIndex: number | null = null;
+
+    /** @docs-private */
+    keyManager: FocusKeyManager<KbqTag>;
+
+    /**
+     * Whether the component is in an error state.
+     *
+     * @docs-private
+     */
+    readonly errorState = this.errorStateTracker.errorState;
 
     /**
      * Combined stream of all of the child tags' focus change events.
@@ -213,19 +419,6 @@ export class KbqTagList
     }
 
     /**
-     * Marks the list for a change-detection check.
-     *
-     * Kept for back-compatibility. The cleaner's visibility is derived from signals of the list and its
-     * tags, so the list re-renders on its own and nothing in the library calls this any more.
-     * Kept at the DS-2196 review, like `KbqButtonToggle.markForCheck()`, which the migration guide promises stays.
-     *
-     * @docs-private
-     */
-    markForCheck(): void {
-        this.changeDetectorRef.markForCheck();
-    }
-
-    /**
      * Whether the cleaner still has a tag to remove, and so is worth showing at all.
      *
      * @docs-private
@@ -244,89 +437,6 @@ export class KbqTagList
         return this.tags?.filter((tag) => this.isClearTarget(tag, predicate)) ?? [];
     }
 
-    /** Whether the cleaner removes this tag: the list must allow removal and the predicate must accept it. */
-    private isClearTarget(tag: KbqTag, predicate: (tag: KbqTag) => boolean): boolean {
-        return tag.removable() && runClearPredicate(predicate, tag);
-    }
-
-    /** @docs-private */
-    readonly valueInput = input<any>(undefined, { alias: 'value' });
-
-    /**
-     * Implemented as part of KbqFormFieldControl. Set with `[value]`, by the form control and by the rendered
-     * tags.
-     *
-     * @docs-private
-     */
-    readonly value = linkedSignal(() => this.valueInput());
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     *
-     * @docs-private
-     */
-    readonly id = computed(() => this.registeredInput()?.id() ?? this.uid);
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     *
-     * @docs-private
-     */
-    readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
-
-    /** @docs-private */
-    readonly placeholderInput = input<string | undefined>(undefined, { alias: 'placeholder' });
-
-    /**
-     * Implemented as part of KbqFormFieldControl. Taken from the `kbqTagInput` when there is one.
-     *
-     * @docs-private
-     */
-    readonly placeholder = computed(() => {
-        const tagInput = this.registeredInput();
-
-        return tagInput ? tagInput.placeholder() : this.placeholderInput();
-    });
-
-    /** Whether any tags or the kbqTagInput inside of this tag-list has focus. */
-    // Derived from the current tags: one removed while focused fires no blur. Read from the query, as syncing
-    // `tags` emits `changes`, whose subscribers must not run inside a computed.
-    readonly focused = computed(
-        () => !!this.registeredInput()?.focused() || this.tagsQuery().some((tag) => tag.hasFocus)
-    );
-
-    /**
-     * Implemented as part of KbqFormFieldControl. Forwarded from the registered `kbqTagInput`, which
-     * is the element the browser actually autofills — the tag list itself is not an input.
-     *
-     * @docs-private
-     */
-    readonly autofilled = computed(() => this.registeredInput()?.autofilled?.() ?? false);
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     *
-     * @docs-private
-     */
-    readonly empty = computed(() => {
-        const tagInput = this.registeredInput();
-
-        return (!tagInput || tagInput.empty()) && this.tagsQuery().length === 0;
-    });
-
-    /** @docs-private */
-    readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
-        alias: 'disabled',
-        transform: booleanAttribute
-    });
-
-    /**
-     * Implemented as part of KbqFormFieldControl. Also set by the bound form control.
-     *
-     * @docs-private
-     */
-    readonly disabled = linkedSignal(() => this.disabledInput());
-
     /** Whether the tags in the list can be reordered by dragging. */
     get draggable(): boolean {
         return this.draggableState();
@@ -336,51 +446,6 @@ export class KbqTagList
         this._draggable.set(value);
         this.syncDropListDisabledState();
     }
-
-    private readonly _draggable = signal(false);
-
-    // One signal per host value. The host bindings of every tag list in a view run in that view's reactive consumer,
-    // where a signal read again by another binding costs a scan of everything the view has read.
-    private readonly draggableState = computed(() => this._draggable() && !this.disabled());
-    private readonly resolvedTabIndex = computed(() =>
-        this.disabled() || this.registeredInput() ? null : this._tabIndex()
-    );
-
-    /**
-     * Emits when the user drops tag inside tag list container.
-     */
-    readonly dropped = output<KbqTagListDroppedEvent>();
-
-    /**
-     * Whether or not this tag list is selectable. When a tag list is not selectable,
-     * the selected states for all the tags inside the tag list are always ignored.
-     */
-    readonly selectable = input(true, { transform: booleanAttribute });
-
-    /** Whether the tags in the list are editable. */
-    readonly editable = input(false, { transform: booleanAttribute });
-
-    /**
-     * Decides which tags the projected `KbqCleaner` removes: return `true` to clear the tag, `false` to
-     * keep it. Disabled tags are kept by default. Bind a stable reference — a new function on every change
-     * detection re-runs the predicate over every tag.
-     *
-     * A tag the list does not allow to be removed is never offered, whatever the predicate answers.
-     */
-    readonly clearPredicate = input<(tag: KbqTag) => boolean, (tag: KbqTag) => boolean>((tag) => !tag.disabled, {
-        transform: (fn) => {
-            if (typeof fn !== 'function') {
-                throw Error('`clearPredicate` must be a function.');
-            }
-
-            return fn;
-        }
-    });
-
-    /** Whether the tags in the list are removable. */
-    // Nothing is pushed onto the tags: each folds this into its own `removable` computed, and a push would
-    // overwrite a tag's own `[removable]="false"`, which Angular never re-writes.
-    readonly removable = input(true, { transform: booleanAttribute });
 
     /**
      * Tab index of the tag list. This property is ignored when the tag list contains a tag input or is disabled.
@@ -396,45 +461,6 @@ export class KbqTagList
         this._tabIndex.set(value);
     }
 
-    private readonly _tabIndex = signal(0);
-
-    /**
-     * Event that emits whenever the raw value of the tag-list changes. This is here primarily
-     * to facilitate the two-way binding for the `value` input.
-     *
-     * @docs-private
-     */
-    readonly valueChange = output<any>();
-
-    /** @docs-private */
-    readonly uid: string = inject(_IdGenerator).getId('kbq-tag-list-');
-
-    /**
-     * User defined tab index.
-     * When it is not null, use user defined tab index. Otherwise use tabIndex
-     *
-     * @docs-private
-     */
-    userTabIndex: number | null = null;
-
-    /** @docs-private */
-    keyManager: FocusKeyManager<KbqTag>;
-
-    /** An object used to control when error messages are shown. */
-    readonly errorStateMatcher = input<ErrorStateMatcher>();
-
-    /** Event emitted when the selected tag list value has been changed by the user. */
-    readonly change = output<KbqTagListChange>();
-
-    /** @docs-private */
-    readonly cleaner = contentChild(KbqCleaner, { descendants: false });
-
-    private readonly tagsQuery = contentChildren<KbqTag>(
-        forwardRef(() => KbqTag),
-        { descendants: true }
-    );
-    private readonly tagsList = kbqQueryListFrom(this.tagsQuery);
-
     /**
      * The tag components contained within this tag list.
      *
@@ -442,68 +468,6 @@ export class KbqTagList
      */
     get tags(): QueryList<KbqTag> {
         return this.tagsList();
-    }
-
-    /**
-     * Whether the component is in an error state.
-     *
-     * @docs-private
-     */
-    readonly errorState = this.errorStateTracker.errorState;
-
-    /** The tag input to add more tags */
-    private tagInput?: KbqTagTextControl;
-
-    /**
-     * The same control as `tagInput`, kept in a signal so `autofilled` can track it reactively —
-     * `registerInput()` runs after the first read.
-     */
-    private readonly registeredInput = signal<KbqTagTextControl | undefined>(undefined);
-
-    /** True when the next `tags.changes` emission is triggered by a UI action, not programmatic update. */
-    private pendingUIChange = false;
-
-    /** Shared range selection state used by pointer and keyboard interactions. */
-    private rangeSelection: { anchor: KbqTag; activeEnd: KbqTag } | null = null;
-
-    /**
-     * When a tag is destroyed, we store the index of the destroyed tag until the tags
-     * query list notifies about the update. This is necessary because we cannot determine an
-     * appropriate tag that should receive focus until the array of tags updated completely.
-     */
-    private lastDestroyedTagIndex: number | null = null;
-
-    /**
-     * Tags the list has asked the consumer to drop. They stay rendered, and stay in `tags`, until the
-     * consumer's own view is re-checked, so until then they cannot be given focus.
-     */
-    private readonly pendingRemoval = new Set<KbqTag>();
-
-    /** Triggers unsubscription from all per-tags streams when tags are reset. */
-    private readonly tagsSubscriptions$ = new Subject<void>();
-
-    /** @docs-private */
-    readonly draggableInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'draggable',
-        transform: booleanAttribute
-    });
-
-    /** @docs-private */
-    readonly tabIndexInput = input<number | undefined>(undefined, { alias: 'tabIndex' });
-
-    ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member; unbound, it leaves what code wrote.
-        if (changes['draggableInput']) {
-            const draggable = this.draggableInput();
-
-            if (draggable !== undefined) this.draggable = draggable;
-        }
-
-        if (changes['tabIndexInput']) {
-            const tabIndex = this.tabIndexInput();
-
-            if (tabIndex !== undefined) this.tabIndex = tabIndex;
-        }
     }
 
     constructor() {
@@ -524,6 +488,21 @@ export class KbqTagList
 
             untracked(() => this.syncDropListDisabledState());
         });
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
+        if (changes['draggableInput']) {
+            const draggable = this.draggableInput();
+
+            if (draggable !== undefined) this.draggable = draggable;
+        }
+
+        if (changes['tabIndexInput']) {
+            const tabIndex = this.tabIndexInput();
+
+            if (tabIndex !== undefined) this.tabIndex = tabIndex;
+        }
     }
 
     ngDoCheck() {
@@ -602,6 +581,24 @@ export class KbqTagList
     ngOnDestroy() {
         this.focusMonitor.stopMonitoring(this.elementRef);
         this.tagsSubscriptions$.next();
+    }
+
+    /**
+     * Marks the list for a change-detection check.
+     *
+     * Kept for back-compatibility. The cleaner's visibility is derived from signals of the list and its
+     * tags, so the list re-renders on its own and nothing in the library calls this any more.
+     * Kept at the DS-2196 review, like `KbqButtonToggle.markForCheck()`, which the migration guide promises stays.
+     *
+     * @docs-private
+     */
+    markForCheck(): void {
+        this.changeDetectorRef.markForCheck();
+    }
+
+    /** Whether the cleaner removes this tag: the list must allow removal and the predicate must accept it. */
+    private isClearTarget(tag: KbqTag, predicate: (tag: KbqTag) => boolean): boolean {
+        return tag.removable() && runClearPredicate(predicate, tag);
     }
 
     /** @docs-private */

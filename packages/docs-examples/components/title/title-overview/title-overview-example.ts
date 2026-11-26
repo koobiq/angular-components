@@ -25,7 +25,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TitleOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly defaultValue = computed(() => this.t().justText);
     readonly longValue = computed(() => `${this.defaultValue()}` + this.t().andLongText.repeat(6));
     field = this.defaultValue();

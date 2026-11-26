@@ -30,8 +30,6 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class FlagOverviewExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly sanitizer = inject(DomSanitizer);
 
     // A mix of flags, including several that are prone to blending into light or dark backgrounds.
@@ -52,6 +50,7 @@ export class FlagOverviewExample {
         'KR'
     ] as const;
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly countries = computed(() =>
         this.countryCodes.map((code, index) => ({
             code,

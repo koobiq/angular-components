@@ -24,9 +24,9 @@ export const EXAMPLE_SIDEPANEL_TOKEN = new InjectionToken<{ name: string; role: 
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleSidepanelWithCustomInjectorContent {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly user = inject(EXAMPLE_SIDEPANEL_TOKEN);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }
 
 /**
@@ -43,10 +43,10 @@ export class ExampleSidepanelWithCustomInjectorContent {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelWithCustomInjectorExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly injector = inject(Injector);
     private readonly sidepanelService = inject(KbqSidepanelService);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     open() {
         this.sidepanelService.open(ExampleSidepanelWithCustomInjectorContent, {

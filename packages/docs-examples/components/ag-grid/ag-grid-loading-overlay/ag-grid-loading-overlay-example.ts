@@ -67,13 +67,11 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridLoadingOverlayExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly loading = model(true);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly datasource = signal<IDatasource | undefined>(undefined);
-
     protected readonly columnDefs = computed(() => exampleIncidentColumns(this.t().headers));
-
     protected readonly defaultColDef: ColDef = {
         cellRendererSelector: ({ data }: ICellRendererParams) =>
             data === undefined ? { component: KbqAgGridSkeletonCellRenderer } : undefined

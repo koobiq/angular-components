@@ -105,14 +105,19 @@ export class KbqDatepickerContent<D> implements OnDestroy {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly injector = inject(Injector);
 
+    /** Reference to the datepicker that created the overlay: the panel is attached through its view container. */
+    datepicker: KbqDatepicker<D> = inject<KbqDatepicker<D>>(KbqDatepicker);
+
+    /** Reference to the internal calendar component. */
+    readonly calendar = viewChild.required(KbqCalendar);
+
+    private readonly currentAnimationState = signal<'enter' | 'void'>('enter');
+
     /** Whether the panel opens and closes without motion. */
     protected readonly animationsDisabled = kbqAnimationsDisabled();
 
     /** Emits when the exit animation has finished. */
     readonly animationDone = new Subject<void>();
-
-    /** Reference to the datepicker that created the overlay: the panel is attached through its view container. */
-    datepicker: KbqDatepicker<D> = inject<KbqDatepicker<D>>(KbqDatepicker);
 
     /** Current state of the animation. */
     get animationState(): 'enter' | 'void' {
@@ -122,11 +127,6 @@ export class KbqDatepickerContent<D> implements OnDestroy {
     set animationState(value: 'enter' | 'void') {
         this.currentAnimationState.set(value);
     }
-
-    private readonly currentAnimationState = signal<'enter' | 'void'>('enter');
-
-    /** Reference to the internal calendar component. */
-    readonly calendar = viewChild.required(KbqCalendar);
 
     ngOnDestroy() {
         this.animationDone.complete();
@@ -164,73 +164,8 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
     private readonly overlayLayers = inject(KBQ_OVERLAY_LAYERS);
     private readonly injector = inject(Injector);
     private viewContainerRef = inject(ViewContainerRef);
-    private readonly dateAdapter = injectRequiredDateAdapter<D>();
     private dir = inject(Directionality, { optional: true })!;
-
     protected readonly document = inject<Document>(DOCUMENT);
-
-    get hasBackdrop(): boolean {
-        return this._hasBackdrop;
-    }
-
-    set hasBackdrop(value: boolean) {
-        this._hasBackdrop = coerceBooleanProperty(value);
-    }
-
-    private _hasBackdrop: boolean = false;
-
-    /** The date to open the calendar to initially. */
-    get startAt(): D | null {
-        // If an explicit startAt is set we start there, otherwise we start at whatever the currently
-        // selected value is.
-        return this._startAt || (this.datepickerInput?.value() ?? null);
-    }
-
-    set startAt(value: D | null) {
-        const deserializedValue = this.dateAdapter.deserialize(value);
-
-        // Untracked, as in the `disabled` setter: an `effect()` that assigns it must not come to depend on the state
-        // read on the way.
-        this._startAt =
-            deserializedValue !== null
-                ? this.dateAdapter.clampDate(deserializedValue, untracked(this.minDate), untracked(this.maxDate))
-                : null;
-    }
-
-    private _startAt?: D | null;
-
-    /** Whether the datepicker pop-up should be disabled. */
-    get disabled(): boolean {
-        const disabled = this.disabledState();
-
-        return disabled === undefined && this.datepickerInput ? this.datepickerInput.disabled() : !!disabled;
-    }
-
-    set disabled(value: boolean) {
-        const newValue = coerceBooleanProperty(value);
-
-        if (newValue !== untracked(this.disabledState)) {
-            this.disabledState.set(newValue);
-            this.disabledChange.next(newValue);
-        }
-    }
-
-    private readonly disabledState = signal<boolean | undefined>(undefined);
-
-    /** Whether the calendar is open. */
-    get opened(): boolean {
-        return this.openedState();
-    }
-
-    set opened(value: boolean) {
-        if (coerceBooleanProperty(value)) {
-            this.open();
-        } else {
-            this.close();
-        }
-    }
-
-    private readonly openedState = signal(false);
 
     /** @docs-private */
     readonly hasBackdropInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
@@ -253,28 +188,18 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
         transform: booleanAttribute
     });
 
-    /** The currently selected date. */
-    get selected(): D | null {
-        return this.validSelected;
-    }
-
-    set selected(value: D | null) {
-        this.validSelected = value;
-    }
-
-    get dateFilter(): (date: D | null) => boolean {
-        return this.datepickerInput?.dateFilter ?? acceptAnyDate;
-    }
-
-    get value(): D | null {
-        return this.selected;
-    }
-
     /** The minimum selectable date. */
     readonly minDate = input<D | null>(undefined!);
 
     /** The maximum selectable date. */
     readonly maxDate = input<D | null>(undefined!);
+
+    /** Classes to be passed to the date picker panel. Supports the same syntax as the `[class]` binding. */
+    readonly panelClass = input<string | string[]>(undefined!);
+
+    /** Function that can be used to add custom CSS classes to dates. */
+    readonly dateClass = input<(date: D) => KbqCalendarCellCssClasses>(undefined!);
+    readonly backdropClass = input<string>('cdk-overlay-transparent-backdrop');
 
     /**
      * Emits selected year in multiyear view.
@@ -288,19 +213,32 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
      */
     readonly monthSelected = output<D>();
 
-    /** Classes to be passed to the date picker panel. Supports the same syntax as the `[class]` binding. */
-    readonly panelClass = input<string | string[]>(undefined!);
-
-    /** Function that can be used to add custom CSS classes to dates. */
-    readonly dateClass = input<(date: D) => KbqCalendarCellCssClasses>(undefined!);
-
-    readonly backdropClass = input<string>('cdk-overlay-transparent-backdrop');
-
     /** Emits when the datepicker has been opened. */
     readonly openedStream = output<void>({ alias: 'opened' });
 
     /** Emits when the datepicker has been closed. */
     readonly closedStream = output<void>({ alias: 'closed' });
+
+    private readonly dateAdapter = injectRequiredDateAdapter<D>();
+    private _hasBackdrop: boolean = false;
+    private _startAt?: D | null;
+    private readonly disabledState = signal<boolean | undefined>(undefined);
+    private readonly openedState = signal(false);
+    private scrollStrategy: () => ScrollStrategy;
+    private validSelected: D | null = null;
+
+    /** A portal containing the calendar for this datepicker. */
+    private calendarPortal?: ComponentPortal<KbqDatepickerContent<D>>;
+
+    /** Reference to the component instantiated in popup mode. */
+    private popupComponentRef?: ComponentRef<KbqDatepickerContent<D>> | null;
+
+    /** The element that was focused before the datepicker was opened. */
+    private focusedElementBeforeOpen: HTMLElement | null = null;
+
+    /** Subscription to value changes in the associated input element. */
+    private inputSubscription = Subscription.EMPTY;
+    private closeSubscription = Subscription.EMPTY;
 
     /** Emits when the datepicker is disabled. */
     readonly disabledChange = new Subject<boolean>();
@@ -317,23 +255,77 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
     /** The input element this datepicker is associated with. */
     datepickerInput: KbqDatepickerInput<D> | undefined;
 
-    private scrollStrategy: () => ScrollStrategy;
+    get hasBackdrop(): boolean {
+        return this._hasBackdrop;
+    }
 
-    private validSelected: D | null = null;
+    set hasBackdrop(value: boolean) {
+        this._hasBackdrop = coerceBooleanProperty(value);
+    }
 
-    /** A portal containing the calendar for this datepicker. */
-    private calendarPortal?: ComponentPortal<KbqDatepickerContent<D>>;
+    /** The date to open the calendar to initially. */
+    get startAt(): D | null {
+        // If an explicit startAt is set we start there, otherwise we start at whatever the currently
+        // selected value is.
+        return this._startAt || (this.datepickerInput?.value() ?? null);
+    }
 
-    /** Reference to the component instantiated in popup mode. */
-    private popupComponentRef?: ComponentRef<KbqDatepickerContent<D>> | null;
+    set startAt(value: D | null) {
+        const deserializedValue = this.dateAdapter.deserialize(value);
 
-    /** The element that was focused before the datepicker was opened. */
-    private focusedElementBeforeOpen: HTMLElement | null = null;
+        // Untracked, as in the `disabled` setter: an `effect()` that assigns it must not come to depend on the state
+        // read on the way.
+        this._startAt =
+            deserializedValue !== null
+                ? this.dateAdapter.clampDate(deserializedValue, untracked(this.minDate), untracked(this.maxDate))
+                : null;
+    }
 
-    /** Subscription to value changes in the associated input element. */
-    private inputSubscription = Subscription.EMPTY;
+    /** Whether the datepicker pop-up should be disabled. */
+    get disabled(): boolean {
+        const disabled = this.disabledState();
 
-    private closeSubscription = Subscription.EMPTY;
+        return disabled === undefined && this.datepickerInput ? this.datepickerInput.disabled() : !!disabled;
+    }
+
+    set disabled(value: boolean) {
+        const newValue = coerceBooleanProperty(value);
+
+        if (newValue !== untracked(this.disabledState)) {
+            this.disabledState.set(newValue);
+            this.disabledChange.next(newValue);
+        }
+    }
+
+    /** Whether the calendar is open. */
+    get opened(): boolean {
+        return this.openedState();
+    }
+
+    set opened(value: boolean) {
+        if (coerceBooleanProperty(value)) {
+            this.open();
+        } else {
+            this.close();
+        }
+    }
+
+    /** The currently selected date. */
+    get selected(): D | null {
+        return this.validSelected;
+    }
+
+    set selected(value: D | null) {
+        this.validSelected = value;
+    }
+
+    get dateFilter(): (date: D | null) => boolean {
+        return this.datepickerInput?.dateFilter ?? acceptAnyDate;
+    }
+
+    get value(): D | null {
+        return this.selected;
+    }
 
     constructor() {
         this.scrollStrategy = inject(KBQ_DATEPICKER_SCROLL_STRATEGY);

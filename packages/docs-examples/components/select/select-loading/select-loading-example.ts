@@ -33,11 +33,10 @@ type Option = {
 };
 
 export class OptionsApiService {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private delay: number = 100;
-
     private readonly data = Array.from({ length: 10 }, (_, i) => ({ id: i, label: 'Option #' + i }));
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     setDelay(delay: number) {
         this.delay = delay;
@@ -57,23 +56,11 @@ export class OptionsApiService {
 }
 
 export class SelectFacade {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly api = inject(OptionsApiService);
+
     private readonly search$ = new BehaviorSubject<string | null>(null);
 
-    reset(): void {
-        this.search$.next(null);
-    }
-
-    setSearch(value: string) {
-        this.search$.next(value);
-    }
-
-    setDelay(delay: number) {
-        this.api.setDelay(delay);
-    }
-
+    protected readonly t = injectTranslation(TRANSLATIONS);
     readonly state$ = this.search$.pipe(
         // for use in a real project
         // debounceTime(300),
@@ -110,6 +97,18 @@ export class SelectFacade {
         }),
         startWith({ status: 'error', error: { message: 'error message' } } as const)
     );
+
+    reset(): void {
+        this.search$.next(null);
+    }
+
+    setSearch(value: string) {
+        this.search$.next(value);
+    }
+
+    setDelay(delay: number) {
+        this.api.setDelay(delay);
+    }
 }
 
 /**
@@ -206,17 +205,22 @@ export class SelectFacade {
     }
 })
 export class SelectLoadingExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly facade = inject(SelectFacade);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected selectedOption: Option = { id: 0, label: 'Option #0' };
-
-    protected readonly compareWith = (a: Option | null, b: Option | null) => a?.id === b?.id;
-    protected readonly virtualOptionFactory = (value: Option) => new KbqVirtualOption(value, false, value.label);
-
     readonly state$ = this.facade.state$;
     readonly searchControl = new FormControl('');
+
+    constructor() {
+        this.searchControl.valueChanges
+            .pipe(takeUntilDestroyed())
+            .subscribe((value) => this.facade.setSearch(value ?? ''));
+    }
+
+    protected readonly compareWith = (a: Option | null, b: Option | null) => a?.id === b?.id;
+
+    protected readonly virtualOptionFactory = (value: Option) => new KbqVirtualOption(value, false, value.label);
 
     protected resetOptions() {
         // used as an example to show loading every time the select is opened
@@ -231,11 +235,5 @@ export class SelectLoadingExample {
     protected reloadOptions() {
         // used as an example to demonstrate a repeated request
         this.searchControl.setValue('');
-    }
-
-    constructor() {
-        this.searchControl.valueChanges
-            .pipe(takeUntilDestroyed())
-            .subscribe((value) => this.facade.setSearch(value ?? ''));
     }
 }

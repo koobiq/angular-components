@@ -1124,6 +1124,7 @@ const EFFECT_RUN_LIMIT = 10;
 })
 class ToggleDrivenByEffect {
     readonly toggle = viewChild.required(KbqToggleComponent);
+
     readonly action = signal<'checked' | 'indeterminate' | null>(null);
     runs = 0;
 
@@ -1160,12 +1161,13 @@ class ToggleDrivenByEffect {
     `
 })
 class LoadingToggle {
+    readonly toggle = viewChild.required(KbqToggleComponent);
+
     value: boolean = false;
     loading: boolean = false;
 
-    readonly toggle = viewChild.required(KbqToggleComponent);
-
     onToggleClick: (event?: Event) => void = () => {};
+
     onToggleChange: (event?: any) => void = () => {};
 }
 
@@ -1192,6 +1194,8 @@ class LoadingToggle {
     `
 })
 class SingleToggle {
+    readonly toggle = viewChild.required(KbqToggleComponent);
+
     labelPos: 'left' | 'right' = 'left';
     value: boolean | number | string = false;
     isDisabled: boolean = false;
@@ -1201,9 +1205,8 @@ class SingleToggle {
     toggleColor: string = 'primary';
     indeterminate = false;
 
-    readonly toggle = viewChild.required(KbqToggleComponent);
-
     onToggleClick: (event?: Event) => void = () => {};
+
     onToggleChange: (event?: any) => void = () => {};
 }
 
@@ -1216,9 +1219,9 @@ class SingleToggle {
     `
 })
 class ToggleWithClickAction {
-    clickAction: KbqToggleClickAction = 'noop';
-
     readonly toggle = viewChild.required(KbqToggleComponent);
+
+    clickAction: KbqToggleClickAction = 'noop';
 }
 
 @Component({

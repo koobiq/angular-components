@@ -120,14 +120,14 @@ export class KbqSidepanelHeader {
         KBQ_A11Y_LOCALE_CONFIGURATION
     );
 
+    /** @docs-private */
+    protected sidepanelRef = inject(KbqSidepanelRef);
+
     /** Add button for close sidepanel. Default false */
     readonly closeable = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     /** Enables text truncation. Default true */
     readonly truncateText = input<boolean, unknown>(true, { transform: booleanAttribute });
-
-    /** @docs-private */
-    protected sidepanelRef = inject(KbqSidepanelRef);
 
     /** Id of the title element, which is what names the sidepanel to assistive technology. */
     protected readonly titleId = `${this.sidepanelRef.id}-title`;

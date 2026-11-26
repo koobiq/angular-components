@@ -48,8 +48,6 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelCanCloseExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly sidepanelService = inject(KbqSidepanelService);
     private readonly modalService = inject(KbqModalService);
     private readonly window = inject(KBQ_WINDOW);
@@ -58,6 +56,7 @@ export class SidepanelCanCloseExample {
 
     private sidepanelRef: KbqSidepanelRef | null = null;
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     value = '';
     readonly dirty = signal(false);
 

@@ -36,7 +36,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class ButtonOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     colors = KbqComponentColors;
     isDisabled = false;
     hasProgress = false;

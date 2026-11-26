@@ -213,6 +213,7 @@ class KbqTextareaGrowOff {
 })
 class TextareaControlWithAsyncValidators {
     readonly textarea = viewChild.required(KbqTextarea);
+
     readonly control = new FormControl<string>('', {
         nonNullable: true,
         asyncValidators: [getAsyncValidator()]
@@ -271,6 +272,7 @@ class TextareaWithBrowserAutocomplete {}
 })
 class KbqTextareaGrowWithMaxRows {
     readonly textarea = viewChild.required(KbqTextarea);
+
     readonly canGrow = signal(true);
     value: string = 'line1\nline2';
 }
@@ -290,6 +292,7 @@ class KbqTextareaGrowWithMaxRows {
 })
 class TextareaWithDIErrorStateMatcher {
     readonly textarea = viewChild.required(KbqTextarea);
+
     readonly form = new FormGroup({ textarea: new FormControl('', Validators.required) });
 }
 
@@ -306,6 +309,7 @@ class TextareaWithDIErrorStateMatcher {
 })
 class TextareaWithErrorStateMatcher {
     readonly textarea = viewChild.required(KbqTextarea);
+
     readonly form = new FormGroup({ textarea: new FormControl('', Validators.required) });
     errorStateMatcher: ErrorStateMatcher = new ErrorStateMatcher();
 }
@@ -320,6 +324,7 @@ const FRESH_VALUE_READ_LIMIT = 100;
 })
 class FreshValueAccessor {
     private readonly element = inject<ElementRef<HTMLTextAreaElement>>(ElementRef).nativeElement;
+
     private reads = 0;
 
     writes = 0;

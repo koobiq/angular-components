@@ -48,16 +48,16 @@ export class KbqAccordionTrigger implements AfterViewInit, OnDestroy {
     /** @docs-private */
     readonly icon = viewChild.required(KbqIcon);
 
+    private savedTransition = '';
+    private readonly afterRenderRef?: AfterRenderRef;
+    private animationTimerId?: ReturnType<typeof setTimeout>;
+
     /**
      * Whether the icon turns without motion.
      *
      * @docs-private
      */
     protected readonly animationsDisabled = kbqAnimationsDisabled();
-
-    private savedTransition = '';
-    private readonly afterRenderRef?: AfterRenderRef;
-    private animationTimerId?: ReturnType<typeof setTimeout>;
 
     get isFill(): boolean {
         return this.accordion.variant() === 'fill';

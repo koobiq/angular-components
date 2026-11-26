@@ -91,18 +91,7 @@ export class KbqCheckbox
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly checkable = inject(KbqCheckable, { self: true });
     private readonly ngControl = inject(NgControl, { optional: true, self: true });
-
-    private readonly errorStateTracker = new KbqErrorStateTracker(
-        inject(ErrorStateMatcher),
-        this.ngControl,
-        inject(FormGroupDirective, { optional: true }),
-        inject(NgForm, { optional: true })
-    );
-
     private readonly uniqueId = inject(_IdGenerator).getId('kbq-checkbox-');
-
-    /** Whether the checkbox is in an error state. */
-    readonly errorState = this.errorStateTracker.errorState;
 
     /** An object used to control when the error state is shown. */
     readonly errorStateMatcher = input<ErrorStateMatcher>();
@@ -124,15 +113,6 @@ export class KbqCheckbox
     /** Name value will be applied to the input element if present */
     readonly name = input<string | null>(null);
 
-    /** Event emitted when the checkbox's `checked` value changes. */
-    readonly change = output<KbqCheckboxChange>();
-
-    /** Emits the new checked value when the user switches the checkbox. Supports `[(checked)]`. */
-    readonly checkedChange = output<boolean>();
-
-    /** Event emitted when the checkbox's `indeterminate` value changes. */
-    readonly indeterminateChange = output<boolean>();
-
     /** The value attribute of the native input element */
     readonly value = input<string>();
 
@@ -140,60 +120,6 @@ export class KbqCheckbox
     readonly clickAction = input<KbqCheckboxClickAction>(
         inject(KBQ_CHECKBOX_CLICK_ACTION, { optional: true }) || undefined
     );
-
-    /** The native `<input type="checkbox">` element */
-    protected readonly inputElement = viewChild.required<ElementRef<HTMLInputElement>>('input');
-
-    /**
-     * Id of the visually hidden native input.
-     *
-     * @docs-private
-     */
-    protected readonly inputId = computed(() => `${this.id()}-input`);
-
-    /** Error text projected into the checkbox. */
-    private readonly error = contentChild(KbqError, { descendants: false });
-
-    /**
-     * Whether the projected `kbq-error` is shown. Without one, nothing is rendered under the label.
-     *
-     * @docs-private
-     */
-    protected readonly showError = computed(() => this.errorState() && !!this.error());
-
-    /**
-     * Id of the element wrapping the projected `kbq-error`.
-     *
-     * @docs-private
-     */
-    protected readonly errorId = computed(() => `${this.id()}-error`);
-
-    /**
-     * Id of the label text, which alone names the native input.
-     *
-     * @docs-private
-     */
-    protected readonly labelId = computed(() => `${this.id()}-label`);
-
-    /** Hints projected into the checkbox. */
-    private readonly hints = contentChildren(KbqHint, { descendants: false });
-
-    /**
-     * Value of `aria-describedby` of the native input: the error, while it is shown, and the hints.
-     *
-     * @docs-private
-     */
-    protected readonly ariaDescribedBy = computed(
-        () =>
-            [...(this.showError() ? [this.errorId()] : []), ...this.hints().map((hint) => hint.id())].join(' ') || null
-    );
-
-    /**
-     * Value of `aria-invalid` of the native input: set whenever the checkbox is painted as invalid.
-     *
-     * @docs-private
-     */
-    protected readonly ariaInvalid = computed(() => (this.errorState() || this.color() === 'error' ? 'true' : null));
 
     /** Whether the checkbox is required. */
     readonly required = input(false, { transform: booleanAttribute });
@@ -222,39 +148,78 @@ export class KbqCheckbox
         transform: booleanAttribute
     });
 
-    ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member; unbound, it leaves what code wrote.
-        if (changes['checkedInput']) {
-            const checked = this.checkedInput();
+    /** Event emitted when the checkbox's `checked` value changes. */
+    readonly change = output<KbqCheckboxChange>();
 
-            if (checked !== undefined) this.checked = checked;
-        }
+    /** Emits the new checked value when the user switches the checkbox. Supports `[(checked)]`. */
+    readonly checkedChange = output<boolean>();
 
-        if (changes['disabledInput']) {
-            const disabled = this.disabledInput();
+    /** Event emitted when the checkbox's `indeterminate` value changes. */
+    readonly indeterminateChange = output<boolean>();
 
-            if (disabled !== undefined) this.disabled = disabled;
-        }
+    /** The native `<input type="checkbox">` element */
+    protected readonly inputElement = viewChild.required<ElementRef<HTMLInputElement>>('input');
 
-        if (changes['tabIndexInput']) this.tabIndex = this.tabIndexInput() ?? 0;
+    /** Error text projected into the checkbox. */
+    private readonly error = contentChild(KbqError, { descendants: false });
 
-        if (changes['indeterminateInput']) {
-            const indeterminate = this.indeterminateInput();
+    /** Hints projected into the checkbox. */
+    private readonly hints = contentChildren(KbqHint, { descendants: false });
 
-            if (indeterminate !== undefined) this.indeterminate = indeterminate;
-        }
-    }
+    private readonly errorStateTracker = new KbqErrorStateTracker(
+        inject(ErrorStateMatcher),
+        this.ngControl,
+        inject(FormGroupDirective, { optional: true }),
+        inject(NgForm, { optional: true })
+    );
 
-    ngDoCheck(): void {
-        // Re-evaluated on every check: a submit of the parent form notifies nothing a signal could follow.
-        if (this.ngControl) this.updateErrorState();
-    }
+    /** Whether the checkbox is in an error state. */
+    readonly errorState = this.errorStateTracker.errorState;
 
-    /** Updates the error state based on the error state matcher. */
-    updateErrorState(): void {
-        this.errorStateTracker.errorStateMatcher = this.errorStateMatcher();
-        this.errorStateTracker.updateErrorState();
-    }
+    /**
+     * Id of the visually hidden native input.
+     *
+     * @docs-private
+     */
+    protected readonly inputId = computed(() => `${this.id()}-input`);
+
+    /**
+     * Whether the projected `kbq-error` is shown. Without one, nothing is rendered under the label.
+     *
+     * @docs-private
+     */
+    protected readonly showError = computed(() => this.errorState() && !!this.error());
+
+    /**
+     * Id of the element wrapping the projected `kbq-error`.
+     *
+     * @docs-private
+     */
+    protected readonly errorId = computed(() => `${this.id()}-error`);
+
+    /**
+     * Id of the label text, which alone names the native input.
+     *
+     * @docs-private
+     */
+    protected readonly labelId = computed(() => `${this.id()}-label`);
+
+    /**
+     * Value of `aria-describedby` of the native input: the error, while it is shown, and the hints.
+     *
+     * @docs-private
+     */
+    protected readonly ariaDescribedBy = computed(
+        () =>
+            [...(this.showError() ? [this.errorId()] : []), ...this.hints().map((hint) => hint.id())].join(' ') || null
+    );
+
+    /**
+     * Value of `aria-invalid` of the native input: set whenever the checkbox is painted as invalid.
+     *
+     * @docs-private
+     */
+    protected readonly ariaInvalid = computed(() => (this.errorState() || this.color() === 'error' ? 'true' : null));
 
     /**
      * Whether the checkbox is checked.
@@ -302,6 +267,50 @@ export class KbqCheckbox
         untracked(() => this.setIndeterminate(value));
     }
 
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
+        if (changes['checkedInput']) {
+            const checked = this.checkedInput();
+
+            if (checked !== undefined) this.checked = checked;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+
+        if (changes['tabIndexInput']) this.tabIndex = this.tabIndexInput() ?? 0;
+
+        if (changes['indeterminateInput']) {
+            const indeterminate = this.indeterminateInput();
+
+            if (indeterminate !== undefined) this.indeterminate = indeterminate;
+        }
+    }
+
+    ngDoCheck(): void {
+        // Re-evaluated on every check: a submit of the parent form notifies nothing a signal could follow.
+        if (this.ngControl) this.updateErrorState();
+    }
+
+    ngAfterViewInit() {
+        this.focusMonitor
+            .monitor(this.inputElement().nativeElement)
+            .subscribe((focusOrigin) => this.onInputFocusChange(focusOrigin));
+    }
+
+    ngOnDestroy() {
+        this.focusMonitor.stopMonitoring(this.inputElement().nativeElement);
+    }
+
+    /** Updates the error state based on the error state matcher. */
+    updateErrorState(): void {
+        this.errorStateTracker.errorStateMatcher = this.errorStateMatcher();
+        this.errorStateTracker.updateErrorState();
+    }
+
     private setIndeterminate(value: boolean): void {
         const changed = value !== this.checkable.indeterminate();
 
@@ -318,16 +327,6 @@ export class KbqCheckbox
 
             this.indeterminateChange.emit(value);
         }
-    }
-
-    ngAfterViewInit() {
-        this.focusMonitor
-            .monitor(this.inputElement().nativeElement)
-            .subscribe((focusOrigin) => this.onInputFocusChange(focusOrigin));
-    }
-
-    ngOnDestroy() {
-        this.focusMonitor.stopMonitoring(this.inputElement().nativeElement);
     }
 
     /**

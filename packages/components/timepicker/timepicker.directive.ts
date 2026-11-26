@@ -174,7 +174,6 @@ export class KbqTimepicker<D>
     implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnChanges, DoCheck, AfterContentInit
 {
     private readonly uid = inject(_IdGenerator).getId('kbq-timepicker-');
-
     private elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     private readonly renderer = inject(Renderer2);
     private dateAdapter = inject<DateAdapter<any>>(DateAdapter, { optional: true })!;
@@ -183,17 +182,17 @@ export class KbqTimepicker<D>
         'timepicker',
         KBQ_TIMEPICKER_LOCALE_CONFIGURATION
     );
+
     private readonly errorStateTracker = new KbqErrorStateTracker(
         inject(ErrorStateMatcher),
         null,
         inject(FormGroupDirective, { optional: true }),
         inject(NgForm, { optional: true })
     );
+    private readonly focusedValue = signal(false);
 
     /** @docs-private */
     readonly errorState = this.errorStateTracker.errorState;
-
-    private readonly focusedValue = signal(false);
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -202,18 +201,24 @@ export class KbqTimepicker<D>
      */
     readonly focused = this.focusedValue.asReadonly();
 
+    /** Object used to control when error messages are shown. */
+    readonly errorStateMatcher = input<ErrorStateMatcher>();
+
+    /** @docs-private */
+    readonly placeholderInput = input<string | undefined>(undefined, { alias: 'placeholder' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
     /**
      * Implemented as part of KbqFormFieldControl.
      *
      * @docs-private
      */
     controlType: string = 'timepicker';
-
-    /** Object used to control when error messages are shown. */
-    readonly errorStateMatcher = input<ErrorStateMatcher>();
-
-    /** @docs-private */
-    readonly placeholderInput = input<string | undefined>(undefined, { alias: 'placeholder' });
 
     /**
      * Implemented as part of KbqFormFieldControl. Defaults to the localized pattern of `format`.
@@ -222,20 +227,11 @@ export class KbqTimepicker<D>
      */
     readonly placeholder = computed(() => this.placeholderInput() ?? this.timeFormatPlaceholder);
 
-    /** @docs-private */
-    readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
-        alias: 'disabled',
-        transform: booleanAttribute
-    });
-
     /** Whether the timepicker is disabled. Also set by the bound form control. */
     readonly disabled = linkedSignal(() => this.disabledInput());
 
     /** @docs-private */
     readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
-
-    /** Unique id of the element, generated when not provided. */
-    readonly id = computed(() => this.idInput() || this.uid);
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -255,16 +251,18 @@ export class KbqTimepicker<D>
     /** Latest time the control accepts. Anything the date adapter cannot read is treated as unset. */
     readonly max = input<D | null>(null);
 
+    /** @docs-private */
+    readonly valueInput = input<D | null | undefined>(undefined, { alias: 'value' });
+
     /** `min` as the date adapter reads it, or null when it cannot. */
     private readonly minDate = computed(() => this.getValidDateOrNull(this.dateAdapter.deserialize(this.min())));
 
     /** `max` as the date adapter reads it, or null when it cannot. */
     private readonly maxDate = computed(() => this.getValidDateOrNull(this.dateAdapter.deserialize(this.max())));
-
-    /** @docs-private */
-    readonly valueInput = input<D | null | undefined>(undefined, { alias: 'value' });
-
     private readonly valueState = signal<D | null>(null);
+
+    /** Unique id of the element, generated when not provided. */
+    readonly id = computed(() => this.idInput() || this.uid);
 
     /** The time the control holds: set with `[value]`, by the form control and by typing. */
     readonly value = this.valueState.asReadonly();
@@ -273,6 +271,32 @@ export class KbqTimepicker<D>
     readonly kbqValidationTooltip = input<KbqTooltipTrigger | undefined>();
 
     readonly incorrectInput = output<void>();
+
+    private readonly emptyValue = signal(true);
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     *
+     * @docs-private
+     */
+    readonly empty = this.emptyValue.asReadonly();
+
+    private readonly validator: ValidatorFn | null;
+    private lastValueValid = false;
+    private control?: AbstractControl;
+    private separator = ':';
+
+    /** Start of the part a caret key selects on a timer, until the selection lands there. */
+    private pendingCaret: { start: number } | null = null;
+    private onChange: (value: any) => void;
+    private onTouched: () => void;
+
+    /**
+     * Whether a drag started in this field, so that its drop here is the field's own text.
+     *
+     * @docs-private
+     */
+    protected draggingOwnText = false;
 
     // TODO: nothing in the library uses it; kept as public API at the DS-2196 review. Document or deprecate it.
     get hasSelection(): boolean {
@@ -294,15 +318,6 @@ export class KbqTimepicker<D>
     get ngControl(): any {
         return this.control;
     }
-
-    private readonly emptyValue = signal(true);
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     *
-     * @docs-private
-     */
-    readonly empty = this.emptyValue.asReadonly();
 
     get selectionStart(): number | null {
         return this.elementRef.nativeElement.selectionStart;
@@ -331,27 +346,6 @@ export class KbqTimepicker<D>
             TIMEFORMAT_PLACEHOLDERS[this.format()]!
         );
     }
-
-    private readonly validator: ValidatorFn | null;
-
-    private lastValueValid = false;
-
-    /**
-     * Whether a drag started in this field, so that its drop here is the field's own text.
-     *
-     * @docs-private
-     */
-    protected draggingOwnText = false;
-
-    private control?: AbstractControl;
-
-    private separator = ':';
-
-    /** Start of the part a caret key selects on a timer, until the selection lands there. */
-    private pendingCaret: { start: number } | null = null;
-
-    private onChange: (value: any) => void;
-    private onTouched: () => void;
 
     constructor() {
         if (!this.dateAdapter) {

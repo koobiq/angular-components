@@ -86,12 +86,14 @@ const customCopyFormatterWithHeaderRow: KbqAgGridCopyFormatter = (api) => {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridCopySelectedExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly toast = inject(KbqToastService);
 
-    protected readonly copyFormatOptions = ['TSV', 'CSV', 'JSON', 'Custom'] as const;
     protected readonly copyFormat = model<(typeof this.copyFormatOptions)[number]>('TSV');
+
+    private readonly incidents = exampleGetIncidents();
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly copyFormatOptions = ['TSV', 'CSV', 'JSON', 'Custom'] as const;
     protected readonly copyFormatter = computed<KbqAgGridCopyFormatter | undefined>(() => {
         switch (this.copyFormat()) {
             case 'Custom': {
@@ -109,22 +111,17 @@ export class AgGridCopySelectedExample {
             }
         }
     });
-
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,
         width: 140
     };
-
     protected readonly rowSelection: RowSelectionOptions = {
         mode: 'multiRow',
         headerCheckbox: true,
         checkboxes: true,
         hideDisabledCheckboxes: false
     };
-
-    private readonly incidents = exampleGetIncidents();
-
     protected readonly columnDefs = computed(() => {
         const headers = this.t().headers;
 
@@ -135,7 +132,6 @@ export class AgGridCopySelectedExample {
             width: field === 'event' || field === 'techniques' || field === 'filePath' ? 240 : 140
         }));
     });
-
     protected readonly rowData = this.incidents.map(({ id, event, severity, status, filePath, techniques }) => ({
         id,
         event,

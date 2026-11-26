@@ -122,11 +122,11 @@ const SERVERS: Server[] = Array.from({ length: 6 }, (_, index) => ({
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SkeletonInSidepanelExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly sidepanel = inject(KbqSidepanelService);
+
     private loading = Subscription.EMPTY;
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly details = signal<Detail[] | null>(null);
     protected readonly servers = signal<Server[] | null>(null);
 

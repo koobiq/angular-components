@@ -62,9 +62,10 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OverflowItemsJustifyContentExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
-    readonly items = Array.from({ length: 7 }, (_, i) => `Item${i}`);
     readonly justifyContentOptions = ['center', 'start', 'end', 'space-between', 'space-around'] as const;
+
     readonly justifyContent = model(this.justifyContentOptions[0]);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
+    readonly items = Array.from({ length: 7 }, (_, i) => `Item${i}`);
 }

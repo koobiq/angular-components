@@ -30,10 +30,9 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalSizesExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly modalService = inject(KbqModalService);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     readonly modalSize = ModalSize;
 
     showModal(kbqSize: ModalSize): void {

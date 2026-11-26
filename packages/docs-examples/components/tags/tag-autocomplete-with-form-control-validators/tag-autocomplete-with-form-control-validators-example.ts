@@ -98,8 +98,6 @@ const latinValidator = (): ValidatorFn => {
 export class TagAutocompleteWithFormControlValidatorsExample {
     private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
 
-    protected readonly maxTagCount = MAX_TAG_COUNT;
-    protected readonly query = signal('');
     protected readonly formControl = new FormControl<string[]>(OPTIONS.slice(0, 3), [
         Validators.required,
         Validators.maxLength(MAX_TAG_COUNT),
@@ -109,6 +107,8 @@ export class TagAutocompleteWithFormControlValidatorsExample {
     /** The control value as a signal, so the option list can be derived from it. */
     private readonly tags = toSignal(this.formControl.valueChanges, { initialValue: this.formControl.value });
 
+    protected readonly maxTagCount = MAX_TAG_COUNT;
+    protected readonly query = signal('');
     protected readonly filteredOptions = computed(() => {
         const current = this.query().trim().toLowerCase();
         const options = OPTIONS.filter((option) => !this.tags()?.includes(option));

@@ -46,10 +46,10 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilesizeFormatterTableNumberExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     protected readonly cdr = inject(ChangeDetectorRef);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     constructor() {
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(() => this.cdr.markForCheck());

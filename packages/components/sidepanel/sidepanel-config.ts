@@ -52,14 +52,11 @@ export class KbqSidepanelConfig<D = any> {
 
     /** Data being injected into the child component. */
     data?: D | null = null;
-
     position?: KbqSidepanelPosition = KbqSidepanelPosition.Right;
-
     size?: KbqSidepanelSize = KbqSidepanelSize.Medium;
 
     /** Whether the sidepanel has a backdrop. */
     hasBackdrop?: boolean = true;
-
     backdropClass?: string;
 
     /** Whether the user can close the sidepanel by any UI action: escape, clicking outside or the close button. */

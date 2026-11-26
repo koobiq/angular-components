@@ -128,7 +128,6 @@ const getFocusMonitor = () => TestBed.inject(FocusMonitor);
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestTagList {
-    readonly tagList = viewChild.required(KbqTagList);
     readonly tags = model<Array<{ id: string; value: string; selected: boolean; disabled?: boolean }>>(
         Array.from({ length: 3 }, (_, i) => ({
             id: `tag${i}`,
@@ -136,11 +135,12 @@ export class TestTagList {
             selected: false
         }))
     );
-
     readonly selectable = model(true);
     readonly removable = model(true);
     readonly draggable = model(false);
     readonly disabled = model(false);
+
+    readonly tagList = viewChild.required(KbqTagList);
 
     readonly selectionChange = vi.fn();
     readonly removedChange = vi.fn();
@@ -197,8 +197,6 @@ class TagListWithPinnedTag {
     changeDetection: ChangeDetectionStrategy.Default
 })
 export class TestFormFieldTagList {
-    readonly tagList = viewChild.required(KbqTagList);
-    readonly editable = signal(false);
     readonly tags = model<Array<{ id: string; value: string; selected: boolean }>>(
         Array.from({ length: 4 }, (_, i) => ({
             id: `tag${i}`,
@@ -206,6 +204,10 @@ export class TestFormFieldTagList {
             selected: false
         }))
     );
+
+    readonly tagList = viewChild.required(KbqTagList);
+
+    readonly editable = signal(false);
 }
 
 /** Tag list named by the caption of its wrapping `kbq-form-field`. */
@@ -238,6 +240,7 @@ class TagListWithFormFieldLabel {}
 })
 class TagListControlWithAsyncValidators {
     readonly tagList = viewChild.required(KbqTagList);
+
     readonly control = new FormControl('', {
         nonNullable: true,
         asyncValidators: [getAsyncValidator()]
@@ -264,6 +267,7 @@ class TagListControlWithAsyncValidators {
 })
 class TagListWithDIErrorStateMatcher {
     readonly tagList = viewChild.required(KbqTagList);
+
     readonly form = new FormGroup({ tagList: new FormControl('', Validators.required) });
 }
 
@@ -285,6 +289,7 @@ class TagListWithDIErrorStateMatcher {
 })
 class TagListWithErrorStateMatcher {
     readonly tagList = viewChild.required(KbqTagList);
+
     readonly form = new FormGroup({ tagList: new FormControl('', Validators.required) });
     errorStateMatcher: ErrorStateMatcher = new ErrorStateMatcher();
 }
@@ -2803,6 +2808,7 @@ class StandardTagList {
     tags = [0, 1, 2, 3, 4];
 
     chipSelect: (index?: number) => void = () => {};
+
     chipDeselect: (index?: number) => void = () => {};
 }
 
@@ -2856,13 +2862,14 @@ class FormFieldTagList {
     `
 })
 class TagListWithCleaner {
+    readonly tagList = viewChild.required(KbqTagList);
+
     tags = ['Alpha', 'Beta', 'Gamma'];
+
     /** Tags disabled through the tag's own input. */
     disabledTags: string[] = [];
     listDisabled = false;
     removable = true;
-
-    readonly tagList = viewChild.required(KbqTagList);
 
     /** The wiring every consumer already has for the remove control. */
     removed({ tag }: KbqTagEvent): void {
@@ -2891,6 +2898,7 @@ class TagListWithCleaner {
 })
 class TagListWithRemovableTags {
     tags = ['Alpha', 'Beta'];
+
     /** Tags the consumer allows to be removed, through the tag's own input. */
     removableTags: string[] = ['Alpha', 'Beta'];
 
@@ -2997,9 +3005,9 @@ class TagListWithRemoveControl {
     `
 })
 class TagListWithCleanerAndAutocomplete {
-    tags = ['Alpha', 'Beta'];
-
     readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+
+    tags = ['Alpha', 'Beta'];
 
     removed({ tag }: KbqTagEvent): void {
         this.tags = this.tags.filter((value) => value !== tag.value);
@@ -3026,11 +3034,12 @@ class TagListWithCleanerAndAutocomplete {
     `
 })
 class TagListWithClearPredicate {
+    readonly tagList = viewChild.required(KbqTagList);
+
     tags = ['Alpha', 'Beta', 'Gamma'];
     disabledTags: string[] = ['Beta'];
-    clearPredicate: (tag: KbqTag) => boolean = () => true;
 
-    readonly tagList = viewChild.required(KbqTagList);
+    clearPredicate: (tag: KbqTag) => boolean = () => true;
 
     removed({ tag }: KbqTagEvent): void {
         this.tags = this.tags.filter((value) => value !== tag.value);
@@ -3063,6 +3072,10 @@ class TagListWithClearPredicate {
     `
 })
 class BasicTagList {
+    readonly formField = viewChild.required(KbqFormField);
+    readonly tagList = viewChild.required(KbqTagList);
+    readonly tags = viewChildren(KbqTag);
+
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' },
@@ -3077,10 +3090,6 @@ class BasicTagList {
     isRequired: boolean;
     tabIndexOverride: number;
     selectable: boolean = true;
-
-    readonly formField = viewChild.required(KbqFormField);
-    readonly tagList = viewChild.required(KbqTagList);
-    readonly tags = viewChildren(KbqTag);
 }
 
 @Component({
@@ -3110,6 +3119,9 @@ class BasicTagList {
     `
 })
 class InputTagList {
+    readonly tagList = viewChild.required(KbqTagList);
+    readonly tags = viewChildren(KbqTag);
+
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' },
@@ -3121,13 +3133,9 @@ class InputTagList {
         { value: 'sushi-7', viewValue: 'Sushi' }
     ];
     control = new UntypedFormControl();
-
     separatorKeyCodes = [ENTER, SPACE];
     addOnBlur: boolean = true;
     isRequired: boolean;
-
-    readonly tagList = viewChild.required(KbqTagList);
-    readonly tags = viewChildren(KbqTag);
 
     add(event: KbqTagInputEvent): void {
         const input = event.input;
@@ -3171,12 +3179,13 @@ class InputTagList {
     `
 })
 class SelectedTagList {
+    readonly tags = viewChildren(KbqTag);
+
     foods: any[] = [
         { value: 0, viewValue: 'Steak', selected: true },
         { value: 1, viewValue: 'Pizza', selected: false },
         { value: 2, viewValue: 'Pasta', selected: true }
     ];
-    readonly tags = viewChildren(KbqTag);
 }
 
 @Component({
@@ -3202,17 +3211,15 @@ class SelectedTagList {
     `
 })
 class TagListWithFormErrorMessages {
+    readonly tags = viewChildren(KbqTag);
+    readonly form = viewChild.required<NgForm>('form');
+
     foods: any[] = [
         { value: 0, viewValue: 'Steak', selected: true },
         { value: 1, viewValue: 'Pizza', selected: false },
         { value: 2, viewValue: 'Pasta', selected: true }
     ];
-
     formControl = new UntypedFormControl('', Validators.required);
-
-    readonly tags = viewChildren(KbqTag);
-
-    readonly form = viewChild.required<NgForm>('form');
 }
 
 @Component({
@@ -3253,6 +3260,7 @@ class StandardTagListWithAnimations {
 })
 class TagListDrivenByEffects {
     readonly tagList = viewChild.required(KbqTagList);
+
     readonly tags = signal(['Tag 0', 'Tag 1']);
     readonly wantUnselected = signal(false);
     readonly wantFocus = signal(false);

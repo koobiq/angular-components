@@ -79,7 +79,6 @@ class TestComponent {
     readonly optionTemplate = viewChild.required<TemplateRef<any>>('optionTemplate');
 
     activeFilter: KbqFilter | null = null;
-
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Select',

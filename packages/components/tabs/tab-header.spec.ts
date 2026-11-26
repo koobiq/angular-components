@@ -1237,6 +1237,8 @@ interface ITab {
     `
 })
 class SimpleTabHeaderApp {
+    readonly tabHeader = viewChild.required(KbqTabHeader);
+
     selectedIndex: number = 0;
     disabledTabIndex = 1;
     tabs: ITab[] = [
@@ -1246,8 +1248,6 @@ class SimpleTabHeaderApp {
         { label: 'tab one' }
     ];
     dir: Direction = 'ltr';
-
-    readonly tabHeader = viewChild.required(KbqTabHeader);
 
     constructor() {
         this.tabs[this.disabledTabIndex].disabled = true;

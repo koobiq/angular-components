@@ -53,7 +53,6 @@ class TestComponent {
     readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     activeFilter: KbqFilter | null = null;
-
     filterTemplate: KbqFilter = {
         name: 'DefaultFilter',
         readonly: false,
@@ -62,7 +61,6 @@ class TestComponent {
         saved: false,
         pipes: []
     };
-
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'PipeA',

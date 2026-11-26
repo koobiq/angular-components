@@ -45,10 +45,9 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatepickerRangeExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     readonly minDate = this.adapter.createDate(2023, 11, 14);
     readonly maxDate = this.adapter.createDate(2024, 7, 25);
 }

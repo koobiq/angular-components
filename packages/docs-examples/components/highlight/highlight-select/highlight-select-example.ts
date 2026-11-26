@@ -55,7 +55,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class HighlightSelectExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly options = [
         'Manchester United',
         'Manchester 62 FC',

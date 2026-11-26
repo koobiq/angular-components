@@ -34,7 +34,6 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class AgGridLoadTextExampleLoadingText implements ICellRendererAngularComp {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly label = computed(() => this.t().loading);
 
     agInit(): void {}
@@ -74,13 +73,9 @@ export class AgGridLoadTextExampleLoadingText implements ICellRendererAngularCom
 })
 export class AgGridLoadTextExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly loadingTextRenderer = AgGridLoadTextExampleLoadingText;
-
     protected readonly columnDefs = computed(() => exampleIncidentColumns(this.t().headers, 'id', 'event', 'status'));
-
     protected readonly rowSelection: RowSelectionOptions = { mode: 'multiRow', headerCheckbox: false };
-
     protected readonly datasource: IDatasource = {
         getRows: ({ startRow, endRow, successCallback }: IGetRowsParams) => {
             setTimeout(() => successCallback(exampleGetIncidents(startRow, endRow), EXAMPLE_INCIDENT_COUNT), 1000);

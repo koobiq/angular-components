@@ -12,7 +12,6 @@ export abstract class KbqModalRef<C = any, R = unknown> {
      * can be assigned or replaced after the dialog was opened. Defaults to the config's value.
      */
     canClose: KbqCanClose | undefined;
-
     abstract afterOpen: Observable<void>;
     abstract beforeClose: Observable<R | undefined>;
     abstract afterClose: Observable<R | undefined>;
@@ -38,7 +37,6 @@ export abstract class KbqModalRef<C = any, R = unknown> {
     abstract triggerOk(): void;
 
     /** Runs the cancel flow exactly as the predefined Cancel button does. */
-
     abstract triggerCancel(): void;
 
     /**

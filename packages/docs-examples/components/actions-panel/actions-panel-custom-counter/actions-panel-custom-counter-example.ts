@@ -177,20 +177,21 @@ type ExampleAction = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActionsPanelCustomCounterExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly toast = inject(KbqToastService);
 
+    private readonly templateRef = viewChild.required(TemplateRef);
+
+    private actionsPanelRef: KbqActionsPanelRef | null = null;
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly actions = computed<ExampleAction[]>(() => [
         { id: 'Responsible', icon: 'kbq-user_16', label: this.t().responsible },
         { id: 'Link to incident', icon: 'kbq-link_16', label: this.t().linkToIncident },
         { id: 'Remove', icon: 'kbq-trash_16', label: this.t().remove, divider: true }
     ]);
     protected readonly action = { Counter: 'counter' };
-
-    private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
-    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly templateRef = viewChild.required(TemplateRef);
-    private readonly toast = inject(KbqToastService);
-    private actionsPanelRef: KbqActionsPanelRef | null = null;
 
     constructor() {
         afterNextRender(() => this.open());

@@ -549,14 +549,15 @@ interface TemplateRef extends Range {
  * template introduces, and whether the element carries a valueless `transparent` attribute.
  */
 class TemplateScanner implements Visitor {
+    /** The embedded view currently being walked; a ref declared in it is invisible outside. */
+    private view: Range;
+
     readonly overlayRefs: TemplateRef[] = [];
     readonly otherNames = new Set<string>();
     readonly expressions: Range[] = [];
+
     /** Whether a `<kbq-loader-overlay transparent>` without a bound value is rendered here. */
     transparentAttribute = false;
-
-    /** The embedded view currently being walked; a ref declared in it is invisible outside. */
-    private view: Range;
 
     constructor(private readonly template: string) {
         this.view = { start: 0, end: template.length };
@@ -680,9 +681,13 @@ class TemplateScanner implements Visitor {
     }
 
     visitAttribute(): void {}
+
     visitComment(): void {}
+
     visitExpansion(): void {}
+
     visitExpansionCase(): void {}
+
     visitBlockParameter(): void {}
 }
 

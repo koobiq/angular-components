@@ -22,16 +22,14 @@ export enum KbqToastPosition {
 export class KbqToastData {
     id?: string;
     title?: string | TemplateRef<any>;
+
     /** Visual style of the toast. Styles outside `KbqToastStyle` render without a default icon. */
     style?: KbqToastStyle | (string & {});
-
     icon?: TemplateRef<any> | boolean;
     iconClass?: string;
     caption?: string | TemplateRef<any>;
-
     content?: string | TemplateRef<any>;
     actions?: TemplateRef<any>;
-
     closeButton?: TemplateRef<any> | boolean;
 }
 

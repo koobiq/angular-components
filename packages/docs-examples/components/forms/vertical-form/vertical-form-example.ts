@@ -20,6 +20,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class VerticalFormExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     value: any;
 }

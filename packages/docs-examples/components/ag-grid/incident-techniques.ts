@@ -26,6 +26,7 @@ import {
 })
 export class ExampleIncidentTechniques {
     readonly ids = input.required<ExampleTechniqueId[]>();
+
     protected readonly techniqueLabel = exampleTechniqueLabel;
     protected readonly techniqueUrl = exampleTechniqueUrl;
 }
@@ -57,6 +58,7 @@ type TechniquesCellParams = ICellRendererParams<ExampleSecurityIncident> & {
 })
 export class ExampleIncidentTechniquesCell implements ICellRendererAngularComp {
     private readonly destroyRef = inject(DestroyRef);
+
     protected readonly ids = signal<ExampleTechniqueId[]>([]);
 
     agInit(params: TechniquesCellParams): void {

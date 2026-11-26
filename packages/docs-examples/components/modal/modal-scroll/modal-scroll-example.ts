@@ -15,7 +15,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class CustomModalComponent {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly items = Array.from({ length: 1000 }, (_, i) => 'Item #' + i);
 }
 
@@ -31,9 +30,9 @@ export class CustomModalComponent {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalScrollExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly modalService = inject(KbqModalService);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     createLongModal(): void {
         this.modalService.create({

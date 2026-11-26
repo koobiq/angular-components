@@ -20,6 +20,7 @@ import { KbqAccordionItem } from './accordion-item';
 export class KbqAccordionHeader {
     /** @docs-private */
     protected readonly item = inject(KbqAccordionItem);
+
     /** @docs-private */
     protected readonly accordion = inject(KbqAccordion);
 

@@ -76,12 +76,12 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OverflowItemsWithVerticalOrientationExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    readonly reverseOverflowOrder = model(false);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     readonly items = Array.from({ length: 20 }, (_, i) => ({
         id: `Item${i}`,
         alwaysVisible: i === 8
     }));
-    readonly reverseOverflowOrder = model(false);
     readonly badgeColor = KbqBadgeColors;
 }

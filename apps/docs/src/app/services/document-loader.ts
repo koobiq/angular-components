@@ -4,8 +4,9 @@ import { type Observable, shareReplay, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class DocsDocumentLoader {
-    private readonly cache = new Map<string, Observable<string>>();
     private readonly httpClient = inject(HttpClient);
+
+    private readonly cache = new Map<string, Observable<string>>();
 
     /**
      * Fetches a document from the given URL.

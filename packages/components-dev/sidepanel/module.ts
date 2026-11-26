@@ -101,7 +101,6 @@ export class DevSidepanelComponent {
     data = inject(KBQ_SIDEPANEL_DATA);
 
     openComponentSidepanel: () => void;
-
     array = new Array(60);
 
     constructor() {
@@ -131,13 +130,11 @@ export class DevSidepanelComponent {
 export class DevApp {
     private sidepanelService = inject(KbqSidepanelService);
 
-    position: KbqSidepanelPosition = KbqSidepanelPosition.Right;
-    size: KbqSidepanelSize = KbqSidepanelSize.Medium;
-
-    modalState: boolean = false;
-
     readonly template = viewChild.required<TemplateRef<unknown>>('sidepanelTemplate');
 
+    position: KbqSidepanelPosition = KbqSidepanelPosition.Right;
+    size: KbqSidepanelSize = KbqSidepanelSize.Medium;
+    modalState: boolean = false;
     array = new Array(40);
 
     openComponentSidepanel() {

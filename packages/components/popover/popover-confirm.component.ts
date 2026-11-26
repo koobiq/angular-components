@@ -47,6 +47,9 @@ export const KBQ_POPOVER_CONFIRM_BUTTON_TEXT = new InjectionToken<string>('KbqPo
     preserveWhitespaces: false
 })
 export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
+    private readonly confirmButtonTextState = signal<string>(undefined!);
+    private readonly confirmTextState = signal<string>(undefined!);
+
     /**
      * Emits when the confirm button is pressed. Internal channel between the panel and its trigger — consume
      * the trigger's `confirm` output instead.
@@ -64,8 +67,6 @@ export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
         this.confirmButtonTextState.set(value);
     }
 
-    private readonly confirmButtonTextState = signal<string>(undefined!);
-
     /** Question rendered in the panel. Written by the trigger. */
     get confirmText(): string {
         return this.confirmTextState();
@@ -74,8 +75,6 @@ export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
     set confirmText(value: string) {
         this.confirmTextState.set(value);
     }
-
-    private readonly confirmTextState = signal<string>(undefined!);
 }
 
 @Directive({
@@ -94,12 +93,24 @@ export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
     exportAs: 'kbqPopoverConfirm'
 })
 export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
-    /** Emits when the user confirms the action. */
-    readonly confirm = output<void>();
-
     private readonly localeConfiguration = kbqInjectPopoverConfirmLocaleConfiguration();
     private readonly externalConfirmText = inject(KBQ_POPOVER_CONFIRM_TEXT, { optional: true });
     private readonly externalConfirmButtonText = inject(KBQ_POPOVER_CONFIRM_BUTTON_TEXT, { optional: true });
+
+    /** @docs-private */
+    readonly confirmTextInput = input<string | undefined>(undefined, { alias: 'kbqPopoverConfirmText' });
+
+    /** @docs-private */
+    readonly confirmButtonTextInput = input<string | undefined>(undefined, { alias: 'kbqPopoverConfirmButtonText' });
+
+    /** Emits when the user confirms the action. */
+    readonly confirm = output<void>();
+
+    private readonly _confirmText = signal<string | undefined>(undefined);
+    private readonly _confirmButtonText = signal<string | undefined>(undefined);
+
+    /** Panel the confirm handler is currently wired to, so it is wired once per attach. */
+    private wiredInstance: KbqPopoverConfirmComponent | null = null;
 
     /**
      * Input (`kbqPopoverConfirmText`) — question rendered in the panel. Falls back to
@@ -115,8 +126,6 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
 
         this.updateData();
     }
-
-    private readonly _confirmText = signal<string | undefined>(undefined);
 
     /**
      * Input (`kbqPopoverConfirmButtonText`) — caption of the confirm button. Falls back to
@@ -135,31 +144,6 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
         this.updateData();
     }
 
-    private readonly _confirmButtonText = signal<string | undefined>(undefined);
-
-    /** Panel the confirm handler is currently wired to, so it is wired once per attach. */
-    private wiredInstance: KbqPopoverConfirmComponent | null = null;
-
-    /** @docs-private */
-    readonly confirmTextInput = input<string | undefined>(undefined, { alias: 'kbqPopoverConfirmText' });
-
-    /** @docs-private */
-    readonly confirmButtonTextInput = input<string | undefined>(undefined, { alias: 'kbqPopoverConfirmButtonText' });
-
-    override ngOnChanges(changes: SimpleChanges): void {
-        super.ngOnChanges(changes);
-
-        // A bound input is handed to its member, a bound `undefined` restoring the
-        // fallback; unbound, it leaves what code wrote.
-        if (changes['confirmTextInput']) {
-            this.confirmText = this.confirmTextInput();
-        }
-
-        if (changes['confirmButtonTextInput']) {
-            this.confirmButtonText = this.confirmButtonTextInput();
-        }
-    }
-
     constructor() {
         super();
 
@@ -174,6 +158,20 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
             this.instance.confirmText = confirmText;
             this.instance.confirmButtonText = confirmButtonText;
         });
+    }
+
+    override ngOnChanges(changes: SimpleChanges): void {
+        super.ngOnChanges(changes);
+
+        // A bound input is handed to its member, a bound `undefined` restoring the
+        // fallback; unbound, it leaves what code wrote.
+        if (changes['confirmTextInput']) {
+            this.confirmText = this.confirmTextInput();
+        }
+
+        if (changes['confirmButtonTextInput']) {
+            this.confirmButtonText = this.confirmButtonTextInput();
+        }
     }
 
     /** @docs-private */

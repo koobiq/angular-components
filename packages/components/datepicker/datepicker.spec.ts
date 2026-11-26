@@ -158,6 +158,7 @@ const customErrorStateMatcher: ErrorStateMatcher = {
 class DatepickerWithErrorStateMatcher {
     readonly datepickerInput = viewChild.required(KbqDatepickerInput);
     readonly datepickerToggle = viewChild.required(KbqDatepickerToggleIconComponent);
+
     readonly form = new FormGroup({ date: new FormControl<DateTime | null>(null, Validators.required) });
     errorStateMatcher: ErrorStateMatcher = new ErrorStateMatcher();
 }
@@ -178,6 +179,7 @@ class DatepickerWithErrorStateMatcher {
 })
 class DatepickerWithDIErrorStateMatcher {
     readonly datepickerInput = viewChild.required(KbqDatepickerInput);
+
     readonly form = new FormGroup({ date: new FormControl<DateTime | null>(null, Validators.required) });
 }
 
@@ -199,6 +201,7 @@ const getAsyncValidator =
 })
 class DatepickerControlWithAsyncValidators {
     readonly datepickerInput = viewChild.required(KbqDatepickerInput);
+
     readonly control = new FormControl<DateTime | null>(null, {
         asyncValidators: [getAsyncValidator()]
     });
@@ -2776,6 +2779,7 @@ describe('KbqDatepicker', () => {
 })
 class DatepickerWithText {
     readonly datepickerInput = viewChild.required(KbqDatepickerInput);
+
     readonly control = new FormControl<DateTime | null>(DateTime.fromISO('2024-05-17T10:30:00'));
 }
 
@@ -2790,6 +2794,7 @@ class DatepickerWithText {
 })
 class DatepickerWithTextOnBlur {
     readonly datepickerInput = viewChild.required(KbqDatepickerInput);
+
     readonly control = new FormControl<DateTime | null>(DateTime.fromISO('2024-05-17T10:30:00'), { updateOn: 'blur' });
 }
 
@@ -2806,6 +2811,7 @@ const EFFECT_RUN_LIMIT = 10;
 class DatepickerDrivenByEffect {
     readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
     readonly datepickerInput = viewChild.required(KbqDatepickerInput);
+
     readonly control = new FormControl<DateTime | null>(null);
     readonly action = signal<'open' | 'toggle' | 'write' | null>(null);
     runs = 0;
@@ -2873,6 +2879,7 @@ class DatepickerState {
 })
 class DatepickerWithCleaner {
     readonly inputs = viewChildren(KbqDatepickerInput);
+
     readonly control = new FormControl<DateTime | null>(DateTime.local(2024, 5, 17));
     readonly value = signal<DateTime | null>(DateTime.local(2024, 5, 17));
 }
@@ -2903,11 +2910,12 @@ class DatepickerWithStateReader {
     `
 })
 class StandardDatepicker {
+    readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
+    readonly datepickerInput = viewChild.required(KbqDatepickerInput);
+
     opened = false;
     disabled = false;
     date: DateTime | null = DateTime.local(2020, 1, 1);
-    readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
-    readonly datepickerInput = viewChild.required(KbqDatepickerInput);
 }
 
 @Component({
@@ -2964,9 +2972,10 @@ class DatepickerSubclassHost {
     `
 })
 class DatepickerWithStartAt {
+    readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
+
     date = DateTime.local(2020, 1, 1);
     startDate = DateTime.local(2010, 1, 1);
-    readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
 }
 
 @Component({
@@ -2980,11 +2989,11 @@ class DatepickerWithStartAt {
     `
 })
 class DatepickerWithNgModel {
-    adapter = inject_1<DateAdapter<DateTime>>(DateAdapter);
-
-    selected: DateTime | null = null;
     readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
     readonly datepickerInput = viewChild.required(KbqDatepickerInput);
+
+    adapter = inject_1<DateAdapter<DateTime>>(DateAdapter);
+    selected: DateTime | null = null;
 }
 
 @Component({
@@ -2999,10 +3008,11 @@ class DatepickerWithNgModel {
     `
 })
 class DatepickerWithFormControl {
-    formControl = new UntypedFormControl();
     readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
     readonly datepickerInput = viewChild.required(KbqDatepickerInput);
     readonly datepickerToggle = viewChild.required(KbqDatepickerToggleIconComponent);
+
+    formControl = new UntypedFormControl();
 }
 
 @Component({
@@ -3049,6 +3059,7 @@ class DatepickerWithCustomIcon {}
 })
 class DatepickerWithMinAndMaxValidation {
     readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
+
     date: DateTime | null;
     minDate: DateTime | undefined = DateTime.local(2010, 1, 1);
     maxDate: DateTime = DateTime.local(2020, 1, 1);
@@ -3067,7 +3078,9 @@ class DatepickerWithMinAndMaxValidation {
 })
 class DatepickerWithFilterAndValidation {
     readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
+
     date: DateTime;
+
     filter: ((date: DateTime) => boolean) | undefined = (date: DateTime) => date.get('day') !== 1;
 }
 
@@ -3088,8 +3101,9 @@ class DatepickerWithFilterAndValidation {
     `
 })
 class DatepickerWithChangeAndInputEvents {
-    value = null;
     readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
+
+    value = null;
 
     onChange() {}
 
@@ -3109,9 +3123,10 @@ class DatepickerWithChangeAndInputEvents {
     `
 })
 class DatepickerWithi18n {
-    date: DateTime | null = DateTime.local(2010, 1, 1);
     readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
     readonly datepickerInput = viewChild.required(KbqDatepickerInput);
+
+    date: DateTime | null = DateTime.local(2010, 1, 1);
 }
 
 @Component({
@@ -3125,12 +3140,13 @@ class DatepickerWithi18n {
     `
 })
 class DatepickerWithISOStrings {
+    readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
+    readonly datepickerInput = viewChild.required(KbqDatepickerInput);
+
     value = new Date(2017, 5, 1).toISOString();
     min = new Date(2017, 1, 1).toISOString();
     max = new Date(2017, 11, 31).toISOString();
     startAt = new Date(2017, 6, 1).toISOString();
-    readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
-    readonly datepickerInput = viewChild.required(KbqDatepickerInput);
 }
 
 @Component({
@@ -3144,10 +3160,11 @@ class DatepickerWithISOStrings {
     `
 })
 class DatepickerWithEvents {
+    readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
+
     selected: DateTime | null = null;
     openedSpy = vi.fn();
     closedSpy = vi.fn();
-    readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
 }
 
 @Component({
@@ -3208,6 +3225,7 @@ class DatepickerOpeningOnFocus {
 class DelayedDatepicker {
     readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
     readonly datepickerInput = viewChild.required(KbqDatepickerInput);
+
     date: DateTime | null;
     assignedDatepicker: KbqDatepicker<DateTime>;
 }

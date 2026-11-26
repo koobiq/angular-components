@@ -32,10 +32,10 @@ export class ComponentLevelService {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomModalComponent {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly modalRef = inject(KbqModalRef);
     protected readonly customService = inject(ComponentLevelService);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     destroyModal(action: 'save' | 'close') {
         this.modalRef.destroy(action);
@@ -55,11 +55,10 @@ export class CustomModalComponent {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalComponentWithInjectorExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly modalService = inject(KbqModalService);
     private readonly injector = inject(Injector);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     modalRef?: KbqModalRef<CustomModalComponent, 'save' | 'close'>;
 
     openModal(): void {

@@ -20,6 +20,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class ButtonLoadingStateExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     colors = KbqComponentColors;
 }

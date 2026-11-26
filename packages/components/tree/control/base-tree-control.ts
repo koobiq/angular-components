@@ -17,7 +17,6 @@ export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
      * Set it before anything is expanded: keys stored under another function no longer match.
      */
     trackBy?: (dataNode: T) => K;
-
     filterModel: SelectionModel<T> = new SelectionModel<T>(true);
 
     /**
@@ -32,11 +31,6 @@ export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
      * Set by `FlatTreeControl.applyFilter`; stays `null` on controls without filtering, such as `NestedTreeControl`.
      */
     filterQuery: string | null = null;
-
-    /** Whether a filter is active: the filter model holds at least one node, or a query is set. */
-    get hasActiveFilter(): boolean {
-        return this.filterModel.selected.length > 0 || this.filterQuery != null;
-    }
 
     /**
      * Get depth of a given data node, return the level number. This is for flat tree node: `FlatTreeControl` sets
@@ -55,6 +49,11 @@ export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
      * `FlatTreeControl` leaves it `undefined`.
      */
     getChildren: ((dataNode: T) => Observable<T[]>) | undefined;
+
+    /** Whether a filter is active: the filter model holds at least one node, or a query is set. */
+    get hasActiveFilter(): boolean {
+        return this.filterModel.selected.length > 0 || this.filterQuery != null;
+    }
 
     /** Gets a list of descendent data nodes of a subtree rooted at given data node recursively. */
     abstract getDescendants(dataNode: T): T[];

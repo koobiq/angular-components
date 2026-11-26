@@ -79,7 +79,6 @@ class NumberInputTestComponent {
     value: number | null = null;
     disabled = false;
     readonly = false;
-
     stepUp = vi.fn().mockImplementation(() => true);
     stepDown = vi.fn().mockImplementation(() => false);
 }
@@ -101,7 +100,6 @@ class NumberInputTestComponent {
 class TestNumberInputConditional {
     isVisible = true;
     value: number | null = null;
-
     stepUp = vi.fn().mockImplementation(() => true);
     stepDown = vi.fn().mockImplementation(() => false);
 }
@@ -262,14 +260,14 @@ class NumberInputWithCleaner {
 class NumberInputWithMask {
     localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
 
+    readonly inputNumberDirective = viewChild.required(KbqNumberInput);
+
     value: number | null = null;
     max: number = 10;
     min: number = 3;
     step: number = 1;
     bigStep: number = 5;
     withMask = true;
-
-    readonly inputNumberDirective = viewChild.required(KbqNumberInput);
 }
 
 @Component({
@@ -294,12 +292,12 @@ class NumberInputWithMask {
 class NumberInputWithInteger {
     localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
 
+    readonly inputNumberDirective = viewChild.required(KbqNumberInput);
+
     value: number | null = null;
     readonly = false;
     step: number = 1;
     bigStep: number = 5;
-
-    readonly inputNumberDirective = viewChild.required(KbqNumberInput);
 }
 
 @Component({
@@ -383,14 +381,14 @@ class NumberInputWithBoundValue {
 class NumberInputConfigurable {
     localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
 
+    readonly inputNumberDirective = viewChild.required(KbqNumberInput);
+
     value: number | null = null;
     min: number | undefined = undefined;
     max: number | undefined = undefined;
     step: number = 1;
     integer = false;
     startFormattingFrom: number | undefined = undefined;
-
-    readonly inputNumberDirective = viewChild.required(KbqNumberInput);
 }
 
 @Component({

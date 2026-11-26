@@ -45,20 +45,17 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class AgGridRowDraggingExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,
         width: 140
     };
-
     protected readonly rowSelection: RowSelectionOptions = {
         mode: 'multiRow',
         headerCheckbox: true,
         checkboxes: true,
         hideDisabledCheckboxes: false
     };
-
     protected readonly columnDefs = computed(() =>
         exampleIncidentColumns(
             this.t().headers,
@@ -70,7 +67,6 @@ export class AgGridRowDraggingExample {
             'category'
         )
     );
-
     protected readonly rowData = exampleGetIncidents();
 
     protected onFirstDataRendered({ api }: FirstDataRenderedEvent): void {

@@ -52,7 +52,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class IconButtonStyleExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     colors = [
         KbqComponentColors.Theme,
         KbqComponentColors.Contrast,

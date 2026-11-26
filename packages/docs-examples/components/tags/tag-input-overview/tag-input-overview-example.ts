@@ -55,11 +55,13 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Tag ${i}` }
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagInputOverviewExample {
-    protected readonly colors = KbqComponentColors;
     protected readonly removable = model(true);
     protected readonly tags = model(getTags());
-    protected readonly separators = [COMMA, SPACE, SEMICOLON, ENTER, TAB];
+
     private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
+
+    protected readonly colors = KbqComponentColors;
+    protected readonly separators = [COMMA, SPACE, SEMICOLON, ENTER, TAB];
 
     protected removed(event: KbqTagEvent): void {
         this.tags.update((tags) => {

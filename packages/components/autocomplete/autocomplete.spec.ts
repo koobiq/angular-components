@@ -3570,6 +3570,11 @@ describe('KbqAutocomplete', () => {
     `
 })
 class SimpleAutocomplete implements OnDestroy {
+    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+    readonly panel = viewChild.required(KbqAutocomplete);
+    readonly formField = viewChild.required(KbqFormField);
+    readonly options = viewChildren(KbqOption);
+
     stateCtrl = new UntypedFormControl();
     filteredStates: any[];
     valueSub: Subscription;
@@ -3582,12 +3587,6 @@ class SimpleAutocomplete implements OnDestroy {
     displayWith: ((value: any) => string) | null = this.displayFn;
     openedSpy = vi.fn();
     closedSpy = vi.fn();
-
-    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
-    readonly panel = viewChild.required(KbqAutocomplete);
-    readonly formField = viewChild.required(KbqFormField);
-    readonly options = viewChildren(KbqOption);
-
     states = [
         { code: 'AL', name: 'Alabama' },
         { code: 'CA', name: 'California' },
@@ -3609,12 +3608,12 @@ class SimpleAutocomplete implements OnDestroy {
         });
     }
 
-    displayFn(value: any): string {
-        return value ? value.name : value;
-    }
-
     ngOnDestroy() {
         this.valueSub.unsubscribe();
+    }
+
+    displayFn(value: any): string {
+        return value ? value.name : value;
     }
 }
 
@@ -3654,6 +3653,11 @@ class SimpleAutocomplete implements OnDestroy {
     encapsulation: ViewEncapsulation.ShadowDom
 })
 class TestShadowDomAutocomplete implements OnDestroy {
+    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+    readonly panel = viewChild.required(KbqAutocomplete);
+    readonly formField = viewChild.required(KbqFormField);
+    readonly options = viewChildren(KbqOption);
+
     stateCtrl = new UntypedFormControl();
     filteredStates: any[];
     valueSub: Subscription;
@@ -3663,12 +3667,6 @@ class TestShadowDomAutocomplete implements OnDestroy {
     displayWith: ((value: any) => string) | null = this.displayFn;
     openedSpy = vi.fn();
     closedSpy = vi.fn();
-
-    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
-    readonly panel = viewChild.required(KbqAutocomplete);
-    readonly formField = viewChild.required(KbqFormField);
-    readonly options = viewChildren(KbqOption);
-
     states = [
         { code: 'AL', name: 'Alabama' },
         { code: 'CA', name: 'California' },
@@ -3690,12 +3688,12 @@ class TestShadowDomAutocomplete implements OnDestroy {
         });
     }
 
-    displayFn(value: any): string {
-        return value ? value.name : value;
-    }
-
     ngOnDestroy() {
         this.valueSub.unsubscribe();
+    }
+
+    displayFn(value: any): string {
+        return value ? value.name : value;
     }
 }
 
@@ -3723,13 +3721,13 @@ class TestShadowDomAutocomplete implements OnDestroy {
     `
 })
 class NgIfAutocomplete {
+    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+    readonly kbqOptions = viewChildren(KbqOption);
+
     optionCtrl = new UntypedFormControl();
     filteredOptions: Observable<any>;
     isVisible = true;
     options = ['One', 'Two', 'Three'];
-
-    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
-    readonly kbqOptions = viewChildren(KbqOption);
 
     constructor() {
         this.filteredOptions = this.optionCtrl.valueChanges.pipe(
@@ -3862,6 +3860,7 @@ class AutocompleteWithNumbers {
 })
 class AutocompleteWithOnPushDelay implements OnInit {
     readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+
     readonly options = signal<string[]>([]);
 
     ngOnInit() {
@@ -3888,12 +3887,12 @@ class AutocompleteWithOnPushDelay implements OnInit {
     `
 })
 class AutocompleteWithNativeInput {
+    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+    readonly kbqOptions = viewChildren(KbqOption);
+
     optionCtrl = new UntypedFormControl();
     filteredOptions: Observable<any>;
     options = ['En', 'To', 'Tre', 'Fire', 'Fem'];
-
-    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
-    readonly kbqOptions = viewChildren(KbqOption);
 
     constructor() {
         this.filteredOptions = this.optionCtrl.valueChanges.pipe(
@@ -3916,6 +3915,7 @@ class AutocompleteWithNativeInput {
 })
 class AutocompleteWithoutPanel {
     readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+
     control = new UntypedFormControl();
 }
 
@@ -3942,10 +3942,11 @@ class AutocompleteWithoutPanel {
     `
 })
 class AutocompleteInTagList {
-    readonly tags = ['Alpha', 'Beta'];
     readonly trigger = viewChild.required(KbqAutocompleteTrigger);
     readonly tagList = viewChild.required(KbqTagList);
     readonly input = viewChild.required(KbqInput);
+
+    readonly tags = ['Alpha', 'Beta'];
 }
 
 @Component({
@@ -3962,9 +3963,10 @@ class AutocompleteInTagList {
     `
 })
 class AutocompleteRenderedLater {
-    readonly panelShown = signal(false);
     readonly trigger = viewChild.required(KbqAutocompleteTrigger);
     readonly autocomplete = viewChild(KbqAutocomplete);
+
+    readonly panelShown = signal(false);
 }
 
 @Component({
@@ -3988,12 +3990,12 @@ class AutocompleteRenderedLater {
     `
 })
 class AutocompleteWithSelectEvent {
+    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+    readonly autocomplete = viewChild.required(KbqAutocomplete);
+
     selectedState: string;
     states = ['New York', 'Washington', 'Oregon'];
     optionSelected = vi.fn();
-
-    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
-    readonly autocomplete = viewChild.required(KbqAutocomplete);
 }
 
 @Component({
@@ -4121,7 +4123,6 @@ class AutocompleteWithDisabledItems {
     readonly trigger = viewChild.required(KbqAutocompleteTrigger);
 
     autoActiveFirstOption = false;
-
     selectedState: string;
     states = [
         { code: 'AL', name: 'Alabama', disabled: true },
@@ -4162,7 +4163,6 @@ class AutocompleteWithOpenOnFocus {
     readonly trigger = viewChild.required(KbqAutocompleteTrigger);
 
     openOnFocus = false;
-
     selectedState: string;
     states = [
         { code: 'AL', name: 'Alabama' },
@@ -4281,12 +4281,11 @@ class AutocompleteWithChangingClass {
     `
 })
 class CaretAutocomplete {
+    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+
     panelMinWidth: number = KBQ_PANEL_DEFAULT_MIN_WIDTH;
     panelWidth: KbqPanelWidth | undefined;
-
     readonly states = ['Alabama', 'Alaska', 'California'];
-
-    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
 }
 
 const TEXT_OPTIONS = ['текст песни', 'тектоник', 'текстурайзер', '/bold', '/italic'];
@@ -4322,30 +4321,26 @@ const TEXT_OPTIONS = ['текст песни', 'тектоник', 'тексту
     `
 })
 class TextModeAutocomplete {
-    readonly textCtrl = new UntypedFormControl('');
+    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
 
+    private readonly query = signal<string | null>(null);
+
+    readonly textCtrl = new UntypedFormControl('');
     textMode = true;
     inlineHint = true;
     minLength: number | undefined;
     triggers: string[] = [];
     displayWith: ((value: string) => string) | null = null;
-
     readonly queries: (string | null)[] = [];
-
     readonly triggersSeen: (string | null)[] = [];
 
     /** Whether every option is shown while there is no query, as for a panel opened with `open()`. */
     readonly showAllOptions = signal(false);
-
-    private readonly query = signal<string | null>(null);
-
     readonly filteredOptions = computed(() => {
         const query = this.query()?.toLocaleLowerCase() ?? (this.showAllOptions() ? '' : undefined);
 
         return query === undefined ? [] : TEXT_OPTIONS.filter((option) => option.toLocaleLowerCase().includes(query));
     });
-
-    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
 
     onQueryChange(query: KbqTextQuery | null): void {
         this.queries.push(query?.text ?? null);
@@ -4372,9 +4367,9 @@ class TextModeAutocomplete {
     `
 })
 class TextModeEmailAutocomplete {
-    readonly ctrl = new UntypedFormControl('');
-
     readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+
+    readonly ctrl = new UntypedFormControl('');
 }
 
 @Component({
@@ -4512,7 +4507,6 @@ class TextFieldOnPush {
 })
 class TextFieldOnPushHost {
     protected readonly query = signal<string | null>(null);
-
     protected readonly filteredOptions = computed(() => {
         const query = this.query()?.toLocaleLowerCase();
 
@@ -4616,6 +4610,7 @@ class AutocompleteInModalHost {
 })
 class AutocompleteDrivenByEffects {
     readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+
     readonly states = signal(['Alabama', 'California']);
     readonly wantOpen = signal(false);
     readonly closeOnOptionsChange = signal(false);

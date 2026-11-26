@@ -71,12 +71,24 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
         'a11y',
         KBQ_A11Y_LOCALE_CONFIGURATION
     );
+    private readonly destroyRef = inject(DestroyRef);
 
     /**
      * Accessible name of the button. The rendered content is an icon, so without a name the button
      * is announced as unlabelled; defaults to the localized "option actions" text.
      */
     readonly ariaLabel = input<string>(undefined!, { alias: 'aria-label' });
+
+    /** Whether the action is disabled. */
+    readonly disabled = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
+
+    /**
+     * Value of the `disabled` and `aria-disabled` attributes.
+     *
+     * @docs-private
+     */
+    protected readonly disabledAttribute = computed(() => this.disabled() || null);
+    hasFocus: boolean = false;
 
     /**
      * Accessible name written to the host.
@@ -96,23 +108,9 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
         );
     }
 
-    /** Whether the action is disabled. */
-    readonly disabled = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
-
-    /**
-     * Value of the `disabled` and `aria-disabled` attributes.
-     *
-     * @docs-private
-     */
-    protected readonly disabledAttribute = computed(() => this.disabled() || null);
-
-    hasFocus: boolean = false;
-
     get active(): boolean {
         return this.hasFocus || !!this.option.dropdownTrigger?.opened;
     }
-
-    private readonly destroyRef = inject(DestroyRef);
 
     ngAfterViewInit(): void {
         this.focusMonitor

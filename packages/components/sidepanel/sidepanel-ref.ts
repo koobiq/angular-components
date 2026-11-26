@@ -17,25 +17,8 @@ import type { KbqSidepanelContainerComponent } from './sidepanel-container.compo
 let uniqueId = 0;
 
 export class KbqSidepanelRef<T = any, R = any> {
-    readonly id: string;
-
-    /**
-     * Guard intercepting every close attempt. Takes precedence over `config.canClose` and can be
-     * assigned or replaced after the panel was opened. Defaults to the config's `canClose`.
-     */
-    canClose: KbqCanClose | undefined;
-
     /** Whether an async `canClose` decision is pending. */
     private isGuarding = false;
-
-    /**
-     * Vertical scroll overflow state of the sidepanel body.
-     * Updated on scroll and used for visual adjustments.
-     */
-    readonly bodyOverflow = signal<KbqOverflowShadowState>({ top: false, bottom: false });
-
-    /** Instance of the component making up the content of the sidepanel, `undefined` when it was opened with a template. */
-    instance: T | undefined;
 
     /** Subject for notifying the user that the sidepanel has been closed and dismissed. */
     private readonly afterClosed$ = new Subject<R | undefined>();
@@ -51,6 +34,23 @@ export class KbqSidepanelRef<T = any, R = any> {
 
     /** Whether `close()` has already started the closing animation. */
     private closing = false;
+
+    readonly id: string;
+
+    /**
+     * Guard intercepting every close attempt. Takes precedence over `config.canClose` and can be
+     * assigned or replaced after the panel was opened. Defaults to the config's `canClose`.
+     */
+    canClose: KbqCanClose | undefined;
+
+    /**
+     * Vertical scroll overflow state of the sidepanel body.
+     * Updated on scroll and used for visual adjustments.
+     */
+    readonly bodyOverflow = signal<KbqOverflowShadowState>({ top: false, bottom: false });
+
+    /** Instance of the component making up the content of the sidepanel, `undefined` when it was opened with a template. */
+    instance: T | undefined;
 
     constructor(
         public readonly containerInstance: KbqSidepanelContainerComponent,

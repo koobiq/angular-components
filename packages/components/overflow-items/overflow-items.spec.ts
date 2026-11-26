@@ -225,6 +225,7 @@ const getOverflowItemsDirective = (debugElement: DebugElement): KbqOverflowItems
 })
 class TestOverflowItemHiddenByEffect {
     readonly item = viewChild.required(KbqOverflowItem);
+
     readonly alwaysVisible = signal(false);
     readonly wantHidden = signal(false);
 

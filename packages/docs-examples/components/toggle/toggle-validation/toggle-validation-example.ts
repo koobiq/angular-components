@@ -31,6 +31,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class ToggleValidationExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly backup = new FormControl(true, { nonNullable: true, validators: Validators.requiredTrue });
 }

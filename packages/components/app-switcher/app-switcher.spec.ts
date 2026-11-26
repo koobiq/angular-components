@@ -2369,8 +2369,9 @@ class AppSwitcherBoundInputs {
     placement: KbqPopUpPlacementValues | undefined = PopUpPlacements.Top;
     backdropClass: string | undefined = 'custom-backdrop';
     sites: KbqAppSwitcherSite[] | undefined = [{ ...GROUP_SITE, apps: [...GROUP_SITE.apps] }];
-    groupBy: KbqAppSwitcherGroupBy | undefined = (app, _groups, untyped) => untyped.push(app);
     offset: number | null | undefined = 4;
+
+    groupBy: KbqAppSwitcherGroupBy | undefined = (app, _groups, untyped) => untyped.push(app);
 }
 
 @Component({

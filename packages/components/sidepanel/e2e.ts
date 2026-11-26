@@ -74,13 +74,17 @@ type SidepanelState = {
     }
 })
 export class E2eSidepanelStateAndStyle implements OnDestroy {
-    protected readonly template = viewChild.required<TemplateRef<any>>('sidepanel');
     protected readonly sidepanelService = inject(KbqSidepanelService);
 
-    protected readonly items = Array.from({ length: 50 }, (_, i) => `Item #${i}`);
+    protected readonly template = viewChild.required<TemplateRef<any>>('sidepanel');
 
+    protected readonly items = Array.from({ length: 50 }, (_, i) => `Item #${i}`);
     protected readonly sidepanelSize = KbqSidepanelSize;
     protected readonly sidepanelPosition = KbqSidepanelPosition;
+
+    ngOnDestroy() {
+        this.sidepanelService.closeAll();
+    }
 
     getId(type: string) {
         return `e2e-sidepanel-${type}`;
@@ -104,10 +108,6 @@ export class E2eSidepanelStateAndStyle implements OnDestroy {
 
     openNested({ size, position }: SidepanelState): void {
         [0, 1].forEach(() => this.open({ size, position }));
-    }
-
-    ngOnDestroy() {
-        this.sidepanelService.closeAll();
     }
 }
 
@@ -154,12 +154,12 @@ class SidepanelComponentPortalContent {
 export class E2eSidepanelComponentPortal implements OnDestroy {
     private readonly sidepanelService = inject(KbqSidepanelService);
 
-    protected open(): void {
-        this.sidepanelService.open(SidepanelComponentPortalContent, { size: KbqSidepanelSize.Medium });
-    }
-
     ngOnDestroy(): void {
         this.sidepanelService.closeAll();
+    }
+
+    protected open(): void {
+        this.sidepanelService.open(SidepanelComponentPortalContent, { size: KbqSidepanelSize.Medium });
     }
 }
 
@@ -181,14 +181,15 @@ export class E2eSidepanelComponentPortal implements OnDestroy {
     }
 })
 export class E2eSidepanelScrollbarNoOverflow implements OnDestroy {
-    private readonly template = viewChild.required<TemplateRef<unknown>>('sidepanel');
     private readonly sidepanelService = inject(KbqSidepanelService);
 
-    protected open(): void {
-        this.sidepanelService.open(this.template(), { size: KbqSidepanelSize.Medium });
-    }
+    private readonly template = viewChild.required<TemplateRef<unknown>>('sidepanel');
 
     ngOnDestroy(): void {
         this.sidepanelService.closeAll();
+    }
+
+    protected open(): void {
+        this.sidepanelService.open(this.template(), { size: KbqSidepanelSize.Medium });
     }
 }

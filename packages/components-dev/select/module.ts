@@ -214,7 +214,6 @@ export class DevPanelAnchor {
     /** Ten of these in a narrow field wrap onto ten rows, which is taller than the 256px panel. */
     readonly options = Array.from({ length: 10 }, (_, index) => `Опция ${index}`);
     readonly control = new UntypedFormControl(this.options);
-
     protected readonly top = signal(120);
     protected readonly fieldWidth = signal(180);
     protected readonly pinned = signal(true);
@@ -282,28 +281,23 @@ export class DevApp {
     singleSelected = '';
     multipleSelected = ['Disabled', 'Normal', 'Hovered', 'Selected', 'Selected1'];
     multipleSelectedForCustomTagText = ['Normal', 'Hovered'];
-
     singleSelectedWithSearch = 'Moscow';
     multipleSelectedWithSearch = ['Dzerzhinsk', 'Pskov'];
-
     singleSelectFormControl = new UntypedFormControl('', Validators.required);
-
     multiSelectSelectFormControl = new UntypedFormControl([], Validators.pattern(/^w/));
-
     searchCtrl: UntypedFormControl = new UntypedFormControl();
     filteredOptions: Observable<string[]> = merge(
         of(DEV_OPTIONS),
         this.searchCtrl.valueChanges.pipe(map((value) => this.getFilteredOptions(value)))
     );
-
     multipleSearchCtrl: UntypedFormControl = new UntypedFormControl();
     filteredMultipleOptions: Observable<string[]> = merge(
         of(DEV_OPTIONS),
         this.multipleSearchCtrl.valueChanges.pipe(map((value) => this.getFilteredOptions(value)))
     );
+    readonly cdkVirtualScrollViewport = viewChild.required(CdkVirtualScrollViewport);
 
     optionCounter = 0;
-
     options: string[] = DEV_OPTIONS.sort();
     selectedOptionsAsObject = [
         { id: 3, name: 'Anapa' },
@@ -313,12 +307,8 @@ export class DevApp {
     optionsObj: { id: number; name: string }[] = DEV_OPTIONS.sort().map((option, index) => {
         return { id: index, name: option, active: true };
     });
-
     initialRange: ListRange = { start: 0, end: 7 } as unknown as ListRange;
-
     selected = ['Almetyevsk', 'Yaroslavl'];
-
-    readonly cdkVirtualScrollViewport = viewChild.required(CdkVirtualScrollViewport);
 
     compareWithById = (o1: any, o2: any): boolean => o1 && o2 && o1.id === o2.id;
 

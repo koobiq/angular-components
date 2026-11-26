@@ -47,20 +47,23 @@ export class KbqOptgroupLabel {}
     exportAs: 'kbqOptgroup'
 })
 export class KbqOptgroup implements AfterContentInit {
+    private readonly nativeElement = kbqInjectNativeElement();
+
     /** Plain-text heading of the group; content projected with `kbq-optgroup-label` takes precedence. */
     readonly label = input<string>(undefined!);
 
     /** Whether the group, and every option in it, is disabled. */
     readonly disabled = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
 
-    /** Unique id for the underlying label. */
-    labelId: string = `kbq-optgroup-label-${uniqueOptgroupIdCounter++}`;
-
     private readonly projectedLabels = contentChildren(KbqOptgroupLabel);
-
     private readonly projectedOptions = contentChildren(KBQ_GROUP_OPTION, { descendants: true });
 
     private readonly selectedCountState = computed(() => this.projectedOptions().filter((o) => o.selected).length);
+    private warnedAboutExtraLabels = false;
+    private warnedAboutLabelWithoutDirective = false;
+
+    /** Unique id for the underlying label. */
+    labelId: string = `kbq-optgroup-label-${uniqueOptgroupIdCounter++}`;
 
     /** @docs-private */
     protected readonly hasProjectedLabel = computed(() => this.projectedLabels().length > 0);
@@ -104,10 +107,4 @@ export class KbqOptgroup implements AfterContentInit {
         // eslint-disable-next-line no-console
         console.warn('KbqOptgroup: at most one kbq-optgroup-label is supported; every extra one also renders.');
     }
-
-    private readonly nativeElement = kbqInjectNativeElement();
-
-    private warnedAboutExtraLabels = false;
-
-    private warnedAboutLabelWithoutDirective = false;
 }

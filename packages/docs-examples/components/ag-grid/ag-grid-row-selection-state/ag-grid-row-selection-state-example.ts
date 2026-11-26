@@ -58,8 +58,6 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class AgGridRowSelectionStateExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
-    protected readonly getRowId = (params: GetRowIdParams<ExampleSecurityIncident>): string => params.data.id;
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true
@@ -71,4 +69,6 @@ export class AgGridRowSelectionStateExample {
     };
     protected readonly columnDefs = computed(() => exampleIncidentColumns(this.t().headers));
     protected readonly rowData = exampleGetIncidents();
+
+    protected readonly getRowId = (params: GetRowIdParams<ExampleSecurityIncident>): string => params.data.id;
 }

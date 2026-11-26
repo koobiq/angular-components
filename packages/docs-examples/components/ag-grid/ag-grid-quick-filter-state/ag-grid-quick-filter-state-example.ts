@@ -55,9 +55,9 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridQuickFilterStateExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly filter = model('');
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly columnDefs = computed(() => exampleIncidentColumns(this.t().headers));
     protected readonly rowData = exampleGetIncidents();
 }

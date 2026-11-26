@@ -145,6 +145,16 @@ export class KbqLink implements AfterViewChecked {
     private readonly options = inject(KBQ_LINK_OPTIONS);
     private readonly nativeElement = kbqInjectNativeElement<HTMLElement>();
 
+    /**
+     * The role written on the element in the template. Such an element owns its semantics and its keyboard, and
+     * the binding keeps the role in place. It is read from the template rather than from the element: on a
+     * hydrated page the element already carries the role this component rendered on the server.
+     */
+    private readonly declaredRole = inject(new HostAttributeToken('role'), { optional: true });
+
+    /** Whether the link is disabled. */
+    readonly disabled = input(false, { transform: booleanAttribute });
+
     private readonly textElement = viewChild.required<ElementRef<HTMLElement>>('text');
 
     /**
@@ -152,13 +162,6 @@ export class KbqLink implements AfterViewChecked {
      * assistive tech, so the state is exposed through ARIA there instead.
      */
     private readonly hostSupportsNativeDisabled = supportsNativeDisabled(this.nativeElement);
-
-    /**
-     * The role written on the element in the template. Such an element owns its semantics and its keyboard, and
-     * the binding keeps the role in place. It is read from the template rather than from the element: on a
-     * hydrated page the element already carries the role this component rendered on the server.
-     */
-    private readonly declaredRole = inject(new HostAttributeToken('role'), { optional: true });
 
     /**
      * Whether a pseudo link may supply the button semantics itself: a `<button>` and a `<label>` are
@@ -175,9 +178,6 @@ export class KbqLink implements AfterViewChecked {
 
     /** The text nodes trimmed at an edge of the text, with their data before, for one that leaves the edge. */
     private readonly trimmedTexts = new Map<Text, { source: string; trimmed: string }>();
-
-    /** Whether the link is disabled. */
-    readonly disabled = input(false, { transform: booleanAttribute });
 
     /**
      * Effective disabled state, mirroring the `disabled` input. It stays writable because `kbqTooltip`
@@ -237,17 +237,17 @@ export class KbqLink implements AfterViewChecked {
     /** @docs-private */
     protected readonly isPseudo = computed(() => this.pseudo() || !this.anchor);
 
-    /** @docs-private */
-    protected readonly underlineMode = computed(
-        () => this.underline() ?? this.options.underline ?? (this.isPseudo() ? 'hover' : 'always')
-    );
-
     /**
      * Whether the pseudo link is a button of its own. One taken out of the tab order with a negative
      * `tabIndex` is activated through something else - the file input of a file upload's label, for
      * instance - and gets neither the role nor the keyboard.
      */
     private readonly actsAsButton = computed(() => this.isPseudo() && this.ownsPseudoSemantics && this.tabIndex() >= 0);
+
+    /** @docs-private */
+    protected readonly underlineMode = computed(
+        () => this.underline() ?? this.options.underline ?? (this.isPseudo() ? 'hover' : 'always')
+    );
 
     /** @docs-private */
     protected readonly role = computed(() => (this.actsAsButton() ? 'button' : this.declaredRole));
