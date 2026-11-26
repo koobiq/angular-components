@@ -1,19 +1,61 @@
-import { expect, test } from '@playwright/test';
+import { expect, type Locator, type Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme } from '../../e2e/utils';
 
-test.describe('Slider', () => {
-    test.beforeEach(async ({ page }, testInfo) => {
-        if (testInfo.title !== 'states and appearance') await page.goto('/E2eSliderInteraction');
+test.describe('Slider appearance', () => {
+    test.beforeEach(async ({ page }) => {
+        await page.goto('/E2eSliderStateAndStyle');
+        await page.mouse.move(1100, 700);
     });
 
-    test('states and appearance', async ({ page }) => {
-        await page.goto('/E2eSliderStateAndStyle');
-        const target = page.getByTestId('e2eScreenshotTarget');
-
-        await page.mouse.move(1100, 700);
-        await expect(target).toHaveScreenshot('01-light.png');
+    const capture = async (page: Page, target: Locator, name: string) => {
+        await expect(target).toHaveScreenshot(`${name}-light.png`);
         await e2eEnableDarkTheme(page);
-        await expect(target).toHaveScreenshot('01-dark.png');
+        await expect(target).toHaveScreenshot(`${name}-dark.png`);
+    };
+
+    for (const [number, group] of [
+        ['01', 'states'],
+        ['02', 'input'],
+        ['03', 'fill'],
+        ['04', 'marks-and-thumbs']
+    ] as const) {
+        test(group, async ({ page }) => {
+            const target = page.getByTestId(group).getByTestId('e2eScreenshotTarget');
+
+            await expect(target).toHaveCSS('display', 'inline-grid');
+            await capture(page, target, `${number}-${group}`);
+        });
+    }
+
+    test('direction', async ({ page }) => {
+        const target = page.getByTestId('direction').getByTestId('e2eScreenshotTarget');
+        const rtlThumb = target.locator('[dir="rtl"] .kbq-slider__thumb');
+
+        await expect(rtlThumb).toHaveCSS('--kbq-slider-position', '70%');
+        await capture(page, target, '05-direction');
+    });
+
+    test('focus-and-tooltip', async ({ page }) => {
+        const target = page.getByTestId('focus-and-tooltip').getByTestId('e2eScreenshotTarget');
+        const thumbs = target.getByRole('slider');
+
+        await target.scrollIntoViewIfNeeded();
+        await thumbs.first().focus();
+        await page.keyboard.press('Tab');
+        await expect(thumbs.last()).toBeFocused();
+        await expect(page.locator('.kbq-slider__tooltip')).toBeVisible();
+        await capture(page, target, '06-focus-and-tooltip');
+    });
+});
+
+test.describe('Slider interactions', () => {
+    test.beforeEach(async ({ page }) => {
+        await page.goto('/E2eSliderInteraction');
+    });
+
+    test('shows the tooltip when hovering the thumb', async ({ page }) => {
+        await page.getByTestId('single').getByRole('slider').hover();
+        await expect(page.locator('.kbq-slider__tooltip')).toBeVisible();
     });
 
     test('supports track clicks and one commit for keyboard repeat', async ({ page }) => {

@@ -3,44 +3,113 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqInputSlider } from './input-slider';
 import { KbqSlider } from './slider';
-import type { KbqSliderCollision, KbqSliderCommit, KbqSliderValue } from './slider.types';
+import type { KbqSliderCollision, KbqSliderCommit, KbqSliderFill, KbqSliderValue } from './slider.types';
 
 @Component({
     selector: 'e2e-slider-state-and-style',
-    imports: [KbqSlider, KbqInputSlider],
+    imports: [Dir, KbqSlider, KbqInputSlider],
     template: `
-        <main data-testid="e2eScreenshotTarget" class="e2e-slider-matrix">
-            @for (state of states; track state) {
-                <kbq-slider
-                    aria-label="Value"
-                    [value]="30"
-                    [disabled]="state === 'Disabled'"
-                    [readonly]="state === 'Read-only'"
-                    [errorStateMatcher]="state === 'Invalid' ? invalidMatcher : undefined"
-                />
-                <kbq-slider
-                    [thumbLabels]="['Lower', 'Upper']"
-                    [value]="[25, 75]"
-                    [disabled]="state === 'Disabled'"
-                    [readonly]="state === 'Read-only'"
-                    [errorStateMatcher]="state === 'Invalid' ? invalidMatcher : undefined"
-                />
-            }
-            <kbq-slider aria-label="Value" [value]="50" [marks]="marks" />
-            <kbq-slider aria-label="Value" class="e2e-slider-round" [value]="50" [marks]="marks" />
-            <kbq-input-slider aria-label="Value" [value]="70" />
-            <kbq-input-slider [value]="[25, 75]" [thumbLabels]="['Lower', 'Upper']" />
-            <kbq-slider vertical aria-label="Value" [value]="30" />
-            <kbq-slider vertical [value]="[25, 75]" [thumbLabels]="['Lower', 'Upper']" />
-        </main>
+        <section data-testid="states">
+            <div data-testid="e2eScreenshotTarget">
+                @for (state of states; track state) {
+                    @for (value of selections; track value) {
+                        <kbq-slider
+                            aria-label="Value"
+                            [value]="value"
+                            [disabled]="state === 'disabled'"
+                            [readonly]="state === 'readonly'"
+                            [errorStateMatcher]="state === 'invalid' ? invalidMatcher : undefined"
+                        />
+                    }
+                }
+            </div>
+        </section>
+        <section data-testid="input">
+            <div data-testid="e2eScreenshotTarget">
+                @for (state of states; track state) {
+                    @for (value of selections; track value) {
+                        <kbq-input-slider
+                            aria-label="Value"
+                            [value]="value"
+                            [disabled]="state === 'disabled'"
+                            [readonly]="state === 'readonly'"
+                            [errorStateMatcher]="state === 'invalid' ? invalidMatcher : undefined"
+                        />
+                    }
+                }
+                <kbq-input-slider aria-label="Value" unit="%" [value]="70" />
+                <kbq-input-slider aria-label="Value" [showStepper]="false" [value]="70" />
+            </div>
+        </section>
+        <section data-testid="fill">
+            <div data-testid="e2eScreenshotTarget" class="e2e-fills">
+                @for (fill of fills; track fill) {
+                    <kbq-slider
+                        aria-label="Value"
+                        [value]="fill === 'outside' ? [25, 75] : 30"
+                        [fill]="fill"
+                        [fillOrigin]="50"
+                    />
+                }
+            </div>
+        </section>
+        <section data-testid="marks-and-thumbs">
+            <div data-testid="e2eScreenshotTarget" class="e2e-marks-and-thumbs">
+                <kbq-slider aria-label="Value" [value]="50" [marks]="ticks" />
+                <kbq-slider aria-label="Value" [value]="50" [marks]="marks" />
+                <kbq-slider aria-label="Value" [value]="50" />
+                <kbq-slider class="e2e-slider-round" aria-label="Value" [value]="50" />
+                <kbq-slider aria-label="Value" [value]="[0, 100]" />
+                <kbq-slider thumbAlignment="center" aria-label="Value" [value]="[0, 100]" />
+            </div>
+        </section>
+        <section data-testid="direction">
+            <div data-testid="e2eScreenshotTarget" class="e2e-direction">
+                <div class="e2e-horizontal">
+                    <kbq-slider aria-label="Value" [value]="30" />
+                    <div dir="rtl">
+                        <kbq-slider aria-label="Value" [value]="30" />
+                    </div>
+                    <kbq-slider reversed aria-label="Value" [value]="30" />
+                </div>
+                <kbq-slider vertical aria-label="Value" [value]="30" />
+                <kbq-slider vertical aria-label="Value" [value]="[25, 75]" />
+            </div>
+        </section>
+        <section data-testid="focus-and-tooltip">
+            <div data-testid="e2eScreenshotTarget" class="e2e-tooltip">
+                <kbq-slider aria-label="Value" [value]="30" />
+                <kbq-slider showTooltip aria-label="Value" [value]="30" />
+            </div>
+        </section>
     `,
     styles: `
-        .e2e-slider-matrix {
+        [data-testid='e2eScreenshotTarget'] {
             display: inline-grid;
-            grid-template-columns: repeat(2, 240px);
-            gap: 24px;
-            padding: 24px;
+            grid-template-columns: repeat(2, auto);
             align-items: center;
+            gap: var(--kbq-size-m) var(--kbq-size-3xl);
+            padding: var(--kbq-size-m) var(--kbq-size-xl);
+        }
+        kbq-slider:not(.kbq-slider_vertical),
+        kbq-input-slider {
+            width: 200px;
+        }
+        .e2e-fills {
+            grid-template-columns: auto;
+        }
+        .e2e-marks-and-thumbs {
+            align-items: start;
+        }
+        .e2e-direction {
+            grid-template-columns: repeat(3, auto);
+        }
+        .e2e-horizontal {
+            display: grid;
+            gap: var(--kbq-size-m);
+        }
+        .e2e-tooltip {
+            padding-top: 48px;
         }
         .e2e-slider-round {
             --kbq-slider-thumb-width: 16px;
@@ -53,8 +122,11 @@ import type { KbqSliderCollision, KbqSliderCommit, KbqSliderValue } from './slid
 })
 export class E2eSliderStateAndStyle {
     protected readonly invalidMatcher = { isErrorState: () => true };
-    protected readonly states = ['Normal', 'Invalid', 'Disabled', 'Read-only'];
-    protected readonly marks = [0, 25, 50, 75, 100].map((value) => ({ value, label: `${value}%` }));
+    protected readonly states = ['normal', 'invalid', 'disabled', 'readonly'];
+    protected readonly selections = [30, [25, 75]] as const;
+    protected readonly fills: readonly KbqSliderFill[] = ['start', 'end', 'origin', 'outside', 'none'];
+    protected readonly ticks = [0, 25, 50, 75, 100].map((value) => ({ value }));
+    protected readonly marks = this.ticks.map(({ value }) => ({ value, label: `${value}%` }));
 }
 
 @Component({
