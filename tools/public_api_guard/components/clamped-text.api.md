@@ -42,7 +42,7 @@ export class KbqClampedList<T> implements KbqClamped, AfterViewInit {
     readonly mode: _angular_core.InputSignal<KbqClampedListMode>;
     ngAfterViewInit(): void;
     readonly orientation: _angular_core.InputSignal<KbqOrientation>;
-    readonly scrollOnCollapse: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly scrollOnCollapse: _angular_core.InputSignalWithTransform<boolean, string | boolean>;
     readonly showMoreCompactCountText: _angular_core.Signal<string>;
     readonly showMoreCountText: _angular_core.Signal<string>;
     toggle(event: Event): void;

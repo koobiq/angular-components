@@ -73,7 +73,7 @@ export class KbqClampedList<T> implements KbqClamped, AfterViewInit {
     readonly wrap = input<KbqFlexWrap>('nowrap');
 
     /** Whether the list scrolls its host into view after collapse. Defaults to `true`. */
-    readonly scrollOnCollapse = input(true, { transform: booleanAttribute });
+    readonly scrollOnCollapse = input<boolean, boolean | string>(true, { transform: booleanAttribute });
 
     /**
      * Maximum number of items visible in collapsed state. Defaults to `10`.
