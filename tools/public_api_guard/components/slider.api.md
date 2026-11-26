@@ -9,7 +9,9 @@ import * as _angular_core from '@angular/core';
 import { BooleanInput } from '@angular/cdk/coercion';
 import { ControlValueAccessor } from '@angular/forms';
 import { DoCheck } from '@angular/core';
+import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
+import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i1 from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -37,6 +39,8 @@ export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue> extends K
     protected edit(value: number | null, index: number): void;
     // (undocumented)
     protected finishEdit(index: number): number;
+    // (undocumented)
+    protected finishInteraction(): void;
     focus(options?: FocusOptions): void;
     // (undocumented)
     protected readonly formatValue: (value: number) => string;
@@ -45,8 +49,6 @@ export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue> extends K
     onContainerClick(event: MouseEvent): void;
     // (undocumented)
     protected onEditorKey(event: KeyboardEvent, index: number): void;
-    // (undocumented)
-    protected onFocusOut(event: FocusEvent): void;
     // (undocumented)
     protected onSliderCommit(event: KbqSliderCommit): void;
     // (undocumented)
@@ -80,6 +82,8 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSli
     readonly fill: _angular_core.InputSignal<KbqSliderFill>;
     readonly fillOrigin: _angular_core.InputSignal<number>;
     // (undocumented)
+    protected finishInteraction(): void;
+    // (undocumented)
     protected finishMarkAnimation(): void;
     focus(options?: FocusOptions, index?: number): void;
     // (undocumented)
@@ -91,8 +95,6 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue> extends KbqSli
     // (undocumented)
     protected leave(index: number): void;
     onContainerClick(event: MouseEvent): void;
-    // (undocumented)
-    protected onFocusOut(event: FocusEvent): void;
     // (undocumented)
     protected onKeyDown(event: KeyboardEvent, index: number): void;
     // (undocumented)
@@ -163,11 +165,17 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue> i
     readonly disabled: _angular_core.Signal<boolean>;
     readonly disabledInput: _angular_core.InputSignalWithTransform<boolean, BooleanInput>;
     readonly displayWith: _angular_core.InputSignal<(value: number) => string>;
+    // (undocumented)
+    protected readonly element: ElementRef<HTMLElement>;
     readonly empty: _angular_core.WritableSignal<boolean>;
     readonly errorState: _angular_core.Signal<boolean>;
     readonly errorStateMatcher: _angular_core.InputSignal<ErrorStateMatcher | undefined>;
+    // (undocumented)
+    protected abstract finishInteraction(): void;
     abstract focus(options?: FocusOptions): void;
     readonly focused: _angular_core.WritableSignal<boolean>;
+    // (undocumented)
+    protected readonly focusMonitor: FocusMonitor;
     readonly id: _angular_core.Signal<string>;
     readonly idInput: _angular_core.InputSignal<string | undefined>;
     // (undocumented)

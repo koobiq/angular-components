@@ -1,4 +1,4 @@
-import { FocusMonitor, type FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
+import { type FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
 import { ENTER, ESCAPE } from '@angular/cdk/keycodes';
 import {
     booleanAttribute,
@@ -6,7 +6,6 @@ import {
     Component,
     computed,
     effect,
-    ElementRef,
     forwardRef,
     inject,
     input,
@@ -39,9 +38,7 @@ import { sliderEqual, sliderMove, sliderSnap, sliderStops } from './slider-value
         class: 'kbq-input-slider',
         '[attr.id]': 'id()',
         '[class.kbq-disabled]': 'disabled()',
-        '[class.kbq-invalid]': 'errorState()',
-        '(focusin)': 'focused.set(true)',
-        '(focusout)': 'onFocusOut($event)'
+        '[class.kbq-invalid]': 'errorState()'
     },
     hostDirectives: [{ directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }],
     exportAs: 'kbqInputSlider'
@@ -58,9 +55,7 @@ export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue>
     });
     /** @docs-private */
     readonly controlType = 'input-slider';
-    private readonly focusMonitor = inject(FocusMonitor);
     private readonly modality = inject(InputModalityDetector);
-    private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly slider = viewChild(KbqSlider);
     private readonly inputs = viewChildren(KbqNumberInput);
     protected readonly formatValue = (value: number): string =>
@@ -85,15 +80,15 @@ export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue>
 
     constructor() {
         super();
-        effect(() => {
-            const values = this.values();
+        effect(() => this.syncDrafts(this.values()));
+    }
 
-            untracked(() =>
-                this.drafts.update((drafts) =>
-                    values.map((value, index) => (index === this.editingIndex ? (drafts[index] ?? null) : value))
-                )
-            );
-        });
+    private syncDrafts(values: readonly number[]): void {
+        untracked(() =>
+            this.drafts.update((drafts) =>
+                values.map((value, index) => (index === this.editingIndex ? (drafts[index] ?? null) : value))
+            )
+        );
     }
 
     /** Focuses the first numeric input. */
@@ -131,6 +126,7 @@ export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue>
     }
 
     protected finishEdit(index: number): number {
+        if (this.editingIndex === null && this.editStart === null) return index;
         const start = this.editStart;
 
         const typed = this.inputs()[index]?.valueAsNumber;
@@ -196,10 +192,8 @@ export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue>
         this.valueCommit.emit(event);
     }
 
-    protected onFocusOut(event: FocusEvent): void {
-        if (!this.element.nativeElement.contains(event.relatedTarget as Node | null)) {
-            this.focused.set(false);
-            this.onTouched();
-        }
+    protected override finishInteraction(): void {
+        // FocusMonitor observes blur in capture, before the editor commits its draft.
+        if (this.editingIndex !== null) this.finishEdit(this.editingIndex);
     }
 }

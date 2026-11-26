@@ -1,4 +1,4 @@
-import { FocusMonitor, type FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
+import { type FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import {
     DOWN_ARROW,
@@ -23,12 +23,13 @@ import {
     computed,
     DestroyRef,
     effect,
-    ElementRef,
+    type ElementRef,
     forwardRef,
     inject,
     Injector,
     input,
     Renderer2,
+    runInInjectionContext,
     signal,
     untracked,
     viewChild,
@@ -55,6 +56,8 @@ type SliderPointerGesture = {
     offset: number;
     overlapped: boolean;
 };
+
+type SliderMarkSnapshot = { element: HTMLElement; before: DOMRect };
 
 type SliderMarkAnimation = {
     index: number;
@@ -91,9 +94,7 @@ const MARK_ANIMATION_TIMING: KeyframeAnimationOptions = {
         '[class.kbq-slider_dragging]': 'dragging()',
         '[class.kbq-slider_vertical]': 'vertical()',
         '[class.kbq-slider_center]': "thumbAlignment() === 'center'",
-        '[class.kbq-slider_with-labels]': 'hasMarkLabels()',
-        '(focusin)': 'focused.set(true)',
-        '(focusout)': 'onFocusOut($event)'
+        '[class.kbq-slider_with-labels]': 'hasMarkLabels()'
     },
     hostDirectives: [{ directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }],
     exportAs: 'kbqSlider'
@@ -131,10 +132,8 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
     /** @docs-private */
     readonly controlType = 'slider';
 
-    private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly platform = inject(Platform);
     private readonly injector = inject(Injector);
-    private readonly focusMonitor = inject(FocusMonitor);
     private readonly modality = inject(InputModalityDetector);
     private readonly overlay = inject(Overlay);
     protected readonly tooltipScrollStrategy = () => this.overlay.scrollStrategies.reposition();
@@ -204,44 +203,56 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
 
     constructor() {
         super();
-        this.modality.modalityDetected
-            .pipe(takeUntilDestroyed())
-            .subscribe((modality) => this.setPointerMotion(modality === 'mouse' || modality === 'touch'));
-        this.directionality?.change.pipe(takeUntilDestroyed()).subscribe((direction) => this.direction.set(direction));
-        effect(() => {
-            this.disabled();
-            this.readonly();
-
-            // A changed configuration ends the old gesture before its geometry or value shape can drift.
-            this.settings();
-            this.collision();
-            this.vertical();
-            this.reversed();
-            this.scale();
-            this.thumbAlignment();
-            this.fill();
-            this.fillOrigin();
-            this.direction();
-            untracked(() => this.cancelGesture());
-        });
-        afterRenderEffect(() => {
-            const index = this.tooltipIndex();
-
-            this.values();
-            if (index !== null) this.tooltips()[index]?.overlayRef?.updatePosition();
-        });
         const destroyRef = inject(DestroyRef);
 
-        afterNextRender(() => {
-            const stopBlur = this.renderer.listen(this.window, 'blur', () => this.cancelGesture());
+        this.trackPointerMotion(destroyRef);
+        this.directionality?.change.pipe(takeUntilDestroyed()).subscribe((direction) => this.direction.set(direction));
+        effect(() => this.cancelGestureOnConfigChange());
+        afterRenderEffect(() => this.updateTooltipPosition());
+        afterNextRender(() => this.listenForWindowBlur(destroyRef));
+        destroyRef.onDestroy(() => this.disposeInteraction());
+    }
 
-            destroyRef.onDestroy(stopBlur);
-        });
-        destroyRef.onDestroy(() => {
-            this.finishMarkAnimation();
-            this.clearTooltip();
-            this.pointer = null;
-        });
+    private trackPointerMotion(destroyRef: DestroyRef): void {
+        this.modality.modalityDetected
+            .pipe(takeUntilDestroyed(destroyRef))
+            .subscribe((modality) => this.setPointerMotion(modality === 'mouse' || modality === 'touch'));
+    }
+
+    private cancelGestureOnConfigChange(): void {
+        this.disabled();
+        this.readonly();
+
+        // A changed configuration ends the old gesture before its geometry or value shape can drift.
+        this.settings();
+        this.collision();
+        this.vertical();
+        this.reversed();
+        this.scale();
+        this.thumbAlignment();
+        this.fill();
+        this.fillOrigin();
+        this.direction();
+        untracked(() => this.cancelGesture());
+    }
+
+    private updateTooltipPosition(): void {
+        const index = this.tooltipIndex();
+
+        this.values();
+        if (index !== null) this.tooltips()[index]?.overlayRef?.updatePosition();
+    }
+
+    private listenForWindowBlur(destroyRef: DestroyRef): void {
+        const stop = this.renderer.listen(this.window, 'blur', () => this.cancelGesture());
+
+        destroyRef.onDestroy(stop);
+    }
+
+    private disposeInteraction(): void {
+        this.finishMarkAnimation();
+        this.clearTooltip();
+        this.pointer = null;
     }
 
     /** Focuses a thumb by its stable lower/upper index. Defaults to the first thumb. */
@@ -277,8 +288,11 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
     }
 
     private setPointerMotion(enabled: boolean): void {
-        // Apply the modality before the browser moves focus on Tab.
-        this.element.nativeElement.classList.toggle('kbq-slider_pointer-motion', enabled);
+        // Tab moves focus before Angular flushes host bindings. Disable the pointer transition before the ring appears.
+        const host = this.element.nativeElement;
+
+        if (enabled) this.renderer.addClass(host, 'kbq-slider_pointer-motion');
+        else this.renderer.removeClass(host, 'kbq-slider_pointer-motion');
     }
 
     protected onPointerDown(event: PointerEvent): void {
@@ -459,21 +473,17 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
 
     protected onThumbFocus(index: number): void {
         this.activeIndex.set(index);
-        this.focused.set(true);
         if (this.markAnimation?.index === index) return;
 
         this.finishMarkAnimation();
         this.revealTooltip(index);
     }
 
-    protected onFocusOut(event: FocusEvent): void {
-        if (this.element.nativeElement.contains(event.relatedTarget as Node | null)) return;
-        this.focused.set(false);
+    protected override finishInteraction(): void {
         this.finishMarkAnimation();
         this.finishKeyboard();
         if (this.pointer) this.cancelGesture();
         this.clearTooltip();
-        this.onTouched();
     }
 
     private nearest(value: number): number {
@@ -605,7 +615,7 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
             !this.platform.isBrowser ||
             typeof rail?.animate !== 'function' ||
             this.animationsDisabled ||
-            this.window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+            runInInjectionContext(this.injector, kbqAnimationsDisabled)
         ) {
             this.finishMarkAnimation();
 
@@ -625,74 +635,74 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
 
         this.markAnimation = motion;
         this.animateMark.set(true);
-        motion.render = afterNextRender(
-            () => {
-                const geometry = snapshots.map(({ element, before }) => ({
-                    element,
-                    before,
-                    after: element.getBoundingClientRect()
-                }));
+        motion.render = afterNextRender(() => this.playMarkAnimation(motion, snapshots, vertical), {
+            injector: this.injector
+        });
+    }
 
-                for (const { element, before, after } of geometry) {
-                    const start = vertical ? before.top : before.left;
-                    const end = vertical ? after.top : after.left;
-                    const translate = (distance: number): string =>
-                        vertical ? '0px ' + distance + 'px' : distance + 'px';
+    private playMarkAnimation(motion: SliderMarkAnimation, snapshots: SliderMarkSnapshot[], vertical: boolean): void {
+        const geometry = snapshots.map(({ element, before }) => ({
+            element,
+            before,
+            after: element.getBoundingClientRect()
+        }));
 
-                    if (element.classList.contains('kbq-slider__thumb')) {
-                        if (start !== end) {
-                            motion.animations.push(
-                                element.animate({ translate: [translate(start - end), '0px'] }, MARK_ANIMATION_TIMING)
-                            );
-                        }
+        for (const { element, before, after } of geometry) {
+            const start = vertical ? before.top : before.left;
+            const end = vertical ? after.top : after.left;
+            const translate = (distance: number): string => (vertical ? '0px ' + distance + 'px' : distance + 'px');
 
-                        continue;
-                    }
-
-                    const from = vertical ? before.height : before.width;
-                    const to = vertical ? after.height : after.width;
-
-                    if ((from === 0 && to === 0) || (start === end && from === to)) continue;
-
-                    // Keep enough of the fill laid out to collapse it all the way to zero with transforms.
-                    const size = Math.max(from, to);
-
-                    if (size > to) {
-                        const property = vertical ? 'min-height' : 'min-width';
-
-                        element.style.setProperty(property, size + 'px');
-                        motion.fillSizes.push({ element, property });
-                    }
-
-                    const scale = (length: number): string => (vertical ? '1 ' + length / size : length / size + ' 1');
-
-                    // Interpolate both ends together. A fixed outer end stays fixed even when the fill collapses.
+            if (element.classList.contains('kbq-slider__thumb')) {
+                if (start !== end) {
                     motion.animations.push(
-                        element.animate(
-                            {
-                                translate: [translate(start - end + (from - size) / 2), translate((to - size) / 2)],
-                                scale: [scale(from), scale(to)]
-                            },
-                            MARK_ANIMATION_TIMING
-                        )
+                        element.animate({ translate: [translate(start - end), '0px'] }, MARK_ANIMATION_TIMING)
                     );
                 }
 
-                const complete = (): void => {
-                    if (this.markAnimation !== motion) return;
+                continue;
+            }
 
-                    this.finishMarkAnimation();
-                    if (this.focused() && this.activeIndex() === index) this.revealTooltip(index);
-                    this.tooltips()[index]?.overlayRef?.updatePosition();
-                };
+            const from = vertical ? before.height : before.width;
+            const to = vertical ? after.height : after.width;
 
-                if (!motion.animations.length) return complete();
+            if ((from === 0 && to === 0) || (start === end && from === to)) continue;
 
-                this.followMarkTooltip(motion);
-                void Promise.allSettled(motion.animations.map(({ finished }) => finished)).then(complete);
-            },
-            { injector: this.injector }
-        );
+            // Keep enough of the fill laid out to collapse it all the way to zero with transforms.
+            const size = Math.max(from, to);
+
+            if (size > to) {
+                const property = vertical ? 'min-height' : 'min-width';
+
+                element.style.setProperty(property, size + 'px');
+                motion.fillSizes.push({ element, property });
+            }
+
+            const scale = (length: number): string => (vertical ? '1 ' + length / size : length / size + ' 1');
+
+            // Interpolate both ends together. A fixed outer end stays fixed even when the fill collapses.
+            motion.animations.push(
+                element.animate(
+                    {
+                        translate: [translate(start - end + (from - size) / 2), translate((to - size) / 2)],
+                        scale: [scale(from), scale(to)]
+                    },
+                    MARK_ANIMATION_TIMING
+                )
+            );
+        }
+
+        const complete = (): void => {
+            if (this.markAnimation !== motion) return;
+
+            this.finishMarkAnimation();
+            if (this.focused() && this.activeIndex() === motion.index) this.revealTooltip(motion.index);
+            this.tooltips()[motion.index]?.overlayRef?.updatePosition();
+        };
+
+        if (!motion.animations.length) return complete();
+
+        this.followMarkTooltip(motion);
+        void Promise.allSettled(motion.animations.map(({ finished }) => finished)).then(complete);
     }
 
     private followMarkTooltip(motion: SliderMarkAnimation): void {

@@ -71,6 +71,26 @@ test.describe('Slider interactions', () => {
         await expect(page.locator('.kbq-slider__tooltip')).toBeVisible();
     });
 
+    test('disables pointer transitions before Tab focuses the thumb', async ({ page }) => {
+        const slider = page.getByTestId('coincident');
+
+        await page.getByRole('button', { name: 'Swap', exact: true }).click();
+        await expect(slider).toHaveClass(/kbq-slider_pointer-motion/);
+        await slider.evaluate((host) => {
+            host.addEventListener(
+                'focusin',
+                () => {
+                    host.dataset['pointerMotionAtFocus'] = String(host.classList.contains('kbq-slider_pointer-motion'));
+                },
+                { once: true }
+            );
+        });
+        await page.keyboard.press(keyName[TAB]);
+
+        await expect(slider.getByRole('slider').first()).toBeFocused();
+        await expect(slider).toHaveAttribute('data-pointer-motion-at-focus', 'false');
+    });
+
     test('supports track clicks and one commit for keyboard repeat', async ({ page }) => {
         const slider = page.getByTestId('single');
         const input = slider.getByRole('slider');

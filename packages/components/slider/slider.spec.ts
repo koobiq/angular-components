@@ -249,6 +249,35 @@ describe('KbqSlider', () => {
             expect(fixture.componentInstance.value()).toBe(0);
         });
 
+        it('skips mark animation when reduced motion is enabled after the slider renders', () => {
+            fixture.componentRef.setInput('marks', [
+                { value: 25, label: '25' },
+                { value: 50, label: '50' }
+            ]);
+            fixture.detectChanges();
+            const rail: HTMLElement = fixture.nativeElement.querySelector('.kbq-slider__rail');
+            const thumb: HTMLElement = fixture.nativeElement.querySelector('.kbq-slider__thumb');
+            const [first, second] = rail.querySelectorAll<HTMLElement>('.kbq-slider__mark-label');
+            const measureThumb = vi.spyOn(thumb, 'getBoundingClientRect');
+
+            rail.animate = vi.fn();
+            first.click();
+            fixture.detectChanges();
+            expect(measureThumb).toHaveBeenCalled();
+            measureThumb.mockClear();
+
+            vi.stubGlobal('matchMedia', (query: string) => ({ matches: query === '(prefers-reduced-motion: reduce)' }));
+
+            try {
+                second.click();
+                fixture.detectChanges();
+                expect(fixture.componentInstance.value()).toBe(50);
+                expect(measureThumb).not.toHaveBeenCalled();
+            } finally {
+                vi.unstubAllGlobals();
+            }
+        });
+
         it('uses Home/End and navigates a discrete mark set', () => {
             fixture.componentRef.setInput('step', null);
             fixture.componentRef.setInput('marks', [{ value: 0 }, { value: 15 }, { value: 70 }]);
@@ -405,6 +434,7 @@ describe('KbqSlider', () => {
             await fixture.whenStable();
             const input: HTMLInputElement = fixture.nativeElement.querySelector('kbq-slider input');
 
+            input.focus();
             dispatchKeyboardEvent(input, 'keydown', END);
             dispatchKeyboardEvent(input, 'keyup', END);
             fixture.detectChanges();
@@ -412,7 +442,7 @@ describe('KbqSlider', () => {
             expect(fixture.componentInstance.control.value).toBe(35);
             expect(fixture.componentInstance.control.touched).toBe(false);
 
-            input.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+            input.blur();
             fixture.detectChanges();
             expect(fixture.componentInstance.control.value).toBe(100);
             expect(fixture.componentInstance.control.dirty).toBe(true);
@@ -426,6 +456,45 @@ describe('KbqSlider', () => {
             fixture.componentInstance.control.enable();
             fixture.detectChanges();
             expect(input.disabled).toBe(false);
+        });
+
+        it('flushes a crossing draft once when focus leaves an updateOn blur input slider', async () => {
+            @Component({
+                imports: [ReactiveFormsModule, KbqInputSlider],
+                template: `
+                    <kbq-input-slider collision="swap" [formControl]="control" />
+                `
+            })
+            class RangeForm {
+                readonly control = new FormControl<KbqSliderValue>([20, 80], { updateOn: 'blur' });
+            }
+
+            const fixture = TestBed.createComponent(RangeForm);
+            const { control } = fixture.componentInstance;
+            const slider = fixture.debugElement.query(By.directive(KbqInputSlider)).injector.get(KbqInputSlider);
+            const commit = vi.fn();
+
+            slider.valueCommit.subscribe(commit);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            const editor: HTMLInputElement = fixture.nativeElement.querySelector('input.kbq-input');
+            const thumb: HTMLInputElement = fixture.nativeElement.querySelector('input[type=range]');
+
+            thumb.focus();
+            editor.focus();
+            expect(slider.focused()).toBe(true);
+            expect(control.untouched).toBe(true);
+
+            editor.value = '90';
+            editor.dispatchEvent(new Event('input', { bubbles: true }));
+            expect(control.value).toEqual([20, 80]);
+            editor.blur();
+
+            expect(slider.focused()).toBe(false);
+            expect(control.touched).toBe(true);
+            expect(control.value).toEqual([80, 90]);
+            expect(commit).toHaveBeenCalledExactlyOnceWith({ value: [80, 90], source: 'input' });
         });
 
         it('links a form label, hint and validation error to the thumb', async () => {

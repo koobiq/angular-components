@@ -1,4 +1,4 @@
-import { _IdGenerator } from '@angular/cdk/a11y';
+import { _IdGenerator, FocusMonitor } from '@angular/cdk/a11y';
 import type { BooleanInput, NumberInput } from '@angular/cdk/coercion';
 import {
     afterNextRender,
@@ -158,45 +158,70 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
         return values.length === 2 && index === 1 ? values[1] : values[0];
     }
 
+    protected readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
+    protected readonly focusMonitor = inject(FocusMonitor);
+    private readonly destroyRef = inject(DestroyRef);
+
     protected onChange: (value: KbqSliderValue) => void = () => {};
     protected onTouched: () => void = () => {};
 
     constructor() {
         if (this.ngControl) this.ngControl.valueAccessor = this;
 
+        this.monitorFocus();
+        this.monitorNativeFormReset();
+    }
+
+    private monitorFocus(): void {
+        this.focusMonitor.monitor(this.element, true).subscribe((origin) => {
+            this.focused.set(!!origin);
+
+            if (!origin) {
+                this.finishInteraction();
+                this.onTouched();
+            }
+        });
+        this.destroyRef.onDestroy(() => this.focusMonitor.stopMonitoring(this.element));
+    }
+
+    private monitorNativeFormReset(): void {
         const parent = inject(KbqFormFieldControl, { optional: true, skipSelf: true });
 
         if (this.ngControl || parent instanceof KbqSliderBase) return;
 
-        const element = inject<ElementRef<HTMLElement>>(ElementRef);
         const renderer = inject(Renderer2);
-        const destroyRef = inject(DestroyRef);
 
-        afterNextRender(() => {
-            const form = element.nativeElement.closest('form');
+        afterNextRender(() => this.listenForNativeFormReset(renderer));
+    }
 
-            if (!form) return;
-            const initial = this.value();
-            const stop = renderer.listen(form, 'reset', (event: Event) => {
-                // A reset dispatched by the browser can run microtasks before restoring the native inputs.
-                setTimeout(() => {
-                    if (event.defaultPrevented || destroyRef.destroyed) return;
-                    const previous = this.value();
+    private listenForNativeFormReset(renderer: Renderer2): void {
+        const form = this.element.nativeElement.closest('form');
 
-                    this.writeValue(initial);
-                    if (!sliderEqual(previous, this.value())) this.valueChange.emit(this.value());
-                });
+        if (!form) return;
+        const initial = this.value();
+        const stop = renderer.listen(form, 'reset', (event: Event) => {
+            // A reset dispatched by the browser can run microtasks before restoring the native inputs.
+            setTimeout(() => {
+                if (!event.defaultPrevented && !this.destroyRef.destroyed) this.restoreInitialValue(initial);
             });
-
-            destroyRef.onDestroy(stop);
         });
+
+        this.destroyRef.onDestroy(stop);
+    }
+
+    private restoreInitialValue(initial: KbqSliderValue): void {
+        const previous = this.value();
+
+        this.writeValue(initial);
+        if (!sliderEqual(previous, this.value())) this.valueChange.emit(this.value());
     }
 
     /** @docs-private */
     ngOnChanges(changes: SimpleChanges<KbqSliderBase>): void {
-        if (!changes.valueInput || this.ngControl) return;
-        const value = this.valueInput() ?? 0;
+        if (changes.valueInput && !this.ngControl) this.syncValueInput(this.valueInput() ?? 0);
+    }
 
+    private syncValueInput(value: KbqSliderValue): void {
         // A two-way binding can echo a value while a gesture or a draft is still active.
         if (sliderEqual(this.value(), sliderNormalize(value, this.settings()))) this.current.set(value);
         else this.writeValue(value);
@@ -302,6 +327,8 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
 
         return name && this.values().length === 2 ? `${name}[${index}]` : name;
     }
+
+    protected abstract finishInteraction(): void;
 
     /** Focuses the first interactive element. */
     abstract focus(options?: FocusOptions): void;
