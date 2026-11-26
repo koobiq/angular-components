@@ -272,7 +272,7 @@ test.describe('docs app', () => {
     });
 
     // Pop-ups are layered against the page they are on, so these examples frame the page of another example.
-    for (const component of ['dropdown', 'popover', 'select']) {
+    for (const component of ['dropdown', 'popover', 'select', 'tree-select']) {
         test(`frames the layering demo into the ${component} overview`, async ({ page }) => {
             const errors = collectErrors(page);
 

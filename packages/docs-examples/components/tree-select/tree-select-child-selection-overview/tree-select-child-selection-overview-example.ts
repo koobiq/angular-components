@@ -135,7 +135,15 @@ export const DATA_OBJECT = {
             </kbq-tree-select>
         </kbq-form-field>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styles: `
+        .kbq-form-field {
+            width: 320px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-column layout-align-center-center'
+    }
 })
 export class TreeSelectChildSelectionOverviewExample {
     readonly select = viewChild.required(KbqTreeSelect);
