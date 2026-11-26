@@ -3,7 +3,7 @@ import { afterNextRender, ChangeDetectionStrategy, Component, effect, inject, In
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { map, type Observable } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KBQ_WINDOW, type KbqCloseReason } from '@koobiq/components/core';
+import { KBQ_WINDOW, type KbqCloseReason, KbqFormsModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { type KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
@@ -12,7 +12,7 @@ import { TRANSLATIONS } from './l10n';
 
 @Component({
     selector: 'example-password-form',
-    imports: [ReactiveFormsModule, KbqFormFieldModule, KbqInputModule],
+    imports: [ReactiveFormsModule, KbqFormFieldModule, KbqInputModule, KbqFormsModule],
     template: `
         <form class="kbq-form-vertical" [formGroup]="form">
             <div class="kbq-form__fieldset">
