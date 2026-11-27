@@ -25,6 +25,9 @@ export const esLALocaleData = {
         toastRegion: 'Notificaciones',
         optionActions: 'Acciones',
         progressBar: 'Progreso',
+        slider: 'Valor',
+        sliderStart: 'Límite inferior',
+        sliderEnd: 'Límite superior',
         date: 'Fecha',
         time: 'Hora',
         search: 'Búsqueda'

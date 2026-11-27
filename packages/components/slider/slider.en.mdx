@@ -1,0 +1,146 @@
+A slider selects a numeric value or range. It suits approximate adjustments with immediate visual feedback. A numeric input can accompany the slider when an exact value matters.
+
+<Example id="slider-overview" />
+
+### When to use a slider
+
+Use a slider for quick adjustments within known bounds. Show the selected value beside the track when it matters to the decision.
+
+<Example id="slider-settings" />
+
+### Application defaults
+
+Register `kbqSliderOptionsProvider` in the application or module `providers` to set defaults for `kbq-slider` and `kbq-input-slider`. A provider on a component can override individual options for its subtree. An explicit input on a slider takes precedence.
+
+```ts
+import type { ApplicationConfig } from '@angular/core';
+import { kbqSliderOptionsProvider } from '@koobiq/components/slider';
+
+export const appConfig: ApplicationConfig = {
+    providers: [kbqSliderOptionsProvider({ step: 5, thumbAlignment: 'center', showStepper: false })]
+};
+```
+
+### Step and bounds
+
+`min` and `max` bound the scale; `step` defines a positive step anchored at `min`. Defaults are 0, 100 and 1. Fractional values are supported. The greatest selectable value lies on the step grid: with `min=0`, `max=10`, `step=3`, it is 9.
+
+### States
+
+`disabled` prevents changes and removes thumbs from the focus sequence. `readonly` allows focus and reading the value while preventing changes.
+
+<Example id="slider-states" />
+
+The scale allows up to 60 minutes, while `Validators.max(45)` limits the timeout that can be saved. The example uses `errorStateMatcher` to show the error immediately, including for the initial value.
+
+<Example id="slider-invalid" />
+
+### Track marks
+
+`marks` adds marks and optional captions. Marks do not change the step. With `step=null`, only mark values are selectable; without marks, only `min` is available. Clicking a caption selects its value; the caption itself does not receive focus.
+
+<Example id="slider-marks" />
+
+Categorical values can use numeric indexes with text labels and `displayWith`. For a non-linear numeric scale, `scale` supplies mutually inverse monotonic `toPosition` and `toValue` functions: a position is a fraction from 0 to 1. Step and thumb separation always use value units.
+
+### Range
+
+A range value is a pair `[start, end]`. Each thumb has an individual accessible name through `thumbAriaLabels`. Clicking the track moves the nearest thumb. `minDistance` defines the minimum separation in value units; excessive separation is limited to the available scale.
+
+`thumbCollisionBehavior` controls how thumbs interact:
+
+- `none` stops the thumb at its neighbour; this is the default.
+- `swap` changes the active range boundary when a thumb crosses its neighbour.
+- `push` moves the neighboring thumb while preserving minimum separation.
+
+<Example id="slider-range" />
+
+#### Minimum distance
+
+In this example, `minDistance` keeps the bounds at least 10 apart with every `thumbCollisionBehavior` strategy. Drag the lower thumb past the upper thumb to compare the strategies.
+
+<Example id="slider-distance" />
+
+### Vertical layout
+
+`vertical` displays a vertical scale. Values increase from bottom to top.
+
+<Example id="slider-vertical" />
+
+### Range fill
+
+The default fill extends from the start of the scale to the value, or between the bounds of a pair. `fill="end"` highlights values above a threshold; `fill="outside"` highlights values outside a selected range. `fill="none"` hides the fill.
+
+<Example id="slider-fill" />
+
+`fill="origin"` fills from `fillOrigin` to the value. The default origin is 0, suitable for audio balance or another parameter with positive and negative values.
+
+### Form field
+
+The component supports `[(value)]`, reactive forms and `[(ngModel)]`. A `kbq-form-field` wrapper associates labels, hints and errors with the thumbs. For ranges, `thumbAriaLabels` identifies the purpose of each bound.
+
+For Angular Forms, use a `nonNullable` control initialized with a number or a pair. Writing `null` displays the lower bound of the scale or the full range. The form retains `null` until the user changes the value.
+
+<Example id="slider-forms" />
+
+### Committing a change
+
+`valueChange` reports the live value. `valueCommit` contains `value` and `source`: `pointer`, `keyboard` or `input`. It fires only when the value changed, after pointer release, key release or the end of numeric editing. Holding a key produces one completion event. Use `valueCommit` for expensive external updates while the thumb continues to move immediately.
+
+**Esc**, pointer cancellation and lost capture restore the value from the start of the gesture without `valueCommit`. Moving focus away completes a keyboard change and hides the tooltip. Programmatic writes and Angular form resets do not emit `valueCommit`.
+
+Set `name` to include the current value in the submitted form data. Ranges use `name[0]` and `name[1]`.
+
+Dragging updates the zoom, map color and caption together. Completing the change redraws the tiles at the selected zoom level.
+
+<Example id="slider-commit" />
+
+### Value tooltip
+
+`showTooltip` shows the value immediately on focus and after a short delay on hover. The tooltip stays visible after dragging until focus leaves the slider or you press Esc. Use `showTooltipOnFocus` to show it only on focus. Vertical sliders show it beside the thumb. Use `displayWith` to format the value.
+
+<Example id="slider-tooltip" />
+
+### Thumb alignment
+
+The default `thumbAlignment="contain"` keeps thumbs inside the control. `thumbAlignment="center"` centres each thumb on the selected point, requiring extra space outside the scale endpoints.
+
+<Example id="slider-alignment" />
+
+### Label and selected value
+
+Boundary labels and the current value can be placed beside the scale. `aria-labelledby` or `aria-label` supplies the accessible name. For values with units, `displayWith` also formats the value text exposed to screen readers.
+
+<Example id="slider-labels" />
+
+### Slider and input
+
+`kbq-input-slider` combines a numeric field with a slider along its bottom edge. It accepts the same values, bounds and collision strategies as `kbq-slider`. The numeric field provides exact adjustments; the thumb provides quick changes.
+
+Place the numeric field beside the slider when both controls fit. Use `kbq-input-slider` for a compact layout. A range has a separate editor for each bound.
+
+<Example id="slider-input" />
+
+Intermediate text, including an empty field, is preserved during editing. On <kbd>Enter</kbd> or blur, the field displays the snapped valid value; an empty field restores the last selected value. Esc cancels the field edit.
+
+### Accessibility
+
+Use `kbq-label` inside `kbq-form-field`. Clicking the label focuses the thumb or the first numeric field. Give each range thumb a distinct `thumbAriaLabels` entry, such as “Minimum price” and “Maximum price”. Use `displayWith` for times, percentages and other quantities so screen readers announce the unit with the value.
+
+### Keyboard interaction
+
+| Key                                                                                           | Action                                                                    |
+| --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| <span class="docs-hot-key-button">Tab</span>                                                  | Moves focus to the next range thumb or the next focusable element         |
+| <span class="docs-hot-key-button">Shift</span>+<span class="docs-hot-key-button">Tab</span>   | Moves focus to the previous range thumb or the previous focusable element |
+| <span class="docs-hot-key-button">Esc</span>                                                  | Cancels the current change and hides the tooltip                          |
+| <span class="docs-hot-key-button">→</span>, <span class="docs-hot-key-button">↑</span>        | Increases the value by one step                                           |
+| <span class="docs-hot-key-button">←</span>, <span class="docs-hot-key-button">↓</span>        | Decreases the value by one step                                           |
+| <span class="docs-hot-key-button">Home</span>                                                 | Selects the lowest available value                                        |
+| <span class="docs-hot-key-button">End</span>                                                  | Selects the highest available value                                       |
+| <span class="docs-hot-key-button">PgUp</span>, <span class="docs-hot-key-button">PgDn</span>  | Changes the value by `largeStepMultiplier` steps, 10 by default           |
+| <span class="docs-hot-key-button">Shift</span>+<span class="docs-hot-key-button">arrow</span> | Changes the value by `largeStepMultiplier` steps                          |
+
+`reversed` reverses the arrow keys along the scale. Home, End, PgUp and PgDn keep their numeric meaning. With `step=null`, arrows move between marks. Standard text editing commands in the numeric field are preserved.
+
+<Example id="slider-keyboard" />

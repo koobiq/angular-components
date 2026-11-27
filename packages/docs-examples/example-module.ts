@@ -7316,6 +7316,261 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "skeleton-typography-example.ts",
     "importPath": "components/skeleton"
   },
+  "slider-alignment": {
+    "packagePath": "components/slider/slider-alignment",
+    "title": "Thumb alignment",
+    "componentName": "SliderAlignmentExample",
+    "files": [
+      "slider-alignment-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "slider-alignment-example",
+    "primaryFile": "slider-alignment-example.ts",
+    "importPath": "components/slider"
+  },
+  "slider-commit": {
+    "packagePath": "components/slider/slider-commit",
+    "title": "Preview a map zoom and redraw its tiles on commit",
+    "componentName": "SliderCommitExample",
+    "files": [
+      "slider-commit-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "slider-commit-example",
+    "primaryFile": "slider-commit-example.ts",
+    "importPath": "components/slider"
+  },
+  "slider-custom": {
+    "packagePath": "components/slider/slider-custom",
+    "title": "Custom slider appearance",
+    "componentName": "SliderCustomExample",
+    "files": [
+      "slider-custom-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "slider-custom-example",
+    "primaryFile": "slider-custom-example.ts",
+    "importPath": "components/slider"
+  },
+  "slider-distance": {
+    "packagePath": "components/slider/slider-distance",
+    "title": "Minimum distance between thumbs",
+    "componentName": "SliderDistanceExample",
+    "files": [
+      "slider-distance-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "slider-distance-example",
+    "primaryFile": "slider-distance-example.ts",
+    "importPath": "components/slider"
+  },
+  "slider-fill": {
+    "packagePath": "components/slider/slider-fill",
+    "title": "Slider fill",
+    "componentName": "SliderFillExample",
+    "files": [
+      "slider-fill-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "slider-fill-example",
+    "primaryFile": "slider-fill-example.ts",
+    "importPath": "components/slider"
+  },
+  "slider-forms": {
+    "packagePath": "components/slider/slider-forms",
+    "title": "Slider with Angular forms",
+    "componentName": "SliderFormsExample",
+    "files": [
+      "slider-forms-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "slider-forms-example",
+    "primaryFile": "slider-forms-example.ts",
+    "importPath": "components/slider"
+  },
+  "slider-input": {
+    "packagePath": "components/slider/slider-input",
+    "title": "Input and slider",
+    "componentName": "SliderInputExample",
+    "files": [
+      "slider-input-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "slider-input-example",
+    "primaryFile": "slider-input-example.ts",
+    "importPath": "components/slider"
+  },
+  "slider-invalid": {
+    "packagePath": "components/slider/slider-invalid",
+    "title": "Invalid slider value",
+    "componentName": "SliderInvalidExample",
+    "files": [
+      "slider-invalid-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "slider-invalid-example",
+    "primaryFile": "slider-invalid-example.ts",
+    "importPath": "components/slider"
+  },
+  "slider-keyboard": {
+    "packagePath": "components/slider/slider-keyboard",
+    "title": "Slider keyboard interaction",
+    "componentName": "SliderKeyboardExample",
+    "files": [
+      "slider-keyboard-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "slider-keyboard-example",
+    "primaryFile": "slider-keyboard-example.ts",
+    "importPath": "components/slider"
+  },
+  "slider-labels": {
+    "packagePath": "components/slider/slider-labels",
+    "title": "Slider label and selected value",
+    "componentName": "SliderLabelsExample",
+    "files": [
+      "slider-labels-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "slider-labels-example",
+    "primaryFile": "slider-labels-example.ts",
+    "importPath": "components/slider"
+  },
+  "slider-marks": {
+    "packagePath": "components/slider/slider-marks",
+    "title": "Steps and marks",
+    "componentName": "SliderMarksExample",
+    "files": [
+      "slider-marks-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "slider-marks-example",
+    "primaryFile": "slider-marks-example.ts",
+    "importPath": "components/slider"
+  },
+  "slider-overview": {
+    "packagePath": "components/slider/slider-overview",
+    "title": "Slider",
+    "componentName": "SliderOverviewExample",
+    "files": [
+      "slider-overview-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "slider-overview-example",
+    "primaryFile": "slider-overview-example.ts",
+    "importPath": "components/slider"
+  },
+  "slider-range": {
+    "packagePath": "components/slider/slider-range",
+    "title": "Range collision strategies",
+    "componentName": "SliderRangeExample",
+    "files": [
+      "slider-range-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "slider-range-example",
+    "primaryFile": "slider-range-example.ts",
+    "importPath": "components/slider"
+  },
+  "slider-settings": {
+    "packagePath": "components/slider/slider-settings",
+    "title": "Scan settings",
+    "componentName": "SliderSettingsExample",
+    "files": [
+      "slider-settings-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "slider-settings-example",
+    "primaryFile": "slider-settings-example.ts",
+    "importPath": "components/slider"
+  },
+  "slider-states": {
+    "packagePath": "components/slider/slider-states",
+    "title": "Slider states",
+    "componentName": "SliderStatesExample",
+    "files": [
+      "slider-states-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "slider-states-example",
+    "primaryFile": "slider-states-example.ts",
+    "importPath": "components/slider"
+  },
+  "slider-tooltip": {
+    "packagePath": "components/slider/slider-tooltip",
+    "title": "Slider value tooltip",
+    "componentName": "SliderTooltipExample",
+    "files": [
+      "slider-tooltip-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "slider-tooltip-example",
+    "primaryFile": "slider-tooltip-example.ts",
+    "importPath": "components/slider"
+  },
+  "slider-vertical": {
+    "packagePath": "components/slider/slider-vertical",
+    "title": "Vertical slider",
+    "componentName": "SliderVerticalExample",
+    "files": [
+      "slider-vertical-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "slider-vertical-example",
+    "primaryFile": "slider-vertical-example.ts",
+    "importPath": "components/slider"
+  },
   "split-button-content": {
     "packagePath": "components/split-button/split-button-content",
     "title": "split-button-content",
@@ -10565,6 +10820,23 @@ export type LiveExampleId =
   | 'skeleton-tabs'
   | 'skeleton-tree'
   | 'skeleton-typography'
+  | 'slider-alignment'
+  | 'slider-commit'
+  | 'slider-custom'
+  | 'slider-distance'
+  | 'slider-fill'
+  | 'slider-forms'
+  | 'slider-input'
+  | 'slider-invalid'
+  | 'slider-keyboard'
+  | 'slider-labels'
+  | 'slider-marks'
+  | 'slider-overview'
+  | 'slider-range'
+  | 'slider-settings'
+  | 'slider-states'
+  | 'slider-tooltip'
+  | 'slider-vertical'
   | 'split-button-content'
   | 'split-button-disabled-state'
   | 'split-button-menu-width'

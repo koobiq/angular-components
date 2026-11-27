@@ -853,6 +853,26 @@ describe('KbqNumberInput', () => {
             expect(fixture.componentInstance.formControl.value).toBe(9);
         });
 
+        it('commits the last keystroke to an updateOn blur control before reporting it touched', async () => {
+            const fixture = createComponent(NumberInputWithFormControl);
+            const control = new UntypedFormControl(10, { updateOn: 'blur' });
+
+            fixture.componentInstance.formControl = control;
+            fixture.detectChanges();
+            const input: HTMLInputElement = fixture.debugElement.query(By.directive(KbqNumberInput)).nativeElement;
+            const changed = vi.fn();
+
+            control.valueChanges.subscribe(changed);
+            input.focus();
+            typeInElement('25', input);
+            expect(control.value).toBe(10);
+            input.blur();
+            expect(control.value).toBe(25);
+            expect(control.touched).toBe(true);
+            await new Promise((resolve) => setTimeout(resolve));
+            expect(changed).toHaveBeenCalledExactlyOnceWith(25);
+        });
+
         it('should mark as touched on blur', () => {
             const fixture = createComponent(NumberInputWithFormControl);
 

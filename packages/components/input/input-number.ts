@@ -214,6 +214,9 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy, KbqStepp
     /** Step applied by the arrow keys and by `kbq-stepper`. */
     readonly step = input<number, NumberInput>(SMALL_STEP, { transform: numberAttribute(SMALL_STEP) });
 
+    /** Custom stepping for a compound control with a discrete scale. @docs-private */
+    readonly stepValue = input<(value: number, delta: number) => number>(add);
+
     /** Lower bound the value is clamped to when stepping. */
     readonly min = input<number, NumberInput>(-Infinity, { transform: numberAttribute(-Infinity) });
 
@@ -246,7 +249,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy, KbqStepp
     private readonly disabledState = signal(false);
     private valueFromPaste?: number | null;
 
-    /** Pending `onInput` reformats by timer handle: cancelled on destroy, run at once before a step. */
+    /** Pending `onInput` reformats by timer handle: cancelled on destroy, flushed before stepping or leaving the field. */
     private readonly pendingReformats = new Map<ReturnType<typeof setTimeout>, (correctCaret: boolean) => void>();
 
     /** Emits when the value changes (either due to user input or programmatic change). */
@@ -360,10 +363,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy, KbqStepp
             untracked(() => this.setViewValue(this.formatNumber(this.value)));
         });
 
-        this.destroyRef.onDestroy(() => {
-            this.pendingReformats.forEach((_, handle) => clearTimeout(handle));
-            this.pendingReformats.clear();
-        });
+        this.destroyRef.onDestroy(() => this.cancelPendingReformats());
     }
 
     ngOnDestroy(): void {
@@ -383,6 +383,28 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy, KbqStepp
     // Implemented as part of ControlValueAccessor.
     writeValue(value: number | null): void {
         this.setValue(value);
+    }
+
+    /**
+     * Replaces the editor's pending draft with a committed value.
+     *
+     * @docs-private
+     */
+    setCommittedValue(value: number): void {
+        this.cancelPendingReformats();
+
+        if (this.valueState() === value) {
+            this.setViewValue(this.formatNumber(value));
+
+            return;
+        }
+
+        this.setValue(value);
+    }
+
+    private cancelPendingReformats(): void {
+        this.pendingReformats.forEach((_, handle) => clearTimeout(handle));
+        this.pendingReformats.clear();
     }
 
     // Implemented as part of ControlValueAccessor.
@@ -407,6 +429,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy, KbqStepp
         }
 
         if (!isFocused) {
+            this.commitPendingReformats();
             this.clampToSafeRange();
             this.onTouched();
         }
@@ -544,7 +567,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy, KbqStepp
 
         this.clampToSafeRange();
 
-        const res = Math.max(Math.min(add(this.value || 0, step), this.stepMax), this.stepMin);
+        const res = Math.max(Math.min(this.stepValue()(this.value || 0, step), this.stepMax), this.stepMin);
 
         this.setViewValue(this.formatNumber(res));
 
@@ -562,7 +585,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy, KbqStepp
 
         this.clampToSafeRange();
 
-        const res = Math.min(Math.max(add(this.value || 0, -step), this.stepMin), this.stepMax);
+        const res = Math.min(Math.max(this.stepValue()(this.value || 0, -step), this.stepMin), this.stepMax);
 
         this.setViewValue(this.formatNumber(res));
 
@@ -593,9 +616,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy, KbqStepp
     private cvaOnChange: (value: any) => void = () => {};
 
     /**
-     * Commits a keystroke whose reformat is still pending, so a step pressed right after typing starts from
-     * the typed value rather than the last committed one. The caret correction is skipped: the step rewrites
-     * the value it would apply to.
+     * Flushes the last keystroke before a step or blur uses the value. Neither interaction needs caret correction.
      */
     private commitPendingReformats(): void {
         this.pendingReformats.forEach((reformat, handle) => {

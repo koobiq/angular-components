@@ -1,0 +1,127 @@
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import type { DateTime } from 'luxon';
+import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import { DateAdapter } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqSlider } from '@koobiq/components/slider';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
+
+/** @title Slider fill */
+@Component({
+    selector: 'slider-fill-example',
+    imports: [KbqFormFieldModule, KbqSlider, LuxonDateModule],
+    template: `
+        <kbq-form-field>
+            <kbq-label class="example-heading">
+                <span>{{ t().threshold }}</span>
+                <output aria-hidden="true">{{ salarySlider.value() }}</output>
+            </kbq-label>
+            <kbq-slider #salarySlider="kbqSlider" fill="end" [max]="200000" [step]="5000" [value]="75000" />
+        </kbq-form-field>
+        <kbq-form-field>
+            <kbq-label class="example-heading">
+                <span>{{ t().quietHours }}</span>
+                <output aria-hidden="true">
+                    @let quietHours = quietSlider.value();
+                    @if (typeof quietHours !== 'number') {
+                        {{ time(quietHours[1]) }}–{{ time(quietHours[0]) }}
+                    }
+                </output>
+            </kbq-label>
+            <kbq-slider
+                #quietSlider="kbqSlider"
+                fill="outside"
+                [max]="24"
+                [minDistance]="1"
+                [value]="[7, 18]"
+                [marks]="hours"
+                [displayWith]="time"
+                [thumbAriaLabels]="t().bounds"
+            />
+        </kbq-form-field>
+        <div>
+            <kbq-form-field>
+                <kbq-label>{{ t().balance }}</kbq-label>
+                <kbq-slider
+                    #balanceSlider="kbqSlider"
+                    fill="origin"
+                    [min]="-1"
+                    [max]="1"
+                    [step]="0.01"
+                    [value]="0.33"
+                />
+            </kbq-form-field>
+            <div class="example-balance-values">
+                <span>{{ t().left }}</span>
+                <output>{{ signed(balanceSlider.value()) }}</output>
+                <span>{{ t().right }}</span>
+            </div>
+        </div>
+        <kbq-form-field>
+            <kbq-label class="example-heading">
+                <span>{{ t().thermal }}</span>
+                <output aria-hidden="true">{{ temperatureSlider.value() }}&nbsp;°C</output>
+            </kbq-label>
+            <kbq-slider
+                #temperatureSlider="kbqSlider"
+                fill="origin"
+                [min]="-20"
+                [max]="80"
+                [fillOrigin]="20"
+                [value]="35"
+                [marks]="temperatureMarks"
+            />
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            gap: var(--kbq-size-xxl);
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto;
+            justify-content: center;
+            min-height: 96px;
+            font-variant-numeric: tabular-nums;
+        }
+        .example-heading {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            column-gap: var(--kbq-size-s);
+            width: 100%;
+        }
+        .example-heading output {
+            margin-inline-start: auto;
+        }
+        output {
+            white-space: nowrap;
+        }
+        .example-balance-values {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: var(--kbq-size-s);
+        }
+        .example-balance-values span:last-child {
+            text-align: end;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class SliderFillExample {
+    private readonly adapter = inject<DateAdapter<DateTime>>(DateAdapter);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    protected readonly time = (hour: number): string =>
+        this.adapter.format(this.adapter.createDateTime(2020, 0, 1, hour % 24, 0, 0, 0), 'HH:mm');
+
+    protected readonly signed = (value: number) => (value > 0 ? `+${value}` : String(value));
+    protected readonly hours = Array.from({ length: 9 }, (_, index) => ({
+        value: index * 3,
+        label: index % 2 === 0 ? this.time(index * 3) : undefined
+    }));
+    protected readonly temperatureMarks = [{ value: 20, label: '20\u00a0°C' }];
+}

@@ -433,6 +433,15 @@
 		<loc>https://koobiq.io/en/components/skeleton/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/slider/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/slider/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/slider/examples</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/split-button/overview</loc>
 	</url>
 	<url>
@@ -1031,6 +1040,15 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/skeleton/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/slider/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/slider/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/slider/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/split-button/overview</loc>

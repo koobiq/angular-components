@@ -87,6 +87,7 @@ export const devAppRoutes: Routes = [
     { path: 'sidebar', loadComponent: () => import('../sidebar/module').then((m) => m.DevApp) },
     { path: 'sidepanel', loadComponent: () => import('../sidepanel/module').then((m) => m.DevApp) },
     { path: 'skeleton', loadComponent: () => import('../skeleton/module').then((m) => m.DevApp) },
+    { path: 'slider', loadComponent: () => import('../slider/module').then((m) => m.DevApp) },
     { path: 'split-button', loadComponent: () => import('../split-button/module').then((m) => m.DevApp) },
     { path: 'splitter', loadComponent: () => import('../splitter/module').then((m) => m.DevApp) },
     { path: 'table', loadComponent: () => import('../table/module').then((m) => m.DevApp) },

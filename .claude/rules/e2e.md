@@ -28,6 +28,12 @@ paths:
 - Local classes and types in e2e code go without a prefix, and markup copied from a docs example drops its `example` prefixes and suffixes; the `e2e` prefix of selectors, classes and exports (`dev` in dev apps, `docs` in the docs app) is lint-enforced.
 - `check-e2e-types` covers only `*.playwright-spec.ts`; type-check the `e2e.ts` scenarios with `npx tsc --noEmit -p packages/e2e/tsconfig.app.json`.
 
+## Grouping visual cases
+
+- Group variants by the visual behavior they share so reviewers can compare them side by side. The [radio scenarios](../../packages/components/radio/e2e.ts) group checked and unchecked controls across states in one target and use separate targets for label layout, hints and validation.
+- Use a compact `inline-grid` screenshot target. Use rows for one varying property and columns for another, in the same order in both themes, so that the cell that changed is easy to locate. Keep case names in the fixture and spec to avoid adding test labels to the image.
+- Include variants that exercise a distinct visual result. Check behavior such as value changes, keyboard navigation and pointer capture with Playwright actions and assertions, so an identical rendering does not need another baseline.
+
 ## Stable screenshots
 
 - The per-test timeout is 15 seconds (`playwright.config.ts`), and screenshot flakes almost always come from shooting before the state has settled — assert the settled state first. `docs/e2e-flakiness.md` records the mechanisms found so far and `docs/e2e-performance.md` where the time of a test goes; the helpers in `packages/e2e/utils` (for example `e2eWaitForSettledScrollbars`) exist for that.
