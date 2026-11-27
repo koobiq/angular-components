@@ -1,4 +1,4 @@
 # Algolia-Crawler-Verif: 3871AA90F374600A
-Sitemap: https://koobiq.io/sitemap.xml
+Sitemap: https://v20.koobiq.io/sitemap.xml
 User-agent: *
 Disallow:

@@ -29,7 +29,7 @@ describe(docsGetPagePaths.name, () => {
     it('stays synchronized with the committed sitemap; run docs:generate-sitemap to update', () => {
         const expectedUrls = docsGetPagePaths()
             .filter(({ indexable }) => indexable)
-            .map(({ path }) => `https://koobiq.io${path}`);
+            .map(({ path }) => `https://v20.koobiq.io${path}`);
         const sitemap = readFileSync(join(__dirname, '../sitemap.xml'), 'utf8');
         const sitemapUrls = Array.from(sitemap.matchAll(/<loc>(.*?)<\/loc>/g), ([, url]) => url);
 
