@@ -14,8 +14,8 @@ import {
     untracked
 } from '@angular/core';
 import { kbqInjectNativeElement } from '@koobiq/components/core';
-// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
-import { KbqAccordionItem } from './accordion-item';
+import { KBQ_ACCORDION_ITEM } from './accordion.types';
+import type { KbqAccordionItem } from './accordion-item';
 
 const CONTENT_HEIGHT = '--kbq-accordion-content-height';
 
@@ -53,7 +53,7 @@ export class KbqAccordionContentDirective implements OnInit, DoCheck, AfterViewI
     protected readonly nativeElement = kbqInjectNativeElement();
 
     /** @docs-private */
-    protected readonly item = inject(KbqAccordionItem);
+    protected readonly item: KbqAccordionItem = inject(KBQ_ACCORDION_ITEM);
 
     private savedTransition = '';
 

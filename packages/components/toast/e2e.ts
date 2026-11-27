@@ -17,9 +17,8 @@ import { KbqLink } from '@koobiq/components/link';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 import { KbqToastComponent } from './toast.component';
 import { KbqToastModule } from './toast.module';
-import { KBQ_TOAST_FACTORY, KbqToastService } from './toast.service';
+import { KBQ_TOAST_FACTORY, type KbqToastContainerComponent, KbqToastService } from './toast.service';
 import { KbqToastStyle } from './toast.type';
-import type { KbqToastContainerComponent } from './toast-container.component';
 
 @Component({
     selector: 'e2e-toast-states',

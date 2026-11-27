@@ -45,8 +45,7 @@ import {
     type KbqTitleTextRef
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
-// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
-import { KbqTagList } from './tag-list.component';
+import { KBQ_TAG_LIST } from './tags.types';
 
 /**
  * Event object emitted by KbqTag.
@@ -263,7 +262,7 @@ export class KbqTag
 {
     changeDetectorRef = inject(ChangeDetectorRef);
     private readonly focusMonitor = inject(FocusMonitor);
-    private readonly tagList = inject(KbqTagList, { optional: true });
+    private readonly tagList = inject(KBQ_TAG_LIST, { optional: true });
     private readonly drag: CdkDrag<KbqTagDragData> = inject(CdkDrag, { host: true });
     private readonly destroyRef = inject(DestroyRef);
     private readonly injector = inject(Injector);

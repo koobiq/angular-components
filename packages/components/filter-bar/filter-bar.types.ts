@@ -128,6 +128,14 @@ export interface KbqFilterBarHost {
 export const KBQ_FILTER_BAR_HOST = new InjectionToken<KbqFilterBarHost>('KBQ_FILTER_BAR_HOST');
 
 /**
+ * The concrete `KbqFilterBar`, for `KbqFilters`: it hands the bar on in `KbqSaveFilterEvent`, so the
+ * {@link KbqFilterBarHost} seam is not enough, and importing the bar would close a cycle through its content query.
+ *
+ * @internal
+ */
+export const KBQ_FILTER_BAR = new InjectionToken<KbqFilterBar>('KbqFilterBar');
+
+/**
  * Contract a projected child depends on instead of the concrete `KbqFilters`. `KbqFilters` provides
  * itself as {@link KBQ_FILTERS}, so a child declared in its template does not import the component that
  * declares it.

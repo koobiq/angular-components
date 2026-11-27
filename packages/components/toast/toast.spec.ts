@@ -28,7 +28,7 @@ import { dispatchKeyboardEvent, dispatchMouseEvent, kbqShadowDomOverlayProvider 
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqToastComponent } from './toast.component';
 import { KbqToastModule } from './toast.module';
-import { KBQ_TOAST_FACTORY, KbqToastService } from './toast.service';
+import { KBQ_TOAST_FACTORY, KbqToastContainerComponent, KbqToastService } from './toast.service';
 import {
     defaultToastConfig,
     type KbqToastConfig,
@@ -37,7 +37,6 @@ import {
     KbqToastPosition,
     KbqToastStyle
 } from './toast.type';
-import { KbqToastContainerComponent } from './toast-container.component';
 
 /** Mirrors `CHECK_INTERVAL` in the service: the countdown is driven by a heartbeat of that period. */
 const CHECK_INTERVAL = 500;
