@@ -142,6 +142,18 @@ test.describe('docs app', () => {
         await expect(example.locator('[kbqClampedList] > div').last()).not.toHaveText(/,\s*$/);
     });
 
+    test('hydrates the overflow Clamped List example without errors', async ({ page }) => {
+        const errors = collectErrors(page);
+
+        await page.goto('/en/components/clamped-list/overview');
+        const example = page.getByTestId('clamped-list-overflow');
+
+        await expect(example).toBeVisible();
+        await waitForHydration(page);
+        await expect(example.locator('.kbq-overflow-item-hidden')).not.toHaveCount(0);
+        expect(errors).toEqual([]);
+    });
+
     test('opens a live example in fullscreen with its overlays', async ({ page }) => {
         await page.goto('/en/components/select/examples');
         await waitForHydration(page);

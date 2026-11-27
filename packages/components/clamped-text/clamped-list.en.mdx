@@ -14,6 +14,22 @@ A multi-line list with a centered dot as a separator. The label on the text butt
 
 <Example id="clamped-list-dotted" />
 
+### Overflow-based collapse
+
+By default, the list collapses by count: `collapsedVisibleCount` items stay visible and the rest is hidden. To collapse by container size, set `mode="overflow"` — the component measures the container and hides the items that do not fit.
+
+Overflow-based collapse has its own requirements:
+
+- Iterate the full `items()` signal and register each item by its numeric index: `[kbqOverflowItem]="$index"`. One directive per item, indices from 0 to `items.length - 1`, otherwise the list falls back to count-based collapse.
+- The container must be bounded on the overflow axis (for example, a fixed width) — with vertical orientation, a bounded height. Without a bound there is nothing to overflow.
+- `orientation` sets the measurement axis, `wrap="wrap"` allows the list to take multiple lines.
+- On the server (SSR) there is no geometry, so the count-based fallback with `collapsedVisibleCount` is rendered.
+- `hiddenThreshold` works as usual: if fewer items are hidden than the threshold, nothing is collapsed. `scrollOnCollapse` controls scrolling the list host into view after collapse.
+
+For NgModule-based consumers, import `KbqOverflowItemsModule` along with `KbqClampedTextModule`. Standalone consumers add the two directives used in the example — `KbqOverflowItem` and `KbqOverflowItemsResult` — to the component `imports`.
+
+<Example id="clamped-list-overflow" />
+
 ### Accessibility
 
 The trigger is yours to place, so applying `kbqClampedListTrigger` to it is a manual step: without the directive the trigger is not reachable from the keyboard, and a screen reader does not report whether the list is collapsed or expanded.

@@ -3,6 +3,7 @@ import { AgGridModule, type ICellRendererAngularComp } from 'ag-grid-angular';
 import { AllCommunityModule, type ColDef, type ICellRendererParams, ModuleRegistry } from 'ag-grid-community';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { KbqBadgeModule } from '@koobiq/components/badge';
+import { KbqClampedList, KbqClampedListTrigger } from '@koobiq/components/clamped-text';
 import { PopUpPlacements, PopUpSizes } from '@koobiq/components/core';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
@@ -29,25 +30,34 @@ type ExampleTechnique = {
 
 @Component({
     selector: 'example-overflow-badges-cell-renderer',
-    imports: [KbqOverflowItems, KbqOverflowItem, KbqOverflowItemsResult, KbqBadgeModule, KbqLink],
+    imports: [
+        KbqBadgeModule,
+        KbqClampedList,
+        KbqClampedListTrigger,
+        KbqLink,
+        KbqOverflowItem,
+        KbqOverflowItemsResult
+    ],
     template: `
-        @if (collapsed()) {
-            <div #overflow="kbqOverflowItems" kbqOverflowItems class="example-hosts">
-                @for (host of hosts(); track host) {
-                    <kbq-badge compact class="layout-margin-right-xxs" [kbqOverflowItem]="host">{{ host }}</kbq-badge>
-                }
-                <a kbqLink pseudo kbqOverflowItemsResult (click)="collapsed.set(false)">
-                    {{ t().moreCount(overflow.hiddenItemIDs().size) }}
+        <div
+            #list="kbqClampedList"
+            kbqClampedList
+            class="example-hosts"
+            mode="overflow"
+            [wrap]="collapsed() ? 'nowrap' : 'wrap'"
+            [items]="hosts()"
+            [hiddenThreshold]="1"
+            [(isCollapsed)]="collapsed"
+        >
+            @for (host of list.items(); track host) {
+                <kbq-badge compact class="layout-margin-right-xxs" [kbqOverflowItem]="$index">{{ host }}</kbq-badge>
+            }
+            @if (list.hasToggle()) {
+                <a kbqLink pseudo kbqClampedListTrigger kbqOverflowItemsResult>
+                    {{ collapsed() ? t().moreCount(list.exceededItemCount()) : t().collapseLink }}
                 </a>
-            </div>
-        } @else {
-            <div class="example-hosts example-hosts_expanded">
-                @for (host of hosts(); track host) {
-                    <kbq-badge compact class="layout-margin-right-xxs">{{ host }}</kbq-badge>
-                }
-            </div>
-            <a kbqLink pseudo (click)="collapsed.set(true)">{{ t().collapseLink }}</a>
-        }
+            }
+        </div>
     `,
     styles: `
         :host {
@@ -61,10 +71,6 @@ type ExampleTechnique = {
             row-gap: var(--kbq-size-xxs);
         }
 
-        .example-hosts_expanded {
-            flex-wrap: wrap;
-        }
-
         .example-hosts > * {
             flex-shrink: 0;
         }
@@ -74,8 +80,7 @@ type ExampleTechnique = {
 export class ExampleOverflowBadgesCellRenderer implements ICellRendererAngularComp {
     private readonly destroyRef = inject(DestroyRef);
 
-    // Only the collapsed cell has the directive, hence the optional query.
-    private readonly overflowItems = viewChild(KbqOverflowItems);
+    private readonly clampedList = viewChild.required(KbqClampedList);
 
     protected readonly hosts = signal<string[]>([]);
     protected readonly collapsed = signal(true);
@@ -85,7 +90,7 @@ export class ExampleOverflowBadgesCellRenderer implements ICellRendererAngularCo
         this.hosts.set(params.value ?? []);
         exampleOnCellEnter(params.eGridCell, this.destroyRef, () => {
             // A collapsed cell with everything already visible has nothing to expand.
-            if (this.collapsed() && !this.overflowItems()?.hiddenItemIDs().size) return;
+            if (this.collapsed() && !this.clampedList().hasToggle()) return;
 
             this.collapsed.update((state) => !state);
         });

@@ -199,6 +199,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/checkbox').then((m) => m.PseudoCheckboxExample);
         case 'clamped-list-dotted':
             return import('@koobiq/docs-examples/components/clamped-text').then((m) => m.ClampedListDottedExample);
+        case 'clamped-list-overflow':
+            return import('@koobiq/docs-examples/components/clamped-text').then((m) => m.ClampedListOverflowExample);
         case 'clamped-list-overview':
             return import('@koobiq/docs-examples/components/clamped-text').then((m) => m.ClampedListOverviewExample);
         case 'clamped-list':

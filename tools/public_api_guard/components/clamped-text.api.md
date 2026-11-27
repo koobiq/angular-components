@@ -10,6 +10,8 @@ import { ElementRef } from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqClampedTextLocaleConfiguration } from '@koobiq/components/core';
 import { KbqDeepPartial } from '@koobiq/components/core';
+import { KbqFlexWrap } from '@koobiq/components/core';
+import { KbqOrientation } from '@koobiq/components/core';
 import * as _koobiq_components_core from '@koobiq/components/core';
 import { Provider } from '@angular/core';
 import { Signal } from '@angular/core';
@@ -27,7 +29,7 @@ export interface KbqClamped {
 }
 
 // @public
-export class KbqClampedList<T> implements KbqClamped {
+export class KbqClampedList<T> implements KbqClamped, AfterViewInit {
     readonly collapsedVisibleCount: _angular_core.InputSignalWithTransform<number, unknown>;
     readonly contentId: string;
     readonly duration: _angular_core.InputSignalWithTransform<number, string | number | null | undefined>;
@@ -37,15 +39,24 @@ export class KbqClampedList<T> implements KbqClamped {
     readonly isCollapsed: _angular_core.ModelSignal<boolean>;
     readonly items: _angular_core.InputSignal<T[]>;
     readonly localeConfiguration: _angular_core.Signal<_koobiq_components_core.KbqClampedTextLocaleConfiguration>;
+    readonly mode: _angular_core.InputSignal<KbqClampedListMode>;
+    ngAfterViewInit(): void;
+    readonly orientation: _angular_core.InputSignal<KbqOrientation>;
+    readonly scrollOnCollapse: _angular_core.InputSignalWithTransform<boolean, string | boolean>;
     readonly showMoreCompactCountText: _angular_core.Signal<string>;
     readonly showMoreCountText: _angular_core.Signal<string>;
     toggle(event: Event): void;
     readonly visibleItems: _angular_core.Signal<T[]>;
+    readonly visibleMap: _angular_core.Signal<readonly boolean[]>;
+    readonly wrap: _angular_core.InputSignal<KbqFlexWrap>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqClampedList<any>, "[kbqClampedList]", ["kbqClampedList"], { "isCollapsed": { "alias": "isCollapsed"; "required": false; "isSignal": true; }; "items": { "alias": "items"; "required": false; "isSignal": true; }; "collapsedVisibleCount": { "alias": "collapsedVisibleCount"; "required": false; "isSignal": true; }; "hiddenThreshold": { "alias": "hiddenThreshold"; "required": false; "isSignal": true; }; "duration": { "alias": "duration"; "required": false; "isSignal": true; }; }, { "isCollapsed": "isCollapsedChange"; }, never, never, true, [{ directive: typeof _koobiq_components_core.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqClampedList<any>, "[kbqClampedList]", ["kbqClampedList"], { "isCollapsed": { "alias": "isCollapsed"; "required": false; "isSignal": true; }; "items": { "alias": "items"; "required": false; "isSignal": true; }; "mode": { "alias": "mode"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; "scrollOnCollapse": { "alias": "scrollOnCollapse"; "required": false; "isSignal": true; }; "collapsedVisibleCount": { "alias": "collapsedVisibleCount"; "required": false; "isSignal": true; }; "hiddenThreshold": { "alias": "hiddenThreshold"; "required": false; "isSignal": true; }; "duration": { "alias": "duration"; "required": false; "isSignal": true; }; }, { "isCollapsed": "isCollapsedChange"; }, ["overflowItems", "overflowResult"], never, true, [{ directive: typeof _koobiq_components_core.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqClampedList<any>, never>;
 }
+
+// @public
+export type KbqClampedListMode = 'count' | 'overflow';
 
 // @public
 export class KbqClampedListTrigger {
