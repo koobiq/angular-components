@@ -1,4 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { DOWN_ARROW, ENTER, LEFT_ARROW, NUMPAD_DIVIDE, RIGHT_ARROW, SLASH, SPACE, TAB } from '@angular/cdk/keycodes';
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -9,20 +10,12 @@ import { type Observable, Subject } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     dispatchKeyboardEvent,
-    DOWN_ARROW,
-    ENTER,
     enUSLocaleData,
     KBQ_ANIMATIONS_CONFIG,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
     KbqOverlayLayer,
-    LEFT_ARROW,
-    NUMPAD_DIVIDE,
-    RIGHT_ARROW,
-    ruRULocaleData,
-    SLASH,
-    SPACE,
-    TAB
+    ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -3236,9 +3229,7 @@ class TestItemCustomContentApp {}
 })
 class TestNavbarCustomTriggerComponent implements KbqNavbarItemTrigger {
     hasFocus = false;
-
     readonly focus = vi.fn();
-
     readonly focusViaKeyboard = vi.fn();
 }
 
@@ -3725,6 +3716,7 @@ const EFFECT_RUN_LIMIT = 10;
 class TestVerticalDrivenByEffectApp {
     readonly navbar = viewChild.required(KbqVerticalNavbar);
     readonly toggle = viewChild.required(KbqNavbarToggle);
+
     readonly action = signal<'navbar' | 'toggle' | null>(null);
     runs = 0;
 

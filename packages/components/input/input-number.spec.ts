@@ -1,4 +1,5 @@
-﻿import { Component, type DebugElement, inject, type Provider, type Type, viewChild } from '@angular/core';
+﻿import { COMMA, DASH, DOWN_ARROW, FF_MINUS, NUMPAD_MINUS, UP_ARROW } from '@angular/cdk/keycodes';
+import { Component, type DebugElement, inject, type Provider, type Type, viewChild } from '@angular/core';
 import { type ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import {
     type AbstractControl,
@@ -14,22 +15,16 @@ import {
 import { By } from '@angular/platform-browser';
 import type { Mock } from 'vitest';
 import {
-    COMMA,
     createKeyboardEvent,
-    DASH,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
-    DOWN_ARROW,
     type ErrorStateMatcher,
-    FF_MINUS,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
     KbqLocaleServiceModule,
-    NUMPAD_MINUS,
     ruRUFormattersData,
-    typeInElement,
-    UP_ARROW
+    typeInElement
 } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { add, BIG_STEP, getPrecision, KbqInput, KbqInputModule, KbqNumberInput, SMALL_STEP } from './index';
@@ -84,7 +79,6 @@ class NumberInputTestComponent {
     value: number | null = null;
     disabled = false;
     readonly = false;
-
     stepUp = vi.fn().mockImplementation(() => true);
     stepDown = vi.fn().mockImplementation(() => false);
 }
@@ -106,7 +100,6 @@ class NumberInputTestComponent {
 class TestNumberInputConditional {
     isVisible = true;
     value: number | null = null;
-
     stepUp = vi.fn().mockImplementation(() => true);
     stepDown = vi.fn().mockImplementation(() => false);
 }
@@ -267,14 +260,14 @@ class NumberInputWithCleaner {
 class NumberInputWithMask {
     localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
 
+    readonly inputNumberDirective = viewChild.required(KbqNumberInput);
+
     value: number | null = null;
     max: number = 10;
     min: number = 3;
     step: number = 1;
     bigStep: number = 5;
     withMask = true;
-
-    readonly inputNumberDirective = viewChild.required(KbqNumberInput);
 }
 
 @Component({
@@ -299,12 +292,12 @@ class NumberInputWithMask {
 class NumberInputWithInteger {
     localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
 
+    readonly inputNumberDirective = viewChild.required(KbqNumberInput);
+
     value: number | null = null;
     readonly = false;
     step: number = 1;
     bigStep: number = 5;
-
-    readonly inputNumberDirective = viewChild.required(KbqNumberInput);
 }
 
 @Component({
@@ -388,14 +381,14 @@ class NumberInputWithBoundValue {
 class NumberInputConfigurable {
     localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
 
+    readonly inputNumberDirective = viewChild.required(KbqNumberInput);
+
     value: number | null = null;
     min: number | undefined = undefined;
     max: number | undefined = undefined;
     step: number = 1;
     integer = false;
     startFormattingFrom: number | undefined = undefined;
-
-    readonly inputNumberDirective = viewChild.required(KbqNumberInput);
 }
 
 @Component({

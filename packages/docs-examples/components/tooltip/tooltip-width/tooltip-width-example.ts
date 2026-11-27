@@ -25,6 +25,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TooltipWidthExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     placement: PopUpPlacements = PopUpPlacements.Top;
 }

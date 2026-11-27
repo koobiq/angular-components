@@ -14,8 +14,8 @@ import {
     untracked
 } from '@angular/core';
 import { kbqInjectNativeElement } from '@koobiq/components/core';
-// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
-import { KbqAccordionItem } from './accordion-item';
+import { KBQ_ACCORDION_ITEM } from './accordion.types';
+import type { KbqAccordionItem } from './accordion-item';
 
 const CONTENT_HEIGHT = '--kbq-accordion-content-height';
 
@@ -51,8 +51,14 @@ export class KbqAccordionContentDirective implements OnInit, DoCheck, AfterViewI
 
     /** @docs-private */
     protected readonly nativeElement = kbqInjectNativeElement();
+
     /** @docs-private */
-    protected readonly item = inject(KbqAccordionItem);
+    protected readonly item: KbqAccordionItem = inject(KBQ_ACCORDION_ITEM);
+
+    private savedTransition = '';
+
+    /** Whether the first browser render has happened; until then a toggle only sets the initial state. */
+    private rendered = false;
 
     /**
      * Value of `data-state`.
@@ -60,6 +66,9 @@ export class KbqAccordionContentDirective implements OnInit, DoCheck, AfterViewI
      * @docs-private
      */
     protected readonly dataState = computed(() => this.item.dataState);
+
+    /** @docs-private */
+    protected readonly hidden = signal<boolean>(true);
 
     /** @docs-private */
     get contentId(): string {
@@ -70,14 +79,6 @@ export class KbqAccordionContentDirective implements OnInit, DoCheck, AfterViewI
     get triggerId(): string {
         return `${this.item.id}-trigger`;
     }
-
-    /** @docs-private */
-    protected readonly hidden = signal<boolean>(true);
-
-    private savedTransition = '';
-
-    /** Whether the first browser render has happened; until then a toggle only sets the initial state. */
-    private rendered = false;
 
     constructor() {
         // `afterNextRender` never runs on the server, so no platform check is needed here.

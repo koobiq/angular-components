@@ -19,9 +19,9 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     ],
     template: `
         <div class="docs-component-header">
-            <div class="docs-component-name" docsRegisterHeader data-docsearch-lvl1>
+            <h1 class="docs-component-name" docsRegisterHeader data-docsearch-lvl1>
                 {{ t('designTokens') }}
-            </div>
+            </h1>
             <div class="docs-component-navbar layout-padding-top-s">
                 <nav kbqTabNavBar [tabNavPanel]="tabNavPanel">
                     @for (link of links; track link) {
@@ -43,6 +43,7 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-component-viewer',
+        role: 'main',
         '[attr.data-docsearch-lvl0]': 'searchGroup()'
     }
 })

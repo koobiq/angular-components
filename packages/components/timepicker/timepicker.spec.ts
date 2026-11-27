@@ -1,3 +1,4 @@
+import { DOWN_ARROW, LEFT_ARROW, ONE, SPACE, TWO, UP_ARROW } from '@angular/cdk/keycodes';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -32,18 +33,12 @@ import {
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
-    DOWN_ARROW,
     ErrorStateMatcher,
     KBQ_LOCALE_SERVICE,
     KbqDateTimezoneService,
     kbqErrorStateMatcherProvider,
-    LEFT_ARROW,
-    ONE,
     ShowOnControlDirtyErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher,
-    SPACE,
-    TWO,
-    UP_ARROW,
     validationTooltipHideDelay
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -973,10 +968,10 @@ describe(KbqTimepicker.name, () => {
         `
     })
     class TimepickerWithLocaleChange {
+        readonly localeService = inject(KBQ_LOCALE_SERVICE);
+
         timeFormat: TimeFormats;
         model: any = null;
-
-        readonly localeService = inject(KBQ_LOCALE_SERVICE);
     }
 
     describe('with Locale change', () => {
@@ -1055,6 +1050,7 @@ describe(KbqTimepicker.name, () => {
     })
     class TimepickerWithErrorStateMatcher {
         readonly timepicker = viewChild.required(KbqTimepicker);
+
         readonly form = new FormGroup({ input: new FormControl<DateTime | null>(null, Validators.required) });
         errorStateMatcher: ErrorStateMatcher = new ErrorStateMatcher();
     }
@@ -1074,6 +1070,7 @@ describe(KbqTimepicker.name, () => {
     })
     class TimepickerWithDIErrorStateMatcher {
         readonly timepicker = viewChild.required(KbqTimepicker);
+
         readonly form = new FormGroup({ input: new FormControl<DateTime | null>(null, Validators.required) });
     }
 
@@ -1251,6 +1248,7 @@ describe(KbqTimepicker.name, () => {
     })
     class TimepickerControlWithAsyncValidators {
         readonly timepicker = viewChild.required(KbqTimepicker);
+
         readonly control = new FormControl<DateTime | null>(null, {
             asyncValidators: [getAsyncValidator()]
         });
@@ -1825,6 +1823,7 @@ describe(KbqTimepicker.name, () => {
 })
 class TimepickerWithCleaner {
     readonly timepickers = viewChildren(KbqTimepicker);
+
     readonly control = new FormControl<DateTime | null>(DateTime.fromISO('2024-05-17T10:30:00'));
     readonly value = signal<DateTime | null>(DateTime.fromISO('2024-05-17T10:30:00'));
 }
@@ -1840,6 +1839,7 @@ class TimepickerWithCleaner {
 })
 class TimepickerWithFormControl {
     readonly timepicker = viewChild.required(KbqTimepicker);
+
     readonly control = new FormControl<DateTime | null>(DateTime.fromISO('2024-05-17T10:30:00'));
 }
 
@@ -1854,6 +1854,7 @@ class TimepickerWithFormControl {
 })
 class TimepickerWithFormControlOnBlur {
     readonly timepicker = viewChild.required(KbqTimepicker);
+
     readonly control = new FormControl<DateTime | null>(DateTime.fromISO('2024-05-17T10:30:00'), { updateOn: 'blur' });
 }
 
@@ -1870,6 +1871,7 @@ const EFFECT_RUN_LIMIT = 10;
 })
 class TimepickerWrittenByEffect {
     readonly timepicker = viewChild.required(KbqTimepicker);
+
     readonly control = new FormControl<DateTime | null>(null);
     readonly write = signal(false);
     runs = 0;

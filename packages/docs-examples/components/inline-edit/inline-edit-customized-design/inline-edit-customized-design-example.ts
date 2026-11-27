@@ -124,16 +124,15 @@ import { TRANSLATIONS } from './l10n';
 })
 export class InlineEditCustomizedDesignExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
-    protected get placeholder(): string {
-        return this.t().placeholder;
-    }
     protected readonly options = signal<string[]>(this.t().severities);
-
     protected readonly linkControl = new FormControl('https://github.com/koobiq/icons');
     protected readonly badgeControl = new FormControl([this.options()[0]], { nonNullable: true });
     protected readonly iconControl = new FormControl('Value');
     protected readonly popupPlacements = PopUpPlacements;
+
+    protected get placeholder(): string {
+        return this.t().placeholder;
+    }
 
     protected removed(event: KbqTagEvent): void {
         this.options.update((tags) => {

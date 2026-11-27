@@ -71,15 +71,16 @@ import { DevThemeToggle } from '../theme-toggle';
     encapsulation: ViewEncapsulation.None
 })
 export class DevBreadcrumbsItemCount {
-    protected readonly items = ['Home', 'Products', 'Laptops', 'Ultrabooks', 'Model X', 'Specifications'];
-    protected readonly count = signal(1);
     readonly firstItemNegativeMargin = model(true);
     readonly wrapMode = model<KbqBreadcrumbsWrapMode>('auto');
-    protected readonly firstItemLeft = signal(0);
-    protected readonly titleTop = signal(0);
 
     private readonly stage = viewChild.required<ElementRef<HTMLElement>>('stage');
     private readonly title = viewChild.required<ElementRef<HTMLElement>>('title');
+
+    protected readonly items = ['Home', 'Products', 'Laptops', 'Ultrabooks', 'Model X', 'Specifications'];
+    protected readonly count = signal(1);
+    protected readonly firstItemLeft = signal(0);
+    protected readonly titleTop = signal(0);
 
     constructor() {
         afterRenderEffect(() => {

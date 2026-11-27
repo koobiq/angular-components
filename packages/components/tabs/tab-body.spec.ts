@@ -226,12 +226,12 @@ describe('KbqTabBody', () => {
 class SimpleTabBodyApp implements AfterContentInit {
     private viewContainerRef = inject(ViewContainerRef);
 
+    readonly tabBody = viewChild.required(KbqTabBody);
+    readonly template = viewChild.required(TemplateRef);
+
     content: TemplatePortal;
     position: number;
     origin: number | null;
-
-    readonly tabBody = viewChild.required(KbqTabBody);
-    readonly template = viewChild.required(TemplateRef);
 
     ngAfterContentInit() {
         this.content = new TemplatePortal(this.template(), this.viewContainerRef);

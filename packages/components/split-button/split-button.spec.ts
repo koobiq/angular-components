@@ -637,7 +637,6 @@ class TestAppUnboundColor {
 class TestAppOwnButtonSettings {
     readonly buttonStyle = KbqButtonStyles.Transparent;
     readonly buttonColor = KbqComponentColors.Theme;
-
     style: KbqButtonStyleInput = KbqButtonStyles.Filled;
     disabled: boolean = false;
 }

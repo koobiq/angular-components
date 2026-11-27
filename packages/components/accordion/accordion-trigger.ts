@@ -12,8 +12,8 @@ import {
 } from '@angular/core';
 import { kbqAnimationsDisabled } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
-// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
-import { KbqAccordion } from './accordion';
+import type { KbqAccordion } from './accordion';
+import { KBQ_ACCORDION } from './accordion.types';
 import { KbqAccordionTriggerDirective } from './accordion-trigger.directive';
 
 @Component({
@@ -43,10 +43,14 @@ export class KbqAccordionTrigger implements AfterViewInit, OnDestroy {
     private readonly platform = inject(Platform);
 
     /** @docs-private */
-    protected readonly accordion: KbqAccordion = inject(KbqAccordion);
+    protected readonly accordion: KbqAccordion = inject(KBQ_ACCORDION);
 
     /** @docs-private */
     readonly icon = viewChild.required(KbqIcon);
+
+    private savedTransition = '';
+    private readonly afterRenderRef?: AfterRenderRef;
+    private animationTimerId?: ReturnType<typeof setTimeout>;
 
     /**
      * Whether the icon turns without motion.
@@ -54,10 +58,6 @@ export class KbqAccordionTrigger implements AfterViewInit, OnDestroy {
      * @docs-private
      */
     protected readonly animationsDisabled = kbqAnimationsDisabled();
-
-    private savedTransition = '';
-    private readonly afterRenderRef?: AfterRenderRef;
-    private animationTimerId?: ReturnType<typeof setTimeout>;
 
     get isFill(): boolean {
         return this.accordion.variant() === 'fill';

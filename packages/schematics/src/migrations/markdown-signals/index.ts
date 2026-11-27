@@ -524,12 +524,12 @@ interface TemplateRef extends Range {
  * component renders its own projected text, so a raw-text rewrite would edit the prose the user reads.
  */
 class TemplateScanner implements Visitor {
+    /** The embedded view currently being walked; a ref declared in it is invisible outside. */
+    private view: Range;
+
     readonly markdownRefs: TemplateRef[] = [];
     readonly otherNames = new Set<string>();
     readonly expressions: Range[] = [];
-
-    /** The embedded view currently being walked; a ref declared in it is invisible outside. */
-    private view: Range;
 
     constructor(private readonly template: string) {
         this.view = { start: 0, end: template.length };
@@ -650,9 +650,13 @@ class TemplateScanner implements Visitor {
     }
 
     visitAttribute(): void {}
+
     visitComment(): void {}
+
     visitExpansion(): void {}
+
     visitExpansionCase(): void {}
+
     visitBlockParameter(): void {}
 }
 

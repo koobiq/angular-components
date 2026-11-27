@@ -38,7 +38,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TitleCustomContentExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly longValue = computed(() => this.t().longValue);
     readonly stringContent = computed(() => this.t().stringContent);
 }

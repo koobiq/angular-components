@@ -84,18 +84,11 @@ export class DevApp {
     private clipboard = inject(Clipboard);
 
     readonly list = signal(Array.from({ length: 5 }, (_, i) => `Item ${i}`));
-
     readonly selectAllItems = signal(Array.from({ length: 5 }, (_, i) => `Item ${i}`));
     readonly selectAllDraggable = signal(false);
     readonly selectAllDisabled = signal(false);
     selectAllSelected: string[] = ['Item 1'];
-
     readonly dragPreview = signal<KbqListDragPreview>('text');
-
-    // The options of the select are the values of `KbqListDragPreview`
-    protected setDragPreview(value: string): void {
-        this.dragPreview.set(value as KbqListDragPreview);
-    }
 
     // One option with a caption and one with a label nobody could fit, so the text preview shows off
     // both of its lines and its truncation.
@@ -108,27 +101,19 @@ export class DevApp {
         }
     ]);
     draggableSelected: DevItem[] = [];
-
     readonly availableItems = signal(devItems('Available', 0, 4));
     readonly chosenItems = signal(devItems('Chosen', 10, 3));
-
     readonly comparatorItems = signal(devItems('Item', 0, 4));
     readonly comparatorByReference = signal(false);
+
     // A separate object rather than `comparatorItems()[1]`, so only `compareById` can match it.
     comparatorSelected: DevItem[] = [{ id: 1, label: 'Item #1' }];
-
-    compareById = (o1: DevItem | null, o2: DevItem | null): boolean => !!o1 && !!o2 && o1.id === o2.id;
-    compareByReference = (o1: DevItem | null, o2: DevItem | null): boolean => o1 === o2;
-
     readonly options = Array.from({ length: 10000 }).map((_, i) => ({
         id: i,
         label: `Option #${i}`
     }));
-
     popUpPlacements = PopUpPlacements;
-
     typesOfShoes = ['Boots', 'Clogs', 'Loafers', 'Moccasins', 'Sneakers'];
-
     readonly switchableModes: { label: string; value: KbqMultipleInput }[] = [
         { label: 'checkbox', value: 'checkbox' },
         { label: 'keyboard', value: 'keyboard' },
@@ -136,13 +121,20 @@ export class DevApp {
     ];
     readonly switchableMultiple = signal<KbqMultipleInput>('checkbox');
     switchableSelected: string[] = ['Boots', 'Clogs', 'Loafers'];
-
     multipleSelected = ['Boots', 'Clogs'];
     multipleSelectedCheckbox: string[] = [];
     selected = [];
     singleSelected = [];
-
     asyncUpdate = new UntypedFormControl();
+
+    // The options of the select are the values of `KbqListDragPreview`
+    protected setDragPreview(value: string): void {
+        this.dragPreview.set(value as KbqListDragPreview);
+    }
+
+    compareById = (o1: DevItem | null, o2: DevItem | null): boolean => !!o1 && !!o2 && o1.id === o2.id;
+
+    compareByReference = (o1: DevItem | null, o2: DevItem | null): boolean => o1 === o2;
 
     asyncUpdate$ = this.asyncUpdate.valueChanges.pipe(
         startWith(null),

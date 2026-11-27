@@ -70,10 +70,15 @@ export class KbqScrollbarDirective implements OnDestroy {
     private ngZone = inject(NgZone);
     private scrollbarConfig = inject<KbqScrollbarOptions>(KBQ_SCROLLBAR_CONFIG);
 
+    /** Whether to defer the initialization to a point in time when the browser is idle. (or to the next frame if `window.requestIdleCallback` is not supported) */
+    readonly defer = input<boolean | IdleRequestOptions>();
+
     private requestDefer: ReturnType<typeof createDefer>[0];
     private cancelDefer: ReturnType<typeof createDefer>[1];
-
     private _options?: KbqScrollbarOptions;
+    private _events?: KbqScrollbarEvents;
+
+    scrollbarInstance?: OverlayScrollbars;
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -91,8 +96,6 @@ export class KbqScrollbarDirective implements OnDestroy {
         return this._options;
     }
 
-    private _events?: KbqScrollbarEvents;
-
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
@@ -108,16 +111,15 @@ export class KbqScrollbarDirective implements OnDestroy {
         return this._events;
     }
 
-    /** Whether to defer the initialization to a point in time when the browser is idle. (or to the next frame if `window.requestIdleCallback` is not supported) */
-    readonly defer = input<boolean | IdleRequestOptions>();
-
-    scrollbarInstance?: OverlayScrollbars;
-
     constructor() {
         const [requestDefer, cancelDefer] = createDefer();
 
         this.requestDefer = requestDefer;
         this.cancelDefer = cancelDefer;
+    }
+
+    ngOnDestroy() {
+        this.cancelDefer();
     }
 
     initialize(target: KbqScrollbarTarget) {
@@ -138,9 +140,5 @@ export class KbqScrollbarDirective implements OnDestroy {
                 init();
             }
         });
-    }
-
-    ngOnDestroy() {
-        this.cancelDefer();
     }
 }

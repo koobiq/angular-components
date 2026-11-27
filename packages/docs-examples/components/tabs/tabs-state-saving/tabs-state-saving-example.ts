@@ -36,7 +36,7 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabsStateSavingExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly group = viewChild.required(KbqTabGroup);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

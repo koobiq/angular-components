@@ -398,11 +398,17 @@ class NavbarRefCollector implements Visitor {
     }
 
     visitAttribute(): void {}
+
     visitText(): void {}
+
     visitComment(): void {}
+
     visitExpansion(): void {}
+
     visitExpansionCase(): void {}
+
     visitBlockParameter(): void {}
+
     visitLetDeclaration(): void {}
 }
 
@@ -453,11 +459,17 @@ class TooltipTextRenameCollector implements Visitor {
     }
 
     visitAttribute(): void {}
+
     visitText(): void {}
+
     visitComment(): void {}
+
     visitExpansion(): void {}
+
     visitExpansionCase(): void {}
+
     visitBlockParameter(): void {}
+
     visitLetDeclaration(): void {}
 }
 

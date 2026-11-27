@@ -70,6 +70,20 @@ const TAB_PADDING = 12;
     exportAs: 'kbqTabNavBar'
 })
 export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentInit {
+    private readonly isBrowser = inject(Platform).isBrowser;
+
+    /** Whether the nav bar background should be transparent. */
+    readonly transparent = input<boolean, unknown>(false, { transform: booleanAttribute });
+    readonly onSurface = input<boolean, unknown>(false, { transform: booleanAttribute });
+
+    /** Whether the nav bar should be underlined. */
+    readonly underlined = input<boolean, unknown>(false, { transform: booleanAttribute });
+
+    /**
+     * Associated tab panel controlled by the nav bar.
+     */
+    readonly tabNavPanel = input<KbqTabNavPanel>();
+
     private readonly tabListContainerQuery = viewChild.required<ElementRef>('tabListContainer');
     private readonly scrollbarViewportQuery = viewChild.required('tabListContainer', { read: KbqScrollbarViewport });
     private readonly tabListQuery = viewChild.required<ElementRef>('tabList');
@@ -79,7 +93,11 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
         forwardRef(() => KbqTabLink),
         { descendants: true }
     );
+
     private readonly itemsList = kbqQueryListFrom(this.itemsQuery);
+
+    /** `activeTabDisabled` as this view last rendered it: a link's `disabled` input gives this view no notice. */
+    private checkedActiveTabDisabled = false;
 
     /** The scroll container of the tab links. */
     get tabListContainer(): ElementRef {
@@ -109,20 +127,6 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
     get items(): QueryList<KbqTabLink> {
         return this.itemsList();
     }
-
-    private readonly isBrowser = inject(Platform).isBrowser;
-
-    /** Whether the nav bar background should be transparent. */
-    readonly transparent = input<boolean, unknown>(false, { transform: booleanAttribute });
-    readonly onSurface = input<boolean, unknown>(false, { transform: booleanAttribute });
-
-    /** Whether the nav bar should be underlined. */
-    readonly underlined = input<boolean, unknown>(false, { transform: booleanAttribute });
-
-    /**
-     * Associated tab panel controlled by the nav bar.
-     */
-    readonly tabNavPanel = input<KbqTabNavPanel>();
 
     get role(): string | null {
         return this.tabNavPanel() ? 'tablist' : this.elementRef.nativeElement.getAttribute('role');
@@ -159,9 +163,6 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
     protected get activeTabDisabled(): boolean {
         return !!this.items.get(this.selectedIndex)?.disabled;
     }
-
-    /** `activeTabDisabled` as this view last rendered it: a link's `disabled` input gives this view no notice. */
-    private checkedActiveTabDisabled = false;
 
     override ngAfterContentInit() {
         // We need this to run before the `changes` subscription in parent to ensure that the `selectedIndex` is
@@ -244,6 +245,11 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
     exportAs: 'kbqTabLink'
 })
 export class KbqTabLink implements OnChanges, OnDestroy, AfterViewInit {
+    readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly focusMonitor = inject(FocusMonitor);
+    private readonly renderer = inject(Renderer2);
+    private readonly tabNavBar = inject(KbqTabNavBar);
+
     /** @docs-private */
     readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
 
@@ -267,8 +273,15 @@ export class KbqTabLink implements OnChanges, OnDestroy, AfterViewInit {
 
     private readonly uniqueId = `kbq-tab-link-${nextUniqueId++}`;
 
+    /** Whether the tab link is active or not. */
+    private _active: boolean = false;
+    private _tabIndex: number = 0;
+
     /** Unique id for the link. */
     id = this.uniqueId;
+
+    /** Whether the tab link is disabled. */
+    disabled: boolean = false;
 
     /** Whether the link is active. */
     get active(): boolean {
@@ -282,9 +295,6 @@ export class KbqTabLink implements OnChanges, OnDestroy, AfterViewInit {
         }
     }
 
-    /** Whether the tab link is active or not. */
-    private _active: boolean = false;
-
     get vertical(): boolean {
         return this.tabNavBar.vertical;
     }
@@ -292,9 +302,6 @@ export class KbqTabLink implements OnChanges, OnDestroy, AfterViewInit {
     get underlined(): boolean {
         return this.tabNavBar.underlined();
     }
-
-    /** Whether the tab link is disabled. */
-    disabled: boolean = false;
 
     /** Link tab index. */
     get tabIndex(): number {
@@ -308,8 +315,6 @@ export class KbqTabLink implements OnChanges, OnDestroy, AfterViewInit {
     set tabIndex(value: number) {
         this._tabIndex = value;
     }
-
-    private _tabIndex: number = 0;
 
     /** Link aria-selected attribute value. */
     protected get ariaSelected(): string | null {
@@ -336,11 +341,6 @@ export class KbqTabLink implements OnChanges, OnDestroy, AfterViewInit {
     protected get ariaCurrent(): string | null {
         return this.active && !this.tabNavBar.tabNavPanel() ? 'page' : null;
     }
-
-    readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly focusMonitor = inject(FocusMonitor);
-    private readonly renderer = inject(Renderer2);
-    private readonly tabNavBar = inject(KbqTabNavBar);
 
     ngOnChanges(changes: SimpleChanges): void {
         // A bound input is handed to its member, except that `undefined` resets a member

@@ -1,18 +1,19 @@
 import type { Translations } from '@koobiq/docs-examples/i18n';
+import { EXAMPLE_INCIDENT_HEADERS, type ExampleIncidentHeaders } from '../incident-headers';
 
 /** Text of the ag-grid-loading-overlay example. */
 export interface ExampleTranslation {
-    headerText: string;
+    headers: ExampleIncidentHeaders;
     showLoadingOverlay: string;
 }
 
 export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
-        headerText: 'Текст',
+        headers: EXAMPLE_INCIDENT_HEADERS['ru-RU'],
         showLoadingOverlay: 'Показать оверлей загрузки'
     },
     default: {
-        headerText: 'Text',
+        headers: EXAMPLE_INCIDENT_HEADERS.default,
         showLoadingOverlay: 'Show loading overlay'
     }
 };

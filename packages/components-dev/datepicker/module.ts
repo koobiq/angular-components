@@ -68,12 +68,12 @@ export class DevApp implements AfterViewInit {
     private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
     date = this.adapter.today();
+    readonly datepicker = viewChild.required(KbqDatepicker);
+
     formControlValue: UntypedFormControl;
     minDate: DateTime;
     maxDate: DateTime;
     startAt: DateTime;
-
-    readonly datepicker = viewChild.required(KbqDatepicker);
 
     constructor() {
         this.formControlValue = new UntypedFormControl(this.adapter.createDateTime(2021, 8, 11, 12, 0, 0, 0));
@@ -87,14 +87,14 @@ export class DevApp implements AfterViewInit {
         this.maxDate = this.adapter.createDate(2024, 7, 20).endOf('day');
     }
 
-    myFilter(date: DateTime): boolean {
-        return date.day !== 0 && date.day !== 6;
-    }
-
     ngAfterViewInit(): void {
         this.datepicker().selectedChanged.subscribe(() => {
             console.log('this.datepicker.selectedChanged');
         });
+    }
+
+    myFilter(date: DateTime): boolean {
+        return date.day !== 0 && date.day !== 6;
     }
 
     onDateChange() {

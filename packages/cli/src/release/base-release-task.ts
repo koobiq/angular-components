@@ -34,6 +34,7 @@ export interface IReleaseTaskConfig {
 export class BaseReleaseTask {
     /** Path to the project package JSON. */
     packageJsonPath: string;
+
     /** Serialized package.json of the specified project. */
     packageJson: any;
 

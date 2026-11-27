@@ -36,8 +36,9 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Removable t
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagListRemovableExample {
-    protected readonly colors = KbqComponentColors;
     protected readonly tags = model(getTags());
+
+    protected readonly colors = KbqComponentColors;
 
     protected removed(event: KbqTagEvent): void {
         this.tags.update((tags) => {

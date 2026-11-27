@@ -49,8 +49,8 @@ class SkeletonWave {
     private readonly window = inject(KBQ_WINDOW) as Window & typeof globalThis;
     private readonly ngZone = inject(NgZone);
     private readonly observer = this.createObserver();
-
     private readonly hosts = new Set<Element>();
+
     /** Hosts waiting to be measured, with whether their wave has just started and needs to be pinned. */
     private readonly pending = new Map<HTMLElement, boolean>();
     private frame: number | null = null;

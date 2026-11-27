@@ -71,6 +71,15 @@ const isLoader = (component: Type<unknown> | DocsExampleLoader): component is Do
     }
 })
 export class DocsLiveExampleViewerComponent extends DocsLocaleState {
+    private readonly documentLoader = inject(DocsDocumentLoader);
+    private readonly cdr = inject(ChangeDetectorRef);
+    private readonly host = kbqInjectNativeElement();
+    private readonly fullscreen = inject(DocsFullscreenService);
+    private readonly sidepanelService = inject(KbqSidepanelService, { optional: true });
+    private readonly modalService = inject(KbqModalService, { optional: true });
+    private readonly toastService = inject(KbqToastService, { optional: true });
+    private readonly stateSaving = inject(KbqStateSavingService);
+
     /**
      * Key of the example to display, resolved against `EXAMPLE_COMPONENTS`. Pages pass only keys the catalogue has:
      * their compiler fails the build on any other.
@@ -84,20 +93,7 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
      */
     readonly component = input.required<Type<unknown> | DocsExampleLoader>();
 
-    protected readonly isSourceShown = signal(false);
-
-    files: KbqCodeBlockFile[] = [];
-
-    /** Data for the currently selected example: the example-page routes only accept a known example id. */
-    readonly exampleData = computed(() => EXAMPLE_COMPONENTS[this.example()]!);
-
-    protected readonly exampleId = computed(() => this.exampleData().selector.replace('-example', ''));
-
-    /**
-     * A plain `href` rather than a `routerLink`: the router does not open a new tab, and before hydration event
-     * replay would swallow the click on a router link.
-     */
-    protected readonly examplePageUrl = computed(() => docsExamplePageUrl(this.example()));
+    readonly exampleElement = viewChild.required<ElementRef<HTMLElement>>('exampleElement');
 
     /** Set to `false` by `reload()` to tear the example down. */
     private readonly isExampleAttached = signal(true);
@@ -107,6 +103,19 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
 
     /** Set when the loader rejects, so a chunk that never arrives does not leave the reader waiting. */
     private readonly hasFailedToLoad = signal(false);
+
+    protected readonly isSourceShown = signal(false);
+    files: KbqCodeBlockFile[] = [];
+
+    /** Data for the currently selected example: the example-page routes only accept a known example id. */
+    readonly exampleData = computed(() => EXAMPLE_COMPONENTS[this.example()]!);
+    protected readonly exampleId = computed(() => this.exampleData().selector.replace('-example', ''));
+
+    /**
+     * A plain `href` rather than a `routerLink`: the router does not open a new tab, and before hydration event
+     * replay would swallow the click on a router link.
+     */
+    protected readonly examplePageUrl = computed(() => docsExamplePageUrl(this.example()));
 
     /** Whether the example waits for its class to load, which a skeleton shows. */
     protected readonly isLoading = computed(
@@ -121,18 +130,6 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
 
         return isLoader(component) ? this.loadedComponent() : component;
     });
-
-    readonly exampleElement = viewChild.required<ElementRef<HTMLElement>>('exampleElement');
-
-    private readonly documentLoader = inject(DocsDocumentLoader);
-    private readonly cdr = inject(ChangeDetectorRef);
-    private readonly host = kbqInjectNativeElement();
-    private readonly fullscreen = inject(DocsFullscreenService);
-    private readonly sidepanelService = inject(KbqSidepanelService, { optional: true });
-    private readonly modalService = inject(KbqModalService, { optional: true });
-    private readonly toastService = inject(KbqToastService, { optional: true });
-    private readonly stateSaving = inject(KbqStateSavingService);
-
     protected readonly fullscreenAvailable = this.fullscreen.available;
     protected readonly isFullscreen = computed(() => this.fullscreen.element() === this.host);
 

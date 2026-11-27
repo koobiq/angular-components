@@ -66,6 +66,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TabsEmptyLabelExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly PopUpPlacements = PopUpPlacements;
 }

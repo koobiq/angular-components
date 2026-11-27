@@ -48,10 +48,10 @@ import { TRANSLATIONS } from './l10n';
 })
 export class RadioValidationExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly form = new FormGroup({
         secondFactor: new FormControl<string | null>(null, Validators.required)
     });
+
     // Shows the error only after the form is submitted, not as soon as focus leaves the group.
     protected readonly errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
 }

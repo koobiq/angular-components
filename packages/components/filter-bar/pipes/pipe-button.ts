@@ -52,8 +52,10 @@ import { KbqPipeState } from './pipe-state';
 export class KbqPipeButton {
     /** KbqPipe instance */
     protected readonly pipe = inject(KbqBasePipe);
+
     /** KbqFilterBar instance */
     protected readonly filterBar = inject(KBQ_FILTER_BAR_HOST);
+
     /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 

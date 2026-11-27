@@ -128,21 +128,28 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     private readonly editorBridge = inject(KbqTimeRangeEditorBridge);
     private readonly document = inject(DOCUMENT);
     private readonly destroyRef = inject(DestroyRef);
+
     /** @docs-private */
     readonly ngControl = inject(NgControl, { optional: true, self: true });
 
     /** The earliest date the calendars offer and the validation accepts. */
     readonly minDate = input<T>();
+
     /** The latest date the calendars offer and the validation accepts. */
     readonly maxDate = input<T>();
+
     /** Seeds the from/to pair of the manual range. */
     readonly defaultRangeValue = input<KbqRangeValue<T>>();
+
     /** The options the editor offers, in order. The first one is selected by default. */
     readonly availableTimeRangeTypes = input<KbqTimeRangeType[]>(this.timeRangeService.providedDefaultTimeRangeTypes);
+
     /** Replaces the built-in trigger. */
     readonly titleTemplate = input<TemplateRef<KbqTimeRangeCustomizableTitleContext>>();
+
     /** Replaces the built-in rendering of an option in the editor. */
     readonly optionTemplate = input<TemplateRef<KbqTimeRangeOptionContext>>();
+
     /** Whether the popover is drawn with an arrow. */
     readonly arrow = input(true, { transform: booleanAttribute });
 
@@ -150,11 +157,14 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
      * Keeps the manual range visible even when `range` is not in {@link availableTimeRangeTypes}.
      */
     readonly showRangeAsDefault = input(true);
+
     /** Falls back to a default value instead of holding `null`. */
     readonly nonNullable = input(true, { transform: booleanAttribute });
 
     /** Emits the corrected value when the provided one could not be used as is. */
     readonly valueCorrected = output<KbqTimeRangeRange>();
+
+    private readonly disabledState = signal(false);
 
     /**
      * Used to calculate time range.
@@ -168,10 +178,9 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
 
     /** @docs-private */
     protected readonly titleValue: WritableSignal<KbqTimeRangeRange | null>;
+
     /** @docs-private */
     protected readonly rangeEditorControl: FormControl<KbqTimeRangeRange>;
-
-    private readonly disabledState = signal(false);
 
     /**
      * The applied time range, or `null` when the component is nullable and holds no value.
@@ -184,15 +193,16 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     readonly disabled: Signal<boolean> = this.disabledState.asReadonly();
 
     /** @docs-private */
-    protected readonly popoverSize = PopUpSizes.Medium;
-    /** @docs-private */
-    protected readonly popupPlacement = PopUpPlacements.BottomLeft;
-
-    /** @docs-private */
     protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'timeRange',
         KBQ_TIME_RANGE_LOCALE_CONFIGURATION
     );
+
+    /** @docs-private */
+    protected readonly popoverSize = PopUpSizes.Medium;
+
+    /** @docs-private */
+    protected readonly popupPlacement = PopUpPlacements.BottomLeft;
 
     constructor() {
         if (this.ngControl) {
@@ -320,12 +330,15 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
 
     /** @docs-private */
     onChange = (_value: KbqTimeRangeRange) => {};
+
     /** @docs-private */
     onTouch = () => {};
+
     /** Implemented as part of ControlValueAccessor */
     registerOnChange(fn: (_value: KbqTimeRangeRange) => void): void {
         this.onChange = fn;
     }
+
     /** Implemented as part of ControlValueAccessor */
     registerOnTouched(fn: () => void): void {
         this.onTouch = fn;

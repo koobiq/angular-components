@@ -41,8 +41,6 @@ const flags: Record<string, string> = flags3x2;
     }
 })
 export class FlagFallbackExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly sanitizer = inject(DomSanitizer);
 
     // "GND", "KRK" and "WA" are not real ISO codes. `hasFlag` guards the lookup — Gondor projects a
@@ -55,6 +53,7 @@ export class FlagFallbackExample {
         { code: 'WA' }
     ];
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly countries = computed(() =>
         this.countriesMeta.map((meta, index) => ({
             ...meta,

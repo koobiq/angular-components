@@ -89,17 +89,14 @@ export class LocalizationDemoBar {
         this.periodPreset('filters.last24h', 'Last 24 hours', { hours: -24 }),
         this.periodPreset('filters.last7days', 'Last 7 days', { days: -7 })
     ];
-
     private readonly statusValues: KbqSelectValue[] = [
         { name: 'Active', nameKey: 'filters.active', id: 'active', value: 'active' },
         { name: 'Blocked', nameKey: 'filters.blocked', id: 'blocked', value: 'blocked' }
     ];
-
     private readonly tagValues: KbqSelectValue[] = [
         { name: 'Alpha', nameKey: 'filters.alpha', id: 'alpha', value: 'alpha' },
         { name: 'Beta', nameKey: 'filters.beta', id: 'beta', value: 'beta' }
     ];
-
     private readonly treeValues: KbqTreeSelectNode[] = [
         {
             name: 'Platform',
@@ -173,7 +170,6 @@ export class LocalizationDemoBar {
             disabled: false
         }
     ];
-
     protected readonly savedFilters: KbqFilter[] = [];
 
     /** Created once. A reset is a user action, not a translation: it may replace the filter. */

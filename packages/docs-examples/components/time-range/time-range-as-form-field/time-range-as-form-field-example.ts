@@ -48,6 +48,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TimeRangeAsFormFieldExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly placeholder = computed(() => this.t().placeholder);
 }

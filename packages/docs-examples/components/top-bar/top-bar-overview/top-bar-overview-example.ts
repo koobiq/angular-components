@@ -112,7 +112,6 @@ type ExampleAction = {
 })
 export class TopBarOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
@@ -122,7 +121,6 @@ export class TopBarOverviewExample {
             ),
         { initialValue: true }
     );
-
     protected readonly actions: ExampleAction[] = [
         {
             id: '1',
@@ -146,7 +144,6 @@ export class TopBarOverviewExample {
             text: 'Create dashboard'
         }
     ];
-
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;

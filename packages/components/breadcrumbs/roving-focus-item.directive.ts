@@ -53,6 +53,16 @@ export class RdxRovingFocusItemDirective implements OnDestroy {
     /** @docs-private */
     readonly isCurrentTabStop = computed(() => this.parent.currentTabStopId() === this.id());
 
+    /**
+     * Determines the `tabIndex` of the element.
+     * Returns `0` if the element is the current tab stop; otherwise, returns `-1`.
+     *
+     * @docs-private
+     */
+    get tabIndex() {
+        return this.isCurrentTabStop() ? 0 : -1;
+    }
+
     constructor() {
         // Registration follows `focusable`, which the host binds to a derived expression: an item that
         // becomes focusable after creation has to join the group, and one that stops being focusable has
@@ -76,16 +86,6 @@ export class RdxRovingFocusItemDirective implements OnDestroy {
      */
     ngOnDestroy() {
         this.parent.unregisterItem(this.elementRef.nativeElement);
-    }
-
-    /**
-     * Determines the `tabIndex` of the element.
-     * Returns `0` if the element is the current tab stop; otherwise, returns `-1`.
-     *
-     * @docs-private
-     */
-    get tabIndex() {
-        return this.isCurrentTabStop() ? 0 : -1;
     }
 
     /** @docs-private */

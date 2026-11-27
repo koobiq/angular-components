@@ -23,11 +23,11 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastActionsOverviewExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    readonly toastService = inject(KbqToastService);
 
     readonly dropdown = viewChild.required<KbqDropdown>('dropdown');
 
-    readonly toastService = inject(KbqToastService);
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     showSingleActionToast(title: TemplateRef<any>, actions: TemplateRef<any>) {
         this.toastService.show({ style: KbqToastStyle.Success, title, actions });

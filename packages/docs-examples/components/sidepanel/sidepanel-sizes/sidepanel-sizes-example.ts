@@ -22,12 +22,11 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelSizesExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private sidepanelService = inject(KbqSidepanelService);
 
     readonly template = viewChild.required(TemplateRef);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     arrayLength = 40;
     array = new Array(this.arrayLength);
 

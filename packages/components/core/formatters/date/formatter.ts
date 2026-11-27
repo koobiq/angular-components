@@ -7,9 +7,10 @@ import { KBQ_LOCALE_SERVICE, type KbqLocaleService } from '../../locales';
 
 @Injectable()
 export class DateFormatter<D> extends BaseDateFormatter<D> {
+    protected localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
+
     override readonly adapter: DateAdapter<D>;
 
-    protected localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     constructor() {
         const adapter = inject<DateAdapter<D>>(KbqDateAdapter);
         const locale = inject(KBQ_DATE_LOCALE);

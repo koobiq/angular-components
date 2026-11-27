@@ -82,6 +82,8 @@ const DATA_OBJECT: FileTree = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeTrackByExample {
+    private readonly drafts: FileTree = {};
+
     protected readonly treeControl = new FlatTreeControl<FileFlatNode, string>(
         (node) => node.level,
         (node) => node.expandable,
@@ -100,8 +102,6 @@ export class TreeTrackByExample {
         ),
         buildFileTree(DATA_OBJECT)
     );
-
-    private readonly drafts: FileTree = {};
 
     constructor() {
         // Before anything is expanded: a key is matched only under the function that stored it.

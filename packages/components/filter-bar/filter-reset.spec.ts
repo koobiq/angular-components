@@ -21,7 +21,6 @@ class TestComponent {
         saved: false,
         pipes: []
     };
-
     onResetFilter = vi.fn();
 }
 

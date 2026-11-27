@@ -133,7 +133,7 @@ export const kbqToastConfigurationProvider: (configuration: Partial<KbqToastConf
 export class KbqToastContainerComponent extends CdkScrollable {
     constructor();
     // (undocumented)
-    protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
+    protected readonly a11yLocaleConfiguration: Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     // (undocumented)
     createTemplate(data: KbqToastData, template: TemplateRef<any>, onTop: boolean): EmbeddedViewRef<KbqToastTemplateContext>;
     // (undocumented)
@@ -145,7 +145,7 @@ export class KbqToastContainerComponent extends CdkScrollable {
     // (undocumented)
     readonly service: KbqToastService<any>;
     // (undocumented)
-    readonly viewContainer: i0.Signal<ViewContainerRef>;
+    readonly viewContainer: Signal<ViewContainerRef>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqToastContainerComponent, "kbq-toast-container", never, {}, {}, never, never, true, never>;
     // (undocumented)

@@ -49,13 +49,12 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class ValidationBasicSingleValidatorExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    private readonly formFieldList = viewChildren(KbqFormField);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly form = new FormGroup({
         name: new FormControl('', [Validators.required])
     });
-
-    private readonly formFieldList = viewChildren(KbqFormField);
 
     onSubmit(): void {
         setTimeout(() => {

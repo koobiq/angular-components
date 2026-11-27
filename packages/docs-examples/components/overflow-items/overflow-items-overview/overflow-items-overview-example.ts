@@ -58,8 +58,8 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OverflowItemsOverviewExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
-    readonly items = Array.from({ length: 20 }, (_, i) => `Item${i}`);
     readonly reverseOverflowOrder = model(false);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
+    readonly items = Array.from({ length: 20 }, (_, i) => `Item${i}`);
 }

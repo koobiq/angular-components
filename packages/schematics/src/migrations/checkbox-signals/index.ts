@@ -494,12 +494,12 @@ interface TemplateRef extends Range {
  * template introduces.
  */
 class TemplateScanner implements Visitor {
+    /** The embedded view currently being walked; a ref declared in it is invisible outside. */
+    private view: Range;
+
     readonly checkboxRefs: TemplateRef[] = [];
     readonly otherNames = new Set<string>();
     readonly expressions: Range[] = [];
-
-    /** The embedded view currently being walked; a ref declared in it is invisible outside. */
-    private view: Range;
 
     constructor(private readonly template: string) {
         this.view = { start: 0, end: template.length };
@@ -621,9 +621,13 @@ class TemplateScanner implements Visitor {
     }
 
     visitAttribute(): void {}
+
     visitComment(): void {}
+
     visitExpansion(): void {}
+
     visitExpansionCase(): void {}
+
     visitBlockParameter(): void {}
 }
 

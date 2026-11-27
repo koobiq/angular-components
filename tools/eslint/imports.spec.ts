@@ -6,7 +6,12 @@ import tseslint from 'typescript-eslint';
 import { importsConfig } from './imports';
 
 const overrideConfig: Linter.Config[] = [{ languageOptions: { parser: tseslint.parser } }, ...importsConfig];
-const fixingEslint = new ESLint({ overrideConfigFile: true, overrideConfig, fix: true });
+const fixingEslint = new ESLint({
+    overrideConfigFile: true,
+    overrideConfig,
+    fix: true,
+    ruleFilter: ({ ruleId }) => ruleId !== 'import-x/no-cycle'
+});
 const filePath = 'packages/components/probe/probe.ts';
 
 /** Rules reported on `a.ts`, which extends a class of `b.ts`, while `b.ts` imports `A` as `importOfA` for a type. */

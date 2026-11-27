@@ -68,9 +68,7 @@ class TestComponent {
     readonly filtersComponent = viewChild.required(KbqFilters);
 
     activeFilter: KbqFilter | null = null;
-
     filters: KbqFilter[] = [];
-
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Text',
@@ -81,7 +79,6 @@ class TestComponent {
             disabled: false
         }
     ];
-
     onSelectFilterSpy = vi.fn();
     onSaveSpy = vi.fn();
     onRemoveFilterSpy = vi.fn();
@@ -91,7 +88,6 @@ class TestComponent {
 /** Calls `command` from an effect of its own view, at most ten times. */
 @Component({ template: '' })
 class EffectHost {
-    command: () => void = () => {};
     runs = 0;
 
     constructor() {
@@ -102,6 +98,8 @@ class EffectHost {
             this.command();
         });
     }
+
+    command: () => void = () => {};
 }
 
 describe('KbqFilters', () => {

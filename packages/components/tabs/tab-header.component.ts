@@ -47,16 +47,22 @@ const TAB_PADDING = 12;
     outputs: ['selectFocusedIndex', 'indexFocused']
 })
 export class KbqTabHeader extends KbqPaginatedTabHeader {
+    private readonly isBrowser = inject(Platform).isBrowser;
+
     /** Whether the tabs are underlined. */
     readonly underlined = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     private readonly itemsQuery = contentChildren(KbqTabLabelWrapper, { descendants: false });
-    private readonly itemsList = kbqQueryListFrom(this.itemsQuery);
     private readonly tabListContainerQuery = viewChild.required<ElementRef>('tabListContainer');
     private readonly scrollbarViewportQuery = viewChild.required('tabListContainer', { read: KbqScrollbarViewport });
     private readonly tabListQuery = viewChild.required<ElementRef>('tabList');
     private readonly nextPaginatorQuery = viewChild.required<ElementRef<HTMLElement>>('nextPaginator');
     private readonly previousPaginatorQuery = viewChild.required<ElementRef<HTMLElement>>('previousPaginator');
+
+    private readonly itemsList = kbqQueryListFrom(this.itemsQuery);
+
+    /** The underline as the last check of the tab group measured it, see `ngAfterContentChecked`. */
+    private checkedUnderline?: string;
 
     /** The label wrappers of the tabs. */
     get items(): QueryList<KbqTabLabelWrapper> {
@@ -86,11 +92,6 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
     get previousPaginator(): ElementRef<HTMLElement> {
         return this.previousPaginatorQuery();
     }
-
-    private readonly isBrowser = inject(Platform).isBrowser;
-
-    /** The underline as the last check of the tab group measured it, see `ngAfterContentChecked`. */
-    private checkedUnderline?: string;
 
     protected get activeTabOffsetWidth(): number | undefined {
         if (!this.isBrowser) return undefined;

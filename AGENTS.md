@@ -117,9 +117,8 @@ There are two types of test files per component:
 
 ```bash
 # Unit tests (Vitest)
-yarn run styles:build-all # CI does this before the unit suites; do the same before a full local run
-yarn run unit:all         # The `angular` and `node` projects of vitest.config.mts; `unit:mcp` covers the `mcp` one
-yarn run unit:components  # Run component unit tests
+yarn run unit:all        # The `angular` and `node` projects of vitest.config.mts; `unit:mcp` covers the `mcp` one
+yarn run unit:components # Run component unit tests
 yarn run unit:components-experimental
 yarn run unit:angular-luxon-adapter
 yarn run unit:angular-moment-adapter
@@ -189,7 +188,7 @@ Every pull request runs these workflows:
 | Workflow                          | What it runs                                                                                                                                                                     |
 | --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Linters                           | `cspell`, `prettier`, `stylelint --max-warnings=0`, `eslint --max-warnings=0`, `check-peer-deps`, `check-e2e-types`, `check-spec-types`, `check-tokens-data`, `check-docs-pages` |
-| Unit tests                        | `styles:build-all`, then `unit:all` (one Vitest run of the `angular` and `node` projects, not `mcp` — that is `mcp.yml`)                                                         |
+| Unit tests                        | `unit:all` (the `angular` and `node` Vitest projects)                                                                                                                            |
 | MCP                               | `build:mcp` on its own (needs no `@koobiq/components` build), `check-mcp-data` and `unit:mcp`                                                                                    |
 | E2E tests                         | `e2e:docker` (component screenshots) and `e2e:docs` (docs smoke)                                                                                                                 |
 | API                               | build the packages, then `check-typings`, `check-api`, `check-public-api-any`, `docs:api-gen`, `check-api-docs`, `check-llms` and `check-skills`                                 |

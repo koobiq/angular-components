@@ -58,12 +58,12 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     }
 })
 export class E2eToggleStateAndStyle {
+    readonly indeterminate = model(false);
+    readonly big = model(false);
+
     readonly states = ['normal', 'hovered', 'focused', 'disabled', 'loading'] as const;
     readonly colors = [KbqComponentColors.Theme, KbqComponentColors.Error];
     readonly types = ['default', 'checked'] as const;
-
-    readonly indeterminate = model(false);
-    readonly big = model(false);
 }
 
 @Component({

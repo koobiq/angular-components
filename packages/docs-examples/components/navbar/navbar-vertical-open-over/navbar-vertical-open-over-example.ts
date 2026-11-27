@@ -25,6 +25,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class NavbarVerticalOpenOverExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     popUpPlacements = PopUpPlacements;
 }

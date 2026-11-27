@@ -252,9 +252,9 @@ export class E2eLoaderOverlayBackground {
     }
 })
 export class E2eLoaderOverlayCard {
-    private readonly modalContent = viewChild.required<TemplateRef<any>>('modalContent');
-
     private readonly modal = inject(KbqModalService);
+
+    private readonly modalContent = viewChild.required<TemplateRef<any>>('modalContent');
 
     protected open(): void {
         this.modal.create({

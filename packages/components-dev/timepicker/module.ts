@@ -49,11 +49,8 @@ export class DevApp {
     timeFormats = TimeFormats;
     minDate: DateTime;
     maxDate: DateTime;
-
     reactiveFormControlValue: UntypedFormControl;
-
     ngModelValue: any;
-
     timeFormat = TimeFormats.HHmm;
 
     constructor() {

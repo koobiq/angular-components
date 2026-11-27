@@ -62,7 +62,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class SelectAddNewOptionExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly options = [
         'admin / @dm1n',
         'root / P@ssw0rd',

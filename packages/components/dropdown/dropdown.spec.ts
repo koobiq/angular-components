@@ -1,6 +1,20 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { type Direction, Directionality } from '@angular/cdk/bidi';
 import {
+    A,
+    B,
+    DOWN_ARROW,
+    END,
+    ENTER,
+    ESCAPE,
+    HOME,
+    LEFT_ARROW,
+    RIGHT_ARROW,
+    SPACE,
+    TAB,
+    UP_ARROW
+} from '@angular/cdk/keycodes';
+import {
     FlexibleConnectedPositionStrategy,
     Overlay,
     OverlayContainer,
@@ -28,8 +42,6 @@ import { By } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
 import type { MockInstance } from 'vitest';
 import {
-    A,
-    B,
     createKeyboardEvent,
     createMouseEvent,
     defaultOffsetY,
@@ -37,21 +49,11 @@ import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
-    DOWN_ARROW,
-    END,
-    ENTER,
-    ESCAPE,
-    HOME,
     KbqOverlayLayer,
     type KbqOverlayOrigin,
     type KbqPanelWidth,
-    LEFT_ARROW,
     patchElementFocus,
-    RIGHT_ARROW,
-    ruRULocaleData,
-    SPACE,
-    TAB,
-    UP_ARROW
+    ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqFormField, kbqFormFieldDefaultOptionsProvider, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -1255,18 +1257,6 @@ describe('KbqDropdown', () => {
             readonly fixture: ComponentFixture<T>;
             readonly trigger: HTMLElement;
 
-            constructor(ctor: new () => T, inputs: { [key: string]: any } = {}) {
-                this.fixture = createComponent(ctor);
-                Object.keys(inputs).forEach((key) => this.fixture.componentRef.setInput(key, inputs[key]));
-                this.fixture.detectChanges();
-                this.trigger = this.fixture.componentInstance.triggerEl().nativeElement;
-            }
-
-            open() {
-                this.fixture.componentInstance.trigger().open();
-                this.fixture.detectChanges();
-            }
-
             get overlayRect() {
                 return this.getOverlayPane().getBoundingClientRect();
             }
@@ -1277,6 +1267,18 @@ describe('KbqDropdown', () => {
 
             get dropdownPanel() {
                 return overlayContainerElement.querySelector(PANEL_SELECTOR);
+            }
+
+            constructor(ctor: new () => T, inputs: { [key: string]: any } = {}) {
+                this.fixture = createComponent(ctor);
+                Object.keys(inputs).forEach((key) => this.fixture.componentRef.setInput(key, inputs[key]));
+                this.fixture.detectChanges();
+                this.trigger = this.fixture.componentInstance.triggerEl().nativeElement;
+            }
+
+            open() {
+                this.fixture.componentInstance.trigger().open();
+                this.fixture.detectChanges();
             }
 
             private getOverlayPane() {
@@ -4344,6 +4346,7 @@ describe('KbqDropdown', () => {
             readonly trigger = viewChild.required(KbqDropdownTrigger);
             readonly dropdown = viewChild.required('dropdown', { read: KbqDropdown });
             readonly item = viewChild.required(KbqDropdownItem);
+
             readonly otherPanel = signal(false);
             readonly itemDisabled = signal(false);
             readonly wantOpen = signal(false);
@@ -4546,6 +4549,7 @@ class SimpleDropdown {
     readonly triggerEl = viewChild.required<ElementRef<HTMLElement>>('triggerEl');
     readonly dropdown = viewChild.required(KbqDropdown);
     readonly items = viewChildren(KbqDropdownItem);
+
     extraItems: string[] = [];
     closeCallback = vi.fn((name: string | undefined) => name);
     backdropClass: string;
@@ -4614,6 +4618,7 @@ class ActionDropdown {
     readonly dropdown = viewChild.required(KbqDropdown);
     readonly nestedTrigger = viewChild.required<KbqDropdownTrigger>('nestedTrigger');
     readonly disabledNestedTrigger = viewChild.required<KbqDropdownTrigger>('disabledNestedTrigger');
+
     closeCallback = vi.fn();
     primaryClick = vi.fn();
     actionClick = vi.fn((event: MouseEvent) => event.preventDefault());
@@ -4647,6 +4652,7 @@ class ContentDirectivesDropdown {
 })
 class PanelMinWidthDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
+
     panelMinWidth: number | null = 200;
     panelWidth: 'auto' | number | null = null;
 }
@@ -4666,6 +4672,7 @@ class PanelMinWidthDropdown {
 })
 class SearchDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
+
     readonly control = new FormControl('');
     panelWidth: 'auto' | number | null = null;
 }
@@ -4687,6 +4694,7 @@ class SearchDropdown {
 })
 class SearchNavigationDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
+
     readonly control = new FormControl('');
     readonly items = ['One', 'Two', 'Three'];
     filtered = [...this.items];
@@ -4712,6 +4720,7 @@ class SearchNavigationDropdown {
 })
 class SearchWithoutCleanerDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
+
     readonly control = new FormControl('query');
 }
 
@@ -4732,6 +4741,7 @@ class SearchWithoutCleanerDropdown {
 })
 class LazySearchDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
+
     readonly control = new FormControl('');
 }
 
@@ -4752,6 +4762,7 @@ class LazySearchDropdown {
 })
 class ConditionalSearchDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
+
     readonly control = new FormControl('');
     showSearch = false;
 }
@@ -4771,6 +4782,7 @@ class ConditionalSearchDropdown {
 })
 class SearchWithDisabledItemDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
+
     readonly control = new FormControl('');
     clicked = false;
 }
@@ -4825,6 +4837,7 @@ class SearchWithNumberInputDropdown {
 class NestedSearchDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
     readonly dropdown = viewChild.required(KbqDropdown);
+
     readonly control = new FormControl('');
 }
 
@@ -4846,6 +4859,7 @@ class NestedSearchDropdown {
 })
 class SearchWithNestedDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
+
     readonly control = new FormControl('');
 }
 
@@ -4900,6 +4914,7 @@ class TypeaheadDropdown {
 class PositionedDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
     readonly triggerEl = viewChild.required<ElementRef<HTMLElement>>('triggerEl');
+
     xPosition: KbqDropdownPositionX = 'before';
     yPosition: KbqDropdownPositionY = 'above';
 }
@@ -4922,6 +4937,7 @@ interface TestableDropdown {
 })
 class OverlapDropdown implements TestableDropdown {
     readonly overlapTriggerY = input<boolean>(undefined!);
+
     readonly trigger = viewChild.required(KbqDropdownTrigger);
     readonly triggerEl = viewChild.required<ElementRef<HTMLElement>>('triggerEl');
 }
@@ -4937,6 +4953,10 @@ class OverlapDropdown implements TestableDropdown {
     exportAs: 'appCustomDropdown'
 })
 class CustomDropdownPanel implements KbqDropdownPanel {
+    readonly closed = output<DropdownCloseReason>();
+
+    readonly templateRef = viewChild.required(TemplateRef);
+
     direction: Direction;
     readonly xPosition = signal<KbqDropdownPositionX>('after');
     readonly yPosition = signal<KbqDropdownPositionY>('below');
@@ -4944,14 +4964,14 @@ class CustomDropdownPanel implements KbqDropdownPanel {
     readonly overlapTriggerY = signal(true);
     parent: KbqDropdownPanel;
     readonly items = signal<readonly KbqDropdownItem[]>([]);
-
-    readonly templateRef = viewChild.required(TemplateRef);
-    readonly closed = output<DropdownCloseReason>();
     readonly backdropClass = signal('');
     readonly hasBackdrop = signal(false);
     readonly lazyContent = signal<KbqDropdownContent | undefined>(undefined);
+
     focusFirstItem = () => {};
+
     resetActiveItem = () => {};
+
     setPositionClasses = () => {};
 
     addItem(): void {}
@@ -5042,28 +5062,24 @@ class CustomDropdown {
     `
 })
 class NestedDropdown {
-    levelOneTriggerDisabled = false;
-    secondItemDisabled = false;
-    lazyTriggerDisabled = false;
-
     readonly rootDropdown = viewChild.required<KbqDropdown>('root');
     readonly rootTrigger = viewChild.required<KbqDropdownTrigger>('rootTrigger');
     readonly rootTriggerEl = viewChild.required<ElementRef<HTMLElement>>('rootTriggerEl');
     readonly alternateTrigger = viewChild.required<KbqDropdownTrigger>('alternateTrigger');
-    readonly rootCloseCallback = vi.fn();
-
     readonly levelOneDropdown = viewChild.required<KbqDropdown>('levelOne');
     readonly levelOneTrigger = viewChild.required<KbqDropdownTrigger>('levelOneTrigger');
-    readonly levelOneCloseCallback = vi.fn();
-
     readonly levelTwoDropdown = viewChild.required<KbqDropdown>('levelTwo');
     readonly levelTwoTrigger = viewChild.required<KbqDropdownTrigger>('levelTwoTrigger');
-    readonly levelTwoCloseCallback = vi.fn();
-
     readonly lazyDropdown = viewChild.required<KbqDropdown>('lazy');
     readonly lazyTrigger = viewChild.required<KbqDropdownTrigger>('lazyTrigger');
-    showLazy = false;
 
+    levelOneTriggerDisabled = false;
+    secondItemDisabled = false;
+    lazyTriggerDisabled = false;
+    readonly rootCloseCallback = vi.fn();
+    readonly levelOneCloseCallback = vi.fn();
+    readonly levelTwoCloseCallback = vi.fn();
+    showLazy = false;
     safeAreaEnabled = false;
 }
 
@@ -5090,8 +5106,8 @@ class NestedDropdown {
 class NestedDropdownRepeater {
     readonly rootTriggerEl = viewChild.required<ElementRef<HTMLElement>>('rootTriggerEl');
     readonly levelOneDropdown = viewChild.required<KbqDropdown>('levelOne');
-    readonly rootCloseCallback = vi.fn();
 
+    readonly rootCloseCallback = vi.fn();
     items = ['one', 'two', 'three'];
 }
 
@@ -5209,6 +5225,7 @@ class DropdownWithItemTooltip {
 class LazyDropdownReopenedOnClose {
     readonly first = viewChild.required('first', { read: KbqDropdownTrigger });
     readonly second = viewChild.required('second', { read: KbqDropdownTrigger });
+
     /** Trigger the next `dropdownClosed` opens the panel with. */
     openOnClose: 'first' | 'second' | null = null;
 
@@ -5240,8 +5257,10 @@ class DynamicPanelDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
     readonly first = viewChild.required<KbqDropdown>('one');
     readonly second = viewChild.required<KbqDropdown>('two');
+
     /** The panel bound to the trigger; `null` leaves the first one in place. */
     panel: KbqDropdownPanel | null = null;
+
     /** Binds the trigger to no panel at all, which `throwKbqDropdownMissingError` reports on open. */
     clearPanel = false;
 }
@@ -5413,6 +5432,7 @@ class FocusRestoreDropdown {
 class SharedPanelDropdown {
     readonly dropdown = viewChild.required(KbqDropdown);
     readonly triggerList = viewChildren(KbqDropdownTrigger);
+
     triggers: string[] = ['One', 'Two', 'Three'];
 }
 
@@ -5431,6 +5451,7 @@ class SharedPanelDropdown {
 })
 class AccessibleSearchDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
+
     readonly control = new FormControl('');
 }
 
@@ -5448,6 +5469,7 @@ class AccessibleSearchDropdown {
 })
 class UnnamedSearchDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
+
     readonly control = new FormControl('');
 }
 
@@ -5462,6 +5484,7 @@ class UnnamedSearchDropdown {
 })
 class RoleOwningItemDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
+
     primaryClick = vi.fn();
 }
 
@@ -5476,6 +5499,7 @@ class RoleOwningItemDropdown {
 })
 class RoleButtonItemDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
+
     primaryClick = vi.fn();
 }
 
@@ -5513,14 +5537,14 @@ class HostClassDropdown {
     `
 })
 class DropdownOrigin {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+    readonly triggerEl = viewChild.required<ElementRef<HTMLElement>>('triggerEl');
+    readonly dropdown = viewChild.required(KbqDropdown);
+
     activeDescendantNavigation = false;
     autoFocus = true;
     origin: KbqOverlayOrigin | null = null;
     panelWidth: KbqPanelWidth = null;
-
-    readonly trigger = viewChild.required(KbqDropdownTrigger);
-    readonly triggerEl = viewChild.required<ElementRef<HTMLElement>>('triggerEl');
-    readonly dropdown = viewChild.required(KbqDropdown);
 }
 
 @Component({

@@ -101,26 +101,6 @@ export class KbqAlertControl {}
 export class KbqAlert {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
-    /** @docs-private */
-    protected readonly iconItem = contentChild(KbqIconItem, { descendants: false });
-    /** @docs-private */
-    protected readonly icon = contentChild(KbqIcon, { descendants: false });
-
-    /**
-     * Must keep the default `descendants: true`: it does not gate a projection slot, it reports whether the
-     * already-projected `[kbq-alert-control]` slot contains a button (which can sit inside a wrapper element),
-     * and drives the `_has-button` button-stack padding.
-     *
-     * @docs-private
-     */
-    protected readonly button = contentChild(KbqButton);
-    /** @docs-private */
-    protected readonly title = contentChild(KbqAlertTitle, { descendants: false });
-    /** @docs-private */
-    protected readonly control = contentChild(KbqAlertControl, { descendants: false });
-    /** @docs-private */
-    protected readonly closeButton = contentChild(KbqAlertCloseButton, { descendants: false });
-
     /** Whether the alert uses the denser compact size. */
     readonly compact = input(false, { transform: booleanAttribute });
 
@@ -140,16 +120,43 @@ export class KbqAlert {
     readonly closed = output<void>();
 
     /** @docs-private */
-    protected readonly alertColorClass = computed(() => `kbq-alert_${this.alertColor()}`);
+    protected readonly iconItem = contentChild(KbqIconItem, { descendants: false });
+
     /** @docs-private */
-    protected readonly isColored = computed(() => this.alertStyle() === KbqAlertStyles.Colored);
-    /** The projected status icon, whichever slot it came from. @docs-private */
-    protected readonly projectedIcon = computed(() => this.icon() || this.iconItem());
+    protected readonly icon = contentChild(KbqIcon, { descendants: false });
+
+    /**
+     * Must keep the default `descendants: true`: it does not gate a projection slot, it reports whether the
+     * already-projected `[kbq-alert-control]` slot contains a button (which can sit inside a wrapper element),
+     * and drives the `_has-button` button-stack padding.
+     *
+     * @docs-private
+     */
+    protected readonly button = contentChild(KbqButton);
+
+    /** @docs-private */
+    protected readonly title = contentChild(KbqAlertTitle, { descendants: false });
+
+    /** @docs-private */
+    protected readonly control = contentChild(KbqAlertControl, { descendants: false });
+
+    /** @docs-private */
+    protected readonly closeButton = contentChild(KbqAlertCloseButton, { descendants: false });
 
     /** Last color this component auto-assigned to the icon; lets us correct color on change without ignoring consumer's color. */
     private lastAutoColor: KbqComponentColors | null = null;
+
     /** Guards the dev-mode double-icon warning so it fires once per instance. */
     private multipleIconsWarned = false;
+
+    /** @docs-private */
+    protected readonly alertColorClass = computed(() => `kbq-alert_${this.alertColor()}`);
+
+    /** @docs-private */
+    protected readonly isColored = computed(() => this.alertStyle() === KbqAlertStyles.Colored);
+
+    /** The projected status icon, whichever slot it came from. @docs-private */
+    protected readonly projectedIcon = computed(() => this.icon() || this.iconItem());
 
     constructor() {
         // Keep the uncolored projected icon in sync with the alert status, reacting to both a later

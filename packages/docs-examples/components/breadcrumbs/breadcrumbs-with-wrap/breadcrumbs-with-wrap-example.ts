@@ -22,7 +22,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class BreadcrumbsWithWrapExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly breadcrumbs = computed(() => [
         { label: this.t().main },
         { label: this.t().standards },

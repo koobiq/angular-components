@@ -1,11 +1,9 @@
+import { ESCAPE, LEFT_ARROW, RIGHT_ARROW } from '@angular/cdk/keycodes';
 import { type AfterContentInit, Directive, inject } from '@angular/core';
 import {
-    ESCAPE,
     kbqInjectA11yLocaleConfiguration,
     kbqInjectNativeElement,
-    kbqSyncSearchFieldA11y,
-    LEFT_ARROW,
-    RIGHT_ARROW
+    kbqSyncSearchFieldA11y
 } from '@koobiq/components/core';
 import { KBQ_FORM_FIELD, KBQ_FORM_FIELD_DEFAULT_OPTIONS } from '@koobiq/components/form-field';
 import { KBQ_DROPDOWN_PANEL } from './dropdown.types';
@@ -50,6 +48,11 @@ export class KbqDropdownSearch implements AfterContentInit {
      */
     readonly panel = inject(KBQ_DROPDOWN_PANEL, { optional: true });
 
+    /** The form control the query is bound to. */
+    get ngControl() {
+        return this.formField.control().ngControl;
+    }
+
     constructor() {
         const localeConfiguration = kbqInjectA11yLocaleConfiguration();
 
@@ -58,11 +61,6 @@ export class KbqDropdownSearch implements AfterContentInit {
             () => this.panel?.searchFieldPopup,
             () => localeConfiguration().search
         );
-    }
-
-    /** The form control the query is bound to. */
-    get ngControl() {
-        return this.formField.control().ngControl;
     }
 
     ngAfterContentInit(): void {

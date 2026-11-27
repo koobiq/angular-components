@@ -84,9 +84,7 @@ class TestComponent {
     readonly optionTemplate = viewChild.required<TemplateRef<any>>('optionTemplate');
 
     selectedAllEqualsSelectedNothing = true;
-
     activeFilter: KbqFilter | null = null;
-
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'MultiSelect',

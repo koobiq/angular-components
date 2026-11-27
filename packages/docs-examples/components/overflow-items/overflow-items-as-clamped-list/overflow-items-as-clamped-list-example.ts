@@ -77,6 +77,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class OverflowItemsAsClampedListExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly countries = computed(() => this.t().countries);
 }

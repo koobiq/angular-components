@@ -87,6 +87,7 @@ import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker'
 })
 export class E2eTimepickerStates {
     private readonly adapter = inject(DateAdapter<DateTime>);
+
     protected readonly timeFormats = TimeFormats;
     protected readonly value = model(this.adapter.createDateTime(2022, 6, 7, 14, 30, 25, 15));
     protected readonly invalidControl = new FormControl(null, [Validators.required]);

@@ -99,8 +99,9 @@ import { KbqInlineEditModule } from './module';
     }
 })
 export class E2eInlineEditStates {
-    protected readonly inlineEditList = viewChildren(KbqInlineEdit);
     private readonly nativeElement = kbqInjectNativeElement();
+
+    protected readonly inlineEditList = viewChildren(KbqInlineEdit);
 
     openInlineEdits() {
         this.inlineEditList().forEach((inlineEdit) => inlineEdit.toggleMode());

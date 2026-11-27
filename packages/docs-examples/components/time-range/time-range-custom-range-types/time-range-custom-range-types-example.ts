@@ -89,20 +89,18 @@ const customTypeTranslation: Record<string, KbqTimeRangeTranslationType> = Objec
     }
 })
 export class TimeRangeCustomRangeTypesExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly dateAdapter = inject(DateAdapter);
     protected readonly dateFormatter = inject(DateFormatter);
-
     private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
-    private readonly localeId = toSignal(this.localeService?.changes || of(''));
 
+    private readonly localeId = toSignal(this.localeService?.changes || of(''));
     private readonly localeConfig = computed(() => {
         this.localeId();
 
         return this.localeService?.getParams('timeRange');
     });
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly placeholder = computed(() => this.t().placeholder);
 
     protected optionLabel(type: string): string {

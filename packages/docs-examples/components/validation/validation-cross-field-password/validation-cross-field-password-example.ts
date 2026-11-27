@@ -161,8 +161,9 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher(
     }
 })
 export class ValidationCrossFieldPasswordExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    private readonly formFieldList = viewChildren(KbqFormField);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly form = new FormGroup(
         {
             currentPassword: new FormControl('', Validators.required),
@@ -179,8 +180,6 @@ export class ValidationCrossFieldPasswordExample {
             ]
         }
     );
-
-    private readonly formFieldList = viewChildren(KbqFormField);
 
     protected onSubmit(formDirective: FormGroupDirective): void {
         if (this.form.invalid) {

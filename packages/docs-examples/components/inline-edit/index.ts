@@ -8,6 +8,7 @@ import { InlineEditDisabledExample } from './inline-edit-disabled/inline-edit-di
 import { InlineEditEditableHeaderExample } from './inline-edit-editable-header/inline-edit-editable-header-example';
 import { InlineEditHorizontalListExample } from './inline-edit-horizontal-list/inline-edit-horizontal-list-example';
 import { InlineEditMenuExample } from './inline-edit-menu/inline-edit-menu-example';
+import { InlineEditMixedListExample } from './inline-edit-mixed-list/inline-edit-mixed-list-example';
 import { InlineEditOnCleanExample } from './inline-edit-on-clean/inline-edit-on-clean-example';
 import { InlineEditOverviewExample } from './inline-edit-overview/inline-edit-overview-example';
 import { InlineEditSaveErrorExample } from './inline-edit-save-error/inline-edit-save-error-example';
@@ -31,6 +32,7 @@ export {
     InlineEditEditableHeaderExample,
     InlineEditHorizontalListExample,
     InlineEditMenuExample,
+    InlineEditMixedListExample,
     InlineEditOnCleanExample,
     InlineEditOverviewExample,
     InlineEditSaveErrorExample,
@@ -51,6 +53,7 @@ const EXAMPLES = [
     InlineEditMenuExample,
     InlineEditDisabledExample,
     InlineEditHorizontalListExample,
+    InlineEditMixedListExample,
     InlineEditOnCleanExample,
     InlineEditSelectBasicExample,
     InlineEditSelectExample,

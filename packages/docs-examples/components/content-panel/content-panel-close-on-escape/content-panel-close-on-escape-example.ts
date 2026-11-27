@@ -54,9 +54,9 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class ContentPanelCloseOnEscapeExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly panel = viewChild.required(KbqContentPanelContainer);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly options = Array.from({ length: 3 }, (_, index) => `Option ${index + 1}`);
 
     protected closeOnEscape(event: Event): void {

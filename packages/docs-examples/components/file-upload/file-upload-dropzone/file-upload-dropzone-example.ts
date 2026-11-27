@@ -66,15 +66,15 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadDropzoneExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly dropzoneService = inject(KbqFullScreenDropzoneService);
+    protected readonly destroyRef = inject(DestroyRef);
 
-    protected readonly isActive = signal(false);
     protected readonly files = model<KbqFileItem[]>([]);
 
     protected readonly fileUpload = viewChild(KbqMultipleFileUploadComponent);
 
-    protected readonly dropzoneService = inject(KbqFullScreenDropzoneService);
-    protected readonly destroyRef = inject(DestroyRef);
+    protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly isActive = signal(false);
 
     constructor() {
         const sub = this.dropzoneService.filesDropped.subscribe((files) => {

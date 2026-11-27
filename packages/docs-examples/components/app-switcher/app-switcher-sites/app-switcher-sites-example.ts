@@ -38,7 +38,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class AppSwitcherSitesExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     SVGIcon: string = `
         <svg fill="none" height="24" viewBox="0 0 32 32" width="24" xmlns="http://www.w3.org/2000/svg">
             <path clip-rule="evenodd"
@@ -49,7 +48,6 @@ export class AppSwitcherSitesExample {
                 fill="white" />
         </svg>
     `;
-
     sites: KbqAppSwitcherSite[] = [
         {
             name: 'СЗФО',
@@ -427,7 +425,6 @@ export class AppSwitcherSitesExample {
             ]
         }
     ];
-
     selectedSite: KbqAppSwitcherSite | undefined = this.sites[0];
     selectedApp: KbqAppSwitcherApp | undefined = this.sites[0]?.apps[0];
 }

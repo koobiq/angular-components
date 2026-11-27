@@ -274,11 +274,17 @@ class TriggerRefCollector implements Visitor {
     }
 
     visitAttribute(): void {}
+
     visitText(): void {}
+
     visitComment(): void {}
+
     visitExpansion(): void {}
+
     visitExpansionCase(): void {}
+
     visitBlockParameter(): void {}
+
     visitLetDeclaration(): void {}
 }
 

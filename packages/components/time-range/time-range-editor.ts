@@ -115,16 +115,34 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
 
     /** The maximum selectable date. */
     readonly maxDate = input<T | null>(null);
+
     /** The minimum selectable date. */
     readonly minDate = input<T | null>(null);
+
     /** Preset of selectable ranges */
     readonly availableTimeRangeTypes = input<KbqTimeRangeType[]>(this.timeRangeService.providedDefaultTimeRangeTypes);
+
     /** Provided value of selected range */
     readonly rangeValue = input<Required<KbqRangeValue<T>>>(this.timeRangeService.getDefaultRangeValue());
     readonly showRangeAsDefault = input.required<boolean>();
     readonly localeConfiguration = input.required<KbqTimeRangeLocaleConfiguration>();
+
     /** Customizable option output */
     readonly optionTemplate = input<TemplateRef<KbqTimeRangeOptionContext>>();
+
+    /**
+     * The same four controls as `form`, indexed as two ends each with a date and a time. The form itself
+     * has to stay flat, because its value is the `KbqRangeValue` the service and the bound control speak
+     * in - this is the single place the two shapes are tied together, and `Record` over both dimensions is
+     * what keeps it exhaustive.
+     */
+    private readonly borderControls: Record<RangeBorder, Record<BorderHalf, FormControl<T>>>;
+
+    /** The same four, flat, for the checks that treat the range as one thing. */
+    private readonly rangeControls: FormControl<T>[];
+
+    /** Raised by the first "apply", after which a border left wholly empty counts as an error too. */
+    private applyAttempted = false;
 
     /** @docs-private */
     protected readonly isRangeVisible = computed(
@@ -168,23 +186,11 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     /** @docs-private */
     protected readonly form: FormGroup<FormValue<T>>;
 
-    /**
-     * The same four controls as `form`, indexed as two ends each with a date and a time. The form itself
-     * has to stay flat, because its value is the `KbqRangeValue` the service and the bound control speak
-     * in - this is the single place the two shapes are tied together, and `Record` over both dimensions is
-     * what keeps it exhaustive.
-     */
-    private readonly borderControls: Record<RangeBorder, Record<BorderHalf, FormControl<T>>>;
-    /** The same four, flat, for the checks that treat the range as one thing. */
-    private readonly rangeControls: FormControl<T>[];
-
     /** @docs-private */
     protected readonly timepickerFormat = TimeFormats.HHmmss;
+
     /** @docs-private */
     protected readonly rangeStateMatcher = new RangeErrorStateMatcher();
-
-    /** Raised by the first "apply", after which a border left wholly empty counts as an error too. */
-    private applyAttempted = false;
 
     /**
      * Ids of the `from`/`to` prefixes, so both fields of a pair take the prefix as part of their
@@ -194,6 +200,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
      * @docs-private
      */
     protected readonly fromLabelId = `kbq-time-range-editor-from-${nextUniqueId}`;
+
     /** @docs-private */
     protected readonly toLabelId = `kbq-time-range-editor-to-${nextUniqueId++}`;
 
@@ -299,12 +306,15 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
 
     /** @docs-private */
     onChange = (_value: KbqTimeRangeRange) => {};
+
     /** @docs-private */
     onTouch = () => {};
+
     /** Implemented as part of ControlValueAccessor */
     registerOnChange(fn: (value: KbqTimeRangeRange) => void): void {
         this.onChange = fn;
     }
+
     /** Implemented as part of ControlValueAccessor */
     registerOnTouched(fn: () => void): void {
         this.onTouch = fn;

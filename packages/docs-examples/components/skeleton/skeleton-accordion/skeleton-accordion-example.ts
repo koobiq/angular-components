@@ -39,9 +39,8 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SkeletonAccordionExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly loading = model(true);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly sections = computed(() => this.t().accordionSections);
 }

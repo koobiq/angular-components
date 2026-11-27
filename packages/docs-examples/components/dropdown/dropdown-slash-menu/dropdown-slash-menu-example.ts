@@ -156,25 +156,26 @@ const MENU_KEYS = ['ArrowUp', 'ArrowDown', 'Enter', 'Escape'];
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownSlashMenuExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly document = inject(DOCUMENT);
     private readonly renderer = inject(Renderer2);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
+
     private readonly editor = viewChild<ElementRef<HTMLElement>>('editor');
     private readonly menu = viewChild(KbqDropdown);
     private readonly trigger = viewChild(KbqDropdownTrigger);
 
     /** The `/…` the menu filters by, as a live range, so the panel keeps up with the token as it grows. */
     private token: Range | null = null;
+
     /** Whether the menu was dismissed for the token the caret still sits in. */
     private dismissed = false;
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     /** Stays on the token: the rectangle is measured again every time the panel is positioned. */
     protected readonly origin = kbqCreateCaretOrigin(() => this.measureToken());
     protected readonly query = signal('');
     protected readonly tokens = computed(() => tokenizeSearchQuery(this.query()));
-
     protected readonly filteredGroups = computed(() => {
         const matches = createSearchPredicate(this.query());
 
@@ -183,7 +184,6 @@ export class DropdownSlashMenuExample {
             items: items.filter(({ name }) => matches(name))
         }));
     });
-
     protected readonly isEmpty = computed(() => this.filteredGroups().every(({ items }) => !items.length));
 
     constructor() {

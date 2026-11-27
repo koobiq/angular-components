@@ -23,10 +23,6 @@ type DocsVersion = {
     exportAs: 'docsVersionPicker'
 })
 export class DocsVersionPickerDirective {
-    selected?: DocsVersion;
-    versions: DocsVersion[] = [];
-    isNext: boolean = false;
-
     private readonly httpClient = inject(HttpClient);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly window = inject(KBQ_WINDOW);
@@ -36,9 +32,14 @@ export class DocsVersionPickerDirective {
 
     /** Pages of each version read so far, by version URL. */
     private readonly pagePaths = new Map<string, Observable<Set<string> | null>>();
+
     /** Versions whose sitemap could not be read, tried again the next time the dropdown opens. */
     private readonly failed = new Set<string>();
     private navigation = Subscription.EMPTY;
+
+    selected?: DocsVersion;
+    versions: DocsVersion[] = [];
+    isNext: boolean = false;
 
     constructor() {
         // Fetches an external, non-local URL: must never run during SSR/prerendering, or a

@@ -126,7 +126,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class ValidationRequiredLabelExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly form = new FormGroup({
         firstName: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
         lastName: new FormControl<string>('', { nonNullable: true }),

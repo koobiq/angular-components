@@ -51,11 +51,10 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NumberFormatterOverviewExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE);
     protected changeDetectorRef = inject(ChangeDetectorRef);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected value = 1000.123;
     protected readonly digitsInfoList = ['', '5.5-5', '4.5-5', '4.0-2', '4.0-2-false', '4.0-0'];
 

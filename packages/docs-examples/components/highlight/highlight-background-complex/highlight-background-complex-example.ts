@@ -67,7 +67,6 @@ type SearchResult = {
 })
 export class HighlightBackgroundComplexExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly colors = KbqComponentColors;
     protected readonly control = new FormControl('cube');
     protected readonly query = signal(this.control.value);
