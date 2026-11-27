@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqClampedList, KbqClampedListTrigger } from '@koobiq/components/clamped-text';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqOverflowItem, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
@@ -9,28 +11,53 @@ import { TRANSLATIONS } from './l10n';
  */
 @Component({
     selector: 'clamped-list-overflow-example',
-    imports: [KbqClampedList, KbqClampedListTrigger, KbqOverflowItem, KbqOverflowItemsResult],
+    imports: [KbqBadgeModule, KbqClampedList, KbqClampedListTrigger, KbqLink, KbqOverflowItem, KbqOverflowItemsResult],
     template: `
         <div
             #list="kbqClampedList"
             data-testid="clamped-list-overflow"
             kbqClampedList
+            class="example-list"
             mode="overflow"
             wrap="wrap"
-            style="width: 360px; max-width: 100%; max-height: 48px; min-width: 150px; resize: horizontal"
+            [class.example-list_expanded]="!list.isCollapsed()"
             [items]="countries()"
             [collapsedVisibleCount]="10"
             [hiddenThreshold]="6"
         >
             @for (item of list.items(); track item) {
-                <span [kbqOverflowItem]="$index">{{ item }}</span>
+                <kbq-badge compact class="layout-margin-right-xxs" [kbqOverflowItem]="$index">{{ item }}</kbq-badge>
             }
             @if (list.hasToggle()) {
-                <span kbqClampedListTrigger kbqOverflowItemsResult>
+                <a kbqLink pseudo kbqClampedListTrigger kbqOverflowItemsResult>
                     {{ list.isCollapsed() ? list.showMoreCountText() : list.localeConfiguration().closeText }}
-                </span>
+                </a>
             }
         </div>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding-block: var(--kbq-size-xs);
+        }
+
+        .example-list {
+            align-items: center;
+            row-gap: var(--kbq-size-xxs);
+            width: 360px;
+            max-width: 100%;
+            min-width: 150px;
+            max-height: 48px;
+            resize: horizontal;
+        }
+
+        .example-list_expanded {
+            max-height: none;
+        }
+
+        .example-list > * {
+            flex-shrink: 0;
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
