@@ -417,6 +417,10 @@ describe('number helpers', () => {
             expect(numberByParts('2,2,2', ruConfig)).toEqual({ integer: '2', fraction: '22' });
         });
 
+        it('should keep the first fraction separator and discard later ones for en-US', () => {
+            expect(numberByParts('1.2.2', enConfig)).toEqual({ integer: '1', fraction: '22' });
+        });
+
         it('should preserve valid digit grouping', () => {
             expect(numberByParts('1.234.567,89', ruConfig)).toEqual({ integer: '1234567', fraction: '89' });
             expect(numberByParts('1.234.567', ruConfig)).toEqual({ integer: '1234', fraction: '567' });
