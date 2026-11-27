@@ -44,7 +44,8 @@ export const kbqActionsPanelLocaleConfigurationProvider = (
 ): Provider => kbqLocaleConfigurationOverrideProvider('actionsPanel', configuration);
 
 /**
- * Internal component that wraps user-provided actions panel content.
+ * Internal container for actions panel content. Open panels through `KbqActionsPanel.open()`, which provides
+ * the injector this container needs to close its panel.
  *
  * @docs-private
  */
