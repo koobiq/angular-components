@@ -42,6 +42,11 @@ export const KBQ_FORM_FIELD_DEFAULT_OPTIONS: InjectionToken<Partial<{
 }>>;
 
 // @public
+export const KBQ_FORM_FIELD_PARENT: InjectionToken<{
+    registerFormField(field: KbqFormField): () => void;
+}>;
+
+// @public
 export const KBQ_HINT_PARENT: InjectionToken<KbqHintParentConfig>;
 
 // @public

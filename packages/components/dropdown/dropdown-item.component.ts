@@ -6,6 +6,7 @@ import {
     Component,
     computed,
     contentChild,
+    DestroyRef,
     Directive,
     effect,
     ElementRef,
@@ -157,6 +158,10 @@ export class KbqDropdownItem
     }
 
     constructor() {
+        const unregister = this.parentDropdownPanel?.registerItem?.(this);
+
+        if (unregister) inject(DestroyRef).onDestroy(unregister);
+
         effect(() => {
             // Start monitoring the element so it gets the appropriate focused classes. We want to
             // show the focus style for menu items only when the focus was not caused by a mouse or

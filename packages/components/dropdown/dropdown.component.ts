@@ -1,11 +1,14 @@
 import type { FocusOrigin } from '@angular/cdk/a11y';
 import type { Direction } from '@angular/cdk/bidi';
 import { DOWN_ARROW, ENTER, ESCAPE, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@angular/cdk/keycodes';
-import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
+import { MutationObserverFactory } from '@angular/cdk/observers';
+import { normalizePassiveListenerOptions, Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
 import {
     type AfterContentInit,
+    afterEveryRender,
     afterNextRender,
+    afterRenderEffect,
     type AfterRenderRef,
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -64,7 +67,7 @@ import {
     type KbqSearchFieldPopup,
     type ListKeyManager
 } from '@koobiq/components/core';
-import { KbqFormField } from '@koobiq/components/form-field';
+import { KBQ_FORM_FIELD_PARENT, type KbqFormField } from '@koobiq/components/form-field';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import {
     type DropdownCloseReason,
@@ -78,7 +81,7 @@ import {
 import { KbqDropdownContent } from './dropdown-content.directive';
 import { throwKbqDropdownInvalidPositionX, throwKbqDropdownInvalidPositionY } from './dropdown-errors';
 import { KbqDropdownItem } from './dropdown-item.component';
-import { KbqDropdownSearch } from './dropdown-search';
+import type { KbqDropdownSearch } from './dropdown-search';
 
 /** Options for binding a passive event listener. */
 const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: true }) as EventListenerOptions;
@@ -119,7 +122,8 @@ export class KbqDropdownGroupHeader {}
     /* Component inherits styles from `list`, so `list` variables are imported as the single source of truth. */
     styleUrls: ['./dropdown.scss', './dropdown-tokens.scss'],
     providers: [
-        { provide: KBQ_DROPDOWN_PANEL, useExisting: KbqDropdown }
+        { provide: KBQ_DROPDOWN_PANEL, useExisting: KbqDropdown },
+        { provide: KBQ_FORM_FIELD_PARENT, useExisting: KbqDropdown }
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -145,23 +149,16 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
      */
     readonly activeDescendantNavigation = input(false, { transform: booleanAttribute });
 
-    private readonly panelFormField = contentChild(KbqFormField);
-
-    /**
-     * Signal content queries carry `descendants: true`, and a nested panel declared inside this one's
-     * content is part of the same view — so the match has to be narrowed to the fields this panel owns,
-     * the way `syncDirectDescendants` narrows the items.
-     */
-    private readonly searches = contentChildren(KbqDropdownSearch, { descendants: true });
-
     /** The pending deferred initial focus, see `focusFirstItem`. */
     private initialFocusRef: AfterRenderRef | null = null;
-    private readonly search: Signal<KbqDropdownSearch | undefined> = computed(() =>
-        this.searches().find((search) => search.panel === this)
-    );
+    private readonly formFields = new Set<KbqFormField>();
+    private fieldRender?: AfterRenderRef;
+    private readonly searches = new Map<KbqFormField, KbqDropdownSearch>();
+    private readonly search = signal<KbqDropdownSearch | undefined>(undefined);
+    private readonly hasAttachedField = signal(false);
 
-    /** Whether the dropdown projects a search form-field. @docs-private */
-    readonly hasSearch = computed(() => !!this.panelFormField());
+    /** Whether the dropdown contains a form field. @docs-private */
+    readonly hasSearch = this.hasAttachedField.asReadonly();
 
     /** Whether the panel highlights the active item instead of focusing it. @docs-private */
     readonly inSearchMode: Signal<boolean> = computed(() => !!this.search() || this.activeDescendantNavigation());
@@ -177,6 +174,9 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
         popup: () => this.panelElement()?.nativeElement,
         activeDescendant: () => (this.inSearchMode() ? this.keyManager?.activeItem?.getHostElement() : null)
     };
+
+    private readonly platform = inject(Platform);
+    private readonly observerFactory = inject(MutationObserverFactory);
 
     readonly navigationWithWrap = input<boolean>(false);
 
@@ -244,7 +244,11 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
 
     /** Element of the open panel, the one that scrolls. */
-    private readonly panelElement = viewChild(KbqScrollbarViewport, { read: ElementRef });
+    private readonly panelElement = viewChild<KbqScrollbarViewport, ElementRef<HTMLElement>>(KbqScrollbarViewport, {
+        read: ElementRef
+    });
+
+    // Preserve the query order for projected items (including items declared inside nested menus).
     private readonly queriedItems = contentChildren(KbqDropdownItem, { descendants: true });
 
     /**
@@ -253,6 +257,49 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
      * @docs-private
      */
     readonly lazyContent = contentChild(KbqDropdownContent);
+
+    private readonly registeredItems = new Map<Element, KbqDropdownItem>();
+    private readonly membershipVersion = signal(0);
+    private readonly orderVersion = signal(0);
+    private readonly childViewItems = computed(() => {
+        this.membershipVersion();
+        const projected = new Set(this.queriedItems());
+
+        return Array.from(this.registeredItems.values()).filter((item) => !projected.has(item));
+    });
+
+    // A detached embedded view is still registered until it is destroyed. Walking the mounted
+    // panel finds only rendered items, including the contents of shadow hosts at their visual position.
+    private readonly renderedContent = computed(() => {
+        const panel = this.panelElement()?.nativeElement;
+        const children = this.childViewItems();
+
+        if (!panel || !children.length || !this.platform.isBrowser) return;
+
+        this.orderVersion();
+        const items: KbqDropdownItem[] = [];
+        const roots = new Set<HTMLElement | ShadowRoot>([panel]);
+        const visit = (element: Element) => {
+            const item = this.registeredItems.get(element);
+
+            if (item) items.push(item);
+
+            const shadow = element.shadowRoot;
+
+            if (shadow) roots.add(shadow);
+
+            const descendants =
+                element instanceof HTMLSlotElement
+                    ? element.assignedElements({ flatten: true })
+                    : (shadow ?? element).children;
+
+            for (const child of descendants) visit(child);
+        };
+
+        visit(panel);
+
+        return { items, roots };
+    });
 
     /** The position the trigger resolved; supersedes the inputs until one of them changes. */
     private readonly positionOverride = signal<{ posX: KbqDropdownPositionX; posY: KbqDropdownPositionY } | null>(null);
@@ -340,13 +387,36 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
         return `${minWidth}px`;
     });
 
-    /**
-     * List of the items inside of a dropdown.
-     */
+    /** List of the items inside of a dropdown. */
     readonly items: Signal<readonly KbqDropdownItem[]> = computed(() => {
-        const queried = this.queriedItems();
+        const projected = this.queriedItems();
+        const children = this.childViewItems();
 
-        return queried.length > 0 ? queried : (this.adoptedItems() ?? queried);
+        if (!children.length) return projected.length ? projected : (this.adoptedItems() ?? projected);
+
+        const rendered = this.renderedContent();
+
+        if (!rendered) return [...projected, ...children];
+
+        // A nested panel renders in its own portal. Retain its projected entries at their
+        // query positions while merging the visible items in composed DOM order.
+        const positions = new Map(rendered.items.map((item, index) => [item, index]));
+        const items: KbqDropdownItem[] = [];
+        let next = 0;
+
+        for (const item of projected) {
+            const position = positions.get(item);
+
+            if (position === undefined) {
+                items.push(item);
+            } else {
+                while (next <= position) items.push(rendered.items[next++]!);
+            }
+        }
+
+        for (; next < rendered.items.length; next++) items.push(rendered.items[next]!);
+
+        return items.length ? items : (this.adoptedItems() ?? items);
     });
 
     /**
@@ -376,6 +446,44 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
         });
 
         effect(() => this.syncDirectDescendants(this.items()));
+
+        // Angular can move tracked views without recreating their items. The query already reports
+        // those moves in projected content; only a child component's view needs DOM observation.
+        const observers = new Map<HTMLElement | ShadowRoot, MutationObserver>();
+        const onMutation = (records: MutationRecord[]) => {
+            if (records.some((record) => this.affectsItemOrder(record))) {
+                this.orderVersion.update((version) => version + 1);
+            }
+        };
+
+        afterRenderEffect(() => {
+            const roots = this.renderedContent()?.roots;
+
+            for (const [root, observer] of observers) {
+                if (roots?.has(root)) continue;
+
+                observer.disconnect();
+                observers.delete(root);
+            }
+
+            if (!roots) return;
+
+            for (const root of roots) {
+                if (observers.has(root)) continue;
+                const observer = this.observerFactory.create(onMutation);
+
+                if (observer) {
+                    observer.observe(root, {
+                        childList: true,
+                        subtree: true,
+                        attributes: true,
+                        attributeFilter: ['slot', 'name']
+                    });
+                    observers.set(root, observer);
+                }
+            }
+        });
+        this.destroyRef.onDestroy(() => observers.forEach((observer) => observer.disconnect()));
 
         // A partial `KBQ_DROPDOWN_DEFAULT_OPTIONS` can leave these undefined, so the default is not validated.
         const defaultPosX = untracked(this.xPosition);
@@ -429,8 +537,6 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
                 switchMap((items) => merge(...items.map((item: KbqDropdownItem) => item.focused)))
             )
             .subscribe((focusedItem) => this.keyManager?.updateActiveItem(focusedItem as KbqDropdownItem));
-
-        this.panelFormField()?.inOverlay.set(true);
 
         // Driven by the item list rather than by the query, because consumers commonly debounce their
         // own filtering. `delay(0)` keeps the write out of the pass that reported the new items.
@@ -625,15 +731,16 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
             case ENTER: {
                 // The highlighted item never sees the key event itself, so replay it as a click and let
                 // consumer handlers and nested triggers behave exactly as they do for the mouse.
-                const activeItem = this.keyManager?.activeItem;
+                const activeElement = this.keyManager?.activeItem?.getHostElement();
 
-                if (this.inSearchMode() && activeItem) {
+                // The consumer can detach the active view before Angular refreshes the item list.
+                if (this.inSearchMode() && activeElement?.isConnected) {
                     event.preventDefault();
                     // The click can close the dropdown synchronously, unregistering the overlay from the
                     // CDK keyboard dispatcher before this keydown reaches `body` — where it would be
                     // handed to whichever overlay was opened earlier.
                     event.stopPropagation();
-                    activeItem.getHostElement().click();
+                    activeElement.click();
                 }
 
                 return;
@@ -697,6 +804,14 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
         // since `close` relies on it to emit the correct close reason.
         this.setFocusOrigin(origin);
 
+        // Eager projected nodes can be disconnected until the portal attaches. Resolve their order
+        // now so keyboard opening can focus the first rendered item in the same turn.
+        if (this.childViewItems().length) {
+            this.orderVersion.update((version) => version + 1);
+            this.syncDirectDescendants(this.items());
+        }
+
+        this.syncAttachedFields();
         const search = this.search();
 
         if (search) {
@@ -718,6 +833,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
      * @docs-private
      */
     restoreFocus(): boolean {
+        this.syncAttachedFields();
         const search = this.search();
 
         search?.focus();
@@ -727,12 +843,9 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
 
     /** Moves DOM focus onto the dropdown panel so that keydown events keep being handled. */
     private focusPanel(): void {
-        // The panel is rendered into the overlay through a `TemplatePortal`, so it can't be
-        // queried with a `ViewChild`. If there are no rendered items, focus stays on the trigger,
-        // same as `setFirstItemActive` no-ops in that case.
-        const panel = this.directDescendantItems.first?.getHostElement().closest<HTMLElement>('.kbq-dropdown__panel');
-
-        panel?.focus({ preventScroll: true });
+        if (this.directDescendantItems.length) {
+            this.panelElement()?.nativeElement.focus({ preventScroll: true });
+        }
     }
 
     /**
@@ -871,13 +984,80 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
         this.keyManager?.activeItem?.getHostElement().scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
     }
 
-    /**
-     * Narrows `items` down to the ones this panel owns. We collect the descendants this way, because
-     * `items` can include items that are part of child menus, and using a custom way of registering
-     * items is unreliable when it comes to maintaining the item order.
-     */
+    /** Registers an item with the panel that owns it across component views. @docs-private */
+    registerItem(item: KbqDropdownItem): () => void {
+        const host = item.getHostElement();
+
+        this.registeredItems.set(host, item);
+        this.membershipVersion.update((version) => version + 1);
+
+        return () => {
+            this.registeredItems.delete(host);
+            this.membershipVersion.update((version) => version + 1);
+        };
+    }
+
+    /** Registers a field that keeps keyboard focus during navigation. @docs-private */
+    registerSearch(search: KbqDropdownSearch, field: KbqFormField): () => void {
+        this.searches.set(field, search);
+
+        return () => this.searches.delete(field);
+    }
+
+    /** Applies overlay styling and tracks plain form fields for panel sizing as well. @docs-private */
+    registerFormField(field: KbqFormField): () => void {
+        field.inOverlay.set(true);
+        this.formFields.add(field);
+
+        // Detaching a view keeps its directives alive. Check connectivity after renders only
+        // while this panel has registered fields, including while a cached field is detached.
+        this.fieldRender ??= afterEveryRender(() => this.syncAttachedFields(), { injector: this.injector });
+
+        return () => {
+            this.formFields.delete(field);
+            if (this.formFields.size) return;
+            this.fieldRender?.destroy();
+            this.fieldRender = undefined;
+            this.syncAttachedFields();
+        };
+    }
+
+    private syncAttachedFields(): void {
+        let hasField = false;
+        let search: KbqDropdownSearch | undefined;
+
+        for (const field of this.formFields) {
+            if (field.elementRef.nativeElement.isConnected) {
+                hasField = true;
+                search = this.searches.get(field);
+                if (search) break;
+            }
+        }
+
+        this.hasAttachedField.set(hasField);
+        this.search.set(search);
+    }
+
+    private affectsItemOrder(record: MutationRecord): boolean {
+        if (record.type === 'attributes')
+            return record.attributeName === 'slot' || record.target instanceof HTMLSlotElement;
+
+        const containsItemOrSlot = (node: Node): boolean =>
+            node instanceof Element &&
+            (this.registeredItems.has(node) ||
+                !!node.shadowRoot ||
+                node instanceof HTMLSlotElement ||
+                Array.from(node.children).some(containsItemOrSlot));
+
+        return (
+            Array.from(record.addedNodes).some(containsItemOrSlot) ||
+            Array.from(record.removedNodes).some(containsItemOrSlot)
+        );
+    }
+
+    /** Nested and borrowed items belong to their own panel's key manager and hover streams. */
     private syncDirectDescendants(items: readonly KbqDropdownItem[]): void {
-        const owned = items.filter((item) => item.parentDropdownPanel === this);
+        const owned = this.renderedContent()?.items ?? items.filter((item) => item.parentDropdownPanel === this);
         const current = this.directDescendantItems.toArray();
 
         // Re-notifying an unchanged list would restart every stream keyed on `changes`.

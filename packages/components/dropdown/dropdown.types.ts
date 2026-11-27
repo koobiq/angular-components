@@ -14,8 +14,10 @@ import {
     type KbqPanelWidth,
     type KbqSearchFieldPopup
 } from '@koobiq/components/core';
+import type { KbqFormField } from '@koobiq/components/form-field';
 import type { KbqDropdownContent } from './dropdown-content.directive';
 import type { KbqDropdownItem } from './dropdown-item.component';
+import type { KbqDropdownSearch } from './dropdown-search';
 
 /** Position of the dropdown panel along the x-axis. */
 export type KbqDropdownPositionX = 'before' | 'after' | 'center';
@@ -57,6 +59,10 @@ export interface KbqDropdownPanel {
     focusFirstItem(origin?: FocusOrigin): void;
     resetActiveItem(): void;
     setPositionClasses?(x: KbqDropdownPositionX, y: KbqDropdownPositionY): void;
+    /** Registers an owned item and returns the callback that removes it. */
+    registerItem?(item: KbqDropdownItem): () => void;
+    /** Registers an owned search field and returns the callback that removes it. */
+    registerSearch?(search: KbqDropdownSearch, field: KbqFormField): () => void;
     /** Lends the panel the parent's items, for a submenu initialised as a child of the root panel. */
     adoptItems?(items: readonly KbqDropdownItem[]): void;
 }

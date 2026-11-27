@@ -942,16 +942,16 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
      * — mirrors `KbqAbstractSelect.lockOverlayWidthForSearch`.
      */
     private lockOverlayWidthForSearch(): void {
-        if (
-            !this.isBrowser ||
-            !this.shouldMatchTriggerWidth ||
-            !(this.dropdown() instanceof KbqDropdown) ||
-            !(this.dropdown() as KbqDropdown).hasSearch()
-        ) {
-            return;
-        }
+        const dropdown = this.dropdown();
 
-        this.widthLockRef = afterNextRender(() => this.pinOverlayWidth(), { injector: this.injector });
+        if (!this.isBrowser || !this.shouldMatchTriggerWidth || !(dropdown instanceof KbqDropdown)) return;
+
+        this.widthLockRef = afterNextRender(
+            () => {
+                if (dropdown.hasSearch()) this.pinOverlayWidth();
+            },
+            { injector: this.injector }
+        );
     }
 
     /** Freezes the overlay pane at its rendered width. */

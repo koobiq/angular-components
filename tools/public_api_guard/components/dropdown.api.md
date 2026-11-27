@@ -15,6 +15,7 @@ import * as i2 from '@koobiq/components/icon';
 import { IFocusableOption } from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqOverlayOrigin } from '@koobiq/components/core';
 import { KbqPanelMaxWidth } from '@koobiq/components/core';
@@ -105,6 +106,9 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     protected readonly panelMinWidthToken: Signal<string>;
     readonly panelWidth: _angular_core.InputSignal<KbqPanelWidth>;
     parent: KbqDropdownPanel | undefined;
+    registerFormField(field: KbqFormField): () => void;
+    registerItem(item: KbqDropdownItem): () => void;
+    registerSearch(search: KbqDropdownSearch, field: KbqFormField): () => void;
     resetActiveItem(): void;
     restoreFocus(): boolean;
     readonly safeArea: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -115,7 +119,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     readonly xPosition: _angular_core.ModelSignal<KbqDropdownPositionX>;
     readonly yPosition: _angular_core.ModelSignal<KbqDropdownPositionY>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "activeDescendantNavigation": { "alias": "activeDescendantNavigation"; "required": false; "isSignal": true; }; "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; "isSignal": true; }; "xPosition": { "alias": "xPosition"; "required": false; "isSignal": true; }; "yPosition": { "alias": "yPosition"; "required": false; "isSignal": true; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; "isSignal": true; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; "isSignal": true; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; "isSignal": true; }; "panelClass": { "alias": "class"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "safeArea": { "alias": "safeArea"; "required": false; "isSignal": true; }; }, { "xPosition": "xPositionChange"; "yPosition": "yPositionChange"; "overlapTriggerY": "overlapTriggerYChange"; "overlapTriggerX": "overlapTriggerXChange"; "closed": "closed"; }, ["panelFormField", "searches", "queriedItems", "lazyContent"], ["*", "[kbqDropdownFooter], kbq-dropdown-footer", "[kbqDropdownStaticContent]"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "activeDescendantNavigation": { "alias": "activeDescendantNavigation"; "required": false; "isSignal": true; }; "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; "isSignal": true; }; "xPosition": { "alias": "xPosition"; "required": false; "isSignal": true; }; "yPosition": { "alias": "yPosition"; "required": false; "isSignal": true; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; "isSignal": true; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; "isSignal": true; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; "isSignal": true; }; "panelClass": { "alias": "class"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "safeArea": { "alias": "safeArea"; "required": false; "isSignal": true; }; }, { "xPosition": "xPositionChange"; "yPosition": "yPositionChange"; "overlapTriggerY": "overlapTriggerYChange"; "overlapTriggerX": "overlapTriggerXChange"; "closed": "closed"; }, ["queriedItems", "lazyContent"], ["*", "[kbqDropdownFooter], kbq-dropdown-footer", "[kbqDropdownStaticContent]"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDropdown, never>;
 }
@@ -274,6 +278,8 @@ export interface KbqDropdownPanel {
     panelWidth?: Signal<KbqPanelWidth>;
     // (undocumented)
     parent?: KbqDropdownPanel | undefined;
+    registerItem?(item: KbqDropdownItem): () => void;
+    registerSearch?(search: KbqDropdownSearch, field: KbqFormField): () => void;
     // (undocumented)
     resetActiveItem(): void;
     readonly searchFieldPopup?: KbqSearchFieldPopup;
@@ -295,6 +301,7 @@ export type KbqDropdownPositionY = 'above' | 'below';
 
 // @public
 export class KbqDropdownSearch extends KbqSearchFieldBase {
+    constructor();
     // (undocumented)
     protected readonly directiveName = "kbqDropdownSearch";
     // (undocumented)
