@@ -37,7 +37,7 @@ try {
 
     const routes = paths
         .map((path) => {
-            return DOCS_SUPPORTED_LOCALES.map((locale) => `https://koobiq.io/${locale}/${path}`);
+            return DOCS_SUPPORTED_LOCALES.map((locale) => `https://v19.koobiq.io/${locale}/${path}`);
         })
         .flat();
 
