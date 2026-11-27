@@ -1,4 +1,4 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusMonitor, LiveAnnouncer } from '@angular/cdk/a11y';
 import { type Direction, Directionality } from '@angular/cdk/bidi';
 import {
     A,
@@ -34,7 +34,9 @@ import {
     TemplateRef,
     type Type,
     viewChild,
-    viewChildren
+    viewChildren,
+    ViewContainerRef,
+    ViewEncapsulation
 } from '@angular/core';
 import { type ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -3190,7 +3192,9 @@ describe('KbqDropdown', () => {
         });
 
         // The width lock measures the pane after the panel renders, so the measurement is stubbed before that render.
-        const openWithPaneWidth = (fixture: ComponentFixture<SearchDropdown | SimpleDropdown>): HTMLElement => {
+        const openWithPaneWidth = (
+            fixture: ComponentFixture<SearchDropdown | SimpleDropdown | ChildItemsDropdown>
+        ): HTMLElement => {
             fixture.componentInstance.trigger().open();
 
             const pane = getPane();
@@ -3208,6 +3212,15 @@ describe('KbqDropdown', () => {
             const pane = openWithPaneWidth(fixture);
 
             expect(pane.style.width).toBe('412px');
+        });
+
+        it.each(['child', 'plain'] as const)('should pin the width for a lazy %s field inside a child', (search) => {
+            const fixture = createComponent(ChildItemsDropdown);
+
+            fixture.componentInstance.search = search;
+            fixture.detectChanges();
+
+            expect(openWithPaneWidth(fixture).style.width).toBe('412px');
         });
 
         it('should not pin a dropdown without a search field', () => {
@@ -3238,6 +3251,264 @@ describe('KbqDropdown', () => {
 
             // 'auto' resolves to the trigger floor (200 min against a 0-width jsdom trigger), never the 412 pane.
             expect(pane.style.width).toBe('200px');
+        });
+    });
+
+    describe('items declared in a child component', () => {
+        const open = async (search: ChildItemsDropdown['search'], mixed = false) => {
+            const fixture = createComponent(ChildItemsDropdown);
+            const host = fixture.componentInstance;
+
+            host.search = search;
+            host.mixed = mixed;
+            fixture.detectChanges();
+            host.trigger().open();
+            await fixture.whenStable();
+
+            return fixture;
+        };
+
+        const press = (fixture: ComponentFixture<ChildItemsDropdown>, key: number) => {
+            dispatchKeyboardEvent(document.activeElement!, 'keydown', key);
+            fixture.detectChanges();
+
+            return overlayContainerElement.querySelector('.kbq-dropdown-item_active')?.textContent?.trim();
+        };
+
+        it.each(['panel', 'child'] as const)('should navigate child items with search in the %s', async (search) => {
+            const fixture = await open(search);
+            const panel = fixture.componentInstance.panel();
+            const field = overlayContainerElement.querySelector('input');
+
+            expect(panel.items().map((item) => item.getLabel())).toEqual(['B', 'C']);
+            expect(panel.inSearchMode()).toBe(true);
+            expect(panel.hasSearch()).toBe(true);
+            expect(document.activeElement).toBe(field);
+            expect(press(fixture, DOWN_ARROW)).toBe('B');
+            expect(press(fixture, DOWN_ARROW)).toBe('C');
+            expect(press(fixture, UP_ARROW)).toBe('B');
+            expect(document.activeElement).toBe(field);
+        });
+
+        it('should interleave child and projected items in DOM order and wrap', async () => {
+            const fixture = await open('child', true);
+            const panel = fixture.componentInstance.panel();
+            const buttons = Array.from(overlayContainerElement.querySelectorAll(ITEM_SELECTOR));
+
+            expect(panel.items().map((item) => item.getHostElement())).toEqual(buttons);
+
+            for (const label of ['A', 'B', 'C', 'D', 'A']) {
+                expect(press(fixture, DOWN_ARROW)).toBe(label);
+            }
+        });
+
+        it('should preserve the order of projected entries from nested menus in the public list', async () => {
+            const fixture = createComponent(EagerChildItemsDropdown);
+            const host = fixture.componentInstance;
+
+            host.nested = true;
+            fixture.detectChanges();
+            host.trigger().open();
+            await fixture.whenStable();
+
+            const panel = host.trigger().dropdown();
+
+            expect(panel.items().map((item) => item.getLabel())).toEqual(['A', 'Nested', 'B', 'C', 'D']);
+            const first = overlayContainerElement.querySelector<HTMLElement>(ITEM_SELECTOR)!;
+
+            dispatchKeyboardEvent(first, 'keydown', DOWN_ARROW);
+            expect(document.activeElement?.textContent?.trim()).toBe('B');
+        });
+
+        it('should skip label mutations and keep observing the same roots across item moves', async () => {
+            const fixture = await open('child', true);
+            const host = fixture.componentInstance;
+            const panel = host.panel();
+            const items = panel.items();
+            const item = items[1];
+            const visitPanel = vi.spyOn(overlayContainerElement.querySelector(PANEL_SELECTOR)!, 'shadowRoot', 'get');
+            const disconnect = vi.spyOn(MutationObserver.prototype, 'disconnect');
+            const label = document.createElement('mark');
+
+            label.textContent = 'match';
+            item.getHostElement().appendChild(label);
+            await fixture.whenStable();
+            expect(visitPanel).not.toHaveBeenCalled();
+            expect(panel.items()).toBe(items);
+
+            host.labels.set(['C', 'B']);
+            await fixture.whenStable();
+            expect(panel.items()[2]).toBe(item);
+            expect(disconnect).not.toHaveBeenCalled();
+            disconnect.mockRestore();
+        });
+
+        it.each(['panel', 'child', 'plain'] as const)(
+            'should track a detached and reinserted %s field',
+            async (mode) => {
+                const fixture = createComponent(DetachableFieldDropdown);
+                const host = fixture.componentInstance;
+
+                host.mode = mode;
+                fixture.detectChanges();
+                const view = host.container().createEmbeddedView(host.template(), {});
+
+                host.trigger().open();
+                await fixture.whenStable();
+                const panel = host.panel();
+                const input = overlayContainerElement.querySelector('input')!;
+
+                expect(panel.hasSearch()).toBe(true);
+                expect(panel.inSearchMode()).toBe(mode !== 'plain');
+                host.container().detach();
+                fixture.detectChanges();
+                await fixture.whenStable();
+                expect(panel.hasSearch()).toBe(false);
+                expect(panel.inSearchMode()).toBe(false);
+                expect(panel.restoreFocus()).toBe(false);
+                dispatchKeyboardEvent(document.activeElement!, 'keydown', DOWN_ARROW);
+                expect(document.activeElement?.textContent?.trim()).toBe('D');
+
+                host.container().insert(view);
+                fixture.detectChanges();
+                await fixture.whenStable();
+                expect(panel.hasSearch()).toBe(true);
+                expect(panel.inSearchMode()).toBe(mode !== 'plain');
+                expect(document.activeElement === input).toBe(mode !== 'plain');
+            }
+        );
+
+        it('should follow moved views and unregister destroyed items and search on close', async () => {
+            const fixture = await open('child', true);
+            const host = fixture.componentInstance;
+            const panel = host.panel();
+            const original = panel.items().find((item) => item.getLabel() === 'B');
+
+            expect(press(fixture, DOWN_ARROW)).toBe('A');
+            expect(press(fixture, DOWN_ARROW)).toBe('B');
+            host.labels.set(['C', 'B']);
+            await fixture.whenStable();
+            expect(panel.items()[2]).toBe(original);
+            expect(press(fixture, DOWN_ARROW)).toBe('D');
+            host.labels.set(['B']);
+            await fixture.whenStable();
+            expect(panel.items().map((item) => item.getLabel())).toEqual(['A', 'B', 'D']);
+
+            host.trigger().close();
+            await fixture.whenStable();
+            expect(panel.items()).toEqual([]);
+            expect(panel.inSearchMode()).toBe(false);
+        });
+
+        it('should skip a detached view and restore its item on reinsertion', async () => {
+            const fixture = createComponent(DetachableItemsDropdown);
+            const host = fixture.componentInstance;
+
+            fixture.detectChanges();
+            const view = host.container().createEmbeddedView(host.template(), {});
+
+            host.trigger().open();
+            await fixture.whenStable();
+
+            const panel = host.panel();
+            const labels = () => panel.items().map((item) => item.getLabel());
+            const field = overlayContainerElement.querySelector('input')!;
+            const cached = panel.items()[1];
+
+            expect(labels()).toEqual(['A', 'B', 'D']);
+            dispatchKeyboardEvent(field, 'keydown', DOWN_ARROW);
+            dispatchKeyboardEvent(field, 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+            expect(cached.getHostElement().classList).toContain('kbq-dropdown-item_active');
+
+            host.container().detach();
+            dispatchKeyboardEvent(field, 'keydown', ENTER);
+            expect(host.chosen).toBe('');
+            fixture.detectChanges();
+            await fixture.whenStable();
+            expect(labels()).toEqual(['A', 'D']);
+            panel.resetActiveItem();
+            dispatchKeyboardEvent(field, 'keydown', DOWN_ARROW);
+            dispatchKeyboardEvent(field, 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+            expect(overlayContainerElement.querySelector('.kbq-dropdown-item_active')?.textContent?.trim()).toBe('D');
+
+            host.container().insert(view);
+            fixture.detectChanges();
+            await fixture.whenStable();
+            expect(labels()).toEqual(['A', 'B', 'D']);
+            expect(panel.items()[1]).toBe(cached);
+            dispatchKeyboardEvent(field, 'keydown', UP_ARROW);
+            dispatchKeyboardEvent(field, 'keydown', ENTER);
+            expect(host.chosen).toBe('B');
+        });
+
+        it(
+            'should follow items across shadow roots and reorder tracked views inside them',
+            async () => {
+                const fixture = createComponent(ShadowItemsDropdown);
+                const host = fixture.componentInstance;
+
+                fixture.detectChanges();
+                host.trigger().open();
+                await fixture.whenStable();
+
+                const panel = host.panel();
+                const labels = () => panel.items().map((item) => item.getLabel());
+                const field = overlayContainerElement.querySelector('input')!;
+                const shadow = overlayContainerElement.querySelector('shadow-dropdown-items')!.shadowRoot!;
+                const announcer = vi.spyOn(TestBed.inject(LiveAnnouncer), 'announce');
+                const active = () => shadow.querySelector('.kbq-dropdown-item_active')?.textContent?.trim();
+
+                expect(labels()).toEqual(['A', 'B', 'C', 'Slotted', 'D']);
+                dispatchKeyboardEvent(field, 'keydown', DOWN_ARROW);
+                dispatchKeyboardEvent(field, 'keydown', DOWN_ARROW);
+                fixture.detectChanges();
+                expect(active()).toBe('B');
+                expect(field.hasAttribute('aria-activedescendant')).toBe(false);
+                expect(announcer).toHaveBeenCalledExactlyOnceWith('B');
+                await expect(overlayContainerElement).toHaveNoViolations();
+                host.labels.set(['C', 'B']);
+                await fixture.whenStable();
+                expect(labels()).toEqual(['A', 'C', 'B', 'Slotted', 'D']);
+                dispatchKeyboardEvent(field, 'keydown', UP_ARROW);
+                fixture.detectChanges();
+                expect(active()).toBe('C');
+                expect(announcer).toHaveBeenLastCalledWith('C');
+                dispatchKeyboardEvent(field, 'keydown', UP_ARROW);
+                fixture.detectChanges();
+                expect(document.getElementById(field.getAttribute('aria-activedescendant')!)?.textContent?.trim()).toBe(
+                    'A'
+                );
+                expect(document.activeElement).toBe(field);
+            },
+            axeTimeout
+        );
+
+        it('should focus the first child item as soon as an eager panel opens', async () => {
+            const fixture = createComponent(EagerChildItemsDropdown);
+
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+
+            const buttons = overlayContainerElement.querySelectorAll<HTMLElement>(ITEM_SELECTOR);
+
+            expect(document.activeElement).toBe(buttons[0]);
+            dispatchKeyboardEvent(buttons[0], 'keydown', DOWN_ARROW);
+            expect(document.activeElement).toBe(buttons[1]);
+            await fixture.whenStable();
+        });
+
+        it('should recognize an unmarked child form field and focus child items with the arrows', async () => {
+            const fixture = await open('plain');
+            const panel = fixture.componentInstance.panel();
+
+            expect(panel.hasSearch()).toBe(true);
+            expect(panel.inSearchMode()).toBe(false);
+            expect(overlayContainerElement.querySelector('.kbq-form-field_in-overlay')).toBeTruthy();
+            expect(document.activeElement?.textContent?.trim()).toBe('B');
+            press(fixture, DOWN_ARROW);
+            expect(document.activeElement?.textContent?.trim()).toBe('C');
         });
     });
 
@@ -3602,8 +3873,7 @@ describe('KbqDropdown', () => {
             await vi.runOnlyPendingTimersAsync();
             nested.detectChanges();
 
-            // The nested panel's content is projected into the root's view, so its search field joins the
-            // root's content query as soon as it is rendered.
+            // Rendering a nested search must leave the root's keyboard and hover behavior intact.
             dispatchMouseEvent(getItems()[0], 'mouseenter');
             nested.detectChanges();
             await vi.advanceTimersByTimeAsync(500);
@@ -4743,6 +5013,163 @@ class LazySearchDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
 
     readonly control = new FormControl('');
+}
+
+@Component({
+    selector: 'child-dropdown-items',
+    imports: [KbqDropdownModule, KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    template: `
+        @if (search() === 'child') {
+            <kbq-form-field kbqDropdownSearch><input kbqInput [formControl]="control" /></kbq-form-field>
+        } @else if (search() === 'plain') {
+            <kbq-form-field><input kbqInput /></kbq-form-field>
+        }
+        @for (label of labels(); track label) {
+            <button kbq-dropdown-item>{{ label }}</button>
+        }
+    `
+})
+class ChildDropdownItems {
+    readonly search = input.required<'child' | 'panel' | 'plain'>();
+    readonly labels = input.required<string[]>();
+
+    readonly control = new FormControl('');
+}
+
+@Component({
+    imports: [ChildDropdownItems, KbqDropdownModule, KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    template: `
+        <button [kbqDropdownTriggerFor]="dropdown">Open</button>
+        <kbq-dropdown #dropdown="kbqDropdown" [navigationWithWrap]="true">
+            <ng-template kbqDropdownContent>
+                @if (search === 'panel') {
+                    <kbq-form-field kbqDropdownSearch><input kbqInput [formControl]="control" /></kbq-form-field>
+                }
+                @if (mixed) {
+                    <button kbq-dropdown-item>A</button>
+                }
+                <child-dropdown-items [search]="search" [labels]="labels()" />
+                @if (mixed) {
+                    <button kbq-dropdown-item>D</button>
+                }
+            </ng-template>
+        </kbq-dropdown>
+    `
+})
+class ChildItemsDropdown {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+    readonly panel = viewChild.required(KbqDropdown);
+
+    readonly control = new FormControl('');
+    readonly labels = signal(['B', 'C']);
+    search: 'child' | 'panel' | 'plain' = 'child';
+    mixed = false;
+}
+
+@Component({
+    imports: [ChildDropdownItems, KbqDropdownModule],
+    template: `
+        <button [kbqDropdownTriggerFor]="dropdown">Open</button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            @if (nested) {
+                <button kbq-dropdown-item>A</button>
+                <kbq-dropdown><button kbq-dropdown-item>Nested</button></kbq-dropdown>
+            }
+            <child-dropdown-items search="panel" [labels]="['B', 'C']" />
+            <button kbq-dropdown-item>D</button>
+        </kbq-dropdown>
+    `
+})
+class EagerChildItemsDropdown {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+
+    nested = false;
+}
+
+@Component({
+    imports: [KbqDropdownModule, KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    template: `
+        <button [kbqDropdownTriggerFor]="dropdown">Open</button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <kbq-form-field kbqDropdownSearch><input kbqInput [formControl]="control" /></kbq-form-field>
+            <button kbq-dropdown-item>A</button>
+            <ng-template #cached><button kbq-dropdown-item (click)="chosen = 'B'">B</button></ng-template>
+            <button kbq-dropdown-item>D</button>
+        </kbq-dropdown>
+    `
+})
+class DetachableItemsDropdown {
+    readonly template = viewChild.required<TemplateRef<object>>('cached');
+    readonly container = viewChild.required('cached', { read: ViewContainerRef });
+    readonly panel = viewChild.required(KbqDropdown);
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+
+    readonly control = new FormControl('');
+    chosen = '';
+}
+
+@Component({
+    imports: [ChildDropdownItems, KbqDropdownModule, KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    template: `
+        <button [kbqDropdownTriggerFor]="dropdown">Open</button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <ng-template #cached>
+                @if (mode === 'panel') {
+                    <kbq-form-field kbqDropdownSearch><input kbqInput [formControl]="control" /></kbq-form-field>
+                } @else {
+                    <child-dropdown-items [search]="mode" [labels]="[]" />
+                }
+            </ng-template>
+            <button kbq-dropdown-item>A</button>
+            <button kbq-dropdown-item>D</button>
+        </kbq-dropdown>
+    `
+})
+class DetachableFieldDropdown {
+    readonly template = viewChild.required<TemplateRef<object>>('cached');
+    readonly container = viewChild.required('cached', { read: ViewContainerRef });
+    readonly panel = viewChild.required(KbqDropdown);
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+
+    readonly control = new FormControl('');
+    mode: 'panel' | 'child' | 'plain' = 'panel';
+}
+
+@Component({
+    selector: 'shadow-dropdown-items',
+    imports: [KbqDropdownModule],
+    template: `
+        @for (label of labels(); track label) {
+            <button kbq-dropdown-item>{{ label }}</button>
+        }
+        <slot></slot>
+    `,
+    encapsulation: ViewEncapsulation.ShadowDom
+})
+class ShadowDropdownItems {
+    readonly labels = input.required<string[]>();
+}
+
+@Component({
+    imports: [ShadowDropdownItems, KbqDropdownModule, KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    template: `
+        <button [kbqDropdownTriggerFor]="dropdown">Open</button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <kbq-form-field kbqDropdownSearch><input kbqInput [formControl]="control" /></kbq-form-field>
+            <button kbq-dropdown-item>A</button>
+            <shadow-dropdown-items [labels]="labels()">
+                <button kbq-dropdown-item>Slotted</button>
+            </shadow-dropdown-items>
+            <button kbq-dropdown-item>D</button>
+        </kbq-dropdown>
+    `
+})
+class ShadowItemsDropdown {
+    readonly panel = viewChild.required(KbqDropdown);
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+
+    readonly control = new FormControl('');
+    readonly labels = signal(['B', 'C']);
 }
 
 @Component({

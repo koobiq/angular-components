@@ -8,3 +8,8 @@ import type { KbqFormField } from './form-field';
  * @docs-private
  */
 export const KBQ_FORM_FIELD = new InjectionToken<KbqFormField>('KbqFormField');
+
+/** A container that tracks its fields across component views. @docs-private */
+export const KBQ_FORM_FIELD_PARENT = new InjectionToken<{
+    registerFormField(field: KbqFormField): () => void;
+}>('KBQ_FORM_FIELD_PARENT');

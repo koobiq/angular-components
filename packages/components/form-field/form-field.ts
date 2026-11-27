@@ -34,7 +34,7 @@ import { KBQ_CONNECTED_OVERLAY_ORIGIN, KBQ_FORM_FIELD_REF, KbqColorDirective } f
 import { kbqIconErrorStateContextFactoryProvider } from '@koobiq/components/icon';
 import { KbqCleaner, kbqCleanerFactoryProvider } from './cleaner';
 import { KbqError } from './error';
-import { KBQ_FORM_FIELD } from './form-field.types';
+import { KBQ_FORM_FIELD, KBQ_FORM_FIELD_PARENT } from './form-field.types';
 import { KbqFormFieldControl, kbqSetDescribedByIds } from './form-field-control';
 import { KbqHint, kbqHintParentFactoryProvider } from './hint';
 import { KbqLabel } from './label';
@@ -172,6 +172,7 @@ export class KbqFormField
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly defaultOptions = inject(KBQ_FORM_FIELD_DEFAULT_OPTIONS, { optional: true });
+    private readonly parent = inject(KBQ_FORM_FIELD_PARENT, { optional: true });
     private readonly customOverlayOrigin = inject(KBQ_CONNECTED_OVERLAY_ORIGIN, { optional: true });
 
     /**
@@ -412,6 +413,10 @@ export class KbqFormField
         this.validateControlChild();
 
         this.initializeControl();
+
+        if (this.parent) {
+            this.destroyRef.onDestroy(this.parent.registerFormField(this));
+        }
     }
 
     ngAfterContentChecked(): void {

@@ -1,5 +1,5 @@
-import { _IdGenerator } from '@angular/cdk/a11y';
-import { afterEveryRender, inject } from '@angular/core';
+import { _IdGenerator, LiveAnnouncer } from '@angular/cdk/a11y';
+import { afterEveryRender, inject, Injector } from '@angular/core';
 
 /**
  * Popup that a search field filters, as the field describes it to assistive technology.
@@ -25,7 +25,7 @@ const TEXT_FIELD_TYPES = new Set(['text', 'search', 'email', 'tel', 'url']);
  * Describes a search field projected into a popup to assistive technology, after every render.
  *
  * The field keeps DOM focus while the arrow keys move a highlight through the popup, so the highlighted item reaches
- * a screen reader only through `aria-activedescendant`. A field with no name of its own gets `fallbackLabel`: it
+ * a screen reader through `aria-activedescendant` or a live announcement across shadow roots. A field with no name of its own gets `fallbackLabel`: it
  * usually shows nothing but a magnifying glass. The attributes are written to the DOM because the field belongs to
  * the consumer's template, where the component that renders the popup has no bindings.
  *
@@ -41,13 +41,19 @@ export function kbqSyncSearchFieldA11y(
     fallbackLabel: () => string
 ): void {
     const idGenerator = inject(_IdGenerator);
+    const injector = inject(Injector);
+    let lastAnnounced: HTMLElement | null = null;
     let appliedLabel: string | null = null;
 
     afterEveryRender({
         write: () => {
             // A field out of the document is perceived by nobody: its popup is closed. It is synced again in the
             // render that attaches it.
-            if (!host.isConnected) return;
+            if (!host.isConnected) {
+                lastAnnounced = null;
+
+                return;
+            }
 
             const field = host.querySelector('input');
 
@@ -70,10 +76,41 @@ export function kbqSyncSearchFieldA11y(
             }
 
             setAttribute(field, 'aria-autocomplete', 'list');
-            setAttribute(field, 'aria-controls', getId(description.popup(), idGenerator));
-            setAttribute(field, 'aria-activedescendant', getId(description.activeDescendant(), idGenerator));
+            const root = field.getRootNode();
+            const panel = description.popup();
+            const active = description.activeDescendant();
+            const sameTree = active?.getRootNode() === root;
+
+            setAttribute(field, 'aria-controls', getId(panel?.getRootNode() === root ? panel : null, idGenerator));
+            setAttribute(field, 'aria-activedescendant', getId(sameTree ? active : null, idGenerator));
+
+            // ID references stop at a shadow boundary. Announce a new highlight only for the
+            // field that currently owns the caret, and only once across unrelated renders.
+            const announce = !sameTree && active?.isConnected && field.matches(':focus') ? active : null;
+
+            if (announce && announce !== lastAnnounced) {
+                const label = getAnnouncement(announce);
+
+                if (label) void injector.get(LiveAnnouncer).announce(label);
+            }
+
+            lastAnnounced = announce;
         }
     });
+}
+
+/** Prefer the explicitly provided accessible name over the item's visible text. */
+function getAnnouncement(item: HTMLElement): string {
+    const root = item.getRootNode() as Document | ShadowRoot;
+    const labelledBy = item
+        .getAttribute('aria-labelledby')
+        ?.trim()
+        .split(/\s+/)
+        .map((id) => root.getElementById(id)?.textContent?.trim())
+        .filter(Boolean)
+        .join(' ');
+
+    return labelledBy || item.getAttribute('aria-label') || item.textContent?.trim() || item.title;
 }
 
 /** Writes the fallback name, or takes it back once the field has one of its own. Returns the name now applied. */

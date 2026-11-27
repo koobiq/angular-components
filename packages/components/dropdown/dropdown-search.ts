@@ -1,7 +1,7 @@
 import { LEFT_ARROW, RIGHT_ARROW } from '@angular/cdk/keycodes';
-import { Directive, inject } from '@angular/core';
+import { DestroyRef, Directive, inject } from '@angular/core';
 import { KbqSearchFieldBase, type KbqSearchFieldPopup } from '@koobiq/components/core';
-import { KBQ_FORM_FIELD_DEFAULT_OPTIONS } from '@koobiq/components/form-field';
+import { KBQ_FORM_FIELD, KBQ_FORM_FIELD_DEFAULT_OPTIONS } from '@koobiq/components/form-field';
 import { KBQ_DROPDOWN_PANEL } from './dropdown.types';
 
 /**
@@ -38,6 +38,14 @@ export class KbqDropdownSearch extends KbqSearchFieldBase {
     readonly panel = inject(KBQ_DROPDOWN_PANEL, { optional: true });
 
     protected readonly directiveName = 'kbqDropdownSearch';
+
+    constructor() {
+        super();
+
+        const unregister = this.panel?.registerSearch?.(this, inject(KBQ_FORM_FIELD));
+
+        if (unregister) inject(DestroyRef).onDestroy(unregister);
+    }
 
     /** The current text of the dropdown's search input. */
     override value(): string {
