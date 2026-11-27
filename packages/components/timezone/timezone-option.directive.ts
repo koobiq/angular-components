@@ -28,17 +28,16 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
     private readonly contentObserver = inject(ContentObserver);
     private readonly platform = inject(Platform);
 
-    private readonly debounceInterval = 100;
-
-    private resizeSubscription = Subscription.EMPTY;
-    private contentObserverSubscription = Subscription.EMPTY;
-    private focusMonitorSubscription = Subscription.EMPTY;
-
     /**
      * Overrides the tooltip's hoverable default. The overflow hint floats over the neighbouring options of a
      * scrolling list, so a pointer-capturing pane would swallow the click that selects them.
      */
     override readonly ignoreTooltipPointerEvents = input<boolean>(true);
+
+    private readonly debounceInterval = 100;
+    private resizeSubscription = Subscription.EMPTY;
+    private contentObserverSubscription = Subscription.EMPTY;
+    private focusMonitorSubscription = Subscription.EMPTY;
 
     /**
      * The hint shows rows the option had to clip, so `kbqTooltipDisabled="false"` cannot conjure one for an

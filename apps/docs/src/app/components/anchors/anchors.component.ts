@@ -52,29 +52,28 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
     private route = inject(ActivatedRoute);
     private ref = inject(ChangeDetectorRef);
     private document = inject<Document>(DOCUMENT);
+    private readonly destroyRef = inject(DestroyRef);
 
     /** CSS selector matching the headings the anchor list is built from. */
     readonly headerSelectors = input.required<string>();
+
+    private readonly headerHeight: number = 64;
+    private fragment = '';
+    private readonly debounceTime = 15;
+    private scrollSubscription?: Subscription;
+    private fragmentScrollTimer: ReturnType<typeof setTimeout> | undefined;
+    private readonly scrollBehavior: ScrollBehavior = kbqAnimationsDisabled() ? 'instant' : 'smooth';
 
     /**
      * Anchors currently rendered in the list. Rebuilt from the DOM on every `setScrollPosition`
      * call, so it is component state rather than an input.
      */
     protected anchors: KbqDocsAnchor[] = [];
-
     protected pathName: string;
 
     /** The query of a link to a heading: the rest of the current one, without the member selected on an API tab. */
     protected readonly queryParams = DOCS_API_WITHOUT_MEMBER;
-
-    private readonly headerHeight: number = 64;
-
-    private fragment = '';
-
-    private readonly debounceTime = 15;
-
-    private scrollSubscription?: Subscription;
-    private fragmentScrollTimer: ReturnType<typeof setTimeout> | undefined;
+    protected readonly popUpPlacements = PopUpPlacements;
 
     // The scroll container lives outside this component's view, so it can be absent (e.g. on a page
     // that renders `docs-anchors` without a `docs-component-viewer` host). Return `null` and let
@@ -94,9 +93,6 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
     private get scrollOffset(): number {
         return (this.scrollContainer?.scrollTop ?? 0) + this.headerHeight;
     }
-
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly scrollBehavior: ScrollBehavior = kbqAnimationsDisabled() ? 'instant' : 'smooth';
 
     constructor() {
         const router = this.router;
@@ -264,6 +260,4 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
 
         this.ref.detectChanges();
     }
-
-    protected readonly popUpPlacements = PopUpPlacements;
 }

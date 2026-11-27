@@ -33,9 +33,9 @@ type NavbarLink = {
 })
 export class NavbarTemplateOutletExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly popUpPlacements = PopUpPlacements;
     readonly colors = KbqComponentColors;
+
     /** Position of the selected app in `t().apps`, so the selection survives a locale switch. */
     readonly selectedApp = signal(0);
 

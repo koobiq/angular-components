@@ -42,6 +42,9 @@ export class KbqPipeInputComponent extends KbqBasePipe<string | null> implements
     /** @docs-private */
     protected readonly input = viewChild.required(KbqInput);
 
+    /** Cancels a pending debounced apply once the value has been applied (or cleared) through another path. */
+    private readonly cancelPendingApply = new Subject<void>();
+
     /**
      * Input control.
      *
@@ -64,9 +67,6 @@ export class KbqPipeInputComponent extends KbqBasePipe<string | null> implements
      * already erased. `Enter` and blur ignore the threshold. Set to `0` to apply every keystroke.
      */
     minLength = 1;
-
-    /** Cancels a pending debounced apply once the value has been applied (or cleared) through another path. */
-    private readonly cancelPendingApply = new Subject<void>();
 
     /** Whether the current pipe is empty. Used for apply style modifier */
     override get isEmpty(): boolean {

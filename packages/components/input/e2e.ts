@@ -238,8 +238,6 @@ export class E2eInputStateAndStyle {
     readonly inputMonoValue = signal('P@a$$w0rd');
     readonly inputNumberValue = signal(123456);
     keyboardValue: number | null = null;
-    errorStateMatcher = (state: ('error' | string)[]): ErrorStateMatcher => new CustomErrorStateMatcher(state);
-
     states: InputStates[][] = [
         [{ state: ['placeholder'] }],
         [{ state: ['narrow'] }],
@@ -250,4 +248,6 @@ export class E2eInputStateAndStyle {
         [{ state: ['error', 'focused'] }],
         [{ state: ['disabled'] }]
     ];
+
+    errorStateMatcher = (state: ('error' | string)[]): ErrorStateMatcher => new CustomErrorStateMatcher(state);
 }

@@ -52,14 +52,13 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatepickerMinimaxExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     readonly minDate = this.adapter.createDate(2023, 11, 14);
+
     // The bounds are compared as instants and the input keeps the time part of what it parses, so
     // the upper bound has to be the end of the last allowed day for that day to stay valid.
     readonly maxDate = this.adapter.createDate(2024, 7, 25).endOf('day');
-
     date: DateTime | null = null;
 }

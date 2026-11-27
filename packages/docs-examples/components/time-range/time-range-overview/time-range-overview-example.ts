@@ -30,14 +30,12 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TimeRangeOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly control = new FormControl<KbqTimeRangeRange>(
         {
             type: 'last5Minutes'
         },
         { nonNullable: true }
     );
-
     protected readonly availableTimeRangeTypes: KbqTimeRangeType[] = [
         'lastMinute',
         'last5Minutes',

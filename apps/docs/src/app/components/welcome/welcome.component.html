@@ -1,7 +1,7 @@
 <div class="docs-welcome__content">
-    <header docsRegisterHeader class="docs-welcome__header">
+    <h1 docsRegisterHeader class="docs-welcome__header">
         {{ t('welcomeTitle') }}
-    </header>
+    </h1>
 
     <div class="docs-welcome__description kbq-text-big">
         {{ t('welcomeDescription') }}
@@ -9,7 +9,7 @@
 
     @for (category of structureCategories; track category) {
         <div class="docs-welcome__category">
-            <div class="docs-welcome__category-title kbq-title">{{ category.name[locale()] }}</div>
+            <h2 class="docs-welcome__category-title kbq-title">{{ category.name[locale()] }}</h2>
             <div class="docs-welcome__category-items layout-row layout-margin-top-l">
                 @let theme = currentTheme();
 

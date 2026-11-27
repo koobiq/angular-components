@@ -60,6 +60,7 @@ const createSearchPipe = (name: string): KbqPipe => ({
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarOverviewExample {
+    /** Text the example owns: it has no counterpart in the library's locale data. */
     protected readonly t = injectTranslation(TRANSLATIONS);
 
     /**
@@ -68,18 +69,14 @@ export class FilterBarOverviewExample {
      */
     protected readonly periods = injectLocalizedPeriods();
 
-    /** Text the example owns: it has no counterpart in the library's locale data. */
-
     // Everything below is derived from the period labels, so it is rebuilt whenever the locale changes:
     // `*kbqPipe` builds a pipe component once from the object it is given and ignores later changes to
     // that binding, so a relabelled period only reaches the screen as a new pipe object. `linkedSignal`
     // for what the user also writes, `computed` for what is only ever read.
     readonly filters = linkedSignal(() => this.createFilters());
     readonly savedFilters = computed(() => structuredClone(this.createFilters()));
-
     readonly defaultFilter = computed<KbqFilter | null>(() => this.getDefaultFilter());
     readonly activeFilter = linkedSignal<KbqFilter | null>(() => this.getDefaultFilter());
-
     readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
         {
             name: 'Date',

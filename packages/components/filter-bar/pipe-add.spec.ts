@@ -1,7 +1,8 @@
+import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { ChangeDetectorRef, Component, type DebugElement, inject, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { createKeyboardEvent, dispatchEvent, ENTER, SPACE } from '@koobiq/components/core';
+import { createKeyboardEvent, dispatchEvent } from '@koobiq/components/core';
 import {
     KBQ_FILTER_BAR_NAME_RESOLVER,
     type KbqFilter,
@@ -52,7 +53,6 @@ class TestComponent {
     readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     activeFilter: KbqFilter | null = null;
-
     filterTemplate: KbqFilter = {
         name: 'DefaultFilter',
         readonly: false,
@@ -61,7 +61,6 @@ class TestComponent {
         saved: false,
         pipes: []
     };
-
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'PipeA',

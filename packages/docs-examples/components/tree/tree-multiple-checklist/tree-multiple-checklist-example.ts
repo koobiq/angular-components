@@ -148,9 +148,7 @@ export const DATA_OBJECT = {
 export class TreeMultipleChecklistExample {
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     modelValue: any = [];
 
     /** The selection for checklist */

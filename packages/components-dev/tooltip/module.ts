@@ -95,16 +95,11 @@ export class DevApp {
     placement = PopUpPlacements.Top;
     componentColors = KbqComponentColors;
     popUpPlacements = PopUpPlacements;
-
     tooltipActiveStage: number;
     selectedOrder = false;
-
     isPopoverVisibleLeft: boolean = false;
-
     activatedPosition: string = '';
-
     inputText = 'Tooltip text';
-
     ELEMENTS = {
         BUTTON: 'button',
         INPUT: 'input',
@@ -112,13 +107,11 @@ export class DevApp {
         ICON: 'icon',
         EXTENDED: 'extended'
     };
-
     TRIGGERS = {
         CLICK: 'click',
         FOCUS: 'focus',
         HOVER: 'hover'
     };
-
     selectedElement: string = 'button';
     selectedColor: KbqComponentColors = KbqComponentColors.Contrast;
     selectedPlacement: PopUpPlacements = PopUpPlacements.Top;
@@ -127,7 +120,6 @@ export class DevApp {
     content: string = 'button text';
     userDefinedPlacementPriority: string[] = ['bottom', 'right'];
     multipleSelected: string[] = [];
-
     toolTipContext = {
         header: 'Header',
         content: `В западной традиции рыбой выступает фрагмент латинского текста из философского трактата Цицерона «О пределах
@@ -135,6 +127,10 @@ export class DevApp {
             неизвестным печатником еще в XVI веке.`
     };
     hasArrow = false;
+
+    get isFallbackActivated(): boolean {
+        return this.selectedPlacement !== this.activatedPosition && this.activatedPosition !== '';
+    }
 
     constructor() {
         this.tooltipActiveStage = 1;
@@ -182,9 +178,5 @@ export class DevApp {
         }
 
         return this.selectedOrder ? { order: 1 } : { order: 2 };
-    }
-
-    get isFallbackActivated(): boolean {
-        return this.selectedPlacement !== this.activatedPosition && this.activatedPosition !== '';
     }
 }

@@ -65,6 +65,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class ButtonGroupContentExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly data = computed(() => [this.t().archive, this.t().report, this.t().snooze]);
 }

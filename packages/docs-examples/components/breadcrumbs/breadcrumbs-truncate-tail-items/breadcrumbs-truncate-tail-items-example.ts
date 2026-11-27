@@ -43,7 +43,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class BreadcrumbsTruncateTailItemsExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly breadcrumbs = computed(() => [
         { label: this.t().main, url: '/main' },
         { label: this.t().users, url: '/main/users' },

@@ -85,17 +85,6 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     private readonly ngZone = inject(NgZone);
     private readonly isBrowser = inject(Platform).isBrowser;
 
-    private readonly externalIndicator = contentChild(KbqLoaderOverlayIndicator);
-    private readonly externalText = contentChild(KbqLoaderOverlayText);
-    private readonly externalCaption = contentChild(KbqLoaderOverlayCaption);
-
-    private parent: HTMLElement | null = null;
-    // Only the siblings this overlay made inert get the attribute back, so an `inert` of the consumer's stays.
-    private readonly inertSiblings = new Set<Element>();
-    private siblingsObserver: MutationObserver | null = null;
-    private previouslyFocused: HTMLElement | null = null;
-    private previousFocusOrigin: FocusOrigin = null;
-
     /** Text shown under the indicator. Ignored when a `[kbq-loader-overlay-text]` is projected. */
     readonly text = input<string>();
 
@@ -126,6 +115,18 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
      * @deprecated Use `surface="card"` instead. Will be removed in 22.0.0.
      */
     readonly card = input(false, { transform: booleanAttribute });
+
+    private readonly externalIndicator = contentChild(KbqLoaderOverlayIndicator);
+    private readonly externalText = contentChild(KbqLoaderOverlayText);
+    private readonly externalCaption = contentChild(KbqLoaderOverlayCaption);
+
+    private parent: HTMLElement | null = null;
+
+    // Only the siblings this overlay made inert get the attribute back, so an `inert` of the consumer's stays.
+    private readonly inertSiblings = new Set<Element>();
+    private siblingsObserver: MutationObserver | null = null;
+    private previouslyFocused: HTMLElement | null = null;
+    private previousFocusOrigin: FocusOrigin = null;
 
     /** @docs-private */
     protected readonly isExternalIndicator = computed(() => !!this.externalIndicator());

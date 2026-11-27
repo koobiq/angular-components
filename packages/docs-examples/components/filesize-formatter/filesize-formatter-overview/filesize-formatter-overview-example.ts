@@ -138,16 +138,15 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class FilesizeFormatterOverviewExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     protected readonly cdr = inject(ChangeDetectorRef);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly precisionControl = new FormControl(2, { nonNullable: true });
     protected readonly unitSystemNameControl = new FormControl<KbqMeasurementSystem>(KbqMeasurementSystem.SI, {
         nonNullable: true
     });
     protected readonly bytesControl = new FormControl(1024, { nonNullable: true });
-
     protected readonly kbqMeasurementSystem = KbqMeasurementSystem;
     protected readonly popUpPlacements = PopUpPlacements;
 

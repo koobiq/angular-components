@@ -1,4 +1,5 @@
 import { CdkTrapFocus, FocusMonitor, type FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
+import { ENTER, ESCAPE } from '@angular/cdk/keycodes';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { _getFocusedElementPierceShadowDom, Platform } from '@angular/cdk/platform';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
@@ -39,10 +40,11 @@ import { outputFromObservable } from '@angular/core/rxjs-interop';
 import { type Observable, type Subscription, take } from 'rxjs';
 import { type KbqButtonColor, KbqButtonModule } from '@koobiq/components/button';
 import {
-    ENTER,
-    ESCAPE,
+    coerceCanCloseDecision,
     KBQ_A11Y_LOCALE_CONFIGURATION,
     kbqAnimationsDisabled,
+    type KbqCanClose,
+    type KbqCloseReason,
     KbqComponentColors,
     KbqLocaleOverridesDirective,
     KbqOverflowShadowBottom,
@@ -60,8 +62,8 @@ import {
     KBQ_MODAL_OPTIONS,
     type KbqModal,
     type KbqModalAutoFocus,
+    type KbqModalConfig,
     MODAL_ANIMATE_DURATION,
-    type ModalOptions,
     ModalSize,
     type ModalType,
     type OnClickCallback
@@ -141,20 +143,11 @@ export class KbqModalComponent<T = any, R = any>
     private readonly injector = inject(Injector);
     private readonly platform = inject(Platform);
 
-    /**
-     * Whether the dialog and its dim layer move without motion. Read from the dialog's own injector, under
-     * `options.injector` when the service opened it.
-     *
-     * @docs-private
-     */
-    readonly animationsDisabled = kbqAnimationsDisabled();
-
     /** Accessible name for the icon-only close button. */
     protected readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'a11y',
         KBQ_A11Y_LOCALE_CONFIGURATION
     );
-
     protected readonly document = inject<Document>(DOCUMENT);
 
     /**
@@ -162,9 +155,7 @@ export class KbqModalComponent<T = any, R = any>
      * takes its initial value from here: a service-created dialog carries no template bindings, so
      * an input it does not bind keeps that initial value for the dialog's whole life.
      */
-    private readonly options = inject(KBQ_MODAL_OPTIONS, { optional: true }) as ModalOptions<T, R> | null;
-
-    componentColors = KbqComponentColors;
+    private readonly options = inject(KBQ_MODAL_OPTIONS, { optional: true }) as KbqModalConfig<T, R> | null;
 
     /** Layout the dialog renders. */
     readonly kbqModalType = input<ModalType>(this.options?.kbqModalType ?? 'default');
@@ -187,21 +178,27 @@ export class KbqModalComponent<T = any, R = any>
 
     /** Explicit width, overriding the one `kbqSize` implies. A number is read as pixels. */
     readonly kbqWidth = input<number | string | undefined>(this.options?.kbqWidth);
+
     /** Width preset. */
     readonly kbqSize = input<ModalSize>(this.options?.kbqSize ?? ModalSize.Medium);
+
     /** Extra class names for the full-screen wrapper around the dialog. */
     readonly kbqWrapClassName = input<string | undefined>(this.options?.kbqWrapClassName);
+
     /** Extra class names for the dialog element itself. */
     readonly kbqClassName = input<string | undefined>(this.options?.kbqClassName);
+
     /** Inline styles for the dialog element. */
     readonly kbqStyle = input<object | undefined>(this.options?.kbqStyle);
 
     /** Heading of the dialog. Also becomes its accessible name. */
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     readonly kbqTitle = input<string | TemplateRef<{}> | undefined>(this.options?.kbqTitle);
+
     /** Secondary line under the heading. Also becomes the dialog's accessible description. */
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     readonly kbqCaption = input<string | TemplateRef<{}> | undefined>(this.options?.kbqCaption);
+
     /** Whether <kbd>Escape</kbd> cancels the dialog. */
     readonly kbqCloseByESC = input(this.options?.kbqCloseByESC ?? true, { transform: booleanAttribute });
 
@@ -222,28 +219,13 @@ export class KbqModalComponent<T = any, R = any>
 
     /** Inline styles for the dim layer. */
     readonly kbqMaskStyle = input<object | undefined>(this.options?.kbqMaskStyle);
+
     /** Inline styles for the body element. */
     readonly kbqBodyStyle = input<object | undefined>(this.options?.kbqBodyStyle);
 
-    // The emitters stay the source of truth: they back the public `afterOpen`/`beforeClose`/`afterClose`
-    // observables and the subscriptions of `ModalBuilderForService`, which `OutputEmitterRef` cannot. The
-    // outputs below mirror them for template bindings; `outputFromObservable` subscribes once per listener,
-    // so `observed` still tells a bound output.
-    // Trigger when modal open(visible) after animations
-    readonly kbqAfterOpen = new EventEmitter<void>();
-    /** @docs-private */
-    readonly kbqAfterOpenOutput = outputFromObservable(this.kbqAfterOpen, { alias: 'kbqAfterOpen' });
-    // Trigger when modal leave-animation over
-    readonly kbqAfterClose = new EventEmitter<R | undefined>();
-    /** @docs-private */
-    readonly kbqAfterCloseOutput = outputFromObservable(this.kbqAfterClose, { alias: 'kbqAfterClose' });
-    /** Emitted before the modal begins its closing animation. */
-    readonly kbqBeforeClose = new EventEmitter<R | undefined>();
-    /** @docs-private */
-    readonly kbqBeforeCloseOutput = outputFromObservable(this.kbqBeforeClose, { alias: 'kbqBeforeClose' });
-
     /** Caption of the predefined OK button. The button is not rendered without it. */
     readonly kbqOkText = input<string | undefined>(this.options?.kbqOkText);
+
     /** Color of the predefined OK button. */
     readonly kbqOkType = input<KbqButtonColor>(this.options?.kbqOkType ?? KbqComponentColors.Contrast);
 
@@ -263,14 +245,6 @@ export class KbqModalComponent<T = any, R = any>
      */
     readonly kbqOkClick = input<OnClickCallback<T> | undefined>(this.options?.kbqOkClick);
 
-    /**
-     * Emits when the predefined OK button is activated. A notification, not a decision — the dialog
-     * closes either way. Bind `[kbqOkClick]` instead to decide whether it closes.
-     */
-    readonly kbqOnOk = new EventEmitter<T>();
-    /** @docs-private */
-    readonly kbqOnOkOutput = outputFromObservable(this.kbqOnOk, { alias: 'kbqOnOk' });
-
     /** Caption of the predefined Cancel button. The button is not rendered without it. */
     readonly kbqCancelText = input<string | undefined>(this.options?.kbqCancelText);
 
@@ -285,25 +259,84 @@ export class KbqModalComponent<T = any, R = any>
      */
     readonly kbqCancelClick = input<OnClickCallback<T> | undefined>(this.options?.kbqCancelClick);
 
+    // The emitters stay the source of truth: they back the public `afterOpen`/`beforeClose`/`afterClose`
+    // observables and the subscriptions of `ModalBuilderForService`, which `OutputEmitterRef` cannot. The
+    // outputs below mirror them for template bindings; `outputFromObservable` subscribes once per listener,
+    // so `observed` still tells a bound output.
+    // Trigger when modal open(visible) after animations
+    readonly kbqAfterOpen = new EventEmitter<void>();
+    /** @docs-private */
+    readonly kbqAfterOpenOutput = outputFromObservable(this.kbqAfterOpen, { alias: 'kbqAfterOpen' });
+
+    // Trigger when modal leave-animation over
+    readonly kbqAfterClose = new EventEmitter<R | undefined>();
+
+    /** @docs-private */
+    readonly kbqAfterCloseOutput = outputFromObservable(this.kbqAfterClose, { alias: 'kbqAfterClose' });
+
+    /** Emitted before the modal begins its closing animation. */
+    readonly kbqBeforeClose = new EventEmitter<R | undefined>();
+
+    /** @docs-private */
+    readonly kbqBeforeCloseOutput = outputFromObservable(this.kbqBeforeClose, { alias: 'kbqBeforeClose' });
+
+    /**
+     * Emits when the predefined OK button is activated. A notification, not a decision — the dialog
+     * closes either way. Bind `[kbqOkClick]` instead to decide whether it closes.
+     */
+    readonly kbqOnOk = new EventEmitter<T>();
+
+    /** @docs-private */
+    readonly kbqOnOkOutput = outputFromObservable(this.kbqOnOk, { alias: 'kbqOnOk' });
+
     /**
      * Emits when the dialog is cancelled, by any of the controls `kbqCancelClick` covers. A
      * notification, not a decision. Bind `[kbqCancelClick]` instead to decide whether it closes.
      */
     readonly kbqOnCancel = new EventEmitter<T>();
+
     /** @docs-private */
     readonly kbqOnCancelOutput = outputFromObservable(this.kbqOnCancel, { alias: 'kbqOnCancel' });
 
     readonly modalContainer = viewChild.required<ElementRef>('modalContainer');
     readonly bodyContainer = viewChild.required('bodyContainer', { read: ViewContainerRef });
+
     // Both the scrollable wrap and the body of a predefined layout, so a query for one would flash
     // whichever comes first in the template rather than the one that overflows.
     private readonly scrollbarViewports = viewChildren(KbqScrollbarViewport);
     private readonly trapFocus = viewChild.required(CdkTrapFocus);
 
+    /** Whether an async `canClose` decision is pending. */
+    private isGuarding = false;
     private readonly uniqueId = uniqueIdCounter++;
+
+    /** Phase of the open/close animation, which the class list and the hidden state follow. */
+    private readonly animationPhase = signal<AnimationState>(null);
+
+    /**
+     * Phase of the dim layer's animation. Follows the dialog's own phase, except while
+     * `KbqModalControlService` fades the layer of a covered dialog out on its own.
+     */
+    private readonly maskPhase = signal<AnimationState>(null);
+
+    /**
+     * Whether the dialog and its dim layer move without motion. Read from the dialog's own injector, under
+     * `options.injector` when the service opened it.
+     *
+     * @docs-private
+     */
+    readonly animationsDisabled = kbqAnimationsDisabled();
+    componentColors = KbqComponentColors;
+
+    /**
+     * Guard intercepting every close attempt. Takes precedence over the config's `canClose` and
+     * can be assigned or replaced after the dialog was opened. Defaults to the config's value.
+     */
+    override canClose: KbqCanClose | undefined;
 
     /** Id of the element that names the dialog. Rendered on the title of a composed modal too. */
     readonly titleId = `kbq-modal-title-${this.uniqueId}`;
+
     /** Id of the element that describes the dialog. Rendered on the caption of a composed modal too. */
     readonly captionId = `kbq-modal-caption-${this.uniqueId}`;
 
@@ -315,6 +348,57 @@ export class KbqModalComponent<T = any, R = any>
      * @docs-private
      */
     readonly bodyOverflow = signal<KbqOverflowShadowState>({ top: false, bottom: false });
+
+    /**
+     * Footer buttons with their defaults filled in. `kbqFooter` reports what was bound; this is what
+     * the template renders, so the input is never written back over.
+     */
+    protected readonly footer = computed(() => {
+        const footer = this.kbqFooter();
+
+        return Array.isArray(footer) ? this.formatModalButtons(footer) : footer;
+    });
+
+    /** @docs-private */
+    protected readonly titleKind = computed(() => slotKind(this.kbqTitle()));
+
+    /** @docs-private */
+    protected readonly captionKind = computed(() => slotKind(this.kbqCaption()));
+
+    /** @docs-private */
+    protected readonly contentKind = computed(() => slotKind(this.kbqContent()));
+
+    /** @docs-private */
+    protected readonly footerKind = computed(() => slotKind(this.footer()));
+
+    /** @docs-private */
+    protected readonly titleTemplate = computed(() => slotTemplate(this.kbqTitle()));
+
+    /** @docs-private */
+    protected readonly captionTemplate = computed(() => slotTemplate(this.kbqCaption()));
+
+    /** @docs-private */
+    protected readonly contentTemplate = computed(() => slotTemplate(this.kbqContent()));
+
+    /** @docs-private */
+    protected readonly footerTemplate = computed(() => slotTemplate(this.footer()));
+
+    /** @docs-private */
+    protected readonly footerButtons = computed(() => {
+        const footer = this.footer();
+
+        return Array.isArray(footer) ? footer : [];
+    });
+
+    /** Full set of classes for the dialog element. */
+    protected readonly containerClasses = computed(() => {
+        const phase = this.animationPhase();
+        const classes = ['kbq-modal-container', this.kbqClassName(), `kbq-modal_${this.kbqSize()}`];
+
+        if (phase) classes.push(`zoom-${phase}`, `zoom-${phase}-active`);
+
+        return classes.filter(Boolean).join(' ');
+    });
 
     // Observable alias for kbqAfterOpen
     get afterOpen(): Observable<void> {
@@ -337,38 +421,59 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     /**
-     * Footer buttons with their defaults filled in. `kbqFooter` reports what was bound; this is what
-     * the template renders, so the input is never written back over.
+     * Whether the dim layer is actually painted: the input, overridden while another dialog covers
+     * this one. Seeded from the input so re-binding `[kbqMask]` still takes effect.
+     *
+     * The override exists because `KbqModalControlService` turns the layer of the dialogs underneath
+     * a newly opened one off and back on. That orchestration belongs in the dialog, keyed on
+     * `KbqModalControlService.topVisibleModal()` the way `inert` already is.
      */
-    protected readonly footer = computed(() => {
-        const footer = this.kbqFooter();
+    private readonly maskEnabled = linkedSignal(() => this.kbqMask());
 
-        return Array.isArray(footer) ? this.formatModalButtons(footer) : footer;
+    /** Classes for the dim layer. */
+    protected readonly maskAnimationClasses = computed(() => {
+        const phase = this.maskPhase();
+
+        return phase ? `fade-${phase} fade-${phase}-active` : '';
     });
 
-    /** @docs-private */
-    protected readonly titleKind = computed(() => slotKind(this.kbqTitle()));
-    /** @docs-private */
-    protected readonly captionKind = computed(() => slotKind(this.kbqCaption()));
-    /** @docs-private */
-    protected readonly contentKind = computed(() => slotKind(this.kbqContent()));
-    /** @docs-private */
-    protected readonly footerKind = computed(() => slotKind(this.footer()));
+    /**
+     * Progress state the predefined buttons actually render: the input, overridden while a handler's
+     * returned promise is pending. Seeded from the input so re-binding it still takes effect.
+     */
+    private readonly okLoading = linkedSignal(() => this.kbqOkLoading());
+    private readonly cancelLoading = linkedSignal(() => this.kbqCancelLoading());
+    private focusedElementBeforeOpen?: HTMLElement | null;
+    private previouslyFocusedElementOrigin: FocusOrigin = null;
+    private monitoredContainer: ElementRef | null = null;
+    private focusMonitorSubscription: Subscription | null = null;
 
-    /** @docs-private */
-    protected readonly titleTemplate = computed(() => slotTemplate(this.kbqTitle()));
-    /** @docs-private */
-    protected readonly captionTemplate = computed(() => slotTemplate(this.kbqCaption()));
-    /** @docs-private */
-    protected readonly contentTemplate = computed(() => slotTemplate(this.kbqContent()));
-    /** @docs-private */
-    protected readonly footerTemplate = computed(() => slotTemplate(this.footer()));
-    /** @docs-private */
-    protected readonly footerButtons = computed(() => {
-        const footer = this.footer();
+    /** Whether a `kbq-modal-title` is composed inside the dialog body. */
+    private composedTitle = false;
 
-        return Array.isArray(footer) ? footer : [];
-    });
+    /** Whether a `kbq-modal-caption` is composed inside the dialog body. */
+    private composedCaption = false;
+
+    /** Whether a `kbq-modal-footer` is composed inside the dialog body. */
+    private composedFooter = false;
+    private viewInitialized = false;
+
+    /** Visibility the open/close flow has already run for. See `syncVisibleState`. */
+    private handledVisible = false;
+
+    // Handle the reference when using kbqContent as Component
+    private contentComponentRef?: ComponentRef<T>;
+
+    // Current animation state
+    private animationState?: AnimationState;
+    private container?: HTMLElement | OverlayRef;
+
+    /** Element or overlay the dialog is rendered into. Read once, on init. */
+    readonly kbqGetContainer = input<HTMLElement | OverlayRef | (() => HTMLElement | OverlayRef) | null>(
+        // A service-created dialog is already inside an overlay the builder owns, so it must not
+        // create one of its own; the declarative path has nowhere to render until it does.
+        this.options ? (this.options.kbqGetContainer ?? null) : () => this.overlay.create()
+    );
 
     /** Whether the dialog renders a footer — a predefined button is enough, `kbqFooter` is not required. */
     protected get hasFooter(): boolean {
@@ -400,88 +505,6 @@ export class KbqModalComponent<T = any, R = any>
 
         return !!top && top !== this;
     }
-
-    /** Phase of the open/close animation, which the class list and the hidden state follow. */
-    private readonly animationPhase = signal<AnimationState>(null);
-
-    /** Full set of classes for the dialog element. */
-    protected readonly containerClasses = computed(() => {
-        const phase = this.animationPhase();
-        const classes = ['kbq-modal-container', this.kbqClassName(), `kbq-modal_${this.kbqSize()}`];
-
-        if (phase) classes.push(`zoom-${phase}`, `zoom-${phase}-active`);
-
-        return classes.filter(Boolean).join(' ');
-    });
-
-    /**
-     * Phase of the dim layer's animation. Follows the dialog's own phase, except while
-     * `KbqModalControlService` fades the layer of a covered dialog out on its own.
-     */
-    private readonly maskPhase = signal<AnimationState>(null);
-
-    /**
-     * Whether the dim layer is actually painted: the input, overridden while another dialog covers
-     * this one. Seeded from the input so re-binding `[kbqMask]` still takes effect.
-     *
-     * The override exists because `KbqModalControlService` turns the layer of the dialogs underneath
-     * a newly opened one off and back on. That orchestration belongs in the dialog, keyed on
-     * `KbqModalControlService.topVisibleModal()` the way `inert` already is.
-     */
-    private readonly maskEnabled = linkedSignal(() => this.kbqMask());
-
-    /** Classes for the dim layer. */
-    protected readonly maskAnimationClasses = computed(() => {
-        const phase = this.maskPhase();
-
-        return phase ? `fade-${phase} fade-${phase}-active` : '';
-    });
-
-    /**
-     * Progress state the predefined buttons actually render: the input, overridden while a handler's
-     * returned promise is pending. Seeded from the input so re-binding it still takes effect.
-     */
-    private readonly okLoading = linkedSignal(() => this.kbqOkLoading());
-    private readonly cancelLoading = linkedSignal(() => this.kbqCancelLoading());
-
-    /** @docs-private */
-    protected loading(triggerType: 'ok' | 'cancel'): boolean {
-        return triggerType === 'ok' ? this.okLoading() : this.cancelLoading();
-    }
-
-    private focusedElementBeforeOpen?: HTMLElement | null;
-
-    private previouslyFocusedElementOrigin: FocusOrigin = null;
-
-    private monitoredContainer: ElementRef | null = null;
-    private focusMonitorSubscription: Subscription | null = null;
-
-    /** Whether a `kbq-modal-title` is composed inside the dialog body. */
-    private composedTitle = false;
-
-    /** Whether a `kbq-modal-caption` is composed inside the dialog body. */
-    private composedCaption = false;
-
-    /** Whether a `kbq-modal-footer` is composed inside the dialog body. */
-    private composedFooter = false;
-
-    private viewInitialized = false;
-
-    /** Visibility the open/close flow has already run for. See `syncVisibleState`. */
-    private handledVisible = false;
-
-    // Handle the reference when using kbqContent as Component
-    private contentComponentRef?: ComponentRef<T>;
-    // Current animation state
-    private animationState?: AnimationState;
-    private container?: HTMLElement | OverlayRef;
-
-    /** Element or overlay the dialog is rendered into. Read once, on init. */
-    readonly kbqGetContainer = input<HTMLElement | OverlayRef | (() => HTMLElement | OverlayRef) | null>(
-        // A service-created dialog is already inside an overlay the builder owns, so it must not
-        // create one of its own; the declarative path has nowhere to render until it does.
-        this.options ? (this.options.kbqGetContainer ?? null) : () => this.overlay.create()
-    );
 
     // [NOTE] NOT available when using by service!
     // Because ngOnChanges never be called when using by service,
@@ -571,6 +594,11 @@ export class KbqModalComponent<T = any, R = any>
         }
     }
 
+    /** @docs-private */
+    protected loading(triggerType: 'ok' | 'cancel'): boolean {
+        return triggerType === 'ok' ? this.okLoading() : this.cancelLoading();
+    }
+
     open() {
         // Untracked, as `close()`, `triggerOk()` and `triggerCancel()`: called from a consumer's `effect()`, the state
         // read and written on the way — `kbqVisible`, the dialogs shown, the inputs — would make the effect run again on
@@ -584,12 +612,56 @@ export class KbqModalComponent<T = any, R = any>
      * Closing an already closed dialog is a no-op: `afterClose` emits once per actual transition.
      */
     close(result?: R) {
+        this.requestClose('programmatic', result);
+    }
+
+    /**
+     * Asks `canClose` and closes with `result` when allowed. Closing an already closed dialog is
+     * a no-op, and repeated attempts are ignored while an async decision is pending. A
+     * `programmatic` attempt re-reads the guard instead: assigning `canClose` and calling `close()`
+     * is the way to force-close past a pending decision. `force` closes unconditionally, bypassing
+     * both the guard and the lock — reserved for teardown.
+     */
+    override requestClose(reason: KbqCloseReason, result?: R, force = false): void {
+        // Read the state untracked: `close()` is called from consumer `effect()`s, and a tracked
+        // read here would re-run that effect on every open/close.
+        if (untracked(() => !this.kbqVisible())) return;
+
+        if (force) {
+            this.doClose(result);
+
+            return;
+        }
+
+        if (this.isGuarding && reason !== 'programmatic') return;
+
+        const guard = this.canClose ?? this.options?.canClose;
+        const decision = untracked(() => guard?.(reason)) ?? true;
+
+        if (decision === true) {
+            this.doClose(result);
+
+            return;
+        }
+
+        if (decision === false) return;
+
+        this.isGuarding = true;
+
+        coerceCanCloseDecision(decision).subscribe((allow) => {
+            this.isGuarding = false;
+
+            if (allow) this.doClose(result);
+        });
+    }
+
+    private doClose(result?: R): void {
         untracked(() => this.changeVisibleFromInside(false, result));
     }
 
-    // Destroy equals Close
+    // Destroy is teardown and bypasses the guard: a dialog whose owner is gone must not stay open.
     destroy(result?: R) {
-        this.close(result);
+        this.requestClose('programmatic', result, true);
     }
 
     markForCheck() {
@@ -686,7 +758,7 @@ export class KbqModalComponent<T = any, R = any>
             ($event.target as HTMLElement).classList.contains('kbq-modal-wrap') &&
             this.kbqVisible()
         ) {
-            this.onClickOkCancel('cancel');
+            this.onClickOkCancel('cancel', 'backdrop');
         }
     }
 
@@ -705,7 +777,7 @@ export class KbqModalComponent<T = any, R = any>
             // the dialog, so it cannot be the keystroke that opened it. Escape is the Cancel
             // button, veto included.
             if (this.kbqCloseByESC() && this.kbqVisible()) {
-                this.onClickOkCancel('cancel');
+                this.onClickOkCancel('cancel', 'escape');
                 event.preventDefault();
             }
 
@@ -724,19 +796,24 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     /** @docs-private */
-    protected onClickOkCancel(type: 'ok' | 'cancel') {
-        this.handleCloseResult(type, (doClose) => doClose !== false);
+    protected onClickOkCancel(type: 'ok' | 'cancel', reason: KbqCloseReason = 'close') {
+        this.handleCloseResult(type, (doClose) => doClose !== false, reason);
     }
 
     /** @docs-private */
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-    protected handleCloseResult(triggerType: 'ok' | 'cancel', canClose: (doClose: boolean | void | {}) => boolean) {
+    protected handleCloseResult(
+        triggerType: 'ok' | 'cancel',
+        // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+        shouldClose: (doClose: boolean | void | {}) => boolean,
+        reason: KbqCloseReason = 'close'
+    ) {
         const handler = triggerType === 'ok' ? this.kbqOkClick() : this.kbqCancelClick();
         const emitter = triggerType === 'ok' ? this.kbqOnOk : this.kbqOnCancel;
         const loading = triggerType === 'ok' ? this.okLoading : this.cancelLoading;
         // Users can return "false" to prevent closing by default
         // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-        const caseClose = (doClose: boolean | void | {}) => canClose(doClose) && this.close(doClose as R);
+        const caseClose = (doClose: boolean | void | {}) =>
+            shouldClose(doClose) && this.requestClose(reason, doClose as R);
 
         if (!handler) {
             emitter.emit(this.getContentComponent());

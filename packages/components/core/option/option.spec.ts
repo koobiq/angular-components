@@ -120,6 +120,7 @@ class ActionWithDisable {
 })
 class OptionDrivenByEffects {
     readonly option = viewChild.required(KbqOption);
+
     readonly wantSelected = signal(false);
     readonly toggles = signal(0);
     readonly runs = { select: 0, toggle: 0 };

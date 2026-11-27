@@ -71,9 +71,11 @@ const lockedTags = ['DDoS'];
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagAutocompleteCleanerWithDisabledExample {
-    private readonly options = getAutocompleteOptions();
-    protected readonly separatorKeysCodes = [ENTER, COMMA];
     protected readonly tagInputModel = model('');
+
+    private readonly options = getAutocompleteOptions();
+
+    protected readonly separatorKeysCodes = [ENTER, COMMA];
     protected readonly tags = model(this.options.slice(0, 4));
     protected readonly filteredOptions = computed(() => {
         const current = this.tagInputModel().trim().toLowerCase();

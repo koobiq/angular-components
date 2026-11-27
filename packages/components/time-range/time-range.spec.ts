@@ -1551,6 +1551,7 @@ export class TestComponentWithValueCorrection {
         startDateTime: '2024-01-01T00:00:00.000Z'
     });
     readonly valueCorrected = signal<KbqTimeRangeRange | undefined>(undefined);
+
     /** Every emission is counted: "did it fire at all" and "did it fire twice" are different bugs. */
     readonly corrections = signal(0);
 

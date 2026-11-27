@@ -98,9 +98,10 @@ describe(KbqNativeScrollbar.name, () => {
         `
     })
     class TestNativeScrollbar {
-        includeDescendants: unknown = false;
         readonly directive = viewChild.required(KbqNativeScrollbar);
         readonly host = viewChild.required(KbqNativeScrollbar, { read: ElementRef<HTMLElement> });
+
+        includeDescendants: unknown = false;
     }
 
     it('customizes only its host by default', () => {
@@ -779,8 +780,9 @@ describe(KbqScrollbar.name, () => {
             `
         })
         class TestScrollbarClickSuppression {
-            mode: KbqScrollbarMode = 'always';
             readonly scrollbar = viewChild.required(KbqScrollbar, { read: ElementRef<HTMLElement> });
+
+            mode: KbqScrollbarMode = 'always';
             readonly hostClick = vi.fn();
         }
 
@@ -1464,11 +1466,12 @@ describe(KbqScrollbar.name, () => {
             `
         })
         class TestStandaloneViewport {
-            mode: KbqScrollbarMode | undefined;
             readonly viewport = viewChild.required(KbqScrollbarViewport);
             readonly viewportEl = viewChild.required(KbqScrollbarViewport, { read: ElementRef<HTMLElement> });
             readonly scrollable = viewChild.required(CdkScrollable);
             readonly target = viewChild.required<ElementRef<HTMLElement>>('target');
+
+            mode: KbqScrollbarMode | undefined;
         }
 
         const spyOnScrollTo = (fixture: ComponentFixture<TestStandaloneViewport>) =>
@@ -1490,9 +1493,10 @@ describe(KbqScrollbar.name, () => {
                 `
             })
             class TestVirtualViewportRegistration {
-                readonly items = Array.from({ length: 50 }, (_, i) => i);
                 readonly viewport = viewChild.required(KbqScrollbarViewport);
                 readonly viewportEl = viewChild.required(KbqScrollbarViewport, { read: ElementRef<HTMLElement> });
+
+                readonly items = Array.from({ length: 50 }, (_, i) => i);
             }
 
             const registrationsFor = (el: HTMLElement): CdkScrollable[] =>
@@ -1585,8 +1589,9 @@ describe(KbqScrollbar.name, () => {
                     `
                 })
                 class TestStandaloneViewportBoundId {
-                    boundId = 'bound-consumer-id';
                     readonly viewportEl = viewChild.required(KbqScrollbarViewport, { read: ElementRef<HTMLElement> });
+
+                    boundId = 'bound-consumer-id';
                 }
 
                 const fixture = createComponent(TestStandaloneViewportBoundId);

@@ -78,6 +78,12 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         { initialValue: [] as string[] }
     );
 
+    /** @docs-private */
+    readonly select = viewChild.required(KbqSelect);
+
+    /** @docs-private */
+    readonly options = viewChildren(KbqOption);
+
     /** Updates on every pipe-template emission, so the options re-derive even for the same array reference. */
     private readonly templatesVersion = signal(0);
 
@@ -85,6 +91,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     private readonly searchQuery = toSignal(this.searchControl.valueChanges, {
         initialValue: this.searchControl.value
     });
+    private selectionAllInProgress = false;
 
     /**
      * Options of the pipe template that match the search query. Follows the templates and the query,
@@ -101,12 +108,15 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
             (value) => this.optionName(value)
         );
     });
-
-    /** @docs-private */
-    readonly select = viewChild.required(KbqSelect);
-
-    /** @docs-private */
-    readonly options = viewChildren(KbqOption);
+    private readonly multiSelect = new KbqMultiSelectPipeState({
+        data: this.data,
+        filterBar: this.filterBar,
+        allOptionsSelected: () => this.allOptionsSelected,
+        lockedValues: () => this.lockedValues ?? [],
+        isSameValue: (first, second) =>
+            (this.optionCompareWith ?? this.compareByValue)(first as KbqSelectValue, second as KbqSelectValue),
+        emptyValue: () => []
+    });
 
     /** selected value */
     get selected() {
@@ -186,17 +196,6 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         // and `deselect()` do not consult `disabled`, so filtering has to happen here.
         return this.options()?.filter((option) => option.selectable() && !option.disabled);
     }
-
-    private selectionAllInProgress = false;
-    private readonly multiSelect = new KbqMultiSelectPipeState({
-        data: this.data,
-        filterBar: this.filterBar,
-        allOptionsSelected: () => this.allOptionsSelected,
-        lockedValues: () => this.lockedValues ?? [],
-        isSameValue: (first, second) =>
-            (this.optionCompareWith ?? this.compareByValue)(first as KbqSelectValue, second as KbqSelectValue),
-        emptyValue: () => []
-    });
 
     constructor() {
         super();

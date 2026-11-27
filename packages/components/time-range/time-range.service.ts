@@ -28,18 +28,16 @@ export class KbqTimeRangeService<T> {
     // `NullInjectorError`. Neither is optional in practice - the guards below reject a missing one.
     readonly dateAdapter = inject<DateAdapter<T>>(DateAdapter, { optional: true })!;
     readonly dateFormatter = inject<DateFormatter<T>>(DateFormatter, { optional: true })!;
-
     readonly providedDefaultTimeRangeTypes =
         inject(KBQ_DEFAULT_TIME_RANGE_TYPES, { optional: true }) || defaultTimeRangeTypes;
-
     readonly customTimeRangeTypes = inject(KBQ_CUSTOM_TIME_RANGE_TYPES, { optional: true });
-
-    readonly DEFAULT_RANGE_TYPE: KbqTimeRangeType = 'lastHour';
 
     private readonly boundsSource = signal<KbqTimeRangeBoundsSource<T>>({
         min: signal(null),
         max: signal(null)
     });
+
+    readonly DEFAULT_RANGE_TYPE: KbqTimeRangeType = 'lastHour';
 
     /**
      * Bounds of the owning component, so that every default and every check reads one pair. Both are
@@ -47,6 +45,7 @@ export class KbqTimeRangeService<T> {
      * end of that day.
      */
     readonly minDate = computed(() => this.boundsSource().min() ?? null);
+
     /** Upper bound of the owning component, read the way `minDate` reads the lower one. */
     readonly maxDate = computed(() => this.boundsSource().max() ?? null);
 

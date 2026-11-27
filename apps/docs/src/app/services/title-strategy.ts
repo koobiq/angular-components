@@ -9,11 +9,14 @@ import { DocsSeoService } from './seo';
 @Injectable()
 export class DocsTitleStrategy extends TitleStrategy {
     private readonly seo = inject(DocsSeoService);
+
     // DocsLocaleService injects Router. Resolve it after Router construction to avoid a
     // Router → TitleStrategy → DocsLocaleService → Router dependency cycle.
     private readonly injector = inject(Injector);
     private readonly destroyRef = inject(DestroyRef);
+
     private currentUrl = '';
+
     // The `title` of the route, which names a page the documentation structure does not describe.
     private currentRouteTitle: string | undefined;
     private observesLocaleChanges = false;

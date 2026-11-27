@@ -72,16 +72,6 @@ const config: Config = {
             }
         ],
         'selector-pseudo-element-no-unknown': [true, { ignorePseudoElements: ['ng-deep'] }],
-        'font-family-no-missing-generic-family-keyword': [
-            true,
-            {
-                ignoreFontFamilies: [
-                    'Inter',
-                    'Koobiq Icons',
-                    'JetBrains Mono'
-                ]
-            }
-        ],
         // The packages add their prefixes below
         'selector-class-pattern': makeSelectorClassPatternOptions(),
         'keyframes-name-pattern': makeKeyframesNamePattern(),

@@ -1,15 +1,16 @@
 import type { Translations } from '@koobiq/docs-examples/i18n';
+import { EXAMPLE_INCIDENT_HEADERS, type ExampleIncidentHeaders } from '../incident-headers';
 
 /** Text shown by the ag-grid examples. */
 export interface ExampleTranslation {
-    headerText: string;
+    headers: ExampleIncidentHeaders;
 }
 
 export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
-        headerText: 'Текст'
+        headers: EXAMPLE_INCIDENT_HEADERS['ru-RU']
     },
     default: {
-        headerText: 'Text'
+        headers: EXAMPLE_INCIDENT_HEADERS.default
     }
 };

@@ -1,28 +1,45 @@
-import { writeFileSync } from 'fs';
-import { join } from 'path';
+/**
+ * Writes the files that name the address of the site, `DOCS_SITE_ORIGIN`: the sitemap, its line in `robots.txt` and the
+ * origin of the canonical links of the pages. The committed files name koobiq.io; `build:docs-content` rewrites them
+ * for the site a workflow deploys to another address.
+ */
+import { readFileSync, writeFileSync } from 'fs';
 import { docsGetPagePaths } from '../apps/docs/src/app/page-paths';
+import { DOCS_SITE_ORIGIN } from './docs-site-origin';
 
-const timeLabel = 'Runtime';
+export const SITEMAP_PATH = 'apps/docs/src/sitemap.xml';
+export const ROBOTS_TXT_PATH = 'apps/docs/src/robots.txt';
+export const SITE_ORIGIN_PATH = 'apps/docs/src/app/site-origin.ts';
 
-console.time(timeLabel);
-
-try {
-    console.info('🚀 Generating sitemap.xml');
-
-    const routes = docsGetPagePaths()
+export const renderSitemap = (origin: string): string => {
+    const urls = docsGetPagePaths()
         .filter(({ indexable }) => indexable)
-        .map(({ path }) => `https://koobiq.io${path}`);
+        .map(({ path }) => `\t<url>\n\t\t<loc>${origin}${path}</loc>\n\t</url>\n`)
+        .join('');
 
-    const xmlUrlElements = routes.map((url) => `\t<url>\n\t\t<loc>${url}</loc>\n\t</url>\n`).join('');
+    return `<?xml version="1.0" encoding="UTF-8" ?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}</urlset>\n`;
+};
 
-    writeFileSync(
-        join(process.cwd(), 'apps/docs/src/sitemap.xml'),
-        `<?xml version="1.0" encoding="UTF-8" ?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${xmlUrlElements}</urlset>\n`
-    );
+/** `robots.txt` is written by hand: only its `Sitemap` line, which has to be absolute, follows the site. */
+export const renderRobotsTxt = (robotsTxt: string, origin: string): string => {
+    if (!/^Sitemap: /m.test(robotsTxt)) throw new Error(`${ROBOTS_TXT_PATH} has no Sitemap line`);
 
-    console.info('✅ sitemap.xml has been successfully generated!');
-} catch (error) {
-    console.info('❌ Error occurred while generating sitemap.xml! Details:\n', error);
-} finally {
-    console.timeEnd(timeLabel);
+    return robotsTxt.replace(/^Sitemap: .*$/m, `Sitemap: ${origin}/sitemap.xml`);
+};
+
+export const renderSiteOrigin = (origin: string): string => [
+        '/**',
+        ' * NOTE! Do not edit manually. The address the site is deployed to, from `KOOBIQ_DOCS_ORIGIN`.',
+        ' * Run `yarn run docs:generate-sitemap` to update.',
+        ' */',
+        `export const DOCS_SITE_ORIGIN = '${origin}';`,
+        ''
+    ].join('\n');
+
+if (require.main === module) {
+    writeFileSync(SITEMAP_PATH, renderSitemap(DOCS_SITE_ORIGIN));
+    writeFileSync(ROBOTS_TXT_PATH, renderRobotsTxt(readFileSync(ROBOTS_TXT_PATH, 'utf8'), DOCS_SITE_ORIGIN));
+    writeFileSync(SITE_ORIGIN_PATH, renderSiteOrigin(DOCS_SITE_ORIGIN));
+
+    console.info(`✅ The sitemap, robots.txt and site-origin.ts name ${DOCS_SITE_ORIGIN}`);
 }

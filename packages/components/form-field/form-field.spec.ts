@@ -1,4 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { ESCAPE } from '@angular/cdk/keycodes';
 import {
     Component,
     type DebugElement,
@@ -27,7 +28,6 @@ import {
     dispatchFakeEvent,
     dispatchMouseEvent,
     type ErrorStateMatcher,
-    ESCAPE,
     KBQ_FORM_FIELD_REF,
     KBQ_PARENT_POPUP,
     type KbqParentPopup,
@@ -271,7 +271,9 @@ export class TestNonLabelableControl extends KbqFormFieldControl<unknown> {
     override readonly disabled = signal(false);
     override readonly errorState = signal(false).asReadonly();
     override readonly isNativeLabelSupported = false;
+
     onContainerClick(): void {}
+
     focus(): void {}
 }
 
@@ -286,8 +288,9 @@ export class TestNonLabelableControl extends KbqFormFieldControl<unknown> {
     `
 })
 export class NonLabelableFormField {
-    showRequiredMarker = false;
     readonly control = viewChild.required(TestNonLabelableControl);
+
+    showRequiredMarker = false;
 }
 
 class CustomErrorStateMatcher implements ErrorStateMatcher {
@@ -1637,6 +1640,7 @@ const EFFECT_RUN_LIMIT = 10;
 class FormFieldDrivenByEffect {
     readonly passwordToggle = viewChild.required(KbqPasswordToggle);
     readonly cleaner = viewChild.required(KbqCleaner);
+
     readonly password = new FormControl('secret');
     readonly control = new FormControl<string | null>('initial');
     readonly action = signal<'toggle' | 'clear' | null>(null);
@@ -1683,8 +1687,9 @@ class ParentPopup implements KbqParentPopup {
     `
 })
 class PasswordToggleWithTooltip {
-    readonly shown = signal(true);
-    readonly control = new FormControl('secret');
     readonly parentPopup = viewChild.required(ParentPopup);
     readonly passwordToggle = viewChild(KbqPasswordToggle);
+
+    readonly shown = signal(true);
+    readonly control = new FormControl('secret');
 }

@@ -95,23 +95,23 @@ export class KbqDropdownItem
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private focusMonitor = inject(FocusMonitor);
     parentDropdownPanel? = inject<KbqDropdownPanel>(KBQ_DROPDOWN_PANEL, { optional: true });
-    private readonly textElementQuery = viewChild<ElementRef>('kbqTitleText');
-
-    /** Element holding the text of the item, measured by `kbq-title`. */
-    get textElement(): ElementRef {
-        return this.textElementQuery()!;
-    }
-
-    readonly icon = contentChild(KbqIcon);
-
-    /** Secondary, independently-focusable icon action projected into the item (e.g. a settings link). */
-    readonly itemAction = contentChild(KbqDropdownItemAction);
 
     /** Whether the dropdown item is disabled. */
     readonly disabled = input(false, { transform: booleanAttribute });
 
     /** Whether the dropdown item is in a loading state. */
     readonly progress = input(false, { transform: booleanAttribute });
+
+    private readonly textElementQuery = viewChild<ElementRef>('kbqTitleText');
+    readonly icon = contentChild(KbqIcon);
+
+    /** Secondary, independently-focusable icon action projected into the item (e.g. a settings link). */
+    readonly itemAction = contentChild(KbqDropdownItemAction);
+
+    private readonly highlightedState = signal(false);
+
+    /** Memoised `getLabel()` result, keyed on the raw text it was derived from. */
+    private cachedLabel?: { text: string; label: string };
 
     /**
      * Value of the `disabled` and `aria-disabled` attributes.
@@ -125,17 +125,6 @@ export class KbqDropdownItem
 
     /** Stream that emits when the menu item is focused. */
     readonly focused = new Subject<KbqDropdownItem>();
-
-    /** Whether the dropdown item is highlighted. */
-    get highlighted(): boolean {
-        return this.highlightedState();
-    }
-
-    set highlighted(value: boolean) {
-        this.highlightedState.set(value);
-    }
-
-    private readonly highlightedState = signal(false);
 
     /** Whether the item is the panel's active item while DOM focus is held elsewhere. */
     protected readonly active = signal(false);
@@ -153,8 +142,19 @@ export class KbqDropdownItem
      */
     protected readonly animationsDisabled = kbqAnimationsDisabled();
 
-    /** Memoised `getLabel()` result, keyed on the raw text it was derived from. */
-    private cachedLabel?: { text: string; label: string };
+    /** Element holding the text of the item, measured by `kbq-title`. */
+    get textElement(): ElementRef {
+        return this.textElementQuery()!;
+    }
+
+    /** Whether the dropdown item is highlighted. */
+    get highlighted(): boolean {
+        return this.highlightedState();
+    }
+
+    set highlighted(value: boolean) {
+        this.highlightedState.set(value);
+    }
 
     constructor() {
         effect(() => {

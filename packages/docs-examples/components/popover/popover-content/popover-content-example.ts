@@ -28,7 +28,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class PopoverContentExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly members = computed<{ name: string; role: string }[]>(() => [
         { name: 'Alex Unipraise', role: this.t().editor },
         { name: 'Serge Vox', role: this.t().editor },

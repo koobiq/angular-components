@@ -24,14 +24,15 @@ import { KbqIcon } from './icon.component';
     }
 })
 export class KbqIconItem extends KbqIcon {
-    /** The item sizes itself through its own padding, so it never gets the bare icon's `max-height`. */
-    protected override readonly appliesMaxHeight: boolean = false;
-
     /** @docs-private */
     override readonly iconNameInput = input<string | undefined>(undefined, { alias: 'kbq-icon-item' });
 
     /** Whether the background is the translucent "fade" variant of the color rather than the solid one. */
     readonly fade = input<boolean>(false);
+
     /** Whether the item is rendered at the larger of its two sizes. */
     readonly big = input<boolean>(false);
+
+    /** The item sizes itself through its own padding, so it never gets the bare icon's `max-height`. */
+    protected override readonly appliesMaxHeight: boolean = false;
 }

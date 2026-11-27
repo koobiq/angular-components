@@ -96,10 +96,10 @@ const createFilter = (pipes: KbqPipe[]): KbqFilter => ({
 })
 class TestComponent {
     readonly changeDetectorRef = inject(ChangeDetectorRef);
+
     readonly optionTemplate = viewChild.required<TemplateRef<any>>('optionTemplate');
 
     activeFilter: KbqFilter | null = null;
-
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'TreeSelect',

@@ -468,7 +468,6 @@ const E2E_LONG_TEXT =
 export class E2eScrollbarContentChanges {
     protected readonly tallImage = E2E_TALL_IMAGE;
     protected readonly longText = E2E_LONG_TEXT;
-
     protected readonly items = signal(0);
     protected readonly itemList = computed(() => Array.from({ length: this.items() }, (_, index) => index));
     protected readonly image = signal<string | null>(null);

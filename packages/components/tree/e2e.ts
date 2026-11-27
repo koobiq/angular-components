@@ -176,8 +176,8 @@ function buildFileTree(value: any, level: number): FileNode[] {
 export class E2eTreeStates implements AfterViewInit {
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
+    protected readonly popUpPlacements = PopUpPlacements;
 
     constructor() {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
@@ -239,7 +239,6 @@ export class E2eTreeStates implements AfterViewInit {
     protected isDisabled = (node: FileFlatNode): boolean => {
         return node.name === 'Disabled';
     };
-    protected readonly popUpPlacements = PopUpPlacements;
 }
 
 const DATA_OBJECT_FOR_TREE_TWO_LINE_NODE = {
@@ -302,7 +301,6 @@ const DATA_OBJECT_FOR_TREE_OPTION_ACTION_VISIBILITY = {
 export class E2eTreeOptionActionVisibility {
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {
@@ -413,8 +411,8 @@ export class E2eTreeOptionActionVisibility {
 export class E2eTreeTwoLineNode implements AfterViewInit {
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
+    protected readonly popUpPlacements = PopUpPlacements;
 
     constructor() {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
@@ -476,5 +474,4 @@ export class E2eTreeTwoLineNode implements AfterViewInit {
     protected isDisabled = (node: FileFlatNode): boolean => {
         return node.name === 'Disabled';
     };
-    protected readonly popUpPlacements = PopUpPlacements;
 }

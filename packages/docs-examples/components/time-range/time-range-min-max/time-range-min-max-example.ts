@@ -87,10 +87,10 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class TimeRangeMinMaxExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly dateAdapter = inject<DateAdapter<DateTime>>(DateAdapter);
     protected readonly dateFormatter = inject(DateFormatter);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     // Both bounds are exact instants, not whole days: a border is checked once its date and its time are
     // put together, so admitting the whole of 31 December means naming the end of that day.

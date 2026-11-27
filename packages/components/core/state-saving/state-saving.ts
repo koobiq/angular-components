@@ -32,7 +32,8 @@ export const KBQ_STATE_SAVING_ENABLED = new InjectionToken<boolean>('KBQ_STATE_S
  *
  * Applied with `hostDirectives`, forwarding both inputs, and injected to drive it. What to persist and
  * when to read it stays with the component: `read()` once while initializing, `write()` on every change.
- * The Core page carries the worked example and the rules.
+ * The Core page carries the worked example and the rules. A consumer reads both inputs on the page of the
+ * component that forwards them, so they describe that component rather than this directive.
  *
  * The key comes from `stateSavingKey`, or is derived from where the host sits in the document
  * (`KBQ_STATE_SAVING_KEY_RESOLVER`) — see the Core page for the rules that come with that.
@@ -49,9 +50,10 @@ export class KbqStateSaving implements KbqStateSavingRef {
      * `KbqSidepanelService` persists on behalf of a panel that lives in an overlay.
      */
     readonly host: Element | null = kbqInjectNativeElement<Element>();
-
-    // These two are what a host forwards, so their documentation is read on the host's own page — it
-    // describes the component a consumer is configuring, not the directive behind it.
+    private readonly store = inject(KBQ_STATE_STORE);
+    private readonly resolveKey = inject(KBQ_STATE_SAVING_KEY_RESOLVER);
+    private readonly service = inject(KbqStateSavingService);
+    private readonly destroyRef = inject(DestroyRef);
 
     /**
      * Whether the component remembers its state across reloads and restores it on the next render.
@@ -76,6 +78,18 @@ export class KbqStateSaving implements KbqStateSavingRef {
      */
     readonly keyChanges = output<void>();
 
+    private _state: unknown = null;
+
+    /** A counter, not a flag: a nested `applying()` would otherwise release the guard on the way out. */
+    private applyingDepth = 0;
+
+    /**
+     * The key `read()` last read, `null` until it has. Until then a write would overwrite what is stored
+     * blind; holding the key rather than a flag also stops a write landing on one never read.
+     */
+    private readKey: string | null = null;
+    private resolvedKey: string | undefined;
+
     /** The state last read from or written to the store, or `null` when there is none. */
     get state(): unknown {
         return this.useStateSaving() ? this._state : null;
@@ -99,23 +113,23 @@ export class KbqStateSaving implements KbqStateSavingRef {
         return this.useStateSaving();
     }
 
-    private readonly store = inject(KBQ_STATE_STORE);
-    private readonly resolveKey = inject(KBQ_STATE_SAVING_KEY_RESOLVER);
-    private readonly service = inject(KbqStateSavingService);
-    private readonly destroyRef = inject(DestroyRef);
+    /** Whether this directive reads and writes at all. */
+    private get persists(): boolean {
+        return this.service.isEnabled() && this.useStateSaving();
+    }
 
-    private _state: unknown = null;
+    /** The key the state is persisted under, empty when the host cannot be identified. */
+    private get storageKey(): string {
+        const key = this.stateSavingKey();
 
-    /** A counter, not a flag: a nested `applying()` would otherwise release the guard on the way out. */
-    private applyingDepth = 0;
+        if (key) return key;
 
-    /**
-     * The key `read()` last read, `null` until it has. Until then a write would overwrite what is stored
-     * blind; holding the key rather than a flag also stops a write landing on one never read.
-     */
-    private readKey: string | null = null;
+        // Memoized because `write()` asks on every change and resolving walks the document. `||=` rather
+        // than `??=`, so a host asked before it was in the document is not stuck with the empty key.
+        this.resolvedKey ||= this.resolveKey(this.host);
 
-    private resolvedKey: string | undefined;
+        return this.resolvedKey;
+    }
 
     constructor() {
         this.service.register(this);
@@ -254,11 +268,6 @@ export class KbqStateSaving implements KbqStateSavingRef {
         }
     }
 
-    /** Whether this directive reads and writes at all. */
-    private get persists(): boolean {
-        return this.service.isEnabled() && this.useStateSaving();
-    }
-
     /**
      * Warns when another live component already persists under this key: a key is a whole entry, not a
      * namespace, so the two overwrite each other. Only an explicit `stateSavingKey` can collide.
@@ -273,18 +282,5 @@ export class KbqStateSaving implements KbqStateSavingRef {
             `${this.name}: \`${claimedBy.name}\` already persists under the state saving key \`${key}\`. ` +
                 'They share one entry and overwrite each other. Give each component its own key.'
         );
-    }
-
-    /** The key the state is persisted under, empty when the host cannot be identified. */
-    private get storageKey(): string {
-        const key = this.stateSavingKey();
-
-        if (key) return key;
-
-        // Memoized because `write()` asks on every change and resolving walks the document. `||=` rather
-        // than `??=`, so a host asked before it was in the document is not stuck with the empty key.
-        this.resolvedKey ||= this.resolveKey(this.host);
-
-        return this.resolvedKey;
     }
 }

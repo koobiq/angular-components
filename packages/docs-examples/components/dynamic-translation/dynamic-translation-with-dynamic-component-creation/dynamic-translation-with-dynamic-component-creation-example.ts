@@ -28,11 +28,12 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DynamicTranslationWithDynamicComponentCreationExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly applicationRef = inject(ApplicationRef);
     private readonly renderer = inject(Renderer2);
+
     private readonly container = viewChild.required('container', { read: ElementRef });
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     constructor() {
         effect((onCleanup) => {

@@ -156,8 +156,8 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "ru": "Инлайн-редактирование может заменить форму, когда пользователю нужно изменить всего несколько полей среди большого числа параметров."
     },
     "input": {
-        "en": "Input provides text, numeric, and password fields with formatting, validation, masking, and other data-entry behavior.",
-        "ru": "Input предоставляет текстовые, числовые поля и поля пароля с форматированием, валидацией, масками и другими сценариями ввода данных."
+        "en": "Input is an interface element that lets users enter textual information.",
+        "ru": "Поле ввода — элемент интерфейса, предназначенный для ввода пользователем текстовой информации."
     },
     "installation": {
         "en": "This guide describes how to set up an Angular project to use @koobiq/components.",

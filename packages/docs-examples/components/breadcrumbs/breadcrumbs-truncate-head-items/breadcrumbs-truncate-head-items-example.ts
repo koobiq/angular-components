@@ -40,7 +40,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class BreadcrumbsTruncateHeadItemsExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly breadcrumbs = computed(() => [
         { label: this.t().components, url: '/components' },
         { label: this.t().commit, url: '/components/commit' },

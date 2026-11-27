@@ -42,17 +42,13 @@ export class DevDocsExamples {}
 })
 export class DevApp {
     readonly colors = KbqComponentColors;
-
     favoriteFruit = '';
-
     isDisabled: boolean = true;
-
     readonly fruits = [
         'Apple',
         'Banana',
         'Tomato'
     ];
-
     readonly selectionList = [
         { name: 'Yes', value: 'true', selected: false },
         { name: 'No', value: 'false', selected: true }

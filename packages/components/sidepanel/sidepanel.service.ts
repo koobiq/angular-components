@@ -56,7 +56,6 @@ class KbqSidepanelStateSavingRef implements KbqStateSavingRef {
 
     /** Persistence is opted into by supplying a `stateSavingKey`, so a tracked key is always enabled. */
     readonly enabled = true;
-
     state: unknown = null;
 
     constructor(
@@ -94,6 +93,8 @@ export class KbqSidepanelService implements OnDestroy {
     private injector = inject(Injector);
     private defaultOptions = inject<KbqSidepanelConfig>(KBQ_SIDEPANEL_DEFAULT_OPTIONS, { optional: true });
     private parentSidepanelService = inject(KbqSidepanelService, { optional: true, skipSelf: true });
+    private readonly stateStore = inject(KBQ_STATE_STORE);
+    private readonly stateSavingService = inject(KbqStateSavingService);
 
     /** Sidepanels opened through this very instance, closed when this injector level is destroyed. */
     private readonly openedSidepanelsAtThisLevel: KbqSidepanelRef[] = [];
@@ -107,16 +108,12 @@ export class KbqSidepanelService implements OnDestroy {
     /** Elements outside the overlay container that were hidden from assistive technology, and their previous state. */
     private readonly ariaHiddenElements = new Map<Element, string | null>();
 
-    private readonly stateStore = inject(KBQ_STATE_STORE);
-    private readonly stateSavingService = inject(KbqStateSavingService);
-
     /**
      * One entry per `stateSavingKey` this service has seen, so `KbqStateSavingService` reports what is
      * stored as claimed. Without it a closed sidepanel's entry has nothing live behind it, and
      * `clearOrphans()` would sweep away exactly what the next visit is meant to restore.
      */
     private readonly stateSavingRefs = new Map<string, KbqSidepanelStateSavingRef>();
-
     private readonly bulkClosedAtThisLevel = new WeakSet<KbqSidepanelRef>();
 
     /** Keeps track of the currently-open sidepanels. */
@@ -404,11 +401,10 @@ export class KbqSidepanelService implements OnDestroy {
     private closeSidepanels(sidepanels: KbqSidepanelRef[]) {
         // `reverse()` mutates, and this is called with the live stack.
         [...sidepanels].reverse().forEach((sidepanelRef: KbqSidepanelRef) => {
-            // Marked before closing rather than around the loop: `afterClosed()` only fires once the exit
-            // animation is done, by which time a flag held for the duration of this call would be gone.
+            // Teardown bypasses the guard: a panel whose owner is being destroyed must not stay
+            // open, and a vetoed `beforeClosed` would otherwise never fire, losing the mark.
             this.bulkClosed.add(sidepanelRef);
-
-            sidepanelRef.close();
+            sidepanelRef.requestClose('programmatic', undefined, true);
         });
     }
 

@@ -204,11 +204,10 @@ describe(KbqScrollbarModule.name, () => {
     `
 })
 class ScrollEventListener {
-    options: KbqScrollbarOptions;
-    events: KbqScrollbarEvents;
-
     readonly scrollbar = viewChild.required(KbqScrollbar);
 
+    options: KbqScrollbarOptions;
+    events: KbqScrollbarEvents;
     scroll = vi.fn();
     initialize = vi.fn();
     update = vi.fn();

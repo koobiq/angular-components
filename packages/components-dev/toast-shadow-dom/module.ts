@@ -75,13 +75,9 @@ export class DevMfeRoot implements AfterViewInit, OnDestroy {
         this.parentToastBridge ?? ((data, duration) => this.toastService.show(data, duration));
 
     protected readonly config = inject(DEV_MFE_CONFIG);
-    protected readonly toastStyle = KbqToastStyle;
 
     /** Per-MFE theme — toggles the theme class on this MFE's host element (see host bindings). */
     protected readonly isDark = model(false);
-
-    /** Where this MFE's modal/sidepanel `.cdk-overlay-container` ended up, updated after opening one. */
-    protected readonly overlayLocation = signal('— (open modal/sidepanel)');
 
     readonly childHost = viewChild<ElementRef<HTMLElement>>('childHost');
     readonly modalContent = viewChild.required<TemplateRef<any>>('modalContent');
@@ -90,6 +86,11 @@ export class DevMfeRoot implements AfterViewInit, OnDestroy {
     private observer?: MutationObserver;
     private child?: DevMountedMfe;
     private destroyed = false;
+
+    protected readonly toastStyle = KbqToastStyle;
+
+    /** Where this MFE's modal/sidepanel `.cdk-overlay-container` ended up, updated after opening one. */
+    protected readonly overlayLocation = signal('— (open modal/sidepanel)');
 
     protected get hasChild(): boolean {
         return this.config.level < this.config.maxLevel;

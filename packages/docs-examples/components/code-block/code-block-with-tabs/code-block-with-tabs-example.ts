@@ -48,8 +48,11 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CodeBlockWithTabsExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    readonly hideTabs = model(false);
+    readonly filled = model(false);
+    readonly lineNumbers = model(true);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     readonly files: KbqCodeBlockFile[] = [
         {
             language: 'html',
@@ -67,8 +70,4 @@ export class CodeBlockWithTabsExample {
             content: `body {\n\tmargin: 0;\n\tfont-family: var(--kbq-typography-text-normal-font-family);\n\tfont-size: var(--kbq-typography-text-normal-font-size);\n\tfont-weight: var(--kbq-typography-text-normal-font-weight);\n\tline-height: var(--kbq-typography-text-normal-line-height);\n\ttext-transform: var(--kbq-typography-text-normal-text-transform);\n\tfont-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);\n\tletter-spacing: var(--kbq-typography-text-normal-letter-spacing);\n\tbackground: var(--kbq-background-bg);\n\tcolor: var(--kbq-foreground-contrast);\n}\n\na {\n\tcolor: var(--kbq-link-text);\n\ttext-decoration: none;\n}`
         }
     ];
-
-    readonly hideTabs = model(false);
-    readonly filled = model(false);
-    readonly lineNumbers = model(true);
 }

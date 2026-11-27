@@ -2333,8 +2333,8 @@ const createToastRef = () => ({}) as ReturnType<KbqToastService['show']>['ref'];
 })
 class SimpleNotificationCenter {
     readonly trigger = viewChild.required(KbqNotificationCenterTrigger);
-    readonly visibleChanges: boolean[] = [];
 
+    readonly visibleChanges: boolean[] = [];
     disabled = false;
     scrolledToBottomOffset = 0;
 }

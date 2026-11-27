@@ -64,42 +64,31 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     private readonly injector = inject(Injector);
     sidepanelConfig = inject(KbqSidepanelConfig);
 
-    /** Whether the sidepanel moves without motion. */
-    protected readonly animationsDisabled = kbqAnimationsDisabled();
-
-    /** Whether the panel exposes the clickable indent strip of the sidepanel stacked underneath it. */
-    get withIndent(): boolean {
-        return this._withIndent();
-    }
-
-    set withIndent(value: boolean) {
-        this._withIndent.set(value);
-    }
+    /** The portal outlet inside of this container into which the content will be loaded. */
+    readonly portalOutlet = viewChild.required(CdkPortalOutlet);
 
     private readonly _withIndent = signal(inject(KBQ_SIDEPANEL_WITH_INDENT));
-
-    /** ID for the container DOM element, assigned by the `KbqSidepanelRef` created along with the container. */
-    id = '';
-
-    /**
-     * Id of the element naming the sidepanel. Comes from the config, or from `kbq-sidepanel-header`.
-     *
-     * @docs-private
-     */
-    get ariaLabelledBy(): string | null {
-        return this._ariaLabelledBy();
-    }
-
-    /** @docs-private */
-    set ariaLabelledBy(value: string | null) {
-        this._ariaLabelledBy.set(value);
-    }
 
     // A signal: the header reports its title while this view is being checked, which a `markForCheck` would miss.
     private readonly _ariaLabelledBy = signal(this.sidepanelConfig.ariaLabelledBy ?? null);
 
-    /** The portal outlet inside of this container into which the content will be loaded. */
-    readonly portalOutlet = viewChild.required(CdkPortalOutlet);
+    /** The transition in progress, ended early by the next one. */
+    private pendingTransition?: { state: KbqSidepanelAnimationState; wait: { destroy(): void } };
+
+    /** Transition events held until the render that applies the state, in the order they happened. */
+    private readonly unreportedEvents: KbqSidepanelAnimationEvent[] = [];
+
+    /** Reports the held events once the next render is over. */
+    private reportAfterRender?: AfterRenderRef;
+
+    /** Whether the component has been destroyed. */
+    private destroyed?: boolean;
+
+    /** Whether the sidepanel moves without motion. */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
+
+    /** ID for the container DOM element, assigned by the `KbqSidepanelRef` created along with the container. */
+    id = '';
 
     /**
      * The state of the sidepanel: on screen, closing, or stacked under another one.
@@ -115,14 +104,72 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
      */
     readonly animationStateChanged = new Subject<KbqSidepanelAnimationEvent>();
 
-    /** The transition in progress, ended early by the next one. */
-    private pendingTransition?: { state: KbqSidepanelAnimationState; wait: { destroy(): void } };
+    /** @docs-private */
+    protected readonly indentClickEmitter = new Subject<MouseEvent>();
 
-    /** Transition events held until the render that applies the state, in the order they happened. */
-    private readonly unreportedEvents: KbqSidepanelAnimationEvent[] = [];
+    /**
+     * Transform of the panel in its current state.
+     *
+     * @docs-private
+     */
+    protected readonly stateTransform = computed((): string | null => {
+        const transforms = kbqSidepanelTransformAnimation[this.position];
 
-    /** Reports the held events once the next render is over. */
-    private reportAfterRender?: AfterRenderRef;
+        switch (this.animationState()) {
+            case KbqSidepanelAnimationState.Hidden:
+                return transforms.in;
+            case KbqSidepanelAnimationState.Visible:
+                return transforms.out;
+            case KbqSidepanelAnimationState.Lower:
+                return transforms.lower;
+            case KbqSidepanelAnimationState.BottomPanel:
+                return transforms.bottomPanel;
+            case KbqSidepanelAnimationState.BecomingNormal:
+                return transforms.becomingNormal;
+            default:
+                return null;
+        }
+    });
+
+    /**
+     * Opacity of the panel in its current state.
+     *
+     * @docs-private
+     */
+    protected readonly stateOpacity = computed((): number | null => {
+        switch (this.animationState()) {
+            case KbqSidepanelAnimationState.Void:
+            case KbqSidepanelAnimationState.BottomPanel:
+                return 0;
+            case KbqSidepanelAnimationState.Hidden:
+                return null;
+            default:
+                return 1;
+        }
+    });
+
+    /** Whether the panel exposes the clickable indent strip of the sidepanel stacked underneath it. */
+    get withIndent(): boolean {
+        return this._withIndent();
+    }
+
+    set withIndent(value: boolean) {
+        this._withIndent.set(value);
+    }
+
+    /**
+     * Id of the element naming the sidepanel. Comes from the config, or from `kbq-sidepanel-header`.
+     *
+     * @docs-private
+     */
+    get ariaLabelledBy(): string | null {
+        return this._ariaLabelledBy();
+    }
+
+    /** @docs-private */
+    set ariaLabelledBy(value: string | null) {
+        this._ariaLabelledBy.set(value);
+    }
 
     /** @docs-private */
     get size(): string {
@@ -144,11 +191,9 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
         return this.sidepanelConfig.trapFocus ?? !!this.sidepanelConfig.hasBackdrop;
     }
 
-    /** @docs-private */
-    protected readonly indentClickEmitter = new Subject<MouseEvent>();
-
-    /** Whether the component has been destroyed. */
-    private destroyed?: boolean;
+    private get position(): KbqSidepanelPosition {
+        return this.sidepanelConfig.position ?? KbqSidepanelPosition.Right;
+    }
 
     ngOnDestroy(): void {
         this.destroyed = true;
@@ -209,47 +254,6 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
         this.animationState.set(state);
         this.startTransition(state);
     }
-
-    /**
-     * Transform of the panel in its current state.
-     *
-     * @docs-private
-     */
-    protected readonly stateTransform = computed((): string | null => {
-        const transforms = kbqSidepanelTransformAnimation[this.position];
-
-        switch (this.animationState()) {
-            case KbqSidepanelAnimationState.Hidden:
-                return transforms.in;
-            case KbqSidepanelAnimationState.Visible:
-                return transforms.out;
-            case KbqSidepanelAnimationState.Lower:
-                return transforms.lower;
-            case KbqSidepanelAnimationState.BottomPanel:
-                return transforms.bottomPanel;
-            case KbqSidepanelAnimationState.BecomingNormal:
-                return transforms.becomingNormal;
-            default:
-                return null;
-        }
-    });
-
-    /**
-     * Opacity of the panel in its current state.
-     *
-     * @docs-private
-     */
-    protected readonly stateOpacity = computed((): number | null => {
-        switch (this.animationState()) {
-            case KbqSidepanelAnimationState.Void:
-            case KbqSidepanelAnimationState.BottomPanel:
-                return 0;
-            case KbqSidepanelAnimationState.Hidden:
-                return null;
-            default:
-                return 1;
-        }
-    });
 
     /**
      * Recomputes whether this panel exposes an indent strip, after the stack it belongs to changed.
@@ -319,10 +323,6 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
 
     private setPanelClass() {
         this.elementRef.nativeElement.classList.add(`kbq-sidepanel-container_${this.position}`);
-    }
-
-    private get position(): KbqSidepanelPosition {
-        return this.sidepanelConfig.position ?? KbqSidepanelPosition.Right;
     }
 
     private validatePortalAttached() {

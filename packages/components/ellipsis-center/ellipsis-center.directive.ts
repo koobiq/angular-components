@@ -61,27 +61,12 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
     /** The two spans this directive renders have no styles of their own until this is loaded. */
     private readonly styleLoader = inject(_CdkPrivateStyleLoader);
 
-    set kbqEllipsisCenter(value: string) {
-        this._kbqEllipsisCenter = value;
-        this.refresh();
-        // check the view to properly calculate text-start and text-end on text initialized
-        this.cdr.detectChanges();
-    }
-
     /**
      * Overrides the tooltip's hoverable default, as `KbqOptionTooltip` does. The hint spells out text that
      * the directive had to truncate, so it floats over the neighbouring content — and a pointer-capturing
      * pane would swallow the clicks meant for it.
      */
     override readonly ignoreTooltipPointerEvents = input<boolean>(true);
-
-    /**
-     * The hint spells out what the split hid, so `kbqTooltipDisabled="false"` cannot conjure one for a name
-     * that fits.
-     *
-     * @docs-private
-     */
-    protected override readonly derivedDisabledWins = true;
 
     /**
      * Shortest text worth splitting in the middle. Anything below it keeps its natural order and is cut off
@@ -105,16 +90,36 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
      */
     readonly debounceInterval = input<number, unknown>(50, { transform: numberAttribute });
 
+    /** @docs-private */
+    readonly kbqEllipsisCenterInput = input<string | undefined>(undefined, { alias: 'kbqEllipsisCenter' });
+
     private _kbqEllipsisCenter = '';
 
     // Host width the last completed `refresh()` measured, so a resize that leaves it untouched (the host is
     // clamped to its container) does not schedule work that would produce the same split.
     private lastMeasuredWidth: number | undefined;
-
     private refreshTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
-    /** @docs-private */
-    readonly kbqEllipsisCenterInput = input<string | undefined>(undefined, { alias: 'kbqEllipsisCenter' });
+    /**
+     * The hint spells out what the split hid, so `kbqTooltipDisabled="false"` cannot conjure one for a name
+     * that fits.
+     *
+     * @docs-private
+     */
+    protected override readonly derivedDisabledWins = true;
+
+    set kbqEllipsisCenter(value: string) {
+        this._kbqEllipsisCenter = value;
+        this.refresh();
+        // check the view to properly calculate text-start and text-end on text initialized
+        this.cdr.detectChanges();
+    }
+
+    constructor() {
+        super();
+
+        this.styleLoader.load(EllipsisCenterStyleLoader);
+    }
 
     override ngOnChanges(changes: SimpleChanges): void {
         super.ngOnChanges(changes);
@@ -122,12 +127,6 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
         // A bound input is handed to its member; unbound, it leaves what code wrote.
         // A bound `undefined` clears the text.
         if (changes['kbqEllipsisCenterInput']) this.kbqEllipsisCenter = this.kbqEllipsisCenterInput() ?? '';
-    }
-
-    constructor() {
-        super();
-
-        this.styleLoader.load(EllipsisCenterStyleLoader);
     }
 
     override ngOnInit(): void {

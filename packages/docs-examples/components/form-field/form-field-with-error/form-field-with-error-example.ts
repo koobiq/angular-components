@@ -26,6 +26,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class FormFieldWithErrorExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly formControl = new FormControl('', [Validators.required, Validators.email]);
 }

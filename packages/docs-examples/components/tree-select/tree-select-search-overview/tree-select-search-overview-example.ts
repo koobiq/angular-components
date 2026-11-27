@@ -152,18 +152,22 @@ export const DATA_OBJECT = {
             </kbq-tree-select>
         </kbq-form-field>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styles: `
+        .kbq-form-field {
+            width: 320px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-column layout-align-center-center'
+    }
 })
 export class TreeSelectSearchOverviewExample implements OnInit {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     selected = '';
-
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     searchControl: FormControl = new FormControl();
 
     constructor() {

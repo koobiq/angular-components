@@ -139,20 +139,10 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     private readonly toastFactory = inject(KBQ_TOAST_FACTORY);
     private readonly toastConfig = inject(KBQ_TOAST_CONFIG);
 
-    get toasts(): ComponentRef<T>[] {
-        return [...this.toastsDict.values()]
-            .map(({ componentRef }) => componentRef)
-            .filter((componentRef) => !componentRef.hostView.destroyed);
-    }
-
-    get templates(): EmbeddedViewRef<KbqToastTemplateContext>[] {
-        return [...this.templatesDict.values()].map(({ viewRef }) => viewRef).filter((viewRef) => !viewRef.destroyed);
-    }
-
-    readonly read = new BehaviorSubject<KbqToastData | null>(null);
-
     private readonly _hovered = signal(false);
     private readonly _focused = signal(false);
+
+    readonly read = new BehaviorSubject<KbqToastData | null>(null);
 
     /** Whether at least one toast is hovered. */
     readonly hovered: Signal<boolean> = this._hovered.asReadonly();
@@ -191,10 +181,19 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     // Keyed by id, in the order the toasts were created: the oldest first.
     private readonly toastsDict = new Map<number, KbqToastRecord<T>>();
     private readonly templatesDict = new Map<number, KbqToastTemplateRecord>();
-
     private readonly hoveredToasts = new Set<number>();
     private readonly focusedToasts = new Map<number, FocusOrigin>();
     private wasPaused = false;
+
+    get toasts(): ComponentRef<T>[] {
+        return [...this.toastsDict.values()]
+            .map(({ componentRef }) => componentRef)
+            .filter((componentRef) => !componentRef.hostView.destroyed);
+    }
+
+    get templates(): EmbeddedViewRef<KbqToastTemplateContext>[] {
+        return [...this.templatesDict.values()].map(({ viewRef }) => viewRef).filter((viewRef) => !viewRef.destroyed);
+    }
 
     private get isPaused(): boolean {
         return this.hoveredToasts.size > 0 || this.focusedToasts.size > 0;
@@ -695,14 +694,11 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
 })
 export class KbqToastContainerComponent extends CdkScrollable {
     private readonly injector = inject(Injector);
-
     protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
-
     readonly service = inject(KbqToastService);
+    private readonly overlayKeyboardDispatcher = inject(OverlayKeyboardDispatcher);
 
     readonly viewContainer = viewChild.required('container', { read: ViewContainerRef });
-
-    private readonly overlayKeyboardDispatcher = inject(OverlayKeyboardDispatcher);
 
     constructor() {
         super();

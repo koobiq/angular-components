@@ -1,4 +1,5 @@
-﻿import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewEncapsulation } from '@angular/core';
+﻿import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewEncapsulation } from '@angular/core';
 import {
     type AbstractControl,
     FormControl,
@@ -16,7 +17,6 @@ import type { DateTime } from 'luxon';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { COMMA, ENTER } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -98,17 +98,12 @@ export class DevApp {
     inputValue: string = '';
     selectValue: string = '';
     treeSelectValue: string = '';
-
     control = new UntypedFormControl('', [Validators.pattern('[a-zA-Z]*')]);
-
     inputControl = new UntypedFormControl('', [Validators.pattern('[a-zA-Z]*')]);
     tagsControl = new UntypedFormControl([], Validators.required);
-
     value = '';
-
     date?: DateTime | null;
     time?: DateTime | null;
-
     reactiveForm = new FormGroup({
         time: new FormControl<DateTime | null>(null, Validators.required),
         date: new FormControl<DateTime | null>(null, Validators.required),
@@ -121,7 +116,6 @@ export class DevApp {
         reactiveTypeaheadValue: new FormControl<string[]>([], Validators.required)
     });
     reactiveFormControl: UntypedFormGroup;
-
     formWithCustomValidator = new FormGroup({
         login: new FormControl('', [
             Validators.required,
@@ -129,14 +123,10 @@ export class DevApp {
         ]),
         password: new FormControl('', Validators.required)
     });
-
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-
     treeControl: FlatTreeControl<DevFileFlatNode>;
     treeFlattener: KbqTreeFlattener<DevFileNode, DevFileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<DevFileNode, DevFileFlatNode>;
-
     formControlDate: UntypedFormControl;
     formControlTime: UntypedFormControl;
     formControlInput: UntypedFormControl;

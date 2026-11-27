@@ -195,11 +195,8 @@ export class TreeLazyloadExample {
 
     treeControl: FlatTreeControl<LazyLoadFlatNode>;
     treeFlattener: KbqTreeFlattener<LazyLoadNode, LazyLoadFlatNode>;
-
     dataSource: LazyLoadDataSource<LazyLoadNode, LazyLoadFlatNode>;
-
     modelValue: any = '';
-
     nodeMap = new Map<string, LazyLoadFlatNode>();
 
     constructor() {

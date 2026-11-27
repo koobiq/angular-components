@@ -3,41 +3,16 @@
  * short enough to load whole, and every link of it leads to a file of the skill or to a file the documentation site
  * serves for agents, which the skills read instead of keeping a copy. Needs the manifest `yarn run docs:api-gen` writes.
  */
-import { readFileSync } from 'fs';
-import { globSync } from 'glob';
-import { posix } from 'path';
+import { DOCS_SITE_ORIGIN, KOOBIQ_SITE_ORIGIN } from '../docs-site-origin';
 import { generateLlms } from '../llms/generate';
-import { KOOBIQ_SITE_ORIGIN, LLMS_SITE_ORIGIN } from '../llms/sources';
-import { findSkillProblems, type Skill } from './skill-problems';
-
-/** Every skill is a directory with a `SKILL.md`, grouped by the library it serves: `angular/koobiq-angular`. */
-const SKILLS_GLOB = 'packages/skills/*/*/SKILL.md';
-
-const readSkills = (): Skill[] =>
-    globSync(SKILLS_GLOB, { posix: true })
-        .sort()
-        .map((skillMd) => {
-            const directory = posix.dirname(skillMd);
-
-            return {
-                name: posix.basename(directory),
-                files: new Map(
-                    globSync('**/*', { cwd: directory, nodir: true, posix: true })
-                        .sort()
-                        // A checkout with Windows line endings holds the same skill.
-                        .map((path): [string, string] => [
-                            path,
-                            readFileSync(posix.join(directory, path), 'utf-8').replace(/\r\n/g, '\n')
-                        ])
-                )
-            };
-        });
+import { findSkillProblems } from './skill-problems';
+import { readSkills, SKILLS_GLOB } from './skills';
 
 const checkSkills = async (): Promise<void> => {
     // The skills link koobiq.io: their links are checked against the files built for the same site.
-    if (LLMS_SITE_ORIGIN !== KOOBIQ_SITE_ORIGIN) {
+    if (DOCS_SITE_ORIGIN !== KOOBIQ_SITE_ORIGIN) {
         throw new Error(
-            `the skills link ${KOOBIQ_SITE_ORIGIN}: run without KOOBIQ_DOCS_ORIGIN, now ${LLMS_SITE_ORIGIN}`
+            `the skills link ${KOOBIQ_SITE_ORIGIN}: run without KOOBIQ_DOCS_ORIGIN, now ${DOCS_SITE_ORIGIN}`
         );
     }
 

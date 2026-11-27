@@ -29,6 +29,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class FileUploadCvaOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     control = new FormControl<KbqFileItem | null>(null);
 }

@@ -134,9 +134,7 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TooltipExtendedExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly extendedTooltipPreferredColor = KbqComponentColors.ContrastFade;
-
     protected readonly data = computed(() => [
         {
             type: this.t().extendedTypes[0],

@@ -93,19 +93,14 @@ export class DevApp implements OnInit {
     readonly tree = viewChild.required(KbqTreeSelection);
 
     disabledState: boolean = false;
-
     control = new UntypedFormControl(['rootNode_1', 'Documents', 'November']);
 
     // modelValue = 'Chrome';
     modelValue: any[] | null = ['Applications', 'Documents', 'Calendar', 'Chrome'];
-
     treeControl: FlatTreeControl<DevFileFlatNode>;
     treeFlattener: KbqTreeFlattener<DevFileNode, DevFileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<DevFileNode, DevFileFlatNode>;
-
     multiSelectSelectFormControl = new UntypedFormControl([], Validators.pattern(/^w/));
-
     searchControl: UntypedFormControl = new UntypedFormControl();
 
     constructor() {

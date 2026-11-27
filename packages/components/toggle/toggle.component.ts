@@ -101,6 +101,73 @@ export class KbqToggleComponent
     private readonly destroyRef = inject(DestroyRef);
     private readonly ngControl = inject(NgControl, { optional: true, self: true });
 
+    /** Defines the behavior when a user clicks on the toggle. */
+    // `KBQ_CHECKBOX_CLICK_ACTION` is the legacy fallback, kept for apps that already configure it globally
+    // to control click behavior for both checkbox and toggle.
+    clickAction: KbqToggleClickAction =
+        inject(KBQ_CHECKABLE_CLICK_ACTION, { optional: true }) ??
+        inject(KBQ_CHECKBOX_CLICK_ACTION, { optional: true }) ??
+        undefined;
+
+    /** @docs-private */
+    protected readonly uniqueId: string = inject(_IdGenerator).getId('kbq-toggle-');
+
+    /** An object used to control when the error state is shown. */
+    readonly errorStateMatcher = input<ErrorStateMatcher>();
+    readonly big = input<boolean>(false);
+    readonly labelPosition = input<ToggleLabelPositionType>('right');
+    readonly ariaLabel = input<string>('', { alias: 'aria-label' });
+    readonly ariaLabelledby = input<string | null>(null, { alias: 'aria-labelledby' });
+    readonly name = input<string | null>(null);
+    readonly value = input<string | undefined>(undefined);
+
+    /**
+     * Property for manually set loading state.
+     */
+    readonly loading = input<boolean, unknown>(false, { transform: booleanAttribute });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'tabIndex',
+        transform: kbqOptionalNumberAttribute
+    });
+
+    /** @docs-private */
+    readonly checkedInput = input<boolean | undefined, boolean | number | string | null | undefined>(undefined, {
+        alias: 'checked',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly indeterminateInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'indeterminate',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly clickActionInput = input<KbqToggleClickAction | undefined>(undefined, { alias: 'clickAction' });
+
+    /** @docs-private */
+    readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
+
+    readonly change = output<KbqToggleChange>();
+
+    /** Emits the new checked value when the user switches the toggle. Supports `[(checked)]`. */
+    readonly checkedChange = output<boolean>();
+
+    /** Event emitted when the toggle's `indeterminate` value changes. */
+    readonly indeterminateChange = output<boolean>();
+
+    /** Error text projected into the toggle. */
+    private readonly error = contentChild(KbqError, { descendants: false });
+    readonly inputElement = viewChild.required<ElementRef<HTMLInputElement>>('input');
+
     private readonly errorStateTracker = new KbqErrorStateTracker(
         inject(ErrorStateMatcher),
         this.ngControl,
@@ -110,12 +177,6 @@ export class KbqToggleComponent
 
     /** Whether the toggle is in an error state. */
     readonly errorState = this.errorStateTracker.errorState;
-
-    /** An object used to control when the error state is shown. */
-    readonly errorStateMatcher = input<ErrorStateMatcher>();
-
-    /** Error text projected into the toggle. */
-    private readonly error = contentChild(KbqError, { descendants: false });
 
     /**
      * Whether the projected `kbq-error` is shown. Without one, nothing is rendered under the label.
@@ -130,25 +191,17 @@ export class KbqToggleComponent
      * @docs-private
      */
     protected readonly ariaInvalid = computed(() => (this.errorState() || this.color() === 'error' ? 'true' : null));
-
-    readonly big = input<boolean>(false);
-
-    readonly inputElement = viewChild.required<ElementRef<HTMLInputElement>>('input');
-
-    readonly labelPosition = input<ToggleLabelPositionType>('right');
-
-    readonly ariaLabel = input<string>('', { alias: 'aria-label' });
-    readonly ariaLabelledby = input<string | null>(null, { alias: 'aria-labelledby' });
-
     id: string;
+
+    /** @docs-private */
+    protected readonly currentCheckState: Signal<TransitionCheckState> = this.checkable.currentCheckState;
+
+    /** @docs-private */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
 
     get inputId(): string {
         return `${this.id || this.uniqueId}-input`;
     }
-
-    readonly name = input<string | null>(null);
-
-    readonly value = input<string | undefined>(undefined);
 
     get disabled(): boolean {
         return this.checkable.disabled();
@@ -204,62 +257,47 @@ export class KbqToggleComponent
         });
     }
 
+    /** Id of the element wrapping the projected hint, referenced by the input's `aria-describedby`. */
+    protected get hintId(): string {
+        return `${this.id || this.uniqueId}-hint`;
+    }
+
     /**
-     * Property for manually set loading state.
+     * Id of the element wrapping the projected `kbq-error`.
+     *
+     * @docs-private
      */
-    readonly loading = input<boolean, unknown>(false, { transform: booleanAttribute });
+    protected get errorId(): string {
+        return `${this.id || this.uniqueId}-error`;
+    }
 
-    readonly change = output<KbqToggleChange>();
+    /**
+     * Id of the label text, which names the native input unless `aria-label` or `aria-labelledby` is given.
+     *
+     * @docs-private
+     */
+    protected get labelId(): string {
+        return `${this.id || this.uniqueId}-label`;
+    }
 
-    /** Event emitted when the toggle's `indeterminate` value changes. */
-    readonly indeterminateChange = output<boolean>();
+    /**
+     * The error, while it is shown, and the hint, in the order a form field gives them.
+     *
+     * @docs-private
+     */
+    protected get ariaDescribedBy(): string {
+        return this.showError() ? `${this.errorId} ${this.hintId}` : this.hintId;
+    }
 
-    /** @docs-private */
-    protected readonly currentCheckState: Signal<TransitionCheckState> = this.checkable.currentCheckState;
+    constructor() {
+        super();
 
-    /** @docs-private */
-    protected readonly animationsDisabled = kbqAnimationsDisabled();
+        this.id = this.uniqueId;
 
-    /** Defines the behavior when a user clicks on the toggle. */
-    // `KBQ_CHECKBOX_CLICK_ACTION` is the legacy fallback, kept for apps that already configure it globally
-    // to control click behavior for both checkbox and toggle.
-    clickAction: KbqToggleClickAction =
-        inject(KBQ_CHECKABLE_CLICK_ACTION, { optional: true }) ??
-        inject(KBQ_CHECKBOX_CLICK_ACTION, { optional: true }) ??
-        undefined;
-
-    /** @docs-private */
-    protected readonly uniqueId: string = inject(_IdGenerator).getId('kbq-toggle-');
-
-    /** @docs-private */
-    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'disabled',
-        transform: booleanAttribute
-    });
-
-    /** @docs-private */
-    readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
-        alias: 'tabIndex',
-        transform: kbqOptionalNumberAttribute
-    });
-
-    /** @docs-private */
-    readonly checkedInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'checked',
-        transform: booleanAttribute
-    });
-
-    /** @docs-private */
-    readonly indeterminateInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'indeterminate',
-        transform: booleanAttribute
-    });
-
-    /** @docs-private */
-    readonly clickActionInput = input<KbqToggleClickAction | undefined>(undefined, { alias: 'clickAction' });
-
-    /** @docs-private */
-    readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
+        // `writeValue` (ngModel/formControl) runs on `KbqCheckable`, bypassing the `checked`/`indeterminate`
+        // setters, so this keeps the switch position in sync for form-driven value changes too.
+        effect(() => this.setTransitionCheckState());
+    }
 
     ngOnChanges(changes: SimpleChanges): void {
         // A bound input is handed to its member, except that `undefined` resets a member
@@ -293,25 +331,9 @@ export class KbqToggleComponent
         }
     }
 
-    constructor() {
-        super();
-
-        this.id = this.uniqueId;
-
-        // `writeValue` (ngModel/formControl) runs on `KbqCheckable`, bypassing the `checked`/`indeterminate`
-        // setters, so this keeps the switch position in sync for form-driven value changes too.
-        effect(() => this.setTransitionCheckState());
-    }
-
     ngDoCheck(): void {
         // Re-evaluated on every check: a submit of the parent form notifies nothing a signal could follow.
         if (this.ngControl) this.updateErrorState();
-    }
-
-    /** Updates the error state based on the error state matcher. */
-    updateErrorState(): void {
-        this.errorStateTracker.errorStateMatcher = this.errorStateMatcher();
-        this.errorStateTracker.updateErrorState();
     }
 
     ngAfterViewInit(): void {
@@ -326,6 +348,12 @@ export class KbqToggleComponent
 
     ngOnDestroy() {
         this.focusMonitor.stopMonitoring(this.elementRef.nativeElement);
+    }
+
+    /** Updates the error state based on the error state matcher. */
+    updateErrorState(): void {
+        this.errorStateTracker.errorStateMatcher = this.errorStateMatcher();
+        this.errorStateTracker.updateErrorState();
     }
 
     focus(): void {
@@ -390,38 +418,6 @@ export class KbqToggleComponent
         }
     }
 
-    /** Id of the element wrapping the projected hint, referenced by the input's `aria-describedby`. */
-    protected get hintId(): string {
-        return `${this.id || this.uniqueId}-hint`;
-    }
-
-    /**
-     * Id of the element wrapping the projected `kbq-error`.
-     *
-     * @docs-private
-     */
-    protected get errorId(): string {
-        return `${this.id || this.uniqueId}-error`;
-    }
-
-    /**
-     * Id of the label text, which names the native input unless `aria-label` or `aria-labelledby` is given.
-     *
-     * @docs-private
-     */
-    protected get labelId(): string {
-        return `${this.id || this.uniqueId}-label`;
-    }
-
-    /**
-     * The error, while it is shown, and the hint, in the order a form field gives them.
-     *
-     * @docs-private
-     */
-    protected get ariaDescribedBy(): string {
-        return this.showError() ? `${this.errorId} ${this.hintId}` : this.hintId;
-    }
-
     /** A native checkbox only reacts to Space, so Enter is forwarded to it manually. */
     protected onEnterKeydown(event: Event): void {
         // Without this the same keystroke also submits the enclosing form.
@@ -441,7 +437,9 @@ export class KbqToggleComponent
     }
 
     private emitChangeEvent() {
-        // Note: `toggle()` already notifies the ControlValueAccessor change handler via `KbqCheckable.toggle()`.
-        this.change.emit(new KbqToggleChange(this, this.checked));
+        const checked = this.checked;
+
+        this.checkedChange.emit(checked);
+        this.change.emit(new KbqToggleChange(this, checked));
     }
 }

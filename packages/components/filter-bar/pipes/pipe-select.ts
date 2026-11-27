@@ -65,6 +65,9 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
         { initialValue: [] as string[] }
     );
 
+    /** @docs-private */
+    readonly select = viewChild.required(KbqSelect);
+
     /** Updates on every pipe-template emission, so the options re-derive even for the same array reference. */
     private readonly templatesVersion = signal(0);
 
@@ -89,17 +92,6 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
         );
     });
 
-    /** @docs-private */
-    readonly select = viewChild.required(KbqSelect);
-
-    constructor() {
-        super();
-
-        this.filterBar?.internalTemplatesChanges
-            .pipe(takeUntilDestroyed())
-            .subscribe(() => this.templatesVersion.update((version) => version + 1));
-    }
-
     /** selected value */
     get selected() {
         return this.data.value;
@@ -108,6 +100,14 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
     /** Whether the current pipe is empty. */
     override get isEmpty(): boolean {
         return !this.data.value;
+    }
+
+    constructor() {
+        super();
+
+        this.filterBar?.internalTemplatesChanges
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => this.templatesVersion.update((version) => version + 1));
     }
 
     override ngAfterViewInit() {

@@ -53,13 +53,13 @@ const stateSavingKey = 'sidepanel-state-saving-example';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelStateSavingExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly sidepanelService = inject(KbqSidepanelService);
-    protected readonly stateSavingKey = stateSavingKey;
-    protected readonly sidepanelRef = signal<KbqSidepanelRef | null>(null);
 
     private readonly template = viewChild.required(TemplateRef);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly stateSavingKey = stateSavingKey;
+    protected readonly sidepanelRef = signal<KbqSidepanelRef | null>(null);
 
     constructor() {
         // Once the view exists, so the template is there to open.

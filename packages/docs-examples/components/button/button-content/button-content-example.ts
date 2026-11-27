@@ -57,6 +57,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class ButtonContentExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     colors = KbqComponentColors;
 }

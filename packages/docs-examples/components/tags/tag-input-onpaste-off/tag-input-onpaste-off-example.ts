@@ -29,14 +29,11 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagInputOnpasteOffExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     control = new FormControl();
-
     tags = ['tag', 'tag1', 'tag2', 'tag3', 'tag4'];
-
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     onCreate(event: KbqTagInputEvent): void {

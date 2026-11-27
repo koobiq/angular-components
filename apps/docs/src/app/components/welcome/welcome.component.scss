@@ -23,6 +23,7 @@
 
 .docs-welcome__header {
     max-width: 900px;
+    margin: 0;
 }
 
 .docs-welcome__description {
@@ -33,6 +34,10 @@
 .docs-welcome__category {
     max-width: 1300px;
     margin-top: var(--kbq-size-5xl);
+}
+
+.docs-welcome__category-title {
+    margin: 0;
 }
 
 .docs-welcome__category-items {

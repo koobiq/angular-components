@@ -138,7 +138,6 @@ type ExampleAction = {
 })
 export class ExampleTopBar {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
@@ -148,13 +147,11 @@ export class ExampleTopBar {
             ),
         { initialValue: true }
     );
-
     readonly actions: ExampleAction[] = [
         { id: 'filter', icon: 'kbq-filter_16', color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent },
         { id: 'button1', text: 'Add object', color: KbqComponentColors.Contrast, style: '' },
         { id: 'button2', text: 'Button 2', color: KbqComponentColors.ContrastFade, style: '' }
     ];
-
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;

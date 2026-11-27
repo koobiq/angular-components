@@ -74,6 +74,19 @@ export interface KbqCheckableClickResult {
     exportAs: 'kbqCheckable'
 })
 export class KbqCheckable implements ControlValueAccessor {
+    readonly checked = model(false);
+    readonly disabled = model(false);
+    readonly indeterminate = model(false);
+
+    /** Raw tab index as set by the caller, ignoring `disabled`. Use `effectiveTabIndex` to read the applied value. */
+    readonly tabIndex = model(0);
+
+    /** @docs-private */
+    readonly currentCheckState = signal<TransitionCheckState>(TransitionCheckState.Init);
+
+    /** The tab index actually applied to the native input: forced to `-1` while disabled. */
+    readonly effectiveTabIndex = computed(() => (this.disabled() ? -1 : this.tabIndex()));
+
     private controlValueAccessorChangeFn: (value: any) => void = () => {};
 
     /**
@@ -82,21 +95,6 @@ export class KbqCheckable implements ControlValueAccessor {
      * @docs-private
      */
     onTouched: () => any = () => {};
-
-    /** @docs-private */
-    readonly currentCheckState = signal<TransitionCheckState>(TransitionCheckState.Init);
-
-    readonly checked = model(false);
-
-    readonly disabled = model(false);
-
-    readonly indeterminate = model(false);
-
-    /** Raw tab index as set by the caller, ignoring `disabled`. Use `effectiveTabIndex` to read the applied value. */
-    readonly tabIndex = model(0);
-
-    /** The tab index actually applied to the native input: forced to `-1` while disabled. */
-    readonly effectiveTabIndex = computed(() => (this.disabled() ? -1 : this.tabIndex()));
 
     /** Returns the ARIA-checked value: `'true'`, `'false'`, or `'mixed'` when indeterminate. */
     getAriaChecked(): KbqCheckedState {

@@ -39,12 +39,12 @@ type ExampleComponentData = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleSidepanelComponent {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly sidepanelRef = inject(KbqSidepanelRef);
     private readonly data: ExampleComponentData = inject(KBQ_SIDEPANEL_DATA);
 
     protected readonly disableClose = model(this.sidepanelRef.config.disableClose);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly open = this.data.open;
 
     constructor() {
@@ -70,9 +70,9 @@ export class ExampleSidepanelComponent {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelWithDynamicConfigUpdateExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly sidepanelService = inject(KbqSidepanelService);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     open() {
         this.sidepanelService.open<ExampleSidepanelComponent, ExampleComponentData>(ExampleSidepanelComponent, {

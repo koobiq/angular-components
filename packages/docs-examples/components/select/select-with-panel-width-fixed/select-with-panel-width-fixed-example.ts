@@ -31,8 +31,6 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class SelectWithPanelWidthFixedExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly options = [
         'Active Scanning',
         'Business Intelligence Gathering',
@@ -44,4 +42,6 @@ export class SelectWithPanelWidthFixedExample {
     ];
 
     protected readonly value = model(this.options[1]);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

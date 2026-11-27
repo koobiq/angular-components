@@ -24,6 +24,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class DropdownLazyloadDataExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     someValue = 'Lazy Value';
 }

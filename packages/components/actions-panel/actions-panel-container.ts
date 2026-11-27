@@ -102,6 +102,33 @@ export const kbqActionsPanelLocaleConfigurationProvider = (
     hostDirectives: [KbqLocaleOverridesDirective]
 })
 export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDestroy {
+    private readonly injector = inject(Injector);
+
+    /**
+     * Actions panel configuration.
+     *
+     * @docs-private
+     */
+    protected readonly config = inject(KbqActionsPanelConfig);
+    private readonly actionsPanel = inject(KBQ_ACTIONS_PANEL);
+    private readonly renderer = inject(Renderer2);
+
+    /**
+     * Actions panel locale configuration.
+     *
+     * @docs-private
+     */
+    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
+        'actionsPanel',
+        KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION
+    );
+
+    /** The transition in progress, ended early by the next one. */
+    private pendingTransition?: { state: 'visible' | 'hidden'; wait: { destroy(): void } };
+
+    /** Whether the actions panel container has been destroyed. */
+    private destroyed?: boolean;
+
     /**
      * The state of the actions panel animations.
      *
@@ -122,34 +149,6 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
      * @docs-private
      */
     protected readonly animationsDisabled = kbqAnimationsDisabled();
-
-    private readonly injector = inject(Injector);
-
-    /** The transition in progress, ended early by the next one. */
-    private pendingTransition?: { state: 'visible' | 'hidden'; wait: { destroy(): void } };
-
-    /** Whether the actions panel container has been destroyed. */
-    private destroyed?: boolean;
-
-    /**
-     * Actions panel configuration.
-     *
-     * @docs-private
-     */
-    protected readonly config = inject(KbqActionsPanelConfig);
-
-    private readonly actionsPanel = inject(KBQ_ACTIONS_PANEL);
-    private readonly renderer = inject(Renderer2);
-
-    /**
-     * Actions panel locale configuration.
-     *
-     * @docs-private
-     */
-    protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
-        'actionsPanel',
-        KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION
-    );
 
     override ngOnDestroy() {
         super.ngOnDestroy();

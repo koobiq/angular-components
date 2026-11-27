@@ -68,16 +68,16 @@ function normalizeOffsetDash(value: string): string {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimezoneSearchOverviewExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    private readonly configuration = kbqInjectLocaleConfiguration('timezone', KBQ_TIMEZONE_LOCALE_CONFIGURATION);
 
+    private readonly data: KbqTimezoneZone[];
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     filteredOptions$: Observable<KbqTimezoneGroup[]>;
     searchControl: FormControl = new FormControl();
     selected = Intl.DateTimeFormat().resolvedOptions().timeZone;
     priorityCountry?: string;
     protected searchTokens: string[] = [];
-
-    private readonly data: KbqTimezoneZone[];
-    private readonly configuration = kbqInjectLocaleConfiguration('timezone', KBQ_TIMEZONE_LOCALE_CONFIGURATION);
 
     constructor() {
         this.data = timezones.map(({ associatedZones, ...zone }) => ({

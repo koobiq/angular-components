@@ -48,7 +48,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class SelectValidationExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly options = Array.from({ length: 10 }, (_, i) => 'Option #' + i);
     readonly invalidControl = new FormControl(null, Validators.required);
 

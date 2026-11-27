@@ -1,6 +1,6 @@
 import type { FocusOrigin } from '@angular/cdk/a11y';
 import type { Direction } from '@angular/cdk/bidi';
-import { DOWN_ARROW, ENTER, UP_ARROW } from '@angular/cdk/keycodes';
+import { DOWN_ARROW, ENTER, ESCAPE, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@angular/cdk/keycodes';
 import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
 import {
@@ -50,7 +50,6 @@ import {
 } from 'rxjs';
 import {
     ActiveDescendantKeyManager,
-    ESCAPE,
     FocusKeyManager,
     getSafeTriangleVertices,
     isExplicitPanelWidth,
@@ -63,9 +62,7 @@ import {
     type KbqPanelWidth,
     type KbqPoint,
     type KbqSearchFieldPopup,
-    LEFT_ARROW,
-    type ListKeyManager,
-    RIGHT_ARROW
+    type ListKeyManager
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
@@ -136,13 +133,17 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private ngZone = inject(NgZone);
     private readonly injector = inject(Injector);
-
-    /** The pending deferred initial focus, see `focusFirstItem`. */
-    private initialFocusRef: AfterRenderRef | null = null;
     private document = inject(DOCUMENT);
     private readonly renderer = inject(Renderer2);
     private defaultOptions = inject<KbqDropdownDefaultOptions>(KBQ_DROPDOWN_DEFAULT_OPTIONS);
     private readonly destroyRef = inject(DestroyRef);
+
+    /**
+     * Whether the arrow keys move a highlight instead of the DOM focus. Turn it on when the keyboard belongs to
+     * something outside the panel — an editor whose caret the panel is anchored to, for instance — and forward
+     * the keys with {@link handleKeydown}.
+     */
+    readonly activeDescendantNavigation = input(false, { transform: booleanAttribute });
 
     private readonly panelFormField = contentChild(KbqFormField);
 
@@ -153,19 +154,14 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
      */
     private readonly searches = contentChildren(KbqDropdownSearch, { descendants: true });
 
+    /** The pending deferred initial focus, see `focusFirstItem`. */
+    private initialFocusRef: AfterRenderRef | null = null;
     private readonly search: Signal<KbqDropdownSearch | undefined> = computed(() =>
         this.searches().find((search) => search.panel === this)
     );
 
     /** Whether the dropdown projects a search form-field. @docs-private */
     readonly hasSearch = computed(() => !!this.panelFormField());
-
-    /**
-     * Whether the arrow keys move a highlight instead of the DOM focus. Turn it on when the keyboard belongs to
-     * something outside the panel — an editor whose caret the panel is anchored to, for instance — and forward
-     * the keys with {@link handleKeydown}.
-     */
-    readonly activeDescendantNavigation = input(false, { transform: booleanAttribute });
 
     /** Whether the panel highlights the active item instead of focusing it. @docs-private */
     readonly inSearchMode: Signal<boolean> = computed(() => !!this.search() || this.activeDescendantNavigation());
@@ -202,43 +198,6 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
 
     /** Classes set on the host `kbq-dropdown` element, transferred onto the panel in the overlay container. */
     readonly panelClass = input<string>('', { alias: 'class' });
-
-    /** The position the trigger resolved; supersedes the inputs until one of them changes. */
-    private readonly positionOverride = signal<{ posX: KbqDropdownPositionX; posY: KbqDropdownPositionY } | null>(null);
-
-    /** Whether a safe area is protecting an open submenu, see `activateSafeArea`. */
-    private readonly safeAreaActive = signal(false);
-
-    /** Config object passed into the dropdown panel's `[class]` binding. */
-    protected readonly classList = computed<Record<string, boolean>>(() => {
-        const { posX, posY } = this.positionOverride() ?? { posX: this.xPosition(), posY: this.yPosition() };
-
-        const classes: Record<string, boolean> = {
-            'kbq-dropdown-before': posX === 'before',
-            'kbq-dropdown-after': posX === 'after',
-            'kbq-dropdown-center': posX === 'center',
-            'kbq-dropdown-above': posY === 'above',
-            'kbq-dropdown-below': posY === 'below',
-            [SAFE_AREA_ACTIVE_CLASS]: this.safeAreaActive()
-        };
-
-        for (const className of this.panelClass().split(' ')) {
-            if (className) classes[className] = true;
-        }
-
-        return classes;
-    });
-
-    /** Whether a trigger has the panel attached, see `setOpened`. */
-    private opened = false;
-
-    private openedRender?: AfterRenderRef;
-
-    /** Parent dropdown of the current dropdown panel. */
-    parent: KbqDropdownPanel | undefined;
-
-    /** Layout direction of the dropdown, which its trigger sets on opening. */
-    direction: Direction | undefined;
 
     /** Class to be added to the backdrop element. */
     readonly backdropClass = input<string>(this.defaultOptions.backdropClass);
@@ -277,42 +236,16 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
      */
     readonly safeArea = input(this.defaultOptions.safeArea ?? true, { transform: booleanAttribute });
 
-    /**
-     * `panelMinWidth` as a CSS length for `--kbq-dropdown-size-container-width-min`.
-     *
-     * @docs-private
-     */
-    protected readonly panelMinWidthToken = computed(() => {
-        const minWidth = this.panelMinWidth();
-
-        // Always a length: dropping the token would fall back to the static 200px floor. It collapses
-        // wherever `kbqResolvePanelWidth` applies no minimum, or the panel would overflow its pane.
-        if (isExplicitPanelWidth(this.panelWidth()) || !Number.isFinite(minWidth)) return '0px';
-
-        return `${minWidth}px`;
-    });
+    /** Event emitted when the dropdown is closed. */
+    readonly closed = output<DropdownCloseReason>();
 
     /** @docs-private */
     readonly templateRef = viewChild.required(TemplateRef);
-
     private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
 
     /** Element of the open panel, the one that scrolls. */
     private readonly panelElement = viewChild(KbqScrollbarViewport, { read: ElementRef });
-
     private readonly queriedItems = contentChildren(KbqDropdownItem, { descendants: true });
-
-    /** Items borrowed from the parent panel, see `adoptItems`. Used only while this panel has none of its own. */
-    private readonly adoptedItems = signal<readonly KbqDropdownItem[] | null>(null);
-
-    /**
-     * List of the items inside of a dropdown.
-     */
-    readonly items: Signal<readonly KbqDropdownItem[]> = computed(() => {
-        const queried = this.queriedItems();
-
-        return queried.length > 0 ? queried : (this.adoptedItems() ?? queried);
-    });
 
     /**
      * Dropdown content that will be rendered lazily.
@@ -321,21 +254,21 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
      */
     readonly lazyContent = contentChild(KbqDropdownContent);
 
-    /** Event emitted when the dropdown is closed. */
-    readonly closed = output<DropdownCloseReason>();
+    /** The position the trigger resolved; supersedes the inputs until one of them changes. */
+    private readonly positionOverride = signal<{ posX: KbqDropdownPositionX; posY: KbqDropdownPositionY } | null>(null);
 
-    /**
-     * Whether the `closed` being emitted closes the panels this one is nested in too, see `closeChain`.
-     *
-     * @docs-private
-     */
-    closingChain = false;
+    /** Whether a safe area is protecting an open submenu, see `activateSafeArea`. */
+    private readonly safeAreaActive = signal(false);
 
+    /** Whether a trigger has the panel attached, see `setOpened`. */
+    private opened = false;
+    private openedRender?: AfterRenderRef;
+
+    /** Items borrowed from the parent panel, see `adoptItems`. Used only while this panel has none of its own. */
+    private readonly adoptedItems = signal<readonly KbqDropdownItem[] | null>(null);
     private keyManager?: ListKeyManager<KbqDropdownItem>;
-
     private activeDescendantKeyManager?: ActiveDescendantKeyManager<KbqDropdownItem>;
     private focusKeyManager?: FocusKeyManager<KbqDropdownItem>;
-
     private focusOrigin: FocusOrigin = 'program';
 
     /** Only the direct descendant menu items. */
@@ -365,6 +298,63 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
 
     /** Watches for a forced switch to a sibling trigger while a safe area is active. */
     private switchTargetSubscription = Subscription.EMPTY;
+
+    /** Config object passed into the dropdown panel's `[class]` binding. */
+    protected readonly classList = computed<Record<string, boolean>>(() => {
+        const { posX, posY } = this.positionOverride() ?? { posX: this.xPosition(), posY: this.yPosition() };
+
+        const classes: Record<string, boolean> = {
+            'kbq-dropdown-before': posX === 'before',
+            'kbq-dropdown-after': posX === 'after',
+            'kbq-dropdown-center': posX === 'center',
+            'kbq-dropdown-above': posY === 'above',
+            'kbq-dropdown-below': posY === 'below',
+            [SAFE_AREA_ACTIVE_CLASS]: this.safeAreaActive()
+        };
+
+        for (const className of this.panelClass().split(' ')) {
+            if (className) classes[className] = true;
+        }
+
+        return classes;
+    });
+
+    /** Parent dropdown of the current dropdown panel. */
+    parent: KbqDropdownPanel | undefined;
+
+    /** Layout direction of the dropdown, which its trigger sets on opening. */
+    direction: Direction | undefined;
+
+    /**
+     * `panelMinWidth` as a CSS length for `--kbq-dropdown-size-container-width-min`.
+     *
+     * @docs-private
+     */
+    protected readonly panelMinWidthToken = computed(() => {
+        const minWidth = this.panelMinWidth();
+
+        // Always a length: dropping the token would fall back to the static 200px floor. It collapses
+        // wherever `kbqResolvePanelWidth` applies no minimum, or the panel would overflow its pane.
+        if (isExplicitPanelWidth(this.panelWidth()) || !Number.isFinite(minWidth)) return '0px';
+
+        return `${minWidth}px`;
+    });
+
+    /**
+     * List of the items inside of a dropdown.
+     */
+    readonly items: Signal<readonly KbqDropdownItem[]> = computed(() => {
+        const queried = this.queriedItems();
+
+        return queried.length > 0 ? queried : (this.adoptedItems() ?? queried);
+    });
+
+    /**
+     * Whether the `closed` being emitted closes the panels this one is nested in too, see `closeChain`.
+     *
+     * @docs-private
+     */
+    closingChain = false;
 
     constructor() {
         // The search field can show up long after content init — rendered by `kbqDropdownContent` when

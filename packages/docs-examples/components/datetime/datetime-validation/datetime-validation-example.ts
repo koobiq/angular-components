@@ -47,17 +47,15 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class DatetimeValidationExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly parseError = KBQ_DATETIME_PARSE_ERROR;
     protected readonly minError = KBQ_DATETIME_MIN_ERROR;
     protected readonly maxError = KBQ_DATETIME_MAX_ERROR;
-
     protected readonly format = 'dd.MM.yyyy HH:mm';
     protected readonly min = this.adapter.createDateTime(2026, 10, 10, 9, 0, 0, 0);
     protected readonly max = this.adapter.createDateTime(2026, 10, 20, 18, 0, 0, 0);
-
     protected readonly control = new FormControl<DateTime | null>(
         this.adapter.createDateTime(2026, 10, 10, 8, 30, 0, 0),
         [

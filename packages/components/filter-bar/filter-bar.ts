@@ -113,11 +113,13 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
         'filterBar',
         KBQ_FILTER_BAR_LOCALE_CONFIGURATION
     );
+    private readonly nameResolverFromDi = inject(KBQ_FILTER_BAR_NAME_RESOLVER);
 
-    /** @docs-private */
-    readonly filters = contentChild(KbqFilters);
-    /** @docs-private */
-    readonly filterReset = contentChild(KbqFilterReset);
+    /**
+     * Persistence of the selected filter and its edits, applied as a host directive. `useStateSaving` and
+     * `stateSavingKey` are its inputs, forwarded onto the filter bar.
+     */
+    private readonly stateSaving = inject(KbqStateSaving);
 
     /**
      * This is special logic that unselect all items when all selected because "all selected = nothing selected".
@@ -144,12 +146,35 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
 
     /** Event that emits whenever the value of the pipe changes. */
     readonly onChangePipe = output<KbqPipe>();
+
     /** Event that emits whenever the pipe deleted. */
     readonly onRemovePipe = output<KbqPipe>();
+
     /** Event that emits whenever the pipe cleared. */
     readonly onClearPipe = output<KbqPipe>();
+
     /** Event that emits whenever the select or multiselect pipe closed. */
     readonly onClosePipe = output<KbqPipe>();
+
+    /** @docs-private */
+    readonly filters = contentChild(KbqFilters);
+
+    /** @docs-private */
+    readonly filterReset = contentChild(KbqFilterReset);
+
+    private savedFilter: KbqFilter | null = null;
+
+    /** The payload read while initializing, held until the data it needs to be applied has arrived. */
+    private pendingState: KbqFilterBarState | null = null;
+
+    /** The filter that was selected when the payload was read, to tell a later change from that one. */
+    private filterWhenPending: KbqFilter | null = null;
+
+    /** Whether the filter is being written by a restore, so the write below does not echo it back. */
+    private restoring = false;
+
+    /** Whether the persisted state has been read; reading twice would resurrect a dismissed filter. */
+    private hasRead = false;
 
     /** Whether the current filter is saved */
     readonly isSaved = computed(() => !!this.filter()?.saved);
@@ -166,32 +191,12 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
     /** Whether the current filter is disabled */
     readonly isDisabled = computed(() => !!this.filter()?.disabled);
 
-    private readonly nameResolverFromDi = inject(KBQ_FILTER_BAR_NAME_RESOLVER);
-
-    private savedFilter: KbqFilter | null = null;
-
-    /**
-     * Persistence of the selected filter and its edits, applied as a host directive. `useStateSaving` and
-     * `stateSavingKey` are its inputs, forwarded onto the filter bar.
-     */
-    private readonly stateSaving = inject(KbqStateSaving);
-
-    /** The payload read while initializing, held until the data it needs to be applied has arrived. */
-    private pendingState: KbqFilterBarState | null = null;
-
-    /** The filter that was selected when the payload was read, to tell a later change from that one. */
-    private filterWhenPending: KbqFilter | null = null;
-
-    /** Whether the filter is being written by a restore, so the write below does not echo it back. */
-    private restoring = false;
-
-    /** Whether the persisted state has been read; reading twice would resurrect a dismissed filter. */
-    private hasRead = false;
-
     /** Event that emits whenever the filter is reset. */
     readonly onResetFilter = new BehaviorSubject<boolean>(false);
+
     /** internal filter changes */
     readonly internalFilterChanges = new BehaviorSubject<KbqFilter | null>(null);
+
     /** internal changes in templates */
     readonly internalTemplatesChanges = new BehaviorSubject<KbqPipeTemplate[] | null>(null);
 
@@ -201,6 +206,21 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
      * @docs-private
      */
     readonly openPipe = new BehaviorSubject<string | number | null>(null);
+
+    /**
+     * Whether state is currently persisted for this filter bar — restored on init, or written since.
+     * Always `false` while `useStateSaving` is unset, and `false` again after `clearSavedState()`.
+     */
+    get hasSavedState(): boolean {
+        return this.stateSaving.state != null;
+    }
+
+    /** Whether this filter bar reads and writes its state at all. */
+    private get persists(): boolean {
+        // A bar that is not in the document has no stable key — the default resolver derives one from the
+        // path to `<body>` — which is the ordinary state of one projected into an overlay.
+        return this.stateSaving.useStateSaving() && !!this.stateSaving.host?.isConnected;
+    }
 
     constructor() {
         // Push template changes into the internal stream — replaces the retired `pipeTemplates` accessor
@@ -284,14 +304,6 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
         untracked(() => this.stateSaving.clear());
     }
 
-    /**
-     * Whether state is currently persisted for this filter bar — restored on init, or written since.
-     * Always `false` while `useStateSaving` is unset, and `false` again after `clearSavedState()`.
-     */
-    get hasSavedState(): boolean {
-        return this.stateSaving.state != null;
-    }
-
     /** Remove pipe from current filter and emit event */
     removePipe(pipe: KbqPipe) {
         // Untracked, as in the other imperative methods: called from a consumer's `effect()`, the filter read
@@ -355,13 +367,6 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
         if (!current) return;
 
         this.filter.set({ ...current, changed: false });
-    }
-
-    /** Whether this filter bar reads and writes its state at all. */
-    private get persists(): boolean {
-        // A bar that is not in the document has no stable key — the default resolver derives one from the
-        // path to `<body>` — which is the ordinary state of one projected into an overlay.
-        return this.stateSaving.useStateSaving() && !!this.stateSaving.host?.isConnected;
     }
 
     /**

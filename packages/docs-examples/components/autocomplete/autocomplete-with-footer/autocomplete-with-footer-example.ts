@@ -59,7 +59,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class AutocompleteWithFooterExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly options = Array.from({ length: 100 }, (_, i) => 'Option #' + (i + 1));
     readonly control = new FormControl('');
     readonly filteredOptions = toSignal(

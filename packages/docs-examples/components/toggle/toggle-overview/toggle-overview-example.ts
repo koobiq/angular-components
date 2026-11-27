@@ -8,7 +8,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     selector: 'toggle-overview-example',
     imports: [KbqToggleModule],
     template: `
-        <kbq-toggle [checked]="value()" (change)="value.set($event.checked)">Wi-Fi</kbq-toggle>
+        <kbq-toggle [(checked)]="wifiEnabled">Wi-Fi</kbq-toggle>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -16,5 +16,5 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     }
 })
 export class ToggleOverviewExample {
-    protected readonly value = signal(false);
+    protected readonly wifiEnabled = signal(false);
 }

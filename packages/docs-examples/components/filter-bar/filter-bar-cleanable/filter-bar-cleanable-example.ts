@@ -50,7 +50,6 @@ export class FilterBarCleanableExample {
             disabled: false
         }
     ];
-
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'MultiSelect',

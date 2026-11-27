@@ -34,11 +34,9 @@ import { TRANSLATIONS } from './l10n';
 })
 export class ListVirtualScrollExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly options = Array.from({ length: 10000 }).map((_, i) => ({
         id: i,
         label: 'Option #' + i
     }));
-
     selected = [];
 }

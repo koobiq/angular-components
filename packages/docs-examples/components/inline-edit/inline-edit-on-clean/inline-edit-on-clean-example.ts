@@ -54,11 +54,11 @@ import { TRANSLATIONS } from './l10n';
 })
 export class InlineEditOnCleanExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly control = { label: 'Label', control: new FormControl('Default value', { nonNullable: true }) };
 
     protected get placeholder(): string {
         return this.t().placeholder;
     }
-    protected readonly control = { label: 'Label', control: new FormControl('Default value', { nonNullable: true }) };
 
     protected onSave(): void {
         if (this.control.control.value) return;

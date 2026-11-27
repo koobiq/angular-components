@@ -97,14 +97,12 @@ import { TRANSLATIONS } from './l10n';
 })
 export class InlineEditSelectBasicExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly statuses = computed(() => this.t().statuses);
+    protected readonly priorities = computed(() => [...this.t().severities].reverse());
+    protected readonly status = new FormControl<number | null>(0);
+    protected readonly priority = new FormControl<number | null>(0);
 
     protected get notSetLabel(): string {
         return this.t().notSpecified;
     }
-
-    protected readonly statuses = computed(() => this.t().statuses);
-    protected readonly priorities = computed(() => [...this.t().severities].reverse());
-
-    protected readonly status = new FormControl<number | null>(0);
-    protected readonly priority = new FormControl<number | null>(0);
 }

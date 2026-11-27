@@ -24,6 +24,13 @@ export class KbqReadStateDirective {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
+    private pointerStartedAt: number | undefined;
+    private focusStartedAt: number | undefined;
+
+    /** How long (ms) the user has to dwell on the host before it counts as read. */
+    timeToRead: number = 500;
+    readonly read = new BehaviorSubject<boolean>(false);
+
     /** Start of the earliest dwell still in progress, or `undefined` while the host is neither hovered nor focused. */
     get timestamp(): number | undefined {
         if (this.pointerStartedAt === undefined) return this.focusStartedAt;
@@ -31,14 +38,6 @@ export class KbqReadStateDirective {
 
         return Math.min(this.pointerStartedAt, this.focusStartedAt);
     }
-
-    /** How long (ms) the user has to dwell on the host before it counts as read. */
-    timeToRead: number = 500;
-
-    readonly read = new BehaviorSubject<boolean>(false);
-
-    private pointerStartedAt: number | undefined;
-    private focusStartedAt: number | undefined;
 
     /** Starts measuring a dwell on one channel. Re-entering the same one keeps its earliest start. */
     startDwell(channel: 'pointer' | 'focus' = 'pointer') {

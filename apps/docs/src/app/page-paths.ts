@@ -12,24 +12,28 @@ export type DocsPagePath = {
     indexable: boolean;
 };
 
-const getLocalizedContentPaths = (): string[] => {
-    const paths = docsGetItems().flatMap(({ categoryId, id, hasApi, hasExamples }) => {
-        if (id === DocsStructureItemId.DesignTokens) {
-            return Object.values(DocsStructureTokensTab).map((tab) => `${categoryId}/${id}/${tab}`);
-        }
+/** Paths of the pages of a structure item without the locale, one per tab: `components/button/overview`. */
+export const docsGetItemPagePaths = ({
+    categoryId,
+    id,
+    hasApi,
+    hasExamples
+}: Pick<DocsStructureItem, 'categoryId' | 'id' | 'hasApi' | 'hasExamples'>): string[] => {
+    if (id === DocsStructureItemId.DesignTokens) {
+        return Object.values(DocsStructureTokensTab).map((tab) => `${categoryId}/${id}/${tab}`);
+    }
 
-        if (id === DocsStructureItemId.Icons) return [`${categoryId}/${id}`];
+    if (id === DocsStructureItemId.Icons) return [`${categoryId}/${id}`];
 
-        const tabs = [`${categoryId}/${id}/${DocsStructureItemTab.Overview}`];
+    const tabs = [`${categoryId}/${id}/${DocsStructureItemTab.Overview}`];
 
-        if (hasApi) tabs.push(`${categoryId}/${id}/${DocsStructureItemTab.Api}`);
-        if (hasExamples) tabs.push(`${categoryId}/${id}/${DocsStructureItemTab.Examples}`);
+    if (hasApi) tabs.push(`${categoryId}/${id}/${DocsStructureItemTab.Api}`);
+    if (hasExamples) tabs.push(`${categoryId}/${id}/${DocsStructureItemTab.Examples}`);
 
-        return tabs;
-    });
-
-    return ['', ...paths];
+    return tabs;
 };
+
+const getLocalizedContentPaths = (): string[] => ['', ...docsGetItems().flatMap(docsGetItemPagePaths)];
 
 /**
  * Whether `tools/llms` writes the Markdown of a structure item. The icons page has none: it is built from the metadata

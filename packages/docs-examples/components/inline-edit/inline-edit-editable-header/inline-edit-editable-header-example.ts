@@ -77,18 +77,18 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class InlineEditEditableHeaderExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly displayValueElement = viewChild<ElementRef<HTMLElement>>('displayValueElement');
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly maxRows = 5;
-    protected get placeholder(): string {
-        return this.t().placeholder;
-    }
     protected readonly control = new FormControl('Spain', { nonNullable: true });
     protected readonly displayValue = signal(this.control.value);
     protected readonly content =
         "Spanish football is characterized by technical skill, tactical innovation, and fierce regional rivalries. La Liga, founded in 1929, features some of the world's best clubs. Spain's national team dominated world football from 2008-2012, winning two European Championships and a World Cup with their 'tiki-taka' style.";
 
-    protected readonly displayValueElement = viewChild<ElementRef<HTMLElement>>('displayValueElement');
+    protected get placeholder(): string {
+        return this.t().placeholder;
+    }
 
     protected onSave(): void {
         if (!this.control.value) {

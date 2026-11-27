@@ -25,6 +25,7 @@ export class DocsMigrationStepDone extends DocsLocaleState {
 
     /** The id of the step's heading. */
     readonly step = input.required<string>();
+
     /** The step's heading text. */
     readonly title = input.required<string>();
 

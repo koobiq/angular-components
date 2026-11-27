@@ -101,7 +101,6 @@ const getTagRemoveElement = (debugElement: DebugElement): HTMLElement => {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestTag {
-    readonly tag = viewChild.required(KbqTag);
     readonly value = model('Tag');
     readonly selectable = model(false);
     readonly disabled = model(false);
@@ -109,6 +108,8 @@ export class TestTag {
     readonly removable = model(true);
     readonly editable = model(true);
     readonly preventEditSubmit = model(false);
+
+    readonly tag = viewChild.required(KbqTag);
 
     readonly selectionChange = vi.fn();
     readonly removedChange = vi.fn();
@@ -141,13 +142,14 @@ export class TestTag {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestTagInsideTagList {
-    readonly tag = viewChild.required(KbqTag);
     readonly value = model('Tag');
     readonly disabled = model(false);
     readonly selected = model(false);
     readonly removable = model(true);
     readonly editable = model(true);
     readonly preventEditSubmit = model(false);
+
+    readonly tag = viewChild.required(KbqTag);
 
     readonly selectionChange = vi.fn();
     readonly removedChange = vi.fn();
@@ -1241,6 +1243,8 @@ describe('Tag content slots', () => {
     `
 })
 class SingleTag {
+    readonly tagList = viewChild.required(KbqTagList);
+
     disabled: boolean = false;
     name: string = 'Test';
     color: string = 'primary';
@@ -1249,11 +1253,12 @@ class SingleTag {
     removable: boolean = true;
     shouldShow: boolean = true;
 
-    readonly tagList = viewChild.required(KbqTagList);
-
     tagFocus: (event?: KbqTagEvent) => void = () => {};
+
     tagDestroy: (event?: KbqTagEvent) => void = () => {};
+
     tagSelectionChange: (event?: KbqTagSelectionChange) => void = () => {};
+
     tagRemove: (event?: KbqTagEvent) => void = () => {};
 }
 
@@ -1303,6 +1308,7 @@ class TagSlotsTest {}
 })
 class TagDrivenByEffects {
     readonly tag = viewChild.required(KbqTag);
+
     readonly wantSelected = signal(false);
     readonly toggles = signal(0);
     readonly wantFocus = signal(false);

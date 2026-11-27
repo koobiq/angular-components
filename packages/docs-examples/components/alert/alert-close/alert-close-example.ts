@@ -62,7 +62,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class AlertCloseExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly animationsDisabled = kbqAnimationsDisabled();
     colors = KbqComponentColors;
     state = true;

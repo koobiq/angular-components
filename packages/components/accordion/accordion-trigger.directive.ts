@@ -26,8 +26,10 @@ import type { KbqAccordionItem } from './accordion-item';
 export class KbqAccordionTriggerDirective {
     /** @docs-private */
     protected readonly nativeElement = kbqInjectNativeElement();
+
     /** @docs-private */
     protected readonly accordion: KbqAccordion = inject(KBQ_ACCORDION);
+
     /** @docs-private */
     protected readonly item: KbqAccordionItem = inject(KBQ_ACCORDION_ITEM);
 
