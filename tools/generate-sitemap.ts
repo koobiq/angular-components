@@ -11,7 +11,7 @@ try {
 
     const routes = docsGetPagePaths()
         .filter(({ indexable }) => indexable)
-        .map(({ path }) => `https://koobiq.io${path}`);
+        .map(({ path }) => `https://v20.koobiq.io${path}`);
 
     const xmlUrlElements = routes.map((url) => `\t<url>\n\t\t<loc>${url}</loc>\n\t</url>\n`).join('');
 

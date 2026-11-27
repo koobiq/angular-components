@@ -9,8 +9,7 @@ import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleState } from '../../services/locale';
 
 const SELECTOR = 'docs-docsearch';
-const HOST = 'koobiq.io';
-const PROTOCOL = 'https:';
+const SEARCH_ORIGIN = 'https://v20.koobiq.io';
 
 // `any` here is intentional: `unknown` fails the `extends AnyFunction` check below for
 // concrete function types (contravariant parameter checking rejects `unknown` params).
@@ -204,7 +203,7 @@ export class DocsDocsearchDirective extends DocsLocaleState {
                     maxResultsPerGroup: 20,
                     theme,
                     indices: [
-                        { name: 'koobiq', searchParameters: { hitsPerPage: 40, facetFilters: [`lang:${locale}`] } }
+                        { name: 'koobiq-v20', searchParameters: { hitsPerPage: 40, facetFilters: [`lang:${locale}`] } }
                     ],
                     transformItems: this.transformItems,
                     translations: TRANSLATIONS[locale],
@@ -216,15 +215,15 @@ export class DocsDocsearchDirective extends DocsLocaleState {
     }
 
     private readonly transformItems: DocSearchProps['transformItems'] = (items) => {
-        // should transform item URL to work docsearch on DEV stand (firebase preview)
-        const shouldTransformItemURL = this.window.location.host !== HOST || this.window.location.protocol !== PROTOCOL;
+        const origin = this.window.location.origin;
 
-        if (shouldTransformItemURL) {
+        if (origin !== SEARCH_ORIGIN) {
             items = items.map((item) => {
-                item.url = item.url.replace(HOST, this.window.location.host);
-                item.url = item.url.replace(PROTOCOL, this.window.location.protocol);
+                const url = new URL(item.url);
 
-                return item;
+                return url.origin === SEARCH_ORIGIN
+                    ? { ...item, url: origin + url.pathname + url.search + url.hash }
+                    : item;
             });
         }
 
