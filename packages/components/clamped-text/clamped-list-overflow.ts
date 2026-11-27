@@ -42,6 +42,7 @@ export interface KbqClampedListOverflowOptions {
     orientation: Signal<KbqOrientation>;
     wrap: Signal<KbqFlexWrap>;
     hiddenThreshold: Signal<number>;
+    isCollapsed: Signal<boolean>;
     hasToggle: () => boolean;
     visibleMap: () => readonly boolean[];
 }
@@ -79,8 +80,29 @@ type OverflowLayoutStyle = (typeof OVERFLOW_LAYOUT_STYLES)[number];
 export function kbqInjectClampedListOverflow(options: KbqClampedListOverflowOptions): KbqClampedListOverflowController {
     const environmentInjector = inject(EnvironmentInjector);
     const renderer = inject(Renderer2);
-    const engine = new KbqOverflowFitEngine(inject(KBQ_WINDOW));
+    const window = inject(KBQ_WINDOW);
+    const engine = new KbqOverflowFitEngine(window);
     const hiddenItemIDs = signal<ReadonlySet<number> | null>(null);
+
+    const px = (value: string) => parseFloat(value) || 0;
+
+    /** Local wrap measurement: the shared scroll-size check also counts absolutely positioned hidden items. */
+    const hasWrappedOverflow = () => {
+        const horizontal = options.orientation() === 'horizontal';
+        const containerStyle = window.getComputedStyle(options.host);
+        const containerRect = options.host.getBoundingClientRect();
+        const contentEnd = horizontal
+            ? containerRect.bottom - px(containerStyle.borderBottomWidth) - px(containerStyle.paddingBottom)
+            : containerRect.right - px(containerStyle.borderRightWidth) - px(containerStyle.paddingRight);
+        const threshold = engine.deviceThreshold();
+
+        return engine.laidOutChildren(options.host).some(({ element, style }) => {
+            const rect = element.getBoundingClientRect();
+            const itemEnd = horizontal ? rect.bottom + px(style.marginBottom) : rect.right + px(style.marginRight);
+
+            return itemEnd > contentEnd + threshold;
+        });
+    };
 
     let invalidItemsWarned = false;
 
@@ -168,8 +190,19 @@ export function kbqInjectClampedListOverflow(options: KbqClampedListOverflowOpti
         invalidItemsWarned = false;
         applyOverflowStyles();
 
+        // An expanded list can grow until nothing overflows. Keep the collapsed measurement so the disclosure
+        // trigger survives; the next collapse measures the latest items and geometry again.
+        if (!options.isCollapsed()) {
+            applyVisibility();
+
+            return;
+        }
+
         engine.showAll(itemDirectives, options.result());
         const subject = engine.containerSubject(options.host, options.orientation(), options.wrap());
+
+        if (options.wrap() === 'wrap') subject.hasOverflown = hasWrappedOverflow;
+
         const hidden = engine.hideOverflownItems(
             [...itemDirectives].reverse(),
             subject,

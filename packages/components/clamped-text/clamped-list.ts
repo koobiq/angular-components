@@ -127,6 +127,7 @@ export class KbqClampedList<T> implements KbqClamped, AfterViewInit {
         orientation: this.orientation,
         wrap: this.wrap,
         hiddenThreshold: this.hiddenThreshold,
+        isCollapsed: this.isCollapsed,
         hasToggle: () => this.hasToggle(),
         visibleMap: () => this.visibleMap()
     });

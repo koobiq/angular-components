@@ -241,6 +241,7 @@ export class E2eClampedList {
             wrap="wrap"
             data-testid="overflow-wrap"
             class="e2e-clamped-list-overflow__wrap"
+            [style.max-height.px]="wrapList.isCollapsed() ? 48 : null"
             [items]="items()"
         >
             @for (item of wrapList.items(); track item) {
@@ -296,7 +297,6 @@ export class E2eClampedList {
 
         .e2e-clamped-list-overflow__wrap {
             width: 400px;
-            max-height: 48px;
             margin-top: var(--kbq-size-m);
         }
 

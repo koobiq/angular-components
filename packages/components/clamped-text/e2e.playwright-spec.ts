@@ -156,7 +156,8 @@ test.describe('KbqClampedText', () => {
             await page.goto('/E2eClampedListOverflow');
             const block = page.getByTestId('overflow-wrap');
 
-            await expect(hiddenItems(block)).not.toHaveCount(0);
+            await expect(hiddenItems(block)).toHaveCount(21);
+            await expect(block.locator('.kbq-overflow-item:not(.kbq-overflow-item-hidden)')).toHaveCount(9);
 
             // max-height fits exactly two 24px rows: the rendered block must not grow past it, and
             // a recalculation bug that lets a third row leak in before hiding items shows up as a
@@ -174,6 +175,13 @@ test.describe('KbqClampedText', () => {
                     );
 
             await expect.poll(visibleRows).toBeLessThanOrEqual(2);
+
+            await trigger(block).click();
+            await expect(trigger(block)).toHaveText('Collapse');
+            await expect(hiddenItems(block)).toHaveCount(0);
+
+            await trigger(block).click();
+            await expect(hiddenItems(block)).toHaveCount(21);
         });
 
         test('stabilizes an auto-width trigger when its counter crosses from 9 to 10', async ({ page }) => {
