@@ -99,6 +99,11 @@ export class KbqSelectSearch extends KbqSearchFieldBase {
 
     isSearchChanged: boolean = false;
 
+    /** @docs-private */
+    override handleKeydown(event: KeyboardEvent): void {
+        super.handleKeydown(event);
+    }
+
     setPlaceholder(value: string): void {
         const placeholder = this.formField.control().placeholder;
 

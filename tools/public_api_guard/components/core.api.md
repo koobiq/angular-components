@@ -4428,9 +4428,9 @@ export abstract class KbqSearchFieldBase implements AfterContentInit {
     constructor();
     protected abstract readonly directiveName: string;
     focus(): void;
-    protected readonly formField: KbqFormFieldRef;
+    protected formField: KbqFormFieldRef;
     protected abstract getSearchFieldPopup(): KbqSearchFieldPopup | null | undefined;
-    handleKeydown(event: KeyboardEvent): void;
+    protected handleKeydown(event: KeyboardEvent): void;
     protected abstract keepsKey(event: KeyboardEvent): boolean;
     // (undocumented)
     ngAfterContentInit(): void;
@@ -4518,6 +4518,7 @@ export class KbqSelectSearch extends KbqSearchFieldBase {
     protected readonly directiveName = "kbqSelectSearch";
     // (undocumented)
     protected getSearchFieldPopup(): KbqSearchFieldPopup | null;
+    handleKeydown(event: KeyboardEvent): void;
     // (undocumented)
     isSearchChanged: boolean;
     // (undocumented)

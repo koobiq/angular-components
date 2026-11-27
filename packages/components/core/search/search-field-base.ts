@@ -22,7 +22,7 @@ import { kbqInjectNativeElement } from '../utils';
 })
 export abstract class KbqSearchFieldBase implements AfterContentInit {
     /** Form field that holds the search input. */
-    protected readonly formField: KbqFormFieldRef = inject(KBQ_FORM_FIELD_REF);
+    protected formField: KbqFormFieldRef = inject(KBQ_FORM_FIELD_REF);
 
     /** Attribute that marks the field, named by the errors a misconfigured field throws. */
     protected abstract readonly directiveName: string;
@@ -70,7 +70,7 @@ export abstract class KbqSearchFieldBase implements AfterContentInit {
     }
 
     /** @docs-private */
-    handleKeydown(event: KeyboardEvent): void {
+    protected handleKeydown(event: KeyboardEvent): void {
         // The cleaner of the form field may clear on ESCAPE too, from its own listener on the same element. This
         // one runs first, so the cleaner finds the field already empty.
         if (event.keyCode === ESCAPE && this.value()) {
