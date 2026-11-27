@@ -218,7 +218,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
 
     /**
      * Maximum number of fraction digits accepted during typing and shown in the field.
-     * Values are clamped to the range from 0 to 100. Non-numeric values fall back to 20.
+     * Values are clamped to the range from 0 to 100. Defaults to `20`.
      */
     readonly maxFractionDigits = input<number, NumberInput>(20, { transform: numberAttribute(20) });
 
@@ -319,6 +319,10 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         return this.localeConfiguration().number;
     }
 
+    private get fractionSplitSeparator(): string | RegExp {
+        return this.groupSeparator.includes(' ') && this.fractionSeparator === ',' ? /[,.]/ : this.fractionSeparator;
+    }
+
     private get stepMin(): number {
         return Math.max(this.min(), -Number.MAX_SAFE_INTEGER);
     }
@@ -362,24 +366,20 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
             if (disabled !== undefined) untracked(() => this.setDisabled(disabled));
         });
 
-        // Re-render the value in the separators of the new locale. `untracked` keeps the configuration,
-        // `integer` and `maxFractionDigits` from rewriting what the user is typing on their own: they only
-        // repaint the committed value.
+        // The current view may still use the previous locale's separators, so locale changes repaint the model.
         effect(() => {
             this.localeConfiguration();
+
+            untracked(() => this.setViewValue(this.formatNumber(this.value)));
+        });
+
+        // Display-only input changes reformat in-progress text without replacing it with the committed model.
+        effect(() => {
             this.integer();
             this.maxFractionDigits();
 
             untracked(() => {
-                const formattedValue = this.formatNumber(this.value);
-                const trailingSeparator =
-                    formattedValue !== null &&
-                    this.fractionDigitsLimit() > 0 &&
-                    this.viewValue.endsWith(this.fractionSeparator)
-                        ? this.fractionSeparator
-                        : '';
-
-                this.setViewValue(formattedValue === null ? null : `${formattedValue}${trailingSeparator}`);
+                this.setViewValue(this.focused ? this.formatViewValue() : this.formatNumber(this.value));
             });
         });
 
@@ -431,6 +431,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
 
         if (!isFocused) {
             this.clampToSafeRange();
+            this.syncModelWithView();
             this.onTouched();
         }
     }
@@ -466,12 +467,15 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
 
         let shouldBlockFractionInput = false;
 
-        if (isNumberKey(event) || isNumpadKey(event) || this.isPeriod(event)) {
+        if (
+            !event.ctrlKey &&
+            !event.metaKey &&
+            !event.altKey &&
+            (isNumberKey(event) || isNumpadKey(event) || this.isPeriod(event))
+        ) {
             const valueAfterInput =
                 this.viewValue.slice(0, selectionStart) + event.key + this.viewValue.slice(selectionEnd);
-            const fractionSeparator =
-                this.groupSeparator.includes(' ') && this.fractionSeparator === ',' ? /[,.]/ : this.fractionSeparator;
-            const fraction = valueAfterInput.split(fractionSeparator)[1];
+            const fraction = valueAfterInput.split(this.fractionSplitSeparator)[1];
 
             shouldBlockFractionInput =
                 fraction !== undefined && fraction.replace(/\D/g, '').length > this.fractionDigitsLimit();
@@ -701,6 +705,14 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         this.viewToModelUpdate(formatted);
     }
 
+    private syncModelWithView(): void {
+        const normalizedValue = normalizeNumber(this.viewValue, this.config);
+
+        if (normalizedValue && Number.isFinite(+normalizedValue)) {
+            this.viewToModelUpdate(this.viewValue);
+        }
+    }
+
     /** Writes a value from outside the field: reformats it and reports the change. */
     private setValue(value: number | null): void {
         const oldValue = this.valueState();
@@ -753,17 +765,18 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
             return null;
         }
 
-        const separator =
-            this.groupSeparator.includes(' ') && this.fractionSeparator === ',' ? /[,.]/ : this.fractionSeparator;
-
         const [intPart, fractionPart] = this.viewValue
-            .split(separator)
+            .split(this.fractionSplitSeparator)
             .map((valuePart) => normalizeNumber(valuePart, this.config));
 
         const integer = Number(intPart);
 
         // A lone sign before the decimal separator (`-,5`) is no number yet: clear the field, do not print NaN.
         if (!Number.isFinite(integer)) return null;
+
+        if (fractionPart !== undefined && fractionPart.replace(/\D/g, '').length > this.fractionDigitsLimit()) {
+            return this.formatNumber(Number(normalizeNumber(this.viewValue, this.config)));
+        }
 
         return this.createLocalizedNumberFromParts(integer, fractionPart);
     }
