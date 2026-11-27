@@ -10,6 +10,7 @@ import {
     SITEMAP_PATH
 } from './generate-sitemap';
 
+const EXPECTED_ALGOLIA_VERIFICATION = '# Algolia-Crawler-Verif: 3871AA90F374600A';
 const NEXT_ORIGIN = 'https://next.koobiq.io';
 
 /** A committed file as the generator writes it: a checkout with Windows line endings holds the same file. */
@@ -41,7 +42,7 @@ describe('generate-sitemap', () => {
             const stable = readCommitted(ROBOTS_TXT_PATH);
             const robots = renderRobotsTxt(stable, origin);
 
-            expect(robots.match(/^# Algolia.*:/gim)).toHaveLength(1);
+            expect(robots.split(/\r?\n/).filter((line) => line === EXPECTED_ALGOLIA_VERIFICATION)).toHaveLength(1);
             expect(renderRobotsTxt(robots, origin)).toBe(robots);
             expect(renderRobotsTxt(robots, KOOBIQ_SITE_ORIGIN)).toBe(stable);
         }
