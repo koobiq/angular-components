@@ -10,17 +10,17 @@
     --kbq-link-underline-width: 1px;
     /* THEME TOKENS */
     --kbq-link-text: var(--kbq-foreground-theme);
-    --kbq-link-border-bottom: var(--kbq-line-theme-fade);
     --kbq-link-state-visited-text: var(--kbq-foreground-visited);
-    --kbq-link-state-visited-border-bottom: var(--kbq-line-visited-fade, var(--kbq-line-visited));
     --kbq-link-state-visited-hover-text: var(--kbq-states-foreground-visited-hover);
-    --kbq-link-state-visited-hover-border-bottom: var(--kbq-line-visited-fade, var(--kbq-line-visited));
     --kbq-link-state-visited-active-text: var(--kbq-states-foreground-visited-active);
-    --kbq-link-state-visited-active-border-bottom: var(--kbq-line-visited-fade, var(--kbq-line-visited));
     --kbq-link-state-hover-text: var(--kbq-states-foreground-theme-hover);
-    --kbq-link-state-hover-border-bottom: var(--kbq-line-theme-fade);
     --kbq-link-state-active-text: var(--kbq-states-foreground-theme-active);
-    --kbq-link-state-active-border-bottom: var(--kbq-line-theme-fade);
+    --kbq-link-border-bottom: color-mix(in srgb, var(--kbq-link-text) 40%, transparent);
+    --kbq-link-state-visited-border-bottom: color-mix(in srgb, var(--kbq-link-state-visited-text) 40%, transparent);
+    --kbq-link-state-hover-border-bottom: var(--kbq-link-state-hover-text);
+    --kbq-link-state-active-border-bottom: var(--kbq-link-state-active-text);
+    --kbq-link-state-visited-hover-border-bottom: var(--kbq-link-state-visited-hover-text);
+    --kbq-link-state-visited-active-border-bottom: var(--kbq-link-state-visited-active-text);
     --kbq-link-state-focused-outline: var(--kbq-states-line-focus-theme);
     --kbq-link-state-disabled-text: var(--kbq-states-foreground-disabled);
     --kbq-link-state-disabled-border-bottom: var(--kbq-states-line-disabled);
@@ -59,6 +59,13 @@
         text-decoration-color: var(--kbq-link-border-bottom);
     }
 
+    &:focus,
+    &.cdk-keyboard-focused {
+        #{$underline} {
+            text-decoration-color: var(--kbq-link-text);
+        }
+    }
+
     &:hover,
     &.kbq-hovered {
         color: var(--kbq-link-state-hover-text);
@@ -94,6 +101,13 @@
 
     #{$underline} {
         text-decoration-color: var(--kbq-link-state-visited-border-bottom);
+    }
+
+    &:focus,
+    &.cdk-keyboard-focused {
+        #{$underline} {
+            text-decoration-color: var(--kbq-link-state-visited-text);
+        }
     }
 
     &:hover,
