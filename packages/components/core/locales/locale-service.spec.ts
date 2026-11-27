@@ -411,6 +411,30 @@ describe('number helpers', () => {
         it('should keep the sign of a negative number', () => {
             expect(numberByParts('-1234,56', ruConfig).integer).toBe('-1234');
         });
+
+        it('should keep the first fraction separator and discard later ones', () => {
+            expect(numberByParts('1.2.2', ruConfig)).toEqual({ integer: '1', fraction: '22' });
+            expect(numberByParts('2,2,2', ruConfig)).toEqual({ integer: '2', fraction: '22' });
+        });
+
+        it('should keep the first fraction separator and discard later ones for en-US', () => {
+            expect(numberByParts('1.2.2', enConfig)).toEqual({ integer: '1', fraction: '22' });
+        });
+
+        it('should preserve valid digit grouping', () => {
+            expect(numberByParts('1.234.567,89', ruConfig)).toEqual({ integer: '1234567', fraction: '89' });
+            expect(numberByParts('1.234.567', ruConfig)).toEqual({ integer: '1234', fraction: '567' });
+            expect(numberByParts('10,000,7', ruConfig)).toEqual({ integer: '10000', fraction: '7' });
+        });
+
+        it('should keep the leading valid groups and join all remaining fraction parts', () => {
+            expect(numberByParts('1.234.567,89,10', ruConfig)).toEqual({ integer: '1234567', fraction: '8910' });
+            expect(numberByParts('10,000,7,8', ruConfig)).toEqual({ integer: '10000', fraction: '78' });
+            expect(numberByParts('-1.234.567,89,10', ruConfig)).toEqual({
+                integer: '-1234567',
+                fraction: '8910'
+            });
+        });
     });
 
     describe('normalizeNumber', () => {

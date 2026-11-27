@@ -305,6 +305,25 @@ export function numberByParts(
     const isNegative = parsedValue.startsWith('-');
     const numberByParts = parsedValue.split(fractionSeparator).filter(Boolean);
 
+    if (numberByParts.length > 2) {
+        const lastPartIndex = numberByParts.length - 1;
+        const firstGroup = (numberByParts[0] ?? '').replace(/\D/g, '');
+        let integerPartsCount = 1;
+
+        if (firstGroup.length >= 1 && firstGroup.length <= 3) {
+            while (integerPartsCount < lastPartIndex && /^\d{3}$/.test(numberByParts[integerPartsCount] ?? '')) {
+                integerPartsCount++;
+            }
+        }
+
+        result.integer = numberByParts.slice(0, integerPartsCount).join('').replace(/\D/g, '');
+        result.fraction = numberByParts.slice(integerPartsCount).join('').replace(/\D/g, '');
+
+        if (isNegative) result.integer = `-${result.integer}`;
+
+        return result;
+    }
+
     if (numberByParts.length > 1) {
         result.fraction = numberByParts.pop() || '';
         result.integer = numberByParts
