@@ -8,15 +8,13 @@ type DocsDocsearchProps = Parameters<typeof docsearch>[0];
 
 const SELECTOR = 'docs-docsearch';
 
-const HOST = 'koobiq.io';
-
-const PROTOCOL = 'https:';
+const SEARCH_ORIGIN = 'https://v19.koobiq.io';
 
 const CONFIG: DocsDocsearchProps = {
     container: SELECTOR,
     appId: '7N2W9AKEM6',
     apiKey: '0f0df042e7b349df5cb381e72f268b4d',
-    indexName: 'koobiq',
+    indexName: 'koobiq-v19',
     maxResultsPerGroup: 20,
     disableUserPersonalization: false,
     resultsFooterComponent: () => null
@@ -31,10 +29,6 @@ const CONFIG: DocsDocsearchProps = {
 })
 export class DocsDocsearchDirective extends DocsLocaleState {
     private readonly window = inject(KBQ_WINDOW);
-    /** should transform item URL to work docsearch on DEV stand */
-    private readonly shouldTransformItemURL =
-        this.window.location.host !== HOST || this.window.location.protocol !== PROTOCOL;
-
     private readonly destroyRef = inject(DestroyRef);
 
     constructor() {
@@ -63,12 +57,15 @@ export class DocsDocsearchDirective extends DocsLocaleState {
     }
 
     private readonly transformItems: DocsDocsearchProps['transformItems'] = (items) => {
-        if (this.shouldTransformItemURL) {
-            items = items.map((item) => {
-                item.url = item.url.replace(HOST, this.window.location.host);
-                item.url = item.url.replace(PROTOCOL, this.window.location.protocol);
+        const origin = this.window.location.origin;
 
-                return item;
+        if (origin !== SEARCH_ORIGIN) {
+            items = items.map((item) => {
+                const url = new URL(item.url);
+
+                return url.origin === SEARCH_ORIGIN
+                    ? { ...item, url: origin + url.pathname + url.search + url.hash }
+                    : item;
             });
         }
 
