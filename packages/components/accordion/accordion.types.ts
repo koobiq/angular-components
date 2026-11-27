@@ -3,14 +3,15 @@ import type { KbqAccordion } from './accordion';
 import type { KbqAccordionItem } from './accordion-item';
 
 /**
- * Provided by `KbqAccordion`, so that its items and triggers inject it without importing the accordion back.
+ * Keeps the concrete type exposed by the public `KbqAccordionItem.accordion` field.
  *
  * @internal
  */
 export const KBQ_ACCORDION = new InjectionToken<KbqAccordion>('KbqAccordion');
 
 /**
- * Provided by `KbqAccordionItem`, so that its trigger and content inject it without importing the item back.
+ * Keeps the concrete type exposed to subclasses through the header, trigger and content directives' protected
+ * `item` fields.
  *
  * @internal
  */
