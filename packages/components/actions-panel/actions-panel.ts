@@ -12,8 +12,8 @@ import {
     type TemplateRef
 } from '@angular/core';
 import { KBQ_OVERFLOW_ITEMS_RESIZE_OBSERVER_TARGETS } from '@koobiq/components/overflow-items';
+import { KBQ_ACTIONS_PANEL } from './actions-panel.types';
 import { KBQ_ACTIONS_PANEL_DEFAULT_CONFIG, KbqActionsPanelConfig } from './actions-panel-config';
-// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqActionsPanelContainer } from './actions-panel-container';
 import { KbqActionsPanelRef } from './actions-panel-ref';
 import {
@@ -204,7 +204,10 @@ export class KbqActionsPanel implements OnDestroy {
                 },
                 injector: Injector.create({
                     parent: config.injector || this.injector,
-                    providers: [{ provide: KbqActionsPanelConfig, useValue: config }]
+                    providers: [
+                        { provide: KbqActionsPanelConfig, useValue: config },
+                        { provide: KBQ_ACTIONS_PANEL, useValue: this }
+                    ]
                 }),
                 providers: (dialogRef, _dialogConfig, container) => {
                     actionsPanelRef = new KbqActionsPanelRef<T, R>(dialogRef, container as KbqActionsPanelContainer);

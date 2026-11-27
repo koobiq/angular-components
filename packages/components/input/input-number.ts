@@ -58,6 +58,7 @@ import {
     normalizeNumber,
     ruRUFormattersData
 } from '@koobiq/components/core';
+import type { KbqStepperControl } from '@koobiq/components/form-field';
 
 /**
  * @deprecated Use {@link KBQ_INPUT_DEFAULT_LOCALE_CONFIGURATION}, which carries the whole `input`
@@ -191,7 +192,7 @@ export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any = {
     ],
     exportAs: 'kbqNumberInput, kbqNumericalInput'
 })
-export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
+export class KbqNumberInput implements ControlValueAccessor, OnDestroy, KbqStepperControl {
     private elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     private readonly renderer = inject(Renderer2);
     private readonly ngZone = inject(NgZone);

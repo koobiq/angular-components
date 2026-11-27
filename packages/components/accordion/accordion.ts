@@ -26,7 +26,7 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { KbqStateSaving } from '@koobiq/components/core';
-// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
+import { KBQ_ACCORDION } from './accordion.types';
 import { KbqAccordionItem } from './accordion-item';
 
 /** Available visual variants of the accordion. */
@@ -91,7 +91,8 @@ const normalizeAccordionState = (parsed: unknown): KbqAccordionState | null => {
     template: '<ng-content />',
     styleUrls: ['./accordion.scss', './accordion-tokens.scss'],
     providers: [
-        { provide: UniqueSelectionDispatcher, useClass: UniqueSelectionDispatcher }
+        { provide: UniqueSelectionDispatcher, useClass: UniqueSelectionDispatcher },
+        { provide: KBQ_ACCORDION, useExisting: forwardRef(() => KbqAccordion) }
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,

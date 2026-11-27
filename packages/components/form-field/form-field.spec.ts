@@ -39,13 +39,9 @@ import {
 import { KbqInput, KbqInputModule, KbqInputPassword } from '@koobiq/components/input';
 import { KbqCleaner } from './cleaner';
 import { KbqError } from './error';
-import {
-    getKbqFormFieldMissingControlError,
-    KBQ_FORM_FIELD,
-    KbqFormField,
-    kbqFormFieldDefaultOptionsProvider
-} from './form-field';
+import { getKbqFormFieldMissingControlError, KbqFormField, kbqFormFieldDefaultOptionsProvider } from './form-field';
 import { KbqFormFieldModule } from './form-field.module';
+import { KBQ_FORM_FIELD } from './form-field.types';
 import { KbqFormFieldControl } from './form-field-control';
 import { KbqHint } from './hint';
 import { KbqLabel } from './label';

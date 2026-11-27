@@ -36,6 +36,21 @@ test.describe('KbqInlineEdit', () => {
             await expect(screenshotTarget).toHaveScreenshot('02-dark.png');
         });
 
+        test('has equal visual horizontal padding with and without a label', async ({ page }) => {
+            await page.goto('/E2eInlineEditStates');
+
+            const fields = getTable(getComponent(page)).locator('kbq-inline-edit');
+
+            for (const index of [0, 2]) {
+                const field = fields.nth(index);
+
+                await expect(field).toHaveCSS('padding-left', '11px');
+                await expect(field).toHaveCSS('padding-right', '11px');
+                await expect(field).toHaveCSS('border-left-width', '1px');
+                await expect(field).toHaveCSS('border-right-width', '1px');
+            }
+        });
+
         // Asserted on DOM state rather than pixels: the keyboard contract needs no baseline of its own.
         test.describe('keyboard', () => {
             const getField = (page: Page, index: number) =>

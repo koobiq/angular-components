@@ -160,7 +160,6 @@ import { TRANSLATIONS } from './l10n';
 
         .kbq-dl {
             grid-template-columns: unset;
-            --kbq-description-list-size-horizontal-content-gap-horizontal: var(--kbq-size-xxs);
             --kbq-description-list-size-horizontal-gap-vertical: var(--kbq-size-3xs);
         }
 
