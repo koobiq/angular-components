@@ -31,7 +31,7 @@ import { TRANSLATIONS } from './l10n';
                             <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.country }" />
                         </div>
                         <kbq-form-field kbqInlineEditEditMode>
-                            <input kbqInput [placeholder]="placeholder" [formControl]="form.controls.country" />
+                            <input kbqInput [placeholder]="t().placeholder" [formControl]="form.controls.country" />
                         </kbq-form-field>
                     </kbq-inline-edit>
                 </kbq-dd>
@@ -43,7 +43,7 @@ import { TRANSLATIONS } from './l10n';
                             <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.capital }" />
                         </div>
                         <kbq-form-field kbqInlineEditEditMode>
-                            <input kbqInput [placeholder]="placeholder" [formControl]="form.controls.capital" />
+                            <input kbqInput [placeholder]="t().placeholder" [formControl]="form.controls.capital" />
                         </kbq-form-field>
                     </kbq-inline-edit>
                 </kbq-dd>
@@ -56,14 +56,14 @@ import { TRANSLATIONS } from './l10n';
                     <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.currency }" />
                 </div>
                 <kbq-form-field kbqInlineEditEditMode>
-                    <input kbqInput [placeholder]="placeholder" [formControl]="form.controls.currency" />
+                    <input kbqInput [placeholder]="t().placeholder" [formControl]="form.controls.currency" />
                 </kbq-form-field>
             </kbq-inline-edit>
         </form>
 
         <ng-template #view let-control>
             @if (!control.value) {
-                <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+                <span kbqInlineEditPlaceholder>{{ t().placeholder }}</span>
             } @else {
                 {{ control.value }}
             }
@@ -105,11 +105,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class InlineEditMixedListExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
-    protected get placeholder(): string {
-        return this.t().placeholder;
-    }
-
     protected readonly form = new FormGroup({
         country: new FormControl('Spain'),
         capital: new FormControl('Madrid'),
