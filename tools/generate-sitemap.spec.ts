@@ -29,10 +29,31 @@ describe('generate-sitemap', () => {
 
         expect(urls).toContain(`${NEXT_ORIGIN}/en/components/alert/overview`);
         expect(urls.filter((url) => !url.startsWith(`${NEXT_ORIGIN}/`))).toEqual([]);
-        expect(renderRobotsTxt(`Sitemap: ${KOOBIQ_SITE_ORIGIN}/sitemap.xml\n\nUser-agent: *\n`, NEXT_ORIGIN)).toBe(
+        expect(renderRobotsTxt(`Sitemap: ${KOOBIQ_SITE_ORIGIN}/sitemap.xml\n\nUser-agent: *\n`, NEXT_ORIGIN)).toContain(
             `Sitemap: ${NEXT_ORIGIN}/sitemap.xml\n\nUser-agent: *\n`
         );
         expect(renderSiteOrigin(NEXT_ORIGIN)).toContain(`export const DOCS_SITE_ORIGIN = '${NEXT_ORIGIN}';`);
+    });
+
+    it.each([NEXT_ORIGIN, 'https://v20.koobiq.io', 'https://v19.koobiq.io'])(
+        'includes exactly one verification comment for %s across repeated builds',
+        (origin) => {
+            const stable = readCommitted(ROBOTS_TXT_PATH);
+            const robots = renderRobotsTxt(stable, origin);
+
+            expect(robots.match(/^# Algolia.*:/gim)).toHaveLength(1);
+            expect(renderRobotsTxt(robots, origin)).toBe(robots);
+            expect(renderRobotsTxt(robots, KOOBIQ_SITE_ORIGIN)).toBe(stable);
+        }
+    );
+
+    it('preserves CRLF across next and stable builds', () => {
+        const stable = readCommitted(ROBOTS_TXT_PATH).replace(/\n/g, '\r\n');
+        const next = renderRobotsTxt(stable, NEXT_ORIGIN);
+
+        expect(next).not.toMatch(/(?<!\r)\n/);
+        expect(renderRobotsTxt(next, NEXT_ORIGIN)).toBe(next);
+        expect(renderRobotsTxt(next, KOOBIQ_SITE_ORIGIN)).toBe(stable);
     });
 
     it('publishes the content signals for all user agents', () => {

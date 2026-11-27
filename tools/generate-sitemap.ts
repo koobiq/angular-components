@@ -20,11 +20,20 @@ export const renderSitemap = (origin: string): string => {
     return `<?xml version="1.0" encoding="UTF-8" ?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}</urlset>\n`;
 };
 
-/** `robots.txt` is written by hand: only its `Sitemap` line, which has to be absolute, follows the site. */
+const ALGOLIA_VERIFICATION = '# Algolia-Crawler-Verif: 3871AA90F374600A';
+const VERIFIED_ORIGINS = ['https://next.koobiq.io', 'https://v20.koobiq.io', 'https://v19.koobiq.io'];
+
 export const renderRobotsTxt = (robotsTxt: string, origin: string): string => {
     if (!/^Sitemap: /m.test(robotsTxt)) throw new Error(`${ROBOTS_TXT_PATH} has no Sitemap line`);
 
-    return robotsTxt.replace(/^Sitemap: .*$/m, `Sitemap: ${origin}/sitemap.xml`);
+    const newline = robotsTxt.includes('\r\n') ? '\r\n' : '\n';
+    const content = robotsTxt
+        .split(/\r?\n/)
+        .filter((line) => line !== ALGOLIA_VERIFICATION)
+        .join(newline);
+    const verification = VERIFIED_ORIGINS.includes(origin) ? ALGOLIA_VERIFICATION + newline : '';
+
+    return verification + content.replace(/^Sitemap: .*$/m, `Sitemap: ${origin}/sitemap.xml`);
 };
 
 export const renderSiteOrigin = (origin: string): string => [
