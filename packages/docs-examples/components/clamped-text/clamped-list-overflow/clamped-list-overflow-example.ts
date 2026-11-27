@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqClampedList, KbqClampedListTrigger } from '@koobiq/components/clamped-text';
 import { KbqLink } from '@koobiq/components/link';
@@ -19,14 +19,15 @@ import { TRANSLATIONS } from './l10n';
             kbqClampedList
             class="example-list"
             mode="overflow"
-            wrap="wrap"
-            [class.example-list_expanded]="!list.isCollapsed()"
-            [items]="countries()"
+            [wrap]="list.isCollapsed() ? 'nowrap' : 'wrap'"
+            [items]="items"
             [collapsedVisibleCount]="10"
             [hiddenThreshold]="6"
         >
             @for (item of list.items(); track item) {
-                <kbq-badge compact class="layout-margin-right-xxs" [kbqOverflowItem]="$index">{{ item }}</kbq-badge>
+                <kbq-badge compact class="layout-margin-right-xxs" [kbqOverflowItem]="$index">
+                    {{ t().itemLabel(item) }}
+                </kbq-badge>
             }
             @if (list.hasToggle()) {
                 <a kbqLink pseudo kbqClampedListTrigger kbqOverflowItemsResult>
@@ -47,12 +48,7 @@ import { TRANSLATIONS } from './l10n';
             width: 360px;
             max-width: 100%;
             min-width: 150px;
-            max-height: 48px;
             resize: horizontal;
-        }
-
-        .example-list_expanded {
-            max-height: none;
         }
 
         .example-list > * {
@@ -63,5 +59,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class ClampedListOverflowExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-    protected readonly countries = computed(() => this.t().countries);
+    protected readonly items = Array.from({ length: 30 }, (_, index) => index + 1);
 }
