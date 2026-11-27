@@ -91,6 +91,41 @@ test.describe('Slider interactions', () => {
         await expect(slider).toHaveAttribute('data-pointer-motion-at-focus', 'false');
     });
 
+    test('keeps a focused range tooltip when hovering the other thumb', async ({ page }) => {
+        const range = page.getByTestId('range-tooltip');
+        const lower = range.getByRole('slider').first();
+        const upper = range.getByRole('slider').last();
+        const tooltip = page.locator('.kbq-slider__tooltip:visible');
+
+        await lower.focus();
+        await expect(tooltip).toHaveText('25');
+        await upper.hover();
+        await page.mouse.move(0, 0);
+        await expect(tooltip).toHaveText('25');
+        await upper.hover();
+        await expect(tooltip).toHaveText('75');
+        await page.mouse.move(0, 0);
+        await expect(tooltip).toHaveText('25');
+        await expect(lower).toBeFocused();
+    });
+
+    test('skips repeated pointer-motion class writes for unrelated keyboard input', async ({ page }) => {
+        const button = page.getByRole('button', { name: 'Swap', exact: true });
+        const slider = page.getByTestId('coincident');
+
+        await button.click();
+        await button.press('a');
+        await expect(slider).not.toHaveClass(/kbq-slider_pointer-motion/);
+        await slider.evaluate((host) => {
+            new MutationObserver((records) => {
+                host.dataset['classWrites'] = String(records.length);
+            }).observe(host, { attributes: true, attributeFilter: ['class'] });
+        });
+        await button.press('b');
+        await button.press('c');
+        await expect(slider).not.toHaveAttribute('data-class-writes', /.+/);
+    });
+
     test('supports track clicks and one commit for keyboard repeat', async ({ page }) => {
         const slider = page.getByTestId('single');
         const input = slider.getByRole('slider');
@@ -264,30 +299,18 @@ test.describe('Slider interactions', () => {
         await expect(reactive).toHaveAttribute('aria-valuenow', '35');
     });
 
-    test('restores native fields and the two-way binding on reset', async ({ page }) => {
-        const slider = page.getByTestId('native-slider').getByRole('slider');
-        const hybrid = page.getByTestId('native-editor');
-        const editor = hybrid.getByRole('spinbutton');
-        const thumb = hybrid.getByRole('slider');
+    test('submits the current single value and both range bounds under their names', async ({ page }) => {
+        const form = page.getByTestId('native-form');
 
-        await thumb.press(keyName[END]);
-        await expect(editor).toHaveValue('100');
-        await page.getByRole('button', { name: 'Reset native', exact: true }).click();
+        await form.getByRole('slider', { name: 'Amount', exact: true }).press(keyName[RIGHT_ARROW]);
+        await form.getByRole('spinbutton', { name: 'Lower limit', exact: true }).fill('35');
+        await form.getByRole('slider', { name: 'Upper limit', exact: true }).press(keyName[LEFT_ARROW]);
 
-        await expect(page.getByTestId('native-value')).toHaveText('70');
-        await expect(editor).toHaveValue('70');
-        await expect(thumb).toHaveValue('70');
-        await expect(slider).toHaveValue('70');
-        await expect
-            .poll(() =>
-                page.getByTestId('native-form').evaluate((form) => [
-                    ...new FormData(form as HTMLFormElement)
-                ])
-            )
-            .toEqual([
-                ['amount', '70'],
-                ['limit', '70']
-            ]);
+        const submittedUrl = new URL(page.url());
+
+        submittedUrl.search = new URLSearchParams({ amount: '71', 'limit[0]': '35', 'limit[1]': '79' }).toString();
+        await form.getByRole('button', { name: 'Submit', exact: true }).click();
+        await expect(page).toHaveURL(submittedUrl.href);
     });
 
     for (const [buttonName, expected] of [

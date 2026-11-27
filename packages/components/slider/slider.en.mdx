@@ -87,9 +87,9 @@ For Angular Forms, use a `nonNullable` control initialized with a number or a pa
 
 `valueChange` reports the live value. `valueCommit` contains `value` and `source`: `pointer`, `keyboard` or `input`. It fires only when the value changed, after pointer release, key release or the end of numeric editing. Holding a key produces one completion event. Use `valueCommit` for expensive external updates while the thumb continues to move immediately.
 
-**Esc**, pointer cancellation and lost capture restore the value from the start of the gesture without `valueCommit`. Moving focus away completes a keyboard change and hides the tooltip. Programmatic writes and form resets do not emit `valueCommit`.
+**Esc**, pointer cancellation and lost capture restore the value from the start of the gesture without `valueCommit`. Moving focus away completes a keyboard change and hides the tooltip. Programmatic writes and Angular form resets do not emit `valueCommit`.
 
-Resetting a native HTML form restores the value from the first render and emits `valueChange` if the value changed. `name` includes the value in the form data. Ranges use `name[0]` and `name[1]`.
+Set `name` to include the current value in the submitted form data. Ranges use `name[0]` and `name[1]`.
 
 Dragging updates the zoom, map color and caption together. Completing the change redraws the tiles at the selected zoom level.
 

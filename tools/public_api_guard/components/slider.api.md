@@ -156,7 +156,7 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue> i
     }>;
     // (undocumented)
     protected changeValue(value: KbqSliderValue, confirmEmpty?: boolean): void;
-    protected commitValue(start: KbqSliderValue, source: KbqSliderCommit['source']): boolean;
+    protected commitValue(start: KbqSliderValue | null, source: KbqSliderCommit['source']): boolean;
     // (undocumented)
     protected readonly defaultFormat: (value: number) => string;
     // (undocumented)
@@ -177,6 +177,7 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue> i
     readonly focused: WritableSignal<boolean>;
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
+    protected get formValue(): KbqSliderValue | null;
     readonly id: _angular_core.Signal<string>;
     readonly idInput: _angular_core.InputSignal<string | undefined>;
     // (undocumented)
@@ -197,17 +198,18 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue> i
     ngDoCheck(): void;
     ngOnChanges(changes: SimpleChanges<KbqSliderBase>): void;
     // (undocumented)
-    protected onChange: (value: KbqSliderValue) => void;
+    protected onChange: (value: KbqSliderValue | null) => void;
     abstract onContainerClick(event: MouseEvent): void;
     // (undocumented)
     protected onTouched: () => void;
     protected readonly options: _koobiq_components_slider.KbqSliderOptions;
     readonly placeholder: WritableSignal<null>;
     readonly readonly: _angular_core.InputSignalWithTransform<boolean, BooleanInput>;
-    registerOnChange(fn: (value: KbqSliderValue) => void): void;
+    registerOnChange(fn: (value: KbqSliderValue | null) => void): void;
     registerOnTouched(fn: () => void): void;
     readonly required: _angular_core.Signal<boolean>;
     readonly requiredInput: _angular_core.InputSignalWithTransform<boolean, BooleanInput>;
+    protected restoreSelection(value: KbqSliderValue | null): void;
     setDescribedByIds(ids: string[]): void;
     setDisabledState(disabled: boolean): void;
     // (undocumented)

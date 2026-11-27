@@ -1,7 +1,6 @@
 import { _IdGenerator, FocusMonitor } from '@angular/cdk/a11y';
 import type { BooleanInput, NumberInput } from '@angular/cdk/coercion';
 import {
-    afterNextRender,
     booleanAttribute,
     computed,
     DestroyRef,
@@ -13,7 +12,6 @@ import {
     numberAttribute,
     type OnChanges,
     output,
-    Renderer2,
     signal,
     type SimpleChanges,
     type WritableSignal
@@ -35,7 +33,15 @@ import type {
     KbqSliderValue
 } from './slider.types';
 import { KBQ_SLIDER_OPTIONS } from './slider-options';
-import { sliderBounds, sliderEqual, sliderGap, sliderMove, sliderNormalize, sliderSnap } from './slider-value';
+import {
+    sliderAdd,
+    sliderBounds,
+    sliderEqual,
+    sliderGap,
+    sliderMove,
+    sliderNormalize,
+    sliderSnap
+} from './slider-value';
 
 /**
  * Shared form and value contract of the slider and input slider.
@@ -189,11 +195,15 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
         return typeof value === 'number' ? [value] : value;
     });
 
+    /** Current form value, including an empty selection. @docs-private */
+    protected get formValue(): KbqSliderValue | null {
+        return this.empty() ? null : this.value();
+    }
+
     constructor() {
         if (this.ngControl) this.ngControl.valueAccessor = this;
 
         this.monitorFocus();
-        this.monitorNativeFormReset();
     }
 
     /** @docs-private */
@@ -214,7 +224,7 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
         return values.length === 2 && index === 1 ? values[1] : values[0];
     }
 
-    protected onChange: (value: KbqSliderValue) => void = () => {};
+    protected onChange: (value: KbqSliderValue | null) => void = () => {};
 
     protected onTouched: () => void = () => {};
 
@@ -228,36 +238,6 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
             }
         });
         this.destroyRef.onDestroy(() => this.focusMonitor.stopMonitoring(this.element));
-    }
-
-    private monitorNativeFormReset(): void {
-        if (this.ngControl || this.parentControl instanceof KbqSliderBase) return;
-
-        const renderer = inject(Renderer2);
-
-        afterNextRender(() => this.listenForNativeFormReset(renderer));
-    }
-
-    private listenForNativeFormReset(renderer: Renderer2): void {
-        const form = this.element.nativeElement.closest('form');
-
-        if (!form) return;
-        const initial = this.value();
-        const stop = renderer.listen(form, 'reset', (event: Event) => {
-            // A reset dispatched by the browser can run microtasks before restoring the native inputs.
-            setTimeout(() => {
-                if (!event.defaultPrevented && !this.destroyRef.destroyed) this.restoreInitialValue(initial);
-            });
-        });
-
-        this.destroyRef.onDestroy(stop);
-    }
-
-    private restoreInitialValue(initial: KbqSliderValue): void {
-        const previous = this.value();
-
-        this.writeValue(initial);
-        if (!sliderEqual(previous, this.value())) this.valueChange.emit(this.value());
     }
 
     private syncValueInput(value: KbqSliderValue): void {
@@ -275,7 +255,7 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
     }
 
     /** @docs-private */
-    registerOnChange(fn: (value: KbqSliderValue) => void): void {
+    registerOnChange(fn: (value: KbqSliderValue | null) => void): void {
         this.onChange = fn;
     }
 
@@ -294,6 +274,20 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
         this.describedByIds.set(ids);
     }
 
+    /** Restores the form value without committing the cancelled interaction. @docs-private */
+    protected restoreSelection(value: KbqSliderValue | null): void {
+        if (value !== null) this.changeValue(value);
+        else if (this.parentControl instanceof KbqSliderBase) this.parentControl.restoreEmptySelection();
+        else this.restoreEmptySelection();
+    }
+
+    private restoreEmptySelection(): void {
+        if (this.empty()) return;
+        this.writeValue(null);
+        this.onChange(null);
+        this.valueChange.emit(this.value());
+    }
+
     protected changeValue(value: KbqSliderValue, confirmEmpty = false): void {
         value = sliderNormalize(value, this.settings());
 
@@ -308,11 +302,11 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
     }
 
     /** Confirms the displayed selection, including the first choice in an empty form control. @docs-private */
-    protected commitValue(start: KbqSliderValue, source: KbqSliderCommit['source']): boolean {
+    protected commitValue(start: KbqSliderValue | null, source: KbqSliderCommit['source']): boolean {
         const value = this.value();
 
         if (this.empty()) this.changeValue(value, true);
-        else if (sliderEqual(start, value)) return false;
+        else if (start !== null && sliderEqual(start, value)) return false;
 
         this.valueCommit.emit({ value, source });
 
@@ -334,7 +328,7 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
         if (index !== 1 || this.thumbCollisionBehavior() === 'swap') return min;
         const lower = this.thumbCollisionBehavior() === 'push' ? min : this.thumbValue(0);
 
-        return sliderSnap(lower + sliderGap(this.settings()), this.settings(), 1);
+        return sliderSnap(sliderAdd(lower, sliderGap(this.settings())), this.settings(), 1);
     }
 
     protected thumbMax(index: number): number {
@@ -343,7 +337,7 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
         if (this.values().length === 1 || index !== 0 || this.thumbCollisionBehavior() === 'swap') return max;
         const upper = this.thumbCollisionBehavior() === 'push' ? max : this.thumbValue(1);
 
-        return sliderSnap(upper - sliderGap(this.settings()), this.settings(), -1);
+        return sliderSnap(sliderAdd(upper, -sliderGap(this.settings())), this.settings(), -1);
     }
 
     protected thumbLabel(index: number): string {

@@ -32,15 +32,15 @@ import { TRANSLATIONS } from './l10n';
         .example-slider-vertical-row {
             display: flex;
             justify-content: center;
-            gap: 16px;
-            padding-inline-end: 24px;
+            gap: var(--kbq-size-l);
+            padding-inline-end: var(--kbq-size-xxl);
         }
         .example-channels {
             display: flex;
             min-width: 0;
         }
         .example-channels kbq-slider {
-            min-width: 24px;
+            min-width: var(--kbq-size-xxl);
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

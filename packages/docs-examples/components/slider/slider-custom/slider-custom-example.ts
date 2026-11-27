@@ -25,7 +25,7 @@ import { TRANSLATIONS } from './l10n';
         :host {
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: var(--kbq-size-xxl);
             width: 100%;
             max-width: 400px;
             margin: 0 auto;
@@ -34,30 +34,30 @@ import { TRANSLATIONS } from './l10n';
             font-variant-numeric: tabular-nums;
         }
         .example-slider-wide.kbq-slider {
-            --kbq-slider-track-size: 24px;
-            --kbq-slider-inset: 16px;
-            --kbq-slider-tick-size: 4px;
-            --kbq-slider-fill-extension: 16px;
+            --kbq-slider-track-size: var(--kbq-size-xxl);
+            --kbq-slider-inset: var(--kbq-size-l);
+            --kbq-slider-tick-size: var(--kbq-size-xxs);
+            --kbq-slider-fill-extension: var(--kbq-size-l);
             --kbq-slider-track-hover: var(--kbq-states-background-contrast-fade-hover);
             --kbq-slider-fill-hover: var(--kbq-states-background-theme-hover);
             --kbq-slider-thumb-pressed-scale: 0.85;
-            --kbq-slider-track-radius: 8px;
-            --kbq-slider-thumb-width: 24px;
-            --kbq-slider-thumb-height: 16px;
-            --kbq-slider-thumb-radius: 4px;
+            --kbq-slider-track-radius: var(--kbq-size-border-radius);
+            --kbq-slider-thumb-width: var(--kbq-size-xxl);
+            --kbq-slider-thumb-height: var(--kbq-size-l);
+            --kbq-slider-thumb-radius: var(--kbq-size-xxs);
             --kbq-slider-thumb-border: transparent;
         }
         .example-slider-round.kbq-slider {
-            --kbq-slider-thumb-width: 16px;
-            --kbq-slider-thumb-height: 16px;
+            --kbq-slider-thumb-width: var(--kbq-size-l);
+            --kbq-slider-thumb-height: var(--kbq-size-l);
             --kbq-slider-thumb-corner-shape: round;
             --kbq-slider-thumb-radius: 50%;
         }
         .example-slider-dot.kbq-slider {
-            --kbq-slider-track-size: 2px;
+            --kbq-slider-track-size: var(--kbq-size-3xs);
             --kbq-slider-thumb-pressed-scale: 1.3;
-            --kbq-slider-thumb-width: 16px;
-            --kbq-slider-thumb-height: 16px;
+            --kbq-slider-thumb-width: var(--kbq-size-l);
+            --kbq-slider-thumb-height: var(--kbq-size-l);
             --kbq-slider-thumb-corner-shape: round;
             --kbq-slider-thumb-radius: 50%;
             --kbq-slider-thumb-background: var(--kbq-background-theme);

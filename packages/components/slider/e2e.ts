@@ -179,10 +179,9 @@ export class E2eSliderStateAndStyle {
                 style="width: 400px; height: 120px"
             ></iframe>
             <form data-testid="native-form">
-                <kbq-slider data-testid="native-slider" name="amount" aria-label="Amount" [value]="70" />
-                <kbq-input-slider data-testid="native-editor" name="limit" aria-label="Limit" [(value)]="nativeValue" />
-                <button type="reset">Reset native</button>
-                <output data-testid="native-value">{{ nativeValue() }}</output>
+                <kbq-slider name="amount" aria-label="Amount" [value]="70" />
+                <kbq-input-slider name="limit" [value]="[20, 80]" [thumbAriaLabels]="['Lower limit', 'Upper limit']" />
+                <button type="submit">Submit</button>
             </form>
             <kbq-input-slider
                 data-testid="hybrid-reactive"
@@ -204,7 +203,6 @@ export class E2eSliderInteraction {
     protected readonly commits = signal<KbqSliderCommit[]>([]);
     protected readonly collision = signal<KbqSliderThumbCollisionBehavior>('none');
     protected readonly control = new FormControl<KbqSliderValue>(35, { nonNullable: true });
-    protected readonly nativeValue = signal(70);
     protected readonly editorControl = new FormControl<KbqSliderValue>(70, { nonNullable: true });
     protected readonly marks = [
         { value: 0, label: '0' },

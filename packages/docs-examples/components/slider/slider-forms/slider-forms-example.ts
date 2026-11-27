@@ -33,7 +33,7 @@ import { TRANSLATIONS } from './l10n';
         form {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: var(--kbq-size-l);
             width: 100%;
             max-width: 320px;
             margin: 0 auto;

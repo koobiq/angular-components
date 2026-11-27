@@ -71,6 +71,22 @@ class SliderWithErrorStateMatcher {
     });
 }
 
+@Component({
+    imports: [KbqSlider, KbqInputSlider, ReactiveFormsModule],
+    template: `
+        @if (withEditor) {
+            <kbq-input-slider [formControl]="control" (valueCommit)="commit($event)" />
+        } @else {
+            <kbq-slider [formControl]="control" (valueCommit)="commit($event)" />
+        }
+    `
+})
+class RequiredSlider {
+    withEditor = false;
+    readonly control = new FormControl<number | null>(null, Validators.required);
+    readonly commit = vi.fn();
+}
+
 describe('KbqSlider', () => {
     describe('slider values', () => {
         const settings: SliderSettings = { min: 0, max: 100, step: 1, minDistance: 0, marks: [] };
@@ -80,6 +96,11 @@ describe('KbqSlider', () => {
             [0.35, 0.05, 1, 0.1, 0.35],
             [3e-7, 0, 1e-6, 1e-7, 3e-7],
             [10, 0, 10, 3, 9],
+            [-999999999.71, -1000000000, -999999999, 0.02, -999999999.7],
+            [1000000.19, 0, 1000000.19, 0.01, 1000000.19],
+            [1000000.189, 0, 1000000.189, 0.01, 1000000.18],
+            [1000000.1, 1000000, 1000000.1, 0.01, 1000000.1],
+            [1000000000.01, 1000000000, 1000000000.01, 0.01, 1000000000.01],
             [-200, -100, 100, 1, -100],
             [NaN, 0, 100, 1, 0],
             [50, 10, 0, 1, 10]
@@ -93,6 +114,20 @@ describe('KbqSlider', () => {
             expect(sliderSnap(45, { ...settings, marks, step: null })).toBe(80);
             expect(sliderSnap(45, { ...settings, marks })).toBe(45);
             expect(sliderSnap(80, { ...settings, step: null })).toBe(0);
+        });
+
+        it('keeps an exact fractional minimum distance between discrete marks across zero', () => {
+            const scale = {
+                ...settings,
+                min: -1,
+                max: 1,
+                step: null,
+                marks: [-1, 0.1, 0.2, 1].map((value) => ({ value })),
+                minDistance: 1.1
+            };
+
+            expect(sliderNormalize([-1, 0.1], scale)).toEqual([-1, 0.1]);
+            expect(sliderMove([-1, 0.2], 1, 0.1, scale, 'none').value).toEqual([-1, 0.1]);
         });
 
         it('normalizes unordered external ranges and impossible gaps', () => {
@@ -442,6 +477,24 @@ describe('KbqSlider', () => {
             expect(input.value).toBe('70');
         });
 
+        it('swaps thumbs for native increment and decrement actions across the minimum distance', () => {
+            fixture.componentRef.setInput('value', [40, 50]);
+            fixture.componentRef.setInput('minDistance', 10);
+            fixture.componentRef.setInput('thumbCollisionBehavior', 'swap');
+            fixture.detectChanges();
+            const [lower, upper]: HTMLInputElement[] = Array.from(fixture.nativeElement.querySelectorAll('input'));
+
+            lower.value = '41';
+            lower.dispatchEvent(new Event('input'));
+            fixture.detectChanges();
+            expect(fixture.componentInstance.value()).toEqual([50, 60]);
+            expect(document.activeElement).toBe(upper);
+            upper.value = '59';
+            upper.dispatchEvent(new Event('input'));
+            expect(fixture.componentInstance.value()).toEqual([40, 50]);
+            expect(document.activeElement).toBe(lower);
+        });
+
         it('uses the disabled input until the form supplies its own state', () => {
             fixture.componentRef.setInput('disabled', true);
             fixture.detectChanges();
@@ -499,6 +552,13 @@ describe('KbqSlider', () => {
                 expect(editor.value).toBe(expected);
                 expect(thumb.value).toBe(expected);
             }
+
+            thumb.focus();
+            dispatchKeyboardEvent(thumb, 'keydown', LEFT_ARROW);
+            dispatchKeyboardEvent(thumb, 'keyup', LEFT_ARROW);
+            await fixture.whenStable();
+            expect(thumb.value).toBe('99');
+            expect(editor.value).toBe('99');
         });
     });
 
@@ -508,22 +568,6 @@ describe('KbqSlider', () => {
             ['input-slider', 'input[type=range]'],
             ['input-slider', 'input.kbq-input']
         ])('selects the displayed minimum once in an empty required %s via %s', async (kind, selector) => {
-            @Component({
-                imports: [KbqSlider, KbqInputSlider, ReactiveFormsModule],
-                template: `
-                    @if (withEditor) {
-                        <kbq-input-slider [formControl]="control" (valueCommit)="commit($event)" />
-                    } @else {
-                        <kbq-slider [formControl]="control" (valueCommit)="commit($event)" />
-                    }
-                `
-            })
-            class RequiredSlider {
-                withEditor = false;
-                readonly control = new FormControl<number | null>(null, Validators.required);
-                readonly commit = vi.fn();
-            }
-
             const fixture = TestBed.createComponent(RequiredSlider);
             const host = fixture.componentInstance;
 
@@ -563,6 +607,59 @@ describe('KbqSlider', () => {
             host.control.reset();
             expect(host.control.value).toBeNull();
             expect(host.control.hasError('required')).toBe(true);
+        });
+
+        it.each([
+            ['slider', 'input[type=range]'],
+            ['input-slider', 'input[type=range]'],
+            ['input-slider', 'input.kbq-input']
+        ])('restores null when the first edit of a required %s is cancelled via %s', async (kind, selector) => {
+            const fixture = TestBed.createComponent(RequiredSlider);
+            const host = fixture.componentInstance;
+
+            host.withEditor = kind === 'input-slider';
+            await fixture.whenStable();
+            const input: HTMLInputElement = fixture.nativeElement.querySelector(selector);
+            const change = vi.fn();
+
+            host.control.valueChanges.subscribe(change);
+            input.focus();
+
+            if (input.type === 'range') {
+                dispatchKeyboardEvent(input, 'keydown', RIGHT_ARROW);
+            } else {
+                input.value = '1';
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+
+            await vi.waitFor(() => expect(host.control.value).toBe(1));
+            dispatchKeyboardEvent(input, 'keydown', ESCAPE);
+            dispatchKeyboardEvent(input, 'keyup', RIGHT_ARROW);
+            input.blur();
+            await fixture.whenStable();
+            expect(change.mock.calls).toEqual([[1], [null]]);
+            expect(host.control.hasError('required')).toBe(true);
+            expect(input.value).toBe('0');
+            expect(host.commit).not.toHaveBeenCalled();
+        });
+
+        it('restores the empty form value when the first pointer gesture is cancelled', async () => {
+            const fixture = TestBed.createComponent(RequiredSlider);
+            const { control, commit } = fixture.componentInstance;
+
+            await fixture.whenStable();
+            const surface: HTMLElement = fixture.nativeElement.querySelector('.kbq-slider__surface');
+            const rail: HTMLElement = fixture.nativeElement.querySelector('.kbq-slider__rail');
+
+            vi.spyOn(rail, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, 100, 10));
+            surface.setPointerCapture = vi.fn();
+            surface.hasPointerCapture = () => false;
+            surface.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1, clientX: 60, isPrimary: true }));
+            expect(control.value).toBe(60);
+            surface.dispatchEvent(new PointerEvent('pointercancel', { pointerId: 1 }));
+            expect(control.value).toBeNull();
+            expect(control.hasError('required')).toBe(true);
+            expect(commit).not.toHaveBeenCalled();
         });
 
         it('updates a focused numeric field when its scale changes before editing starts', async () => {

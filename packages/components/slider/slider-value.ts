@@ -22,6 +22,14 @@ const fractionDigits = (value: number): number => {
     return Math.max(0, (mantissa.split('.')[1]?.length ?? 0) - Number(exponent));
 };
 
+const roundDecimal = (value: number, precision: number): number =>
+    precision <= 100 ? Number(value.toFixed(precision)) : value;
+
+/** @internal */
+export function sliderAdd(a: number, b: number): number {
+    return roundDecimal(a + b, Math.max(fractionDigits(a), fractionDigits(b)));
+}
+
 /** @internal */
 export function sliderBounds(settings: SliderSettings): { min: number; max: number; step: number } {
     const min = Number.isFinite(settings.min) ? settings.min : 0;
@@ -58,14 +66,22 @@ export function sliderSnap(value: number, settings: SliderSettings, direction: S
         return stops.reduce((best, stop) => (Math.abs(stop - safeValue) <= Math.abs(best - safeValue) ? stop : best));
     }
 
-    const count = (safeValue - min) / step;
-    const index =
-        direction < 0 ? Math.floor(count + 1e-10) : direction > 0 ? Math.ceil(count - 1e-10) : Math.round(count);
-    const lastIndex = Math.floor((max - min) / step + 1e-10);
+    const precision = Math.max(fractionDigits(min), fractionDigits(step));
+    const gridValue = (index: number): number => roundDecimal(min + index * step, precision);
+    const index = Math.round(sliderAdd(safeValue, -min) / step);
+    const nearest = gridValue(index);
 
-    const precision = Math.min(100, Math.max(fractionDigits(min), fractionDigits(step)));
+    if (nearest === safeValue) return nearest;
 
-    return clamp(Number((min + clamp(index, 0, lastIndex) * step).toFixed(precision)), min, max);
+    // The quotient can round across a step or a half-step. Compare the two actual grid values instead.
+    const adjacent = gridValue(Math.max(0, index + (nearest < safeValue ? 1 : -1)));
+    const lower = Math.min(nearest, adjacent);
+    const upper = Math.max(nearest, adjacent);
+
+    if (upper > max || direction < 0) return lower;
+    if (direction > 0) return upper;
+
+    return sliderAdd(safeValue, -lower) < sliderAdd(upper, -safeValue) ? lower : upper;
 }
 
 /** @internal */
@@ -73,7 +89,7 @@ export function sliderGap(settings: SliderSettings): number {
     const lower = sliderSnap(sliderBounds(settings).min, settings);
     const upper = sliderSnap(sliderBounds(settings).max, settings, -1);
 
-    return clamp(Number.isFinite(settings.minDistance) ? settings.minDistance : 0, 0, upper - lower);
+    return clamp(Number.isFinite(settings.minDistance) ? settings.minDistance : 0, 0, sliderAdd(upper, -lower));
 }
 
 /** @internal */
@@ -84,8 +100,8 @@ export function sliderNormalize(value: KbqSliderValue, settings: SliderSettings)
     const b = sliderSnap(value[1], settings);
     const gap = sliderGap(settings);
     const max = sliderSnap(sliderBounds(settings).max, settings, -1);
-    const start = sliderSnap(Math.min(a, b, max - gap), settings, -1);
-    const end = sliderSnap(Math.max(a, b, start + gap), settings, 1);
+    const start = sliderSnap(Math.min(a, b, sliderAdd(max, -gap)), settings, -1);
+    const end = sliderSnap(Math.max(a, b, sliderAdd(start, gap)), settings, 1);
 
     return [start, end];
 }
@@ -112,21 +128,21 @@ export function sliderMove(
         [start, end] = index === 1 ? [end, snapped] : [snapped, start];
     } else if (collision === 'push') {
         if (index === 0) {
-            start = sliderSnap(Math.min(snapped, sliderSnap(max, settings, -1) - gap), settings, -1);
-            end = sliderSnap(Math.max(end, start + gap), settings, 1);
+            start = sliderSnap(Math.min(snapped, sliderAdd(sliderSnap(max, settings, -1), -gap)), settings, -1);
+            end = sliderSnap(Math.max(end, sliderAdd(start, gap)), settings, 1);
         } else {
-            end = sliderSnap(Math.max(snapped, sliderSnap(min, settings) + gap), settings, 1);
-            start = sliderSnap(Math.min(start, end - gap), settings, -1);
+            end = sliderSnap(Math.max(snapped, sliderAdd(sliderSnap(min, settings), gap)), settings, 1);
+            start = sliderSnap(Math.min(start, sliderAdd(end, -gap)), settings, -1);
         }
     } else if (index === 0) {
-        start = sliderSnap(Math.min(snapped, end - gap), settings, -1);
+        start = sliderSnap(Math.min(snapped, sliderAdd(end, -gap)), settings, -1);
     } else {
-        end = sliderSnap(Math.max(snapped, start + gap), settings, 1);
+        end = sliderSnap(Math.max(snapped, sliderAdd(start, gap)), settings, 1);
     }
 
-    if (end - start < gap) {
-        if (index === 0) start = sliderSnap(end - gap, settings, -1);
-        else end = sliderSnap(start + gap, settings, 1);
+    if (sliderAdd(end, -start) < gap) {
+        if (index === 0) start = sliderSnap(sliderAdd(end, -gap), settings, -1);
+        else end = sliderSnap(sliderAdd(start, gap), settings, 1);
     }
 
     return { value: sliderNormalize([start, end], settings), index };

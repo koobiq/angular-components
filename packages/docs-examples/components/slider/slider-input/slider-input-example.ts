@@ -56,7 +56,7 @@ import { TRANSLATIONS } from './l10n';
         .example-volume {
             display: grid;
             grid-template-columns: minmax(0, 1fr) 88px;
-            gap: 16px;
+            gap: var(--kbq-size-l);
             align-items: center;
         }
     `,

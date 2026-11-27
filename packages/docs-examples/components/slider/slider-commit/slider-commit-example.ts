@@ -12,7 +12,7 @@ import { TRANSLATIONS } from './l10n';
             <div
                 class="example-tiles"
                 [style.scale]="zoom() / renderedZoom()"
-                [style.--tile-size.px]="32 * renderedZoom()"
+                [style.--example-rendered-zoom]="renderedZoom()"
             >
                 @for (tile of tiles; track tile) {
                     <span></span>
@@ -41,7 +41,7 @@ import { TRANSLATIONS } from './l10n';
             display: grid;
             width: min(100%, 320px);
             margin: auto;
-            gap: 4px;
+            gap: var(--kbq-size-xxs);
             font-variant-numeric: tabular-nums;
         }
         .example-caption {
@@ -56,19 +56,21 @@ import { TRANSLATIONS } from './l10n';
             background: var(--kbq-background-bg);
         }
         .example-tiles {
+            --example-tile-size: calc(var(--kbq-size-3xl) * var(--example-rendered-zoom));
+
             position: absolute;
             inset: -200%;
             display: grid;
-            grid-template-columns: repeat(auto-fill, var(--tile-size));
-            grid-auto-rows: var(--tile-size);
+            grid-template-columns: repeat(auto-fill, var(--example-tile-size));
+            grid-auto-rows: var(--example-tile-size);
             align-content: center;
             justify-content: center;
         }
         .example-tiles span {
             background: var(--kbq-background-contrast-fade);
-            margin: 2px;
+            margin: var(--kbq-size-3xs);
             border: 3px solid var(--kbq-background-bg);
-            border-radius: 6px;
+            border-radius: var(--kbq-size-xs);
         }
         .example-tiles span:nth-child(7n) {
             background: hsl(var(--example-map-hue) 58% 55% / 0.4);

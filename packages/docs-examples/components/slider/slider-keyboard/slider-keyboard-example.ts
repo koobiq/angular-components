@@ -25,7 +25,7 @@ import { TRANSLATIONS } from './l10n';
     styles: `
         :host {
             display: grid;
-            gap: 16px;
+            gap: var(--kbq-size-l);
             width: min(100%, 320px);
             margin: auto;
         }

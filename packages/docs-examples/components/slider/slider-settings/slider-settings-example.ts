@@ -23,15 +23,9 @@ import { TRANSLATIONS } from './l10n';
                 </kbq-button-toggle-group>
                 <kbq-form-field>
                     <kbq-label>{{ t().workers }}</kbq-label>
-                    <kbq-slider
-                        #workers
-                        [min]="1"
-                        [max]="16"
-                        [ngModel]="limits[period] ?? 1"
-                        (ngModelChange)="setLimit($event)"
-                    />
+                    <kbq-slider #slider="kbqSlider" [min]="1" [max]="16" [(ngModel)]="limits[period]" />
                 </kbq-form-field>
-                <output>{{ workers.value() }}</output>
+                <output>{{ slider.value() }}</output>
             </div>
         </ng-template>
     `,
@@ -44,7 +38,7 @@ import { TRANSLATIONS } from './l10n';
         .example-settings {
             display: grid;
             position: relative;
-            gap: 16px;
+            gap: var(--kbq-size-l);
         }
         output {
             position: absolute;
@@ -59,8 +53,4 @@ export class SliderSettingsExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly limits = [4, 8, 12];
     protected period = 0;
-
-    protected setLimit(value: number | readonly [number, number]): void {
-        if (typeof value === 'number') this.limits[this.period] = value;
-    }
 }

@@ -19,11 +19,13 @@ import { FormsModule } from '@angular/forms';
 import type { ErrorStateMatcher } from '@koobiq/components/core';
 import { KbqLocaleOverridesDirective } from '@koobiq/components/core';
 import { KbqFormFieldControl, KbqFormFieldModule } from '@koobiq/components/form-field';
-import { add, KbqInputModule, KbqNumberInput } from '@koobiq/components/input';
+import { KbqInputModule, KbqNumberInput } from '@koobiq/components/input';
 import { KbqSlider } from './slider';
 import type { KbqSliderCommit, KbqSliderSelection, KbqSliderValue } from './slider.types';
 import { KbqSliderBase } from './slider-base';
-import { sliderEqual, sliderLargeStepMultiplier, sliderMove, sliderSnap, sliderStops } from './slider-value';
+import { sliderAdd, sliderEqual, sliderLargeStepMultiplier, sliderMove, sliderSnap, sliderStops } from './slider-value';
+
+type SliderDraft = { value: KbqSliderValue; formValue: KbqSliderValue | null };
 
 /** Numeric input and slider sharing a single value or range. */
 @Component({
@@ -76,7 +78,7 @@ export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue>
         const settings = this.settings();
         const current = sliderSnap(value, settings);
 
-        if (settings.step !== null) return add(current, delta);
+        if (settings.step !== null) return sliderAdd(current, delta);
         const stops = sliderStops(settings);
         const index = Math.max(0, Math.min(stops.length - 1, stops.indexOf(current) + delta));
 
@@ -84,7 +86,7 @@ export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue>
     };
     protected readonly numberErrorMatcher: ErrorStateMatcher = { isErrorState: () => this.errorState() };
     private editingIndex: number | null = null;
-    private editStart: KbqSliderValue | null = null;
+    private editStart: SliderDraft | null = null;
 
     constructor() {
         super();
@@ -122,7 +124,7 @@ export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue>
     }
 
     protected startDraft(): KbqSliderValue {
-        return (this.editStart ??= this.value());
+        return (this.editStart ??= { value: this.value(), formValue: this.formValue }).value;
     }
 
     protected edit(value: number | null, index: number): void {
@@ -144,7 +146,7 @@ export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue>
 
         const result =
             start !== null && typed != null && Number.isFinite(typed) && !this.disabled() && !this.readonly()
-                ? sliderMove(start, index, typed, this.settings(), this.thumbCollisionBehavior())
+                ? sliderMove(start.value, index, typed, this.settings(), this.thumbCollisionBehavior())
                 : null;
 
         if (result) this.changeValue(result.value);
@@ -153,7 +155,8 @@ export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue>
         this.editingIndex = null;
         this.drafts.set([...this.values()]);
         this.refreshInput(index);
-        if (start !== null && (result || !sliderEqual(start, this.value()))) this.commitValue(start, 'input');
+        if (start !== null && (result || !sliderEqual(start.value, this.value())))
+            this.commitValue(start.formValue, 'input');
 
         return result?.index ?? index;
     }
@@ -170,7 +173,7 @@ export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue>
 
         if (event.keyCode !== ESCAPE || this.editStart === null) return;
         event.preventDefault();
-        this.changeValue(this.editStart);
+        this.restoreSelection(this.editStart.formValue);
         this.editStart = null;
         this.drafts.set([...this.values()]);
         this.refreshInput(index);

@@ -48,11 +48,19 @@ import type {
     KbqSliderValue
 } from './slider.types';
 import { KbqSliderBase } from './slider-base';
-import { sliderEqual, sliderGap, sliderLargeStepMultiplier, sliderMove, sliderSnap, sliderStops } from './slider-value';
+import {
+    sliderAdd,
+    sliderEqual,
+    sliderGap,
+    sliderLargeStepMultiplier,
+    sliderMove,
+    sliderSnap,
+    sliderStops
+} from './slider-value';
 
 type SliderPointerGesture = {
     id: number;
-    start: KbqSliderValue;
+    start: KbqSliderValue | null;
     offset: number;
     overlapped: boolean;
 };
@@ -174,7 +182,8 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
         return [[min, values[0]]];
     });
     private pointer: SliderPointerGesture | null = null;
-    private keyboardStart: KbqSliderValue | null = null;
+    private keyboardStart?: KbqSliderValue | null;
+    private pointerMotion = false;
     private tooltipTimer: ReturnType<typeof setTimeout> | undefined;
     private markAnimation?: SliderMarkAnimation;
 
@@ -298,6 +307,9 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
     }
 
     private setPointerMotion(enabled: boolean): void {
+        if (this.pointerMotion === enabled) return;
+        this.pointerMotion = enabled;
+
         // Tab moves focus before Angular flushes host bindings. Disable the pointer transition before the ring appears.
         const host = this.element.nativeElement;
 
@@ -335,7 +347,7 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
         this.finishKeyboard();
         this.pointer = {
             id: event.pointerId,
-            start: this.value(),
+            start: this.formValue,
             overlapped: !!thumb && this.values().length === 2 && this.thumbValue(0) === this.thumbValue(1),
             offset: thumb ? this.position(this.thumbValue(index)) - this.pointerPosition(event) : 0
         };
@@ -375,12 +387,17 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
         const { keyCode } = event;
 
         if (keyCode === ESCAPE) {
-            if (this.tooltipIndex() !== null || this.markAnimation || this.pointer || this.keyboardStart !== null) {
+            if (
+                this.tooltipIndex() !== null ||
+                this.markAnimation ||
+                this.pointer ||
+                this.keyboardStart !== undefined
+            ) {
                 event.stopPropagation();
                 event.preventDefault();
             }
 
-            if (this.pointer || this.keyboardStart !== null) {
+            if (this.pointer || this.keyboardStart !== undefined) {
                 this.cancelGesture();
             }
 
@@ -394,7 +411,7 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
         event.preventDefault();
         if (this.disabled() || this.readonly() || this.pointer) return;
         this.finishMarkAnimation();
-        this.keyboardStart ??= this.value();
+        if (this.keyboardStart === undefined) this.keyboardStart = this.formValue;
         this.activeIndex.set(index);
         let direction = keyCode === RIGHT_ARROW || keyCode === UP_ARROW || keyCode === PAGE_UP ? 1 : -1;
 
@@ -409,7 +426,7 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
             keyCode === PAGE_UP || keyCode === PAGE_DOWN || event.shiftKey
                 ? sliderLargeStepMultiplier(this.largeStepMultiplier())
                 : 1;
-        let next = this.thumbValue(index) + direction * this.bounds().step * page;
+        let next = sliderAdd(this.thumbValue(index), direction * this.bounds().step * page);
 
         if (this.step() === null) {
             const stops = sliderStops(this.settings());
@@ -420,14 +437,14 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
 
         if (keyCode === HOME) next = this.thumbMin(index);
         if (keyCode === END) next = this.thumbMax(index);
-        const nextIndex = this.move(index, this.keyboardTarget(index, next));
+        const nextIndex = this.move(index, this.incrementTarget(index, next));
 
         this.activeIndex.set(nextIndex);
         if (nextIndex !== index) this.focusThumb(nextIndex, 'keyboard', { preventScroll: true });
         this.revealTooltip(nextIndex);
     }
 
-    private keyboardTarget(index: number, next: number): number {
+    private incrementTarget(index: number, next: number): number {
         const values = this.values();
 
         if (values.length !== 2 || this.thumbCollisionBehavior() !== 'swap') return next;
@@ -436,12 +453,12 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
         const current = this.thumbValue(index);
         const neighbour = this.thumbValue(1 - index);
         const gap = sliderGap(this.settings());
-        const limit = sliderSnap(neighbour - direction * gap, this.settings(), index === 0 ? -1 : 1);
+        const limit = sliderSnap(sliderAdd(neighbour, -direction * gap), this.settings(), index === 0 ? -1 : 1);
 
         // At the nearest legal stop, an arrow towards the neighbour must skip the minimum gap.
         if (current !== limit || (next - current) * direction <= 0 || (next - neighbour) * direction > 0) return next;
 
-        return sliderSnap(neighbour + direction * gap, this.settings(), direction);
+        return sliderSnap(sliderAdd(neighbour, direction * gap), this.settings(), direction);
     }
 
     protected onKeyUp(event: KeyboardEvent): void {
@@ -470,7 +487,7 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
             next = stops[stops.indexOf(current) + Math.sign(next - current)] ?? current;
         }
 
-        const active = this.move(index, next);
+        const active = this.move(index, this.incrementTarget(index, next));
 
         input.value = String(this.thumbValue(index));
         if (active !== index) this.focus({ preventScroll: true }, active);
@@ -538,10 +555,10 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
     }
 
     private finishKeyboard(): void {
-        if (this.keyboardStart === null) return;
+        if (this.keyboardStart === undefined) return;
         const start = this.keyboardStart;
 
-        this.keyboardStart = null;
+        this.keyboardStart = undefined;
         this.commitValue(start, 'keyboard');
     }
 
@@ -556,11 +573,11 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
 
     private cancelGesture(): void {
         this.finishMarkAnimation();
-        const start = this.pointer?.start ?? this.keyboardStart;
+        const start = this.pointer ? this.pointer.start : this.keyboardStart;
 
         this.releasePointer();
-        this.keyboardStart = null;
-        if (start !== null && start !== undefined) this.changeValue(start);
+        this.keyboardStart = undefined;
+        if (start !== undefined) this.restoreSelection(start);
         this.clearTooltip();
     }
 
@@ -585,7 +602,9 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
 
     protected leave(index: number): void {
         clearTimeout(this.tooltipTimer);
-        if (!this.pointer && !(this.focused() && this.activeIndex() === index)) this.clearTooltip();
+        if (this.pointer || this.tooltipIndex() !== index) return;
+        if (this.focused()) this.revealTooltip(this.activeIndex());
+        else this.clearTooltip();
     }
 
     protected finishMarkAnimation(): void {
@@ -723,7 +742,7 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
 
     override writeValue(value: KbqSliderValue | null): void {
         this.releasePointer();
-        this.keyboardStart = null;
+        this.keyboardStart = undefined;
         this.clearTooltip();
         this.finishMarkAnimation();
         super.writeValue(value);
