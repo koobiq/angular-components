@@ -48,10 +48,10 @@ import { TRANSLATIONS } from './l10n';
     `,
     styles: `
         :host .kbq-inline-edit {
-            width: calc(100% + 12px);
-            margin-left: -6px;
+            width: calc(100% + 24px);
+            margin-left: -12px;
             --kbq-inline-edit-padding-vertical: 3px;
-            --kbq-inline-edit-padding-horizontal: 5px;
+            --kbq-inline-edit-padding-horizontal: 11px;
         }
 
         .example-inline-edit__display-value {
@@ -68,7 +68,7 @@ import { TRANSLATIONS } from './l10n';
             font-feature-settings: var(--kbq-typography-headline-font-feature-settings);
             letter-spacing: var(--kbq-typography-headline-letter-spacing);
             --kbq-textarea-size-padding-vertical: 3px;
-            --kbq-textarea-size-padding-horizontal: 5px;
+            --kbq-textarea-size-padding-horizontal: 11px;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -77,18 +77,18 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class InlineEditEditableHeaderExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly displayValueElement = viewChild<ElementRef<HTMLElement>>('displayValueElement');
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly maxRows = 5;
-    protected get placeholder(): string {
-        return this.t().placeholder;
-    }
     protected readonly control = new FormControl('Spain', { nonNullable: true });
     protected readonly displayValue = signal(this.control.value);
     protected readonly content =
         "Spanish football is characterized by technical skill, tactical innovation, and fierce regional rivalries. La Liga, founded in 1929, features some of the world's best clubs. Spain's national team dominated world football from 2008-2012, winning two European Championships and a World Cup with their 'tiki-taka' style.";
 
-    protected readonly displayValueElement = viewChild<ElementRef<HTMLElement>>('displayValueElement');
+    protected get placeholder(): string {
+        return this.t().placeholder;
+    }
 
     protected onSave(): void {
         if (!this.control.value) {

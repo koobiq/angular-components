@@ -1,4 +1,5 @@
 import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
+import { DOWN_ARROW, ENTER, RIGHT_ARROW, SPACE } from '@angular/cdk/keycodes';
 import { ContentObserver } from '@angular/cdk/observers';
 import { _getFocusedElementPierceShadowDom, Platform } from '@angular/cdk/platform';
 import {
@@ -32,17 +33,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subject } from 'rxjs';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import {
-    DOWN_ARROW,
-    ENTER,
     type IFocusableOption,
     KBQ_WINDOW,
     kbqAnimationsDisabled,
     kbqInjectNativeElement,
     type KbqOverflowFitItem,
     PopUpPlacements,
-    PopUpTriggers,
-    RIGHT_ARROW,
-    SPACE
+    PopUpTriggers
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField } from '@koobiq/components/form-field';
@@ -155,6 +152,7 @@ export class KbqNavbarItemContent {}
 export class KbqNavbarTitle {
     /** @docs-private */
     protected readonly isBrowser = inject(Platform).isBrowser;
+
     /** @docs-private */
     protected readonly nativeElement = kbqInjectNativeElement();
     private readonly window = inject(KBQ_WINDOW);
@@ -239,6 +237,15 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
     private readonly injector = inject(Injector);
     private readonly destroyRef = inject(DestroyRef);
 
+    // Co-located on the same element; a toggle carries no rectangle element.
+    private readonly rectangleElement = inject(KbqNavbarRectangleElement, { optional: true });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
     /** @docs-private */
     readonly title = contentChild(KbqNavbarTitle);
 
@@ -251,6 +258,24 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
     /** Custom interactive component projected into the item, if any. @docs-private */
     readonly customTrigger = contentChild(KBQ_NAVBAR_ITEM_TRIGGER, { descendants: true });
 
+    private _tooltip?: KbqTooltipTrigger;
+    private readonly hasFocusState = signal(false);
+    private readonly disabledState = signal(false);
+
+    /** @docs-private */
+    readonly onFocus = new Subject<KbqNavbarFocusableItemEvent>();
+
+    /** @docs-private */
+    readonly onBlur = new Subject<KbqNavbarFocusableItemEvent>();
+
+    /**
+     * Keeps an element with nothing to interact with out of the roving focus order, without announcing or
+     * styling it as disabled.
+     *
+     * @docs-private
+     */
+    readonly decorative = signal(false);
+
     /** Interactive element projected into the item, if any. */
     get nestedElement(): KbqNavbarNestedElement | undefined {
         return this.button() || this.formField() || this.customTrigger() || undefined;
@@ -261,14 +286,6 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
         return this._tooltip;
     }
 
-    private _tooltip?: KbqTooltipTrigger;
-
-    /** @docs-private */
-    readonly onFocus = new Subject<KbqNavbarFocusableItemEvent>();
-
-    /** @docs-private */
-    readonly onBlur = new Subject<KbqNavbarFocusableItemEvent>();
-
     /** @docs-private */
     get hasFocus(): boolean {
         return !!this.nestedElement?.hasFocus || this.hasFocusState();
@@ -277,11 +294,6 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
     set hasFocus(value: boolean) {
         this.hasFocusState.set(value);
     }
-
-    private readonly hasFocusState = signal(false);
-
-    // Co-located on the same element; a toggle carries no rectangle element.
-    private readonly rectangleElement = inject(KbqNavbarRectangleElement, { optional: true });
 
     /**
      * Whether the item is disabled. Also `true` for a decorative element and for one hidden under the «More» panel
@@ -296,16 +308,6 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
     set disabled(value: boolean) {
         this.disabledState.set(value);
     }
-
-    private readonly disabledState = signal(false);
-
-    /**
-     * Keeps an element with nothing to interact with out of the roving focus order, without announcing or
-     * styling it as disabled.
-     *
-     * @docs-private
-     */
-    readonly decorative = signal(false);
 
     /**
      * Whether the item was disabled through `disabled`, as opposed to being decorative.
@@ -324,11 +326,12 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
         return -1;
     }
 
-    /** @docs-private */
-    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'disabled',
-        transform: booleanAttribute
-    });
+    constructor() {
+        this.destroyRef.onDestroy(() => {
+            this.onFocus.complete();
+            this.onBlur.complete();
+        });
+    }
 
     ngOnChanges(changes: SimpleChanges): void {
         // A bound input is handed to its member; unbound, it leaves what code wrote.
@@ -337,13 +340,6 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
 
             if (disabled !== undefined) this.disabled = disabled;
         }
-    }
-
-    constructor() {
-        this.destroyRef.onDestroy(() => {
-            this.onFocus.complete();
-            this.onBlur.complete();
-        });
     }
 
     /** @docs-private */
@@ -487,16 +483,46 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
 export class KbqNavbarRectangleElement implements KbqOverflowFitItem {
     /** @docs-private */
     protected readonly isBrowser = inject(Platform).isBrowser;
+
     /** Element the rectangle renders in, the handle the ambient navbar hides it by. @docs-private */
     readonly element = kbqInjectNativeElement();
     private readonly window = inject(KBQ_WINDOW);
     private readonly destroyRef = inject(DestroyRef);
     private readonly renderer = inject(Renderer2);
 
+    /**
+     * Element with this attribute is never hidden under the «More» panel of a horizontal navbar, whatever the
+     * overflow. Defaults to `false`.
+     */
+    readonly alwaysVisible = input<boolean, boolean | string | null | undefined>(false, {
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly button = contentChild(KbqButtonCssStyler);
+
+    private readonly _orientation = signal<KbqNavbarOrientation>('vertical');
+    private readonly hiddenState = signal(false);
+
+    // Deliberately left `undefined`: it is not equal to either boolean, so the guard below always lets the
+    // first assignment through. Initializing it to `false` would swallow the initial `collapsed = false` of a
+    // navbar that starts expanded, and with it the `updateDropdown()` that rides on that emission.
+    private readonly _collapsed = signal<boolean | undefined>(undefined);
+
     /** Emits whenever the orientation or the collapsed state of the element changes. @docs-private */
     readonly state = new Subject<void>();
 
-    private readonly _orientation = signal<KbqNavbarOrientation>('vertical');
+    /** Whether the element is hidden under the «More» panel of a horizontal navbar. @docs-private */
+    readonly hidden = computed(() => this.hiddenState());
+
+    /** Whether the ambient navbar is horizontal. @docs-private */
+    readonly isHorizontal: Signal<boolean> = computed(() => this._orientation() === 'horizontal');
+
+    /** Whether the ambient navbar is vertical. @docs-private */
+    readonly isVertical: Signal<boolean> = computed(() => this._orientation() === 'vertical');
+
+    /** Signal mirror of `collapsed`, for `computed()` consumers. @docs-private */
+    readonly collapsedState: Signal<boolean> = computed(() => !!this._collapsed());
 
     /**
      * Orientation of the navbar this element belongs to. Written by the ambient `KbqNavbar` /
@@ -514,18 +540,22 @@ export class KbqNavbarRectangleElement implements KbqOverflowFitItem {
         this.state.next();
     }
 
-    /**
-     * Element with this attribute is never hidden under the «More» panel of a horizontal navbar, whatever the
-     * overflow. Defaults to `false`.
-     */
-    readonly alwaysVisible = input<boolean, boolean | string | null | undefined>(false, {
-        transform: booleanAttribute
-    });
+    /** Whether the element is rendered in its collapsed (icon-only) form. @docs-private */
+    get collapsed(): boolean {
+        return !!this._collapsed();
+    }
 
-    /** Whether the element is hidden under the «More» panel of a horizontal navbar. @docs-private */
-    readonly hidden = computed(() => this.hiddenState());
+    set collapsed(value: boolean) {
+        if (this._collapsed() === value) return;
 
-    private readonly hiddenState = signal(false);
+        this._collapsed.set(value);
+
+        this.state.next();
+    }
+
+    constructor() {
+        this.destroyRef.onDestroy(() => this.state.complete());
+    }
 
     /**
      * Hides the element, out of the layout flow of its container. Written by the ambient `KbqNavbar`, never by
@@ -548,40 +578,6 @@ export class KbqNavbarRectangleElement implements KbqOverflowFitItem {
         this.renderer.removeStyle(this.element, 'visibility');
         this.renderer.removeStyle(this.element, 'position');
         this.hiddenState.set(false);
-    }
-
-    /** Whether the ambient navbar is horizontal. @docs-private */
-    readonly isHorizontal: Signal<boolean> = computed(() => this._orientation() === 'horizontal');
-
-    /** Whether the ambient navbar is vertical. @docs-private */
-    readonly isVertical: Signal<boolean> = computed(() => this._orientation() === 'vertical');
-
-    // Deliberately left `undefined`: it is not equal to either boolean, so the guard below always lets the
-    // first assignment through. Initializing it to `false` would swallow the initial `collapsed = false` of a
-    // navbar that starts expanded, and with it the `updateDropdown()` that rides on that emission.
-    private readonly _collapsed = signal<boolean | undefined>(undefined);
-
-    /** Whether the element is rendered in its collapsed (icon-only) form. @docs-private */
-    get collapsed(): boolean {
-        return !!this._collapsed();
-    }
-
-    set collapsed(value: boolean) {
-        if (this._collapsed() === value) return;
-
-        this._collapsed.set(value);
-
-        this.state.next();
-    }
-
-    /** Signal mirror of `collapsed`, for `computed()` consumers. @docs-private */
-    readonly collapsedState: Signal<boolean> = computed(() => !!this._collapsed());
-
-    /** @docs-private */
-    readonly button = contentChild(KbqButtonCssStyler);
-
-    constructor() {
-        this.destroyRef.onDestroy(() => this.state.complete());
     }
 
     /** Outer width of the element: its border box plus horizontal margins. */
@@ -639,11 +635,12 @@ export class KbqNavbarRectangleElement implements KbqOverflowFitItem {
 export class KbqNavbarItem implements AfterContentInit {
     /** @docs-private */
     readonly rectangleElement = inject(KbqNavbarRectangleElement);
+
     /** @docs-private */
     readonly navbarFocusableItem = inject(KbqNavbarFocusableItem);
+
     /** @docs-private */
     readonly tooltip = inject(KbqTooltipTrigger, { self: true });
-
     private readonly nativeElement = kbqInjectNativeElement();
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly dropdownTrigger = inject(KbqDropdownTrigger, { optional: true })!;
@@ -652,20 +649,6 @@ export class KbqNavbarItem implements AfterContentInit {
     private readonly injector = inject(Injector);
     private readonly destroyRef = inject(DestroyRef);
     private readonly renderer = inject(Renderer2);
-
-    // Outer widths recorded by `measureWidths()`, 0 while unknown.
-    private expandedWidth = 0;
-    private collapsedWidth = 0;
-
-    /** @docs-private */
-    readonly title = contentChild(KbqNavbarTitle);
-
-    private readonly icons = contentChildren(KbqIcon, { descendants: true });
-
-    /** Icon shown before the title; it stays visible when the item collapses. @docs-private */
-    readonly icon: Signal<KbqIcon | undefined> = computed(() =>
-        this.icons().find((icon) => !icon.getHostElement().closest('[kbqNavbarItemSuffix]'))
-    );
 
     /**
      * Text shown in the tooltip of a collapsed item, and in the row an icon-only item renders in the «More» panel
@@ -688,7 +671,25 @@ export class KbqNavbarItem implements AfterContentInit {
         transform: (value: unknown) => (value === undefined ? undefined : booleanAttribute(value))
     });
 
+    /**
+     * Accessible name of the item. Needed for an icon-only item, which has no visible label of its own; an
+     * item that renders a title is named by it.
+     */
+    readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
+
+    /** @docs-private */
+    readonly title = contentChild(KbqNavbarTitle);
+    private readonly icons = contentChildren(KbqIcon, { descendants: true });
+
+    // Outer widths recorded by `measureWidths()`, 0 while unknown.
+    private expandedWidth = 0;
+    private collapsedWidth = 0;
     private readonly ownCollapsed = signal<boolean | undefined>(undefined);
+
+    /** Icon shown before the title; it stays visible when the item collapses. @docs-private */
+    readonly icon: Signal<KbqIcon | undefined> = computed(() =>
+        this.icons().find((icon) => !icon.getHostElement().closest('[kbqNavbarItemSuffix]'))
+    );
 
     /**
      * Whether the item is currently moved into the «More» panel of a horizontal navbar: there it renders its title,
@@ -698,6 +699,29 @@ export class KbqNavbarItem implements AfterContentInit {
      * @docs-private
      */
     readonly inMorePanel = signal(false);
+
+    /** Whether the item is rendered in its collapsed (icon-only) form. */
+    // todo in future need rename to 'collapsed'
+    readonly isCollapsed: Signal<boolean> = computed(
+        () => this.ownCollapsed() ?? this.rectangleElement.collapsedState()
+    );
+
+    /** @docs-private */
+    protected readonly showVerticalDropDownAngle: Signal<boolean> = computed(
+        () => !this.bento && this.hasDropDownTrigger && this.rectangleElement.isVertical() && !this.isCollapsed()
+    );
+
+    /** @docs-private */
+    protected readonly showHorizontalDropDownAngle: Signal<boolean> = computed(
+        () => this.hasDropDownTrigger && this.rectangleElement.isHorizontal() && !this.isCollapsed()
+    );
+
+    /**
+     * Whether the title of a vertical bento item slides in without motion.
+     *
+     * @docs-private
+     */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
 
     /**
      * Collapses the item regardless of what the ambient navbar decided. The class is written here rather than
@@ -713,12 +737,6 @@ export class KbqNavbarItem implements AfterContentInit {
             this.renderer.removeClass(this.nativeElement, COLLAPSED_ITEM_CLASS);
         }
     }
-
-    /** Whether the item is rendered in its collapsed (icon-only) form. */
-    // todo in future need rename to 'collapsed'
-    readonly isCollapsed: Signal<boolean> = computed(
-        () => this.ownCollapsed() ?? this.rectangleElement.collapsedState()
-    );
 
     /** @docs-private */
     get croppedText(): string {
@@ -749,32 +767,9 @@ export class KbqNavbarItem implements AfterContentInit {
     }
 
     /** @docs-private */
-    protected readonly showVerticalDropDownAngle: Signal<boolean> = computed(
-        () => !this.bento && this.hasDropDownTrigger && this.rectangleElement.isVertical() && !this.isCollapsed()
-    );
-
-    /** @docs-private */
-    protected readonly showHorizontalDropDownAngle: Signal<boolean> = computed(
-        () => this.hasDropDownTrigger && this.rectangleElement.isHorizontal() && !this.isCollapsed()
-    );
-
-    /**
-     * Whether the title of a vertical bento item slides in without motion.
-     *
-     * @docs-private
-     */
-    protected readonly animationsDisabled = kbqAnimationsDisabled();
-
-    /** @docs-private */
     get hasCroppedText(): boolean {
         return !!this.title()?.isOverflown;
     }
-
-    /**
-     * Accessible name of the item. Needed for an icon-only item, which has no visible label of its own; an
-     * item that renders a title is named by it.
-     */
-    readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
 
     /**
      * A collapsed item shows nothing but its icon, and a tooltip is a transient overlay — never an accessible

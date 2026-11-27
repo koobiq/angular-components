@@ -32,8 +32,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class BadgeListExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     colors = KbqBadgeColors;
-
     readonly badges = computed(() => this.t().categories.map((name) => ({ name, color: this.colors.FadeContrast })));
 }

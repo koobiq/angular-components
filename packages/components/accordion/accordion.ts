@@ -26,7 +26,7 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { KbqStateSaving } from '@koobiq/components/core';
-// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
+import { KBQ_ACCORDION } from './accordion.types';
 import { KbqAccordionItem } from './accordion-item';
 
 /** Available visual variants of the accordion. */
@@ -91,7 +91,8 @@ const normalizeAccordionState = (parsed: unknown): KbqAccordionState | null => {
     template: '<ng-content />',
     styleUrls: ['./accordion.scss', './accordion-tokens.scss'],
     providers: [
-        { provide: UniqueSelectionDispatcher, useClass: UniqueSelectionDispatcher }
+        { provide: UniqueSelectionDispatcher, useClass: UniqueSelectionDispatcher },
+        { provide: KBQ_ACCORDION, useExisting: forwardRef(() => KbqAccordion) }
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -107,49 +108,16 @@ const normalizeAccordionState = (parsed: unknown): KbqAccordionState | null => {
 export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit, AfterContentChecked {
     /** @docs-private */
     protected readonly focusMonitor = inject(FocusMonitor);
+
     /** @docs-private */
     protected readonly elementRef = inject(ElementRef);
+
     /** @docs-private */
     protected readonly selectionDispatcher = inject(UniqueSelectionDispatcher);
+
     /** @docs-private */
     protected readonly dir = inject(Directionality, { optional: true });
-
     private readonly injector = inject(Injector);
-
-    /** @docs-private */
-    protected keyManager: FocusKeyManager<KbqAccordionItem> | undefined;
-
-    /** Emits every time `openAll()` or `closeAll()` is called. @docs-private */
-    readonly openCloseAllActions = new Subject<boolean>();
-
-    /**
-     * Every item the content query matches, including those of a nested accordion.
-     * Use `items` instead — this one is the raw, unfiltered query.
-     *
-     * @docs-private
-     */
-    // The generic is explicit because `forwardRef` erases the locator type, which would leave both
-    // this query and `items` as `Signal<any[]>` in the public API report.
-    protected readonly allItems: Signal<readonly KbqAccordionItem[]> = contentChildren(
-        forwardRef(() => KbqAccordionItem),
-        { descendants: true }
-    );
-
-    /**
-     * The accordion items that belong to this accordion.
-     *
-     * A descendant content query resolves against the template the tag is authored in and does not
-     * stop at a nested component of the same type, so `allItems` of an outer accordion also matches
-     * the items of an accordion rendered inside an item's content. Each item's own `accordion` is
-     * injected and therefore always its nearest one, which makes ownership the reliable filter.
-     * Without it the key manager would move focus into the nested accordion's headers, `valueChange`
-     * would report a nested item's value and state saving would persist it under the outer key.
-     *
-     * @docs-private
-     */
-    readonly items: Signal<readonly KbqAccordionItem[]> = computed(() =>
-        this.allItems().filter((item) => item.accordion === this)
-    );
 
     /**
      * Persistence of the expanded state, applied as a host directive. `useStateSaving` and
@@ -193,6 +161,58 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit,
     // `input()` (not `model()`): a `model()` would auto-create a colliding `valueChange` output.
     readonly valueInput = input<string[] | string | undefined>(undefined, { alias: 'value' });
 
+    /** Emits the current value whenever the expanded state of the accordion changes. */
+    readonly valueChange = output<string[] | string>();
+
+    /**
+     * Every item the content query matches, including those of a nested accordion.
+     * Use `items` instead — this one is the raw, unfiltered query.
+     *
+     * @docs-private
+     */
+    // The generic is explicit because `forwardRef` erases the locator type, which would leave both
+    // this query and `items` as `Signal<any[]>` in the public API report.
+    protected readonly allItems: Signal<readonly KbqAccordionItem[]> = contentChildren(
+        forwardRef(() => KbqAccordionItem),
+        { descendants: true }
+    );
+
+    /**
+     * `value()` as an array, reshaped by mode — the shape the selection dispatcher is notified with.
+     * Falls back to `defaultValue` while `value` is unbound, so it doubles as the uncontrolled default.
+     */
+    private readonly valueArray = computed(() => {
+        const array = toValueArray(this.valueInput() ?? this.defaultValue());
+
+        return this.isMultiple ? array : array.slice(0, 1);
+    });
+    private _id = `kbq-accordion-${uniqueIdCounter++}`;
+
+    /** Whether the state saving key changed and the state under the new key is still to be restored. */
+    private keyChanged = false;
+
+    /** @docs-private */
+    protected keyManager: FocusKeyManager<KbqAccordionItem> | undefined;
+
+    /** Emits every time `openAll()` or `closeAll()` is called. @docs-private */
+    readonly openCloseAllActions = new Subject<boolean>();
+
+    /**
+     * The accordion items that belong to this accordion.
+     *
+     * A descendant content query resolves against the template the tag is authored in and does not
+     * stop at a nested component of the same type, so `allItems` of an outer accordion also matches
+     * the items of an accordion rendered inside an item's content. Each item's own `accordion` is
+     * injected and therefore always its nearest one, which makes ownership the reliable filter.
+     * Without it the key manager would move focus into the nested accordion's headers, `valueChange`
+     * would report a nested item's value and state saving would persist it under the outer key.
+     *
+     * @docs-private
+     */
+    readonly items: Signal<readonly KbqAccordionItem[]> = computed(() =>
+        this.allItems().filter((item) => item.accordion === this)
+    );
+
     /**
      * The controlled value of the item(s) to expand, reshaped by mode. Supports `[(value)]`.
      * Falls back to `defaultValue` while `value` is unbound.
@@ -205,9 +225,6 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit,
 
         return this.isMultiple ? array : (array[0] ?? '');
     });
-
-    /** Emits the current value whenever the expanded state of the accordion changes. */
-    readonly valueChange = output<string[] | string>();
 
     /** The unique id of this accordion. */
     get id(): string {
@@ -226,21 +243,6 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit,
     get hasSavedState(): boolean {
         return this.stateSaving.state != null;
     }
-
-    /**
-     * `value()` as an array, reshaped by mode — the shape the selection dispatcher is notified with.
-     * Falls back to `defaultValue` while `value` is unbound, so it doubles as the uncontrolled default.
-     */
-    private readonly valueArray = computed(() => {
-        const array = toValueArray(this.valueInput() ?? this.defaultValue());
-
-        return this.isMultiple ? array : array.slice(0, 1);
-    });
-
-    private _id = `kbq-accordion-${uniqueIdCounter++}`;
-
-    /** Whether the state saving key changed and the state under the new key is still to be restored. */
-    private keyChanged = false;
 
     constructor() {
         // The state lives under the new key now, so restore from it — in `ngAfterContentChecked`: the change is

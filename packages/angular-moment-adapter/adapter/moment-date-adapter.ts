@@ -46,9 +46,17 @@ export function KBQ_MOMENT_DATE_ADAPTER_OPTIONS_FACTORY(): IKbqMomentDateAdapter
 
 @Injectable()
 export class MomentDateAdapter extends BaseMomentDateAdapter {
-    protected override readonly options?: IKbqMomentDateAdapterOptions;
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     private readonly timezoneService = inject(KbqDateTimezoneService);
+
+    private _localeChanges = new Subject<void>();
+
+    protected override readonly options?: IKbqMomentDateAdapterOptions;
+
+    /** A stream that emits when the locale changes. */
+    get localeChanges(): Observable<any> {
+        return this._localeChanges;
+    }
 
     constructor() {
         const dateLocale = inject(KBQ_DATE_LOCALE, { optional: true })!;
@@ -62,13 +70,6 @@ export class MomentDateAdapter extends BaseMomentDateAdapter {
 
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.setLocale);
     }
-
-    /** A stream that emits when the locale changes. */
-    get localeChanges(): Observable<any> {
-        return this._localeChanges;
-    }
-
-    private _localeChanges = new Subject<void>();
 
     /**
      * Sets the locale used for all dates.

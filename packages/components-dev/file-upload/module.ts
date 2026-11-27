@@ -212,21 +212,19 @@ export class DevMultipleFileUploadCompact {
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
+    private readonly cdr = inject(ChangeDetectorRef);
+
     disabled = false;
     validation: FileValidatorFn[] = [maxFileExceededFiveMbs];
     hintMessage = hintMessage;
-
     file: KbqFileItem | null = null;
     files: KbqFileItem[] = [];
     filesForDefaultValidation: KbqFileItem[] = [];
-
     errorMessagesForSingle: string[] = [];
     errorMessages: string[] = [];
     accept = ['.pdf', '.png'];
-
     control = new FormControl<KbqFileItem | null>(null, FileValidators.maxFileSize(MAX_FILE_SIZE));
     singleFileControl = new FormControl<KbqFileItem | null>(null, FileValidators.maxFileSize(MAX_FILE_SIZE));
-
     form = new FormGroup(
         {
             'file-upload': new FormControl<KbqFileItem | null>(null, [
@@ -236,7 +234,6 @@ export class DevApp {
         },
         { updateOn: 'submit' }
     );
-
     formMultiple = new FormGroup(
         {
             'file-upload': new FormControl<FileList | KbqFileItem[]>([]),
@@ -246,15 +243,13 @@ export class DevApp {
     );
     fileList = new FormArray<FormControl<KbqFileItem | null>>([]);
     fileListOnAddLoad = new FormArray<FormControl<KbqFileItem | null>>([]);
-
     secondControl = new FormControl<File | KbqFileItem | null>(null);
     multipleFileUploadControl = new FormControl<FileList | KbqFileItem[]>([], maxFileSize);
+    protected readonly showOnFormSubmitErrorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
 
     get fileListValidationOnSubmit(): FormArray {
         return this.formMultiple.get('file-list') as FormArray;
     }
-
-    private readonly cdr = inject(ChangeDetectorRef);
 
     constructor() {
         this.control.valueChanges.pipe(takeUntilDestroyed()).subscribe((value: KbqFileItem | null) => {
@@ -411,6 +406,4 @@ export class DevApp {
             }
         }
     }
-
-    protected readonly showOnFormSubmitErrorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
 }

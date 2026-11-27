@@ -1,4 +1,5 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
+import { DOWN_ARROW, ENTER, SPACE } from '@angular/cdk/keycodes';
 import { Component, ElementRef, type Provider, type Type, viewChild, viewChildren } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -6,13 +7,10 @@ import { provideRouter, RouterLink } from '@angular/router';
 import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
-    DOWN_ARROW,
-    ENTER,
     KbqComponentColors,
     type KbqOrientation,
     leftIconClassName,
-    rightIconClassName,
-    SPACE
+    rightIconClassName
 } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -1781,6 +1779,7 @@ class KbqButtonWrappedIconAndTextTestApp {}
 })
 class ButtonDropdownTrigger {
     readonly trigger = viewChild.required('triggerEl', { read: ElementRef });
+
     backdropClass: string;
 }
 
@@ -1846,7 +1845,6 @@ class DynamicChildrenTestComponent {
 })
 class UnboundColorGroupTestComponent {
     readonly transparent = KbqButtonStyles.Transparent;
-
     color: KbqButtonColor | null = null;
 }
 
@@ -1948,10 +1946,8 @@ class OverriddenChildTestComponent {
     groupStyle: KbqButtonStyleInput = KbqButtonStyles.Filled;
     groupColor: KbqButtonColor = KbqComponentColors.ContrastFade;
     groupDisabled = false;
-
     ownStyle: KbqButtonStyleInput | undefined = KbqButtonStyles.Transparent;
     readonly ownColor = KbqComponentColors.Theme;
-
     showExtra = false;
 }
 

@@ -140,34 +140,35 @@ class ExampleRolesError extends Error {
     }
 })
 export class InlineEditSaveInvalidItemsExample {
+    private readonly toastService = inject(KbqToastService);
+
+    private readonly title = viewChild.required<TemplateRef<unknown>>('title');
+    private readonly actions = viewChild.required<TemplateRef<unknown>>('actions');
+    private readonly closeButton = viewChild.required<TemplateRef<unknown>>('closeButton');
+
+    private failedSave: KbqInlineEditSaveErrorContext<ExampleRolesError> | null = null;
+    private toastId: number | null = null;
+
     protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly roles = ROLES;
+    protected readonly badgeColors = KbqBadgeColors;
+    protected readonly tagColors = KbqComponentColors;
+    protected readonly forbiddenRoles = FORBIDDEN_ROLES.join(', ');
+    protected readonly control = new FormControl<string[]>(['user:read', 'user:create'], { nonNullable: true });
+
+    /** Values of the last failed save the server refused, matched against the badges in view mode. */
+    protected readonly rejectedRoles = signal<string[]>([]);
 
     protected get placeholder(): string {
         return this.t().placeholder;
     }
-    protected readonly roles = ROLES;
-    protected readonly badgeColors = KbqBadgeColors;
-    protected readonly tagColors = KbqComponentColors;
-
-    protected readonly forbiddenRoles = FORBIDDEN_ROLES.join(', ');
-
-    protected readonly control = new FormControl<string[]>(['user:read', 'user:create'], { nonNullable: true });
-    /** Values of the last failed save the server refused, matched against the badges in view mode. */
-    protected readonly rejectedRoles = signal<string[]>([]);
-
-    protected readonly save: KbqInlineEditSaveHandler = () => this.saveOnServer(this.control.value);
-
-    private readonly toastService = inject(KbqToastService);
-    private readonly title = viewChild.required<TemplateRef<unknown>>('title');
-    private readonly actions = viewChild.required<TemplateRef<unknown>>('actions');
-    private readonly closeButton = viewChild.required<TemplateRef<unknown>>('closeButton');
-    private failedSave: KbqInlineEditSaveErrorContext<ExampleRolesError> | null = null;
-    private toastId: number | null = null;
 
     constructor() {
         // Editing the value drops the marks: they belong to the values that were sent.
         this.control.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => this.rejectedRoles.set([]));
     }
+
+    protected readonly save: KbqInlineEditSaveHandler = () => this.saveOnServer(this.control.value);
 
     protected showToast(context: KbqInlineEditSaveErrorContext<ExampleRolesError>): void {
         const { error } = context;

@@ -27,12 +27,11 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class FlagCircleExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly sanitizer = inject(DomSanitizer);
 
     private readonly countryCodes = ['AO', 'MY', 'UY'] as const;
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly countries = computed(() =>
         this.countryCodes.map((code, index) => ({
             code,

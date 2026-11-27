@@ -42,7 +42,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class SelectWithMultilineMatcherExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly options = Array.from({ length: 10 }, (_, i) => 'Option #' + i);
     selected: string[] = this.options.slice(0, 4);
 }

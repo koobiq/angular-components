@@ -1,7 +1,17 @@
 import { type FocusableOption, FocusKeyManager } from '@angular/cdk/a11y';
 import { type Direction, Directionality } from '@angular/cdk/bidi';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
-import { ENTER, hasModifierKey, SPACE } from '@angular/cdk/keycodes';
+import {
+    DOWN_ARROW,
+    END,
+    ENTER,
+    hasModifierKey,
+    HOME,
+    LEFT_ARROW,
+    RIGHT_ARROW,
+    SPACE,
+    UP_ARROW
+} from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { normalizePassiveListenerOptions, Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
@@ -40,17 +50,11 @@ import {
     timer
 } from 'rxjs';
 import {
-    DOWN_ARROW,
-    END,
-    HOME,
     KBQ_WINDOW,
     kbqAnimationsDisabled,
     kbqGetScrollOverflowTolerance,
     kbqHasScrollOverflow,
-    kbqOptionalNumberAttribute,
-    LEFT_ARROW,
-    RIGHT_ARROW,
-    UP_ARROW
+    kbqOptionalNumberAttribute
 } from '@koobiq/components/core';
 import { KBQ_SCROLLBAR_OPTIONS, type KbqScrollbarMode, type KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 
@@ -136,6 +140,18 @@ export type KbqPaginatedTabHeaderItem = FocusableOption & { elementRef: ElementR
 export abstract class KbqPaginatedTabHeader
     implements OnChanges, AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy
 {
+    protected readonly destroyRef = inject(DestroyRef);
+    public readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly ngZone = inject(NgZone);
+    private readonly platform = inject(Platform);
+    private readonly dir = inject(Directionality, { optional: true });
+    private readonly window = inject(KBQ_WINDOW);
+    private readonly sharedResizeObserver = inject(SharedResizeObserver);
+    private readonly document = inject(DOCUMENT);
+    private readonly scrollbarOptions = inject(KBQ_SCROLLBAR_OPTIONS);
+    private readonly injector = inject(Injector);
+
     /** @docs-private */
     readonly selectedIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
         alias: 'selectedIndex',
@@ -154,95 +170,8 @@ export abstract class KbqPaginatedTabHeader
         transform: booleanAttribute
     });
 
-    /** The index of the active tab. */
-    get selectedIndex(): number {
-        return this.selectedIndexState();
-    }
-
-    set selectedIndex(value: number) {
-        const coercedValue = coerceNumberProperty(value);
-
-        this.selectedIndexChanged = untracked(this.selectedIndexState) !== coercedValue;
-        this.selectedIndexState.set(coercedValue);
-
-        this.keyManager?.updateActiveItem(coercedValue);
-    }
-
     private readonly selectedIndexState = signal(0);
-
-    /** Tracks which element has focus; used for keyboard navigation */
-    get focusIndex(): number {
-        // Before `ngAfterContentInit` builds the key manager the selection is where focus would land —
-        // `updateActiveItem(this.selectedIndex)` is the first thing that runs once it exists. Falling
-        // back to `0` instead would hand the roving `tabindex="0"` to the first tab on the very first
-        // render of any group that does not open on it.
-        return this.keyManager ? this.keyManager.activeItemIndex! : this.selectedIndex;
-    }
-
-    /** When the focus index is set, we must manually send focus to the correct label */
-    set focusIndex(value: number) {
-        if (!this.isValidIndex(value) || this.focusIndex === value || !this.keyManager) {
-            return;
-        }
-
-        this.keyManager.setActiveItem(value);
-    }
-
-    abstract get items(): QueryList<KbqPaginatedTabHeaderItem>;
-    abstract get tabListContainer(): ElementRef<HTMLElement>;
-    /** The strip's scroll viewport — the same element as {@link tabListContainer}. */
-    protected abstract get scrollbarViewport(): KbqScrollbarViewport;
-    abstract get tabList(): ElementRef<HTMLElement>;
-    abstract get nextPaginator(): ElementRef<HTMLElement>;
-    abstract get previousPaginator(): ElementRef<HTMLElement>;
-
-    /** Event emitted when the option is selected. */
-    readonly selectFocusedIndex: EventEmitter<number> = new EventEmitter<number>();
-
-    /** Event emitted when a label is focused. */
-    readonly indexFocused: EventEmitter<number> = new EventEmitter<number>();
-
-    /** Whether the controls for pagination should be displayed */
-    showPaginationControls = false;
-
-    /** Whether the tab list can be scrolled more towards the end of the tab label list. */
-    disableScrollAfter = true;
-
-    /** Whether the tab list can be scrolled more towards the beginning of the tab label list. */
-    disableScrollBefore = true;
-
-    /** @docs-private */
-    protected overflowBefore = false;
-
-    /** @docs-private */
-    protected overflowAfter = false;
-
-    /**
-     * Whether pagination should be disabled. This can be used to avoid unnecessary
-     * layout recalculations if it's known that pagination won't be required.
-     *
-     * A vertical header never paginates, so `vertical` forces this on without overwriting the value
-     * the consumer set — turning `vertical` back off restores it.
-     */
-    get disablePagination(): boolean {
-        return this._disablePagination || this._vertical;
-    }
-
-    set disablePagination(value: boolean) {
-        this._disablePagination = value;
-    }
-
     private _disablePagination = false;
-
-    /** Whether the tabs should be displayed vertically. */
-    set vertical(value: boolean) {
-        this._vertical = value;
-    }
-
-    get vertical(): boolean {
-        return this._vertical;
-    }
-
     private _vertical = false;
 
     /** `disablePagination` as of the last content check — see `ngAfterContentChecked`. */
@@ -289,14 +218,6 @@ export abstract class KbqPaginatedTabHeader
     /** Handle of the timer that clears {@link suppressNextClick}, so it can be cancelled on destroy. */
     private suppressClickTimeoutId: ReturnType<Window['setTimeout']> | null = null;
 
-    // Attached only while a drag is possibly in progress (from `pointerdown` to `pointerup`/
-    // `pointercancel`) rather than for the component's whole lifetime: bound to `ownerDocument`,
-    // so every pointer move anywhere on the page would otherwise run this handler for every
-    // paginated tab header on the page, whether or not any of them is actually being dragged.
-    private readonly documentPointerMoveListener = (event: PointerEvent) => this.handlePointerMove(event);
-    private readonly documentPointerUpListener = (event: PointerEvent) => this.endDrag(event, true);
-    private readonly documentPointerCancelListener = (event: PointerEvent) => this.endDrag(event, false);
-
     /** Emits on every native `scroll` event and drag/inertia frame; throttled to limit change detection. */
     private readonly scrollProgress = new Subject<void>();
 
@@ -316,20 +237,98 @@ export abstract class KbqPaginatedTabHeader
      */
     private lastScrollCorrection: { index: number; behavior: ScrollBehavior } | null = null;
 
-    protected readonly destroyRef = inject(DestroyRef);
-    public readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
-    private readonly ngZone = inject(NgZone);
-    private readonly platform = inject(Platform);
-    private readonly dir = inject(Directionality, { optional: true });
-    private readonly window = inject(KBQ_WINDOW);
-    private readonly sharedResizeObserver = inject(SharedResizeObserver);
-    private readonly document = inject(DOCUMENT);
-    private readonly scrollbarOptions = inject(KBQ_SCROLLBAR_OPTIONS);
-    private readonly injector = inject(Injector);
+    /** Event emitted when the option is selected. */
+    readonly selectFocusedIndex: EventEmitter<number> = new EventEmitter<number>();
+
+    /** Event emitted when a label is focused. */
+    readonly indexFocused: EventEmitter<number> = new EventEmitter<number>();
+
+    /** Whether the controls for pagination should be displayed */
+    showPaginationControls = false;
+
+    /** Whether the tab list can be scrolled more towards the end of the tab label list. */
+    disableScrollAfter = true;
+
+    /** Whether the tab list can be scrolled more towards the beginning of the tab label list. */
+    disableScrollBefore = true;
+
+    /** @docs-private */
+    protected overflowBefore = false;
+
+    /** @docs-private */
+    protected overflowAfter = false;
 
     /** Whether the underline of the active tab moves without motion. */
     protected readonly animationsDisabled = kbqAnimationsDisabled();
+
+    /** The index of the active tab. */
+    get selectedIndex(): number {
+        return this.selectedIndexState();
+    }
+
+    set selectedIndex(value: number) {
+        const coercedValue = coerceNumberProperty(value);
+
+        this.selectedIndexChanged = untracked(this.selectedIndexState) !== coercedValue;
+        this.selectedIndexState.set(coercedValue);
+
+        this.keyManager?.updateActiveItem(coercedValue);
+    }
+
+    /** Tracks which element has focus; used for keyboard navigation */
+    get focusIndex(): number {
+        // Before `ngAfterContentInit` builds the key manager the selection is where focus would land —
+        // `updateActiveItem(this.selectedIndex)` is the first thing that runs once it exists. Falling
+        // back to `0` instead would hand the roving `tabindex="0"` to the first tab on the very first
+        // render of any group that does not open on it.
+        return this.keyManager ? this.keyManager.activeItemIndex! : this.selectedIndex;
+    }
+
+    /** When the focus index is set, we must manually send focus to the correct label */
+    set focusIndex(value: number) {
+        if (!this.isValidIndex(value) || this.focusIndex === value || !this.keyManager) {
+            return;
+        }
+
+        this.keyManager.setActiveItem(value);
+    }
+
+    abstract get items(): QueryList<KbqPaginatedTabHeaderItem>;
+
+    abstract get tabListContainer(): ElementRef<HTMLElement>;
+
+    /** The strip's scroll viewport — the same element as {@link tabListContainer}. */
+    protected abstract get scrollbarViewport(): KbqScrollbarViewport;
+
+    abstract get tabList(): ElementRef<HTMLElement>;
+
+    abstract get nextPaginator(): ElementRef<HTMLElement>;
+
+    abstract get previousPaginator(): ElementRef<HTMLElement>;
+
+    /**
+     * Whether pagination should be disabled. This can be used to avoid unnecessary
+     * layout recalculations if it's known that pagination won't be required.
+     *
+     * A vertical header never paginates, so `vertical` forces this on without overwriting the value
+     * the consumer set — turning `vertical` back off restores it.
+     */
+    get disablePagination(): boolean {
+        return this._disablePagination || this._vertical;
+    }
+
+    set disablePagination(value: boolean) {
+        this._disablePagination = value;
+    }
+
+    /** Whether the tabs should be displayed vertically. */
+    set vertical(value: boolean) {
+        this._vertical = value;
+    }
+
+    get vertical(): boolean {
+        return this._vertical;
+    }
 
     /**
      * Scrollbar mode for the tab strip. Only a vertical header scrolls in a direction the user is meant
@@ -342,6 +341,17 @@ export abstract class KbqPaginatedTabHeader
      */
     protected get scrollbarMode(): KbqScrollbarMode {
         return this.vertical ? this.scrollbarOptions.mode : 'hidden';
+    }
+
+    /**
+     * The tab list's scroll position expressed independently of reading direction: `0` at the
+     * start of the tab list, growing towards the end — mirrors native `scrollLeft`'s RTL-dependent
+     * sign so callers can reason about "before"/"after" without checking direction themselves.
+     */
+    private get logicalScrollPosition(): number {
+        const scrollLeft = this.tabListContainer.nativeElement.scrollLeft;
+
+        return this.getLayoutDirection() === 'rtl' ? -scrollLeft : scrollLeft;
     }
 
     constructor() {
@@ -615,6 +625,16 @@ export abstract class KbqPaginatedTabHeader
         this.stopScrolling.complete();
     }
 
+    // Attached only while a drag is possibly in progress (from `pointerdown` to `pointerup`/
+    // `pointercancel`) rather than for the component's whole lifetime: bound to `ownerDocument`,
+    // so every pointer move anywhere on the page would otherwise run this handler for every
+    // paginated tab header on the page, whether or not any of them is actually being dragged.
+    private readonly documentPointerMoveListener = (event: PointerEvent) => this.handlePointerMove(event);
+
+    private readonly documentPointerUpListener = (event: PointerEvent) => this.endDrag(event, true);
+
+    private readonly documentPointerCancelListener = (event: PointerEvent) => this.endDrag(event, false);
+
     handleKeydown(event: KeyboardEvent) {
         // We don't handle any key bindings with a modifier key.
         if (hasModifierKey(event)) {
@@ -860,17 +880,6 @@ export abstract class KbqPaginatedTabHeader
         }
 
         this.keyManager.setActiveItem(index);
-    }
-
-    /**
-     * The tab list's scroll position expressed independently of reading direction: `0` at the
-     * start of the tab list, growing towards the end — mirrors native `scrollLeft`'s RTL-dependent
-     * sign so callers can reason about "before"/"after" without checking direction themselves.
-     */
-    private get logicalScrollPosition(): number {
-        const scrollLeft = this.tabListContainer.nativeElement.scrollLeft;
-
-        return this.getLayoutDirection() === 'rtl' ? -scrollLeft : scrollLeft;
     }
 
     /**

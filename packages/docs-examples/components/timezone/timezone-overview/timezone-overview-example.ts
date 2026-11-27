@@ -32,7 +32,6 @@ import { timezones } from '../timezone-data';
 })
 export class TimezoneOverviewExample {
     selected = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
     data: KbqTimezoneGroup[];
 
     constructor() {

@@ -1,8 +1,8 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { ENTER, ESCAPE } from '@angular/cdk/keycodes';
 import { ChangeDetectorRef, Component, type DebugElement, inject } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ENTER, ESCAPE } from '@koobiq/components/core';
 import {
     type KbqFilter,
     KbqFilterBar,
@@ -54,7 +54,6 @@ class TestComponent {
     readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     activeFilter: KbqFilter | null = null;
-
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Text',

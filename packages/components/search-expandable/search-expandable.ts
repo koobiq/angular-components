@@ -118,10 +118,13 @@ export class KbqSearchExpandable
 {
     /** @docs-private */
     protected readonly ngControl = inject(NgControl, { optional: true, self: true });
+
     /** @docs-private */
     protected readonly focusMonitor = inject(FocusMonitor);
+
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
+
     /** @docs-private */
     protected readonly nativeElement: HTMLElement = inject(ElementRef).nativeElement;
     private readonly carrier = inject(KbqLocaleOverridesDirective, { self: true });
@@ -136,11 +139,63 @@ export class KbqSearchExpandable
     /** Strings currently rendered by the component. */
     readonly localeConfiguration = this.carrier.read('searchExpandable', KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION);
 
+    /** Emit event by enter or not. Default is false */
+    readonly isEmitValueByEnterEnabled = input(false, { transform: booleanAttribute });
+
+    /** Timeout in milliseconds for emit event. The default value is taken from defaultEmitValueTimeout */
+    readonly emitValueTimeout = input(defaultEmitValueTimeout, { transform: numberAttribute });
+
+    /** @docs-private */
+    readonly isOpenedInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'isOpened',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly tooltipTextInput = input<string | null | undefined>(undefined, { alias: 'tooltipText' });
+
+    /** @docs-private */
+    readonly placeholderInput = input<string | null | undefined>(undefined, { alias: 'placeholder' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'tabIndex',
+        transform: kbqOptionalNumberAttribute
+    });
+
+    /** Event emitted when the search has been toggled. */
+    readonly isOpenedChange = output<boolean>();
+
     private readonly input = viewChild(KbqInput);
     private readonly button = viewChild(KbqButton);
     private readonly tooltip = viewChild(KbqTooltipTrigger);
 
-    /** @docs-private */
+    /** Suppress the automatic input focus once — set when the component auto-opens from a model value. */
+    private suppressInputFocus = false;
+
+    /** Whether the expanded input was rendered on the previous change detection pass. */
+    private inputRendered = false;
+
+    /** Whether the collapsed button was rendered on the previous change detection pass. */
+    private buttonRendered = false;
+
+    /** Cancels a pending debounced emission once the value has been emitted (or reset) through another path. */
+    private readonly cancelPendingEmit = new Subject<void>();
+    private focusMonitorSubscription: Subscription | null = null;
+    private readonly openedState = signal(false);
+    private _tooltipText?: string | null;
+    private _placeholder: string | null = null;
+
+    // A signal: `setDisabledState` reaches the setter from the forms API, outside any binding of this view.
+    private readonly disabledState = signal(false);
+    private _tabIndex = 0;
+    private lastEmittedValue = defaultValue;
 
     /**
      * Control backing the expanded input. Owning it — rather than binding the consumer's own control to
@@ -167,21 +222,7 @@ export class KbqSearchExpandable
 
     /** Current value in input. A write reaches the field, and the bound control once `emitValueTimeout` passes. */
     readonly value = signal(defaultValue);
-
     protected lastFocusOrigin: 'touch' | 'mouse' | 'keyboard' | 'program' | null = null;
-
-    /** Suppress the automatic input focus once — set when the component auto-opens from a model value. */
-    private suppressInputFocus = false;
-
-    /** Whether the expanded input was rendered on the previous change detection pass. */
-    private inputRendered = false;
-    /** Whether the collapsed button was rendered on the previous change detection pass. */
-    private buttonRendered = false;
-
-    /** Cancels a pending debounced emission once the value has been emitted (or reset) through another path. */
-    private readonly cancelPendingEmit = new Subject<void>();
-
-    private focusMonitorSubscription: Subscription | null = null;
 
     /** state of component. */
     get isOpened(): boolean {
@@ -192,13 +233,6 @@ export class KbqSearchExpandable
         this.openedState.set(value);
     }
 
-    private readonly openedState = signal(false);
-
-    /** Emit event by enter or not. Default is false */
-    readonly isEmitValueByEnterEnabled = input(false, { transform: booleanAttribute });
-    /** Timeout in milliseconds for emit event. The default value is taken from defaultEmitValueTimeout */
-    readonly emitValueTimeout = input(defaultEmitValueTimeout, { transform: numberAttribute });
-
     /** Tooltip text for the search button. When set, overrides the locale tooltip */
     get tooltipText(): string {
         return this._tooltipText ?? this.localeConfiguration().tooltip;
@@ -208,8 +242,6 @@ export class KbqSearchExpandable
         this._tooltipText = value;
     }
 
-    private _tooltipText?: string | null;
-
     /** Placeholder for input when expanded */
     get placeholder(): string {
         return this._placeholder ?? this.localeConfiguration().placeholder;
@@ -218,8 +250,6 @@ export class KbqSearchExpandable
     set placeholder(value: string | null) {
         this._placeholder = value;
     }
-
-    private _placeholder: string | null = null;
 
     /** Whether the component is disabled. Also set by the bound control through `setDisabledState`. */
     get disabled(): boolean {
@@ -240,9 +270,6 @@ export class KbqSearchExpandable
         }
     }
 
-    // A signal: `setDisabledState` reaches the setter from the forms API, outside any binding of this view.
-    private readonly disabledState = signal(false);
-
     /** Tab index of the collapsed button and of the expanded input. Always `-1` while disabled. */
     get tabIndex(): number {
         return this.disabled ? -1 : this._tabIndex;
@@ -250,67 +277,6 @@ export class KbqSearchExpandable
 
     set tabIndex(value: number) {
         this._tabIndex = value;
-    }
-
-    private _tabIndex = 0;
-
-    /** Event emitted when the search has been toggled. */
-    readonly isOpenedChange = output<boolean>();
-
-    private lastEmittedValue = defaultValue;
-
-    /** @docs-private */
-    readonly isOpenedInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'isOpened',
-        transform: booleanAttribute
-    });
-
-    /** @docs-private */
-    readonly tooltipTextInput = input<string | null | undefined>(undefined, { alias: 'tooltipText' });
-
-    /** @docs-private */
-    readonly placeholderInput = input<string | null | undefined>(undefined, { alias: 'placeholder' });
-
-    /** @docs-private */
-    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'disabled',
-        transform: booleanAttribute
-    });
-
-    /** @docs-private */
-    readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
-        alias: 'tabIndex',
-        transform: kbqOptionalNumberAttribute
-    });
-
-    ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member, a bound `undefined` as the member's default; unbound, it leaves
-        // what code wrote.
-        if (changes['isOpenedInput']) {
-            const isOpened = this.isOpenedInput();
-
-            // A form directive on the element writes its value before this hook runs, and expands the field when the
-            // value is not empty: a first binding of `false` must not collapse it again.
-            if (isOpened !== undefined && (isOpened || !changes['isOpenedInput'].firstChange)) {
-                this.isOpened = isOpened;
-            }
-        }
-
-        if (changes['tooltipTextInput']) {
-            this.tooltipText = this.tooltipTextInput() ?? null;
-        }
-
-        if (changes['placeholderInput']) {
-            this.placeholder = this.placeholderInput() ?? null;
-        }
-
-        if (changes['disabledInput']) {
-            const disabled = this.disabledInput();
-
-            if (disabled !== undefined) this.disabled = disabled;
-        }
-
-        if (changes['tabIndexInput']) this.tabIndex = this.tabIndexInput() ?? 0;
     }
 
     constructor() {
@@ -356,6 +322,36 @@ export class KbqSearchExpandable
                 takeUntilDestroyed(this.destroyRef)
             )
             .subscribe((value) => this.emitValue(value));
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member, a bound `undefined` as the member's default; unbound, it leaves
+        // what code wrote.
+        if (changes['isOpenedInput']) {
+            const isOpened = this.isOpenedInput();
+
+            // A form directive on the element writes its value before this hook runs, and expands the field when the
+            // value is not empty: a first binding of `false` must not collapse it again.
+            if (isOpened !== undefined && (isOpened || !changes['isOpenedInput'].firstChange)) {
+                this.isOpened = isOpened;
+            }
+        }
+
+        if (changes['tooltipTextInput']) {
+            this.tooltipText = this.tooltipTextInput() ?? null;
+        }
+
+        if (changes['placeholderInput']) {
+            this.placeholder = this.placeholderInput() ?? null;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+
+        if (changes['tabIndexInput']) this.tabIndex = this.tabIndexInput() ?? 0;
     }
 
     ngAfterViewInit(): void {

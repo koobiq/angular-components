@@ -55,13 +55,12 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class ValidationBasicMultipleValidatorsExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    private readonly formFieldList = viewChildren(KbqFormField);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly form = new FormGroup({
         username: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(20)])
     });
-
-    private readonly formFieldList = viewChildren(KbqFormField);
 
     onSubmit(): void {
         setTimeout(() => {

@@ -42,6 +42,7 @@ import { e2eRoutes } from './routes';
 })
 class ScenarioSelect {
     private readonly router = inject(Router);
+
     protected readonly options = e2eRoutes.flatMap(({ path }) => (path ? [path] : []));
     protected readonly searchQuery = signal<string | null>('');
     protected readonly filteredOptions = computed(() => {
@@ -49,6 +50,7 @@ class ScenarioSelect {
 
         return query ? this.options.filter((option) => option.toLowerCase().includes(query)) : this.options;
     });
+
     // Follows the URL rather than the last pick, so browser navigation keeps it on the rendered scenario.
     protected readonly selected = toSignal(
         this.router.events.pipe(

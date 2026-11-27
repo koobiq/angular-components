@@ -46,7 +46,7 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DlWidthSyncExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly dtWidth = model(160);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

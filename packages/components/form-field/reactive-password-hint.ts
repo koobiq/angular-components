@@ -16,8 +16,7 @@ import { PristineChangeEvent, TouchedChangeEvent } from '@angular/forms';
 import { filter } from 'rxjs';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
-import { KBQ_FORM_FIELD } from './form-field';
+import { KBQ_FORM_FIELD } from './form-field.types';
 import { KbqHint } from './hint';
 
 /** Password hint to be shown below the password form field control. */

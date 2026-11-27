@@ -20,14 +20,13 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionInPanelExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private sidepanelService = inject(KbqSidepanelService);
 
+    readonly template = viewChild.required<TemplateRef<any>>('template');
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     position: KbqSidepanelPosition = KbqSidepanelPosition.Right;
     size: KbqSidepanelSize = KbqSidepanelSize.Medium;
-
-    readonly template = viewChild.required<TemplateRef<any>>('template');
 
     openPanel() {
         this.sidepanelService.open(this.template(), {

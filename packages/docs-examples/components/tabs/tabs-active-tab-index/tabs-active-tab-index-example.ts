@@ -30,12 +30,10 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TabsActiveTabIndexExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly tabs = computed(() => [
         { tabId: 'files', icon: 'kbq-folder-open_16', label: this.t().files },
         { tabId: 'settings', icon: 'kbq-gear_16', label: this.t().settings },
         { tabId: 'tasks', icon: 'kbq-bars-horizontal_16', label: this.t().tasks }
     ]);
-
     selectedTabIndex: number = 1;
 }

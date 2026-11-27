@@ -59,7 +59,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class ListActionButtonExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     selected = [];
     protected readonly PopUpPlacements = PopUpPlacements;
 

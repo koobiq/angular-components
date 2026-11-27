@@ -87,19 +87,6 @@ export class KbqResizer {
     private readonly renderer = inject(Renderer2);
     private readonly window = inject(KBQ_WINDOW);
 
-    private x = NaN;
-    private y = NaN;
-
-    private width = 0;
-    private height = 0;
-    private readonly dragging = signal(false);
-    private activePointerId: number | null = null;
-
-    /** Body cursor captured on pointer-down and restored when the drag finishes. `null` while not dragging. */
-    private previousBodyCursor: string | null = null;
-    // CSS priority is only ever `'important'` or `''`, so a boolean is enough to restore it faithfully.
-    private previousBodyCursorImportant = false;
-
     /**
      * Direction of element resizing.
      */
@@ -130,6 +117,19 @@ export class KbqResizer {
      * Emits the new size of the element after resizing.
      */
     readonly sizeChange = output<KbqResizerSizeChangeEvent>();
+
+    private x = NaN;
+    private y = NaN;
+    private width = 0;
+    private height = 0;
+    private readonly dragging = signal(false);
+    private activePointerId: number | null = null;
+
+    /** Body cursor captured on pointer-down and restored when the drag finishes. `null` while not dragging. */
+    private previousBodyCursor: string | null = null;
+
+    // CSS priority is only ever `'important'` or `''`, so a boolean is enough to restore it faithfully.
+    private previousBodyCursorImportant = false;
 
     /**
      * @docs-private

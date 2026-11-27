@@ -143,10 +143,8 @@ export const DATA_OBJECT = {
 })
 export class TreeSelectCustomMatcherExample {
     selected = 'docs';
-
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {

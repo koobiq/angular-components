@@ -1,20 +1,13 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
+import { DOWN_ARROW, END, HOME, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@angular/cdk/keycodes';
 import { Component, type DebugElement, effect, signal, viewChild, viewChildren } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { EMPTY } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
-import {
-    dispatchKeyboardEvent,
-    DOWN_ARROW,
-    END,
-    HOME,
-    LEFT_ARROW,
-    RIGHT_ARROW,
-    UP_ARROW
-} from '@koobiq/components/core';
+import { dispatchKeyboardEvent } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleDirective } from '@koobiq/components/title';
 import { KbqButtonToggle, type KbqButtonToggleChange, KbqButtonToggleGroup, KbqButtonToggleModule } from './index';
@@ -1628,8 +1621,9 @@ class ButtonTogglesInsideButtonToggleGroupMultiple {
     `
 })
 class FalsyButtonTogglesInsideButtonToggleGroupMultiple {
-    value: ('' | number | null | undefined | boolean)[] = [0];
     readonly toggles = viewChildren(KbqButtonToggle);
+
+    value: ('' | number | null | undefined | boolean)[] = [0];
 }
 
 @Component({
@@ -1669,6 +1663,7 @@ class ButtonToggleGroupWithInitialValue {
 })
 class ButtonToggleGroupWithValueReadBeforeIt {
     readonly group = viewChild.required(KbqButtonToggleGroup);
+
     value = 'green';
 }
 
@@ -1685,6 +1680,7 @@ class ButtonToggleGroupWithValueReadBeforeIt {
 })
 class MultipleButtonToggleGroupWithValueReadBeforeIt {
     readonly group = viewChild.required(KbqButtonToggleGroup);
+
     values: string[] | undefined = ['one', 'two'];
 }
 
@@ -1702,6 +1698,7 @@ class MultipleButtonToggleGroupWithValueReadBeforeIt {
 })
 class UnmatchedButtonToggleGroupWithValueReadBeforeIt {
     readonly group = viewChild.required(KbqButtonToggleGroup);
+
     value = 'missing';
     renderLate = false;
 }
@@ -1718,6 +1715,7 @@ class UnmatchedButtonToggleGroupWithValueReadBeforeIt {
 })
 class ButtonToggleGroupWithPrecheckedToggle {
     readonly group = viewChild.required(KbqButtonToggleGroup);
+
     value: string | undefined;
 }
 
@@ -1746,6 +1744,7 @@ class ButtonToggleGroupWithFormControl {
 })
 class ButtonToggleGroupWithChangingToggleValue {
     readonly group = viewChild.required(KbqButtonToggleGroup);
+
     readonly control = new UntypedFormControl();
     readonly valueChange = vi.fn();
     multiple = false;
@@ -1763,6 +1762,7 @@ class ButtonToggleGroupWithChangingToggleValue {
 })
 class TwoWayButtonToggleGroupWithChangingToggleValue {
     readonly toggles = viewChildren(KbqButtonToggle);
+
     value: unknown = 'red';
     first = 'red';
 }
@@ -1782,6 +1782,7 @@ class TwoWayButtonToggleGroupWithChangingToggleValue {
 })
 class RemountedButtonToggleGroupWithFormControl {
     readonly toggles = viewChildren(KbqButtonToggle);
+
     control = new UntypedFormControl('red');
     renderRed = true;
 }
@@ -1951,6 +1952,7 @@ const EFFECT_RUN_LIMIT = 10;
 class ButtonToggleGroupsDrivenByEffect {
     readonly group = viewChild.required<KbqButtonToggleGroup>('group');
     readonly toggles = viewChildren(KbqButtonToggle);
+
     readonly action = signal<'value' | 'checked' | 'click' | null>(null);
     runs = 0;
 

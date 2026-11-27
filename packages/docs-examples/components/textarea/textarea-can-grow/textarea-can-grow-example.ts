@@ -25,8 +25,8 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class TextareaCanGrowExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly canGrow = model(true);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly value = model(this.t().dosText);
 }

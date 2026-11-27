@@ -93,8 +93,8 @@ import { TRANSLATIONS } from './l10n';
         }
 
         form {
-            width: calc(100% + 16px);
-            margin-left: -8px;
+            width: calc(100% + 24px);
+            margin-left: -12px;
         }
 
         .example-inline-text {
@@ -110,14 +110,13 @@ import { TRANSLATIONS } from './l10n';
 })
 export class InlineEditContentAlignmentExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
-    protected get placeholder(): string {
-        return this.t().placeholder;
-    }
-
     protected readonly form = new FormGroup({
         country: new FormControl('Spain'),
         capital: new FormControl('Madrid'),
         currency: new FormControl('Euro')
     });
+
+    protected get placeholder(): string {
+        return this.t().placeholder;
+    }
 }

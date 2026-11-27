@@ -132,7 +132,6 @@ const isCollapsed = (fixture: ComponentFixture<unknown>): boolean =>
 })
 class ClampedTextTest {
     protected readonly text = text;
-
     readonly isCollapsed = signal<boolean | undefined>(undefined);
     readonly rows = signal(5);
     readonly scrollOnCollapse = signal(true);
@@ -169,9 +168,9 @@ const EFFECT_RUN_LIMIT = 10;
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 class ClampedTextDrivenByEffect {
-    protected readonly text = text;
-
     readonly clampedText = viewChild.required(KbqClampedText);
+
+    protected readonly text = text;
     readonly expand = signal(false);
     runs = 0;
 

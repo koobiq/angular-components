@@ -37,9 +37,8 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SkeletonDlExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly loading = model(true);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly items = computed(() => this.t().dlItems);
 }

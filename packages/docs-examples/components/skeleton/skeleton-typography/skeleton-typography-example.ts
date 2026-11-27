@@ -68,7 +68,7 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SkeletonTypographyExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly loading = model(true);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

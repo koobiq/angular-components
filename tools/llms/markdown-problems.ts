@@ -4,8 +4,8 @@ import remarkGfm from 'remark-gfm';
 import remarkParse from 'remark-parse';
 import { unified } from 'unified';
 import { docsGetPagePaths } from '../../apps/docs/src/app/page-paths';
+import { DOCS_SITE_ORIGIN } from '../docs-site-origin';
 import { LLMS_TXT } from './llms-txt';
-import { LLMS_SITE_ORIGIN } from './sources';
 
 const parser = unified().use(remarkParse).use(remarkGfm);
 
@@ -28,9 +28,9 @@ const findLinkProblem = (
             : `a relative link, which leads nowhere outside the site: ${url}`;
     }
 
-    if (!url.startsWith(`${LLMS_SITE_ORIGIN}/`)) return null;
+    if (!url.startsWith(`${DOCS_SITE_ORIGIN}/`)) return null;
 
-    const [path = ''] = url.slice(LLMS_SITE_ORIGIN.length).split(/[?#]/);
+    const [path = ''] = url.slice(DOCS_SITE_ORIGIN.length).split(/[?#]/);
 
     if (/\.(md|txt)$/.test(path)) {
         return served.has(path.slice(1)) || path.slice(1) === LLMS_TXT

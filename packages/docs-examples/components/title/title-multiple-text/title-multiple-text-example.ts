@@ -22,7 +22,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TitleMultipleTextExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly name = computed(() => this.t().status);
     readonly value = computed(() => this.t().longValueMultiple);
 }

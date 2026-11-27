@@ -108,10 +108,10 @@ export class DevDocsExamples {}
 export class DevApp {
     localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE);
 
+    readonly disabled = model(false);
+
     password = '456';
-
     control = new FormControl('');
-
     readonly passwordControl = new FormControl('', [
         Validators.required,
         PasswordValidators.minLength(8),
@@ -121,13 +121,9 @@ export class DevApp {
         PasswordValidators.minNumber(1),
         PasswordValidators.minSpecial(1)
     ]);
-
     value: string = '';
     numberValue: number | null = null;
     min = -5;
-
-    readonly disabled = model(false);
-
     locales: string[];
 
     constructor() {

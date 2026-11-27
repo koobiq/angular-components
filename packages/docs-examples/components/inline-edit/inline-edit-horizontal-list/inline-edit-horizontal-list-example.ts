@@ -24,7 +24,7 @@ import { TRANSLATIONS } from './l10n';
     template: `
         <form [formGroup]="form">
             <kbq-dl [vertical]="false">
-                <kbq-dt>Country</kbq-dt>
+                <kbq-dt>{{ t().country }}</kbq-dt>
                 <kbq-dd>
                     <kbq-inline-edit>
                         <div class="example-inline-text" kbqInlineEditViewMode>
@@ -36,7 +36,7 @@ import { TRANSLATIONS } from './l10n';
                     </kbq-inline-edit>
                 </kbq-dd>
 
-                <kbq-dt>Capital</kbq-dt>
+                <kbq-dt>{{ t().capital }}</kbq-dt>
                 <kbq-dd>
                     <kbq-inline-edit>
                         <div class="example-inline-text" kbqInlineEditViewMode>
@@ -48,7 +48,7 @@ import { TRANSLATIONS } from './l10n';
                     </kbq-inline-edit>
                 </kbq-dd>
 
-                <kbq-dt>Currency</kbq-dt>
+                <kbq-dt>{{ t().currency }}</kbq-dt>
                 <kbq-dd>
                     <kbq-inline-edit>
                         <div class="example-inline-text" kbqInlineEditViewMode>
@@ -94,14 +94,13 @@ import { TRANSLATIONS } from './l10n';
 })
 export class InlineEditHorizontalListExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
-    protected get placeholder(): string {
-        return this.t().placeholder;
-    }
-
     protected readonly form = new FormGroup({
         country: new FormControl('Spain'),
         capital: new FormControl('Madrid'),
         currency: new FormControl('Euro')
     });
+
+    protected get placeholder(): string {
+        return this.t().placeholder;
+    }
 }

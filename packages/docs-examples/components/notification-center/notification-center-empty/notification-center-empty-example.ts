@@ -68,13 +68,11 @@ enum NavbarIcItems {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationCenterEmptyExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly notificationService = inject(KbqNotificationCenterService);
-
     private readonly themeService = inject(KbqThemeService, { optional: true });
-    protected readonly currentTheme = computed(() => this.themeService?.colorScheme() ?? 'light');
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly currentTheme = computed(() => this.themeService?.colorScheme() ?? 'light');
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
@@ -84,10 +82,8 @@ export class NotificationCenterEmptyExample {
             ),
         { initialValue: true }
     );
-
     protected items = NavbarIcItems;
     protected selected: NavbarIcItems = NavbarIcItems.Assets;
-
     protected readonly actions = computed<ExampleAction[]>(() => [
         {
             id: '1',
@@ -102,7 +98,6 @@ export class NotificationCenterEmptyExample {
             icon: 'kbq-ellipsis-horizontal_16'
         }
     ]);
-
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;

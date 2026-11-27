@@ -1,6 +1,6 @@
-﻿import type { CdkConnectedOverlay, ConnectedPosition } from '@angular/cdk/overlay';
+﻿import { END, HOME, SPACE } from '@angular/cdk/keycodes';
+import type { CdkConnectedOverlay, ConnectedPosition } from '@angular/cdk/overlay';
 import {
-    type AfterContentInit,
     booleanAttribute,
     ChangeDetectorRef,
     Directive,
@@ -15,10 +15,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, fromEvent, Subscription } from 'rxjs';
-import { type KbqSearchFieldPopup, kbqSyncSearchFieldA11y } from '../a11y';
-import { KBQ_FORM_FIELD_REF, type KbqFormFieldRef } from '../form-field';
-import { END, ESCAPE, HOME, SPACE } from '../keycodes';
-import { kbqInjectA11yLocaleConfiguration } from '../locales';
+import type { KbqSearchFieldPopup } from '../a11y';
 import {
     KBQ_PANEL_DEFAULT_MAX_HEIGHT,
     type KbqPanelSpaceContext,
@@ -33,8 +30,8 @@ import {
     kbqResolvePanelWidth
 } from '../overlay/panel-width';
 import { KBQ_CONNECTED_OVERLAY_OVERLAP_CLASS } from '../pop-up/constants';
+import { KbqSearchFieldBase } from '../search/search-field-base';
 import { KBQ_WINDOW } from '../tokens';
-import { kbqInjectNativeElement } from '../utils';
 import { KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD, SELECT_PANEL_VIEWPORT_PADDING } from './constants';
 
 @Directive({
@@ -81,15 +78,13 @@ export class KbqSelectFooterItem {}
  */
 export const KBQ_SELECT_SEARCH_POPUP = new InjectionToken<KbqSearchFieldPopup>('KBQ_SELECT_SEARCH_POPUP');
 
+/** Marks a `kbq-form-field` projected into a `kbq-select` or a `kbq-tree-select` as the panel's search field. */
 @Directive({
     selector: '[kbqSelectSearch]',
-    host: {
-        '(keydown)': 'handleKeydown($event)'
-    },
     exportAs: 'kbqSelectSearch'
 })
-export class KbqSelectSearch implements AfterContentInit {
-    protected formField = inject<KbqFormFieldRef>(KBQ_FORM_FIELD_REF, { optional: true })!;
+export class KbqSelectSearch extends KbqSearchFieldBase {
+    private readonly popup = inject(KBQ_SELECT_SEARCH_POPUP, { optional: true });
 
     /**
      * Captured here rather than built where it is used: `takeUntilDestroyed()` reads the current
@@ -98,56 +93,12 @@ export class KbqSelectSearch implements AfterContentInit {
      */
     private readonly takeUntilDestroyed = takeUntilDestroyed<any>();
 
+    protected readonly directiveName = 'kbqSelectSearch';
     readonly changes: EventEmitter<string> = new EventEmitter<string>();
-
     isSearchChanged: boolean = false;
 
-    get ngControl() {
-        return this.formField.control().ngControl;
-    }
-
-    constructor() {
-        this.formField.inOverlay.set(true);
-
-        const popup = inject(KBQ_SELECT_SEARCH_POPUP, { optional: true });
-        const localeConfiguration = kbqInjectA11yLocaleConfiguration();
-
-        kbqSyncSearchFieldA11y(
-            kbqInjectNativeElement(),
-            () => popup,
-            () => localeConfiguration().search
-        );
-    }
-
-    setPlaceholder(value: string): void {
-        const placeholder = this.formField.control().placeholder;
-
-        // The search control is `KbqInput` (see `ngAfterContentInit`), whose placeholder can be written.
-        if (isWritableSignal(placeholder)) {
-            placeholder.set(value);
-        }
-    }
-
-    focus(): void {
-        this.formField.focus();
-    }
-
-    reset(): void {
-        this.ngControl?.reset();
-    }
-
-    value() {
-        return this.formField.control().value();
-    }
-
-    ngAfterContentInit(): void {
-        if (this.formField.control().controlType !== 'input') {
-            throw Error('KbqSelectSearch does not work without kbqInput');
-        }
-
-        if (!this.ngControl) {
-            throw Error('KbqSelectSearch does not work without ngControl');
-        }
+    override ngAfterContentInit(): void {
+        super.ngAfterContentInit();
 
         // The subscription is deferred, so the directive can be destroyed before it even exists —
         // the captured operator owns it either way, while an `ngOnDestroy` unsubscribe would not.
@@ -159,17 +110,26 @@ export class KbqSelectSearch implements AfterContentInit {
         });
     }
 
-    handleKeydown(event: KeyboardEvent) {
-        if (event.keyCode === ESCAPE) {
-            if (this.value()) {
-                this.reset();
-                event.stopPropagation();
-            }
-        }
+    /** @docs-private */
+    override handleKeydown(event: KeyboardEvent): void {
+        super.handleKeydown(event);
+    }
 
-        if ([SPACE, HOME, END].includes(event.keyCode)) {
-            event.stopPropagation();
+    setPlaceholder(value: string): void {
+        const placeholder = this.formField.control().placeholder;
+
+        // The search control is `KbqInput` (see `ngAfterContentInit`), whose placeholder can be written.
+        if (isWritableSignal(placeholder)) {
+            placeholder.set(value);
         }
+    }
+
+    protected getSearchFieldPopup(): KbqSearchFieldPopup | null {
+        return this.popup;
+    }
+
+    protected keepsKey(event: KeyboardEvent): boolean {
+        return [SPACE, HOME, END].includes(event.keyCode);
     }
 }
 
@@ -182,6 +142,36 @@ export class KbqSelectSearch implements AfterContentInit {
  */
 @Directive()
 export abstract class KbqAbstractSelect {
+    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+    protected readonly window = inject(KBQ_WINDOW);
+
+    /**
+     * Row container of a multi-selection trigger. Absent for a single value, an empty trigger and a custom
+     * matcher or trigger — all of which have no rows for the panel to anchor to.
+     */
+    protected readonly multilineMatchList = viewChild<ElementRef<HTMLElement>>('multilineMatchList');
+
+    /**
+     * Height of everything in the panel that is not the option list — the trigger gap the pane pads itself
+     * with, the list padding, a search field and a footer.
+     *
+     * The same for every anchor: the below and overlap panes pad the top, the above pane pads the bottom, and
+     * all three pad by the same gap — which is what keeps the anchor decision from feeding back into itself.
+     */
+    private panelChromeHeight = 0;
+
+    /** Transparent gap the pane pads itself with, which the anchor has to be raised by. */
+    private panelGapHeight = 0;
+
+    /**
+     * Cap the option list is rendered with, in pixels. Measured off the panel rather than derived from
+     * `panelMaxHeight`, because `--kbq-select-panel-size-max-height` is what the list actually obeys and a
+     * consumer can override it. Seeded with the stylesheet's own default, which is what a DOM that computes
+     * no layout — the server, jsdom — leaves in force.
+     */
+    private panelMaxHeightCap = KBQ_PANEL_DEFAULT_MAX_HEIGHT;
+    private resizeSubscription = Subscription.EMPTY;
+
     /** Overlay directive of the panel. Subclasses resolve it with their own view query. */
     protected abstract overlayDir: CdkConnectedOverlay;
 
@@ -203,21 +193,6 @@ export abstract class KbqAbstractSelect {
     /** Margin the overlay keeps from the viewport edge, i.e. `cdkConnectedOverlayViewportMargin`. */
     protected abstract readonly viewportMargin: number;
 
-    /**
-     * Row container of a multi-selection trigger. Absent for a single value, an empty trigger and a custom
-     * matcher or trigger — all of which have no rows for the panel to anchor to.
-     */
-    protected readonly multilineMatchList = viewChild<ElementRef<HTMLElement>>('multilineMatchList');
-
-    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
-    protected readonly window = inject(KBQ_WINDOW);
-
-    /** Whether the panel is open. Declared as a method because the two selects spell the state differently. */
-    protected abstract isPanelOpen(): boolean;
-
-    /** Element the overlay is positioned and sized against. */
-    protected abstract getOverlayOriginElement(): HTMLElement | undefined;
-
     /** Overlay panel class. */
     protected readonly overlayPanelClass = 'kbq-select-overlay';
 
@@ -227,27 +202,11 @@ export abstract class KbqAbstractSelect {
     /** Minimum width of the overlay panel. */
     protected overlayMinWidth: string | number = '';
 
-    /**
-     * Height of everything in the panel that is not the option list — the trigger gap the pane pads itself
-     * with, the list padding, a search field and a footer.
-     *
-     * The same for every anchor: the below and overlap panes pad the top, the above pane pads the bottom, and
-     * all three pad by the same gap — which is what keeps the anchor decision from feeding back into itself.
-     */
-    private panelChromeHeight = 0;
+    /** Whether the panel is open. Declared as a method because the two selects spell the state differently. */
+    protected abstract isPanelOpen(): boolean;
 
-    /** Transparent gap the pane pads itself with, which the anchor has to be raised by. */
-    private panelGapHeight = 0;
-
-    /**
-     * Cap the option list is rendered with, in pixels. Measured off the panel rather than derived from
-     * `panelMaxHeight`, because `--kbq-select-panel-size-max-height` is what the list actually obeys and a
-     * consumer can override it. Seeded with the stylesheet's own default, which is what a DOM that computes
-     * no layout — the server, jsdom — leaves in force.
-     */
-    private panelMaxHeightCap = KBQ_PANEL_DEFAULT_MAX_HEIGHT;
-
-    private resizeSubscription = Subscription.EMPTY;
+    /** Element the overlay is positioned and sized against. */
+    protected abstract getOverlayOriginElement(): HTMLElement | undefined;
 
     /**
      * Resolves the overlay panel size for the current trigger geometry and stores it for the
@@ -621,5 +580,19 @@ export abstract class KbqAbstractSelect {
 
     protected resolveSearchMinOptionsThreshold(value?: 'auto' | number) {
         return value === 'auto' ? KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD : value;
+    }
+
+    /**
+     * Whether the panel shows the search field: without a threshold, from the threshold on, and while a query is
+     * typed, so that a query filtering the options below the threshold does not hide its own field.
+     *
+     * @docs-private
+     */
+    protected isSearchVisible(
+        threshold: number | undefined,
+        search: KbqSelectSearch | undefined,
+        optionsCount: number
+    ): boolean {
+        return threshold === undefined || !!search?.value() || optionsCount >= threshold;
     }
 }

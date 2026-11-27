@@ -73,11 +73,14 @@ export class DevDocsExamples {}
 export class DevApp {
     private modalService = inject(KbqModalService);
 
-    popUpPlacements = PopUpPlacements;
-
     readonly navbar = viewChild.required<KbqNavbar>('verticalNavbar');
 
+    private _collapsedNavbarWidth: number = 1280;
+
+    popUpPlacements = PopUpPlacements;
     readonly minNavbarWidth: number = 940;
+    componentModal?: KbqModalRef;
+    permission$ = timer(500).pipe(map(() => true));
 
     get collapsedNavbarWidth(): number {
         return this._collapsedNavbarWidth;
@@ -90,12 +93,6 @@ export class DevApp {
 
         this._collapsedNavbarWidth = value;
     }
-
-    componentModal?: KbqModalRef;
-
-    private _collapsedNavbarWidth: number = 1280;
-
-    permission$ = timer(500).pipe(map(() => true));
 
     collapsedNavbarWidthChange() {
         this.navbar().updateExpandedStateForItems();

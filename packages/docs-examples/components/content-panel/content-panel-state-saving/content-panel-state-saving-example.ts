@@ -56,7 +56,7 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContentPanelStateSavingExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly container = viewChild.required(KbqContentPanelContainer);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

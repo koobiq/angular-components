@@ -15,14 +15,12 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelOverviewExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private sidepanelService = inject(KbqSidepanelService);
-
-    position = KbqSidepanelPosition.Right;
 
     readonly template = viewChild.required(TemplateRef);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
+    position = KbqSidepanelPosition.Right;
     arrayLength = 40;
     array = new Array(this.arrayLength);
 

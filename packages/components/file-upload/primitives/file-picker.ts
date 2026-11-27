@@ -23,10 +23,13 @@ import {
 export class KbqFileUploadContext {
     /** id for file input */
     readonly id = input<string | null>(null);
+
     /** Whether file input selectable or not */
     readonly disabled = model<boolean | null>(null);
+
     /** Selection mode for file input */
     readonly multiple = input(null, { transform: booleanAttribute });
+
     /** File type specifiers */
     readonly accept = input<string | null>(null);
 
@@ -69,10 +72,13 @@ export class KbqFileLoader {
 
     /** Whether file input selectable or not */
     readonly disabled = input<boolean>(false);
+
     /** Selection mode for file input */
     readonly multiple = input<boolean | null>(null);
+
     /** File type specifiers */
     readonly accept = input<string | null>(null);
+
     /** id for file input  */
     readonly for = input<string | null>(null);
 
@@ -82,8 +88,10 @@ export class KbqFileLoader {
      * See [`HTMLInputElement: webkitdirectory property`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory).
      */
     readonly onlyDirectory = input<boolean | null>(null);
+
     /** Ids of the elements describing the file input, written to its `aria-describedby`. */
     readonly describedBy = input<string | null>(null);
+
     /** Whether the file input holds a value the form rejects, reported through `aria-invalid`. */
     readonly invalid = input(false, { transform: booleanAttribute });
 
@@ -95,12 +103,16 @@ export class KbqFileLoader {
 
     /** @docs-private */
     protected readonly innerDisabled = computed(() => this.fileUploadContext?.disabled() ?? this.disabled());
+
     /** @docs-private */
     protected readonly innerMultiple = computed(() => this.fileUploadContext?.multiple() ?? this.multiple());
+
     /** @docs-private */
     protected readonly innerAccept = computed(() => this.fileUploadContext?.accept() ?? this.accept());
+
     /** @docs-private */
     protected readonly innerFor = computed(() => this.fileUploadContext?.id() ?? this.for());
+
     /** @docs-private */
     protected readonly innerOnlyDirectory = computed(
         () => this.fileUploadContext?.onlyDirectory() ?? this.onlyDirectory()
@@ -126,6 +138,7 @@ export class KbqFileList<T> {
      * Useful when handle removed files, skipping filtering file list.
      */
     readonly itemRemoved = output<[T, number]>();
+
     /** Emits array of items that were added to the list. */
     readonly itemsAdded = output<T[]>();
 

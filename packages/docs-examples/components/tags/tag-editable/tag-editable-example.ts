@@ -44,6 +44,7 @@ const TAG = 'Editable tag';
 })
 export class TagEditableExample {
     protected readonly tag = model(TAG);
+
     protected readonly isTagRemoved = signal(false);
     protected readonly color = KbqComponentColors;
 

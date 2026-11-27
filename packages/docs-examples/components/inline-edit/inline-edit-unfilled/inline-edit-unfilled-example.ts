@@ -94,14 +94,13 @@ import { TRANSLATIONS } from './l10n';
 })
 export class InlineEditUnfilledExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
-    protected get placeholder(): string {
-        return this.t().empty;
-    }
-
     protected readonly form = new FormGroup({
         country: new FormControl('Spain'),
         capital: new FormControl(''),
         currency: new FormControl('Euro')
     });
+
+    protected get placeholder(): string {
+        return this.t().empty;
+    }
 }

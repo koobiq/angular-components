@@ -17,25 +17,23 @@ export interface DocsNavbarPropertyChange {
 }
 
 export class DocsNavbarProperty {
+    private readonly window = inject(KBQ_WINDOW);
+
+    private _data: any[];
+    private _currentValue!: any;
+    private _changes = new ReplaySubject<DocsNavbarPropertyChange>(1);
+
     get data(): any[] {
         return this._data;
     }
-
-    private _data: any[];
 
     get currentValue(): any {
         return this._currentValue;
     }
 
-    private _currentValue!: any;
-
     get changes(): Observable<DocsNavbarPropertyChange> {
         return this._changes;
     }
-
-    private _changes = new ReplaySubject<DocsNavbarPropertyChange>(1);
-
-    private readonly window = inject(KBQ_WINDOW);
 
     constructor(readonly parameters: DocsNavbarPropertyParameters) {
         this._data = parameters.data;

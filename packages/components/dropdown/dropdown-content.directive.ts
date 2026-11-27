@@ -22,13 +22,17 @@ export class KbqDropdownContent implements OnDestroy {
     private appRef = inject(ApplicationRef);
     private injector = inject(Injector);
     private viewContainerRef = inject(ViewContainerRef);
-
     protected readonly document = inject<Document>(DOCUMENT);
+
+    private portal?: TemplatePortal;
+    private outlet?: DomPortalOutlet;
 
     /** Emits when the dropdown content has been attached. */
     attached = new Subject<void>();
-    private portal?: TemplatePortal;
-    private outlet?: DomPortalOutlet;
+
+    ngOnDestroy() {
+        this.outlet?.dispose();
+    }
 
     /**
      * Attaches the content with a particular context.
@@ -65,9 +69,5 @@ export class KbqDropdownContent implements OnDestroy {
         if (this.portal?.isAttached) {
             this.portal.detach();
         }
-    }
-
-    ngOnDestroy() {
-        this.outlet?.dispose();
     }
 }

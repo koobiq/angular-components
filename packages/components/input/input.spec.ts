@@ -1,4 +1,5 @@
-﻿import { Component, Directive, ElementRef, inject, type Provider, type Type, viewChild } from '@angular/core';
+﻿import { ESCAPE } from '@angular/cdk/keycodes';
+import { Component, Directive, ElementRef, inject, type Provider, type Type, viewChild } from '@angular/core';
 import { type ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import {
     type AsyncValidatorFn,
@@ -16,7 +17,6 @@ import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     ErrorStateMatcher,
-    ESCAPE,
     kbqErrorStateMatcherProvider,
     ShowOnControlDirtyErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher
@@ -219,6 +219,7 @@ const getAsyncValidator =
 })
 class InputControlWithAsyncValidators {
     readonly input = viewChild.required(KbqInput);
+
     readonly control = new FormControl<string>('', {
         nonNullable: true,
         asyncValidators: [getAsyncValidator()]
@@ -240,6 +241,7 @@ class InputControlWithAsyncValidators {
 })
 class InputWithDIErrorStateMatcher {
     readonly input = viewChild.required(KbqInput);
+
     readonly form = new FormGroup({ input: new FormControl('', Validators.required) });
 }
 
@@ -256,6 +258,7 @@ class InputWithDIErrorStateMatcher {
 })
 class InputWithErrorStateMatcher {
     readonly input = viewChild.required(KbqInput);
+
     readonly form = new FormGroup({ input: new FormControl('', Validators.required) });
     errorStateMatcher: ErrorStateMatcher = new ErrorStateMatcher();
 }
@@ -334,6 +337,7 @@ class InputWithBoundAutocomplete {
 })
 class InputWithHintsAndError {
     readonly input = viewChild.required(KbqInput);
+
     readonly control = new FormControl('', Validators.required);
     errorStateMatcher: ErrorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
 }
@@ -346,6 +350,7 @@ class InputWithHintsAndError {
 })
 class InputWithBoundValue {
     readonly input = viewChild.required(KbqInput);
+
     value = 'bound';
 }
 
@@ -359,6 +364,7 @@ const FRESH_VALUE_READ_LIMIT = 100;
 })
 class FreshValueAccessor {
     private readonly element = inject<ElementRef<HTMLInputElement>>(ElementRef).nativeElement;
+
     private reads = 0;
 
     writes = 0;

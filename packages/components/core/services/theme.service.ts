@@ -149,8 +149,9 @@ export interface KbqThemeStore {
 @Injectable({ providedIn: 'root' })
 export class KbqThemeLocalStorageStore implements KbqThemeStore {
     private readonly window = inject(KBQ_WINDOW);
-    private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
     private readonly storageKey = inject(KBQ_THEME_CONFIG).storageKey;
+
+    private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
     private readonly staticThemeStorageKey = `${this.storageKey}-static`;
 
     /**
@@ -222,10 +223,12 @@ export class KbqThemeLocalStorageStore implements KbqThemeStore {
 @Injectable({ providedIn: 'root' })
 export class KbqThemeCookieStore implements KbqThemeStore {
     private readonly document = inject(DOCUMENT);
+
     /** The incoming request during a server render — the only cookie source there. `null` in the browser. */
     private readonly request = inject(REQUEST, { optional: true });
-    private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
     private readonly storageKey = inject(KBQ_THEME_CONFIG).storageKey;
+
+    private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
     private readonly staticThemeStorageKey = `${this.storageKey}-static`;
 
     getMode(): KbqThemeMode | null {
@@ -340,13 +343,13 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
      */
     private readonly media = this.matchPrefersDark();
     private readonly systemPrefersDark = signal(this.media?.matches ?? false);
-
     private readonly themesState = signal<T[]>(this.config.themes);
     private readonly modeState = signal<KbqThemeMode>(this.readMode());
     private readonly staticThemeState = signal<string | null>(this.readStaticTheme());
 
     /** Themes available to select from. Set via `setThemes()` to register a fully custom set. */
     readonly themes = this.themesState.asReadonly();
+
     /** Selected fixed `'light'`/`'dark'` mode, or `'auto'` to follow the OS color scheme. Set via `setMode()`. */
     readonly mode = this.modeState.asReadonly();
 

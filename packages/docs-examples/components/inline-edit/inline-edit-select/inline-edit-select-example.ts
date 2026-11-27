@@ -81,10 +81,7 @@ const USERS: KbqUserInfo[] = [
 })
 export class InlineEditSelectExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly notSetLabel = 'Not specified';
-
     protected readonly users = USERS;
-
     protected readonly control = new FormControl<KbqUserInfo | null>(this.users[0] ?? null);
 }

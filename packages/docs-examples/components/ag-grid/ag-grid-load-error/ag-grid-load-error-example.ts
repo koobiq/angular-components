@@ -24,13 +24,15 @@ import {
 import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { exampleIncidentColumns } from '../incident-columns';
+import { EXAMPLE_INCIDENT_COUNT, exampleGetIncidents, type ExampleSecurityIncident } from '../security-incidents';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 const PAGE_SIZE = 20;
-const PINNED_LEFT = ['ag-Grid-SelectionColumn', 'column0'];
-const PINNED_RIGHT = ['column4'];
+const PINNED_LEFT = ['ag-Grid-SelectionColumn', 'id'];
+const PINNED_RIGHT = ['sourceIp'];
 
 /**
  * @title AG Grid with a load error row
@@ -79,24 +81,22 @@ const PINNED_RIGHT = ['column4'];
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridLoadErrorExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    private readonly localeService = inject(KbqLocaleService);
 
     protected readonly pinnedColumns = model(true);
     protected readonly rowDividers = model(false);
 
     private readonly loadError = viewChild.required(KbqAgGridLoadError);
-    private readonly localeService = inject(KbqLocaleService);
-    private readonly pageCache = new Map<number, Record<string, string>[]>();
 
+    private readonly pageCache = new Map<number, ExampleSecurityIncident[]>();
     private requestCount = 0;
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected api?: GridApi;
     protected readonly pageSize = PAGE_SIZE;
-
     protected readonly labels = computed(() =>
         this.localeService.localeId() === 'ru-RU' ? KBQ_AG_GRID_LOAD_ERROR_LABELS_RU : KBQ_AG_GRID_LOAD_ERROR_LABELS_EN
     );
-
     protected readonly rowStyle = computed<RowStyle>(() =>
         this.rowDividers()
             ? {
@@ -105,34 +105,27 @@ export class AgGridLoadErrorExample {
               }
             : { borderBottom: '', borderRadius: '' }
     );
-
-    protected readonly columnDefs = computed<ColDef[]>(() =>
-        Array.from({ length: 5 }, (_, i) => ({
-            field: 'column' + i,
-            headerName: this.t().headerText,
-            width: 130,
-            pinned: i === 0 ? ('left' as const) : i === 4 ? ('right' as const) : undefined
-        }))
+    protected readonly columnDefs = computed(() =>
+        exampleIncidentColumns(this.t().headers, { field: 'id', pinned: 'left' }, 'event', 'severity', 'status', {
+            field: 'sourceIp',
+            pinned: 'right'
+        })
     );
-
     protected readonly defaultColDef: ColDef = {
         cellRendererSelector: ({ data }: ICellRendererParams) =>
             data === undefined ? { component: KbqAgGridSkeletonCellRenderer } : undefined
     };
-
     protected readonly selectionColumnDef: SelectionColumnDef = {
         pinned: 'left',
         cellRendererSelector: ({ data }: ICellRendererParams) =>
             data === undefined ? { component: KbqAgGridSkeletonSelectionCellComponent } : undefined
     };
-
     protected readonly rowSelection: RowSelectionOptions = {
         mode: 'multiRow',
         checkboxes: true,
         headerCheckbox: false,
         isRowSelectable: ({ data }) => data !== undefined
     };
-
     protected readonly datasource: IDatasource = {
         getRows: (params: IGetRowsParams) => this.getRows(params)
     };
@@ -145,7 +138,7 @@ export class AgGridLoadErrorExample {
     }
 
     private getRows({ startRow, endRow, successCallback, failCallback }: IGetRowsParams): void {
-        const lastRow = endRow >= 1000 ? 1000 : -1;
+        const lastRow = endRow >= EXAMPLE_INCIDENT_COUNT ? EXAMPLE_INCIDENT_COUNT : -1;
         const cached = this.pageCache.get(startRow);
 
         if (cached) {
@@ -164,9 +157,7 @@ export class AgGridLoadErrorExample {
                 return;
             }
 
-            const rows = Array.from({ length: endRow - startRow }, (_, i) =>
-                Object.fromEntries(Array.from({ length: 5 }, (_, c) => ['column' + c, 'Text ' + (startRow + i)]))
-            );
+            const rows = exampleGetIncidents(startRow, endRow);
 
             this.pageCache.set(startRow, rows);
             successCallback(rows, lastRow);

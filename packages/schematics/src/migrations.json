@@ -420,6 +420,11 @@
             "version": "21.1.0-0",
             "description": "Reports reads of members that are `| undefined` now: fields the library left unset until a hook ran or an overlay opened (selectionModel, keyManager, trigger and others) and getters that returned undefined (KbqSelect.selected, KbqTreeSelect.selected, KbqTab.templateLabel). Also reports `new KbqCheckboxChange()`, `new KbqToggleChange()` and `new KbqTabChangeEvent()` without the constructor arguments, and classes that extend KbqFormFieldControl or KbqPopUp, whose members are abstract now. Warn-only: a read either checks the value or keeps `!`.",
             "factory": "./migrations/uninitialized-members/index"
+        },
+        "keycodes-import-path": {
+            "version": "21.2.0-0",
+            "description": "Moves the keycode constants off @koobiq/components/core onto @angular/cdk/keycodes. The 119 constants (ENTER, SPACE, TAB, the arrows, the numpad and function keys, and the rest) are deprecated in core — the library imports them from the CDK from 21.2.0 on — and will be removed in 22.0.0. Splits the keycode bindings of every import/export statement from core into a statement from the CDK, leaving the other bindings on core; the values are identical, so an unmigrated import keeps compiling.",
+            "factory": "./migrations/keycodes-import-path/index"
         }
     }
 }

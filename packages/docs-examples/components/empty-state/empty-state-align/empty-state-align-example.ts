@@ -45,7 +45,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class EmptyStateAlignExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly colors = KbqComponentColors;
     readonly styles = KbqButtonStyles;
 }

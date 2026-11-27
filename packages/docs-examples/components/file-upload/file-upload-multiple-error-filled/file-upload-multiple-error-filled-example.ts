@@ -75,11 +75,17 @@ const createMockFile = (fileName: string = 'Filename.txt', options?: FilePropert
 })
 export class FileUploadMultipleErrorFilledExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected accept: KbqFileTypeSpecifier = ['.doc', '.docx', '.pdf', '.txt'];
     protected acceptedOutput: string = this.accept
         .map((typeSpecifier) => typeSpecifier.replace('.', '').toUpperCase())
         .join(', ');
+
+    protected readonly cdr = inject(ChangeDetectorRef);
+
+    protected readonly formMultiple = new FormGroup({
+        fileUpload: new FormControl<FileList | KbqFileItem[]>([]),
+        fileList: new FormArray<FormControl<KbqFileItem | null>>([])
+    });
 
     protected get errorMessages() {
         return {
@@ -87,12 +93,6 @@ export class FileUploadMultipleErrorFilledExample {
             maxFileSize: this.t().sizeLimitExceeded
         };
     }
-    protected readonly cdr = inject(ChangeDetectorRef);
-
-    protected readonly formMultiple = new FormGroup({
-        fileUpload: new FormControl<FileList | KbqFileItem[]>([]),
-        fileList: new FormArray<FormControl<KbqFileItem | null>>([])
-    });
 
     protected get fileUpload() {
         return this.formMultiple.controls.fileUpload;

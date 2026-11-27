@@ -20,7 +20,7 @@ import {
     KbqErrorStateTracker,
     kbqInjectAutofilled
 } from '@koobiq/components/core';
-import { KbqFormFieldControl } from '@koobiq/components/form-field';
+import { KbqFormFieldControl, type KbqPasswordToggleControl } from '@koobiq/components/form-field';
 import { KBQ_INPUT_VALUE_ACCESSOR } from './input-value-accessor';
 
 const isObject = (value: unknown): value is object => typeof value === 'object' && value !== null;
@@ -50,12 +50,17 @@ const isObject = (value: unknown): value is object => typeof value === 'object' 
     },
     exportAs: 'kbqInputPassword'
 })
-export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanUpdateErrorState {
+export class KbqInputPassword
+    implements KbqFormFieldControl<any>, KbqPasswordToggleControl, DoCheck, CanUpdateErrorState
+{
     protected elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     ngControl = inject(NgControl, { optional: true, self: true });
     parentForm = inject(NgForm, { optional: true });
     parentFormGroup = inject(FormGroupDirective, { optional: true });
     defaultErrorStateMatcher = inject(ErrorStateMatcher);
+
+    /** An object used to control when error messages are shown. */
+    readonly errorStateMatcher = input<ErrorStateMatcher>();
 
     private readonly errorStateTracker = new KbqErrorStateTracker(
         this.defaultErrorStateMatcher,
@@ -63,14 +68,10 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanU
         this.parentFormGroup,
         this.parentForm
     );
+    private readonly focusedValue = signal(false);
 
     /** Whether the component is in an error state. */
     readonly errorState = this.errorStateTracker.errorState;
-
-    /** An object used to control when error messages are shown. */
-    readonly errorStateMatcher = input<ErrorStateMatcher>();
-
-    private readonly focusedValue = signal(false);
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -86,14 +87,14 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanU
      */
     readonly autofilled = kbqInjectAutofilled();
 
+    private readonly elementTypeValue = signal<'text' | 'password'>('password');
+
     /**
      * Implemented as part of KbqFormFieldControl.
      *
      * @docs-private
      */
     controlType: string = 'input-password';
-
-    private readonly elementTypeValue = signal<'text' | 'password'>('password');
 
     /** Type of the native input: `password` while the password is hidden, `text` while it is shown. */
     readonly elementType = this.elementTypeValue.asReadonly();
@@ -118,16 +119,6 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanU
         transform: booleanAttribute
     });
 
-    /** `disabled` of the bound form control, which takes precedence over the input. */
-    private readonly formDisabled = signal<boolean | null>(null);
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     *
-     * @docs-private
-     */
-    readonly disabled = computed(() => this.formDisabled() ?? this.disabledInput());
-
     /**
      * Whether the input is read-only: its value can be selected and copied, but not changed. A read-only
      * input shows no placeholder. Defaults to `false`.
@@ -142,19 +133,33 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanU
      *
      * @docs-private
      */
-    readonly id = computed(() => this.idInput() || this.uid);
+    readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
+
+    /** @docs-private */
+    readonly valueInput = input<string | undefined>(undefined, { alias: 'value' });
+
+    /** `disabled` of the bound form control, which takes precedence over the input. */
+    private readonly formDisabled = signal<boolean | null>(null);
+    private inputValueAccessor: { value: any };
+    private readonly emptyValue = signal(true);
+
+    /** The value the element and `value` last agreed on, and the text the element showed then. */
+    private syncedValue: unknown;
+    private syncedText: string;
 
     /**
      * Implemented as part of KbqFormFieldControl.
      *
      * @docs-private
      */
-    readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
+    readonly disabled = computed(() => this.formDisabled() ?? this.disabledInput());
 
-    private inputValueAccessor: { value: any };
-
-    /** @docs-private */
-    readonly valueInput = input<string | undefined>(undefined, { alias: 'value' });
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     *
+     * @docs-private
+     */
+    readonly id = computed(() => this.idInput() || this.uid);
 
     /**
      * Implemented as part of KbqFormFieldControl. Follows what the user types; a value bound with `[value]` or set
@@ -163,12 +168,6 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanU
      * @docs-private
      */
     readonly value: WritableSignal<string>;
-
-    private readonly emptyValue = signal(true);
-
-    /** The value the element and `value` last agreed on, and the text the element showed then. */
-    private syncedValue: unknown;
-    private syncedText: string;
 
     /**
      * Implemented as part of KbqFormFieldControl.

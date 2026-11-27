@@ -24,12 +24,8 @@ import { KbqBasePipe } from './base-pipe';
  */
 @Directive()
 export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements OnInit, AfterViewInit {
-    /** control for search options */
-    readonly searchControl = new FormControl<string | null>(null);
-
-    treeControl: FlatTreeControl<KbqTreeSelectFlatNode>;
-    treeFlattener: KbqTreeFlattener<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
-    dataSource: KbqTreeFlatDataSource<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
+    /** @docs-private */
+    readonly select = viewChild.required<KbqTreeSelect<KbqTreeSelectFlatNode>>(KbqTreeSelect);
 
     private readonly sourceNodes = new WeakMap<KbqTreeSelectFlatNode, KbqTreeSelectNode>();
 
@@ -39,8 +35,11 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
      */
     private readonly flatNodes: Signal<KbqTreeSelectFlatNode[]>;
 
-    /** @docs-private */
-    readonly select = viewChild.required<KbqTreeSelect<KbqTreeSelectFlatNode>>(KbqTreeSelect);
+    /** control for search options */
+    readonly searchControl = new FormControl<string | null>(null);
+    treeControl: FlatTreeControl<KbqTreeSelectFlatNode>;
+    treeFlattener: KbqTreeFlattener<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
+    dataSource: KbqTreeFlatDataSource<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
 
     constructor() {
         super();

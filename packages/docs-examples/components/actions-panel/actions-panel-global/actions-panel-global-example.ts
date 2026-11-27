@@ -47,11 +47,13 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActionsPanelGlobalExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+
     private readonly templateRef = viewChild.required(TemplateRef);
+
     private actionsPanelRef?: KbqActionsPanelRef | null;
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     protected action(action: string): void {
         this.actionsPanelRef?.close(action);

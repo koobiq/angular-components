@@ -4,9 +4,20 @@ Tree Select lets users search and select one or more values from hierarchical da
 
 <Example id="tree-select-overview" />
 
-### Multiple tree-select
+### Validation
 
-<Example id="tree-select-multiple-overview" />
+The tree-select works with both reactive and template-driven forms. A required control with no value is invalid: the error
+shows on load, clears on a pick, and comes back when the `None` leaf is picked — a leaf whose value is `null`, the tree
+analog of select's `[value]="null"` option.
+
+<Example id="tree-select-validation" />
+
+### Inactive states
+
+Both the whole control and its individual nodes can be made inactive: the first field carries the `disabled` attribute,
+the nodes of the second one are disabled through `treeControl.isDisabled`.
+
+<Example id="tree-select-disabled" />
 
 ### Reset selected value
 
@@ -16,6 +27,15 @@ The reset control clears everything except disabled nodes. Change that with the 
 
 For a node inside a collapsed branch the `[disabled]` attribute is not taken into account: its option is not
 rendered. Such a node is made inactive through `treeControl.isDisabled`.
+
+### Multiple tree-select
+
+Whichever order the nodes are picked in, the form control receives them in panel order — the order the nodes sit in
+the tree, collapsed branches included. Pass a `sortComparator` to order them differently: it is typed as
+`KbqTreeSelectSortComparator` and, like `Array.prototype.sort`, receives the two nodes being compared and every node
+of the tree in panel order.
+
+<Example id="tree-select-multiple-overview" />
 
 ### Multiline tree-select (multiline)
 
@@ -51,11 +71,33 @@ class Example {
 
 The counter is only rendered in multiple selection mode and only while `multiline` is off — a multiline trigger wraps the tags instead of hiding them.
 
-### With search
+### Customizing tags
+
+In multiple selection mode the markup of every tag can be replaced with your own. Declare an `<ng-template #kbqSelectTagContent>` inside `<kbq-tree-select>` — it is rendered once per selected value and receives a `KbqTreeSelectTriggerValue` as `$implicit` and the `KbqTreeSelect` instance as `select`:
+
+{/* prettier-ignore */}
+```html
+<ng-template #kbqSelectTagContent let-option let-select="select">
+    <kbq-tag [selectable]="false" [disabled]="option.disabled || select.disabled()">
+        {{ option.viewValue }}
+        @if (!option.disabled && !select.disabled()) {
+            <i kbq-icon="kbq-xmark-s_16" kbqTagRemove [tabIndex]="0" [aria-label]="removeItem(option.viewValue)" (click)="select.onRemoveSelectedOption(option, $event)"></i>
+        }
+    </kbq-tag>
+</ng-template>
+```
+
+The template replaces the built-in markup completely, so the color, the disabled state and the remove control have to be reproduced by hand. The removal goes through `select.onRemoveSelectedOption` — the value the template receives is a trigger value, not the panel's option. Keep `<kbq-tag>` as the root element: the “+N” counter of hidden tags measures the rendered `kbq-tag` elements, and any other root element breaks it.
+
+### Filling a list of values
+
+#### List with search
+
+Use search when the tree has more than 10 nodes. Search splits a multi-word query into parts and searches for them independently, trims leading and trailing spaces, is case-insensitive, and folds diacritics. The algorithm is described in the [Smart search guide](/en/other/search-smart).
 
 <Example id="tree-select-search-overview" />
 
-### Select all
+#### Select all
 
 In multiple selection mode all the nodes can be selected at once. The feature is off by default — turn it on with the `selectAll` attribute, and a master checkbox appears above the tree.
 
@@ -78,43 +120,41 @@ Once everything is selected, the control can show a label of its own instead of 
 
 <Example id="tree-select-select-all-label" />
 
-### Selecting everything from the keyboard
+#### Selecting everything from the keyboard
 
 `Ctrl`/`Cmd` + `A` selects all nodes in multiple selection mode. By default a repeated press keeps them selected; `selectAllToggle` makes it deselect them instead. With `selectAll` the shortcut always toggles both ways, so it and the master checkbox cannot disagree.
 
 Inside a non-empty search field the first press selects the text of the field; the next one falls through to the nodes. The behaviour can be replaced wholesale with the `selectAllHandler` input.
 
-### Lazy loading tree-select
+#### Search for short lists
+
+When there are only a few nodes, the search can be hidden automatically. This feature is off by default.
+Use the `searchMinOptionsThreshold` attribute to configure it.
+
+Possible values:
+
+- `'auto'` – hides the search if there are fewer than 10 nodes (the default threshold).
+- `<number>` – hides the search if there are fewer nodes than the specified number.
+
+To configure this for all tree-selects in a module with consistent display rules, use the `kbqTreeSelectOptionsProvider` provider:
+
+```ts
+import { kbqTreeSelectOptionsProvider } from '@koobiq/components/tree-select';
+
+@NgModule({
+    providers: [
+        kbqTreeSelectOptionsProvider({ searchMinOptionsThreshold: 'auto' })
+    ]
+})
+```
+
+#### Lazy loading
 
 <Example id="tree-select-lazyload" />
 
-### With custom footer
+#### With custom footer
 
 <Example id="tree-select-footer-overview" />
-
-### Accessibility
-
-The control is a `role="combobox"`: it reports `aria-expanded`, points `aria-controls` at the dropdown while it is open, and mirrors its validity and its required state into `aria-invalid`/`aria-required`. Opening the dropdown moves the focus into it — onto the node the keyboard is on, or into the search field when one is projected — so while the dropdown is open a screen reader reads the panel rather than the control.
-
-A combobox has to be named, and `<label for>` only names native form controls. Inside a `kbq-form-field` the label names the control through `aria-labelledby`, which the control wires up on its own. Without a form-field label, prefer `aria-labelledby` pointing at text that is already on screen, and reach for `aria-label` when nothing on the page holds the caption. Left unnamed, the control falls back to its `placeholder`:
-
-```html
-<kbq-form-field>
-    <kbq-label>Files</kbq-label>
-    <kbq-tree-select>...</kbq-tree-select>
-</kbq-form-field>
-
-<kbq-form-field>
-    <kbq-tree-select aria-label="Files">...</kbq-tree-select>
-</kbq-form-field>
-
-<h3 id="files-caption">Files</h3>
-<kbq-form-field>
-    <kbq-tree-select aria-labelledby="files-caption">...</kbq-tree-select>
-</kbq-form-field>
-```
-
-From the keyboard, `Escape` and `Alt` + arrow close the dropdown and return the focus to the control, while `Tab` closes it and moves on to the next control the way it does everywhere else.
 
 ### Dropdown height
 
@@ -172,3 +212,58 @@ import { kbqTreeSelectOptionsProvider } from '@koobiq/components/tree-select';
     ]
 })
 ```
+
+### Optional icon
+
+<Example id="tree-select-icon" />
+
+### Layering
+
+By default, the dropdown menu appears above the horizontal [Navbar](/en/components/navbar) and [Topbar](/en/components/top-bar). To have it slide under them while the page scrolls, as in the example below, mark the content area with `kbqOverlayLayer` — see [Panels under a sticky header](/en/components/core/overview#panels-under-a-sticky-header).
+
+<Example id="tree-select-scrolling-and-layering" />
+
+### Caption in options
+
+By default, long option text is truncated to a single line. The tree-select has no `multilineOptions` switch: a second line is part of the tree-option template itself. Put the node's text and the caption into their own elements inside `<kbq-tree-option>` and give the caption the `kbq-option-caption` class — the option grows to fit both lines.
+
+<Example id="tree-select-two-line-option" />
+
+### Localization
+
+The strings the tree-select renders itself — the `select all` label, the hidden-items counter, the accessible names of the cleaner and of the tag remove buttons — follow the active locale. Bind `[localeOverrides]` to override them for one instance; every key you leave out keeps following the locale. See the [localization guide](/en/main/localization) for the other ways to override them.
+
+<Example id="tree-select-locale-configuration" />
+
+### Accessibility
+
+The control is a `role="combobox"`: it reports `aria-expanded`, points `aria-controls` at the dropdown while it is open, and mirrors its validity and its required state into `aria-invalid`/`aria-required`. Opening the dropdown moves the focus into it — onto the node the keyboard is on, or into the search field when one is projected — so while the dropdown is open a screen reader reads the panel rather than the control.
+
+A combobox has to be named, and `<label for>` only names native form controls. Inside a `kbq-form-field` the label names the control through `aria-labelledby`, which the control wires up on its own. Without a form-field label, prefer `aria-labelledby` pointing at text that is already on screen, and reach for `aria-label` when nothing on the page holds the caption. Left unnamed, the control falls back to its `placeholder`:
+
+```html
+<kbq-form-field>
+    <kbq-label>Files</kbq-label>
+    <kbq-tree-select>...</kbq-tree-select>
+</kbq-form-field>
+
+<kbq-form-field>
+    <kbq-tree-select aria-label="Files">...</kbq-tree-select>
+</kbq-form-field>
+
+<h3 id="files-caption">Files</h3>
+<kbq-form-field>
+    <kbq-tree-select aria-labelledby="files-caption">...</kbq-tree-select>
+</kbq-form-field>
+```
+
+From the keyboard, `Escape` and `Alt` + arrow close the dropdown and return the focus to the control, while `Tab` closes it and moves on to the next control the way it does everywhere else.
+
+In multiple selection mode every tag has its own remove control: a `button` operable with `Enter` and `Space`, named after the a11y locale (`remove`) — in a custom tag template, bind `aria-label` on the remove icon to name it after the value. A custom `#kbqSelectTagContent` template replaces that markup wholesale — reproduce the control, including its `tabIndex` opt-in, if you keep tag removal.
+
+When the operating system asks for reduced motion, the panel opens and closes without the fade animation.
+
+### Recommendations
+
+- If you are using a tree-select without a label, we suggest adding a placeholder to indicate what information the user should select. For example, “Files.”
+- If there are more than 10 nodes in the tree, then enable the search display in the tree-select header. This will make it easier to find values.

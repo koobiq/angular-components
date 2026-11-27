@@ -22,13 +22,13 @@ import {
 export class DevApp {
     protected readonly dateAdapter: DateAdapter<DateTime> = inject(DateAdapter<DateTime>);
     protected readonly formatter: DateFormatter<DateTime> = inject(DateFormatter<DateTime>);
+
     // The token, not the class: `KbqLuxonDateModule` provides it with `useClass`, so the `providedIn: 'root'`
     // instance is a different object from the one the pipes and `DateFormatter` subscribe to.
     protected readonly localeService: KbqLocaleService = inject(KBQ_LOCALE_SERVICE);
     protected readonly timezoneService = inject(KbqDateTimezoneService);
 
     protected readonly timezones: KbqTimezoneLike[] = ['system', 'utc', 'Asia/Tokyo', 'America/New_York'];
-
     obj: any = {
         absolute: {
             long: {
@@ -124,7 +124,6 @@ export class DevApp {
             yearsMonths: ''
         }
     };
-
     iso = JSON.parse(JSON.stringify(this.obj));
     publishedAt = '2022-02-02 10:04:08.049306';
 

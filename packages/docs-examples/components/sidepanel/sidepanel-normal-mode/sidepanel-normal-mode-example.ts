@@ -16,16 +16,13 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelNormalModeExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private sidepanelService = inject(KbqSidepanelService);
-
-    position = KbqSidepanelPosition.Right;
-
-    isOpened = false;
 
     readonly template = viewChild.required(TemplateRef);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
+    position = KbqSidepanelPosition.Right;
+    isOpened = false;
     arrayLength = 40;
     array = new Array(this.arrayLength);
 

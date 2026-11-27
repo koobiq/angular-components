@@ -40,11 +40,10 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableStickyHeaderExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly adapter = inject<DateAdapter<DateTime>>(DateAdapter);
-    readonly value = this.adapter.today();
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
+    readonly value = this.adapter.today();
     protected readonly rows = computed(() => [
         { name: 'document.txt', owner: 'User 1', modified: this.value },
         { name: 'report-2023.pdf', owner: 'User 2', modified: this.value },

@@ -199,10 +199,17 @@ const END_ALIGNED_POSITIONS: KbqSelect['positions'] = [
 export class DocsHeader {
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE);
     protected readonly themeService = inject(KbqThemeService);
+
     protected readonly selects = viewChildren(KbqSelect);
 
     // The docs site and its examples are translated into English and Russian only.
     protected readonly languages = this.localeService.locales.items.filter(({ id }) => id in HEADER_TEXT);
+    protected readonly text = computed(() => HEADER_TEXT[this.localeService.localeId()] ?? HEADER_TEXT['en-US']);
+    protected readonly themeOptions = computed((): { mode: KbqThemeMode; title: string }[] => [
+        { mode: 'auto', title: this.text().system },
+        { mode: KbqThemeNames.Light, title: this.text().light },
+        { mode: KbqThemeNames.Dark, title: this.text().dark }
+    ]);
 
     constructor() {
         // The header sits at the right edge of the page. The default panel opens from the trigger's start edge
@@ -213,12 +220,4 @@ export class DocsHeader {
             }
         });
     }
-
-    protected readonly text = computed(() => HEADER_TEXT[this.localeService.localeId()] ?? HEADER_TEXT['en-US']);
-
-    protected readonly themeOptions = computed((): { mode: KbqThemeMode; title: string }[] => [
-        { mode: 'auto', title: this.text().system },
-        { mode: KbqThemeNames.Light, title: this.text().light },
-        { mode: KbqThemeNames.Dark, title: this.text().dark }
-    ]);
 }

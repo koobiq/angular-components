@@ -38,11 +38,11 @@ const SUCCESS_LABEL_DURATION = 1000;
     }
 })
 export class DocsCopyButtonComponent extends DocsLocaleState {
+    private readonly clipboard = inject(DocsClipboardService);
+
     readonly contentToCopy = input<string>('');
 
     protected readonly isLabelSuccessVisible = signal(false);
-
-    private readonly clipboard = inject(DocsClipboardService);
 
     copyContent(): void {
         if (!this.contentToCopy() || !this.clipboard.copy(this.contentToCopy())) {

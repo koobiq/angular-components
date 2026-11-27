@@ -78,14 +78,13 @@ export class DevApp {
     private sidepanelService = inject(KbqSidepanelService);
     private overlayRef = inject(OverlayContainer);
 
-    selectValue = '';
-
-    position: KbqSidepanelPosition = KbqSidepanelPosition.Right;
-
-    modalState: boolean = false;
-
-    array = new Array(40);
     readonly template = viewChild.required<TemplateRef<any>>('sipanelTemplate');
+
+    selectValue = '';
+    position: KbqSidepanelPosition = KbqSidepanelPosition.Right;
+    modalState: boolean = false;
+    array = new Array(40);
+    protected readonly popUpPlacements = PopUpPlacements;
 
     constructor() {
         const overlayRef = this.overlayRef;
@@ -116,6 +115,4 @@ export class DevApp {
             kbqWidth: 400
         });
     }
-
-    protected readonly popUpPlacements = PopUpPlacements;
 }

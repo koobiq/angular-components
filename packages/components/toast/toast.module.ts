@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { KbqToastCloseButton, KbqToastComponent } from './toast.component';
-import { KbqToastContainerComponent } from './toast-container.component';
+import { KbqToastContainerComponent } from './toast.service';
 
 const COMPONENTS = [
     KbqToastComponent,

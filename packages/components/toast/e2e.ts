@@ -17,9 +17,8 @@ import { KbqLink } from '@koobiq/components/link';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 import { KbqToastComponent } from './toast.component';
 import { KbqToastModule } from './toast.module';
-import { KBQ_TOAST_FACTORY, KbqToastService } from './toast.service';
+import { KBQ_TOAST_FACTORY, type KbqToastContainerComponent, KbqToastService } from './toast.service';
 import { KbqToastStyle } from './toast.type';
-import type { KbqToastContainerComponent } from './toast-container.component';
 
 @Component({
     selector: 'e2e-toast-states',
@@ -67,16 +66,15 @@ import type { KbqToastContainerComponent } from './toast-container.component';
     }
 })
 export class E2eToastStates implements AfterViewInit {
+    toastFactory = inject(KBQ_TOAST_FACTORY);
+
     readonly toastContainer = viewChild.required<KbqToastContainerComponent>('toastContainer');
     readonly toastContainer2 = viewChild.required<KbqToastContainerComponent>('toastContainer2');
-
     readonly toastIconTemplate = viewChild.required<TemplateRef<any>>('toastIconTemplate');
     readonly toastTitleTemplate = viewChild.required<TemplateRef<any>>('toastTitleTemplate');
     readonly toastCaptionTemplate = viewChild.required<TemplateRef<any>>('toastCaptionTemplate');
     readonly toastContentTemplate = viewChild.required<TemplateRef<any>>('toastContentTemplate');
     readonly toastActionsTemplate = viewChild.required<TemplateRef<any>>('toastActionsTemplate');
-
-    toastFactory = inject(KBQ_TOAST_FACTORY);
 
     ngAfterViewInit(): void {
         this.toastContainer().createToast(
@@ -212,10 +210,12 @@ export class E2eToastInteraction {
     private readonly toastService = inject(KbqToastService);
     private readonly overlay = inject(Overlay);
     private readonly viewContainerRef = inject(ViewContainerRef);
+
     private readonly overlayContent = viewChild.required<TemplateRef<unknown>>('overlayContent');
     private readonly anchoredOverlayContent = viewChild.required<TemplateRef<unknown>>('anchoredOverlayContent');
     private readonly longActions = viewChild.required<TemplateRef<unknown>>('longActions');
     private readonly closeOnScrollOrigin = viewChild.required('closeOnScrollOrigin', { read: ElementRef });
+
     private overlayRef: OverlayRef | null = null;
     private anchoredOverlayRef: OverlayRef | null = null;
     private lastToast: HTMLElement | null = null;

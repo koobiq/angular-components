@@ -7,7 +7,9 @@ export const e2eDisableResizeObserver = async (page: Page): Promise<void> => {
     await page.addInitScript(() => {
         window.ResizeObserver = class {
             observe() {}
+
             unobserve() {}
+
             disconnect() {}
         } as unknown as typeof ResizeObserver;
     });

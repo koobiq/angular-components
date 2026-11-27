@@ -48,6 +48,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 })
 export class DevSkeletonTableExample {
     protected readonly loading = model(true);
+
     protected readonly columns = ['Address', 'Port', 'Protocol'];
     protected readonly servers = [
         { address: 'productname1.security.com', port: 555, protocol: 'LDAPS' },

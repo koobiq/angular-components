@@ -34,15 +34,13 @@ import { KBQ_CONNECTED_OVERLAY_ORIGIN, KBQ_FORM_FIELD_REF, KbqColorDirective } f
 import { kbqIconErrorStateContextFactoryProvider } from '@koobiq/components/icon';
 import { KbqCleaner, kbqCleanerFactoryProvider } from './cleaner';
 import { KbqError } from './error';
+import { KBQ_FORM_FIELD } from './form-field.types';
 import { KbqFormFieldControl, kbqSetDescribedByIds } from './form-field-control';
 import { KbqHint, kbqHintParentFactoryProvider } from './hint';
 import { KbqLabel } from './label';
-// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqPasswordToggle } from './password-toggle';
 import { KbqPrefix } from './prefix';
-// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqReactivePasswordHint } from './reactive-password-hint';
-// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqStepper } from './stepper';
 import { KbqSuffix } from './suffix';
 
@@ -50,13 +48,6 @@ import { KbqSuffix } from './suffix';
 export function getKbqFormFieldMissingControlError(): Error {
     return Error('kbq-form-field must contain a KbqFormFieldControl');
 }
-
-/**
- * Injection token used to access the owning `KbqFormField`.
- *
- * @docs-private
- */
-export const KBQ_FORM_FIELD = new InjectionToken<KbqFormField>('KbqFormField');
 
 /**
  * Default options for the kbq-form-field that can be configured using the `KBQ_FORM_FIELD_DEFAULT_OPTIONS`
@@ -255,7 +246,6 @@ export class KbqFormField
     private readonly controlElementRef: Signal<ElementRef<HTMLElement>> = contentChild.required(KbqFormFieldControl, {
         read: ElementRef
     });
-
     private readonly reactivePasswordHint = contentChildren(KbqReactivePasswordHint);
     private readonly error = contentChildren(KbqError);
     private readonly label = contentChild(KbqLabel);
@@ -266,10 +256,15 @@ export class KbqFormField
     private readonly disabledState = computed(() => !!this.control()?.disabled());
     private readonly autofilledState = computed(() => !!this.control()?.autofilled?.());
 
-    /** Whether the form field is invalid. */
-    get invalid(): boolean {
-        return this.invalidState();
-    }
+    /**
+     * Whether the bound form control has `Validators.required`. Re-read on every content check: the validators of a
+     * control notify nothing a signal could follow.
+     */
+    private readonly requiredByValidator = signal(false);
+    private _focusOrigin: FocusOrigin = null;
+
+    /** Ids last written to the control's `aria-describedby`, to skip redundant DOM writes. */
+    private appliedDescribedByIds: string = '';
 
     /**
      * Whether the form field control has an reactive password hint.
@@ -291,12 +286,6 @@ export class KbqFormField
      * @docs-private
      */
     protected readonly hasLabel = computed(() => !!this.label());
-
-    /**
-     * Whether the bound form control has `Validators.required`. Re-read on every content check: the validators of a
-     * control notify nothing a signal could follow.
-     */
-    private readonly requiredByValidator = signal(false);
 
     /**
      * Whether the label ends with the required marker.
@@ -366,6 +355,14 @@ export class KbqFormField
      */
     readonly hasPasswordToggle = computed(() => !!this.passwordToggle());
 
+    /** Whether the form field control is read-only. */
+    readonly readonly = computed(() => !!this.control()?.readonly?.());
+
+    /** Whether the form field is invalid. */
+    get invalid(): boolean {
+        return this.invalidState();
+    }
+
     /**
      * Current focus origin state.
      *
@@ -374,8 +371,6 @@ export class KbqFormField
     get focusOrigin(): FocusOrigin {
         return this._focusOrigin;
     }
-
-    private _focusOrigin: FocusOrigin = null;
 
     /**
      * @docs-private
@@ -399,9 +394,6 @@ export class KbqFormField
         return this.disabledState();
     }
 
-    /** Whether the form field control is read-only. */
-    readonly readonly = computed(() => !!this.control()?.readonly?.());
-
     /**
      * Whether the form field control's value was filled in by the browser. Controls that cannot be
      * autofilled do not implement `autofilled`, and report `false` here.
@@ -415,9 +407,6 @@ export class KbqFormField
     get autofilled(): boolean {
         return this.autofilledState();
     }
-
-    /** Ids last written to the control's `aria-describedby`, to skip redundant DOM writes. */
-    private appliedDescribedByIds: string = '';
 
     ngAfterContentInit(): void {
         this.validateControlChild();
@@ -601,8 +590,9 @@ export class KbqFormField
     exportAs: 'KbqTrim'
 })
 export class KbqTrim {
-    private readonly noTrim = coerceBooleanProperty(inject(new HostAttributeToken('no-trim'), { optional: true }));
     private readonly ngControl = inject(NgControl, { optional: true, self: true });
+
+    private readonly noTrim = coerceBooleanProperty(inject(new HostAttributeToken('no-trim'), { optional: true }));
 
     constructor() {
         if (this.noTrim || !this.ngControl) {

@@ -1,6 +1,6 @@
-﻿import { PlatformModule } from '@angular/cdk/platform';
+﻿import { ENTER } from '@angular/cdk/keycodes';
+import { PlatformModule } from '@angular/cdk/platform';
 import { NgModule } from '@angular/core';
-import { ENTER } from '@koobiq/components/core';
 import {
     KbqTag,
     KbqTagAvatar,

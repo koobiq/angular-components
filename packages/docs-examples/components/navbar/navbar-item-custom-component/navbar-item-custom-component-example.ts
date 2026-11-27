@@ -79,6 +79,5 @@ export class ExampleNavbarNotifications implements KbqNavbarItemTrigger {
 })
 export class NavbarItemCustomComponentExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly popUpPlacements = PopUpPlacements;
 }

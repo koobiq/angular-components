@@ -10,6 +10,7 @@ import { ListKeyManager } from './list-key-manager';
 class FakeFocusable {
     /** Whether the item is disabled or not. */
     disabled = false;
+
     /** Test property that can be used to test the `skipPredicate` functionality. */
     skipItem = false;
 
@@ -93,6 +94,25 @@ describe('Key managers', () => {
         it('should set the activeItem to null if an invalid index is passed in', () => {
             keyManager.setActiveItem(1337);
             expect(keyManager.activeItem).toBeNull();
+        });
+
+        describe('isActiveItemStale', () => {
+            it('should not report an active item that is still in the list', () => {
+                expect(keyManager.isActiveItemStale()).toBe(false);
+            });
+
+            it('should report an active item that has left the list', () => {
+                itemList.reset(itemList.toArray().slice(1));
+                itemList.notifyOnChanges();
+
+                expect(keyManager.isActiveItemStale()).toBe(true);
+            });
+
+            it('should report a list without an active item', () => {
+                keyManager.setActiveItem(-1);
+
+                expect(keyManager.isActiveItemStale()).toBe(true);
+            });
         });
 
         describe('Key events', () => {

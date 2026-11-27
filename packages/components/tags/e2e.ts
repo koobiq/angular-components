@@ -1,7 +1,8 @@
+import { ENTER } from '@angular/cdk/keycodes';
 import { ChangeDetectionStrategy, Component, model, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
-import { ENTER, KbqComponentColors } from '@koobiq/components/core';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { type KbqTagInputEvent, kbqTagsDefaultOptionsProvider, KbqTagsModule } from '@koobiq/components/tags';
@@ -104,6 +105,7 @@ export class E2eTagStateAndStyle {
 })
 export class E2eTagEditable {
     readonly tag = model('Editable tag');
+
     readonly color = KbqComponentColors;
 }
 

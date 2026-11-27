@@ -40,7 +40,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class SelectPrioritizedSelectedExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly options = signal<string[]>([]);
     selected: string[] = [];
 

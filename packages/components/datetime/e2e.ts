@@ -78,7 +78,6 @@ const template = `
 class DatetimeStates {
     protected readonly timeFormats = TimeFormats;
     protected readonly min = DateTime.fromISO('2025-11-12T09:00');
-
     protected readonly emptyControl = new FormControl<DateTime | null>(null);
     protected readonly filledControl = new FormControl(DateTime.fromISO('2025-11-09T20:20:35'));
     protected readonly disabledControl = new FormControl({

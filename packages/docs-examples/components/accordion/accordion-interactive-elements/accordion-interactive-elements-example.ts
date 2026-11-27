@@ -37,7 +37,6 @@ type ExampleSection = {
 })
 export class AccordionInteractiveElementsExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly sections = computed<ExampleSection[]>(() => [
         { id: 'section-1', title: this.t().profile, enabled: true, name: '' },
         { id: 'section-2', title: this.t().specifications, enabled: false, name: '' },

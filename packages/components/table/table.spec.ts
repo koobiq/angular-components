@@ -7,9 +7,9 @@ import { KbqTableModule } from './table.module';
 
 @Injectable()
 class MockResizeObserver extends SharedResizeObserver {
-    readonly observed: Element[] = [];
-
     private readonly changes = new Subject<ResizeObserverEntry[]>();
+
+    readonly observed: Element[] = [];
 
     override observe(target: Element, _options?: ResizeObserverOptions): Observable<ResizeObserverEntry[]> {
         this.observed.push(target);

@@ -117,35 +117,36 @@ export class KbqFilterSavePopover implements AfterViewInit {
 
     /** Popover trigger owned by the parent (`KbqFilters` main button). */
     readonly popoverTrigger = input.required<KbqPopoverTrigger>();
+
     /** Filter bar, used for the save payload, the current filter and localized strings. */
     readonly filterBar = input.required<KbqFilterBar>();
 
     /** Emits when the user saves/renames a filter. */
     readonly save = output<KbqSaveFilterEvent>();
+
     /** Emits when the popover closes; the boolean requests focus restoration by the parent. */
     readonly closed = output<boolean>();
 
     /** @docs-private */
     readonly headerTemplate = viewChild.required<TemplateRef<unknown>>('header');
+
     /** @docs-private */
     readonly contentTemplate = viewChild.required<TemplateRef<unknown>>('content');
+
     /** @docs-private */
     readonly footerTemplate = viewChild.required<TemplateRef<unknown>>('footer');
-
     private readonly newFilterName = viewChild.required<ElementRef>('newFilterName');
     private readonly saveFilterButton = viewChild.required<KbqButton>('saveFilterButton');
+
+    /** Custom error text passed to `showError()`; `null` when the locale-derived default should be used. */
+    private customErrorText: string | null = null;
 
     /** new filter name for saving */
     filterName: FormControl<string | null> = new FormControl<string | null>(null);
 
     /** true if saving a new filter, false if saving changes in filter */
     saveNewFilter: boolean = false;
-
     showFilterSavingError: boolean = false;
-
-    /** Custom error text passed to `showError()`; `null` when the locale-derived default should be used. */
-    private customErrorText: string | null = null;
-
     isSaving: boolean = false;
 
     /**

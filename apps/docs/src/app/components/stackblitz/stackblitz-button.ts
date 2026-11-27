@@ -37,9 +37,9 @@ import { DocsStackblitzWriter } from './stackblitz-writer';
     }
 })
 export class DocsStackblitzButtonComponent {
-    readonly exampleId = input<string>();
-
     private readonly stackBlitzWriter = inject(DocsStackblitzWriter);
+
+    readonly exampleId = input<string>();
 
     private readonly exampleData = computed(() => {
         const id = this.exampleId();

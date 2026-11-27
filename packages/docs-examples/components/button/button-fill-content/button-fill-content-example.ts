@@ -22,6 +22,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class ButtonFillContentExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     colors = KbqComponentColors;
 }

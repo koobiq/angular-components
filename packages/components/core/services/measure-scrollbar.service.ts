@@ -11,6 +11,15 @@ export class KbqMeasureScrollbarService {
     protected readonly document = inject<Document>(DOCUMENT);
     private readonly platform = inject(Platform);
 
+    private _scrollBarWidth = 0;
+    private scrollbarMeasure = {
+        position: 'absolute',
+        top: '-9999px',
+        width: '50px',
+        height: '50px',
+        overflow: 'scroll'
+    };
+
     get scrollBarWidth(): number {
         if (this._scrollBarWidth) {
             return this._scrollBarWidth;
@@ -20,15 +29,6 @@ export class KbqMeasureScrollbarService {
 
         return this._scrollBarWidth;
     }
-
-    private _scrollBarWidth = 0;
-    private scrollbarMeasure = {
-        position: 'absolute',
-        top: '-9999px',
-        width: '50px',
-        height: '50px',
-        overflow: 'scroll'
-    };
 
     constructor() {
         this.initScrollBarWidth();

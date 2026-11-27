@@ -53,13 +53,11 @@ const restSymbolsRegex = /[^0-9a-zA-Zа-яА-ЯйЙёЁ]+/g;
     }
 })
 export class ValidationOnTypeExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly tooltip = viewChild(KbqTooltipTrigger);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly popUpPlacements = PopUpPlacements;
     protected readonly colors = KbqComponentColors;
-
     protected readonly checkOnFlyForm = new FormGroup({
         folderName: new FormControl('')
     });

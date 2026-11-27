@@ -46,7 +46,7 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DlVerticalExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly vertical = model(true);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

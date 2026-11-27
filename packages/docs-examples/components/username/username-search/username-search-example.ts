@@ -124,11 +124,11 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class UsernameSearchExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly formatUsername = kbqInjectUsernameFormatter();
 
     protected readonly isCompact = model(false);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly searchControl = new FormControl('', { nonNullable: true });
 
     private readonly searchText = toSignal(this.searchControl.valueChanges.pipe(startWith('')), { initialValue: '' });
@@ -140,12 +140,10 @@ export class UsernameSearchExample {
         { firstName: 'Elena', middleName: 'Vera', lastName: 'Fox', login: 'efox' },
         { firstName: 'Madonna', login: 'madonna', site: 'corp' }
     ];
-
     protected readonly selectedUser = signal<KbqUserInfo | null>(this.users[0] ?? null);
 
     // The name, the login and the site are rendered in separate elements, so each word of the query is highlighted on its own.
     protected readonly keywords = computed(() => tokenizeSearchQuery(this.searchText()));
-
     protected readonly filteredUsers = computed(() => {
         const matches = createSearchPredicate(this.searchText());
 

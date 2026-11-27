@@ -101,7 +101,6 @@ export class E2eFilterBarPipeTruncation {
             disabled: false
         }
     ];
-
     readonly filter: KbqFilter = {
         name: 'Очень длинное название сохранённого фильтра',
         readonly: false,
@@ -323,9 +322,7 @@ export class E2eFilterBarStates implements AfterViewInit {
     readonly optionTemplate = viewChild.required<TemplateRef<any>>('optionTemplate');
 
     pipeTemplates: KbqPipeTemplate[] = [];
-
     dateTime = this.adapter.createDateTime(2025, 11, 12, 10, 10, 10, 10);
-
     filters: KbqFilter[] = [
         {
             name: 'select',
@@ -1089,10 +1086,6 @@ export class E2eFilterBarStates implements AfterViewInit {
     }
 })
 export class E2eFilterBarPanelMaxHeight {
-    private buildOptions(count: number) {
-        return Array.from({ length: count }, (_, index) => ({ name: `Option ${index + 1}`, id: `${index + 1}` }));
-    }
-
     readonly pipeTemplates: KbqPipeTemplate[] = [
         {
             // 8 × 32px == the 256px default exactly: the list must not scroll.
@@ -1149,7 +1142,6 @@ export class E2eFilterBarPanelMaxHeight {
             disabled: false
         }
     ];
-
     readonly filter: KbqFilter = {
         name: 'panelMaxHeight',
         readonly: false,
@@ -1209,6 +1201,10 @@ export class E2eFilterBarPanelMaxHeight {
             }
         ]
     };
+
+    private buildOptions(count: number) {
+        return Array.from({ length: count }, (_, index) => ({ name: `Option ${index + 1}`, id: `${index + 1}` }));
+    }
 }
 
 /** Captioned and custom options in select and tree pipes, with and without `multilineOptions`. */
@@ -1247,6 +1243,8 @@ export class E2eFilterBarPanelMaxHeight {
     }
 })
 export class E2eFilterBarOptionCaption {
+    readonly treeOptionTemplate = viewChild<TemplateRef<any>>('treeOptionTemplate');
+
     private readonly values = [
         {
             // Long enough to reach the panel's maximum width (640px), below which neither mode is observable.
@@ -1258,7 +1256,6 @@ export class E2eFilterBarOptionCaption {
         { name: 'Event: Action', id: 'action', value: 'action', caption: 'action' },
         { name: 'Event: Threat type', id: 'threat', value: 'threat', caption: 'category.generic' }
     ];
-
     private readonly treeValues = [
         {
             name: 'Event fields',
@@ -1275,8 +1272,6 @@ export class E2eFilterBarOptionCaption {
             ]
         }
     ];
-
-    readonly treeOptionTemplate = viewChild<TemplateRef<any>>('treeOptionTemplate');
 
     readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
         {
@@ -1345,7 +1340,6 @@ export class E2eFilterBarOptionCaption {
             disabled: false
         }
     ]);
-
     readonly filter: KbqFilter = {
         name: '',
         readonly: false,
@@ -1496,7 +1490,6 @@ export class E2eFilterBarPipeFill {
             disabled: false
         }
     ];
-
     readonly pipes: KbqPipe[] = [
         {
             name: 'Select',
@@ -1609,7 +1602,6 @@ export class E2eFilterBarNoOptions {
             disabled: false
         }
     ];
-
     readonly filter: KbqFilter = {
         name: '',
         readonly: false,
@@ -1712,7 +1704,6 @@ export class E2eFilterBarDateWithoutValues {
             disabled: false
         }
     ];
-
     readonly filter: KbqFilter = {
         name: '',
         readonly: false,
@@ -1779,7 +1770,6 @@ export class E2eFilterBarDateWithHint {
             disabled: false
         }
     ];
-
     readonly filter: KbqFilter = {
         name: '',
         readonly: false,
@@ -1926,7 +1916,6 @@ export class E2eFilterBarMultiTreeSelectValueTemplate implements AfterViewInit {
     readonly optionTemplate = viewChild.required<TemplateRef<any>>('optionTemplate');
 
     pipeTemplates: KbqPipeTemplate[] = [];
-
     readonly filter: KbqFilter = {
         name: '',
         readonly: false,
@@ -2059,7 +2048,6 @@ export class E2eFilterBarSelectAllCounter {
             }
         ]
     };
-
     readonly pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'MultiSelect',

@@ -1,8 +1,9 @@
-﻿import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+﻿import { COMMA, ENTER, SPACE, TAB } from '@angular/cdk/keycodes';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { COMMA, ENTER, KbqHighlightModule, KbqPseudoCheckboxModule, SPACE, TAB } from '@koobiq/components/core';
+import { KbqHighlightModule, KbqPseudoCheckboxModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqModalModule } from '@koobiq/components/modal';
@@ -201,29 +202,18 @@ export class DevApp {
         'Bryansk',
         'Veliky Novgorod'
     ];
-
     emptyMultipleValue = [];
-
     treeModel = 'rootNode_1';
     multipleTreeModel = ['rootNode_1', 'Documents', 'November'];
-
     treeControl: FlatTreeControl<DevFileFlatNode>;
     treeFlattener: KbqTreeFlattener<DevFileNode, DevFileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<DevFileNode, DevFileFlatNode>;
-
     inputTags = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6', 'tag7'];
-
     tagModel = ['tag', 'tag1'];
-
     readonly separatorKeysCodes: number[] = [ENTER, SPACE, TAB, COMMA];
-
     autocompleteSelectedTags: string[] = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6', 'tag7'];
-
     options: string[] = OPTIONS.sort();
-
     password = '456';
-
     numberValue: number | null = null;
 
     constructor() {

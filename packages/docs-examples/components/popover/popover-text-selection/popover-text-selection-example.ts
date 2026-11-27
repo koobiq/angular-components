@@ -105,18 +105,20 @@ type Format = (typeof FORMATS)[number];
 })
 export class PopoverTextSelectionExample {
     private readonly document = inject(DOCUMENT);
+
     private readonly textRef = viewChild<ElementRef<HTMLElement>>('text');
     private readonly popover = viewChild(KbqPopoverTrigger);
 
     /** Stays on the selection: the rectangle is measured again every time the panel is positioned. */
     protected readonly origin = kbqCreateCaretOrigin(() => this.measureSelection());
+    /** Whether a pointer selection is still being dragged out. */
+    private selecting = false;
+
     protected readonly visible = signal(false);
+
     /** The formats the selection already carries. */
     protected readonly active = signal<string[]>([]);
     protected readonly formats = FORMATS;
-
-    /** Whether a pointer selection is still being dragged out. */
-    private selecting = false;
 
     constructor() {
         // A pointer selection is only final on `pointerup`: shown on the first `selectionchange`, the toolbar

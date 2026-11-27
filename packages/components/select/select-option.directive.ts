@@ -20,17 +20,16 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
     private readonly isBrowser = inject(Platform).isBrowser;
     private readonly window = inject(KBQ_WINDOW);
 
-    private readonly debounceInterval = 100;
-
-    private resizeSubscription = Subscription.EMPTY;
-    private contentObserverSubscription = Subscription.EMPTY;
-    private focusMonitorSubscription = Subscription.EMPTY;
-
     /**
      * Overrides the tooltip's hoverable default. The overflow hint floats over the neighbouring options of a
      * scrolling list, so a pointer-capturing pane would swallow the click that selects them.
      */
     override readonly ignoreTooltipPointerEvents = input<boolean>(true);
+
+    private readonly debounceInterval = 100;
+    private resizeSubscription = Subscription.EMPTY;
+    private contentObserverSubscription = Subscription.EMPTY;
+    private focusMonitorSubscription = Subscription.EMPTY;
 
     /**
      * The hint repeats text the option had to clip, so `kbqTooltipDisabled="false"` cannot conjure one for an
@@ -51,23 +50,6 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
 
         // A two-line option's lines clip themselves, so they never widen this element's `scrollWidth`.
         return textElement.clientWidth < textElement.scrollWidth || this.hasClippedLine(textElement);
-    }
-
-    /**
-     * Whether one of the option's own line boxes is truncating its text. The ellipsis is part of the
-     * condition, so a child clipping for another reason is not read as truncated text.
-     */
-    private hasClippedLine(textElement: HTMLElement): boolean {
-        for (const line of Array.from(textElement.children)) {
-            if (
-                line.clientWidth < line.scrollWidth &&
-                this.window.getComputedStyle(line).textOverflow.includes('ellipsis')
-            ) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     override ngAfterViewInit() {
@@ -100,6 +82,23 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
         this.focusMonitorSubscription.unsubscribe();
 
         super.ngOnDestroy();
+    }
+
+    /**
+     * Whether one of the option's own line boxes is truncating its text. The ellipsis is part of the
+     * condition, so a child clipping for another reason is not read as truncated text.
+     */
+    private hasClippedLine(textElement: HTMLElement): boolean {
+        for (const line of Array.from(textElement.children)) {
+            if (
+                line.clientWidth < line.scrollWidth &&
+                this.window.getComputedStyle(line).textOverflow.includes('ellipsis')
+            ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     handleElementEnter() {

@@ -64,7 +64,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class FormFieldPasswordOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly formControl = new FormControl('', [
         Validators.required,
         PasswordValidators.minLength(8),

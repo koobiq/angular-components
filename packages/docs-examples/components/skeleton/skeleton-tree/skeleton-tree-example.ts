@@ -50,11 +50,10 @@ type DirectoryFlatNode = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SkeletonTreeExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly loading = model(true);
-
     protected readonly selected = model<string>('');
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly treeControl = new FlatTreeControl<DirectoryFlatNode>(
         (node) => node.level,
         (node) => node.expandable,

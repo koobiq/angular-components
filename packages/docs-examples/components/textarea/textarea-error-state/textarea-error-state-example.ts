@@ -25,7 +25,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TextareaErrorStateExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly control = new FormControl('', [Validators.minLength(10), Validators.required]);
 
     constructor() {

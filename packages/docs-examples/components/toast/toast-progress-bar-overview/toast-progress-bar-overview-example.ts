@@ -36,9 +36,9 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastProgressBarOverviewExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly toastService = inject(KbqToastService);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     showStickyToast(content: TemplateRef<any>, actions: TemplateRef<any>) {
         this.toastService.show(

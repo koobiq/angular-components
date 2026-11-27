@@ -173,7 +173,6 @@ export function kbqNotificationCenterScrollStrategyFactory(overlay: Overlay): ()
 export class KbqNotificationCenterComponent extends KbqPopUp implements AfterViewInit, KbqNotificationCenterPanel {
     /** @docs-private */
     protected readonly service = inject(KbqNotificationCenterService);
-
     private readonly injector = inject(Injector);
     private readonly ngZone = inject(NgZone);
     private readonly idGenerator = inject(_IdGenerator);
@@ -181,7 +180,6 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     private readonly document = inject(DOCUMENT);
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly inputModalityDetector = inject(InputModalityDetector);
-
     private readonly carrier = inject(KbqLocaleOverridesDirective, { self: true });
 
     /**
@@ -210,6 +208,17 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
      */
     protected readonly titleId = this.idGenerator.getId('kbq-notification-center-title-');
 
+    readonly switcher = viewChild.required<KbqButton>('notificationSwitcher');
+
+    /** Scrollable list container; used to measure scroll position for infinite scroll. */
+    private readonly scrollContainer = viewChild.required(KbqScrollbarViewport);
+
+    /** Re-measures the list outside of a scroll event: on first render and whenever the state changes. */
+    /** Whether a re-measurement is already queued for the next render. */
+    private scrolledToBottomRecheckPending = false;
+    private readonly scrolledToBottomRecheck = new Subject<void>();
+    private _popoverHeight = '';
+
     /**
      * Id of the panel element, set by the trigger so it can point `aria-controls` at it.
      *
@@ -227,11 +236,14 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
      */
     protected scrolledToBottomOffset: number = 0;
 
-    /** Re-measures the list outside of a scroll event: on first render and whenever the state changes. */
-    /** Whether a re-measurement is already queued for the next render. */
-    private scrolledToBottomRecheckPending = false;
+    /** @docs-private */
+    override prefix = 'kbq-notification-center';
 
-    private readonly scrolledToBottomRecheck = new Subject<void>();
+    /** @docs-private */
+    override trigger: KbqNotificationCenterTrigger | undefined;
+
+    /** @docs-private */
+    isTrapFocus: boolean = false;
 
     /**
      * Text of the panel's single live region. The panel keeps one persistent region and only changes
@@ -258,18 +270,6 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
         return this.service.empty() ? this.localeConfiguration().noNotifications : '';
     }
 
-    /** @docs-private */
-    override prefix = 'kbq-notification-center';
-    /** @docs-private */
-    override trigger: KbqNotificationCenterTrigger | undefined;
-    /** @docs-private */
-    isTrapFocus: boolean = false;
-
-    readonly switcher = viewChild.required<KbqButton>('notificationSwitcher');
-
-    /** Scrollable list container; used to measure scroll position for infinite scroll. */
-    private readonly scrollContainer = viewChild.required(KbqScrollbarViewport);
-
     get popoverHeight(): string {
         return this._popoverHeight;
     }
@@ -292,8 +292,6 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
             );
         }
     }
-
-    private _popoverHeight = '';
 
     ngAfterViewInit() {
         this.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state) => {
@@ -590,6 +588,7 @@ export class KbqNotificationCenterTrigger
 {
     /** @docs-private */
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY);
+
     /** @docs-private */
     protected readonly service = inject(KbqNotificationCenterService);
 
@@ -599,26 +598,6 @@ export class KbqNotificationCenterTrigger
      * @docs-private
      */
     protected readonly panelId = inject(_IdGenerator).getId('kbq-notification-center-panel-');
-
-    /**
-     * Not used.
-     *
-     * @docs-private
-     */
-    arrow: boolean = false;
-
-    /** @docs-private */
-    customClass: string = '';
-    /** @docs-private */
-    content: string | TemplateRef<unknown> = '';
-
-    /** Number of unread notifications, formatted for the trigger badge. */
-    get unreadItemsCounter(): Signal<string> {
-        return this.service.unreadItemsCounter;
-    }
-
-    /** Placement of popUp */
-    override placement: KbqPopUpPlacementValues = defaultPlacement;
 
     /** Class that will be used in the background */
     readonly backdropClass = input<string>('cdk-overlay-transparent-backdrop');
@@ -631,6 +610,90 @@ export class KbqNotificationCenterTrigger
 
     /** Distance in pixels from the bottom of the list at which the next page is requested via `onNextPage`. */
     readonly scrolledToBottomOffset = input<number, unknown>(0, { transform: numberAttribute });
+
+    /** @docs-private */
+    readonly placementInput = input<KbqPopUpPlacementValues | undefined>(undefined, {
+        alias: 'kbqNotificationCenterPlacement'
+    });
+
+    /** @docs-private */
+    readonly popoverModeInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'popoverMode',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly popoverHeightInput = input<string | undefined>(undefined, { alias: 'popoverHeight' });
+
+    /** @docs-private */
+    readonly stickToWindowInput = input<KbqStickToWindowPlacementValues | undefined>(undefined, {
+        alias: 'stickToWindow'
+    });
+
+    /** @docs-private */
+    readonly containerInput = input<HTMLElement | undefined>(undefined, { alias: 'container' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** Emits a change event whenever the placement state changes. */
+    readonly placementChange = new EventEmitter<KbqPopUpPlacementValues>();
+
+    /** @docs-private */
+    readonly placementChangeOutput = outputFromObservable(this.placementChange, { alias: 'kbqPlacementChange' });
+
+    /** Emits a change event whenever the visible state changes. */
+    readonly visibleChange = new EventEmitter<boolean>();
+
+    /** @docs-private */
+    readonly visibleChangeOutput = outputFromObservable(this.visibleChange, { alias: 'kbqVisibleChange' });
+
+    /** Placement and priority in force before `popoverMode` replaced them. */
+    private placementBeforePopoverMode: {
+        placement: KbqPopUpPlacementValues;
+        priority: string | string[] | null;
+    } | null = null;
+    private _popoverMode: boolean = false;
+    private _popoverHeight = '';
+
+    /**
+     * Not used.
+     *
+     * @docs-private
+     */
+    arrow: boolean = false;
+
+    /** @docs-private */
+    customClass: string = '';
+
+    /** @docs-private */
+    content: string | TemplateRef<unknown> = '';
+
+    /** Placement of popUp */
+    override placement: KbqPopUpPlacementValues = defaultPlacement;
+
+    /**
+     * Additionally positions the element relative to the window side (Top, Right, Bottom and Left).
+     * If container is specified, the positioning will be relative to it.
+     * */
+    override stickToWindow: KbqStickToWindowPlacementValues | undefined;
+
+    /** Container for additional positioning, used with stickToWindow */
+    override container: HTMLElement | undefined;
+
+    /** @docs-private */
+    trigger: string = `${PopUpTriggers.Click}, ${PopUpTriggers.Keydown}`;
+
+    /** @docs-private */
+    protected originSelector = '.kbq-notification-center';
+
+    /** Number of unread notifications, formatted for the trigger badge. */
+    get unreadItemsCounter(): Signal<string> {
+        return this.service.unreadItemsCounter;
+    }
 
     /** Use popover or not */
     get popoverMode(): boolean {
@@ -660,14 +723,6 @@ export class KbqNotificationCenterTrigger
         }
     }
 
-    /** Placement and priority in force before `popoverMode` replaced them. */
-    private placementBeforePopoverMode: {
-        placement: KbqPopUpPlacementValues;
-        priority: string | string[] | null;
-    } | null = null;
-
-    private _popoverMode: boolean = false;
-
     /** Set height of popover. Default is `calc(100vh - <navbar height>)`. */
     get popoverHeight(): string {
         return this._popoverHeight;
@@ -683,8 +738,6 @@ export class KbqNotificationCenterTrigger
         }
     }
 
-    private _popoverHeight = '';
-
     /** Whether the trigger is disabled. */
     get disabled(): boolean {
         return this._disabled;
@@ -698,37 +751,10 @@ export class KbqNotificationCenterTrigger
         }
     }
 
-    /**
-     * Additionally positions the element relative to the window side (Top, Right, Bottom and Left).
-     * If container is specified, the positioning will be relative to it.
-     * */
-    override stickToWindow: KbqStickToWindowPlacementValues | undefined;
-
-    /** Container for additional positioning, used with stickToWindow */
-    override container: HTMLElement | undefined;
-
     /** @docs-private */
     get hasClickTrigger(): boolean {
         return this.trigger.includes(PopUpTriggers.Click);
     }
-
-    /** Emits a change event whenever the placement state changes. */
-    readonly placementChange = new EventEmitter<KbqPopUpPlacementValues>();
-
-    /** @docs-private */
-    readonly placementChangeOutput = outputFromObservable(this.placementChange, { alias: 'kbqPlacementChange' });
-
-    /** Emits a change event whenever the visible state changes. */
-    readonly visibleChange = new EventEmitter<boolean>();
-
-    /** @docs-private */
-    readonly visibleChangeOutput = outputFromObservable(this.visibleChange, { alias: 'kbqVisibleChange' });
-
-    /** @docs-private */
-    trigger: string = `${PopUpTriggers.Click}, ${PopUpTriggers.Keydown}`;
-
-    /** @docs-private */
-    protected originSelector = '.kbq-notification-center';
 
     /** @docs-private */
     protected get overlayConfig(): OverlayConfig {
@@ -742,33 +768,11 @@ export class KbqNotificationCenterTrigger
         };
     }
 
-    /** @docs-private */
-    readonly placementInput = input<KbqPopUpPlacementValues | undefined>(undefined, {
-        alias: 'kbqNotificationCenterPlacement'
-    });
+    constructor() {
+        super();
 
-    /** @docs-private */
-    readonly popoverModeInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'popoverMode',
-        transform: booleanAttribute
-    });
-
-    /** @docs-private */
-    readonly popoverHeightInput = input<string | undefined>(undefined, { alias: 'popoverHeight' });
-
-    /** @docs-private */
-    readonly stickToWindowInput = input<KbqStickToWindowPlacementValues | undefined>(undefined, {
-        alias: 'stickToWindow'
-    });
-
-    /** @docs-private */
-    readonly containerInput = input<HTMLElement | undefined>(undefined, { alias: 'container' });
-
-    /** @docs-private */
-    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'disabled',
-        transform: booleanAttribute
-    });
+        this.updatePlacementPriority(['right', 'rightBottom', 'rightTop']);
+    }
 
     ngOnChanges(changes: SimpleChanges): void {
         // A bound input is handed to its member, a bound `undefined` as the member's default; unbound, it leaves
@@ -800,12 +804,6 @@ export class KbqNotificationCenterTrigger
 
             if (disabled !== undefined) this.disabled = disabled;
         }
-    }
-
-    constructor() {
-        super();
-
-        this.updatePlacementPriority(['right', 'rightBottom', 'rightTop']);
     }
 
     ngAfterContentInit(): void {

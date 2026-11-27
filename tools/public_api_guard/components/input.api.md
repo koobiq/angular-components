@@ -22,6 +22,8 @@ import { KbqDeepPartial } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqInputLocaleConfiguration } from '@koobiq/components/core';
 import { KbqInputNumberLocaleConfiguration } from '@koobiq/components/core';
+import { KbqPasswordToggleControl } from '@koobiq/components/form-field';
+import { KbqStepperControl } from '@koobiq/components/form-field';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { NumberInput } from '@angular/cdk/coercion';
@@ -152,7 +154,7 @@ export class KbqInputMono {
 }
 
 // @public (undocumented)
-export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanUpdateErrorState {
+export class KbqInputPassword implements KbqFormFieldControl<any>, KbqPasswordToggleControl, DoCheck, CanUpdateErrorState {
     constructor();
     readonly autofilled: _angular_core.Signal<boolean>;
     controlType: string;
@@ -234,7 +236,7 @@ export class KbqMinValidator implements Validator, OnChanges {
 }
 
 // @public (undocumented)
-export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
+export class KbqNumberInput implements ControlValueAccessor, OnDestroy, KbqStepperControl {
     constructor();
     protected readonly ariaValueMax: _angular_core.Signal<number | null>;
     protected readonly ariaValueMin: _angular_core.Signal<number | null>;

@@ -651,12 +651,12 @@ const MICROSYNTAX_NAME = /\b(?:let|as)\s+([A-Za-z_$][\w$]*)/g;
  * template introduces (so a `@for` variable sharing a ref's name is not rewritten).
  */
 export class TemplateScanner<T = string> implements Visitor {
+    /** The embedded view currently being walked; a ref declared in it is invisible outside. */
+    private view: Range;
+
     readonly refs: TemplateRef<T>[] = [];
     readonly otherNames = new Set<string>();
     readonly expressions: TemplateExpression[] = [];
-
-    /** The embedded view currently being walked; a ref declared in it is invisible outside. */
-    private view: Range;
 
     constructor(
         private readonly template: string,
@@ -803,9 +803,13 @@ export class TemplateScanner<T = string> implements Visitor {
     }
 
     visitAttribute(): void {}
+
     visitComment(): void {}
+
     visitExpansion(): void {}
+
     visitExpansionCase(): void {}
+
     visitBlockParameter(): void {}
 }
 
