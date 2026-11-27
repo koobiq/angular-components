@@ -92,14 +92,14 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverArrowAndOffsetExample implements AfterViewInit {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly toggleGroup = viewChild.required(KbqButtonToggleGroup);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected arrow = true;
     protected arrowCentered = false;
     protected offset: number | null = null;
     protected offsetChanged = false;
     protected readonly popoverSize = PopUpSizes.Large;
-    protected readonly toggleGroup = viewChild.required(KbqButtonToggleGroup);
 
     ngAfterViewInit() {
         void Promise.resolve().then(() => {

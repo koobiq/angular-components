@@ -42,7 +42,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class SelectGroupsLabelExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly pokemonTypes = [
         {
             name: 'Grass',
@@ -68,6 +67,5 @@ export class SelectGroupsLabelExample {
             ]
         }
     ];
-
     readonly selected = ['bulbasaur-0', 'oddish-1'];
 }

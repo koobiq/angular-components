@@ -68,9 +68,9 @@ interface GroupOverride {
  * in another group still reports its children once.
  */
 class GroupOverrideCollector implements Visitor {
-    readonly overrides: GroupOverride[] = [];
-
     private groupDepth = 0;
+
+    readonly overrides: GroupOverride[] = [];
 
     visitElement(element: any): void {
         const entered = isGroup(element);
@@ -101,11 +101,17 @@ class GroupOverrideCollector implements Visitor {
     }
 
     visitAttribute(): void {}
+
     visitText(): void {}
+
     visitComment(): void {}
+
     visitExpansion(): void {}
+
     visitExpansionCase(): void {}
+
     visitBlockParameter(): void {}
+
     visitLetDeclaration(): void {}
 }
 

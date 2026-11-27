@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, type ColDef, ModuleRegistry } from 'ag-grid-community';
 import {
@@ -8,6 +8,8 @@ import {
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { exampleIncidentColumns } from '../incident-columns';
+import { exampleGetIncidents } from '../security-incidents';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -25,10 +27,10 @@ ModuleRegistry.registerModules([AllCommunityModule]);
             #filterState="kbqAgGridFilterState"
             kbqAgGridTheme
             kbqAgGridThemeDisableCellFocusStyles
-            kbqAgGridFilterState="example-ag-grid-filter-state"
+            kbqAgGridFilterState="example-ag-grid-incidents-filter-state"
             [alwaysMultiSort]="true"
             [rowData]="rowData"
-            [columnDefs]="columnDefs"
+            [columnDefs]="columnDefs()"
             [style.height.px]="300"
             [style.width.%]="100"
             [defaultColDef]="defaultColDef"
@@ -49,17 +51,10 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class AgGridFilterStateExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly defaultColDef: ColDef = {
         filter: true,
         floatingFilter: true
     };
-    readonly columnDefs: ColDef[] = Array.from({ length: 6 }, (_, i) => ({
-        field: 'column' + i,
-        headerName: 'Column ' + i,
-        width: 130
-    }));
-    readonly rowData = Array.from({ length: 100 }, (_, index) =>
-        Object.fromEntries(Array.from({ length: 6 }, (_, i) => ['column' + i, 'Text ' + index]))
-    );
+    protected readonly columnDefs = computed(() => exampleIncidentColumns(this.t().headers));
+    protected readonly rowData = exampleGetIncidents();
 }

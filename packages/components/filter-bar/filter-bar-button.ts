@@ -12,8 +12,10 @@ import { KBQ_FILTER_BAR_HOST, KBQ_FILTERS } from './filter-bar.types';
 })
 export class KbqFilterBarButton {
     private readonly button = inject(KbqButton);
+
     /** KbqFilterBar host seam */
     private readonly filterBar = inject(KBQ_FILTER_BAR_HOST);
+
     /** KbqFilters host seam */
     private readonly filters = inject(KBQ_FILTERS);
 

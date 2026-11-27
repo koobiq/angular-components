@@ -81,15 +81,14 @@ import { TRANSLATIONS } from './l10n';
 })
 export class InlineEditSaveProgressExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly delayOptions = [100, 250, 500, 3000];
+    protected readonly delay = signal(500);
+    protected readonly nameControl = new FormControl('Security team', { nonNullable: true });
+    protected readonly descriptionControl = new FormControl('Monitors incidents', { nonNullable: true });
 
     protected get placeholder(): string {
         return this.t().placeholder;
     }
-    protected readonly delayOptions = [100, 250, 500, 3000];
-    protected readonly delay = signal(500);
-
-    protected readonly nameControl = new FormControl('Security team', { nonNullable: true });
-    protected readonly descriptionControl = new FormControl('Monitors incidents', { nonNullable: true });
 
     protected readonly save: KbqInlineEditSaveHandler = () => this.sendToServer();
 

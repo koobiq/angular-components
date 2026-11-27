@@ -83,15 +83,11 @@ const restSymbolsRegex = /[^0-9.]+/g;
     }
 })
 export class InlineEditValidationExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly tooltip = viewChild(KbqTooltipTrigger);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly tooltipPlacement = PopUpPlacements.BottomLeft;
     protected readonly tooltipColor = KbqComponentColors.Warning;
-    protected get placeholder(): string {
-        return this.t().placeholder;
-    }
-
     protected readonly ipAddressControl = new FormControl<string>('192.168.0.2', {
         nonNullable: true,
         validators: [Validators.pattern(IP_PATTERN)]
@@ -100,6 +96,10 @@ export class InlineEditValidationExample {
         nonNullable: true,
         validators: [Validators.required]
     });
+
+    protected get placeholder(): string {
+        return this.t().placeholder;
+    }
 
     onInput(event: Event): void {
         const allowedSymbolsRegex = /^[0-9.]+$/g;

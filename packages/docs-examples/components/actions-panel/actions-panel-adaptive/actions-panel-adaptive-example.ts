@@ -127,14 +127,15 @@ type ExampleAction = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleActionsPanel {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly templateRef = viewChild.required(TemplateRef);
-    private actionsPanelRef: KbqActionsPanelRef | null = null;
     private readonly toast = inject(KbqToastService);
 
+    private readonly templateRef = viewChild.required(TemplateRef);
+
+    private actionsPanelRef: KbqActionsPanelRef | null = null;
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly actions = computed<ExampleAction[]>(() => [
         { id: 'Responsible', icon: 'kbq-user_16', label: this.t().responsible },
         { id: 'Status', icon: 'kbq-arrow-right-s_16', label: this.t().status },

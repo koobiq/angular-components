@@ -75,10 +75,10 @@ type Country = { code: string; name: string; svg: SafeHtml };
     }
 })
 export class FlagAspectRatioExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     private readonly sanitizer = inject(DomSanitizer);
     private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     // Every flag exported from country-flag-icons, resolved to a country name for display.
     // Subdivision codes are exported with underscores (GB-ENG → GB_ENG).
@@ -93,7 +93,6 @@ export class FlagAspectRatioExample {
             }))
             .sort((a, b) => a.name.localeCompare(b.name));
     });
-
     protected readonly control = new FormControl<Country | null>(this.countries()[0] ?? null);
 
     protected readonly compareWith = (a: Country | null, b: Country | null) => a?.code === b?.code;

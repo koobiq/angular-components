@@ -73,20 +73,19 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
     parentFormGroup = inject(FormGroupDirective, { optional: true });
     defaultErrorStateMatcher = inject(ErrorStateMatcher);
 
+    /** An object used to control when error messages are shown. */
+    readonly errorStateMatcher = input<ErrorStateMatcher>();
+
     private readonly errorStateTracker = new KbqErrorStateTracker(
         this.defaultErrorStateMatcher,
         this.ngControl,
         this.parentFormGroup,
         this.parentForm
     );
+    private readonly focusedValue = signal(false);
 
     /** Whether the component is in an error state. */
     readonly errorState = this.errorStateTracker.errorState;
-
-    /** An object used to control when error messages are shown. */
-    readonly errorStateMatcher = input<ErrorStateMatcher>();
-
-    private readonly focusedValue = signal(false);
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -102,15 +101,15 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
      */
     readonly autofilled = kbqInjectAutofilled();
 
+    /** @docs-private */
+    readonly placeholderInput = input<string | undefined>(undefined, { alias: 'placeholder' });
+
     /**
      * Implemented as part of KbqFormFieldControl.
      *
      * @docs-private
      */
     controlType: string = this.numberInput ? 'input-number' : 'input';
-
-    /** @docs-private */
-    readonly placeholderInput = input<string | undefined>(undefined, { alias: 'placeholder' });
 
     /**
      * Implemented as part of KbqFormFieldControl. Writable, so that a select search can supply one.
@@ -120,30 +119,12 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
     readonly placeholder = linkedSignal(() => this.placeholderInput());
 
     protected uid = inject(_IdGenerator).getId('kbq-input-');
-    protected neverEmptyInputTypes = [
-        'date',
-        'datetime',
-        'datetime-local',
-        'month',
-        'time',
-        'week'
-    ].filter((t) => getSupportedInputTypes().has(t));
 
     /** @docs-private */
     readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
         alias: 'disabled',
         transform: booleanAttribute
     });
-
-    /** `disabled` of the bound form control, which takes precedence over the input. */
-    private readonly formDisabled = signal<boolean | null>(null);
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     *
-     * @docs-private
-     */
-    readonly disabled = computed(() => this.formDisabled() ?? this.disabledInput());
 
     /**
      * Whether the input is read-only: its value can be selected and copied, but not changed. A read-only
@@ -159,22 +140,16 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
      *
      * @docs-private
      */
-    readonly id = computed(() => this.idInput() || this.uid);
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     *
-     * @docs-private
-     */
     readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
 
     /** @docs-private */
     readonly typeInput = input<string | undefined>(undefined, { alias: 'type' });
 
-    /** Input type of the element. */
-    get type(): string {
-        return this.resolvedType();
-    }
+    /** @docs-private */
+    readonly valueInput = input<string | undefined>(undefined, { alias: 'value' });
+
+    /** `disabled` of the bound form control, which takes precedence over the input. */
+    private readonly formDisabled = signal<boolean | null>(null);
 
     // A native number field runs the value sanitization algorithm on assignment and drops anything that
     // is not a valid floating-point number — which is every value `kbqNumberInput` renders once a group
@@ -185,11 +160,35 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
 
         return this.numberInput && type === 'number' ? 'text' : type;
     });
-
     private inputValueAccessor: { value: any };
+    private readonly emptyValue = signal(true);
 
-    /** @docs-private */
-    readonly valueInput = input<string | undefined>(undefined, { alias: 'value' });
+    /** The value the element and `value` last agreed on, and the text the element showed then. */
+    private syncedValue: unknown;
+    private syncedText: string;
+
+    protected neverEmptyInputTypes = [
+        'date',
+        'datetime',
+        'datetime-local',
+        'month',
+        'time',
+        'week'
+    ].filter((t) => getSupportedInputTypes().has(t));
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     *
+     * @docs-private
+     */
+    readonly disabled = computed(() => this.formDisabled() ?? this.disabledInput());
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     *
+     * @docs-private
+     */
+    readonly id = computed(() => this.idInput() || this.uid);
 
     /**
      * Implemented as part of KbqFormFieldControl. Follows what the user types; a value bound with `[value]` or set
@@ -199,18 +198,17 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
      */
     readonly value: WritableSignal<string>;
 
-    private readonly emptyValue = signal(true);
-
-    /** The value the element and `value` last agreed on, and the text the element showed then. */
-    private syncedValue: unknown;
-    private syncedText: string;
-
     /**
      * Implemented as part of KbqFormFieldControl.
      *
      * @docs-private
      */
     readonly empty = this.emptyValue.asReadonly();
+
+    /** Input type of the element. */
+    get type(): string {
+        return this.resolvedType();
+    }
 
     constructor() {
         const inputValueAccessor = inject(KBQ_INPUT_VALUE_ACCESSOR, { optional: true, self: true });

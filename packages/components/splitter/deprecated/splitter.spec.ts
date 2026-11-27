@@ -89,11 +89,12 @@ class KbqSplitterDirection {
     `
 })
 class KbqSplitterEvents {
+    readonly areaA = viewChild.required('areaA', { read: KbqSplitterAreaDirective });
+    readonly areaB = viewChild.required('areaB', { read: KbqSplitterAreaDirective });
+
     gutterPositionChange = vi.fn();
     areaASizeChange = vi.fn().mockImplementation((size: number) => size);
     areaBSizeChange = vi.fn().mockImplementation((size: number) => size);
-    readonly areaA = viewChild.required('areaA', { read: KbqSplitterAreaDirective });
-    readonly areaB = viewChild.required('areaB', { read: KbqSplitterAreaDirective });
 }
 
 @Component({
@@ -109,9 +110,10 @@ class KbqSplitterEvents {
     `
 })
 class KbqSplitterGhost {
-    direction: Direction = Direction.Horizontal;
     readonly areaA = viewChild.required('areaA', { read: KbqSplitterAreaDirective });
     readonly areaB = viewChild.required('areaB', { read: KbqSplitterAreaDirective });
+
+    direction: Direction = Direction.Horizontal;
 }
 
 @Component({
@@ -129,10 +131,11 @@ class KbqSplitterGhost {
     `
 })
 class DynamicData {
-    direction: Direction = Direction.Horizontal;
-    isFirstRendered = true;
     readonly areaA = viewChild('areaA', { read: KbqSplitterAreaDirective });
     readonly areaB = viewChild.required('areaB', { read: KbqSplitterAreaDirective });
+
+    direction: Direction = Direction.Horizontal;
+    isFirstRendered = true;
 }
 
 /** Binds the sizes of its own host, as a sidebar does. */

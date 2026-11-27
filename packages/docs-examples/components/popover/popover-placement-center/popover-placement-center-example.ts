@@ -38,7 +38,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class PopoverPlacementCenterExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     placements = PopUpPlacements;
     activePopover?: KbqPopoverTrigger;
 }

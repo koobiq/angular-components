@@ -118,7 +118,6 @@ export class E2eButtonToggleStates {
     readonly showSuffixIcon = model(false);
 
     private readonly states: ButtonState[] = E2E_BUTTON_STATES;
-
     private readonly orientation: ButtonOrientation[] = [
         { vertical: false },
         { multiple: true },

@@ -36,38 +36,6 @@ const DAYS_PER_WEEK = 7;
 export class KbqMonthView<D> implements AfterContentInit, OnChanges {
     private changeDetectorRef = inject(ChangeDetectorRef);
     private readonly timezoneService = inject(KbqDateTimezoneService);
-    adapter: DateAdapter<D> = injectRequiredDateAdapter<D>();
-
-    /**
-     * The date to display in this month view (everything other than the month and year is ignored).
-     */
-    get activeDate(): D {
-        return this._activeDate;
-    }
-
-    set activeDate(value: D) {
-        const oldValue = this._activeDate;
-
-        this._activeDate = value;
-
-        if (!this.hasSameMonthAndYear(oldValue, value)) {
-            this.init();
-        }
-    }
-
-    private _activeDate: D;
-
-    /** The currently selected date. */
-    get selected(): D | null {
-        return this._selected;
-    }
-
-    set selected(value: D | null) {
-        this._selected = value;
-        this.selectedDate = this.getDateInCurrentMonth(this._selected);
-    }
-
-    private _selected: D | null = null;
 
     /** @docs-private */
     readonly activeDateInput = input<D | undefined>(undefined, { alias: 'activeDate' });
@@ -99,6 +67,11 @@ export class KbqMonthView<D> implements AfterContentInit, OnChanges {
     /** The body of calendar table */
     readonly kbqCalendarBody = viewChild.required(KbqCalendarBody);
 
+    private _activeDate: D;
+    private _selected: D | null = null;
+
+    adapter: DateAdapter<D> = injectRequiredDateAdapter<D>();
+
     /** Grid of calendar cells representing the dates of the month. Defaults to `[]`. */
     weeks: KbqCalendarCell[][] = [];
 
@@ -116,6 +89,33 @@ export class KbqMonthView<D> implements AfterContentInit, OnChanges {
 
     /** The names of the weekdays. */
     weekdays: { long: string; narrow: string }[];
+
+    /**
+     * The date to display in this month view (everything other than the month and year is ignored).
+     */
+    get activeDate(): D {
+        return this._activeDate;
+    }
+
+    set activeDate(value: D) {
+        const oldValue = this._activeDate;
+
+        this._activeDate = value;
+
+        if (!this.hasSameMonthAndYear(oldValue, value)) {
+            this.init();
+        }
+    }
+
+    /** The currently selected date. */
+    get selected(): D | null {
+        return this._selected;
+    }
+
+    set selected(value: D | null) {
+        this._selected = value;
+        this.selectedDate = this.getDateInCurrentMonth(this._selected);
+    }
 
     constructor() {
         const firstDayOfWeek = this.adapter.getFirstDayOfWeek();

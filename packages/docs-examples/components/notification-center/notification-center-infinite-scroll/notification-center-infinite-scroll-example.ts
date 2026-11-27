@@ -80,22 +80,17 @@ enum NavbarIcItems {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationCenterInfiniteScrollExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
-    private readonly itemText = (position: number): ItemText => ({
-        title: this.t().pageItemTitle(position),
-        caption: this.t().pageItemCaption(Math.ceil(position / PAGE_SIZE))
-    });
-
     protected readonly notificationService = inject(KbqNotificationCenterService);
-
     private readonly destroyRef = inject(DestroyRef);
+    private readonly themeService = inject(KbqThemeService, { optional: true });
 
     /** Index of the last loaded page. */
     private currentPage = 0;
+
     /** Used to demonstrate the bottom error state once, then succeed on retry. */
     private hasFailedOnce = false;
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly actions = computed<ExampleAction[]>(() => [
         {
             id: '1',
@@ -110,9 +105,18 @@ export class NotificationCenterInfiniteScrollExample {
             icon: 'kbq-ellipsis-horizontal_16'
         }
     ]);
-
     protected items = NavbarIcItems;
     protected selected: NavbarIcItems = NavbarIcItems.Assets;
+    protected readonly currentTheme = computed(() => this.themeService?.colorScheme() ?? 'light');
+    readonly isDesktop = toSignal(
+        inject(BreakpointObserver)
+            .observe('(min-width: 900px)')
+            .pipe(
+                takeUntilDestroyed(),
+                map(({ matches }) => matches)
+            ),
+        { initialValue: true }
+    );
 
     constructor() {
         // Initial page loads immediately; subsequent pages are appended on scroll.
@@ -131,6 +135,11 @@ export class NotificationCenterInfiniteScrollExample {
             this.notificationService.items = items.map((item) => ({ ...item, ...this.itemText(Number(item.id)) }));
         });
     }
+
+    private readonly itemText = (position: number): ItemText => ({
+        title: this.t().pageItemTitle(position),
+        caption: this.t().pageItemCaption(Math.ceil(position / PAGE_SIZE))
+    });
 
     private appendPage(page: number): void {
         if (this.notificationService.loadingMore() || !this.notificationService.hasMore()) {
@@ -174,17 +183,4 @@ export class NotificationCenterInfiniteScrollExample {
             };
         });
     }
-
-    private readonly themeService = inject(KbqThemeService, { optional: true });
-    protected readonly currentTheme = computed(() => this.themeService?.colorScheme() ?? 'light');
-
-    readonly isDesktop = toSignal(
-        inject(BreakpointObserver)
-            .observe('(min-width: 900px)')
-            .pipe(
-                takeUntilDestroyed(),
-                map(({ matches }) => matches)
-            ),
-        { initialValue: true }
-    );
 }

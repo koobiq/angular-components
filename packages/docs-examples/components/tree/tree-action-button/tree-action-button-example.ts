@@ -18,7 +18,6 @@ import { TRANSLATIONS } from './l10n';
 
 export class FileNode {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     children?: FileNode[];
     name = '';
     type: any;
@@ -176,14 +175,10 @@ export const DATA_OBJECT = {
 })
 export class TreeActionButtonExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     popUpPlacements = PopUpPlacements;
-
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     modelValue: any = '';
 
     constructor() {

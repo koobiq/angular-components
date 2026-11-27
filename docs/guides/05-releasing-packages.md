@@ -47,9 +47,10 @@ are still supported.
     and re-runs the Algolia crawler.
 
 Once a new major takes `koobiq.io`, the branch of the previous line deploys its docs to `v<major>.koobiq.io`:
-`20.4.x` points the `target` of its `docs-stable.yml` at `v20`. From 21 on, that job also sets
-`KOOBIQ_DOCS_ORIGIN: https://v<major>.koobiq.io`. The Markdown for agents links its files by that address,
-and without it the files of `v21.koobiq.io` would lead to `koobiq.io`, the docs of the newer major.
+`20.4.x` points the `target` of its `docs-stable.yml` at `v20`. From 21 on, that job also changes
+`KOOBIQ_DOCS_ORIGIN` to `https://v<major>.koobiq.io`. The canonical links of the pages, the sitemap and the
+Markdown for agents name that address, and without it the pages of `v21.koobiq.io` would lead to `koobiq.io`,
+the docs of the newer major.
 
 Nothing has to be done on github.com afterwards. The release body is GitHub's auto-generated pull
 request list, grouped by the categories in [release.yml](../../.github/release.yml); those categories

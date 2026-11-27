@@ -1,5 +1,6 @@
+import { LEFT_ARROW, RIGHT_ARROW } from '@angular/cdk/keycodes';
 import { Directive, inject } from '@angular/core';
-import { KbqSearchFieldBase, type KbqSearchFieldPopup, LEFT_ARROW, RIGHT_ARROW } from '@koobiq/components/core';
+import { KbqSearchFieldBase, type KbqSearchFieldPopup } from '@koobiq/components/core';
 import { KBQ_FORM_FIELD_DEFAULT_OPTIONS } from '@koobiq/components/form-field';
 import { KBQ_DROPDOWN_PANEL } from './dropdown.types';
 
@@ -28,8 +29,6 @@ import { KBQ_DROPDOWN_PANEL } from './dropdown.types';
     exportAs: 'kbqDropdownSearch'
 })
 export class KbqDropdownSearch extends KbqSearchFieldBase {
-    protected readonly directiveName = 'kbqDropdownSearch';
-
     /**
      * Panel this field searches. A nested panel declared inside its parent's content shares the view with
      * it, so the parent has to be able to tell which of the projected fields is its own.
@@ -37,6 +36,8 @@ export class KbqDropdownSearch extends KbqSearchFieldBase {
      * @docs-private
      */
     readonly panel = inject(KBQ_DROPDOWN_PANEL, { optional: true });
+
+    protected readonly directiveName = 'kbqDropdownSearch';
 
     /** The current text of the dropdown's search input. */
     override value(): string {

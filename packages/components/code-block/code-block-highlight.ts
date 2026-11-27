@@ -121,8 +121,10 @@ export class KbqCodeBlockHighlight {
     private readonly pendingTasks = inject(PendingTasks);
     private readonly loader = inject(KbqCodeBlockHighlightJsLoader);
     private readonly fallbackFileLanguage = inject(KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE);
+
     // Read here and handed to the loader: a component or a route may provide a configuration of its own.
     private readonly config = inject(KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG, { optional: true });
+
     private readonly _pending = signal(false);
 
     /**
@@ -134,6 +136,22 @@ export class KbqCodeBlockHighlight {
 
     /** The code file. */
     readonly file = input.required<KbqCodeBlockFile>();
+
+    /** The starting line number. */
+    readonly startFrom = input<number, unknown>(1, { transform: (value: unknown) => numberAttribute(value, 1) });
+
+    /** Whether to display line numbers for single line code block. */
+    readonly singleLine = input<boolean, unknown>(false, { transform: booleanAttribute });
+
+    /** Number of lines of the file, a line break at its end not counted, as it starts no line. */
+    protected readonly lineCount = computed(() => {
+        const lines = this.file().content.split(LINE_BREAK);
+
+        return lines.length > 1 && !lines[lines.length - 1] ? lines.length - 1 : lines.length;
+    });
+
+    /** Width of the line numbers column, in digits of its largest number. */
+    protected readonly lineNumberDigits = computed(() => String(this.startFrom() + this.lineCount() - 1).length);
 
     constructor() {
         effect((onCleanup) => {
@@ -186,22 +204,6 @@ export class KbqCodeBlockHighlight {
                 });
         });
     }
-
-    /** The starting line number. */
-    readonly startFrom = input<number, unknown>(1, { transform: (value: unknown) => numberAttribute(value, 1) });
-
-    /** Whether to display line numbers for single line code block. */
-    readonly singleLine = input<boolean, unknown>(false, { transform: booleanAttribute });
-
-    /** Number of lines of the file, a line break at its end not counted, as it starts no line. */
-    protected readonly lineCount = computed(() => {
-        const lines = this.file().content.split(LINE_BREAK);
-
-        return lines.length > 1 && !lines[lines.length - 1] ? lines.length - 1 : lines.length;
-    });
-
-    /** Width of the line numbers column, in digits of its largest number. */
-    protected readonly lineNumberDigits = computed(() => String(this.startFrom() + this.lineCount() - 1).length);
 
     private highlight(hljs: HLJSApi, file: KbqCodeBlockFile): void {
         this._pending.set(true);

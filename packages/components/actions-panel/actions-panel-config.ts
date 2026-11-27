@@ -83,12 +83,12 @@ export class KbqActionsPanelConfig<D = unknown> {
     direction?: Direction = 'ltr';
 
     /**
-     * Scroll strategy to be used for the actions panel. Defaults to `RepositionScrollStrategy`.
-     */
-    scrollStrategy?: (overlay: Overlay) => ScrollStrategy = (overlay) => overlay.scrollStrategies.reposition();
-
-    /**
      * Whether the user can use ESC or click on close button to close the actions panel. Defaults to `false`.
      */
     disableClose?: boolean = false;
+
+    /**
+     * Scroll strategy to be used for the actions panel. Defaults to `RepositionScrollStrategy`.
+     */
+    scrollStrategy?: (overlay: Overlay) => ScrollStrategy = (overlay) => overlay.scrollStrategies.reposition();
 }

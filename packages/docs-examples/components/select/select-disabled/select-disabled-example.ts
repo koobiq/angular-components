@@ -66,7 +66,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class SelectDisabledExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly options = Array.from({ length: 5 }, (_, i) => 'Option #' + i);
     readonly groups = Array.from({ length: 3 }, (_, i) => 'Group #' + i);
     readonly selected = this.options[0];

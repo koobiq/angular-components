@@ -42,9 +42,7 @@ export class DevDocsExamples {}
 })
 export class DevApp {
     colors = KbqComponentColors;
-
     text = 'text text text text text text text text text text text text text text ';
     caption = 'caption caption caption caption caption caption caption caption ';
-
     loading = true;
 }

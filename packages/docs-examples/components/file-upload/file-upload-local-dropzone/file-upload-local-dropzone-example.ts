@@ -74,7 +74,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class FileUploadLocalDropzoneExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly value = signal(false);
     readonly position = SidebarPositions;
 }

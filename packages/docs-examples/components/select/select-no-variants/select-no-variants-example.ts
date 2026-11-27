@@ -50,7 +50,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class SelectNoVariantsExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     options: string[] = [];
     noOptions = false;
 

@@ -127,7 +127,6 @@ type ExampleAction = {
 })
 export class TopBarTitleCounterExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
@@ -137,7 +136,6 @@ export class TopBarTitleCounterExample {
             ),
         { initialValue: true }
     );
-
     protected readonly actions: ExampleAction[] = [
         {
             id: '1',
@@ -162,7 +160,6 @@ export class TopBarTitleCounterExample {
             alwaysVisible: true
         }
     ];
-
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;

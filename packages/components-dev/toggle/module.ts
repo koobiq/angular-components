@@ -45,15 +45,11 @@ export class DevDocsExamples {}
 })
 export class DevApp {
     colors = KbqComponentColors;
-
     valueSmallOff: boolean = false;
     valueSmallOn: boolean = true;
-
     valueBigOff: boolean = false;
     valueBigOn: boolean = true;
-
     disabled: boolean = false;
-
     toggleControl = new UntypedFormControl(true);
 
     constructor() {

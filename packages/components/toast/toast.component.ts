@@ -79,14 +79,15 @@ const assertiveStyles: string[] = [KbqToastStyle.Warning, KbqToastStyle.Error];
 })
 export class KbqToastComponent implements OnDestroy {
     readonly data = inject(KbqToastData);
-
     private readonly stack = inject(KBQ_TOAST_STACK);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly injector = inject(Injector);
-
     protected readonly readStateDirective = inject(KbqReadStateDirective, { host: true });
     protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+
+    private readonly _hovered = signal(false);
+    private readonly _focused = signal(false);
 
     /** Whether the toast appears and leaves without motion. */
     protected readonly animationsDisabled = kbqAnimationsDisabled();
@@ -94,15 +95,11 @@ export class KbqToastComponent implements OnDestroy {
     /** Height the exit animation collapses from, set once the toast leaves. */
     protected readonly leavingHeight = signal<number | null>(null);
 
-    private readonly _hovered = signal(false);
-    private readonly _focused = signal(false);
-
     /** Whether the pointer is over the toast. */
     readonly hovered: Signal<boolean> = this._hovered.asReadonly();
 
     /** Whether the toast or an element inside it holds the focus. */
     readonly focused: Signal<boolean> = this._focused.asReadonly();
-
     id = id++;
 
     /** Context of the templates a consumer passes through `KbqToastData`. */

@@ -92,7 +92,6 @@ function buildFileTree(value: any, level: number): FileNode[] {
 class BaseTreeSelectStates {
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {
@@ -470,8 +469,9 @@ export class E2eTreeSelectMultiBehavior extends BaseTreeSelectStates {
     }
 })
 export class E2eTreeSelectDataMutation extends BaseTreeSelectStates {
-    readonly control = new UntypedFormControl('rootNode_1_long_text_long_text');
     private readonly originalData = this.dataSource.data;
+
+    readonly control = new UntypedFormControl('rootNode_1_long_text_long_text');
 
     clearData(): void {
         this.dataSource.data = [];

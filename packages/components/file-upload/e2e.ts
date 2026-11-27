@@ -208,6 +208,9 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
     }
 })
 export class E2eFileUploadStateAndStyle {
+    private readonly renderer = inject(Renderer2);
+    private readonly document = inject(DOCUMENT);
+
     protected readonly iconClass = { error: 'kbq-circle-info_16', default: 'kbq-file-o_16' };
 
     // Held as fields rather than built in the template: the uploads take the value by reference, and a
@@ -225,7 +228,6 @@ export class E2eFileUploadStateAndStyle {
     protected readonly determinateFiles: KbqFileItem[] = [this.determinateFile];
     protected readonly indeterminateFiles: KbqFileItem[] = [this.indeterminateFile];
     protected readonly noFiles: KbqFileItem[] = [];
-
     protected readonly singleFileUploadRows: SingleUploadState[][] = [
         // Simple (no file selected)
         [
@@ -273,7 +275,6 @@ export class E2eFileUploadStateAndStyle {
             { file: this.testKbqFileItem, showFileSize: true, className: 'dev-focused', dragover: true }
         ]
     ];
-
     protected readonly multipleFileUploadRows: MultipleUploadState[][] = [
         // Row 1: No file selected
         [
@@ -319,10 +320,6 @@ export class E2eFileUploadStateAndStyle {
             { files: [this.testKbqFileItem], className: 'dev-hover', dragover: true }
         ]
     ];
-
-    private readonly renderer = inject(Renderer2);
-    private readonly document = inject(DOCUMENT);
-
     protected readonly longNameFiles: KbqFileItem[] = [
         {
             file: new File(
@@ -340,13 +337,10 @@ export class E2eFileUploadStateAndStyle {
      * the page first, which is the only point at which that measurement can be influenced from outside.
      */
     protected readonly longNameRowsShown = signal(false);
+    protected readonly kbqFileUploadAllowedTypes = KbqFileUploadAllowedType;
 
     protected get testKbqFileItem(): KbqFileItem {
         return { file: new File(['test'] satisfies BlobPart[], 'test.file') } satisfies KbqFileItem;
-    }
-
-    getErrorStateMatcher(isError: boolean): any {
-        return isError ? new CustomErrorStateMatcher() : null;
     }
 
     constructor() {
@@ -407,7 +401,9 @@ export class E2eFileUploadStateAndStyle {
         );
     }
 
-    protected readonly kbqFileUploadAllowedTypes = KbqFileUploadAllowedType;
+    getErrorStateMatcher(isError: boolean): any {
+        return isError ? new CustomErrorStateMatcher() : null;
+    }
 }
 
 @Component({
@@ -467,8 +463,9 @@ export class E2eFileUploadStateAndStyle {
     }
 })
 export class E2eFileUploadDropzone {
-    protected readonly localDropzone = viewChild.required(KbqLocalDropzone);
     protected readonly fullScreenDropzoneService = inject(KbqFullScreenDropzoneService);
+
+    protected readonly localDropzone = viewChild.required(KbqLocalDropzone);
 }
 
 @Component({

@@ -26,6 +26,7 @@ class KbqOverlayLayerRegistry implements KbqOverlayLayers {
     private readonly overlayContainer = inject(OverlayContainer);
     private readonly document = inject(DOCUMENT);
     private readonly isBrowser = inject(Platform).isBrowser;
+
     private readonly layers = new Set<KbqOverlayLayer>();
     private readonly adopted = new WeakSet<OverlayRef>();
 
@@ -200,10 +201,11 @@ export const KBQ_OVERLAY_LAYERS = new InjectionToken<KbqOverlayLayers>('KBQ_OVER
 export class KbqOverlayLayer implements OnDestroy {
     private readonly registry = inject(KbqOverlayLayerRegistry);
     private readonly document = inject(DOCUMENT);
-    private container: HTMLElement | null = null;
 
     /** @docs-private */
     readonly host = kbqInjectNativeElement();
+
+    private container: HTMLElement | null = null;
 
     constructor() {
         this.registry.register(this);

@@ -72,12 +72,6 @@ For all fields, using the `ErrorStateMatcher` token:
 
 For a full explanation of both approaches, built-in matchers, and component-specific patterns (tag list, file upload), see the [Validation](/en/other/validation) guide.
 
-### Field cleaning
-
-`<kbq-cleaner />` is a component that adds a clear button for **filled** form fields inside the `<kbq-form-field>` component.
-
-<Example id="form-field-with-cleaner" />
-
 ### Prefix and suffix
 
 `kbqPrefix` and `kbqSuffix` are directives that allow adding custom elements **before** and **after** the form field inside the `<kbq-form-field>` component. These directives are useful for adding icons, text, buttons, and other elements that should be placed next to the form field.
@@ -89,14 +83,6 @@ For a full explanation of both approaches, built-in matchers, and component-spec
 In text input fields, a blue border is always displayed when focused, regardless of the activation method (mouse, keyboard, or touch).
 For form elements with dropdown lists (such as: [select](/en/components/select), [timezone](/en/components/timezone), and [tree select](/en/components/tree-select)),
 the focus border is shown only during keyboard navigation (using the `Tab` key) and is hidden when the dropdown list is opened.
-
-### Disabling borders
-
-For a specific field, using the `noBorders` attribute:
-
-<Example id="form-field-without-borders" />
-
-For all fields, in the [global options](#global-options).
 
 ### Autofill
 

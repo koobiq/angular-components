@@ -1,8 +1,8 @@
+import { ESCAPE } from '@angular/cdk/keycodes';
 import { type AfterContentInit, Directive, inject } from '@angular/core';
 import type { NgControl } from '@angular/forms';
 import { type KbqSearchFieldPopup, kbqSyncSearchFieldA11y } from '../a11y';
 import { KBQ_FORM_FIELD_REF, type KbqFormFieldRef } from '../form-field';
-import { ESCAPE } from '../keycodes';
 import { kbqInjectA11yLocaleConfiguration } from '../locales';
 import { kbqInjectNativeElement } from '../utils';
 

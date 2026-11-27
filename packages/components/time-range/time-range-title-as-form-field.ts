@@ -61,12 +61,25 @@ export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<KbqTimeRa
     private readonly timeRange = inject(KbqTimeRange);
     private readonly parentFormField = inject(KBQ_FORM_FIELD, { host: true, optional: true });
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
     private readonly requiredValue = signal(false);
+
+    /** @docs-private */
+    readonly ngControl: NgControl | null = this.timeRange.ngControl;
+
+    private readonly errorStateTracker = new KbqErrorStateTracker(
+        inject(ErrorStateMatcher),
+        this.ngControl,
+        inject(FormGroupDirective, { optional: true }),
+        inject(NgForm, { optional: true })
+    );
+
     /** @docs-private */
     protected readonly focusedValue = signal(false);
 
     /** @docs-private */
     readonly controlType = 'select';
+
     /** @docs-private */
     readonly isNativeLabelSupported = false;
 
@@ -79,30 +92,28 @@ export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<KbqTimeRa
      * @docs-private
      */
     protected readonly ariaLabelledby = computed(() => this.parentFormField?.labelId() ?? null);
-    /** @docs-private */
-    readonly ngControl: NgControl | null = this.timeRange.ngControl;
-
-    private readonly errorStateTracker = new KbqErrorStateTracker(
-        inject(ErrorStateMatcher),
-        this.ngControl,
-        inject(FormGroupDirective, { optional: true }),
-        inject(NgForm, { optional: true })
-    );
 
     /** @docs-private */
     readonly value: Signal<KbqTimeRangeRange | null> = this.timeRange.value;
+
     /** @docs-private */
     readonly id = signal(inject(_IdGenerator).getId('kbq-time-range-title-as-control-')).asReadonly();
+
     /** @docs-private */
     readonly placeholder = signal<string | undefined>(undefined).asReadonly();
+
     /** @docs-private */
     readonly focused = this.focusedValue.asReadonly();
+
     /** @docs-private */
     readonly empty = computed(() => this.timeRange.value() === null);
+
     /** @docs-private */
     readonly required = this.requiredValue.asReadonly();
+
     /** @docs-private */
     readonly disabled: Signal<boolean> = this.timeRange.disabled;
+
     /** @docs-private */
     readonly errorState = this.errorStateTracker.errorState;
 

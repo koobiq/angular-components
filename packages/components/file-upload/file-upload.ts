@@ -87,6 +87,50 @@ export type KbqFileUploadCaptionContext = {
 
 /** @docs-private */
 export abstract class KbqFileUploadBase {
+    /** @docs-private */
+    protected readonly fileUploadContext = inject(KbqFileUploadContext, { host: true });
+
+    /** @docs-private */
+    protected readonly fileList = inject<KbqFileList<KbqFileItem>>(KbqFileList, { host: true });
+
+    /** @docs-private */
+    protected readonly cdr = inject(ChangeDetectorRef);
+
+    /** @docs-private */
+    protected readonly renderer = inject(Renderer2);
+
+    /** @docs-private */
+    protected readonly destroyRef = inject(DestroyRef);
+
+    /** Localized labels of both upload flavours, following the active locale. */
+    readonly localeConfiguration: Signal<KbqFileUploadLocaleConfiguration> = inject(KbqLocaleOverridesDirective, {
+        self: true
+    }).read('fileUpload', KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION);
+
+    /** Accessible names of the icon-only controls the component renders itself. @docs-private */
+    protected readonly a11yNames = kbqInjectA11yLocaleConfiguration();
+
+    /** @docs-private */
+    protected readonly ngControl = inject(NgControl, { optional: true, self: true });
+
+    /** @docs-private */
+    protected readonly parentForm = inject(NgForm, { optional: true });
+
+    /** @docs-private */
+    protected readonly parentFormGroup = inject(FormGroupDirective, { optional: true });
+
+    /** @docs-private */
+    protected readonly defaultErrorStateMatcher = inject(ErrorStateMatcher);
+
+    /** @docs-private */
+    protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+    /** @docs-private */
+    protected readonly dropzoneService = inject(KbqFullScreenDropzoneService);
+
+    /** Replaced once per list change; an emission sets only the status signal of its item. */
+    private readonly itemStatuses = signal<ReadonlyMap<KbqFileItem, KbqFileItemTracker>>(new Map());
+
     /**
      * Tracks whether the component is in an error state based on the control, parent form,
      * and `errorStateMatcher`, triggering visual updates and state changes if needed.
@@ -104,46 +148,13 @@ export abstract class KbqFileUploadBase {
      */
     readonly stateChanges = new Subject<void>();
 
-    /** @docs-private */
-    protected readonly fileUploadContext = inject(KbqFileUploadContext, { host: true });
-    /** @docs-private */
-    protected readonly fileList = inject<KbqFileList<KbqFileItem>>(KbqFileList, { host: true });
+    /** Text of the live region that announces changes of the file list. @docs-private */
+    protected readonly announcement = signal('');
 
     /** @docs-private */
     get disabled(): boolean {
         return this.fileUploadContext.disabled() ?? false;
     }
-
-    /** @docs-private */
-    protected readonly cdr = inject(ChangeDetectorRef);
-    /** @docs-private */
-    protected readonly renderer = inject(Renderer2);
-    /** @docs-private */
-    protected readonly destroyRef = inject(DestroyRef);
-    /** Localized labels of both upload flavours, following the active locale. */
-    readonly localeConfiguration: Signal<KbqFileUploadLocaleConfiguration> = inject(KbqLocaleOverridesDirective, {
-        self: true
-    }).read('fileUpload', KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION);
-    /** Accessible names of the icon-only controls the component renders itself. @docs-private */
-    protected readonly a11yNames = kbqInjectA11yLocaleConfiguration();
-    /** @docs-private */
-    protected readonly ngControl = inject(NgControl, { optional: true, self: true });
-    /** @docs-private */
-    protected readonly parentForm = inject(NgForm, { optional: true });
-    /** @docs-private */
-    protected readonly parentFormGroup = inject(FormGroupDirective, { optional: true });
-    /** @docs-private */
-    protected readonly defaultErrorStateMatcher = inject(ErrorStateMatcher);
-    /** @docs-private */
-    protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    /** @docs-private */
-    protected readonly dropzoneService = inject(KbqFullScreenDropzoneService);
-
-    /** Text of the live region that announces changes of the file list. @docs-private */
-    protected readonly announcement = signal('');
-
-    /** Replaced once per list change; an emission sets only the status signal of its item. */
-    private readonly itemStatuses = signal<ReadonlyMap<KbqFileItem, KbqFileItemTracker>>(new Map());
 
     constructor() {
         const trackers = new Map<KbqFileItem, KbqFileItemTracker>();

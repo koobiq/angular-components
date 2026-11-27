@@ -337,8 +337,9 @@ function isWithin(startRange: number, endRange: number, valueToCheck: number): b
 export class KbqRoundDecimalPipe implements PipeTransform {
     private id = inject(KBQ_LOCALE_ID, { optional: true });
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
-    private roundingOptions: RoundDecimalOptions = ruRUFormattersData.formatters.number.rounding;
     private readonly formatters = kbqInjectLocaleConfiguration('formatters', KBQ_FORMATTERS_LOCALE_CONFIGURATION);
+
+    private roundingOptions: RoundDecimalOptions = ruRUFormattersData.formatters.number.rounding;
 
     constructor() {
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe((newId: string) => (this.id = newId));

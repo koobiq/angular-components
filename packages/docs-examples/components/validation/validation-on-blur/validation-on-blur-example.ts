@@ -49,6 +49,7 @@ export class CustomErrorStateMatcher implements ErrorStateMatcher {
 class ExampleResetTouchedOnFirstInput {
     protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     protected readonly control = inject(NgControl, { optional: true, host: true });
+
     protected validators: ValidatorFn | null = null;
 
     constructor() {
@@ -109,10 +110,9 @@ class ExampleResetTouchedOnFirstInput {
     }
 })
 export class ValidationOnBlurExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly tooltip = viewChild(KbqTooltipTrigger);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly ipAddressControl = new FormControl('', [Validators.pattern(IP_PATTERN)]);
     protected readonly popUpPlacements = PopUpPlacements;
     protected readonly colors = KbqComponentColors;

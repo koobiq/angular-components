@@ -49,7 +49,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
 export class LayoutFlexOffsetsExample {
     selectedSize: string = 'flex-10';
     selectedOffset: string = 'flex-offset-10';
-
     flexSizes = [
         'flex-0',
         'flex-5',
@@ -74,7 +73,6 @@ export class LayoutFlexOffsetsExample {
         'flex-95',
         'flex-100'
     ];
-
     flexOffsets = [
         'flex-offset-0',
         'flex-offset-5',

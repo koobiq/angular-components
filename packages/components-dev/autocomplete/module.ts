@@ -92,9 +92,7 @@ export class DevApp {
         'Уфа',
         'Челябинск'
     ];
-
     formControl = new UntypedFormControl('', Validators.required);
-
     filteredOptions: Observable<string[]> = this.formControl.valueChanges.pipe(
         startWith(''),
         map((value) => this.filter(value))

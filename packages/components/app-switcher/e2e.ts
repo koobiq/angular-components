@@ -131,7 +131,6 @@ export class E2eAppSwitcherWithSitesStates {
                 fill="white" />
         </svg>
     `;
-
     sites: KbqAppSwitcherSite[] = [
         {
             name: 'СЗФО',
@@ -406,7 +405,6 @@ export class E2eAppSwitcherWithSitesStates {
             ]
         }
     ];
-
     selectedSite: KbqAppSwitcherSite | undefined = this.sites[0];
     selectedApp: KbqAppSwitcherApp | undefined = this.sites[0]?.apps[0];
 }

@@ -46,13 +46,13 @@ import { TRANSLATIONS } from './l10n';
 })
 export class InlineEditOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly options = Array.from({ length: 10 }, (_, i) => 'Option #' + i);
+    protected value: string[] = this.options.slice(0, 1);
+    protected readonly displayValue = signal(this.value);
 
     protected get placeholder(): string {
         return this.t().placeholder;
     }
-    protected readonly options = Array.from({ length: 10 }, (_, i) => 'Option #' + i);
-    protected value: string[] = this.options.slice(0, 1);
-    protected readonly displayValue = signal(this.value);
 
     protected update(): void {
         this.displayValue.set(this.value);

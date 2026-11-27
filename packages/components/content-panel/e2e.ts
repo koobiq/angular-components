@@ -232,9 +232,10 @@ export class E2eContentPanelWideContent {
     }
 })
 export class E2eContentPanelState {
+    private readonly contentPanelBody = viewChild.required(KbqContentPanelBody);
+
     protected readonly componentColors = KbqComponentColors;
     protected readonly buttonStyles = KbqButtonStyles;
-    private readonly contentPanelBody = viewChild.required(KbqContentPanelBody);
 
     constructor() {
         afterNextRender(() => {

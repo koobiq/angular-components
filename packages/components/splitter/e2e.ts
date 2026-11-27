@@ -462,11 +462,11 @@ const e2eSplitterSeparatorStateClasses: Record<SplitterSeparatorState, string[]>
     }
 })
 export class E2eSplitterStates {
+    private readonly nativeElement = kbqInjectNativeElement();
+
     protected readonly orientations: KbqSplitterOrientation[] = ['horizontal', 'vertical'];
     protected readonly appearances: KbqSplitterAppearance[] = ['divider', 'transparent', 'handle'];
     protected readonly states = Object.keys(e2eSplitterSeparatorStateClasses) as SplitterSeparatorState[];
-
-    private readonly nativeElement = kbqInjectNativeElement();
 
     constructor() {
         afterNextRender(() => {

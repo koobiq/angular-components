@@ -32,6 +32,25 @@ const createComponent = <T>(component: Type<T>, providers: any[] = []): Componen
 };
 
 describe('KbqToggle', () => {
+    it('should bind checked in both directions and emit once per user change', () => {
+        const fixture = createComponent(ToggleWithTwoWayChecked);
+
+        fixture.detectChanges();
+
+        const host = fixture.componentInstance;
+        const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+
+        host.checked = true;
+        fixture.detectChanges();
+        expect(input.checked).toBe(true);
+        expect(host.changes).toEqual([]);
+
+        input.click();
+        fixture.detectChanges();
+        expect(host.checked).toBe(false);
+        expect(host.changes).toEqual([false]);
+    });
+
     describe('basic behaviors', () => {
         let fixture: ComponentFixture<SingleToggle>;
         let toggleDebugElement: DebugElement;
@@ -51,6 +70,25 @@ describe('KbqToggle', () => {
             testComponent = fixture.debugElement.componentInstance;
             inputElement = <HTMLInputElement>toggleNativeElement.querySelector('input');
             labelElement = <HTMLLabelElement>toggleNativeElement.querySelector('label');
+        });
+
+        it('should keep a click on a one-way binding until the bound value changes', () => {
+            testComponent.value = 0;
+            fixture.detectChanges();
+            expect(inputElement.checked).toBe(true);
+
+            inputElement.click();
+            fixture.detectChanges();
+            expect(testComponent.value).toBe(0);
+            expect(inputElement.checked).toBe(false);
+
+            testComponent.value = 1;
+            fixture.detectChanges();
+            expect(inputElement.checked).toBe(true);
+
+            testComponent.value = 'false';
+            fixture.detectChanges();
+            expect(inputElement.checked).toBe(false);
         });
 
         it('should add and remove the checked state', () => {
@@ -117,6 +155,10 @@ describe('KbqToggle', () => {
         });
 
         it('should not toggle `checked` state upon interaction while disabled', () => {
+            const checkedChange = vi.fn();
+
+            toggleInstance.checkedChange.subscribe(checkedChange);
+
             testComponent.isDisabled = true;
             fixture.detectChanges();
 
@@ -129,6 +171,7 @@ describe('KbqToggle', () => {
 
             expect(toggleInstance.checked).toBe(false);
             expect(onToggleChangeSpyFn).not.toHaveBeenCalled();
+            expect(checkedChange).not.toHaveBeenCalled();
         });
 
         it('should preserve the user-provided id', () => {
@@ -510,6 +553,18 @@ describe('KbqToggle', () => {
             inputElement = <HTMLInputElement>toggleDebugElement.nativeElement.querySelector('input');
         });
 
+        it('should update checked silently when the form writes a value', () => {
+            const checkedChange = vi.fn();
+
+            toggleInstance.checkedChange.subscribe(checkedChange);
+
+            testComponent.formControl.setValue(true);
+            fixture.detectChanges();
+
+            expect(inputElement.checked).toBe(true);
+            expect(checkedChange).not.toHaveBeenCalled();
+        });
+
         it('should toggle the disabled state', () => {
             expect(toggleInstance.disabled).toBe(false);
 
@@ -663,9 +718,14 @@ describe('KbqToggle', () => {
                 { provide: KBQ_CHECKABLE_CLICK_ACTION, useValue: 'noop' }
             ]);
 
+            const checkedChange = vi.fn();
+
+            fixture.componentInstance.toggle().checkedChange.subscribe(checkedChange);
+
             clickLabel(fixture);
 
             expect(fixture.componentInstance.toggle().checked).toBe(false);
+            expect(checkedChange).not.toHaveBeenCalled();
         });
 
         it('should prefer KBQ_CHECKABLE_CLICK_ACTION over the legacy KBQ_CHECKBOX_CLICK_ACTION', () => {
@@ -783,12 +843,17 @@ describe('KbqToggle', () => {
         it('should ignore a click, keep the native input in sync and not bubble the click twice', () => {
             const onToggleClickSpyFn = vi.spyOn(fixture.componentInstance, 'onToggleClick');
 
+            const checkedChange = vi.fn();
+
+            fixture.componentInstance.toggle().checkedChange.subscribe(checkedChange);
+
             fixture.nativeElement.querySelector('label').click();
             fixture.detectChanges();
 
             expect(onToggleClickSpyFn).toHaveBeenCalledTimes(1);
             expect(fixture.componentInstance.toggle().checked).toBe(false);
             expect(inputElement.checked).toBe(false);
+            expect(checkedChange).not.toHaveBeenCalled();
         });
     });
 
@@ -1059,6 +1124,7 @@ const EFFECT_RUN_LIMIT = 10;
 })
 class ToggleDrivenByEffect {
     readonly toggle = viewChild.required(KbqToggleComponent);
+
     readonly action = signal<'checked' | 'indeterminate' | null>(null);
     runs = 0;
 
@@ -1095,12 +1161,13 @@ class ToggleDrivenByEffect {
     `
 })
 class LoadingToggle {
+    readonly toggle = viewChild.required(KbqToggleComponent);
+
     value: boolean = false;
     loading: boolean = false;
 
-    readonly toggle = viewChild.required(KbqToggleComponent);
-
     onToggleClick: (event?: Event) => void = () => {};
+
     onToggleChange: (event?: any) => void = () => {};
 }
 
@@ -1127,8 +1194,10 @@ class LoadingToggle {
     `
 })
 class SingleToggle {
+    readonly toggle = viewChild.required(KbqToggleComponent);
+
     labelPos: 'left' | 'right' = 'left';
-    value: boolean = false;
+    value: boolean | number | string = false;
     isDisabled: boolean = false;
     big: boolean = false;
     parentElementClickCount: number = 0;
@@ -1136,9 +1205,8 @@ class SingleToggle {
     toggleColor: string = 'primary';
     indeterminate = false;
 
-    readonly toggle = viewChild.required(KbqToggleComponent);
-
     onToggleClick: (event?: Event) => void = () => {};
+
     onToggleChange: (event?: any) => void = () => {};
 }
 
@@ -1151,9 +1219,9 @@ class SingleToggle {
     `
 })
 class ToggleWithClickAction {
-    clickAction: KbqToggleClickAction = 'noop';
-
     readonly toggle = viewChild.required(KbqToggleComponent);
+
+    clickAction: KbqToggleClickAction = 'noop';
 }
 
 @Component({
@@ -1313,4 +1381,15 @@ class ToggleWithStaticAttributes {}
 })
 class ToggleInsideForm {
     readonly toggle = viewChild.required(KbqToggleComponent);
+}
+
+@Component({
+    imports: [KbqToggleComponent],
+    template: `
+        <kbq-toggle [(checked)]="checked" (checkedChange)="changes.push($event)" />
+    `
+})
+class ToggleWithTwoWayChecked {
+    checked = false;
+    readonly changes: boolean[] = [];
 }

@@ -32,8 +32,6 @@ export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate' |
 })
 export class KbqPseudoCheckbox extends KbqColorDirective {
     readonly big = input<boolean>(false);
-
     readonly state = input<KbqPseudoCheckboxState>('unchecked');
-
     readonly disabled = input<boolean>(false);
 }

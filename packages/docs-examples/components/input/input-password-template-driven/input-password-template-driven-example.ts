@@ -12,6 +12,10 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
 import { TRANSLATIONS } from './l10n';
 
+/** Allows printable ASCII only and rejects an empty password, which Angular's pattern validator ignores. */
+const latinAndSpecialSymbols = ({ value }: AbstractControl): ValidationErrors | null =>
+    typeof value === 'string' && !/^[\x20-\x7E]+$/.test(value) ? { latinAndSpecialSymbols: true } : null;
+
 /** Template-driven forms take validators from directives, so this one hands `PasswordValidators` to `ngModel`. */
 @Directive({
     selector: '[examplePasswordRules]',
@@ -20,11 +24,11 @@ import { TRANSLATIONS } from './l10n';
 class ExamplePasswordRules implements Validator {
     private readonly rules = Validators.compose([
         PasswordValidators.minLength(8),
-        PasswordValidators.maxLength(15),
+        PasswordValidators.maxLength(128),
         PasswordValidators.minUppercase(1),
         PasswordValidators.minLowercase(1),
         PasswordValidators.minNumber(1),
-        PasswordValidators.minSpecial(1)
+        latinAndSpecialSymbols
     ]);
 
     validate(control: AbstractControl): ValidationErrors | null {
@@ -32,16 +36,10 @@ class ExamplePasswordRules implements Validator {
     }
 }
 
-/**
- * @title Input password with template-driven forms
- */
+/** @title Input password with template-driven forms */
 @Component({
     selector: 'input-password-template-driven-example',
-    imports: [
-        KbqInputModule,
-        FormsModule,
-        ExamplePasswordRules
-    ],
+    imports: [KbqInputModule, FormsModule, ExamplePasswordRules],
     template: `
         <kbq-form-field style="width: 250px">
             <kbq-label>{{ t().password }}</kbq-label>
@@ -53,7 +51,7 @@ class ExamplePasswordRules implements Validator {
             <kbq-reactive-password-hint
                 [hasError]="passwordModel.hasError('minLength') || passwordModel.hasError('maxLength')"
             >
-                {{ t().from8to15 }}
+                {{ t().length }}
             </kbq-reactive-password-hint>
 
             <kbq-reactive-password-hint [hasError]="passwordModel.hasError('minUppercase')">
@@ -68,15 +66,17 @@ class ExamplePasswordRules implements Validator {
                 {{ t().digit }}
             </kbq-reactive-password-hint>
 
-            <kbq-reactive-password-hint [hasError]="passwordModel.hasError('minSpecial')">
-                {{ t().special }}
+            <kbq-reactive-password-hint [hasError]="passwordModel.hasError('latinAndSpecialSymbols')">
+                {{ t().allowedCharacters }}
             </kbq-reactive-password-hint>
         </kbq-form-field>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    }
 })
 export class InputPasswordTemplateDrivenExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly password = signal('');
 }

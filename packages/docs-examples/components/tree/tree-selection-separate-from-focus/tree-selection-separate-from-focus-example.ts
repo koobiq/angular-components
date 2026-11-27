@@ -160,9 +160,7 @@ export const DATA_OBJECT = [
 export class TreeSelectionSeparateFromFocusExample {
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     modelValue: FileFlatNode | undefined;
 
     constructor() {

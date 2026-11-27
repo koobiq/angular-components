@@ -18,9 +18,9 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastLinkOverviewExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly toastService = inject(KbqToastService);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     showToastWithInlineLink(caption: TemplateRef<any>, actions: TemplateRef<any>) {
         this.toastService.show({ caption, actions });

@@ -72,13 +72,13 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectAutoHideScrollStrategyExample implements AfterViewInit {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
-    protected readonly options = Array.from({ length: 5 }, (_, i) => 'Option #' + i);
-    protected readonly selected = this.options[0];
+    private readonly destroyRef = inject(DestroyRef);
 
     private readonly select = viewChild.required(KbqSelect);
-    private readonly destroyRef = inject(DestroyRef);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly options = Array.from({ length: 5 }, (_, i) => 'Option #' + i);
+    protected readonly selected = this.options[0];
 
     ngAfterViewInit(): void {
         const select = this.select();

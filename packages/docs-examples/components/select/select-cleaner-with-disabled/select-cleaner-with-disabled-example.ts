@@ -45,12 +45,10 @@ import { TRANSLATIONS } from './l10n';
 })
 export class SelectCleanerWithDisabledExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly options = Array.from({ length: 4 }, (_, i) => ({
         value: 'Option #' + i,
         disabled: i === 1
     }));
-
     readonly selected = this.options.map(({ value }) => value);
 
     /** Opts out of the default, which leaves the disabled options selected. */

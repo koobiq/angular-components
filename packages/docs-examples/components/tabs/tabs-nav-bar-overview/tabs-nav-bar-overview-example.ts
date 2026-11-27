@@ -27,7 +27,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TabsNavBarOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly links = computed(() => [this.t().bruteforce, this.t().complexAttack, this.t().ddos]);
     activeLink = this.links()[0];
 }

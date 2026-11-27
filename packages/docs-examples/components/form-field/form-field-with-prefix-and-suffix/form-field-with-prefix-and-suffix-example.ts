@@ -21,6 +21,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class FormFieldWithPrefixAndSuffixExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly formControl = new FormControl();
 }

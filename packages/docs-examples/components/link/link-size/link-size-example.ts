@@ -34,7 +34,7 @@ import { TRANSLATIONS } from './l10n';
     host: { class: 'layout-column layout-align-center-center' }
 })
 export class LinkSizeExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly size = model<KbqDefaultSizes>('normal');
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

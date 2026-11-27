@@ -133,7 +133,6 @@ function scenarioV(testid: string, overrides: Partial<VerticalScenario> = {}): V
 })
 export class E2eOverflowItemsHorizontal {
     protected readonly items = Array.from({ length: 20 }, (_, i) => ({ id: `Item${i}`, alwaysVisible: i === 7 }));
-
     protected readonly scenarios: HorizontalScenario[] = [
         scenarioH('overflowItems_default'),
         scenarioH('overflowItems_padding', { containerPadding: 25 }),
@@ -204,7 +203,6 @@ export class E2eOverflowItemsHorizontal {
 })
 export class E2eOverflowItemsAdditionalTargets {
     protected readonly items = Array.from({ length: 20 }, (_, i) => ({ id: `Item${i}` }));
-
     protected readonly containerWidth = 500;
     protected readonly itemWidth = 50;
     protected targetWidth = 50;
@@ -271,7 +269,6 @@ export class E2eOverflowItemsAdditionalTargets {
 })
 export class E2eOverflowItemsVertical {
     protected readonly items = Array.from({ length: 20 }, (_, i) => ({ id: `Item${i}`, alwaysVisible: i === 7 }));
-
     protected readonly scenarios: VerticalScenario[] = [
         scenarioV('overflowItemsVertical_default'),
         scenarioV('overflowItemsVertical_padding', { containerPadding: 25 }),
@@ -339,7 +336,6 @@ export class E2eOverflowItemsOrdered {
     protected readonly itemWidth = 50;
     protected readonly resultWidth = 100;
     protected readonly lastHiddenItemIndex = 5;
-
     protected readonly scenarios: OrderedScenario[] = [
         {
             testid: 'overflowItemsOrdered_byOrder',

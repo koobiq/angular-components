@@ -32,7 +32,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class ListDraggableExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly items = signal([
         { id: 1, name: 'Item 1' },
         { id: 2, name: 'Item 2' },
@@ -43,15 +42,15 @@ export class ListDraggableExample {
         { id: 7, name: 'Item 7. Sorting is prohibited', pinned: true }
     ]);
 
-    protected itemName(item: { id: number }): string {
-        return item.id === 7 ? this.t().item7Pinned : 'Item ' + item.id;
-    }
-
     // The group and the divider sit at fixed positions, so the sections are plain slices and the indices
     // `dropped` reports address the array directly. An option dragged past a boundary changes section.
     protected readonly beforeGroup = computed(() => this.items().slice(0, 2));
     protected readonly grouped = computed(() => this.items().slice(2, 5));
     protected readonly afterDivider = computed(() => this.items().slice(5));
+
+    protected itemName(item: { id: number }): string {
+        return item.id === 7 ? this.t().item7Pinned : 'Item ' + item.id;
+    }
 
     protected dropped({ previousIndex, currentIndex }: KbqListSelectionDroppedEvent): void {
         const items = [...this.items()];

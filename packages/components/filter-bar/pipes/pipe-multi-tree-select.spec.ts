@@ -128,12 +128,11 @@ const CUSTOM_TREE_DATA: CustomTreeNode[] = [
 })
 class TestComponent {
     readonly changeDetectorRef = inject(ChangeDetectorRef);
+
     readonly optionTemplate = viewChild.required<TemplateRef<any>>('optionTemplate');
 
     selectedAllEqualsSelectedNothing = true;
-
     activeFilter: KbqFilter | null = null;
-
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'MultiTreeSelect',
@@ -1455,8 +1454,6 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
     // otherwise it alone stays in the old locale while every other string in the panel follows along.
     describe('select-all label localization', () => {
         class MockLocaleService {
-            readonly changes = new BehaviorSubject<string>('locale-a');
-
             private readonly params: Record<string, KbqFilterBarLocaleConfiguration> = {
                 'locale-a': {
                     ...KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
@@ -1467,6 +1464,8 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
                     pipe: { ...KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.pipe, selectAll: 'Select all B' }
                 }
             };
+
+            readonly changes = new BehaviorSubject<string>('locale-a');
 
             // The real service answers every section; a mock that ignored `section` and always returned the
             // filterBar slice fed it to readers of other sections too — the cleaner's `a11y.clear` resolved

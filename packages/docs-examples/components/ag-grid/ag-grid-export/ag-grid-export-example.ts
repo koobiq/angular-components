@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, type ColDef, type GridApi, type GridReadyEvent, ModuleRegistry } from 'ag-grid-community';
 import { jsPDF } from 'jspdf';
@@ -6,7 +6,10 @@ import { autoTable } from 'jspdf-autotable';
 import writeExcelFile from 'write-excel-file/browser';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqDataSizePipe } from '@koobiq/components/core';
 import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { exampleIncidentColumns } from '../incident-columns';
+import { exampleGetIncidents, exampleTechniqueLabel } from '../security-incidents';
 import { TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -54,32 +57,44 @@ type ExportTable = {
             gap: var(--kbq-size-m);
         }
     `,
+    providers: [KbqDataSizePipe],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridExportExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    private readonly fileSize = inject(KbqDataSizePipe);
 
     private readonly api = signal<GridApi | null>(null);
-    private readonly filename = 'example-export';
+    private readonly filename = 'security-incidents';
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,
         filter: true,
         floatingFilter: true
     };
-    protected readonly columnDefs = computed<ColDef[]>(() => [
-        { field: 'column0', headerName: this.t().projectName, width: 130 },
-        ...Array.from({ length: 4 }, (_, i) => ({
-            field: 'column' + (i + 1),
-            headerName: 'Column ' + (i + 1),
-            width: 130
-        }))
-    ]);
-    protected readonly rowData = Array.from({ length: 20 }, (_, index) => ({
-        column0: 'Project name ' + index,
-        ...Object.fromEntries(Array.from({ length: 4 }, (_, i) => ['column' + (i + 1), 'Text ' + index]))
-    }));
+    protected readonly columnDefs = computed(() =>
+        exampleIncidentColumns(
+            this.t().headers,
+            'id',
+            'event',
+            'severity',
+            'status',
+            'filePath',
+            {
+                field: 'fileSize',
+                cellDataType: 'number',
+                valueFormatter: ({ data }) =>
+                    data?.fileSize !== undefined ? this.fileSize.transform(data.fileSize) : ''
+            },
+            {
+                field: 'techniques',
+                width: 240,
+                valueGetter: ({ data }) => data?.techniques.map(exampleTechniqueLabel).join('; ')
+            }
+        )
+    );
+    protected readonly rowData = exampleGetIncidents(0, 20);
 
     /** Stores the grid API once the grid finishes initializing. */
     protected onGridReady({ api }: GridReadyEvent): void {

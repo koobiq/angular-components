@@ -72,8 +72,10 @@ import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 })
 export class E2eActionsPanelWithOverlayContainer {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+
     private readonly templateRef = viewChild.required(TemplateRef);
     private readonly overlayContainer = viewChild.required('overlayContainer', { read: ElementRef });
+
     protected readonly actions = Array.from({ length: 7 });
 
     protected open(): void {
@@ -102,6 +104,7 @@ export class E2eActionsPanelWithOverlayContainer {
 })
 export class E2eActionsPanelGlobalOverlayContainer {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+
     private readonly templateRef = viewChild.required(TemplateRef);
 
     protected open(): void {
@@ -148,6 +151,7 @@ export class E2eActionsPanelGlobalOverlayContainer {
 })
 export class E2eActionsPanelDisabledButtons {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+
     private readonly templateRef = viewChild.required(TemplateRef);
 
     protected open(): void {
@@ -227,8 +231,10 @@ export class E2eActionsPanelDisabledButtons {
 })
 export class E2eActionsPanelDisabledOverflow {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+
     private readonly templateRef = viewChild.required(TemplateRef);
     private readonly overlayContainer = viewChild.required('overlayContainer', { read: ElementRef });
+
     protected readonly actions = Array.from({ length: 7 });
     protected readonly disabledAction = 2;
 

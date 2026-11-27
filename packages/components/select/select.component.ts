@@ -2,6 +2,22 @@ import { CdkMonitorFocus, InteractivityChecker } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { SelectionModel } from '@angular/cdk/collections';
 import {
+    BACKSPACE,
+    DELETE,
+    DOWN_ARROW,
+    END,
+    ENTER,
+    ESCAPE,
+    HOME,
+    LEFT_ARROW,
+    PAGE_DOWN,
+    PAGE_UP,
+    RIGHT_ARROW,
+    SPACE,
+    TAB,
+    UP_ARROW
+} from '@angular/cdk/keycodes';
+import {
     CdkConnectedOverlay,
     CdkOverlayOrigin,
     type ConnectedPosition,
@@ -72,20 +88,13 @@ import {
 } from 'rxjs';
 import {
     ActiveDescendantKeyManager,
-    BACKSPACE,
     type CanUpdateErrorState,
     defaultOffsetY,
-    DELETE,
-    DOWN_ARROW,
-    END,
-    ENTER,
     ErrorStateMatcher,
-    ESCAPE,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
     getKbqSelectNonFunctionValueError,
     getSelectAllState,
-    HOME,
     isInput,
     isSelectAll,
     KBQ_A11Y_LOCALE_CONFIGURATION,
@@ -128,17 +137,10 @@ import {
     type KbqSiblingPopup,
     kbqSiblingPopupProvider,
     KbqVirtualOption,
-    LEFT_ARROW,
-    PAGE_DOWN,
-    PAGE_UP,
-    RIGHT_ARROW,
     runClearPredicate,
     runCompareWith,
     shouldSelectSearchText,
-    SPACE,
-    TAB,
-    toggleSelectAll,
-    UP_ARROW
+    toggleSelectAll
 } from '@koobiq/components/core';
 import {
     KBQ_FORM_FIELD,
@@ -326,7 +328,6 @@ export class KbqSelect
     private readonly parentFormField = inject(KBQ_FORM_FIELD, { host: true, optional: true })!;
     ngControl = inject(NgControl, { self: true, optional: true });
     private readonly scrollStrategyFactory = inject(KBQ_SELECT_SCROLL_STRATEGY);
-
     private readonly carrier = inject(KbqLocaleOverridesDirective, { self: true });
 
     /** Localized strings of the select, following the active locale. */
@@ -334,9 +335,7 @@ export class KbqSelect
 
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
-
     protected readonly isBrowser = inject(Platform).isBrowser;
-
     protected readonly defaultOptions = inject(KBQ_SELECT_OPTIONS, { optional: true });
     private readonly scrollbarOptions = inject(KBQ_SCROLLBAR_OPTIONS);
 
@@ -346,6 +345,7 @@ export class KbqSelect
         this.parentFormGroup,
         this.parentForm
     );
+    private readonly hiddenItemsCount = signal(0);
 
     /** Whether the component is in an error state. */
     readonly errorState = this.errorStateTracker.errorState;
@@ -359,8 +359,6 @@ export class KbqSelect
      */
     readonly isNativeLabelSupported = false;
 
-    private readonly hiddenItemsCount = signal(0);
-
     /** Number of the selected items that do not fit into the trigger. */
     readonly hiddenItems = this.hiddenItemsCount.asReadonly();
 
@@ -372,6 +370,17 @@ export class KbqSelect
      * to measure. Both cases leave every tag treated as visible.
      */
     private readonly visibleTriggerItems = signal<number | null>(null);
+
+    /** Whether the selection is being set to a written value, which is no selection of the user. */
+    private writingValue = false;
+
+    /**
+     * Detached copies of the selected options, captured while the option was still rendered.
+     * `cdk-virtual-scroll` recycles option views, so a `KbqOption` kept in `selectionModel` can
+     * silently start carrying another item's value and label — the copy preserves the original ones.
+     */
+    private readonly selectedOptionCopies = new WeakMap<KbqOptionBase, KbqVirtualOption>();
+    private panelRender?: AfterRenderRef;
 
     /** The last measured value for the trigger's client bounding rect, or `undefined` until the panel first opens. */
     protected triggerRect: DOMRect | undefined;
@@ -388,16 +397,6 @@ export class KbqSelect
     /** Previously selected options before the current selection was made. */
     previousSelectionModelSelected: KbqOptionBase[] = [];
 
-    /** Whether the selection is being set to a written value, which is no selection of the user. */
-    private writingValue = false;
-
-    /**
-     * Detached copies of the selected options, captured while the option was still rendered.
-     * `cdk-virtual-scroll` recycles option views, so a `KbqOption` kept in `selectionModel` can
-     * silently start carrying another item's value and label — the copy preserves the original ones.
-     */
-    private readonly selectedOptionCopies = new WeakMap<KbqOptionBase, KbqVirtualOption>();
-
     /** Manages keyboard events for options in the panel. Configured once the content is initialized. */
     keyManager: ActiveDescendantKeyManager<KbqOption>;
 
@@ -407,10 +406,69 @@ export class KbqSelect
     /** Emits once the panel has rendered (`'showing'`) or has been removed (`'void'`). */
     panelDoneAnimatingStream = new Subject<string>();
 
-    private panelRender?: AfterRenderRef;
-
     /** Strategy that will be used to handle scrolling while the select panel is open. */
     scrollStrategy: ScrollStrategy = this.scrollStrategyFactory();
+
+    /**
+     * Trigger - is a clickable field to open select dropdown panel
+     */
+    readonly trigger = viewChild<ElementRef>('trigger');
+
+    /** Reference to the overlay panel element. */
+    readonly panel = viewChild<ElementRef>('panel');
+
+    /** Reference to the container element that holds the options. */
+    readonly optionsContainer = viewChild.required<ElementRef>('optionsContainer');
+    private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
+
+    // Virtual scroll projects its own viewport, which is the actual scrolling element.
+    private readonly projectedScrollbarViewport = contentChild(KbqScrollbarViewport, { descendants: true });
+
+    /** Reference to the built-in "select all" row, rendered only while `selectAll` is on. */
+    readonly selectAllOption = viewChild(KbqOption);
+    private readonly overlayDirQuery = viewChild(CdkConnectedOverlay);
+
+    /** Reference to the optional footer element in the panel. */
+    readonly footer = contentChild(KbqSelectFooter, { read: ElementRef });
+
+    /** Reference to the CDK virtual scroll directive for virtual scrolling support. */
+    readonly cdkVirtualForOf = contentChild(CdkVirtualForOf);
+
+    /** Reference to the CDK virtual scroll viewport for tracking scroll position in virtual mode. */
+    readonly virtualScrollViewport = contentChild(CdkVirtualScrollViewport);
+    private readonly tagsQuery = viewChildren(KbqTag);
+
+    /** User-supplied override of the trigger element for custom rendering. */
+    readonly customTrigger = contentChild(KbqSelectTrigger);
+
+    /** User-supplied matcher component for custom value matching logic. */
+    readonly customMatcher = contentChild(KbqSelectMatcher);
+
+    /** Custom template reference for rendering tag content. */
+    readonly customTagTemplateRef = contentChild('kbqSelectTagContent', { read: TemplateRef });
+
+    /**
+     * Reference to the optional cleaner element for clearing selection.
+     *
+     * @docs-private
+     */
+    readonly cleaner = contentChild(KbqCleaner, { descendants: false });
+    private readonly optionsQuery = contentChildren(KbqOption, { descendants: true });
+
+    /** All of the defined groups of options. */
+    readonly optionGroups = contentChildren(KbqOptgroup);
+
+    /** Reference to the optional search component. */
+    readonly search = contentChild(KbqSelectSearch);
+
+    /** Reference to the optional empty search result component. */
+    readonly searchEmpty = contentChild(KbqSelectSearchEmptyResult);
+
+    private readonly tagsList = kbqQueryListFrom(this.tagsQuery);
+    private readonly optionsList = kbqQueryListFrom(this.optionsQuery);
+
+    /** Whether `ngAfterContentInit` has run. The options are not settled before that, so nothing reads them. */
+    private contentReady = false;
 
     /**
      * Minimum space to keep between the overlay and the viewport edge.
@@ -444,76 +502,6 @@ export class KbqSelect
     ];
 
     /**
-     * Trigger - is a clickable field to open select dropdown panel
-     */
-    readonly trigger = viewChild<ElementRef>('trigger');
-
-    /** Reference to the overlay panel element. */
-    readonly panel = viewChild<ElementRef>('panel');
-
-    /** Reference to the container element that holds the options. */
-    readonly optionsContainer = viewChild.required<ElementRef>('optionsContainer');
-
-    private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
-
-    // Virtual scroll projects its own viewport, which is the actual scrolling element.
-    private readonly projectedScrollbarViewport = contentChild(KbqScrollbarViewport, { descendants: true });
-
-    /** Reference to the built-in "select all" row, rendered only while `selectAll` is on. */
-    readonly selectAllOption = viewChild(KbqOption);
-
-    private readonly overlayDirQuery = viewChild(CdkConnectedOverlay);
-
-    /** Reference to the CDK connected overlay directive. */
-    protected get overlayDir(): CdkConnectedOverlay {
-        return this.overlayDirQuery()!;
-    }
-
-    /** Reference to the optional footer element in the panel. */
-    readonly footer = contentChild(KbqSelectFooter, { read: ElementRef });
-
-    /** Reference to the CDK virtual scroll directive for virtual scrolling support. */
-    readonly cdkVirtualForOf = contentChild(CdkVirtualForOf);
-
-    /** Reference to the CDK virtual scroll viewport for tracking scroll position in virtual mode. */
-    readonly virtualScrollViewport = contentChild(CdkVirtualScrollViewport);
-
-    private readonly tagsQuery = viewChildren(KbqTag);
-    private readonly tagsList = kbqQueryListFrom(this.tagsQuery);
-
-    /** Query list of tags displayed in multiple selection mode. */
-    get tags(): QueryList<KbqTag> {
-        return this.tagsList();
-    }
-
-    /** User-supplied override of the trigger element for custom rendering. */
-    readonly customTrigger = contentChild(KbqSelectTrigger);
-
-    /** User-supplied matcher component for custom value matching logic. */
-    readonly customMatcher = contentChild(KbqSelectMatcher);
-
-    /** Custom template reference for rendering tag content. */
-    readonly customTagTemplateRef = contentChild('kbqSelectTagContent', { read: TemplateRef });
-
-    /**
-     * Reference to the optional cleaner element for clearing selection.
-     *
-     * @docs-private
-     */
-    readonly cleaner = contentChild(KbqCleaner, { descendants: false });
-
-    private readonly optionsQuery = contentChildren(KbqOption, { descendants: true });
-    private readonly optionsList = kbqQueryListFrom(this.optionsQuery);
-
-    /** All of the defined select options. */
-    get options(): QueryList<KbqOption> {
-        return this.optionsList();
-    }
-
-    /** Whether `ngAfterContentInit` has run. The options are not settled before that, so nothing reads them. */
-    private contentReady = false;
-
-    /**
      * Everything the key manager navigates: the built-in "select all" row first, then `options`.
      *
      * The row is rendered by the select's own template, so it never reaches the `options` content query.
@@ -524,15 +512,6 @@ export class KbqSelect
      * @docs-private
      */
     readonly navigableOptions = new QueryList<KbqOption>();
-
-    /** All of the defined groups of options. */
-    readonly optionGroups = contentChildren(KbqOptgroup);
-
-    /** Reference to the optional search component. */
-    readonly search = contentChild(KbqSelectSearch);
-
-    /** Reference to the optional empty search result component. */
-    readonly searchEmpty = contentChild(KbqSelectSearchEmptyResult);
 
     /**
      * Option list that the search field filters, as the field describes it to assistive technology.
@@ -563,18 +542,6 @@ export class KbqSelect
     readonly hiddenItemsTextFormatter = input<(hiddenItemsText: string, hiddenItems: number) => string>(
         (hiddenItemsText, hiddenItems) => hiddenItemsText.replace('{{ number }}', hiddenItems.toString())
     );
-
-    /** Rendered hidden items counter. */
-    protected get hiddenItemsLabel(): string {
-        const template = this.hiddenItemsText() ?? this.localeConfiguration().hiddenItemsText;
-
-        return this.hiddenItemsTextFormatter()(template, this.hiddenItems());
-    }
-
-    /** Label of the "select all" row. Follows the active locale. */
-    protected get selectAllText(): string {
-        return this.localeConfiguration().selectAll;
-    }
 
     /**
      * Accessible name of the trigger and of the option list.
@@ -631,6 +598,11 @@ export class KbqSelect
         { transform: booleanAttribute }
     );
 
+    /** @docs-private */
+    readonly searchMinOptionsThresholdInput = input<'auto' | number | undefined>(undefined, {
+        alias: 'searchMinOptionsThreshold'
+    });
+
     /**
      * Controls when the search functionality is displayed based on the number of available options.
      *
@@ -644,11 +616,6 @@ export class KbqSelect
             this.resolveSearchMinOptionsThreshold(this.searchMinOptionsThresholdInput()) ??
             this.resolveSearchMinOptionsThreshold(this.defaultOptions?.searchMinOptionsThreshold)
     );
-
-    /** @docs-private */
-    readonly searchMinOptionsThresholdInput = input<'auto' | number | undefined>(undefined, {
-        alias: 'searchMinOptionsThreshold'
-    });
 
     /** Combined stream of all of the child options' change events. */
     readonly optionSelectionChanges: Observable<KbqOptionSelectionChange> = defer(() => {
@@ -681,9 +648,6 @@ export class KbqSelect
         return this.contentInitialized.pipe(switchMap(() => this.optionSelectionChanges));
     }) as Observable<KbqOptionSelectionChange>;
 
-    /** Emits once the content queries are resolved, for subscribers that arrive before `options` exist. */
-    private readonly contentInitialized = new Subject<void>();
-
     /**
      * Event emitted when the select panel has been toggled. Emits true when opened, false when closed.
      * Also serves as the `openedChange` member of the `KbqSiblingPopup` contract — a tooltip sharing
@@ -697,6 +661,9 @@ export class KbqSelect
 
     /** Event emitted before the select panel starts opening. */
     readonly beforeOpened = output<void>();
+
+    /** Emits once the content queries are resolved, for subscribers that arrive before `options` exist. */
+    private readonly contentInitialized = new Subject<void>();
 
     /** Event emitted when the select has been opened. */
     readonly openedStream: Observable<void> = this.openedChange.pipe(
@@ -713,34 +680,11 @@ export class KbqSelect
         map(() => {})
     );
 
-    /** @docs-private */
-    readonly closedOutput = outputFromObservable(this.closedStream, { alias: 'closed' });
-
-    /** Event emitted when the selected value has been changed by the user. */
-    readonly selectionChange = output<KbqSelectChange>();
-
-    /**
-     * Event emitted when all options are selected or deselected via the Ctrl/Cmd + A shortcut.
-     * Not emitted when a custom `selectAllHandler` is supplied — the handler owns the behaviour then.
-     */
-    readonly onSelectAll = output<KbqSelectAllEvent<KbqOption, KbqSelect>>();
-
-    /**
-     * Event that emits whenever the raw value of the select changes. This is here primarily
-     * to facilitate the two-way binding for the `value` input.
-     *
-     * @docs-private
-     */
-    readonly valueChange = output<any>();
-
     /**
      * Distance in pixels from the bottom of the options panel at which `scrolledToBottom` fires.
      * Default `0` — emits only when the panel is fully scrolled to the bottom.
      */
     readonly scrolledToBottomOffset = input<number, unknown>(0, { transform: numberAttribute });
-
-    /** Emits when the options panel is scrolled to (or within `scrolledToBottomOffset` of) the bottom. */
-    readonly scrolledToBottom = output<void>();
 
     /**
      * Whether the overlay should have a backdrop.
@@ -764,17 +708,6 @@ export class KbqSelect
         alias: 'multiple',
         transform: booleanAttribute
     });
-
-    /**
-     * Whether multiple options can be selected.
-     * Note: This cannot be changed dynamically after initialization.
-     */
-    get multiple(): boolean {
-        return this.multipleValue ?? this.multipleInput();
-    }
-
-    /** The multiplicity the selection model was created with; a later binding change is refused. */
-    private multipleValue: boolean | undefined;
 
     /**
      * Function to compare the option values with the selected values.
@@ -851,15 +784,6 @@ export class KbqSelect
     });
 
     /**
-     * Function for handling the Ctrl + A (select all) keyboard combination.
-     * By default, the internal handler selects all options.
-     * It is called with the keyboard event that triggered it and a reference to this select component.
-     */
-    get selectAllHandler(): (event: KeyboardEvent, select: KbqSelect) => void {
-        return this.selectAllHandlerInput() ?? this.defaultSelectAllHandler;
-    }
-
-    /**
      * Width of the panel. If set to `auto`, the panel will match the trigger width, but will never be
      * narrower than `panelMinWidth`. If set to null or an empty string, the panel will grow to match the
      * longest option's text. Any other value is used as an exact width, and `panelMinWidth` is not applied.
@@ -900,6 +824,35 @@ export class KbqSelect
         { transform: numberAttribute }
     );
 
+    /** @docs-private */
+    readonly valueInput = input<any>(undefined, { alias: 'value' });
+
+    /** @docs-private */
+    readonly closedOutput = outputFromObservable(this.closedStream, { alias: 'closed' });
+
+    /** Event emitted when the selected value has been changed by the user. */
+    readonly selectionChange = output<KbqSelectChange>();
+
+    /**
+     * Event emitted when all options are selected or deselected via the Ctrl/Cmd + A shortcut.
+     * Not emitted when a custom `selectAllHandler` is supplied — the handler owns the behaviour then.
+     */
+    readonly onSelectAll = output<KbqSelectAllEvent<KbqOption, KbqSelect>>();
+
+    /**
+     * Event that emits whenever the raw value of the select changes. This is here primarily
+     * to facilitate the two-way binding for the `value` input.
+     *
+     * @docs-private
+     */
+    readonly valueChange = output<any>();
+
+    /** Emits when the options panel is scrolled to (or within `scrolledToBottomOffset` of) the bottom. */
+    readonly scrolledToBottom = output<void>();
+
+    /** The multiplicity the selection model was created with; a later binding change is refused. */
+    private multipleValue: boolean | undefined;
+
     /**
      * `panelMaxHeight` rendered as a CSS length for the `--kbq-select-panel-size-max-height` token.
      * A non-finite value (e.g. `null`) leaves the stylesheet default in place.
@@ -908,8 +861,32 @@ export class KbqSelect
      */
     protected readonly panelMaxHeightToken = computed(() => kbqResolvePanelMaxHeightToken(this.panelMaxHeight()));
 
-    /** @docs-private */
-    readonly valueInput = input<any>(undefined, { alias: 'value' });
+    /** Reference to the CDK connected overlay directive. */
+    protected get overlayDir(): CdkConnectedOverlay {
+        return this.overlayDirQuery()!;
+    }
+
+    /** Query list of tags displayed in multiple selection mode. */
+    get tags(): QueryList<KbqTag> {
+        return this.tagsList();
+    }
+
+    /** All of the defined select options. */
+    get options(): QueryList<KbqOption> {
+        return this.optionsList();
+    }
+
+    /** Rendered hidden items counter. */
+    protected get hiddenItemsLabel(): string {
+        const template = this.hiddenItemsText() ?? this.localeConfiguration().hiddenItemsText;
+
+        return this.hiddenItemsTextFormatter()(template, this.hiddenItems());
+    }
+
+    /** Label of the "select all" row. Follows the active locale. */
+    protected get selectAllText(): string {
+        return this.localeConfiguration().selectAll;
+    }
 
     /**
      * Value of the select control. Can be a single value or array of values for multiple selection. Follows
@@ -918,17 +895,8 @@ export class KbqSelect
      */
     readonly value = linkedSignal(() => this.valueInput());
 
-    /** The value the selection was last made from or reported as. */
-    private selectionValue: any;
-
     /** @docs-private */
     readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
-
-    /**
-     * Unique identifier for the select component.
-     * Auto-generates an ID if not provided.
-     */
-    readonly id = computed(() => this.idInput() || this.uid);
 
     /**
      * Sets the tabIndex of the select element.
@@ -940,15 +908,20 @@ export class KbqSelect
         transform: numberAttribute
     });
 
-    get tabIndex(): number {
-        return this.resolvedTabIndex();
-    }
-
     /** @docs-private */
     readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
         alias: 'disabled',
         transform: booleanAttribute
     });
+
+    /** The value the selection was last made from or reported as. */
+    private selectionValue: any;
+
+    /**
+     * Unique identifier for the select component.
+     * Auto-generates an ID if not provided.
+     */
+    readonly id = computed(() => this.idInput() || this.uid);
 
     /**
      * Whether the select is disabled.
@@ -963,18 +936,98 @@ export class KbqSelect
     private readonly resolvedAriaLabelValue = computed(
         () => this.ariaLabel() ?? (this.ariaLabelledby ? null : this.placeholder() || null)
     );
+    private readonly focusedValue = signal(false);
+    private readonly panelOpenValue = signal(false);
+    private readonly emptyValue = signal(false);
+
     /** @docs-private */
     protected readonly disabledAttribute = computed(() => this.disabled() || null);
+
     /** @docs-private */
     protected readonly disabledClass = computed(() => this.disabled());
+
     /** @docs-private */
     protected readonly invalidClass = computed(() => this.errorState());
 
-    private readonly focusedValue = signal(false);
-    private readonly panelOpenValue = signal(false);
-
     /** Whether the select is focused. */
     readonly focused = computed(() => this.focusedValue() || this.panelOpenValue());
+
+    /** Whether virtual scrolling is enabled for the options panel. Defaults to `false`. */
+    withVirtualScroll = false;
+
+    /**
+     * Whether multiple options can be selected.
+     * Note: This cannot be changed dynamically after initialization.
+     */
+    get multiple(): boolean {
+        return this.multipleValue ?? this.multipleInput();
+    }
+
+    /**
+     * Function for handling the Ctrl + A (select all) keyboard combination.
+     * By default, the internal handler selects all options.
+     * It is called with the keyboard event that triggered it and a reference to this select component.
+     */
+    get selectAllHandler(): (event: KeyboardEvent, select: KbqSelect) => void {
+        return this.selectAllHandlerInput() ?? this.defaultSelectAllHandler;
+    }
+
+    /** Whether no option is currently selected. */
+    readonly empty = this.emptyValue.asReadonly();
+
+    /** `panelClass` flattened into a class string. */
+    private readonly customPanelClasses = computed(() => {
+        const panelClass = this.panelClass();
+
+        if (!panelClass) return '';
+
+        if (typeof panelClass === 'string') return panelClass;
+
+        if (Array.isArray(panelClass) || panelClass instanceof Set) return [...panelClass].filter(Boolean).join(' ');
+
+        return Object.keys(panelClass)
+            .filter((key) => panelClass[key])
+            .join(' ');
+    });
+
+    /** Whether a "select all" batch is running, so the per-option changes propagate only once. */
+    private selectAllInProgress = false;
+
+    /** Subscription to the close event of the overlay. */
+    private closeSubscription = Subscription.EMPTY;
+
+    /** Subscription to the options panel scroll event used by `scrolledToBottom`. */
+    private scrollSubscription = Subscription.EMPTY;
+
+    /** The scroll offset the panel is restored to when it attaches — the list always opens at the top. */
+    private scrollTop = 0;
+
+    /** Unique id for this input. Auto-incremented for each instance. */
+    private readonly uid = `kbq-select-${nextUniqueId++}`;
+
+    /** Subject that emits when the component visibility changes. */
+    private visibleChanges: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    private openPanelTimeout?: ReturnType<typeof setTimeout>;
+
+    /** Pending re-highlight scheduled by a search keystroke. */
+    private highlightOptionTimeout?: ReturnType<typeof setTimeout>;
+
+    /**
+     * Id of the listbox the trigger owns, referenced by `aria-controls` while the panel is open.
+     *
+     * @docs-private
+     */
+    protected readonly panelId = `${this.uid}-panel`;
+
+    /** Origin element for the overlay panel positioning. */
+    protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
+
+    get tabIndex(): number {
+        return this.resolvedTabIndex();
+    }
+
+    /** Accessible names of the controls the select renders itself. */
+    private readonly a11yLocaleConfiguration = this.carrier.read('a11y', KBQ_A11Y_LOCALE_CONFIGURATION);
 
     /** Whether the select panel is currently open. */
     get panelOpen(): boolean {
@@ -989,9 +1042,6 @@ export class KbqSelect
     get isAttached(): boolean {
         return this.panelOpen;
     }
-
-    /** Whether virtual scrolling is enabled for the options panel. Defaults to `false`. */
-    withVirtualScroll = false;
 
     protected get scrollbarMode(): KbqScrollbarMode {
         return this.withVirtualScroll ? 'native' : this.scrollbarOptions.mode;
@@ -1081,14 +1131,6 @@ export class KbqSelect
     }
 
     /**
-     * Passes the resolved option, so a view recycled by `cdk-virtual-scroll` cannot answer for another
-     * item.
-     */
-    private shouldClear(option: KbqOptionBase): boolean {
-        return runClearPredicate(this.clearPredicate(), this.resolveSelectedOption(option));
-    }
-
-    /**
      * Returns the currently selected option(s). Single value or array for multiple selection. A single select with
      * nothing selected returns `undefined`.
      */
@@ -1129,27 +1171,6 @@ export class KbqSelect
         return this.triggerValuesLimit() > 0 ? selectedOptions.slice(0, this.triggerValuesLimit()) : selectedOptions;
     }
 
-    /**
-     * Whether the tag at `index` is one the trigger actually shows.
-     *
-     * The trigger renders every selected value and clips the overflow with `overflow: hidden`, so a tag
-     * that wrapped past the single line is still in the DOM. Its remove control has to leave the tab order
-     * with it, or focus lands on something the user cannot see — and the browser scrolls the clipped list
-     * to reveal it, shifting the row that is on screen.
-     *
-     * @docs-private
-     */
-    protected isTriggerValueVisible(index: number): boolean {
-        const visibleTriggerItems = this.visibleTriggerItems();
-
-        return visibleTriggerItems === null || index < visibleTriggerItems;
-    }
-
-    private readonly emptyValue = signal(false);
-
-    /** Whether no option is currently selected. */
-    readonly empty = this.emptyValue.asReadonly();
-
     /** Whether there are no options available. */
     get noOptions(): boolean {
         return this.options?.length === 0;
@@ -1180,43 +1201,6 @@ export class KbqSelect
     get multiSelection(): boolean {
         return this.multiple || this.multiline();
     }
-
-    /** `panelClass` flattened into a class string. */
-    private readonly customPanelClasses = computed(() => {
-        const panelClass = this.panelClass();
-
-        if (!panelClass) return '';
-
-        if (typeof panelClass === 'string') return panelClass;
-
-        if (Array.isArray(panelClass) || panelClass instanceof Set) return [...panelClass].filter(Boolean).join(' ');
-
-        return Object.keys(panelClass)
-            .filter((key) => panelClass[key])
-            .join(' ');
-    });
-
-    /** Whether a "select all" batch is running, so the per-option changes propagate only once. */
-    private selectAllInProgress = false;
-
-    /** Subscription to the close event of the overlay. */
-    private closeSubscription = Subscription.EMPTY;
-
-    /** Subscription to the options panel scroll event used by `scrolledToBottom`. */
-    private scrollSubscription = Subscription.EMPTY;
-
-    /** The scroll offset the panel is restored to when it attaches — the list always opens at the top. */
-    private scrollTop = 0;
-
-    /** Unique id for this input. Auto-incremented for each instance. */
-    private readonly uid = `kbq-select-${nextUniqueId++}`;
-
-    /**
-     * Id of the listbox the trigger owns, referenced by `aria-controls` while the panel is open.
-     *
-     * @docs-private
-     */
-    protected readonly panelId = `${this.uid}-panel`;
 
     /**
      * Id of the `kbq-form-field` label naming this select, when it has one.
@@ -1257,20 +1241,6 @@ export class KbqSelect
     protected get isOptionsListBusy(): boolean {
         return this.noOptions && !this.showSelectAll;
     }
-
-    /** Subject that emits when the component visibility changes. */
-    private visibleChanges: BehaviorSubject<boolean> = new BehaviorSubject(false);
-
-    /** Origin element for the overlay panel positioning. */
-    protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
-
-    private openPanelTimeout?: ReturnType<typeof setTimeout>;
-
-    /** Pending re-highlight scheduled by a search keystroke. */
-    private highlightOptionTimeout?: ReturnType<typeof setTimeout>;
-
-    /** Accessible names of the controls the select renders itself. */
-    private readonly a11yLocaleConfiguration = this.carrier.read('a11y', KBQ_A11Y_LOCALE_CONFIGURATION);
 
     constructor() {
         super();
@@ -1503,6 +1473,30 @@ export class KbqSelect
 
         clearTimeout(this.openPanelTimeout);
         clearTimeout(this.highlightOptionTimeout);
+    }
+
+    /**
+     * Passes the resolved option, so a view recycled by `cdk-virtual-scroll` cannot answer for another
+     * item.
+     */
+    private shouldClear(option: KbqOptionBase): boolean {
+        return runClearPredicate(this.clearPredicate(), this.resolveSelectedOption(option));
+    }
+
+    /**
+     * Whether the tag at `index` is one the trigger actually shows.
+     *
+     * The trigger renders every selected value and clips the overflow with `overflow: hidden`, so a tag
+     * that wrapped past the single line is still in the DOM. Its remove control has to leave the tab order
+     * with it, or focus lands on something the user cannot see — and the browser scrolls the clipped list
+     * to reveal it, shifting the row that is on screen.
+     *
+     * @docs-private
+     */
+    protected isTriggerValueVisible(index: number): boolean {
+        const visibleTriggerItems = this.visibleTriggerItems();
+
+        return visibleTriggerItems === null || index < visibleTriggerItems;
     }
 
     /** Updates the error state based on the error state matcher. */

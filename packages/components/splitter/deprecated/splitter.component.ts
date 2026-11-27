@@ -86,6 +86,12 @@ export class KbqGutterDirective implements OnInit {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private renderer = inject(Renderer2);
 
+    private _direction: Direction = Direction.Vertical;
+    private _order: number = 0;
+    private _size: number = 6;
+
+    dragged: boolean = false;
+
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
@@ -96,8 +102,6 @@ export class KbqGutterDirective implements OnInit {
     set direction(direction: Direction) {
         this._direction = direction;
     }
-
-    private _direction: Direction = Direction.Vertical;
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -110,8 +114,6 @@ export class KbqGutterDirective implements OnInit {
         this._order = coerceNumberProperty(order);
     }
 
-    private _order: number = 0;
-
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
@@ -123,13 +125,9 @@ export class KbqGutterDirective implements OnInit {
         this._size = coerceNumberProperty(size);
     }
 
-    private _size: number = 6;
-
     get isVertical(): boolean {
         return this._direction === Direction.Vertical;
     }
-
-    dragged: boolean = false;
 
     ngOnInit(): void {
         this.setStyle(StyleProperty.FlexBasis, coerceCssPixelValue(this.size));
@@ -179,6 +177,11 @@ export class KbqGutterGhostDirective {
     //  Your application code writes to the input. This prevents migration.
     @Input() visible = false;
 
+    private _x: number = 0;
+    private _y: number = 0;
+    private _direction: Direction = Direction.Vertical;
+    private _size: number = 6;
+
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
@@ -190,8 +193,6 @@ export class KbqGutterGhostDirective {
         this._x = x;
         this.setStyle(StyleProperty.Left, coerceCssPixelValue(x));
     }
-
-    private _x: number = 0;
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -205,8 +206,6 @@ export class KbqGutterGhostDirective {
         this.setStyle(StyleProperty.Top, coerceCssPixelValue(y));
     }
 
-    private _y: number = 0;
-
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
@@ -219,8 +218,6 @@ export class KbqGutterGhostDirective {
         this.updateDimensions();
     }
 
-    private _direction: Direction = Direction.Vertical;
-
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
@@ -232,8 +229,6 @@ export class KbqGutterGhostDirective {
         this._size = coerceNumberProperty(size);
         this.updateDimensions();
     }
-
-    private _size: number = 6;
 
     get isVertical(): boolean {
         return this.direction === Direction.Vertical;
@@ -277,8 +272,6 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
     readonly gutterPositionChange = output<void>();
 
-    areas: IArea[] = [];
-
     readonly gutters = viewChildren(KbqGutterDirective);
     readonly ghost = viewChild.required(KbqGutterGhostDirective);
 
@@ -286,15 +279,22 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
     @ContentChildren(forwardRef(() => KbqSplitterAreaDirective))
     areaRefs: QueryList<KbqSplitterAreaDirective> = new QueryList<KbqSplitterAreaDirective>();
 
+    private _isDragging: boolean = false;
+    private readonly areaPositionDivider: number = 2;
+    private readonly listeners: (() => void)[] = [];
+    private areasChangeSubscription: Subscription = Subscription.EMPTY;
+    private _hideGutters: boolean = false;
+    private _direction: Direction = Direction.Horizontal;
+    private _disabled: boolean = false;
+    private _useGhost: boolean = false;
+    private _gutterSize: number = 6;
+    private _resizing: boolean = false;
+
+    areas: IArea[] = [];
+
     get isDragging(): boolean {
         return this._isDragging;
     }
-    private _isDragging: boolean = false;
-
-    private readonly areaPositionDivider: number = 2;
-    private readonly listeners: (() => void)[] = [];
-
-    private areasChangeSubscription: Subscription = Subscription.EMPTY;
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -307,8 +307,6 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
         this._hideGutters = coerceBooleanProperty(value);
     }
 
-    private _hideGutters: boolean = false;
-
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
@@ -319,8 +317,6 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
     set direction(direction: Direction) {
         this._direction = direction;
     }
-
-    private _direction: Direction = Direction.Horizontal;
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -333,8 +329,6 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
         this._disabled = coerceBooleanProperty(disabled);
     }
 
-    private _disabled: boolean = false;
-
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
@@ -345,8 +339,6 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
     set useGhost(useGhost: boolean) {
         this._useGhost = coerceBooleanProperty(useGhost);
     }
-
-    private _useGhost: boolean = false;
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -361,17 +353,8 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
         this._gutterSize = size > 0 ? size : this.gutterSize;
     }
 
-    private _gutterSize: number = 6;
-
     get resizing(): boolean {
         return this._resizing;
-    }
-
-    private _resizing: boolean = false;
-
-    addArea(area: KbqSplitterAreaDirective): void {
-        this.areas.push(this.mapAndOrderArea(area, this.areas.length));
-        this.changeDetectorRef.detectChanges();
     }
 
     ngOnInit(): void {
@@ -391,6 +374,11 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
     ngOnDestroy() {
         this.areasChangeSubscription.unsubscribe();
+    }
+
+    addArea(area: KbqSplitterAreaDirective): void {
+        this.areas.push(this.mapAndOrderArea(area, this.areas.length));
+        this.changeDetectorRef.detectChanges();
     }
 
     onMouseDown(event: MouseEvent, leftAreaIndex: number, rightAreaIndex: number) {
@@ -617,19 +605,10 @@ export class KbqSplitterAreaDirective implements OnInit, AfterViewInit, OnDestro
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private renderer = inject(Renderer2);
     private splitter = inject(KbqSplitterComponent);
-
-    readonly sizeChange = output<number>();
-
     private readonly window = inject(KBQ_WINDOW);
     private readonly platform = inject(Platform);
 
-    isResizing(): boolean {
-        return this.splitter.isDragging;
-    }
-
-    disableFlex(): void {
-        this.renderer.removeStyle(this.elementRef.nativeElement, 'flex');
-    }
+    readonly sizeChange = output<number>();
 
     // Before the host bindings of the element apply, so that a component on it keeps the sizes it binds to its host.
     ngOnInit() {
@@ -652,6 +631,14 @@ export class KbqSplitterAreaDirective implements OnInit, AfterViewInit, OnDestro
 
     ngOnDestroy(): void {
         this.splitter.removeArea(this);
+    }
+
+    isResizing(): boolean {
+        return this.splitter.isDragging;
+    }
+
+    disableFlex(): void {
+        this.renderer.removeStyle(this.elementRef.nativeElement, 'flex');
     }
 
     setOrder(order: number): void {

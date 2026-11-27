@@ -52,7 +52,6 @@ const DATA_OBJECT = {
 })
 export class FilterBarSearchInPipesExample {
     activeFilter: KbqFilter = this.getDefaultFilter();
-
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Select',

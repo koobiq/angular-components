@@ -6,10 +6,12 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KBQ_MODAL_DATA, KbqModalModule, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import {
+    ModalButtonLoadingExample,
     ModalCaptionExample,
     ModalComponentExample,
     ModalComponentWithInjectorExample,
     ModalFullCustomExample,
+    ModalKeepOpenOnErrorExample,
     ModalMultipleExample,
     ModalOverviewExample,
     ModalScrollExample,
@@ -21,6 +23,7 @@ import {
     selector: 'dev-examples',
     imports: [
         ModalOverviewExample,
+        ModalButtonLoadingExample,
         ModalComponentExample,
         ModalComponentWithInjectorExample,
         ModalTemplateExample,
@@ -28,10 +31,13 @@ import {
         ModalSizesExample,
         ModalMultipleExample,
         ModalCaptionExample,
-        ModalFullCustomExample
+        ModalFullCustomExample,
+        ModalKeepOpenOnErrorExample
     ],
     template: `
         <modal-overview-example />
+        <hr />
+        <modal-button-loading-example />
         <hr />
         <modal-component-example />
         <hr />
@@ -48,6 +54,8 @@ import {
         <modal-caption-example />
         <hr />
         <modal-full-custom-example />
+        <hr />
+        <modal-keep-open-on-error-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -92,10 +100,10 @@ export class DevModalLongCustomComponent {
 })
 export class DevModalCustomComponent {
     private modal = inject(KbqModalRef);
+    data = inject<{ title?: string; subtitle?: string; myData?: string }>(KBQ_MODAL_DATA, { optional: true });
 
     componentColors = KbqComponentColors;
 
-    data = inject<{ title?: string; subtitle?: string; myData?: string }>(KBQ_MODAL_DATA, { optional: true });
     constructor() {
         console.log('data: ', this.data);
     }
@@ -141,10 +149,10 @@ export class DevModalCustomComponent {
 export class DevModalFullCustomComponent {
     private modal = inject(KbqModalRef);
 
-    componentColors = KbqComponentColors;
-
     readonly title = input<string>(undefined!);
     readonly subtitle = input<string>(undefined!);
+
+    componentColors = KbqComponentColors;
 
     destroyModal() {
         this.modal.destroy({ data: 'this the result data' });
@@ -170,11 +178,9 @@ export class DevApp {
     private modalService = inject(KbqModalService);
 
     componentColors = KbqComponentColors;
-
     isVisible = false;
     tplModal?: KbqModalRef;
     htmlModalVisible = false;
-
     isLoading = false;
 
     showConfirm() {

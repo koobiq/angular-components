@@ -2,9 +2,9 @@
      only redirects to /404 on a later tick. Rendering the header unguarded threw in between. -->
 @if (structureItem) {
     <div class="docs-component-header">
-        <div docsRegisterHeader class="docs-component-name" data-docsearch-lvl1>
+        <h1 docsRegisterHeader class="docs-component-name" data-docsearch-lvl1>
             {{ structureItem.name[locale()] }}
-        </div>
+        </h1>
         @if (!structureItem.isGuide) {
             <div class="docs-component-navbar layout-row layout-align-space-between-center layout-padding-top-s">
                 <nav kbqTabNavBar [tabNavPanel]="tabNavPanel">

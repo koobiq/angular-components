@@ -1,30 +1,22 @@
 import type { Translations } from '@koobiq/docs-examples/i18n';
+import { EXAMPLE_INCIDENT_HEADERS, type ExampleIncidentHeaders } from '../incident-headers';
 
 /** Text of the ag-grid-row-group example. */
 export interface ExampleTranslation {
-    severity: string;
+    headers: ExampleIncidentHeaders;
     clearCollapsedState: string;
     clearSelectionState: string;
-    category: string;
-    categories: string[];
-    severities: string[];
 }
 
 export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
-        severity: 'Важность',
+        headers: EXAMPLE_INCIDENT_HEADERS['ru-RU'],
         clearCollapsedState: 'Очистить состояние свёрнутости',
-        clearSelectionState: 'Очистить состояние выбора',
-        category: 'Категория',
-        categories: ['Подбор пароля', 'Сложная атака', 'DDoS', 'HIPS-алерт', 'IDS/IPS-алерт', 'XSS'],
-        severities: ['Низкая', 'Средняя', 'Высокая', 'Критическая']
+        clearSelectionState: 'Очистить состояние выбора'
     },
     default: {
-        severity: 'Severity',
+        headers: EXAMPLE_INCIDENT_HEADERS.default,
         clearCollapsedState: 'Clear collapsed state',
-        clearSelectionState: 'Clear selection state',
-        category: 'Category',
-        categories: ['BruteForce', 'Complex Attack', 'DDoS', 'HIPS alert', 'IDS/IPS Alert', 'XSS'],
-        severities: ['Low', 'Medium', 'High', 'Critical']
+        clearSelectionState: 'Clear selection state'
     }
 };

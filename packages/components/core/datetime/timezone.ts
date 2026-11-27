@@ -132,6 +132,9 @@ export const kbqResolveTimezoneOffset = (timezone: KbqTimezoneLike, timestamp: n
  */
 @Injectable({ providedIn: 'root' })
 export class KbqDateTimezoneService {
+    private readonly _timezone = signal<KbqTimezoneLike>(inject(KBQ_DATE_TIMEZONE, { optional: true }) ?? 'system');
+    private readonly _changes = new Subject<KbqTimezoneLike>();
+
     /** Active time zone. */
     readonly timezone: Signal<KbqTimezoneLike>;
 
@@ -142,9 +145,6 @@ export class KbqDateTimezoneService {
      * through an impure pipe — the date inputs and the calendar.
      */
     readonly changes: Observable<KbqTimezoneLike>;
-
-    private readonly _timezone = signal<KbqTimezoneLike>(inject(KBQ_DATE_TIMEZONE, { optional: true }) ?? 'system');
-    private readonly _changes = new Subject<KbqTimezoneLike>();
 
     constructor() {
         this.timezone = this._timezone.asReadonly();

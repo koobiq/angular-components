@@ -34,6 +34,5 @@ import { TRANSLATIONS } from './l10n';
 })
 export class RadioMultilineExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly options = computed(() => this.t().practiceOptions);
 }

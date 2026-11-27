@@ -48,7 +48,6 @@ export class FilterBarRequiredExample {
     // that binding, so a relabelled period only reaches the screen as a new pipe object.
     readonly activeFilter = linkedSignal<KbqFilter | null>(() => this.getDefaultFilter());
     readonly defaultFilter = computed<KbqFilter | null>(() => this.getDefaultFilter());
-
     readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
         {
             name: 'Date',

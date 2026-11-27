@@ -35,7 +35,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class TableOverviewExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly rows = computed(() => [
         { client: 'Company 1', event: this.t().events[0], registered: '8 Jul, 14:31' },
         { client: 'Company 2', event: this.t().events[1], registered: '4 Dec, 16:11' },

@@ -67,7 +67,6 @@ type CompanyRow = {
 })
 export class HighlightBackgroundTableExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly keyword = 'manc';
     protected readonly rows: CompanyRow[] = [
         {

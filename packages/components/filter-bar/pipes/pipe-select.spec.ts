@@ -1,4 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { ENTER, ESCAPE } from '@angular/cdk/keycodes';
 import {
     ChangeDetectorRef,
     Component,
@@ -11,7 +12,7 @@ import {
 } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { dispatchKeyboardEvent, ENTER, ESCAPE } from '@koobiq/components/core';
+import { dispatchKeyboardEvent } from '@koobiq/components/core';
 import {
     type KbqFilter,
     KbqFilterBar,
@@ -78,7 +79,6 @@ class TestComponent {
     readonly optionTemplate = viewChild.required<TemplateRef<any>>('optionTemplate');
 
     activeFilter: KbqFilter | null = null;
-
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Select',

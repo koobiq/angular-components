@@ -1,4 +1,5 @@
-﻿import type { CdkConnectedOverlay, ConnectedPosition } from '@angular/cdk/overlay';
+﻿import { END, HOME, SPACE } from '@angular/cdk/keycodes';
+import type { CdkConnectedOverlay, ConnectedPosition } from '@angular/cdk/overlay';
 import {
     booleanAttribute,
     ChangeDetectorRef,
@@ -15,7 +16,6 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, fromEvent, Subscription } from 'rxjs';
 import type { KbqSearchFieldPopup } from '../a11y';
-import { END, HOME, SPACE } from '../keycodes';
 import {
     KBQ_PANEL_DEFAULT_MAX_HEIGHT,
     type KbqPanelSpaceContext,
@@ -84,8 +84,6 @@ export const KBQ_SELECT_SEARCH_POPUP = new InjectionToken<KbqSearchFieldPopup>('
     exportAs: 'kbqSelectSearch'
 })
 export class KbqSelectSearch extends KbqSearchFieldBase {
-    protected readonly directiveName = 'kbqSelectSearch';
-
     private readonly popup = inject(KBQ_SELECT_SEARCH_POPUP, { optional: true });
 
     /**
@@ -95,9 +93,22 @@ export class KbqSelectSearch extends KbqSearchFieldBase {
      */
     private readonly takeUntilDestroyed = takeUntilDestroyed<any>();
 
+    protected readonly directiveName = 'kbqSelectSearch';
     readonly changes: EventEmitter<string> = new EventEmitter<string>();
-
     isSearchChanged: boolean = false;
+
+    override ngAfterContentInit(): void {
+        super.ngAfterContentInit();
+
+        // The subscription is deferred, so the directive can be destroyed before it even exists —
+        // the captured operator owns it either way, while an `ngOnDestroy` unsubscribe would not.
+        void Promise.resolve().then(() => {
+            this.ngControl!.valueChanges!.pipe(this.takeUntilDestroyed).subscribe((value) => {
+                this.isSearchChanged = true;
+                this.changes.next(value);
+            });
+        });
+    }
 
     /** @docs-private */
     override handleKeydown(event: KeyboardEvent): void {
@@ -111,19 +122,6 @@ export class KbqSelectSearch extends KbqSearchFieldBase {
         if (isWritableSignal(placeholder)) {
             placeholder.set(value);
         }
-    }
-
-    override ngAfterContentInit(): void {
-        super.ngAfterContentInit();
-
-        // The subscription is deferred, so the directive can be destroyed before it even exists —
-        // the captured operator owns it either way, while an `ngOnDestroy` unsubscribe would not.
-        void Promise.resolve().then(() => {
-            this.ngControl!.valueChanges!.pipe(this.takeUntilDestroyed).subscribe((value) => {
-                this.isSearchChanged = true;
-                this.changes.next(value);
-            });
-        });
     }
 
     protected getSearchFieldPopup(): KbqSearchFieldPopup | null {
@@ -144,6 +142,36 @@ export class KbqSelectSearch extends KbqSearchFieldBase {
  */
 @Directive()
 export abstract class KbqAbstractSelect {
+    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+    protected readonly window = inject(KBQ_WINDOW);
+
+    /**
+     * Row container of a multi-selection trigger. Absent for a single value, an empty trigger and a custom
+     * matcher or trigger — all of which have no rows for the panel to anchor to.
+     */
+    protected readonly multilineMatchList = viewChild<ElementRef<HTMLElement>>('multilineMatchList');
+
+    /**
+     * Height of everything in the panel that is not the option list — the trigger gap the pane pads itself
+     * with, the list padding, a search field and a footer.
+     *
+     * The same for every anchor: the below and overlap panes pad the top, the above pane pads the bottom, and
+     * all three pad by the same gap — which is what keeps the anchor decision from feeding back into itself.
+     */
+    private panelChromeHeight = 0;
+
+    /** Transparent gap the pane pads itself with, which the anchor has to be raised by. */
+    private panelGapHeight = 0;
+
+    /**
+     * Cap the option list is rendered with, in pixels. Measured off the panel rather than derived from
+     * `panelMaxHeight`, because `--kbq-select-panel-size-max-height` is what the list actually obeys and a
+     * consumer can override it. Seeded with the stylesheet's own default, which is what a DOM that computes
+     * no layout — the server, jsdom — leaves in force.
+     */
+    private panelMaxHeightCap = KBQ_PANEL_DEFAULT_MAX_HEIGHT;
+    private resizeSubscription = Subscription.EMPTY;
+
     /** Overlay directive of the panel. Subclasses resolve it with their own view query. */
     protected abstract overlayDir: CdkConnectedOverlay;
 
@@ -165,21 +193,6 @@ export abstract class KbqAbstractSelect {
     /** Margin the overlay keeps from the viewport edge, i.e. `cdkConnectedOverlayViewportMargin`. */
     protected abstract readonly viewportMargin: number;
 
-    /**
-     * Row container of a multi-selection trigger. Absent for a single value, an empty trigger and a custom
-     * matcher or trigger — all of which have no rows for the panel to anchor to.
-     */
-    protected readonly multilineMatchList = viewChild<ElementRef<HTMLElement>>('multilineMatchList');
-
-    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
-    protected readonly window = inject(KBQ_WINDOW);
-
-    /** Whether the panel is open. Declared as a method because the two selects spell the state differently. */
-    protected abstract isPanelOpen(): boolean;
-
-    /** Element the overlay is positioned and sized against. */
-    protected abstract getOverlayOriginElement(): HTMLElement | undefined;
-
     /** Overlay panel class. */
     protected readonly overlayPanelClass = 'kbq-select-overlay';
 
@@ -189,27 +202,11 @@ export abstract class KbqAbstractSelect {
     /** Minimum width of the overlay panel. */
     protected overlayMinWidth: string | number = '';
 
-    /**
-     * Height of everything in the panel that is not the option list — the trigger gap the pane pads itself
-     * with, the list padding, a search field and a footer.
-     *
-     * The same for every anchor: the below and overlap panes pad the top, the above pane pads the bottom, and
-     * all three pad by the same gap — which is what keeps the anchor decision from feeding back into itself.
-     */
-    private panelChromeHeight = 0;
+    /** Whether the panel is open. Declared as a method because the two selects spell the state differently. */
+    protected abstract isPanelOpen(): boolean;
 
-    /** Transparent gap the pane pads itself with, which the anchor has to be raised by. */
-    private panelGapHeight = 0;
-
-    /**
-     * Cap the option list is rendered with, in pixels. Measured off the panel rather than derived from
-     * `panelMaxHeight`, because `--kbq-select-panel-size-max-height` is what the list actually obeys and a
-     * consumer can override it. Seeded with the stylesheet's own default, which is what a DOM that computes
-     * no layout — the server, jsdom — leaves in force.
-     */
-    private panelMaxHeightCap = KBQ_PANEL_DEFAULT_MAX_HEIGHT;
-
-    private resizeSubscription = Subscription.EMPTY;
+    /** Element the overlay is positioned and sized against. */
+    protected abstract getOverlayOriginElement(): HTMLElement | undefined;
 
     /**
      * Resolves the overlay panel size for the current trigger geometry and stores it for the

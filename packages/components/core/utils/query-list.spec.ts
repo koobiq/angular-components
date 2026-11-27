@@ -22,14 +22,15 @@ class TestItem {
 })
 class TestOwner implements AfterContentInit {
     private readonly itemsQuery = contentChildren(TestItem);
+
     private readonly itemsList = kbqQueryListFrom(this.itemsQuery);
+
+    lengthOnContentInit = -1;
+    readonly emitted: (number | undefined)[][] = [];
 
     get items(): QueryList<TestItem> {
         return this.itemsList();
     }
-
-    lengthOnContentInit = -1;
-    readonly emitted: (number | undefined)[][] = [];
 
     ngAfterContentInit(): void {
         this.lengthOnContentInit = this.items.length;
@@ -116,6 +117,7 @@ describe('kbqQueryListFrom', () => {
 })
 class TestHookOwner implements AfterContentInit, AfterContentChecked {
     private readonly itemsQuery = contentChildren(TestItem);
+
     private readonly itemsList = kbqQueryListFrom(this.itemsQuery);
 
     // A plain field, written by a subscriber to `changes` and read by a host binding.

@@ -106,7 +106,6 @@ class TestWithContextComponent {
     contextAccept: string | null = null;
     contextId: string | null = null;
     contextOnlyDirectory: boolean | null = null;
-
     disabled = false;
     multiple: boolean | null = null;
     accept: string | null = null;
@@ -678,6 +677,7 @@ describe('KbqFileList called from an effect', () => {
 })
 class TestFileListDrivenByEffect {
     readonly fileList = viewChild.required<KbqFileList<TestFile>>(KbqFileList);
+
     readonly remove = signal(false);
     runs = 0;
 

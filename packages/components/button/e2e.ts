@@ -254,7 +254,6 @@ export class E2eButtonGroup {
         { color: KbqComponentColors.Contrast, appearance: KbqButtonStyles.Transparent },
         { appearance: KbqButtonStyles.Transparent }
     ];
-
     protected readonly color = KbqComponentColors.ContrastFade;
     protected readonly style = KbqButtonStyles.Filled;
 }
@@ -486,7 +485,6 @@ export class E2eButtonStress {
     private readonly window = inject(KBQ_WINDOW);
 
     protected readonly styles = KbqButtonStyles;
-
     protected readonly count = signal(1500);
     protected readonly items = signal<number[]>([]);
     protected readonly rendered = signal(0);

@@ -232,7 +232,6 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
         'a11y',
         KBQ_A11Y_LOCALE_CONFIGURATION
     );
-
     private readonly overlay = inject(Overlay);
     private readonly overlayLayers = inject(KBQ_OVERLAY_LAYERS);
     private readonly document = inject(DOCUMENT);
@@ -249,19 +248,6 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
     private readonly focusMonitor = inject(FocusMonitor);
 
     /**
-     * The validation tooltip is anchored inside the edit-mode overlay — an overlay inside another
-     * overlay. Its default `close()` scroll strategy would close it the moment either overlay's
-     * origin scrolls (including the programmatic scroll `showValidationTooltip()` uses to bring an
-     * invalid control into view), so it's overridden to `reposition()` here — passed directly as a
-     * per-instance override to this tooltip's `[kbqTooltipScrollStrategy]` input, rather than a DI
-     * override, so it doesn't leak into any `kbqTooltip` in projected content.
-     *
-     * @docs-private
-     */
-    protected readonly validationTooltipScrollStrategy = (): ScrollStrategy =>
-        this.overlay.scrollStrategies.reposition();
-
-    /**
      * Whether to show save/cancel action buttons in edit mode. Defaults to `false`.
      */
     readonly showActions = input(false, { transform: booleanAttribute });
@@ -271,6 +257,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
      * Has no effect unless `validationTooltip` is set. Defaults to `true`.
      */
     readonly showTooltipOnError = input(true, { transform: booleanAttribute });
+
     /** Custom validation tooltip message. */
     readonly validationTooltip = input<string | TemplateRef<unknown>>();
 
@@ -279,14 +266,19 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
      * Defaults to `false`.
      */
     readonly disabled = input(false, { transform: booleanAttribute });
+
     /** Custom width in pixels for the edit mode overlay. Auto-calculated if not set. */
     readonly editModeWidth = input(undefined, { transform: numberAttribute });
+
     /** User-defined tooltip placement */
     readonly tooltipPlacement = input<PopUpPlacements>();
+
     /** Classes to be passed to the inline edit panel. */
     readonly overlayPanelClass = input<string | string[]>('');
+
     /** Handler function to retrieve the current value */
     readonly getValueHandler = input<() => unknown>();
+
     /** Handler function to update the value */
     readonly setValueHandler = input<(value: unknown) => void>();
 
@@ -316,6 +308,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
     readonly saveErrorHandler = input<KbqInlineEditSaveErrorHandler | null>(
         inject(KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER, { optional: true })
     );
+
     /** Customizable function that checks if saving on enter available. */
     readonly canSaveOnEnter = input((event: KeyboardEvent): boolean => {
         // A control that runs its own action on Enter would otherwise fire it and save at the same time.
@@ -335,31 +328,52 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
      */
     readonly interactiveSelectors = input<string[]>(['a', 'kbq-tag']);
 
-    /** Emitted when the inline edit is saved successfully. */
-    readonly saved = output();
-    /** Emitted when the inline edit is canceled and changes are discarded. */
-    readonly canceled = output();
-    /** Emitted when a `saveHandler` request fails. Silent once the row is destroyed; `saveErrorHandler` is not. */
-    readonly saveError = output<KbqInlineEditSaveErrorContext>();
-
     /**
      * Current mode. Two-way bindable: `[(mode)]` opens and closes the editor programmatically, and
      * `(modeChange)` alone reports every transition.
      */
     readonly mode = model<KbqInlineEditMode>('view');
 
+    /** Emitted when the inline edit is saved successfully. */
+    readonly saved = output();
+
+    /** Emitted when the inline edit is canceled and changes are discarded. */
+    readonly canceled = output();
+
+    /** Emitted when a `saveHandler` request fails. Silent once the row is destroyed; `saveErrorHandler` is not. */
+    readonly saveError = output<KbqInlineEditSaveErrorContext>();
+
     /** @docs-private */
     protected readonly menu = contentChild(KbqInlineEditMenu);
+
     /** @docs-private */
     protected readonly label = contentChild(KbqLabel);
 
-    /** @docs-private */
-    protected readonly formFieldRef = computed<KbqFormField | undefined>(() => this.formFieldRefList()[0]);
     /** @docs-private */
     protected readonly formFieldRefList = contentChildren(KbqFormField, { descendants: true });
 
     /** @docs-private */
     protected readonly selectRef = contentChild(KbqSelect, { descendants: true });
+
+    /** @docs-private */
+    protected readonly tooltipTrigger = viewChild.required(KbqTooltipTrigger);
+
+    /** @docs-private */
+    protected readonly viewContainer = viewChild.required<ElementRef<HTMLElement>>('viewContainer');
+
+    /** @docs-private */
+    protected readonly viewContent = viewChild.required<ElementRef<HTMLElement>>('viewContent');
+
+    /** Present only while the view content is interactive, where it stands in as the field's tab stop. */
+    protected readonly focusAnchor = viewChild<ElementRef<HTMLElement>>('focusAnchor');
+
+    /** @docs-private */
+    protected readonly overlayDir = viewChild.required(CdkConnectedOverlay);
+
+    private readonly saveStatusSource = signal<KbqInlineEditSaveStatus>('idle');
+
+    /** @docs-private */
+    protected readonly formFieldRef = computed<KbqFormField | undefined>(() => this.formFieldRefList()[0]);
 
     /**
      * Whether edit mode contains a single-value select. When true, edit mode shows only the
@@ -374,18 +388,8 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
     });
 
     /** @docs-private */
-    protected readonly tooltipTrigger = viewChild.required(KbqTooltipTrigger);
-    /** @docs-private */
-    protected readonly viewContainer = viewChild.required<ElementRef<HTMLElement>>('viewContainer');
-    /** @docs-private */
-    protected readonly viewContent = viewChild.required<ElementRef<HTMLElement>>('viewContent');
-    /** Present only while the view content is interactive, where it stands in as the field's tab stop. */
-    protected readonly focusAnchor = viewChild<ElementRef<HTMLElement>>('focusAnchor');
-    /** @docs-private */
-    protected readonly overlayDir = viewChild.required(CdkConnectedOverlay);
-
-    /** @docs-private */
     protected readonly overlayWidth = signal<number | string>('');
+
     /** Distance the panel is pulled up by so that it covers the view it replaces. */
     protected readonly overlayOffsetY = signal(0);
 
@@ -405,9 +409,39 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
      */
     protected readonly scrollStrategy = computed(() => this.overlay.scrollStrategies.reposition());
 
-    private readonly saveStatusSource = signal<KbqInlineEditSaveStatus>('idle');
+    /**
+     * The validation tooltip is anchored inside the edit-mode overlay — an overlay inside another
+     * overlay. Its default `close()` scroll strategy would close it the moment either overlay's
+     * origin scrolls (including the programmatic scroll `showValidationTooltip()` uses to bring an
+     * invalid control into view), so it's overridden to `reposition()` here — passed directly as a
+     * per-instance override to this tooltip's `[kbqTooltipScrollStrategy]` input, rather than a DI
+     * override, so it doesn't leak into any `kbqTooltip` in projected content.
+     *
+     * @docs-private
+     */
+    protected readonly validationTooltipScrollStrategy = (): ScrollStrategy =>
+        this.overlay.scrollStrategies.reposition();
     /** State of the background save started by `saveHandler`. */
     readonly saveStatus = this.saveStatusSource.asReadonly();
+
+    private initialValue: unknown;
+
+    /** Value sent by the in-flight `saveHandler` request, which becomes `lastSavedValue` once it succeeds. */
+    private submittedValue: unknown;
+
+    /** Last value the server accepted — what `rollback()` restores after a failed save. */
+    private lastSavedValue: unknown;
+    private destroyed = false;
+
+    /** Handle for an in-flight `showValidationTooltip()` scroll/settle request, if any. */
+    private validationTooltipScrollHandle: { cancel: () => void } | null = null;
+
+    /** How edit mode was entered, so leaving it restores the same focus style. */
+    private editModeOrigin: FocusOrigin = null;
+
+    /** Set while Tab-chaining, where the next inline edit — not this one — has to end up focused. */
+    private chainingToNextInlineEdit = false;
+
     /** @docs-private */
     protected readonly isSaving = computed(() => this.saveStatus() === 'pending' || this.saveStatus() === 'progress');
 
@@ -432,12 +466,16 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
     /** @docs-private */
     protected readonly className = computed(() => `${baseClass}_${this.mode()}`);
+
     /** @docs-private */
     protected readonly isEditMode = computed(() => this.mode() === 'edit');
+
     /** @docs-private */
     protected readonly hasInteractiveContent = signal(false);
+
     /** @docs-private */
     protected readonly anchorFocused = signal(false);
+
     /** @docs-private */
     protected readonly tabIndex = computed(() => {
         // Saving is deliberately absent: like `kbq-dropdown-item`, a row in progress keeps its place in the tab
@@ -467,25 +505,6 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
     /** @docs-private */
     protected readonly colors = KbqComponentColors;
-
-    private initialValue: unknown;
-
-    /** Value sent by the in-flight `saveHandler` request, which becomes `lastSavedValue` once it succeeds. */
-    private submittedValue: unknown;
-
-    /** Last value the server accepted — what `rollback()` restores after a failed save. */
-    private lastSavedValue: unknown;
-
-    private destroyed = false;
-
-    /** Handle for an in-flight `showValidationTooltip()` scroll/settle request, if any. */
-    private validationTooltipScrollHandle: { cancel: () => void } | null = null;
-
-    /** How edit mode was entered, so leaving it restores the same focus style. */
-    private editModeOrigin: FocusOrigin = null;
-
-    /** Set while Tab-chaining, where the next inline edit — not this one — has to end up focused. */
-    private chainingToNextInlineEdit = false;
 
     constructor() {
         inlineEditRegistry.set(this.elementRef.nativeElement, this);

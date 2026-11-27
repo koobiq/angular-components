@@ -69,9 +69,8 @@ const createSearchPipe = (name: string): KbqPipe => ({
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarReadonlyPipesExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     /** Text the example owns: it has no counterpart in the library's locale data. */
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     /** Period labels follow the active locale, so everything built out of them is rebuilt with it. */
     protected readonly periods = injectLocalizedPeriods();
@@ -92,7 +91,6 @@ export class FilterBarReadonlyPipesExample {
             pipes.length > defaultPipes.length || pipes.some((pipe, index) => pipe.value !== defaultPipes[index]?.value)
         );
     });
-
     readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
         {
             name: 'Date',

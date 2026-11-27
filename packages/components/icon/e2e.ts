@@ -150,14 +150,11 @@ export class E2eIconStateAndStyle {
     protected readonly colors: KbqComponentColors[] = Array.from(
         new Set(Object.values(KbqComponentColors)).values()
     ).filter((color) => color !== KbqComponentColors.ThemeFade);
-
     protected readonly warningColor = KbqComponentColors.Warning;
     protected readonly errorColor = KbqComponentColors.Error;
-
     iconStates: IconStates[][] = [
         this.colors.map((color) => ({ color }))
     ];
-
     iconItemStates: IconItemStates[][] = [
         this.colors.map((color) => ({ color })),
 
@@ -171,7 +168,6 @@ export class E2eIconStateAndStyle {
             state: 'fade'
         }))
     ];
-
     iconButtonStates: IconButtonStates[][] = [
         this.colors.map((color) => ({
             color,
@@ -395,13 +391,11 @@ export class E2eIconStateAndStyle {
 })
 export class E2eIconSvg {
     readonly inputMonoValue = signal('P@a$$w0rd');
-
     readonly tabs = [
         { tabId: 'files', icon: 'kbq-folder-open_16' },
         { tabId: 'settings', icon: 'kbq-gear_16' },
         { tabId: 'tasks', icon: 'kbq-bars-horizontal_16' }
     ];
-
     selectedTabId: string = 'settings';
 }
 

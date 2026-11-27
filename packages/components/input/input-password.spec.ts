@@ -67,7 +67,6 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 class PasswordInputDefault {
     disabled = false;
     readonly = false;
-
     value: any = '1';
 }
 
@@ -140,6 +139,7 @@ const FRESH_VALUE_READ_LIMIT = 100;
 })
 class FreshValueAccessor {
     private readonly element = inject<ElementRef<HTMLInputElement>>(ElementRef).nativeElement;
+
     private reads = 0;
 
     writes = 0;

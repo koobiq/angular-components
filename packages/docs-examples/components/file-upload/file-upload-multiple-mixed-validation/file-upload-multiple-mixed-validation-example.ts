@@ -57,19 +57,19 @@ import { TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadMultipleMixedValidationExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
-    protected readonly customErrorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
-    protected readonly accept: KbqFileTypeSpecifier = ['.txt'];
-    protected get fileExtensionMismatchErrorMessage(): string {
-        return this.t().provideValidExtension;
-    }
     protected readonly cdr = inject(ChangeDetectorRef);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly customErrorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
+    protected readonly accept: KbqFileTypeSpecifier = ['.txt'];
     protected readonly formMultiple = new FormGroup({
         fileUpload: new FormControl<FileList | KbqFileItem[]>([], Validators.required),
         fileList: new FormArray<FormControl<KbqFileItem | null>>([], Validators.required)
     });
+
+    protected get fileExtensionMismatchErrorMessage(): string {
+        return this.t().provideValidExtension;
+    }
 
     protected get fileList() {
         return this.formMultiple.controls.fileList;

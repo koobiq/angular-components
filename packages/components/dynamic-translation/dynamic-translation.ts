@@ -44,14 +44,14 @@ export interface KbqDynamicTranslationHelperSlot {
 })
 export class KbqDynamicTranslationSlot {
     /**
-     * The name of the dynamic translation slot.
-     */
-    readonly name = input.required<string>({ alias: 'kbqDynamicTranslationSlot' });
-
-    /**
      * @docs-private
      */
     readonly templateRef = inject(TemplateRef);
+
+    /**
+     * The name of the dynamic translation slot.
+     */
+    readonly name = input.required<string>({ alias: 'kbqDynamicTranslationSlot' });
 }
 
 /**
@@ -75,12 +75,12 @@ export class KbqDynamicTranslationSlot {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqDynamicTranslation {
-    private readonly slots = contentChildren(KbqDynamicTranslationSlot);
-
     /**
      * The text which will be translated.
      */
     readonly text = input.required<string>();
+
+    private readonly slots = contentChildren(KbqDynamicTranslationSlot);
 
     /**
      * @docs-private
@@ -156,12 +156,13 @@ export class KbqDynamicTranslation {
 })
 export class KbqDynamicTranslationHelper {
     private readonly renderer = inject(Renderer2);
-    private readonly replaceableSlotContainers = viewChildren<ElementRef<HTMLElement>>('replaceableSlotContainer');
-    private readonly slotsByName = new Map<string, KbqDynamicTranslationHelperSlot>();
 
     readonly text = input.required<string>();
-
     readonly slots = input.required<KbqDynamicTranslationHelperSlot[]>();
+
+    private readonly replaceableSlotContainers = viewChildren<ElementRef<HTMLElement>>('replaceableSlotContainer');
+
+    private readonly slotsByName = new Map<string, KbqDynamicTranslationHelperSlot>();
 
     constructor() {
         effect(() => {

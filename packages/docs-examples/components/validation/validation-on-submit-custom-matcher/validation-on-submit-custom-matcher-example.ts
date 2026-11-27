@@ -68,15 +68,14 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class ValidationOnSubmitCustomMatcherExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
+    private readonly formFieldList = viewChildren(KbqFormField);
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
     protected readonly inProgress = signal(false);
     protected readonly globalErrorForm = new FormGroup({
         firstName: new FormControl('', [Validators.minLength(5), Validators.required]),
         lastName: new FormControl('')
     });
-
-    private readonly formFieldList = viewChildren(KbqFormField);
 
     protected submitForm(): void {
         if (this.globalErrorForm.invalid) {

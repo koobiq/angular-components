@@ -30,6 +30,7 @@ import { KBQ_EMPTY_STATE_CONTEXT, type KbqEmptyStateContext } from './empty-stat
 export class KbqEmptyStateIcon {
     private readonly emptyState = inject(KBQ_EMPTY_STATE_CONTEXT, { optional: true });
     private readonly hostIcon = inject(KbqIconItem, { optional: true, self: true });
+
     private readonly wrappedIcons = contentChildren(KbqIconItem, { descendants: true });
 
     constructor() {
@@ -142,6 +143,7 @@ export class KbqEmptyStateActions {}
 export class KbqEmptyState implements KbqEmptyStateContext {
     /** Whether the title, the text and the projected icon render in the error color. Defaults to `false`. */
     readonly errorColor = input<boolean>(false);
+
     /** Whether the content sits at the top of the host instead of its center. Defaults to `false`. */
     readonly alignTop = input<boolean>(false);
 

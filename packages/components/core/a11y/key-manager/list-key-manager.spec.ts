@@ -10,6 +10,7 @@ import { ListKeyManager } from './list-key-manager';
 class FakeFocusable {
     /** Whether the item is disabled or not. */
     disabled = false;
+
     /** Test property that can be used to test the `skipPredicate` functionality. */
     skipItem = false;
 

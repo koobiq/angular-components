@@ -69,7 +69,6 @@ import { TRANSLATIONS } from './l10n';
 })
 export class UsernamePlaygroundExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-
     userInfo: KbqUserInfo = {
         firstName: 'Maxwell',
         middleName: 'Alan',
@@ -80,7 +79,6 @@ export class UsernamePlaygroundExample {
     selectedType: KbqUsernameStyle = 'default';
     isCompact = false;
     fullNameFormat = 'f.m.l';
-
     modes: KbqUsernameMode[] = ['inline', 'stacked', 'text'];
     types: KbqUsernameStyle[] = ['default', 'error', 'accented', 'inherit'];
 }

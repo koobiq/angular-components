@@ -1,4 +1,5 @@
-﻿import {
+﻿import { ENTER } from '@angular/cdk/keycodes';
+import {
     type AfterViewInit,
     ChangeDetectionStrategy,
     Component,
@@ -10,7 +11,7 @@
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { ENTER, PopUpPlacements } from '@koobiq/components/core';
+import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
@@ -46,18 +47,18 @@ import { KbqPipeState } from './pipe-state';
     encapsulation: ViewEncapsulation.None
 })
 export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements AfterViewInit, OnInit {
-    readonly placements = PopUpPlacements;
-
     /** @docs-private */
     readonly popover = viewChild.required(KbqPopoverTrigger);
+
+    readonly placements = PopUpPlacements;
+
+    /** textarea control */
+    control = new FormControl<typeof this.data.value>('');
 
     /** Whether the current pipe is disabled. */
     get disabled(): boolean {
         return !this.control.value;
     }
-
-    /** textarea control */
-    control = new FormControl<typeof this.data.value>('');
 
     ngOnInit(): void {
         this.control.setValue(this.data.value);

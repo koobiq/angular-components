@@ -7,16 +7,19 @@ import type { KbqActionsPanelContainer } from './actions-panel-container';
  * Reference to actions panel opened by `KbqActionsPanel` service.
  */
 export class KbqActionsPanelRef<I = unknown, R = unknown> {
+    private readonly afterOpenedSubject = new Subject<void>();
+    private readonly beforeOpenedSubject = new ReplaySubject<void>(1);
+    private readonly beforeClosedSubject = new Subject<R | undefined>();
+
+    /** Result to be passed down to the `afterClosed` stream. */
+    private result: R | undefined;
+
     /**
      * Instance of the component into which the actions panel content is projected.
      *
      * @docs-private
      */
     containerInstance: KbqActionsPanelContainer;
-
-    private readonly afterOpenedSubject = new Subject<void>();
-    private readonly beforeOpenedSubject = new ReplaySubject<void>(1);
-    private readonly beforeClosedSubject = new Subject<R | undefined>();
 
     /** Emits when keydown events are targeted on the overlay. */
     readonly keydownEvents: Observable<KeyboardEvent> = this.dialogRef.keydownEvents;
@@ -46,9 +49,6 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
      * @docs-private
      */
     readonly id: string = this.dialogRef.id;
-
-    /** Result to be passed down to the `afterClosed` stream. */
-    private result: R | undefined;
 
     constructor(
         private readonly dialogRef: DialogRef<R, I>,

@@ -41,6 +41,11 @@ type ClampedTextState = {
 })
 export class E2eClampedTextStateAndStyle {
     protected readonly text = text;
+    protected readonly states = signal<ClampedTextState[][]>([
+        [{ rows: kbqClampedTextDefaultMaxRows }],
+        [{ rows: kbqClampedTextDefaultMaxRows }],
+        [{ rows: 3 }]
+    ]);
 
     constructor() {
         afterNextRender(() => {
@@ -51,12 +56,6 @@ export class E2eClampedTextStateAndStyle {
             ]);
         });
     }
-
-    protected readonly states = signal<ClampedTextState[][]>([
-        [{ rows: kbqClampedTextDefaultMaxRows }],
-        [{ rows: kbqClampedTextDefaultMaxRows }],
-        [{ rows: 3 }]
-    ]);
 }
 
 @Component({
@@ -93,6 +92,7 @@ export class E2eClampedTextStateAndStyle {
 export class E2eClampedTextStates {
     protected readonly text = text;
     protected readonly resizeWidth = signal(200);
+
     /**
      * Eight 80-character words. Nothing inside a word can wrap, so each one overflows the 200px
      * container on a line of its own — enough lines to exceed `rows` and collapse, while every

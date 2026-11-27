@@ -100,10 +100,6 @@
 
     border: var(--kbq-size-border-width) solid transparent;
 
-    &:not(.kbq-inline-edit_with-label) {
-        --kbq-inline-edit-padding-horizontal: calc(var(--kbq-size-m) - var(--kbq-size-border-width));
-    }
-
     &.kbq-inline-edit_with-label {
         padding-top: var(--kbq-inline-edit-padding-vertical);
         padding-bottom: var(--kbq-inline-edit-padding-vertical);

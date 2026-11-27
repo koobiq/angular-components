@@ -107,18 +107,17 @@ const createNumberedPipes = (): KbqPipe[] => [
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarCompleteFunctionsExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     protected readonly adapter = inject(DateAdapter<DateTime>);
-
-    /** Period labels follow the active locale, so everything built out of them is rebuilt with it. */
-    protected readonly periods = injectLocalizedPeriods();
-
-    /** Text the example owns: it has no counterpart in the library's locale data. */
 
     // Read as a signal, not resolved in `ngAfterViewInit`: the templates below are rebuilt whenever the
     // locale changes, so they have to be able to pick the query up on any pass, not only the first.
     readonly optionTemplate = viewChild<TemplateRef<any>>('optionTemplate');
+
+    /** Text the example owns: it has no counterpart in the library's locale data. */
+    protected readonly t = injectTranslation(TRANSLATIONS);
+
+    /** Period labels follow the active locale, so everything built out of them is rebuilt with it. */
+    protected readonly periods = injectLocalizedPeriods();
 
     // Rebuilt whenever the locale changes: `*kbqPipe` builds a pipe component once from the object it is
     // given and ignores later changes to that binding, so relabelled pipes only reach the screen as new
@@ -128,7 +127,6 @@ export class FilterBarCompleteFunctionsExample {
         source: this.filters,
         computation: () => null
     });
-
     readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
         {
             name: 'Select',

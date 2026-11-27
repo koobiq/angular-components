@@ -42,6 +42,13 @@ import type { KbqLocaleData, KbqLocaleSection, KbqPartialLocaleData } from './ty
     exportAs: 'kbqLocaleOverrides'
 })
 export class KbqLocaleOverridesDirective implements KbqLocaleOverridesHost {
+    // Angular resolves an element-injector token from the nearest node that holds it and never merges the
+    // levels above — the same trap `kbqLocaleConfigurationOverrideProvider` works around for its `multi`
+    // token. Without re-merging the ancestor here, a carrier on a nested component would hide an outer
+    // carrier from that whole subtree.
+    private readonly parent = inject(KBQ_LOCALE_OVERRIDES_HOST, { skipSelf: true, optional: true });
+    private readonly injector = inject(Injector);
+
     /**
      * Localized strings for this element and its subtree, keyed by locale section. Every key is optional at
      * every depth.
@@ -51,14 +58,6 @@ export class KbqLocaleOverridesDirective implements KbqLocaleOverridesHost {
         undefined,
         { alias: 'kbqLocaleOverrides' }
     );
-
-    // Angular resolves an element-injector token from the nearest node that holds it and never merges the
-    // levels above — the same trap `kbqLocaleConfigurationOverrideProvider` works around for its `multi`
-    // token. Without re-merging the ancestor here, a carrier on a nested component would hide an outer
-    // carrier from that whole subtree.
-    private readonly parent = inject(KBQ_LOCALE_OVERRIDES_HOST, { skipSelf: true, optional: true });
-
-    private readonly injector = inject(Injector);
 
     // One signal per token: a public method invites repeated calls, and each of them would otherwise open
     // a subscription of its own, living until the view is destroyed.

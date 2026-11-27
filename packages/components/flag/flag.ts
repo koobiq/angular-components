@@ -69,6 +69,7 @@ export class KbqFlag {
      * Defaults to `'inset'`.
      */
     readonly shadow = input<KbqFlagShadow>('inset');
+
     /** Renders a neutral placeholder — use when no flag can be shown (unknown / invalid country code). */
     readonly empty = input(false, { transform: booleanAttribute });
 
@@ -78,6 +79,7 @@ export class KbqFlag {
      * `DomSanitizer.bypassSecurityTrustHtml`, and only for markup known at build time.
      */
     readonly svg = input<SafeHtml | string>();
+
     /** Marks the flag as decorative — hidden from screen readers (use when adjacent text is present). */
     readonly decorative = input(false, { transform: booleanAttribute });
 

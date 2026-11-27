@@ -98,7 +98,7 @@ export class BlockCheckboxComponent {
     }
 })
 export class BlockCheckboxExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
     readonly checked = model(true);
+
+    protected readonly t = injectTranslation(TRANSLATIONS);
 }

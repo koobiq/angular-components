@@ -1,45 +1,18 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { injectTranslation } from '@koobiq/docs-examples/i18n';
-import { TRANSLATIONS } from './l10n';
 
-/**
- * @title Input
- */
+/** @title Input */
 @Component({
     selector: 'input-overview-example',
-    imports: [
-        KbqInputModule,
-        KbqIconModule,
-        FormsModule
-    ],
+    imports: [KbqInputModule],
     template: `
-        <kbq-form-field>
-            <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix [autoColor]="true"></i>
-
-            <input kbqInput [placeholder]="t().placeholder" [(ngModel)]="value" />
-
-            <kbq-cleaner />
-        </kbq-form-field>
-
-        <br />
-        <br />
-        <br />
-
-        <kbq-form-field noBorders>
-            <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix [autoColor]="true"></i>
-
-            <input kbqInput [placeholder]="t().placeholder" [(ngModel)]="value" />
-
-            <kbq-cleaner />
+        <kbq-form-field style="width: 320px">
+            <input kbqInput />
         </kbq-form-field>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    }
 })
-export class InputOverviewExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
-    value = '';
-}
+export class InputOverviewExample {}

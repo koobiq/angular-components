@@ -63,7 +63,7 @@ Rules for code that uses Koobiq:
 - [Icon Button](https://koobiq.io/en/components/icon-button.md): For icon buttons (clickable icons). Entry point: `@koobiq/components/icon`.
 - [Icon Item](https://koobiq.io/en/components/icon-item.md): A backing icon can be used instead of an illustration where you want to attract attention with graphics. Entry point: `@koobiq/components/icon`.
 - [Inline edit](https://koobiq.io/en/components/inline-edit.md): Inline editing can replace a traditional form when the user only needs to update a few fields among many available parameters. Entry point: `@koobiq/components/inline-edit`.
-- [Input](https://koobiq.io/en/components/input.md): Input provides text, numeric, and password fields with formatting, validation, masking, and other data-entry behavior. Entry point: `@koobiq/components/input`.
+- [Input](https://koobiq.io/en/components/input.md): Input is an interface element that lets users enter textual information. Entry point: `@koobiq/components/input`.
 - [Layout flex](https://koobiq.io/en/components/layout-flex.md): Layout flex provides Koobiq CSS classes for arranging, aligning, and ordering elements in flex containers.
 - [Link](https://koobiq.io/en/components/link.md): `KbqLink` is a link that takes the user to another page, a document, or an external site. Entry point: `@koobiq/components/link`.
 - [List](https://koobiq.io/en/components/list.md): A list shows a set of related items and lets the user select one or several of them. Entry point: `@koobiq/components/list`.

@@ -63,7 +63,6 @@ export class LayoutFlexOrderExample {
     selectedFirstBlockOrder: string = 'flex-order-0';
     selectedSecondBlockOrder: string = 'flex-order-1';
     selectedThirdBlockOrder: string = 'flex-order-2';
-
     flexOrders = [
         'flex-order-0',
         'flex-order-1',

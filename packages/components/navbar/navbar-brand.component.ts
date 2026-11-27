@@ -69,15 +69,18 @@ const LONG_TITLE_CLASS = 'kbq-navbar-brand_long-title';
 export class KbqNavbarBrand implements AfterContentInit {
     /** @docs-private */
     protected readonly nativeElement = kbqInjectNativeElement();
+
     /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+
     /** @docs-private */
     protected readonly rectangleElement = inject(KbqNavbarRectangleElement);
+
     /** @docs-private */
     protected readonly navbarFocusableItem = inject(KbqNavbarFocusableItem);
+
     /** @docs-private */
     readonly tooltip = inject(KbqTooltipTrigger, { self: true });
-
     private readonly isBrowser = inject(Platform).isBrowser;
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly contentObserver = inject(ContentObserver);
@@ -85,19 +88,6 @@ export class KbqNavbarBrand implements AfterContentInit {
     private readonly injector = inject(Injector);
     private readonly destroyRef = inject(DestroyRef);
     private readonly renderer = inject(Renderer2);
-
-    private readonly debounceInterval = 100;
-
-    /** @docs-private */
-    readonly title = contentChild(KbqNavbarTitle);
-
-    /**
-     * Whether the title has been measured as not fitting into a single line, which switches it to the compact
-     * two-line presentation.
-     *
-     * @docs-private
-     */
-    protected readonly longTitleEnabled = signal(false);
 
     /** text that will be displayed in the tooltip. By default, the text is taken from kbq-navbar-title. */
     readonly collapsedText = input<string>('');
@@ -112,6 +102,25 @@ export class KbqNavbarBrand implements AfterContentInit {
         alias: 'kbqTooltipDisabled',
         transform: (value: unknown) => (value === undefined ? undefined : booleanAttribute(value))
     });
+
+    /** Accessible name of the brand. Needed when the brand renders nothing but a logo. */
+    readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
+
+    /** @docs-private */
+    readonly title = contentChild(KbqNavbarTitle);
+
+    private readonly debounceInterval = 100;
+
+    /**
+     * Whether the title has been measured as not fitting into a single line, which switches it to the compact
+     * two-line presentation.
+     *
+     * @docs-private
+     */
+    protected readonly longTitleEnabled = signal(false);
+
+    /** Whether the brand is rendered in its collapsed (logo-only) form. @docs-private */
+    readonly collapsed: Signal<boolean> = this.rectangleElement.collapsedState;
 
     /** Whether the brand is rendered as a native link. */
     get isLink(): boolean {
@@ -136,12 +145,6 @@ export class KbqNavbarBrand implements AfterContentInit {
     get titleText(): string | null {
         return this.collapsedText() || this.title()?.text || null;
     }
-
-    /** Whether the brand is rendered in its collapsed (logo-only) form. @docs-private */
-    readonly collapsed: Signal<boolean> = this.rectangleElement.collapsedState;
-
-    /** Accessible name of the brand. Needed when the brand renders nothing but a logo. */
-    readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
 
     /**
      * A collapsed brand shows nothing but its logo, and a tooltip is a transient overlay — never an accessible

@@ -39,13 +39,48 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 export class KbqSplitButton extends KbqColorDirective<KbqButtonColor> implements OnChanges, AfterContentInit {
     private readonly nativeElement = kbqInjectNativeElement();
 
+    /** Sets the width of the dropdown to the width of the trigger. Default is false */
+    readonly panelAutoWidth = input<boolean>(false);
+
+    /** @docs-private */
+    readonly kbqStyleInput = input<KbqButtonStyleInput | null | undefined>(undefined, { alias: 'kbqStyle' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
     /** @docs-private */
     protected readonly buttons = contentChildren(KbqButton);
+
     /** @docs-private */
     protected readonly dropdownTrigger = contentChild(KbqDropdownTrigger);
 
-    /** Sets the width of the dropdown to the width of the trigger. Default is false */
-    readonly panelAutoWidth = input<boolean>(false);
+    private _kbqStyle: KbqButtonStyleInput = KbqButtonStyles.Filled;
+
+    /**
+     * Color propagated to every nested button: a bound `color`, or one set in code other than the
+     * split button's own default. Nothing is propagated otherwise, and every nested button follows the
+     * default color of its style. A button that sets its own `color` keeps it.
+     */
+    private readonly propagatedColor = computed(() => {
+        const color = this.color();
+
+        return this.colorInput() || color !== this.defaultColor() ? color : undefined;
+    });
+
+    // Both states are computed rather than read off the query on every pass, and `firstDisabled` and
+    // `secondDisabled` stay getters rather than becoming signals because they are public API, where the call shape
+    // has to keep working as a property read.
+    private readonly firstButtonDisabled = computed(() => !!this.buttons().at(0)?.disabled);
+    private readonly lastButtonDisabled = computed(() => {
+        const buttons = this.buttons();
+
+        return buttons.length > 1 && !!buttons.at(-1)?.disabled;
+    });
+
+    protected _disabled: boolean | undefined;
 
     /**
      * Visual style of the split button, propagated to every nested button. A button that sets its own
@@ -64,19 +99,6 @@ export class KbqSplitButton extends KbqColorDirective<KbqButtonColor> implements
         this.updateStyle(this._kbqStyle, this.buttons?.());
     }
 
-    private _kbqStyle: KbqButtonStyleInput = KbqButtonStyles.Filled;
-
-    /**
-     * Color propagated to every nested button: a bound `color`, or one set in code other than the
-     * split button's own default. Nothing is propagated otherwise, and every nested button follows the
-     * default color of its style. A button that sets its own `color` keeps it.
-     */
-    private readonly propagatedColor = computed(() => {
-        const color = this.color();
-
-        return this.colorInput() || color !== this.defaultColor() ? color : undefined;
-    });
-
     /**
      * Whether the split button is disabled. Disabling it disables every nested button; re-enabling it
      * leaves buttons that are disabled through their own input untouched.
@@ -91,12 +113,6 @@ export class KbqSplitButton extends KbqColorDirective<KbqButtonColor> implements
         this.updateDisabledState(this._disabled, this.buttons?.());
     }
 
-    protected _disabled: boolean | undefined;
-
-    // Both states are computed rather than read off the query on every pass, and stay getters rather
-    // than becoming signals because they are public API, where the call shape has to keep working as
-    // a property read.
-
     /** Whether the leading button is disabled. */
     get firstDisabled(): boolean {
         return this.firstButtonDisabled();
@@ -105,36 +121,6 @@ export class KbqSplitButton extends KbqColorDirective<KbqButtonColor> implements
     /** Whether the trailing button is disabled. Stays `false` while the split button holds one button. */
     get secondDisabled(): boolean {
         return this.lastButtonDisabled();
-    }
-
-    private readonly firstButtonDisabled = computed(() => !!this.buttons().at(0)?.disabled);
-
-    private readonly lastButtonDisabled = computed(() => {
-        const buttons = this.buttons();
-
-        return buttons.length > 1 && !!buttons.at(-1)?.disabled;
-    });
-
-    /** @docs-private */
-    readonly kbqStyleInput = input<KbqButtonStyleInput | null | undefined>(undefined, { alias: 'kbqStyle' });
-
-    /** @docs-private */
-    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'disabled',
-        transform: booleanAttribute
-    });
-
-    ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member; unbound, it leaves what code wrote.
-        if (changes['kbqStyleInput']) {
-            this.kbqStyle = this.kbqStyleInput();
-        }
-
-        if (changes['disabledInput']) {
-            const disabled = this.disabledInput();
-
-            if (disabled !== undefined) this.disabled = disabled;
-        }
     }
 
     constructor() {
@@ -158,6 +144,19 @@ export class KbqSplitButton extends KbqColorDirective<KbqButtonColor> implements
             this.updateDisabledState(this._disabled, buttons);
             this.updateDropdownParams();
         });
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
+        if (changes['kbqStyleInput']) {
+            this.kbqStyle = this.kbqStyleInput();
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
     }
 
     ngAfterContentInit(): void {

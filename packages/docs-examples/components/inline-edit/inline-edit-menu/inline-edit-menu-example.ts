@@ -160,7 +160,6 @@ import { TRANSLATIONS } from './l10n';
 
         .kbq-dl {
             grid-template-columns: unset;
-            --kbq-description-list-size-horizontal-content-gap-horizontal: var(--kbq-size-xxs);
             --kbq-description-list-size-horizontal-gap-vertical: var(--kbq-size-3xs);
         }
 
@@ -196,14 +195,10 @@ import { TRANSLATIONS } from './l10n';
     }
 })
 export class InlineEditMenuExample {
-    protected readonly t = injectTranslation(TRANSLATIONS);
-
-    protected readonly maxRows = 20;
     protected readonly clipboard = inject(Clipboard);
-    protected get placeholder(): string {
-        return this.t().placeholder;
-    }
 
+    protected readonly t = injectTranslation(TRANSLATIONS);
+    protected readonly maxRows = 20;
     protected readonly form = new FormGroup({
         style: new FormControl(
             'Spanish football is characterized by technical skill, tactical innovation, and fierce regional rivalries.',
@@ -212,6 +207,10 @@ export class InlineEditMenuExample {
         foundDate: new FormControl('1929')
     });
     protected readonly displayValue = signal(this.form.controls.style.value);
+
+    protected get placeholder(): string {
+        return this.t().placeholder;
+    }
 
     protected update(): void {
         this.displayValue.set(this.form.controls.style.value);

@@ -78,15 +78,11 @@ export class DevApp {
     readonly popovers = viewChildren(KbqPopoverTrigger);
 
     popUpPlacements = PopUpPlacements;
-
     popoverActiveStage: number;
     selectedOrder = false;
     isClosable: boolean = false;
-
     isPopoverVisibleLeft: boolean = false;
-
     activatedPosition: string = '';
-
     ELEMENTS = {
         BUTTON: 'button',
         CONFIRM_BUTTON: 'confirm-button',
@@ -95,20 +91,17 @@ export class DevApp {
         RADIO_GROUP: 'radio-group',
         LINK: 'link'
     };
-
     TRIGGERS = {
         CLICK: 'click',
         FOCUS: 'focus',
         HOVER: 'hover',
         PROGRAM: 'program'
     };
-
     SIZE = {
         LARGE: 'large',
         MEDIUM: 'medium',
         SMALL: 'small'
     };
-
     selectedElement: string = this.ELEMENTS.BUTTON;
     selectedPlacement: PopUpPlacements = PopUpPlacements.Left;
     selectedTrigger: string = this.TRIGGERS.CLICK;
@@ -118,9 +111,12 @@ export class DevApp {
     content: string = 'button text';
     userDefinedPlacementPriority: string[] = ['bottom', 'right'];
     multipleSelected: string[] = [];
-
     confirmText: string = 'Вы уверены, что хотите продолжить?';
     confirmButtonText: string = 'Да';
+
+    get isFallbackActivated(): boolean {
+        return this.selectedPlacement !== this.activatedPosition && this.activatedPosition !== '';
+    }
 
     constructor() {
         this.popoverActiveStage = 1;
@@ -180,10 +176,6 @@ export class DevApp {
         }
 
         return 1;
-    }
-
-    get isFallbackActivated(): boolean {
-        return this.selectedPlacement !== this.activatedPosition && this.activatedPosition !== '';
     }
 
     onConfirm() {

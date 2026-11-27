@@ -1,6 +1,7 @@
 import { computed, Directive, inject } from '@angular/core';
-import { KbqAccordion } from './accordion';
-import { KbqAccordionItem } from './accordion-item';
+import type { KbqAccordion } from './accordion';
+import { KBQ_ACCORDION, KBQ_ACCORDION_ITEM } from './accordion.types';
+import type { KbqAccordionItem } from './accordion-item';
 
 @Directive({
     selector: 'kbq-accordion-header, [kbq-accordion-header]',
@@ -19,9 +20,10 @@ import { KbqAccordionItem } from './accordion-item';
 })
 export class KbqAccordionHeader {
     /** @docs-private */
-    protected readonly item = inject(KbqAccordionItem);
+    protected readonly item: KbqAccordionItem = inject(KBQ_ACCORDION_ITEM);
+
     /** @docs-private */
-    protected readonly accordion = inject(KbqAccordion);
+    protected readonly accordion: KbqAccordion = inject(KBQ_ACCORDION);
 
     /**
      * Value of `data-state`.
