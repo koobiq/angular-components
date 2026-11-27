@@ -19,13 +19,11 @@ import { combineLatest, distinctUntilChanged, map } from 'rxjs';
 import { KBQ_WINDOW, KbqThemeService } from '@koobiq/components/core';
 import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleState } from '../../services/locale';
+import { DOCS_SITE_ORIGIN } from '../../site-origin';
 
-/** The index the crawler writes and the search reads. */
-const INDEX_NAME = 'koobiq';
+const INDEX_NAME = new URL(DOCS_SITE_ORIGIN).hostname === 'next.koobiq.io' ? 'koobiq-next' : 'koobiq';
 
 const SELECTOR = 'docs-docsearch';
-const HOST = 'koobiq.io';
-const PROTOCOL = 'https:';
 
 type DocSearchTranslations = NonNullable<DocSearchProps['translations']>;
 
@@ -40,7 +38,7 @@ const TRANSLATION_RU: DocSearchTranslations = {
             clearButtonAriaLabel: 'Очистить запрос',
             closeButtonText: 'Отмена',
             closeButtonAriaLabel: 'Отмена',
-            placeholderText: 'Поиск по документации на koobiq.io',
+            placeholderText: 'Поиск по документации',
             enterKeyHint: 'Enter',
             searchInputLabel: 'Поиск'
         },
@@ -87,10 +85,9 @@ const TRANSLATION_RU: DocSearchTranslations = {
     }
 };
 
-// The placeholder names koobiq.io: the index holds its pages alone, whichever site of a version the search is opened on.
 const TRANSLATIONS: Record<DocsLocale, DocSearchTranslations> = {
     [DocsLocale.Ru]: TRANSLATION_RU,
-    [DocsLocale.En]: { modal: { searchBox: { placeholderText: 'Search the docs on koobiq.io' } } }
+    [DocsLocale.En]: { modal: { searchBox: { placeholderText: 'Search the docs' } } }
 };
 
 /** Algolia DocSearch component implementation */
@@ -152,15 +149,15 @@ export class DocsDocsearch extends DocsLocaleState {
     }
 
     private readonly transformItems: DocSearchProps['transformItems'] = (items) => {
-        // should transform item URL to work docsearch on DEV stand (firebase preview)
-        const shouldTransformItemURL = this.window.location.host !== HOST || this.window.location.protocol !== PROTOCOL;
+        const previewOrigin = this.window.location.origin;
 
-        if (shouldTransformItemURL) {
+        if (previewOrigin !== DOCS_SITE_ORIGIN) {
             items = items.map((item) => {
-                item.url = item.url.replace(HOST, this.window.location.host);
-                item.url = item.url.replace(PROTOCOL, this.window.location.protocol);
+                const url = new URL(item.url);
 
-                return item;
+                return url.origin === DOCS_SITE_ORIGIN
+                    ? { ...item, url: previewOrigin + url.pathname + url.search + url.hash }
+                    : item;
             });
         }
 
