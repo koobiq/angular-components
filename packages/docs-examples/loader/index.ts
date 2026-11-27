@@ -559,6 +559,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/inline-edit').then((m) => m.InlineEditHorizontalListExample);
         case 'inline-edit-menu':
             return import('@koobiq/docs-examples/components/inline-edit').then((m) => m.InlineEditMenuExample);
+        case 'inline-edit-mixed-list':
+            return import('@koobiq/docs-examples/components/inline-edit').then((m) => m.InlineEditMixedListExample);
         case 'inline-edit-on-clean':
             return import('@koobiq/docs-examples/components/inline-edit').then((m) => m.InlineEditOnCleanExample);
         case 'inline-edit-overview':

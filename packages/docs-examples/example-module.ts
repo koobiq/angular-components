@@ -4212,6 +4212,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "inline-edit-menu-example.ts",
     "importPath": "components/inline-edit"
   },
+  "inline-edit-mixed-list": {
+    "packagePath": "components/inline-edit/inline-edit-mixed-list",
+    "title": "Inline edit mixed list",
+    "componentName": "InlineEditMixedListExample",
+    "files": [
+      "inline-edit-mixed-list-example.ts"
+    ],
+    "localImportFiles": [
+      "../../../i18n/index.ts",
+      "l10n.ts"
+    ],
+    "selector": "inline-edit-mixed-list-example",
+    "primaryFile": "inline-edit-mixed-list-example.ts",
+    "importPath": "components/inline-edit"
+  },
   "inline-edit-on-clean": {
     "packagePath": "components/inline-edit/inline-edit-on-clean",
     "title": "Inline edit on clean",
@@ -10338,6 +10353,7 @@ export type LiveExampleId =
   | 'inline-edit-editable-header'
   | 'inline-edit-horizontal-list'
   | 'inline-edit-menu'
+  | 'inline-edit-mixed-list'
   | 'inline-edit-on-clean'
   | 'inline-edit-overview'
   | 'inline-edit-save-error'
