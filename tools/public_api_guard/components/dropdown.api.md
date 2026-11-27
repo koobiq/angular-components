@@ -6,7 +6,6 @@
 
 import { AfterContentInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
-import * as _angular_forms from '@angular/forms';
 import { Direction } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { FocusOrigin } from '@angular/cdk/a11y';
@@ -23,6 +22,7 @@ import { KbqPanelMinWidth } from '@koobiq/components/core';
 import { KbqPanelWidth } from '@koobiq/components/core';
 import { KbqPanelWidthOrigin } from '@koobiq/components/core';
 import { KbqPoint } from '@koobiq/components/core';
+import { KbqSearchFieldBase } from '@koobiq/components/core';
 import { KbqSearchFieldPopup } from '@koobiq/components/core';
 import { KbqSiblingPopup } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
@@ -294,16 +294,14 @@ export type KbqDropdownPositionX = 'before' | 'after' | 'center';
 export type KbqDropdownPositionY = 'above' | 'below';
 
 // @public
-export class KbqDropdownSearch implements AfterContentInit {
-    constructor();
-    focus(): void;
-    protected handleClick(event: MouseEvent): void;
-    protected handleKeydown(event: KeyboardEvent): void;
+export class KbqDropdownSearch extends KbqSearchFieldBase {
     // (undocumented)
-    ngAfterContentInit(): void;
-    get ngControl(): _angular_forms.NgControl | null;
+    protected readonly directiveName = "kbqDropdownSearch";
+    // (undocumented)
+    protected getSearchFieldPopup(): KbqSearchFieldPopup | undefined;
+    protected handleClick(event: MouseEvent): void;
+    protected keepsKey(event: KeyboardEvent): boolean;
     readonly panel: _koobiq_components_dropdown.KbqDropdownPanel | null;
-    reset(): void;
     value(): string;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqDropdownSearch, "[kbqDropdownSearch]", ["kbqDropdownSearch"], {}, {}, never, never, true, never>;

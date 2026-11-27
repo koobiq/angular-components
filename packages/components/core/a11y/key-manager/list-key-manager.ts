@@ -72,6 +72,16 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
         }
     }
 
+    /**
+     * Whether no item is active or the active one has left the list, as when a search filters it out. Either way
+     * the next highlight has to be chosen anew rather than moved from the current one.
+     *
+     * @docs-private
+     */
+    isActiveItemStale(): boolean {
+        return !this._activeItem || !this.getItemsArray().includes(this._activeItem);
+    }
+
     /** Gets whether the user is currently typing into the manager using the typeahead feature. */
     isTyping(): boolean {
         return this.pressedLetters.length > 0;

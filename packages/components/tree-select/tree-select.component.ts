@@ -88,7 +88,6 @@ import {
     getKbqSelectNonArrayValueError,
     isInput,
     isSelectAll,
-    isUndefined,
     KBQ_A11Y_LOCALE_CONFIGURATION,
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
@@ -1825,13 +1824,9 @@ export class KbqTreeSelect<T = any, K = T>
         // added to it on a separate, later-processed reactive pass than the one behind `nodesCount` —
         // reading the tree's own authoritative node count instead of subtracting from `options.length`
         // sidesteps that race entirely, rather than risking the two going momentarily out of step.
-        const optionsCount = this.tree()?.nodesCount ?? this.options?.length ?? 0;
+        const count = this.tree()?.nodesCount ?? this.options?.length ?? 0;
 
-        return (
-            isUndefined(this.searchMinOptionsThreshold()) ||
-            !!this.search()?.value() ||
-            optionsCount >= this.searchMinOptionsThreshold()!
-        );
+        return this.isSearchVisible(this.searchMinOptionsThreshold(), this.search(), count);
     }
 
     /**

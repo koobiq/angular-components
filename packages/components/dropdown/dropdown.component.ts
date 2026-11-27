@@ -438,7 +438,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
             .pipe(
                 filter(() => !!this.search()),
                 delay(0),
-                filter(() => this.isActiveItemStale()),
+                filter(() => this.keyManager?.isActiveItemStale() ?? true),
                 takeUntilDestroyed(this.destroyRef)
             )
             .subscribe(() => {
@@ -859,12 +859,6 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
         if (this.keyManager instanceof FocusKeyManager) {
             this.keyManager.setFocusOrigin(origin);
         }
-    }
-
-    private isActiveItemStale(): boolean {
-        const activeItem = this.keyManager?.activeItem;
-
-        return !activeItem || !this.directDescendantItems.some((item) => item === activeItem);
     }
 
     /**
