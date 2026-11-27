@@ -248,7 +248,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     private readonly disabledState = signal(false);
     private valueFromPaste?: number | null;
 
-    /** Pending `onInput` reformats by timer handle: cancelled on destroy, run at once before a step. */
+    /** Pending `onInput` reformats by timer handle: cancelled on destroy, flushed before stepping or leaving the field. */
     private readonly pendingReformats = new Map<ReturnType<typeof setTimeout>, (correctCaret: boolean) => void>();
 
     /** Emits when the value changes (either due to user input or programmatic change). */
@@ -428,6 +428,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         }
 
         if (!isFocused) {
+            this.commitPendingReformats();
             this.clampToSafeRange();
             this.onTouched();
         }
@@ -614,9 +615,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     private cvaOnChange: (value: any) => void = () => {};
 
     /**
-     * Commits a keystroke whose reformat is still pending, so a step pressed right after typing starts from
-     * the typed value rather than the last committed one. The caret correction is skipped: the step rewrites
-     * the value it would apply to.
+     * Flushes the last keystroke before a step or blur uses the value. Neither interaction needs caret correction.
      */
     private commitPendingReformats(): void {
         this.pendingReformats.forEach((reformat, handle) => {

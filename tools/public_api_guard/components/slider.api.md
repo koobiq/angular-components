@@ -21,6 +21,7 @@ import { NumberInput } from '@angular/cdk/coercion';
 import { OnChanges } from '@angular/core';
 import { Provider } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
+import { WritableSignal } from '@angular/core';
 
 // @public
 export const KBQ_SLIDER_OPTIONS: InjectionToken<KbqSliderOptions>;
@@ -154,11 +155,12 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue> i
         step: number;
     }>;
     // (undocumented)
-    protected changeValue(value: KbqSliderValue): void;
+    protected changeValue(value: KbqSliderValue, confirmEmpty?: boolean): void;
+    protected commitValue(start: KbqSliderValue, source: KbqSliderCommit['source']): boolean;
     // (undocumented)
     protected readonly defaultFormat: (value: number) => string;
     // (undocumented)
-    protected readonly describedByIds: _angular_core.WritableSignal<string[]>;
+    protected readonly describedByIds: WritableSignal<string[]>;
     // (undocumented)
     protected readonly description: _angular_core.Signal<string | null>;
     readonly disabled: _angular_core.Signal<boolean>;
@@ -166,13 +168,13 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue> i
     readonly displayWith: _angular_core.InputSignal<(value: number) => string>;
     // (undocumented)
     protected readonly element: ElementRef<HTMLElement>;
-    readonly empty: _angular_core.WritableSignal<boolean>;
+    readonly empty: WritableSignal<boolean>;
     readonly errorState: _angular_core.Signal<boolean>;
     readonly errorStateMatcher: _angular_core.InputSignal<ErrorStateMatcher | undefined>;
     // (undocumented)
     protected abstract finishInteraction(): void;
     abstract focus(options?: FocusOptions): void;
-    readonly focused: _angular_core.WritableSignal<boolean>;
+    readonly focused: WritableSignal<boolean>;
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
     readonly id: _angular_core.Signal<string>;
@@ -200,7 +202,7 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue> i
     // (undocumented)
     protected onTouched: () => void;
     protected readonly options: _koobiq_components_slider.KbqSliderOptions;
-    readonly placeholder: _angular_core.WritableSignal<null>;
+    readonly placeholder: WritableSignal<null>;
     readonly readonly: _angular_core.InputSignalWithTransform<boolean, BooleanInput>;
     registerOnChange(fn: (value: KbqSliderValue) => void): void;
     registerOnTouched(fn: () => void): void;

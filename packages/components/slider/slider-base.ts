@@ -15,7 +15,8 @@ import {
     output,
     Renderer2,
     signal,
-    type SimpleChanges
+    type SimpleChanges,
+    type WritableSignal
 } from '@angular/core';
 import { type ControlValueAccessor, FormGroupDirective, NgControl, NgForm, Validators } from '@angular/forms';
 import {
@@ -51,6 +52,7 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
 
     /** Associated Angular form control, if present. @docs-private */
     readonly ngControl = inject(NgControl, { optional: true, self: true });
+    private readonly parentControl = inject(KbqFormFieldControl, { optional: true, skipSelf: true });
     private readonly parentFormField = inject(KBQ_FORM_FIELD, { optional: true, host: true });
     protected readonly locale = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'a11y',
@@ -129,6 +131,7 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
     /** Emits once when a changed user interaction completes. */
     readonly valueCommit = output<KbqSliderCommit>();
 
+    private readonly formValueMissing = signal(false);
     private readonly current = signal<KbqSliderValue>(0);
     private readonly formDisabled = signal<boolean | undefined>(undefined);
     private readonly errorTracker = new KbqErrorStateTracker(
@@ -163,7 +166,8 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
     readonly focused = signal(false);
 
     /** @docs-private */
-    readonly empty = signal(false);
+    readonly empty: WritableSignal<boolean> =
+        this.parentControl instanceof KbqSliderBase ? this.parentControl.empty : this.formValueMissing;
 
     /** Whether a value is required by the field or its Angular validator. */
     readonly required = computed(() => this.requiredInput() || this.requiredValidator());
@@ -227,9 +231,7 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
     }
 
     private monitorNativeFormReset(): void {
-        const parent = inject(KbqFormFieldControl, { optional: true, skipSelf: true });
-
-        if (this.ngControl || parent instanceof KbqSliderBase) return;
+        if (this.ngControl || this.parentControl instanceof KbqSliderBase) return;
 
         const renderer = inject(Renderer2);
 
@@ -266,6 +268,7 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
 
     /** Writes a form value without emitting a user change. @docs-private */
     writeValue(value: KbqSliderValue | null): void {
+        this.formValueMissing.set(value === null);
         this.current.set(
             value ?? (typeof this.value() === 'number' ? this.bounds().min : [this.bounds().min, this.bounds().max])
         );
@@ -291,16 +294,29 @@ export abstract class KbqSliderBase<T extends KbqSliderValue = KbqSliderValue>
         this.describedByIds.set(ids);
     }
 
-    protected changeValue(value: KbqSliderValue): void {
+    protected changeValue(value: KbqSliderValue, confirmEmpty = false): void {
         value = sliderNormalize(value, this.settings());
 
-        if (!sliderEqual(this.value(), value)) {
+        if (!sliderEqual(this.value(), value) || (confirmEmpty && this.empty())) {
+            this.formValueMissing.set(false);
             this.current.set(value);
             const selection = this.value();
 
             this.onChange(selection);
             this.valueChange.emit(selection);
         }
+    }
+
+    /** Confirms the displayed selection, including the first choice in an empty form control. @docs-private */
+    protected commitValue(start: KbqSliderValue, source: KbqSliderCommit['source']): boolean {
+        const value = this.value();
+
+        if (this.empty()) this.changeValue(value, true);
+        else if (sliderEqual(start, value)) return false;
+
+        this.valueCommit.emit({ value, source });
+
+        return true;
     }
 
     protected move(index: number, value: number): number {

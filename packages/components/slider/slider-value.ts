@@ -13,6 +13,9 @@ export type SliderSettings = {
 
 const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
 
+/** @internal */
+export const sliderLargeStepMultiplier = (value: number): number => Math.max(1, Math.floor(value));
+
 const fractionDigits = (value: number): number => {
     const [mantissa = '', exponent = '0'] = String(value).split('e');
 

@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { END, ESCAPE, HOME, LEFT_ARROW, PAGE_DOWN, PAGE_UP, RIGHT_ARROW } from '@angular/cdk/keycodes';
+import { END, ESCAPE, HOME, LEFT_ARROW, PAGE_DOWN, PAGE_UP, RIGHT_ARROW, UP_ARROW } from '@angular/cdk/keycodes';
 import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import {
@@ -19,10 +19,12 @@ import {
     ShowOnFormSubmitErrorStateMatcher
 } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
+import { SliderInputExample } from '../../docs-examples/components/slider/slider-input/slider-input-example';
 import { KbqInputSlider } from './input-slider';
 import { KbqSlider } from './slider';
 import type { KbqSliderValue } from './slider.types';
 import { kbqSliderOptionsProvider } from './slider-options';
+import { sliderMove, sliderNormalize, type SliderSettings, sliderSnap } from './slider-value';
 
 @Component({
     imports: [KbqSlider, KbqInputSlider, ReactiveFormsModule, FormsModule, KbqFormFieldModule],
@@ -70,6 +72,64 @@ class SliderWithErrorStateMatcher {
 }
 
 describe('KbqSlider', () => {
+    describe('slider values', () => {
+        const settings: SliderSettings = { min: 0, max: 100, step: 1, minDistance: 0, marks: [] };
+
+        it.each([
+            [0.1 + 0.2, 0, 1, 0.1, 0.3],
+            [0.35, 0.05, 1, 0.1, 0.35],
+            [3e-7, 0, 1e-6, 1e-7, 3e-7],
+            [10, 0, 10, 3, 9],
+            [-200, -100, 100, 1, -100],
+            [NaN, 0, 100, 1, 0],
+            [50, 10, 0, 1, 10]
+        ])('snaps %s on the min-anchored grid', (value, min, max, step, expected) => {
+            expect(sliderSnap(value, { ...settings, min, max, step })).toBe(expected);
+        });
+
+        it('uses marks only when step is null', () => {
+            const marks = [{ value: 10 }, { value: 80 }, { value: 80 }, { value: NaN }, { value: 200 }];
+
+            expect(sliderSnap(45, { ...settings, marks, step: null })).toBe(80);
+            expect(sliderSnap(45, { ...settings, marks })).toBe(45);
+            expect(sliderSnap(80, { ...settings, step: null })).toBe(0);
+        });
+
+        it('normalizes unordered external ranges and impossible gaps', () => {
+            expect(sliderNormalize([90, 20], settings)).toEqual([20, 90]);
+            expect(sliderNormalize([90, 20], { ...settings, minDistance: 200 })).toEqual([0, 100]);
+            expect(sliderNormalize([40, 50], { ...settings, step: 30, minDistance: 31 })).toEqual([30, 90]);
+        });
+
+        it.each([
+            ['none', 0, 90, [50, 60], 0],
+            ['none', 1, 10, [20, 30], 1],
+            ['push', 0, 90, [90, 100], 0],
+            ['push', 1, 0, [0, 10], 1],
+            ['swap', 0, 90, [60, 90], 1],
+            ['swap', 1, 0, [0, 20], 0]
+        ] as const)('resolves %s collisions', (collision, index, value, expected, active) => {
+            expect(sliderMove([20, 60], index, value, { ...settings, minDistance: 10 }, collision)).toEqual({
+                value: expected,
+                index: active
+            });
+        });
+
+        it('maintains the gap and an idempotent selection when swapping near a bound', () => {
+            const config = { ...settings, minDistance: 30 };
+            const result = sliderMove([20, 80], 0, 90, config, 'swap');
+
+            expect(result).toEqual({ value: [70, 100], index: 1 });
+            expect(sliderNormalize(result.value, config)).toEqual(result.value);
+        });
+
+        it('keeps push values and gap on a fractional grid', () => {
+            const config = { ...settings, min: 0.05, max: 1, step: 0.1, minDistance: 0.25 };
+
+            expect(sliderMove([0.15, 0.45], 0, 0.85, config, 'push').value).toEqual([0.65, 0.95]);
+        });
+    });
+
     describe('kbqSliderOptionsProvider', () => {
         it('applies partial defaults and gives explicit slider inputs precedence', () => {
             TestBed.configureTestingModule({
@@ -129,6 +189,31 @@ describe('KbqSlider', () => {
             expect(sibling.componentInstance.unit()).toBe('g');
             expect(sibling.componentInstance.showStepper()).toBe(true);
             expect(TestBed.createComponent(KbqSlider).componentInstance.vertical()).toBe(true);
+        });
+
+        it('uses the provided large step for Shift+ArrowUp in both the editor and the thumb', async () => {
+            TestBed.configureTestingModule({
+                providers: [kbqSliderOptionsProvider({ step: 2, largeStepMultiplier: 3 })]
+            });
+            const fixture = TestBed.createComponent(KbqInputSlider);
+
+            await fixture.whenStable();
+
+            const editor: HTMLInputElement = fixture.nativeElement.querySelector('input.kbq-input');
+            const thumb: HTMLInputElement = fixture.nativeElement.querySelector('input[type=range]');
+            const stepUp = (input: HTMLInputElement) => {
+                input.focus();
+                input.dispatchEvent(new KeyboardEvent('keydown', { keyCode: UP_ARROW, shiftKey: true, bubbles: true }));
+                dispatchKeyboardEvent(input, 'keyup', UP_ARROW);
+            };
+
+            stepUp(editor);
+            await fixture.whenStable();
+            expect(fixture.componentInstance.value()).toBe(6);
+            stepUp(thumb);
+            await fixture.whenStable();
+            expect(editor.value).toBe('12');
+            expect(thumb.value).toBe('12');
         });
 
         it('uses input slider bindings for both the editor and the thumb', async () => {
@@ -390,7 +475,111 @@ describe('KbqSlider', () => {
         });
     });
 
+    describe('slider and number input example', () => {
+        it('normalizes the last keystroke on blur and keeps both controls in sync', async () => {
+            const fixture = TestBed.createComponent(SliderInputExample);
+
+            await fixture.whenStable();
+            const root: HTMLElement = fixture.nativeElement.querySelector('.example-volume');
+            const editor = root.querySelector<HTMLInputElement>('input.kbq-input')!;
+            const thumb = root.querySelector<HTMLInputElement>('input[type=range]')!;
+
+            for (const [draft, expected] of [
+                ['83', '83'],
+                ['150', '100'],
+                ['190', '100'],
+                ['', '100']
+            ]) {
+                editor.focus();
+                editor.value = draft;
+                editor.dispatchEvent(new Event('input', { bubbles: true }));
+                editor.blur();
+                await new Promise((resolve) => setTimeout(resolve));
+                await fixture.whenStable();
+                expect(editor.value).toBe(expected);
+                expect(thumb.value).toBe(expected);
+            }
+        });
+    });
+
     describe('forms', () => {
+        it.each([
+            ['slider', 'input[type=range]'],
+            ['input-slider', 'input[type=range]'],
+            ['input-slider', 'input.kbq-input']
+        ])('selects the displayed minimum once in an empty required %s via %s', async (kind, selector) => {
+            @Component({
+                imports: [KbqSlider, KbqInputSlider, ReactiveFormsModule],
+                template: `
+                    @if (withEditor) {
+                        <kbq-input-slider [formControl]="control" (valueCommit)="commit($event)" />
+                    } @else {
+                        <kbq-slider [formControl]="control" (valueCommit)="commit($event)" />
+                    }
+                `
+            })
+            class RequiredSlider {
+                withEditor = false;
+                readonly control = new FormControl<number | null>(null, Validators.required);
+                readonly commit = vi.fn();
+            }
+
+            const fixture = TestBed.createComponent(RequiredSlider);
+            const host = fixture.componentInstance;
+
+            host.withEditor = kind === 'input-slider';
+            await fixture.whenStable();
+            const input: HTMLInputElement = fixture.nativeElement.querySelector(selector);
+            const chooseMinimum = () => {
+                input.focus();
+
+                if (input.type === 'range') {
+                    dispatchKeyboardEvent(input, 'keydown', HOME);
+                    dispatchKeyboardEvent(input, 'keyup', HOME);
+                } else {
+                    input.value = '0';
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+
+                input.blur();
+            };
+
+            input.focus();
+            input.blur();
+            expect(host.control.value).toBeNull();
+            expect(host.control.hasError('required')).toBe(true);
+            const change = vi.fn();
+
+            host.control.valueChanges.subscribe(change);
+            chooseMinimum();
+            chooseMinimum();
+            expect(host.control.value).toBe(0);
+            expect(host.control.valid).toBe(true);
+            expect(change).toHaveBeenCalledExactlyOnceWith(0);
+            expect(host.commit).toHaveBeenCalledExactlyOnceWith({
+                value: 0,
+                source: input.type === 'range' ? 'keyboard' : 'input'
+            });
+            host.control.reset();
+            expect(host.control.value).toBeNull();
+            expect(host.control.hasError('required')).toBe(true);
+        });
+
+        it('updates a focused numeric field when its scale changes before editing starts', async () => {
+            const fixture = TestBed.createComponent(KbqInputSlider);
+
+            fixture.componentRef.setInput('value', 80);
+            await fixture.whenStable();
+            const editor: HTMLInputElement = fixture.nativeElement.querySelector('input.kbq-input');
+            const thumb: HTMLInputElement = fixture.nativeElement.querySelector('input[type=range]');
+
+            editor.focus();
+            fixture.componentRef.setInput('max', 50);
+            await fixture.whenStable();
+            expect(editor.value).toBe('50');
+            expect(thumb.value).toBe('50');
+        });
+
         it('uses the parent NgForm to show and clear submission errors for both sliders', async () => {
             @Component({
                 imports: [FormsModule, KbqFormFieldModule, KbqSlider, KbqInputSlider],

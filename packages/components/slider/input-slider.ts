@@ -23,7 +23,7 @@ import { add, KbqInputModule, KbqNumberInput } from '@koobiq/components/input';
 import { KbqSlider } from './slider';
 import type { KbqSliderCommit, KbqSliderSelection, KbqSliderValue } from './slider.types';
 import { KbqSliderBase } from './slider-base';
-import { sliderEqual, sliderMove, sliderSnap, sliderStops } from './slider-value';
+import { sliderEqual, sliderLargeStepMultiplier, sliderMove, sliderSnap, sliderStops } from './slider-value';
 
 /** Numeric input and slider sharing a single value or range. */
 @Component({
@@ -62,7 +62,9 @@ export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue>
 
     /** @docs-private */
     readonly controlType = 'input-slider';
-    protected readonly bigStep = computed(() => 10 * this.bounds().step);
+    protected readonly bigStep = computed(
+        () => sliderLargeStepMultiplier(this.options.largeStepMultiplier) * this.bounds().step
+    );
     protected readonly drafts = signal<(number | null)[]>([0]);
 
     protected readonly formatValue = (value: number): string =>
@@ -92,7 +94,9 @@ export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue>
     private syncDrafts(values: readonly number[]): void {
         untracked(() =>
             this.drafts.update((drafts) =>
-                values.map((value, index) => (index === this.editingIndex ? (drafts[index] ?? null) : value))
+                values.map((value, index) =>
+                    index === this.editingIndex && this.editStart !== null ? (drafts[index] ?? null) : value
+                )
             )
         );
     }
@@ -149,8 +153,7 @@ export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue>
         this.editingIndex = null;
         this.drafts.set([...this.values()]);
         this.refreshInput(index);
-        if (start !== null && !sliderEqual(start, this.value()))
-            this.valueCommit.emit({ value: this.value(), source: 'input' });
+        if (start !== null && (result || !sliderEqual(start, this.value()))) this.commitValue(start, 'input');
 
         return result?.index ?? index;
     }
@@ -182,7 +185,7 @@ export class KbqInputSlider<T extends KbqSliderValue = KbqSliderValue>
     }
 
     protected onSliderValue(value: KbqSliderValue): void {
-        this.changeValue(value);
+        this.changeValue(value, true);
         this.drafts.set([...this.values()]);
         this.editStart = null;
 

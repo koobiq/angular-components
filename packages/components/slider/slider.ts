@@ -48,7 +48,7 @@ import type {
     KbqSliderValue
 } from './slider.types';
 import { KbqSliderBase } from './slider-base';
-import { sliderEqual, sliderGap, sliderMove, sliderSnap, sliderStops } from './slider-value';
+import { sliderEqual, sliderGap, sliderLargeStepMultiplier, sliderMove, sliderSnap, sliderStops } from './slider-value';
 
 type SliderPointerGesture = {
     id: number;
@@ -364,7 +364,7 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
         const start = this.pointer.start;
 
         this.releasePointer();
-        if (!sliderEqual(start, this.value())) this.valueCommit.emit({ value: this.value(), source: 'pointer' });
+        this.commitValue(start, 'pointer');
     }
 
     protected onPointerCancel(event: PointerEvent): void {
@@ -407,7 +407,7 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
 
         const page =
             keyCode === PAGE_UP || keyCode === PAGE_DOWN || event.shiftKey
-                ? Math.max(1, Math.floor(this.largeStepMultiplier()))
+                ? sliderLargeStepMultiplier(this.largeStepMultiplier())
                 : 1;
         let next = this.thumbValue(index) + direction * this.bounds().step * page;
 
@@ -475,10 +475,7 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
         input.value = String(this.thumbValue(index));
         if (active !== index) this.focus({ preventScroll: true }, active);
 
-        if (!sliderEqual(start, this.value())) {
-            this.valueCommit.emit({ value: this.value(), source: 'input' });
-            this.revealTooltip(active);
-        }
+        if (this.commitValue(start, 'input')) this.revealTooltip(active);
     }
 
     protected onThumbFocus(index: number): void {
@@ -545,7 +542,7 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
         const start = this.keyboardStart;
 
         this.keyboardStart = null;
-        if (!sliderEqual(start, this.value())) this.valueCommit.emit({ value: this.value(), source: 'keyboard' });
+        this.commitValue(start, 'keyboard');
     }
 
     private releasePointer(): void {
@@ -609,13 +606,13 @@ export class KbqSlider<T extends KbqSliderValue = KbqSliderValue>
         const start = this.value();
         const next = sliderMove(start, this.nearest(value), value, this.settings(), this.thumbCollisionBehavior());
 
-        if (sliderEqual(start, next.value)) return;
+        if (!this.empty() && sliderEqual(start, next.value)) return;
 
         this.prepareMarkAnimation(next.index);
         this.changeValue(next.value);
         this.focus({ preventScroll: true }, next.index);
         if (!this.markAnimation) this.revealTooltip(next.index);
-        this.valueCommit.emit({ value: this.value(), source: 'pointer' });
+        this.commitValue(start, 'pointer');
     }
 
     private prepareMarkAnimation(index: number): void {

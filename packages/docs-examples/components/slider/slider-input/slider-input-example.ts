@@ -15,6 +15,7 @@ import { TRANSLATIONS } from './l10n';
             <kbq-slider [aria-label]="t().volume" [value]="volume()" (valueChange)="setVolume($event)" />
             <kbq-form-field>
                 <input
+                    #editor="ngModel"
                     kbqNumberInput
                     integer
                     [min]="0"
@@ -22,7 +23,7 @@ import { TRANSLATIONS } from './l10n';
                     [attr.aria-label]="t().volume"
                     [(ngModel)]="draft"
                     (ngModelChange)="setVolume($event)"
-                    (blur)="normalizeVolume()"
+                    (blur)="editor.control.setValue(volume())"
                 />
             </kbq-form-field>
         </div>
@@ -65,10 +66,6 @@ export class SliderInputExample {
     protected readonly volume = signal(70);
     protected draft: number | null = 70;
     protected readonly t = injectTranslation(TRANSLATIONS);
-
-    protected normalizeVolume(): void {
-        this.draft = this.volume();
-    }
 
     protected setVolume(value: number | null): void {
         if (value !== null) {
