@@ -371,6 +371,7 @@ class NumberInputWithBoundValue {
                 [min]="min"
                 [step]="step"
                 [integer]="integer"
+                [maxFractionDigits]="maxFractionDigits"
                 [startFormattingFrom]="startFormattingFrom"
                 [(ngModel)]="value"
             />
@@ -388,6 +389,7 @@ class NumberInputConfigurable {
     max: number | undefined = undefined;
     step: number = 1;
     integer = false;
+    maxFractionDigits = 20;
     startFormattingFrom: number | undefined = undefined;
 }
 
@@ -1669,6 +1671,73 @@ describe('KbqNumberInput', () => {
 
                 expect(preventDefaultSpyFn).toHaveBeenCalledTimes(minuses.length);
             });
+
+            it('should prevent minus in the middle without clearing the value', async () => {
+                fixture.componentInstance.min = -5;
+                fixture.componentInstance.value = 1;
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                inputElement.value = '1';
+                inputElement.setSelectionRange(1, 1);
+                fixture.detectChanges();
+
+                const event = { key: '-', keyCode: DASH, preventDefault: vi.fn() };
+
+                inputElementDebug.triggerEventHandler('keydown', event);
+
+                expect(event.preventDefault).toHaveBeenCalled();
+                expect(inputElement.value).toBe('1');
+                expect(fixture.componentInstance.value).not.toBeNull();
+            });
+
+            it('should allow minus at the start and when replacing an existing sign', async () => {
+                fixture.componentInstance.min = -5;
+                fixture.detectChanges();
+
+                inputElement.value = '-5';
+                inputElement.setSelectionRange(0, 1);
+                fixture.detectChanges();
+
+                const event = { key: '-', keyCode: DASH, preventDefault: vi.fn() };
+
+                inputElementDebug.triggerEventHandler('keydown', event);
+
+                expect(event.preventDefault).not.toHaveBeenCalled();
+            });
+
+            it('should block repeated minus outside selection for all minus keys', async () => {
+                fixture.componentInstance.min = -5;
+                fixture.detectChanges();
+
+                inputElement.value = '-1';
+                inputElement.setSelectionRange(2, 2);
+                fixture.detectChanges();
+
+                const minuses = [NUMPAD_MINUS, DASH, FF_MINUS];
+
+                for (const minus of minuses) {
+                    const event = { key: '-', keyCode: minus, preventDefault: vi.fn() };
+
+                    inputElementDebug.triggerEventHandler('keydown', event);
+                    expect(event.preventDefault).toHaveBeenCalled();
+                }
+            });
+
+            it('should block minus at the start when min >= 0', async () => {
+                fixture.componentInstance.min = 0;
+                fixture.detectChanges();
+
+                inputElement.value = '1';
+                inputElement.setSelectionRange(0, 0);
+                fixture.detectChanges();
+
+                const event = { key: '-', keyCode: DASH, preventDefault: vi.fn() };
+
+                inputElementDebug.triggerEventHandler('keydown', event);
+
+                expect(event.preventDefault).toHaveBeenCalled();
+            });
         });
     });
 
@@ -2118,6 +2187,360 @@ describe('KbqNumberInput', () => {
             await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.value).toBe(`10${defaultLocaleGroupSep}000`);
+        });
+    });
+
+    describe('maxFractionDigits', () => {
+        let fixture: ComponentFixture<NumberInputConfigurable>;
+        let inputElementDebug: DebugElement;
+        let inputElement: HTMLInputElement;
+
+        beforeEach(() => {
+            fixture = createComponent(NumberInputConfigurable);
+            fixture.componentInstance.localeService.setLocale('ru-RU');
+            fixture.detectChanges();
+            inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
+            inputElement = inputElementDebug.nativeElement;
+        });
+
+        it('should round pasted fraction to maxFractionDigits', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.maxFractionDigits = 2;
+            fixture.detectChanges();
+
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: vi.fn(),
+                clipboardData: { getData: () => '1,239' }
+            });
+            fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertFromPaste' } as InputEvent);
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe('1,24');
+            expect(fixture.componentInstance.value).toBe(1.24);
+        });
+
+        it('should round a fraction inserted without keydown', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.maxFractionDigits = 2;
+            fixture.detectChanges();
+
+            inputElement.value = '1,239';
+            fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertFromDrop' } as InputEvent);
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe('1,24');
+            expect(fixture.componentInstance.value).toBe(1.24);
+        });
+
+        it('should preserve an unrounded programmatic model', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.maxFractionDigits = 2;
+            fixture.componentInstance.value = 1.239;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe('1,24');
+            expect(fixture.componentInstance.value).toBe(1.239);
+        });
+
+        it('should sync the rounded view to the model on blur', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.maxFractionDigits = 2;
+            fixture.componentInstance.value = 1.239;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe('1,24');
+            expect(fixture.componentInstance.value).toBe(1.239);
+
+            dispatchFakeEvent(inputElement, 'blur');
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe('1,24');
+            expect(fixture.componentInstance.value).toBe(1.24);
+        });
+
+        it('should block typing a digit past the limit', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.maxFractionDigits = 2;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            inputElement.value = '1,23';
+            inputElement.selectionStart = inputElement.selectionEnd = inputElement.value.length;
+
+            const preventDefault = vi.fn();
+
+            inputElementDebug.triggerEventHandler('keydown', { preventDefault, keyCode: 52, key: '4' });
+
+            expect(preventDefault).toHaveBeenCalled();
+        });
+
+        it('should block a fraction separator that would put existing digits past the limit', () => {
+            fixture.componentInstance.maxFractionDigits = 2;
+            fixture.detectChanges();
+
+            inputElement.value = '1234';
+            inputElement.setSelectionRange(1, 1);
+
+            const preventDefault = vi.fn();
+
+            inputElementDebug.triggerEventHandler('keydown', { preventDefault, keyCode: COMMA, key: ',' });
+
+            expect(preventDefault).toHaveBeenCalled();
+        });
+
+        it.each(['ctrlKey', 'metaKey', 'altKey'])(
+            'should allow %s with a digit when the fraction is at the limit',
+            (modifier) => {
+                fixture.componentInstance.maxFractionDigits = 2;
+                fixture.detectChanges();
+
+                inputElement.value = '1,23';
+                inputElement.setSelectionRange(inputElement.value.length, inputElement.value.length);
+
+                const preventDefault = vi.fn();
+
+                inputElementDebug.triggerEventHandler('keydown', {
+                    preventDefault,
+                    keyCode: 50,
+                    key: '2',
+                    [modifier]: true
+                });
+
+                expect(preventDefault).not.toHaveBeenCalled();
+            }
+        );
+
+        it('should allow replacing the selected fraction with one digit', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.maxFractionDigits = 2;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            inputElement.value = '1,23';
+            inputElement.selectionStart = 2;
+            inputElement.selectionEnd = 4;
+
+            const preventDefault = vi.fn();
+
+            inputElementDebug.triggerEventHandler('keydown', { preventDefault, keyCode: 52, key: '4' });
+
+            expect(preventDefault).not.toHaveBeenCalled();
+        });
+
+        it('should keep the stepped model unrounded while the view is limited', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.maxFractionDigits = 2;
+            fixture.componentInstance.step = 0.001;
+            fixture.componentInstance.value = 1.23;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            fixture.componentInstance.inputNumberDirective().stepUp(0.001);
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(fixture.componentInstance.value).toBe(1.231);
+            expect(inputElement.value).toBe('1,23');
+        });
+
+        it('should keep integer mode parsing a paste without rounding', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.integer = true;
+            fixture.componentInstance.maxFractionDigits = 2;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: vi.fn(),
+                clipboardData: { getData: () => '1,9' }
+            });
+            fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertFromPaste' } as InputEvent);
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(fixture.componentInstance.value).toBe(1);
+            expect(inputElement.value).toBe('1');
+        });
+
+        it.each([100, 101, Infinity])('should clamp the limit to 100 for %s without RangeError', async (limit) => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.maxFractionDigits = limit;
+            fixture.componentInstance.value = 1e-100;
+
+            expect(() => fixture.detectChanges()).not.toThrow();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe(`0,${'0'.repeat(99)}1`);
+            expect(fixture.componentInstance.value).toBe(1e-100);
+        });
+
+        it('should clamp a negative limit to zero without changing the model', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.maxFractionDigits = -1;
+            fixture.componentInstance.value = 1.5;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe('2');
+            expect(fixture.componentInstance.value).toBe(1.5);
+        });
+
+        it('should preserve the model when integer mode changes dynamically', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.integer = true;
+            fixture.componentInstance.maxFractionDigits = 2;
+            fixture.componentInstance.value = 1.5;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe('2');
+            expect(fixture.componentInstance.value).toBe(1.5);
+
+            fixture.componentInstance.integer = false;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe('1,5');
+            expect(fixture.componentInstance.value).toBe(1.5);
+
+            fixture.componentInstance.integer = true;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe('2');
+            expect(fixture.componentInstance.value).toBe(1.5);
+        });
+
+        it('should round a negative pasted fraction to maxFractionDigits', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.maxFractionDigits = 2;
+            fixture.detectChanges();
+
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: vi.fn(),
+                clipboardData: { getData: () => '-1,239' }
+            });
+            fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertFromPaste' } as InputEvent);
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe('-1,24');
+            expect(fixture.componentInstance.value).toBe(-1.24);
+        });
+
+        it('should repaint the view after maxFractionDigits changes without changing the model', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.maxFractionDigits = 3;
+            fixture.componentInstance.value = 1.239;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe('1,239');
+
+            fixture.componentInstance.maxFractionDigits = 2;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe('1,24');
+            expect(fixture.componentInstance.value).toBe(1.239);
+        });
+
+        it('should preserve a trailing separator when the limit changes during input', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.maxFractionDigits = 2;
+            fixture.componentInstance.value = 1;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            dispatchFakeEvent(inputElement, 'focus');
+            inputElement.value = '1,';
+            inputElement.setSelectionRange(2, 2);
+            fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertText' } as InputEvent);
+            await vi.runOnlyPendingTimersAsync();
+
+            fixture.componentInstance.maxFractionDigits = 3;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe('1,');
+
+            inputElement.value = `${inputElement.value}2`;
+            inputElement.setSelectionRange(inputElement.value.length, inputElement.value.length);
+            fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertText' } as InputEvent);
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe('1,2');
+            expect(fixture.componentInstance.value).toBe(1.2);
+        });
+
+        it('should preserve a lone minus when the limit changes during input', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.maxFractionDigits = 2;
+            fixture.componentInstance.value = null;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            dispatchFakeEvent(inputElement, 'focus');
+            inputElement.value = '-';
+            fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertText' } as InputEvent);
+            await vi.runOnlyPendingTimersAsync();
+
+            fixture.componentInstance.maxFractionDigits = 3;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe('-');
+            expect(fixture.componentInstance.value).toBeNull();
+        });
+
+        it('should preserve a pending edit when integer mode changes during input', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.value = 1;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            dispatchFakeEvent(inputElement, 'focus');
+            inputElement.value = '12';
+
+            fixture.componentInstance.integer = true;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe('12');
+        });
+
+        it('should keep 20 fraction digits by default and for a NaN limit', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.value = 1e-20;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe(`0,${'0'.repeat(19)}1`);
+            expect(fixture.componentInstance.value).toBe(1e-20);
+
+            fixture.componentInstance.maxFractionDigits = NaN;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe(`0,${'0'.repeat(19)}1`);
+            expect(fixture.componentInstance.value).toBe(1e-20);
         });
     });
 

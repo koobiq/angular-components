@@ -65,6 +65,20 @@ import { TRANSLATIONS } from './l10n';
                 </div>
 
                 <div class="kbq-form__row">
+                    <label class="kbq-form__label flex-40" for="number-fraction-digits">{{ t().fractionDigits }}</label>
+                    <kbq-form-field class="kbq-form__control flex-60">
+                        <input
+                            id="number-fraction-digits"
+                            kbqNumberInput
+                            kbqNormalizeWhitespace
+                            [maxFractionDigits]="2"
+                            [(ngModel)]="value"
+                        />
+                        <kbq-stepper />
+                    </kbq-form-field>
+                </div>
+
+                <div class="kbq-form__row">
                     <label class="kbq-form__label flex-40" for="number-integer">{{ t().integer }}</label>
                     <kbq-form-field class="kbq-form__control flex-60">
                         <input
